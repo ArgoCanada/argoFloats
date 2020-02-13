@@ -1,2 +1,2 @@
 # argoFloats
-Tools for analysing collections of oceanographic Argo floats
+Tools for analyzing collections of oceanographic Argo floats
