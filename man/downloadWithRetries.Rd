@@ -64,3 +64,6 @@ String indicating the full pathname to the downloaded file.
 \description{
 General function for downloading and caching a dataset.
 }
+\author{
+Dan Kelley
+}

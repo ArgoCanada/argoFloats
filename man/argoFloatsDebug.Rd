@@ -28,3 +28,6 @@ of \code{debug} is generally reduced by 1 on each nested function call, leading
 to indented messages. Most functions start and end with a call to
 \code{\link[=argoFloatsDebug]{argoFloatsDebug()}} that has \code{style="bold"} and \code{unindent=1}.
 }
+\author{
+Dan Kelley
+}
