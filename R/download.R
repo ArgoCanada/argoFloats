@@ -251,7 +251,7 @@ getProfiles <- function(url=NULL, destdir=".", destfile, mode="wb",
 #' For the `ftp://usgodae.org/pub/outgoing/argo` server,
 #' two of multiple choices for `file` are
 #' `ar_index_global_prof.txt.gz`
-#' and
+#' (which is the default for this function) and
 #' `argo_bio-profile_index.txt.gz`
 #' but examination of the server will reveal other possibilities
 #' that might be worth exploring.
@@ -273,19 +273,29 @@ getProfiles <- function(url=NULL, destdir=".", destfile, mode="wb",
 #'\dontrun{
 #' # These examples assume that the ~/data/argo directory exists and is readable.
 #' library(argoFloats)
+#' #
+#' # Example 1: non-bio argo
 #' # Get the index
 #' theIndex <- getIndex(destdir="~/data/argo")
 #' # Load the index. Note that this places 'index' in the current environment,
 #' # so in what follows, we use index$data.  Be sure to rename 'index'
 #' # if you want to work with more than one index at a time.
-#' load(theIndex)
+#' load(theIndex) # defines 'index'
 #' # Plot histograms of 'date' and 'date_update'
 #' par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
 #' hist(index$data$date, breaks="years",
 #'      main="", xlab="Time", freq=TRUE)
 #' hist(index$data$date_update, breaks="years",
 #'      main="", xlab="Last Update Time", freq=TRUE)
-#' # See ?getProfiles for how to get and work with profiles
+#'
+#' # Example 2: as above, but for bio argo.  Note that this redefines 'index'.
+#' theBioargoIndex <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+#' load(theBioargoIndex) # defines 'index' (destroying that from Example 1)
+#' par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
+#' hist(index$data$date, breaks="years",
+#'      main="", xlab="Time", freq=TRUE)
+#' hist(index$data$date_update, breaks="years",
+#'      main="", xlab="Last Update Time", freq=TRUE)
 #'}
 #'
 #' @author
