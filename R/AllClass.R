@@ -30,10 +30,11 @@ setMethod(f="initialize",
 #' Extract Something From an argoFloats Object
 #'
 #' @param x a [argoFloats-class] object.
-#'
 #' @param i a character value specifying an item within the object's `data` slot. Partial
 #' matches are allowed, e.g. `x[["lon"]]` functions the same as `x[["lon"]]`, because only
 #' item matches to those three letters.
+#' @param j ignored.
+#' @param ... ignored.
 #'
 #' @author Dan Kelley
 #'
@@ -66,6 +67,7 @@ setMethod(f="[[",
 #'
 #' @importFrom oce processingLogShow vectorShow
 #' @importFrom methods callNextMethod
+#' @importFrom utils head
 #'
 #' @export
 #'

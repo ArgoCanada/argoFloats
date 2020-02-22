@@ -12,6 +12,10 @@
 \item{i}{a character value specifying an item within the object's \code{data} slot. Partial
 matches are allowed, e.g. \code{x[["lon"]]} functions the same as \code{x[["lon"]]}, because only
 item matches to those three letters.}
+
+\item{j}{ignored.}
+
+\item{...}{ignored.}
 }
 \description{
 Extract Something From an argoFloats Object
