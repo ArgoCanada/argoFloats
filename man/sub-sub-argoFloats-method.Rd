@@ -2,23 +2,26 @@
 % Please edit documentation in R/AllClass.R
 \name{[[,argoFloats-method}
 \alias{[[,argoFloats-method}
-\title{Extract Something From an argoFloats Object}
+\title{Look up a Value Within an argoFloats Object}
 \usage{
 \S4method{[[}{argoFloats}(x, i, j, ...)
 }
 \arguments{
 \item{x}{a \linkS4class{argoFloats} object.}
 
-\item{i}{a character value specifying an item within the object's \code{data} slot. Partial
-matches are allowed, e.g. \code{x[["lon"]]} functions the same as \code{x[["lon"]]}, because only
-item matches to those three letters.}
+\item{i}{a character value, in one of three forms. If it is \code{"metadata"}, then
+the \code{metadata} slot is returned.  If it is \code{"data"}, then the data slot is
+returned.  If it is the name of an item within the object's \code{data} slot (or
+a partial string match to such a name), then that item is returned.}
 
 \item{j}{ignored.}
 
 \item{...}{ignored.}
 }
 \description{
-Extract Something From an argoFloats Object
+This function provides an easy way to look up values within an \linkS4class{argoFloats}
+object, without the need to know the exact structure of the data. There are three
+modes of operation, as determined by the \code{i} argument.
 }
 \author{
 Dan Kelley

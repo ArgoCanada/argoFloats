@@ -28,12 +28,18 @@ setMethod(f="initialize",
               return(.Object)
           })
 
-#' Extract Something From an argoFloats Object
+
+#' Look up a Value Within an argoFloats Object
+#'
+#' This function provides an easy way to look up values within an [argoFloats-class]
+#' object, without the need to know the exact structure of the data. There are three
+#' modes of operation, as determined by the `i` argument.
 #'
 #' @param x a [argoFloats-class] object.
-#' @param i a character value specifying an item within the object's `data` slot. Partial
-#' matches are allowed, e.g. `x[["lon"]]` functions the same as `x[["lon"]]`, because only
-#' item matches to those three letters.
+#' @param i a character value, in one of three forms. If it is `"metadata"`, then
+#' the `metadata` slot is returned.  If it is `"data"`, then the data slot is
+#' returned.  If it is the name of an item within the object's `data` slot (or
+#' a partial string match to such a name), then that item is returned.
 #' @param j ignored.
 #' @param ... ignored.
 #'
@@ -46,12 +52,17 @@ setMethod(f="[[",
               if (missing(i))
                   stop("Must name an item to retrieve, e.g. 'x[[\"latitude\"]]'", call.=FALSE)
               if (x@metadata$type == "index") {
-                  names <- names(x@data$index)
-                  w <- pmatch(i, names)
-                  if (is.finite(w))
+                  if (i == "data") {
+                      return(x@data)
+                  } else if (i == "metadata") {
+                      return(x@metadata)
+                  } else {
+                      names <- names(x@data$index)
+                      w <- pmatch(i, names)
+                      if (!is.finite(w))
+                          stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
                       return(x@data$index[[names[w]]])
-                  else
-                      stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
+                  }
               } else {
                   stop("only for type 'index'")
               }
@@ -144,9 +155,11 @@ setMethod(f="summary",
 #' aiFirstThree <- subset(ai, 1:3)
 #' cat("First three longitudes:", paste(aiFirstThree[["longitude"]]), "\n")
 #'
-#' # Example 2: Profiles within 50km of Bermuda
-#' aiBermuda <- subset(ai, circle=list(longitude=-65.75, latitude=32.31, radius=50))
-#' cat("Found", length(aiBermuda[["longitude"]]), "profiles near Bermuda\n")
+#' # Example 2: Profiles within 50km of Sable Island
+#' lon0 <- -59.9149
+#' lat0 <- 43.9337
+#' aiSable <- subset(ai, circle=list(longitude=lon0, latitude=lat0, radius=50))
+#' cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 #'}
 #'
 #' @author Dan Kelley

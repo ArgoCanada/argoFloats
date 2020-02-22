@@ -167,13 +167,11 @@ downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quie
 
 #' Get Data for an Argo Float Profile
 #'
-#' @param url character value giving the URLs for an Argo float a profile. (In
-#' a future version, `url` may be permitted to be a vector.)
+#' @param url character value giving the URL for an Argo float a profile.
 #' @template destdir
 #' @param destfile optional character value that specifies the name to be used
 #' for the downloaded file. If this is not specified, then a name is determined
 #' from the value of `url`.
-#' @template mode
 #' @template retries
 #' @template force
 #' @template quiet
@@ -181,33 +179,32 @@ downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quie
 #'
 #' @examples
 #'\dontrun{
-#' # These examples assume that the ~/data/argo directory exists and is readable.
+#' # These examples assume that the ~/data/argo directory exists.
 #' library(argoFloats)
 #' library(oce)
-#' #
-#' # Example 1: get float profile based on URL
+#'
+#' # Example 1: a particular file
 #' url <- "ftp://ftp.ifremer.fr/ifremer/argo/dac/nmdis/2901633/profiles/R2901633_071.nc"
-#' file <- getProfiles(url=url, destdir="~/data/argo")
+#' file <- getProfileFromUrl(url=url, destdir="~/data/argo")
 #' argo <- read.argo(file)
 #' plot(argo, which=c(1, 4, 6, 5))
-#' #
-#' # Example 2: get float profile nearest Sable Island
-#' theIndex <- getIndex(destdir="~/data/argo")
-#' load(theIndex) # defines 'index'
+#'
+#' # Example 2: profile nearest Sable Island
+#' index <- getIndex(destdir="~/data/argo")
 #' lon0 <- -59.9149
 #' lat0 <- 43.9337
-#' dist <- geodDist(index$data$longitude, index$data$latitude, lon0, lat0)
-#' which0 <- which.min(dist)
-#' url <- paste0(index$ftpRoot, "/", index$data$file[which0])
-#' file0 <- getProfiles(url=url, destdir="~/data/argo")
-#' argo0 <- read.oce(file0)
-#' plot(argo0, which=c(1, 4, 6, 5))
+#' dist <- geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
+#' w <- which.min(dist)
+#' url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
+#' fileSable <- getProfileFromUrl(url=url, destdir="~/data/argo")
+#' argoSable <- read.oce(fileSable)
+#' plot(argoSable, which=c(1, 4, 6, 5))
 #'}
 #' @importFrom curl curl_download
 #' @export
 #' @author Dan Kelley
-getProfiles <- function(url=NULL, destdir=".", destfile, mode="wb",
-                        retries=3, force=FALSE, quiet=FALSE, debug=0)
+getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
+                              retries=3, force=FALSE, quiet=FALSE, debug=0)
 {
     argoFloatsDebug(debug,  "getProfiles(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
                     if (missing(destfile)) "(missing)" else destfile, "\", ...) {", sep="", "\n", style="bold", unindent=1)
@@ -218,7 +215,7 @@ getProfiles <- function(url=NULL, destdir=".", destfile, mode="wb",
         destfile <- gsub(".*/(.*).nc", "\\1.nc", url)
         argoFloatsDebug(debug,  "inferred destfile=\"", destfile, "\" from url.\n", sep="")
     }
-    downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode=mode, quiet=quiet,
+    downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode="wb", quiet=quiet,
                         force=force, retries=retries, debug=debug-1)
     argoFloatsDebug(debug,  "} # getProfiles()", sep="", "\n", style="bold", unindent=1)
     paste0(destdir, "/", destfile)

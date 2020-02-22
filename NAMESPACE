@@ -3,7 +3,7 @@
 export(argoFloatsDebug)
 export(downloadWithRetries)
 export(getIndex)
-export(getProfiles)
+export(getProfileFromUrl)
 exportMethods("[[")
 exportMethods(subset)
 exportMethods(summary)
