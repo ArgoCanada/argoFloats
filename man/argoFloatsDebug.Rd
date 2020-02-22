@@ -4,7 +4,7 @@
 \alias{argoFloatsDebug}
 \title{Possibly print debugging information.}
 \usage{
-argoFloatsDebug(debug = 0, ..., style = "plain", unindent = 0)
+argoFloatsDebug(debug = 0, ..., style = "plain", showTime = TRUE, unindent = 0)
 }
 \arguments{
 \item{debug}{an integer specifying the level of debugging. Values greater
@@ -17,6 +17,10 @@ list of \code{\link[=cat]{cat()}}.}
 for normal text, \code{"bold"} for bold-faced text, \code{"italic"} for italicized
 text, \code{"red"} for red text, \code{"green"} for green text, or \code{"blue"} for blue
 text. These codes may not be combined.}
+
+\item{showTime}{logical value indicating whether to preface message with
+the present time. This can be useful for learning about which operations
+are using the most time.}
 
 \item{unindent}{integer specifying the degree of reverse indentation
 to be done, as explained in the \dQuote{Details} sction.}
