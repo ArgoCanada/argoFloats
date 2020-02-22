@@ -8,7 +8,7 @@
 #'
 #' @param debug an integer specifying the level of debugging. Values greater
 #' than zero indicate that some printing should be done. Many functions
-#' @param ... content to be printed, analogous to the the ... argument
+#' @param ... values to be printed, analogous to the `...` argument
 #' list of [cat()].
 #' @param style character value indicating special formatting, with `"plain"`
 #' for normal text, `"bold"` for bold-faced text, `"italic"` for italicized
@@ -18,7 +18,7 @@
 #' the present time. This can be useful for learning about which operations
 #' are using the most time.
 #' @param unindent integer specifying the degree of reverse indentation
-#' to be done, as explained in the \dQuote{Details} sction.
+#' to be done, as explained in the \dQuote{Details} section.
 #' @importFrom utils flush.console
 #' @export
 #' @author Dan Kelley
@@ -228,7 +228,7 @@ getProfiles <- function(url=NULL, destdir=".", destfile, mode="wb",
 #' Get an Index of Available Argo Float Profiles
 #'
 #' This function gets an index of available Argo float profiles, either by
-#' by downloading information from a data repository or by resusing an index
+#' by downloading information from a data repository or by reusing an index
 #' (stored as an `.rda` file) that was prepared by a recent call to the function.
 #'
 #' The first step is to construct a URL for downloading, based on the
@@ -274,7 +274,7 @@ getProfiles <- function(url=NULL, destdir=".", destfile, mode="wb",
 #' must be (in days), for it to be considered out-of-date.  The
 #' default, `age=7`, limits downloads to once per week, as a way
 #' to avoid slowing down a workflow with a download that might take
-#' a sizeable fraction of an hour. Set `age=0` to force a download,
+#' a sizable fraction of an hour. Set `age=0` to force a download,
 #' regardless of the file age.
 #' @param quiet silence some progress indicators.  The default
 #' is to show such indicators.
@@ -320,6 +320,10 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
     ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
     ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
     argoFloatsDebug(debug,  "getIndex(server=\"", server, "\", file=\"", file, "\"", ", destdir=\"", destdir, "\") {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
+    if (!file.exists(destdir))
+        stop("First, create a directory named '", destdir, "'")
+    if (!file.info(destdir)$isdir)
+        stop("'", destdir, "' is not a directory")
     url <- paste(server, file, sep="/")
     destfile <- paste(destdir, file, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations

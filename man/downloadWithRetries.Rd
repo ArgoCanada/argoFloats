@@ -52,7 +52,7 @@ already exists.}
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
 
-\item{debug}{integer value indicating level of debuggin. If this
+\item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
 will print debugging information.  If a function call fails, the
 first step should be to rerun the function with \code{debug=1},

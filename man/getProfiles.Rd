@@ -51,7 +51,7 @@ already exists.}
 that indicates whether to download silently.  Since some downloads
 can be slow, the default value is \code{quiet=FALSE}.}
 
-\item{debug}{integer value indicating level of debuggin. If this
+\item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
 will print debugging information.  If a function call fails, the
 first step should be to rerun the function with \code{debug=1},

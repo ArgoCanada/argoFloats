@@ -42,13 +42,13 @@ File clutter is reduced by creating a top-level directory called
 must be (in days), for it to be considered out-of-date.  The
 default, \code{age=7}, limits downloads to once per week, as a way
 to avoid slowing down a workflow with a download that might take
-a sizeable fraction of an hour. Set \code{age=0} to force a download,
+a sizable fraction of an hour. Set \code{age=0} to force a download,
 regardless of the file age.}
 
 \item{quiet}{silence some progress indicators.  The default
 is to show such indicators.}
 
-\item{debug}{integer value indicating level of debuggin. If this
+\item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
 will print debugging information.  If a function call fails, the
 first step should be to rerun the function with \code{debug=1},
@@ -59,7 +59,7 @@ An object of class \code{argoFloats} with type=\code{"index"}.
 }
 \description{
 This function gets an index of available Argo float profiles, either by
-by downloading information from a data repository or by resusing an index
+by downloading information from a data repository or by reusing an index
 (stored as an \code{.rda} file) that was prepared by a recent call to the function.
 }
 \details{
