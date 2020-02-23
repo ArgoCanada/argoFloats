@@ -88,9 +88,11 @@ This has columns named \code{file}, \code{date}, \code{longitude}, \code{latitud
 }
 
 Note that \code{paste0(argoIndex$ftpRoot, argoIndex$data$file)} will
-form a vector of names of files that can be downloaded with
-\code{\link[=getProfiles]{getProfiles()}} and then analyzed and plotted with functions
-provided by the \CRANpkg{oce} package.
+form a vector of names of files that can be downloaded en-mass
+with \code{\link[=getProfiles]{getProfiles()}} or individually with \code{\link[=getProfileFromUrl]{getProfileFromUrl()}},
+after which the profiles may be read with \code{\link[oce:read.oce]{oce::read.oce()}}
+(or \code{\link[oce:read.argo]{oce::read.argo()}}), plotted with \code{\link[oce:plot,argo-method]{oce::plot,argo-method()}},
+etc.
 }
 \examples{
 \dontrun{
@@ -110,7 +112,4 @@ mapPoints(ai[["longitude"]], ai[["latitude"]], pch=".", col="blue")
 }
 \author{
 Dan Kelley
-
-Dan Kelley
 }
-\concept{functions related to argo data}

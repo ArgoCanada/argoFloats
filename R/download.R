@@ -172,8 +172,8 @@ downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quie
 #' @param destfile optional character value that specifies the name to be used
 #' for the downloaded file. If this is not specified, then a name is determined
 #' from the value of `url`.
-#' @template retries
 #' @template force
+#' @template retries
 #' @template quiet
 #' @template debug
 #'
@@ -200,13 +200,15 @@ downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quie
 #' argoSable <- read.oce(fileSable)
 #' plot(argoSable, which=c(1, 4, 6, 5))
 #'}
+#'
+#' @author Dan Kelley
+#'
 #' @importFrom curl curl_download
 #' @export
-#' @author Dan Kelley
 getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
-                              retries=3, force=FALSE, quiet=FALSE, debug=0)
+                              force=FALSE, retries=3, quiet=FALSE, debug=0)
 {
-    argoFloatsDebug(debug,  "getProfiles(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
+    argoFloatsDebug(debug,  "getProfileFromUrl(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
                     if (missing(destfile)) "(missing)" else destfile, "\", ...) {", sep="", "\n", style="bold", unindent=1)
     ## If the ID starts with ftp://, thn we just download the file directly, ignoring server
     if (!grepl("^ftp://", url))
@@ -217,7 +219,7 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
     }
     downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode="wb", quiet=quiet,
                         force=force, retries=retries, debug=debug-1)
-    argoFloatsDebug(debug,  "} # getProfiles()", sep="", "\n", style="bold", unindent=1)
+    argoFloatsDebug(debug,  "} # getProfileFromUrl()", sep="", "\n", style="bold", unindent=1)
     paste0(destdir, "/", destfile)
 }
 
@@ -251,9 +253,11 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #'    `ocean`, `profiler_type`, `institution`, and `date_update`.
 #'
 #' Note that `paste0(argoIndex$ftpRoot, argoIndex$data$file)` will
-#' form a vector of names of files that can be downloaded with
-#' [getProfiles()] and then analyzed and plotted with functions
-#' provided by the \CRANpkg{oce} package.
+#' form a vector of names of files that can be downloaded en-mass
+#' with [getProfiles()] or individually with [getProfileFromUrl()],
+#' after which the profiles may be read with [oce::read.oce()]
+#' (or [oce::read.argo()]), plotted with [oce::plot,argo-method()],
+#' etc.
 #'
 #' @template server
 #' @param file character value indicating the file on the server, also
@@ -294,16 +298,12 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #' mapPoints(ai[["longitude"]], ai[["latitude"]], pch=".", col="blue")
 #'}
 #'
-#' @author
-#' Dan Kelley
-#'
-#' @family functions related to argo data
+#' @author Dan Kelley
 #'
 #' @importFrom utils read.csv tail
 #' @importFrom curl curl_download
 #' @importFrom oce processingLogAppend
 #' @export
-#' @author Dan Kelley
 getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
                      file="ar_index_global_prof.txt.gz",
                      destdir=".",
@@ -386,4 +386,25 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
                                              paste("getIndex(server='", server, "', file='", file, "', age=", age, ")", sep=""))
     argoFloatsDebug(debug, "} # getIndex()\n", style="bold", unindent=1)
     res
+}
+
+
+#' Get all Profiles Named in an argoFloats Index
+#'
+#' @param index an [argoFloats-class] object of type `"index"`, as created
+#' by [getIndex()].
+#' @template destdir
+#' @template force
+#' @template retries
+#' @template quiet
+#' @template debug
+#'
+#' @return A character vector of filenames that have been downloaded, or
+#' that were already present in th `destdir` directory.
+#'
+#' @export
+getProfiles<- function(index, destdir=".",
+                       force=FALSE, retries=3, quiet=FALSE, debug=0)
+{
+    message("in getProfiles()")
 }
