@@ -3,7 +3,6 @@
 \docType{class}
 \name{argoFloats-class}
 \alias{argoFloats-class}
-\alias{argoFloats}
 \title{Class to hold argoFloats objects}
 \description{
 Class to hold argoFloats objects

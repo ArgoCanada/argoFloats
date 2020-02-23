@@ -2,7 +2,7 @@
 % Please edit documentation in R/download.R
 \name{getProfiles}
 \alias{getProfiles}
-\title{Get all Profiles Named in an argoFloats Index}
+\title{Get Profiles Named in an argoFloats Index}
 \usage{
 getProfiles(
   index,
@@ -47,5 +47,23 @@ A character vector of filenames that have been downloaded, or
 that were already present in th \code{destdir} directory.
 }
 \description{
-Get all Profiles Named in an argoFloats Index
+This takes an index constructed with \code{\link[=getIndex]{getIndex()}}, possibly
+after focussing with \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}}, and creates
+a list of files to download from the server named in the index.
+Then these files are downloaded to the \code{destdir} directory,
+using filenames inferred from the source filenames. The return
+value from \code{\link[=getProfiles]{getProfiles()}} is a character vector holding
+the full filenames of the downloaded files. See \dQuote{Examples}
+for a full worked example.
+}
+\examples{
+library(argoFloats)
+\dontrun{
+# BIO-argo profiles near Sable Island.
+ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+aiSable <- subset(ai, circle=list(longitude=-59.91, latitude=44.93, radius=150))
+namesSable <- getProfiles(aiSable)
+argosSable <- lapply(namesSable, oce::read.argo)
+}
+
 }

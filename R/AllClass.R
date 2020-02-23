@@ -9,14 +9,14 @@
 #'
 #' @importFrom methods new
 #' @import knitr
-#' @importFrom oce subset summary vectorShow
+## @importFrom oce subset summary
 #' @name argoFloats-package
 #' @docType package
 NULL
 
 #'
 #' Class to hold argoFloats objects
-argoFloats <- setClass("argoFloats", contains="oce")
+setClass("argoFloats", slots=c(metadata="list", data="list", processingLog="list"))
 
 
 setMethod(f="initialize",
@@ -35,11 +35,23 @@ setMethod(f="initialize",
 #' object, without the need to know the exact structure of the data. There are three
 #' modes of operation, as determined by the `i` argument.
 #'
+#' The possibilities for the value of `i` are as follows.
+#' 1. If `i=="metadata"` then the `metadata` slot is returned.
+#' 2. If `i=="data"` then the `data` slot is returned.
+#' 3. If `i=="ftpRoot"` then the value of `ftpRoot` in the `metadata`
+#' slot is returned.  This is used by [getProfiles()] to construct
+#' a vector of URLs to download.
+#' 4. If `i=="index"` then the `index` item in the `data` slot is
+#' returned. This can be useful in trying to understand more about
+#' the profiles, although the informaton provided is somewhat limited.
+#' 5. Otherwise, `i` must be the name of an item in the `index` item
+#' in the `data` slot, or a string that is made up of enough characters
+#' to uniquely identify such an item, e.g. `"lon"` may be used as a
+#' shortcut for `"longitude"`.
+#'
 #' @param x a [argoFloats-class] object.
-#' @param i a character value, in one of three forms. If it is `"metadata"`, then
-#' the `metadata` slot is returned.  If it is `"data"`, then the data slot is
-#' returned.  If it is the name of an item within the object's `data` slot (or
-#' a partial string match to such a name), then that item is returned.
+#' @param i a character value that specifies the item to be looked up;
+#' see \dQuote{Details}.
 #' @param j ignored.
 #' @param ... ignored.
 #'
@@ -56,6 +68,10 @@ setMethod(f="[[",
                       return(x@data)
                   } else if (i == "metadata") {
                       return(x@metadata)
+                  } else if (i == "ftpRoot") {
+                      return(x@metadata$ftpRoot)
+                  } else if (i == "index") {
+                      return(x@data$index)
                   } else {
                       names <- names(x@data$index)
                       w <- pmatch(i, names)
@@ -77,7 +93,7 @@ setMethod(f="[[",
 #'
 #' @param ... Further arguments passed to or from other methods.
 #'
-#' @importFrom oce processingLogShow vectorShow
+#' @importFrom oce processingLogShow
 #' @importFrom methods callNextMethod
 #' @importFrom utils head
 #'
@@ -155,10 +171,10 @@ setMethod(f="summary",
 #' aiFirstThree <- subset(ai, 1:3)
 #' cat("First three longitudes:", paste(aiFirstThree[["longitude"]]), "\n")
 #'
-#' # Example 2: Profiles within 50km of Sable Island
+#' # Example 2: Profiles within 150km of Sable Island
 #' lon0 <- -59.9149
 #' lat0 <- 43.9337
-#' aiSable <- subset(ai, circle=list(longitude=lon0, latitude=lat0, radius=50))
+#' aiSable <- subset(ai, circle=list(longitude=lon0, latitude=lat0, radius=150))
 #' cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 #'}
 #'

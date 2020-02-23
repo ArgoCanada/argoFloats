@@ -389,7 +389,16 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
 }
 
 
-#' Get all Profiles Named in an argoFloats Index
+#' Get Profiles Named in an argoFloats Index
+#'
+#' This takes an index constructed with [getIndex()], possibly
+#' after focussing with [subset,argoFloats-method()], and creates
+#' a list of files to download from the server named in the index.
+#' Then these files are downloaded to the `destdir` directory,
+#' using filenames inferred from the source filenames. The return
+#' value from [getProfiles()] is a character vector holding
+#' the full filenames of the downloaded files. See \dQuote{Examples}
+#' for a full worked example.
 #'
 #' @param index an [argoFloats-class] object of type `"index"`, as created
 #' by [getIndex()].
@@ -402,9 +411,29 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
 #' @return A character vector of filenames that have been downloaded, or
 #' that were already present in th `destdir` directory.
 #'
+#' @examples
+#' library(argoFloats)
+#'\dontrun{
+#' # BIO-argo profiles near Sable Island.
+#' ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+#' aiSable <- subset(ai, circle=list(longitude=-59.91, latitude=44.93, radius=150))
+#' namesSable <- getProfiles(aiSable)
+#' argosSable <- lapply(namesSable, oce::read.argo)
+#'}
+##'
 #' @export
 getProfiles<- function(index, destdir=".",
                        force=FALSE, retries=3, quiet=FALSE, debug=0)
 {
-    message("in getProfiles()")
+    argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
+    if (missing(index))
+        stop("must provide an index, as created by getIndex()")
+    urls <- paste0(index[["ftpRoot"]], "/", index[["file"]])
+    res <- NULL
+    for (url in urls) {
+        filename <- getProfileFromUrl(url, destdir=destdir, force=force, retries=retries, quiet=quiet, debug=debug)
+        res <- c(res, filename)
+    }
+    argoFloatsDebug(debug,  "} # getProfiles()\n", style="bold", showTime=FALSE, unindent=1)
+    res
 }

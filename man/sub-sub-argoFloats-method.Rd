@@ -9,10 +9,8 @@
 \arguments{
 \item{x}{a \linkS4class{argoFloats} object.}
 
-\item{i}{a character value, in one of three forms. If it is \code{"metadata"}, then
-the \code{metadata} slot is returned.  If it is \code{"data"}, then the data slot is
-returned.  If it is the name of an item within the object's \code{data} slot (or
-a partial string match to such a name), then that item is returned.}
+\item{i}{a character value that specifies the item to be looked up;
+see \dQuote{Details}.}
 
 \item{j}{ignored.}
 
@@ -22,6 +20,23 @@ a partial string match to such a name), then that item is returned.}
 This function provides an easy way to look up values within an \linkS4class{argoFloats}
 object, without the need to know the exact structure of the data. There are three
 modes of operation, as determined by the \code{i} argument.
+}
+\details{
+The possibilities for the value of \code{i} are as follows.
+\enumerate{
+\item If \code{i=="metadata"} then the \code{metadata} slot is returned.
+\item If \code{i=="data"} then the \code{data} slot is returned.
+\item If \code{i=="ftpRoot"} then the value of \code{ftpRoot} in the \code{metadata}
+slot is returned.  This is used by \code{\link[=getProfiles]{getProfiles()}} to construct
+a vector of URLs to download.
+\item If \code{i=="index"} then the \code{index} item in the \code{data} slot is
+returned. This can be useful in trying to understand more about
+the profiles, although the informaton provided is somewhat limited.
+\item Otherwise, \code{i} must be the name of an item in the \code{index} item
+in the \code{data} slot, or a string that is made up of enough characters
+to uniquely identify such an item, e.g. \code{"lon"} may be used as a
+shortcut for \code{"longitude"}.
+}
 }
 \author{
 Dan Kelley
