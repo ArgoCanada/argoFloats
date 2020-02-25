@@ -40,10 +40,8 @@ ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
 aiFirstThree <- subset(ai, 1:3)
 cat("First three longitudes:", paste(aiFirstThree[["longitude"]]), "\n")
 
-# Example 2: Profiles within 150km of Sable Island
-lon0 <- -59.9149
-lat0 <- 43.9337
-aiSable <- subset(ai, circle=list(longitude=lon0, latitude=lat0, radius=150))
+# Example 2: Profiles within 200km of Sable Island
+aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
 cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 }
 

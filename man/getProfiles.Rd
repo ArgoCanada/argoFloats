@@ -59,9 +59,9 @@ for a full worked example.
 \examples{
 library(argoFloats)
 \dontrun{
-# BIO-argo profiles near Sable Island.
+# BIO-argo profiles within 200km of Sable Island.
 ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
-aiSable <- subset(ai, circle=list(longitude=-59.91, latitude=44.93, radius=150))
+aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
 namesSable <- getProfiles(aiSable)
 argosSable <- lapply(namesSable, oce::read.argo)
 }

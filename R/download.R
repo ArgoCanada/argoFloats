@@ -414,9 +414,9 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
 #' @examples
 #' library(argoFloats)
 #'\dontrun{
-#' # BIO-argo profiles near Sable Island.
+#' # BIO-argo profiles within 200km of Sable Island.
 #' ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
-#' aiSable <- subset(ai, circle=list(longitude=-59.91, latitude=44.93, radius=150))
+#' aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
 #' namesSable <- getProfiles(aiSable)
 #' argosSable <- lapply(namesSable, oce::read.argo)
 #'}
@@ -427,15 +427,20 @@ getProfiles<- function(index, destdir=".",
 {
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
-        stop("must provide an index, as created by getIndex()")
-    urls <- paste0(index[["ftpRoot"]], "/", index[["file"]])
-    argoFloatsDebug(debug, "ftpRoot is '", index[["ftpRoot"]], "\n", sep="")
-    argoFloatsDebug(debug, "file[1:3] is c('", paste(index[["file"]][1:3], collapse="', '"), "'\n", sep="")
-    argoFloatsDebug(debug, "Created urls[1:3] is c('", paste(urls[1:3], collapse="', '"), "')\n", sep="")
+        stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
     res <- NULL
-    for (url in urls) {
-        filename <- getProfileFromUrl(url, destdir=destdir, force=force, retries=retries, quiet=quiet, debug=debug)
-        res <- c(res, filename)
+    if (!length(index[["file"]])) {
+        warning("In getProfiles() : the index has no files, so there is nothing to 'get'\n", call.=FALSE)
+    } else {
+        urls <- paste0(index[["ftpRoot"]], "/", index[["file"]])
+        argoFloatsDebug(debug, "ftpRoot is '", index[["ftpRoot"]], "\n", sep="")
+        argoFloatsDebug(debug, "file[1:3] is c('", paste(index[["file"]][1:3], collapse="', '"), "'\n", sep="")
+        argoFloatsDebug(debug, "Created urls[1:3] is c('", paste(urls[1:3], collapse="', '"), "')\n", sep="")
+        for (url in urls) {
+            filename <- getProfileFromUrl(url, destdir=destdir,
+                                          force=force, retries=retries, quiet=quiet, debug=debug)
+            res <- c(res, filename)
+        }
     }
     argoFloatsDebug(debug,  "} # getProfiles()\n", style="bold", showTime=FALSE, unindent=1)
     res

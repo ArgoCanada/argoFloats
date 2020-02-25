@@ -9,6 +9,7 @@ Maintainer: Dan Kelley <dan.kelley@dal.ca>
 Description: The 'argoFloats' package provides support for downloading and analyzing Argo float datasets.
 Depends: knitr, oce
 Imports: curl, methods
+Suggests: testthat
 License: GPL (>= 2)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2
