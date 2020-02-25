@@ -8,7 +8,6 @@
 #' guide.**
 #'
 #' @importFrom methods new
-#' @import knitr
 ## @importFrom oce subset summary
 #' @name argoFloats-package
 #' @docType package
@@ -184,7 +183,7 @@ setMethod(f="summary",
 #' @export
 setMethod(f="subset",
           signature="argoFloats",
-          definition=function(x, subset, ...) {
+          definition=function(x, subset=NULL, ...) {
               subsetString <- paste(deparse(substitute(subset)), collapse=" ")
               dots <- list(...)
               dotsNames <- names(dots)

@@ -5,7 +5,7 @@
 \alias{subset.argoFloats}
 \title{Subset an argoFloats Object}
 \usage{
-\S4method{subset}{argoFloats}(x, subset, ...)
+\S4method{subset}{argoFloats}(x, subset = NULL, ...)
 }
 \arguments{
 \item{x}{an \linkS4class{argoFloats} object.}

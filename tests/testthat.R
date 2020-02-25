@@ -1,4 +1,4 @@
 library(argoFloats)
 
-test_check("argoFloats")
+testthat::test_check("argoFloats")
 
