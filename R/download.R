@@ -427,8 +427,9 @@ getProfiles<- function(index, destdir=".",
 {
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
-        stop("must provide an index, as created by getIndex()")
+        stop("must provide an index, as created by getIndex()") 
     urls <- paste0(index[["ftpRoot"]], "/", index[["file"]])
+    message('urls=', paste(urls,collapse=','))
     res <- NULL
     for (url in urls) {
         filename <- getProfileFromUrl(url, destdir=destdir, force=force, retries=retries, quiet=quiet, debug=debug)

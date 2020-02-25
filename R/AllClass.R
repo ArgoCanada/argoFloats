@@ -159,7 +159,7 @@ setMethod(f="summary",
 #' @param ... a single named list. At the moment, the only possibility
 #' is a list named `circle`, which holds elements named `longitude`,
 #' `latitude` and `radius`.  The first two specify a location, and
-#" the third species a search radius in kilometers, as in Example 2.
+#' the third species a search radius in kilometers, as in Example 2.
 #'
 #' @return An [argoFloats-class] object.
 #'

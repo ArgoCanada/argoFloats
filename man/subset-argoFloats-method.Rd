@@ -15,7 +15,8 @@ indices of \code{x@data$index} to keep.  See example 1.}
 
 \item{...}{a single named list. At the moment, the only possibility
 is a list named \code{circle}, which holds elements named \code{longitude},
-\code{latitude} and \code{radius}.  The first two specify a location, and}
+\code{latitude} and \code{radius}.  The first two specify a location, and
+the third species a search radius in kilometers, as in Example 2.}
 }
 \value{
 An \linkS4class{argoFloats} object.
