@@ -5,3 +5,4 @@
 .Rproj.user
 .*.swp
 Rplot.*png
+.Rapp.history
