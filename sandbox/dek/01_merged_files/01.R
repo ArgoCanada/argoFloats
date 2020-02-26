@@ -11,5 +11,7 @@
 ##> aoml/1900722/profiles/MD1900722_001.nc,20061022021624,-40.316,73.389,I,846,AO,PRES TEMP PSAL DOXY,DDDR,20161021233045
 ##> aoml/1900722/profiles/MD1900722_002.nc,20061101064423,-40.390,73.528,I,846,AO,PRES TEMP PSAL DOXY,DDDR,20161021224705
 
-d <- read.csv("argo_merge-profile_index.txt.gz", skip=8, header=FALSE)
+d <- read.csv("argo_merge-profile_index.txt.gz", skip=9, header=FALSE)
+head(d, 1)
+unique(d$V7)
 
