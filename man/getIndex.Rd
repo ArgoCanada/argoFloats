@@ -42,25 +42,24 @@ File clutter is reduced by creating a top-level directory called
 must be (in days), for it to be considered out-of-date.  The
 default, \code{age=7}, limits downloads to once per week, as a way
 to avoid slowing down a workflow with a download that might take
-a sizeable fraction of an hour. Set \code{age=0} to force a download,
+a sizable fraction of an hour. Set \code{age=0} to force a download,
 regardless of the file age.}
 
 \item{quiet}{silence some progress indicators.  The default
 is to show such indicators.}
 
-\item{debug}{integer value indicating level of debuggin. If this
+\item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
 will print debugging information.  If a function call fails, the
 first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-A character value holding the name of the \code{.rda} file,
-which is typically loaded with \code{\link[=load]{load()}}; see \dQuote{Examples}.
+An object of class \code{argoFloats} with type=\code{"index"}.
 }
 \description{
 This function gets an index of available Argo float profiles, either by
-by downloading information from a data repository or by resusing an index
+by downloading information from a data repository or by reusing an index
 (stored as an \code{.rda} file) that was prepared by a recent call to the function.
 }
 \details{
@@ -89,43 +88,28 @@ This has columns named \code{file}, \code{date}, \code{longitude}, \code{latitud
 }
 
 Note that \code{paste0(argoIndex$ftpRoot, argoIndex$data$file)} will
-form a vector of names of files that can be downloaded with
-\code{\link[=getProfiles]{getProfiles()}} and then analyzed and plotted with functions
-provided by the \CRANpkg{oce} package.
+form a vector of names of files that can be downloaded en-mass
+with \code{\link[=getProfiles]{getProfiles()}} or individually with \code{\link[=getProfileFromUrl]{getProfileFromUrl()}},
+after which the profiles may be read with \code{\link[oce:read.oce]{oce::read.oce()}}
+(or \code{\link[oce:read.argo]{oce::read.argo()}}), plotted with \code{\link[oce:plot,argo-method]{oce::plot,argo-method()}},
+etc.
 }
 \examples{
 \dontrun{
-# These examples assume that the ~/data/argo directory exists and is readable.
 library(argoFloats)
-#
-# Example 1: non-bio argo
-# Get the index
-theIndex <- getIndex(destdir="~/data/argo")
-# Load the index. Note that this places 'index' in the current environment,
-# so in what follows, we use index$data.  Be sure to rename 'index'
-# if you want to work with more than one index at a time.
-load(theIndex) # defines 'index'
-# Plot histograms of 'date' and 'date_update'
+library(oce)
+# Example: Temporal and spatial coverage of BIO-Argo floats.
 par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
-hist(index$data$date, breaks="years",
-     main="", xlab="Time", freq=TRUE)
-hist(index$data$date_update, breaks="years",
-     main="", xlab="Last Update Time", freq=TRUE)
-
-# Example 2: as above, but for bio argo.  Note that this redefines 'index'.
-theBioargoIndex <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
-load(theBioargoIndex) # defines 'index' (destroying that from Example 1)
-par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
-hist(index$data$date, breaks="years",
-     main="", xlab="Time", freq=TRUE)
-hist(index$data$date_update, breaks="years",
-     main="", xlab="Last Update Time", freq=TRUE)
+ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+summary(ai)
+hist(ai[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
+data(coastlineWorld)
+par(mar=rep(0.5, 4))
+mapPlot(coastlineWorld, col="gray")
+mapPoints(ai[["longitude"]], ai[["latitude"]], pch=".", col="blue")
 }
 
 }
 \author{
 Dan Kelley
-
-Dan Kelley
 }
-\concept{functions related to argo data}

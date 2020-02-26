@@ -1,14 +1,14 @@
 Package: argoFloats
 Type: Package
 Title: Tools for analyzing collections of oceanographic Argo floats
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person(given="Dan", family="Kelley", email="Dan.Kelley@Dal.Ca", role=c("aut", "cre"), comment=c(ORCID="https://orcid.org/0000-0001-7808-5911")))
 URL: https://dankelley.github.io/argoFloats/index.html
 Maintainer: Dan Kelley <dan.kelley@dal.ca>
 Description: The 'argoFloats' package provides support for downloading and analyzing Argo float datasets.
-Suggests: oce
-Imports: curl
+Imports: curl, methods, oce
+Suggests: testthat
 License: GPL (>= 2)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2
