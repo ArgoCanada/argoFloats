@@ -42,7 +42,7 @@ setMethod(f="initialize",
 #' a vector of URLs to download.
 #' 4. If `i=="index"` then the `index` item in the `data` slot is
 #' returned. This can be useful in trying to understand more about
-#' the profiles, although the informaton provided is somewhat limited.
+#' the profiles, although the information provided is somewhat limited.
 #' 5. Otherwise, `i` must be the name of an item in the `index` item
 #' in the `data` slot, or a string that is made up of enough characters
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a

@@ -21,14 +21,8 @@ now fails.}
 
 \item{file}{character value indicating the file on the server, also
 used as a pattern for the name of a constructed \code{.rda} file that
-is placed in the \code{destdir} directory.
-For the \verb{ftp://usgodae.org/pub/outgoing/argo} server,
-two of multiple choices for \code{file} are
-\code{ar_index_global_prof.txt.gz}
-(which is the default for this function) and
-\code{argo_bio-profile_index.txt.gz}
-but examination of the server will reveal other possibilities
-that might be worth exploring.}
+is placed in the \code{destdir} directory. See \dQuote{Details} for
+advice on choosing a value for \code{file}.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value of \code{"."} means to store the
@@ -55,7 +49,8 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-An object of class \code{argoFloats} with type=\code{"index"}.
+An object of class \linkS4class{argoFloats} with type=\code{"index"}, which
+is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 }
 \description{
 This function gets an index of available Argo float profiles, either by
@@ -88,11 +83,34 @@ This has columns named \code{file}, \code{date}, \code{longitude}, \code{latitud
 }
 
 Note that \code{paste0(argoIndex$ftpRoot, argoIndex$data$file)} will
-form a vector of names of files that can be downloaded en-mass
-with \code{\link[=getProfiles]{getProfiles()}} or individually with \code{\link[=getProfileFromUrl]{getProfileFromUrl()}},
-after which the profiles may be read with \code{\link[oce:read.oce]{oce::read.oce()}}
-(or \code{\link[oce:read.argo]{oce::read.argo()}}), plotted with \code{\link[oce:plot,argo-method]{oce::plot,argo-method()}},
-etc.
+form a vector of URLs pointing to argo netcdf files that can be
+downloaded with any system tool for downloading files, but it
+is more practical to use \code{\link[=getProfileFromUrl]{getProfileFromUrl()}}, which also checks
+to see if the data has already been constructed for a given URL.
+Even better, one should use \code{\link[=getProfiles]{getProfiles()}}, which computes
+a set of relevant URLs based on the contents of the index, and
+places the results in the \code{destfile} directory that was supplied
+to \code{\link[=getIndex]{getIndex()}}, and stored in the index.
+
+Some expertise is required in deciding on the value for the
+\code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of February 2020, the
+FTP site \verb{ftp://usgodae.org/pub/outgoing/argo} contains the following
+files that appear to be indices.  The notes to the right indicate
+a guess as to the file meanings. (Note that there are also some files
+that do not end in \code{.gz}, but these ought to be ignored, because the
+\code{.gz} files are faster to download, and \code{\link[=getIndex]{getIndex()}} is designed to
+work with them.)
+\tabular{ll}{
+\emph{File}                            \tab \emph{Contents}\cr
+\code{ar_greylist.txt}                 \tab \strong{FIXME(jlh)}: add something here, please.\cr
+\code{ar_index_global_meta.txt.gz}     \tab \strong{FIXME(jlh)}: add something here, please.\cr
+\code{ar_index_global_prof.txt.gz}     \tab Argo data.\cr
+\code{ar_index_global_tech.txt.gz}     \tab \strong{FIXME(jlh)}: add something here, please.\cr
+\code{ar_index_global_traj.txt.gz}     \tab \strong{FIXME(jlh)}: add something here, please.\cr
+\code{argo_bio-profile_index.txt.gz}   \tab Bio-Argo data (which lacks S and T).\cr
+\code{argo_bio-traj_index.txt.gz}      \tab \strong{FIXME(jlh)}: add something here, please.\cr
+\code{argo_merge-profile_index.txt.gz} \tab Merged Argo and Bio-Argo data.\cr
+}
 }
 \examples{
 \dontrun{

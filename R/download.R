@@ -253,23 +253,40 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #'    `ocean`, `profiler_type`, `institution`, and `date_update`.
 #'
 #' Note that `paste0(argoIndex$ftpRoot, argoIndex$data$file)` will
-#' form a vector of names of files that can be downloaded en-mass
-#' with [getProfiles()] or individually with [getProfileFromUrl()],
-#' after which the profiles may be read with [oce::read.oce()]
-#' (or [oce::read.argo()]), plotted with [oce::plot,argo-method()],
-#' etc.
+#' form a vector of URLs pointing to argo netcdf files that can be
+#' downloaded with any system tool for downloading files, but it
+#' is more practical to use [getProfileFromUrl()], which also checks
+#' to see if the data has already been constructed for a given URL.
+#' Even better, one should use [getProfiles()], which computes
+#' a set of relevant URLs based on the contents of the index, and
+#' places the results in the `destfile` directory that was supplied
+#' to [getIndex()], and stored in the index.
+#'
+#' Some expertise is required in deciding on the value for the
+#' `file` argument to [getIndex()].  As of February 2020, the
+#' FTP site `ftp://usgodae.org/pub/outgoing/argo` contains the following
+#' files that appear to be indices.  The notes to the right indicate
+#' a guess as to the file meanings. (Note that there are also some files
+#' that do not end in `.gz`, but these ought to be ignored, because the
+#' `.gz` files are faster to download, and [getIndex()] is designed to
+#' work with them.)
+#' \tabular{ll}{
+#' *File*                            \tab *Contents*\cr
+#' `ar_greylist.txt`                 \tab **FIXME(jlh)**: add something here, please.\cr
+#' `ar_index_global_meta.txt.gz`     \tab **FIXME(jlh)**: add something here, please.\cr
+#' `ar_index_global_prof.txt.gz`     \tab Argo data.\cr
+#' `ar_index_global_tech.txt.gz`     \tab **FIXME(jlh)**: add something here, please.\cr
+#' `ar_index_global_traj.txt.gz`     \tab **FIXME(jlh)**: add something here, please.\cr
+#' `argo_bio-profile_index.txt.gz`   \tab Bio-Argo data (which lacks S and T).\cr
+#' `argo_bio-traj_index.txt.gz`      \tab **FIXME(jlh)**: add something here, please.\cr
+#' `argo_merge-profile_index.txt.gz` \tab Merged Argo and Bio-Argo data.\cr
+#' }
 #'
 #' @template server
 #' @param file character value indicating the file on the server, also
 #' used as a pattern for the name of a constructed `.rda` file that
-#' is placed in the `destdir` directory.
-#' For the `ftp://usgodae.org/pub/outgoing/argo` server,
-#' two of multiple choices for `file` are
-#' `ar_index_global_prof.txt.gz`
-#' (which is the default for this function) and
-#' `argo_bio-profile_index.txt.gz`
-#' but examination of the server will reveal other possibilities
-#' that might be worth exploring.
+#' is placed in the `destdir` directory. See \dQuote{Details} for
+#' advice on choosing a value for `file`.
 #' @template destdir
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
@@ -281,7 +298,8 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #' is to show such indicators.
 #' @template debug
 #'
-#' @return An object of class `argoFloats` with type=`"index"`.
+#' @return An object of class [argoFloats-class] with type=`"index"`, which
+#' is suitable as the first argument of [getProfiles()].
 #'
 #' @examples
 #'\dontrun{
@@ -392,7 +410,7 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
 #' Get Profiles Named in an argoFloats Index
 #'
 #' This takes an index constructed with [getIndex()], possibly
-#' after focussing with [subset,argoFloats-method()], and creates
+#' after focusing with [subset,argoFloats-method()], and creates
 #' a list of files to download from the server named in the index.
 #' Then these files are downloaded to the `destdir` directory,
 #' using filenames inferred from the source filenames. The return
@@ -409,7 +427,7 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
 #' @template debug
 #'
 #' @return A character vector of filenames that have been downloaded, or
-#' that were already present in th `destdir` directory.
+#' that were already present in the `destdir` directory.
 #'
 #' @examples
 #' library(argoFloats)
@@ -422,7 +440,7 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
 #'}
 ##'
 #' @export
-getProfiles<- function(index, destdir=".",
+getProfiles <- function(index, destdir=".",
                        force=FALSE, retries=3, quiet=FALSE, debug=0)
 {
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)

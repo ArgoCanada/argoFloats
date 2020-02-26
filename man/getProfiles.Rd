@@ -44,11 +44,11 @@ to see if the output suggests a problem in the call.}
 }
 \value{
 A character vector of filenames that have been downloaded, or
-that were already present in th \code{destdir} directory.
+that were already present in the \code{destdir} directory.
 }
 \description{
 This takes an index constructed with \code{\link[=getIndex]{getIndex()}}, possibly
-after focussing with \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}}, and creates
+after focusing with \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}}, and creates
 a list of files to download from the server named in the index.
 Then these files are downloaded to the \code{destdir} directory,
 using filenames inferred from the source filenames. The return

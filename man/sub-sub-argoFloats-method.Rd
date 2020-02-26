@@ -31,7 +31,7 @@ slot is returned.  This is used by \code{\link[=getProfiles]{getProfiles()}} to 
 a vector of URLs to download.
 \item If \code{i=="index"} then the \code{index} item in the \code{data} slot is
 returned. This can be useful in trying to understand more about
-the profiles, although the informaton provided is somewhat limited.
+the profiles, although the information provided is somewhat limited.
 \item Otherwise, \code{i} must be the name of an item in the \code{index} item
 in the \code{data} slot, or a string that is made up of enough characters
 to uniquely identify such an item, e.g. \code{"lon"} may be used as a
