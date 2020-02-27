@@ -189,7 +189,7 @@ downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quie
 #' argo <- read.argo(file)
 #' plot(argo, which=c(1, 4, 6, 5))
 #'
-#' # Example 2: profile nearest Sable Island
+#' # Example 2: argo profile nearest Sable Island
 #' index <- getIndex(destdir="~/data/argo")
 #' lon0 <- -59.9149
 #' lat0 <- 43.9337
@@ -249,8 +249,10 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #' * `header`, the preliminary lines in the source file that start
 #'    with the `#` character.
 #' * `data`, a data frame containing the items in the source file.
-#'    This has columns named `file`, `date`, `longitude`, `latitude`,
-#'    `ocean`, `profiler_type`, `institution`, and `date_update`.
+#'    The names of these items are determined automatically from
+#'    `"argo"` and `"bcgargo"` files, but for `"merged"` files,
+#'    the header is malformed (as of February 2020) and so the names
+#'    are set based on the authors' inspection of a downloaded file.
 #'
 #' Note that `paste0(argoIndex$ftpRoot, argoIndex$data$file)` will
 #' form a vector of URLs pointing to argo netcdf files that can be
@@ -264,39 +266,35 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #'
 #' Some expertise is required in deciding on the value for the
 #' `file` argument to [getIndex()].  As of February 2020, the
-#' FTP site `ftp://usgodae.org/pub/outgoing/argo` contains the following
-#' files that appear to be indices.  The notes to the right indicate
-#' a guess as to the file meanings. (Note that there are also some files
-#' that do not end in `.gz`, but these ought to be ignored, because the
-#' `.gz` files are faster to download, and [getIndex()] is designed to
-#' work with them.)
-#' \tabular{ll}{
-#' *File*                            \tab *Contents*\cr
-#' `ar_greylist.txt`                 \tab **FIXME(jlh)**: add something here, please.\cr
-#' `ar_index_global_meta.txt.gz`     \tab **FIXME(jlh)**: add something here, please.\cr
-#' `ar_index_global_prof.txt.gz`     \tab Argo data.\cr
-#' `ar_index_global_tech.txt.gz`     \tab **FIXME(jlh)**: add something here, please.\cr
-#' `ar_index_global_traj.txt.gz`     \tab **FIXME(jlh)**: add something here, please.\cr
-#' `argo_bio-profile_index.txt.gz`   \tab Bio-Argo data (which lacks S and T).\cr
-#' `argo_bio-traj_index.txt.gz`      \tab **FIXME(jlh)**: add something here, please.\cr
-#' `argo_merge-profile_index.txt.gz` \tab Merged Argo and Bio-Argo data.\cr
+#' FTP site `ftp://usgodae.org/pub/outgoing/argo` contains multiple
+#' files that appear to be indices.  These are listed as the left-hand
+#' column in the following table. The middle column is a "nickname"
+#' for the file (and can be provided as the `file` argument to the
+#' [getIndex()] function).  The right-hand column is a brief
+#' description of the file contents, inferred by examination
+#' of the file.  (Note that there some files on the server
+#' have names similar to those given below, but ending in `.txt` instead
+#' of `.txt.gz`, but these files take longer to download and
+#' seem to be equivalent to the `.gz` versions, so [getIndex()] is
+#' designed to work with them.)
+#' \tabular{lll}{
+#' *File Name*                       \tab *Nickname*  \tab *Contents*\cr
+#' `ar_greylist.txt`                 \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
+#' `ar_index_global_meta.txt.gz`     \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
+#' `ar_index_global_prof.txt.gz`     \tab `"argo"`    \tab Argo data.\cr
+#' `ar_index_global_tech.txt.gz`     \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
+#' `ar_index_global_traj.txt.gz`     \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
+#' `argo_bio-profile_index.txt.gz`   \tab `"bcgargo"` \tab biogeochemical Argo data (without S or T).\cr
+#' `argo_bio-traj_index.txt.gz`      \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
+#' `argo_merge-profile_index.txt.gz` \tab `"merged"`  \tab Merged argo and bgcargo data.\cr
 #' }
 #'
 #' @template server
-#' @param file character value that indicates the file name on the server.
-#' This may be either a nickname for the file, or the actual name of the file.
-#' There are three permitted nicknames: `"argo"`, which is the default
-#' value for `file`, and which is converted to `"ar_index_global_prof.txt.gz"`
-#' by [getIndex()]; `"argo_bio"` (converted to `"argo_bio-profile_index.txt.gz"`),
-#' and `argo_merge` (converted to `"argo_merge-profile_index.txt.gz"`).
-#' If `file` is not one of these three nicknames, then [getIndex()] takes it
-#' to be a literal name. In every case, it is the full name on the server
-#' that is used for the output filename, so that e.g. `file="argo"`
-#' saves the file as `paste0(destdir,"/ar_index_global_prof.txt.gz")`.
-#' See \dQuote{Details} for more on the names of `file` that exist on
-#' the `ftp://usgodae.org` server, as of February 2020, but note that this
-#' package only handles the three types of files for which nicknames
-#' are provided.
+#' @param file character value that indicates the file name on the server, as in
+#' the first column of the table given in \dQuote{Details}, or (for some file types)
+#' as in the nickname given in the middle column. Note that the downloaded
+#' file name will be based on the full file name given as this argument, and
+#' that nicknames are expanded to the full filenames before saving.
 #' @template destdir
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
@@ -315,9 +313,9 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #'\dontrun{
 #' library(argoFloats)
 #' library(oce)
-#' # Example: Temporal and spatial coverage of BIO-Argo floats.
+#' # Example: Temporal and spatial coverage of merged argo/bgcargo measurements.
 #' par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
-#' ai <- getIndex(file="argo_bio", destdir="~/data/argo")
+#' ai <- getIndex(file="merged", destdir="~/data/argo")
 #' summary(ai)
 #' hist(ai[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
 #' data(coastlineWorld)
@@ -336,7 +334,8 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
                      file="argo",
                      destdir=".",
                      age=7,
-                     quiet=FALSE, debug=0)
+                     quiet=FALSE,
+                     debug=0)
 {
     ## Sample file
     ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
@@ -354,10 +353,10 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
     if (file == "argo") {
         file <- "ar_index_global_prof.txt.gz"
         argoFloatsDebug(debug, "file=\"argo\" converted to file=\"", file, "\"", sep="")
-    } else if (file == "argo_bio") {
+    } else if (file == "bgcargo") {
         file <- "argo_bio-profile_index.txt.gz"
-        argoFloatsDebug(debug, "file=\"argo_bio\" converted to file=\"", file, "\"", sep="")
-    } else if (file == "argo_merge") {
+        argoFloatsDebug(debug, "file=\"bgcargo\" converted to file=\"", file, "\"", sep="")
+    } else if (file == "merged") {
         file <- "argo_merge-profile_index.txt.gz"
         argoFloatsDebug(debug, "file=\"argo_merge\" converted to file=\"", file, "\"", sep="")
     }
@@ -400,6 +399,12 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
     header <- first[hash]
     lastHash <- tail(hash, 1)
     names <- strsplit(first[1 + lastHash], ",")[[1]]
+    if (grepl("merge", file)) {
+        names <- c("file", "date", "latitude", "longitude", "ocean",
+                   "profiler_type", "institution", "parameters",
+                   "param_data_mode", "date_update")
+        argoFloatsDebug(debug, "skipping (flawed) header in the merged file\n", sep="")
+    }
     argoFloatsDebug(debug, "about to read the newly-downloaded index file.\n", sep="")
     index <- read.csv(destfileTemp, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE)
     argoFloatsDebug(debug, "setting out-of-range latitude and longitude to NA.\n", sep="")
@@ -454,8 +459,8 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
 #' @examples
 #' library(argoFloats)
 #'\dontrun{
-#' # BIO-argo profiles within 200km of Sable Island.
-#' ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+#' # Argo profiles within 200km of Sable Island.
+#' ai <- getIndex(destdir="~/data/argo")
 #' aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
 #' namesSable <- getProfiles(aiSable)
 #' argosSable <- lapply(namesSable, oce::read.argo)
