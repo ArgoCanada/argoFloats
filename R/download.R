@@ -283,10 +283,20 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #' }
 #'
 #' @template server
-#' @param file character value indicating the file on the server, also
-#' used as a pattern for the name of a constructed `.rda` file that
-#' is placed in the `destdir` directory. See \dQuote{Details} for
-#' advice on choosing a value for `file`.
+#' @param file character value that indicates the file name on the server.
+#' This may be either a nickname for the file, or the actual name of the file.
+#' There are three permitted nicknames: `"argo"`, which is the default
+#' value for `file`, and which is converted to `"ar_index_global_prof.txt.gz"`
+#' by [getIndex()]; `"argo_bio"` (converted to `"argo_bio-profile_index.txt.gz"`),
+#' and `argo_merge` (converted to `"argo_merge-profile_index.txt.gz"`).
+#' If `file` is not one of these three nicknames, then [getIndex()] takes it
+#' to be a literal name. In every case, it is the full name on the server
+#' that is used for the output filename, so that e.g. `file="argo"`
+#' saves the file as `paste0(destdir,"/ar_index_global_prof.txt.gz")`.
+#' See \dQuote{Details} for more on the names of `file` that exist on
+#' the `ftp://usgodae.org` server, as of February 2020, but note that this
+#' package only handles the three types of files for which nicknames
+#' are provided.
 #' @template destdir
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
@@ -307,7 +317,7 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #' library(oce)
 #' # Example: Temporal and spatial coverage of BIO-Argo floats.
 #' par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
-#' ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+#' ai <- getIndex(file="argo_bio", destdir="~/data/argo")
 #' summary(ai)
 #' hist(ai[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
 #' data(coastlineWorld)
@@ -323,22 +333,34 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #' @importFrom oce processingLogAppend
 #' @export
 getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
-                     file="ar_index_global_prof.txt.gz",
+                     file="argo",
                      destdir=".",
                      age=7,
                      quiet=FALSE, debug=0)
 {
-    if (!requireNamespace("curl", quietly=TRUE))
-        stop('must install.packages("curl") to download Argo data')
-    res <- new("argoFloats", type="index")
     ## Sample file
     ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
     ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
+    if (!requireNamespace("curl", quietly=TRUE))
+        stop('must install.packages("curl") to download Argo data')
+    res <- new("argoFloats", type="index")
     argoFloatsDebug(debug,  "getIndex(server=\"", server, "\", file=\"", file, "\"", ", destdir=\"", destdir, "\") {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
+    ## Ensure that we can save the file
     if (!file.exists(destdir))
         stop("First, create a directory named '", destdir, "'")
     if (!file.info(destdir)$isdir)
         stop("'", destdir, "' is not a directory")
+    ## Handle nicknames
+    if (file == "argo") {
+        file <- "ar_index_global_prof.txt.gz"
+        argoFloatsDebug(debug, "file=\"argo\" converted to file=\"", file, "\"", sep="")
+    } else if (file == "argo_bio") {
+        file <- "argo_bio-profile_index.txt.gz"
+        argoFloatsDebug(debug, "file=\"argo_bio\" converted to file=\"", file, "\"", sep="")
+    } else if (file == "argo_merge") {
+        file <- "argo_merge-profile_index.txt.gz"
+        argoFloatsDebug(debug, "file=\"argo_merge\" converted to file=\"", file, "\"", sep="")
+    }
     url <- paste(server, file, sep="/")
     destfile <- paste(destdir, file, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations

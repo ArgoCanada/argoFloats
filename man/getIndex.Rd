@@ -6,7 +6,7 @@
 \usage{
 getIndex(
   server = "ftp://usgodae.org/pub/outgoing/argo",
-  file = "ar_index_global_prof.txt.gz",
+  file = "argo",
   destdir = ".",
   age = 7,
   quiet = FALSE,
@@ -19,10 +19,20 @@ construction of URL queries. Since servers tend to change over time, this
 is a good argument to check, when debugging code that once worked but
 now fails.}
 
-\item{file}{character value indicating the file on the server, also
-used as a pattern for the name of a constructed \code{.rda} file that
-is placed in the \code{destdir} directory. See \dQuote{Details} for
-advice on choosing a value for \code{file}.}
+\item{file}{character value that indicates the file name on the server.
+This may be either a nickname for the file, or the actual name of the file.
+There are three permitted nicknames: \code{"argo"}, which is the default
+value for \code{file}, and which is converted to \code{"ar_index_global_prof.txt.gz"}
+by \code{\link[=getIndex]{getIndex()}}; \code{"argo_bio"} (converted to \code{"argo_bio-profile_index.txt.gz"}),
+and \code{argo_merge} (converted to \code{"argo_merge-profile_index.txt.gz"}).
+If \code{file} is not one of these three nicknames, then \code{\link[=getIndex]{getIndex()}} takes it
+to be a literal name. In every case, it is the full name on the server
+that is used for the output filename, so that e.g. \code{file="argo"}
+saves the file as \code{paste0(destdir,"/ar_index_global_prof.txt.gz")}.
+See \dQuote{Details} for more on the names of \code{file} that exist on
+the \verb{ftp://usgodae.org} server, as of February 2020, but note that this
+package only handles the three types of files for which nicknames
+are provided.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value of \code{"."} means to store the
@@ -118,7 +128,7 @@ library(argoFloats)
 library(oce)
 # Example: Temporal and spatial coverage of BIO-Argo floats.
 par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
-ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+ai <- getIndex(file="argo_bio", destdir="~/data/argo")
 summary(ai)
 hist(ai[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
 data(coastlineWorld)
