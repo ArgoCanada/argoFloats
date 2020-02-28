@@ -21,9 +21,12 @@
 #' are using the most time.
 #' @param unindent integer specifying the degree of reverse indentation
 #' to be done, as explained in the \dQuote{Details} section.
-#' @importFrom utils flush.console
-#' @export
+#'
 #' @author Dan Kelley
+#'
+#' @importFrom utils flush.console
+#'
+#' @export
 argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=TRUE, unindent=0)
 {
     debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
@@ -345,6 +348,7 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
     if (!requireNamespace("curl", quietly=TRUE))
         stop('must install.packages("curl") to download Argo data')
     res <- new("argoFloats", type="index")
+    res@metadata$destdir <- destdir
     argoFloatsDebug(debug,  "getIndex(server=\"", server, "\", file=\"", file, "\"", ", destdir=\"", destdir, "\") {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     ## Ensure that we can save the file
     if (!file.exists(destdir))
@@ -380,6 +384,7 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
             argoFloatsDebug(debug, "finished loading '", destfileRda, "'.\n", sep="")
             res@metadata$server <- server
             res@metadata$file <- file
+            res@metadata$destdir <- destdir
             res@metadata$destfileRda <- destfileRda
             res@metadata$server <- argoFloatsIndex$server
             res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
@@ -442,53 +447,52 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
 #' after focusing with [subset,argoFloats-method()], and creates
 #' a list of files to download from the server named in the index.
 #' Then these files are downloaded to the `destdir` directory,
-#' using filenames inferred from the source filenames. The return
-#' value from [getProfiles()] is a character vector holding
-#' the full filenames of the downloaded files. See \dQuote{Examples}
-#' for a full worked example.
+#' using filenames inferred from the source filenames. The
+#' value returned by [getProfiles()] is suitable for use
+#' by [readProfiles()], and an example of this is given
+#' in the documentation for the latter function.
 #'
 #' @param index an [argoFloats-class] object of type `"index"`, as created
 #' by [getIndex()].
-#' @template destdir
 #' @template force
 #' @template retries
 #' @template quiet
 #' @template debug
 #'
-#' @return A character vector of filenames that have been downloaded, or
-#' that were already present in the `destdir` directory.
+#' @return An object of class [argoFloats-class] with type=`"profiles"`, which
+#' is suitable as the first argument of [readProfiles()].
 #'
-#' @examples
-#' library(argoFloats)
-#'\dontrun{
-#' # Argo profiles within 200km of Sable Island.
-#' ai <- getIndex(destdir="~/data/argo")
-#' aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
-#' namesSable <- getProfiles(aiSable)
-#' argosSable <- lapply(namesSable, oce::read.argo)
-#'}
-##'
+#' @author Dan Kelley
+#'
+#' @importFrom oce processingLogAppend vectorShow
+#'
 #' @export
-getProfiles <- function(index, destdir=".",
-                       force=FALSE, retries=3, quiet=FALSE, debug=0)
+getProfiles <- function(index, force=FALSE, retries=3, quiet=FALSE, debug=0)
 {
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
         stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
-    res <- NULL
-    if (!length(index[["file"]])) {
+    if (!inherits(index, "argoFloats"))
+        stop("'index' must be an object created by getIndex()")
+    res <- new("argoFloats", type="profiles")
+    n <- length(index[["file"]])
+    if (n == 0) {
         warning("In getProfiles() : the index has no files, so there is nothing to 'get'\n", call.=FALSE)
+        file <- NULL
     } else {
+        file <- rep("", n)
+        argoFloatsDebug(debug, vectorShow(index[["ftpRoot"]]))
+        argoFloatsDebug(debug, vectorShow(index[["file"]]))
         urls <- paste0(index[["ftpRoot"]], "/", index[["file"]])
-        argoFloatsDebug(debug, "ftpRoot is '", index[["ftpRoot"]], "\n", sep="")
-        argoFloatsDebug(debug, "file[1:3] is c('", paste(index[["file"]][1:3], collapse="', '"), "'\n", sep="")
-        argoFloatsDebug(debug, "Created urls[1:3] is c('", paste(urls[1:3], collapse="', '"), "')\n", sep="")
-        for (url in urls) {
-            filename <- getProfileFromUrl(url, destdir=destdir,
-                                          force=force, retries=retries, quiet=quiet, debug=debug)
-            res <- c(res, filename)
+        argoFloatsDebug(debug, oce::vectorShow(urls))
+        for (i in seq_along(urls)) {
+            file[i] <- getProfileFromUrl(urls[i], destdir=index[["destdir"]],
+                                         force=force, retries=retries, quiet=quiet, debug=debug)
         }
     }
+    res@metadata$destdir <- index[["destdir"]]
+    res@data$file <- file
+    res@processingLog <- processingLogAppend(res@processingLog, "getProfiles(index, ...)")
     argoFloatsDebug(debug,  "} # getProfiles()\n", style="bold", showTime=FALSE, unindent=1)
     res
 }

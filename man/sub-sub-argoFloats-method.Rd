@@ -29,9 +29,14 @@ The possibilities for the value of \code{i} are as follows.
 \item If \code{i=="ftpRoot"} then the value of \code{ftpRoot} in the \code{metadata}
 slot is returned.  This is used by \code{\link[=getProfiles]{getProfiles()}} to construct
 a vector of URLs to download.
-\item If \code{i=="index"} then the \code{index} item in the \code{data} slot is
-returned. This can be useful in trying to understand more about
-the profiles, although the information provided is somewhat limited.
+\item If \code{i=="ftpRoot"} then the value of \code{ftpRoot} in the \code{metadata}
+\item If \code{i=="destdir"} then the \code{destdir} item in the \code{metadata} slot is
+returned. This is used by \code{\link[=getProfiles]{getProfiles()}} to decide where to
+save downloaded files, and later by \code{\link[=readProfiles]{readProfiles()}}, which
+works with the output from \code{\link[=getProfiles]{getProfiles()}}.
+\item If \code{i=="type"} then the \code{type} item in the \code{metadata} slot is
+returned. This is \code{"index"} if the object was created with
+\code{\link[=getIndex]{getIndex()}} and \code{"profiles"} if it was created with \code{\link[=getProfiles]{getProfiles()}}.
 \item Otherwise, \code{i} must be the name of an item in the \code{index} item
 in the \code{data} slot, or a string that is made up of enough characters
 to uniquely identify such an item, e.g. \code{"lon"} may be used as a

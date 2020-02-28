@@ -42,10 +42,15 @@ setMethod(f="initialize",
 #' 3. If `i=="ftpRoot"` then the value of `ftpRoot` in the `metadata`
 #' slot is returned.  This is used by [getProfiles()] to construct
 #' a vector of URLs to download.
-#' 4. If `i=="index"` then the `index` item in the `data` slot is
-#' returned. This can be useful in trying to understand more about
-#' the profiles, although the information provided is somewhat limited.
-#' 5. Otherwise, `i` must be the name of an item in the `index` item
+#' 3. If `i=="ftpRoot"` then the value of `ftpRoot` in the `metadata`
+#' 5. If `i=="destdir"` then the `destdir` item in the `metadata` slot is
+#' returned. This is used by [getProfiles()] to decide where to
+#' save downloaded files, and later by [readProfiles()], which
+#' works with the output from [getProfiles()].
+#' 6. If `i=="type"` then the `type` item in the `metadata` slot is
+#' returned. This is `"index"` if the object was created with
+#' [getIndex()] and `"profiles"` if it was created with [getProfiles()].
+#' 7. Otherwise, `i` must be the name of an item in the `index` item
 #' in the `data` slot, or a string that is made up of enough characters
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a
 #' shortcut for `"longitude"`.
@@ -64,25 +69,30 @@ setMethod(f="[[",
           definition=function(x, i, j, ...) {
               if (missing(i))
                   stop("Must name an item to retrieve, e.g. 'x[[\"latitude\"]]'", call.=FALSE)
-              if (x@metadata$type == "index") {
-                  if (i == "data") {
-                      return(x@data)
-                  } else if (i == "metadata") {
-                      return(x@metadata)
-                  } else if (i == "ftpRoot") {
-                      return(x@metadata$ftpRoot)
-                  } else if (i == "index") {
+              if (i == "data") {
+                  return(x@data)
+              } else if (i == "metadata") {
+                  return(x@metadata)
+              } else if (i == "ftpRoot") {
+                  return(x@metadata$ftpRoot)
+              } else if (i == "destdir") {
+                  return(x@metadata$destdir)
+              } else if (i == "type") {
+                  return(x@metadata$type)
+              } else if (i == "index") {
+                  if (x@metadata$type == "index") {
                       return(x@data$index)
                   } else {
-                      names <- names(x@data$index)
-                      w <- pmatch(i, names)
-                      if (!is.finite(w))
-                          stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
-                      return(x@data$index[[names[w]]])
+                      stop("can only retrieve 'index' for objects created by getIndex()")
                   }
-              } else {
-                  stop("only for type 'index'")
+              } else if (x@metadata$type == "index") {
+                  names <- names(x@data$index)
+                  w <- pmatch(i, names)
+                  if (!is.finite(w))
+                      stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
+                  return(x@data$index[[names[w]]])
               }
+              return(NULL)
           })
 
 
