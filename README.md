@@ -28,5 +28,5 @@ for (i in seq_len(length(argosSI))) {
 }
 ```
 
-![exampleTS.png](exampleTS.png)
+![Sample TS plot.](exampleTS.png)
 
