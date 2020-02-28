@@ -3,7 +3,7 @@
 #' Read argo profiles, creating a list of argo objects
 #'
 #' @param profiles either a character vector holding the names
-#' of local files to read, or (better) an [argoFloat-class] object created
+#' of local files to read, or (better) an [argoFloats-class] object created
 #' by [getProfiles()].
 #' @param debug an integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
@@ -12,7 +12,7 @@
 #' the file, and so it will print messages if `debug` exceeds 1.
 #'
 #' @return [readProfiles] returns a list of `argo` objects,
-#' created by [oce:read.argo()], the documentation for which
+#' created by [oce::read.argo()], the documentation for which
 #' provides information on what can be done with such objects.
 #'
 #' @examples

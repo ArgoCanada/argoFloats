@@ -8,7 +8,7 @@ readProfiles(profiles, debug = 0)
 }
 \arguments{
 \item{profiles}{either a character vector holding the names
-of local files to read, or (better) an \linkS4class{argoFloat} object created
+of local files to read, or (better) an \linkS4class{argoFloats} object created
 by \code{\link[=getProfiles]{getProfiles()}}.}
 
 \item{debug}{an integer specifying the level of debugging. If
@@ -19,7 +19,7 @@ the file, and so it will print messages if \code{debug} exceeds 1.}
 }
 \value{
 \link{readProfiles} returns a list of \code{argo} objects,
-created by \code{\link[=oce:read.argo]{oce:read.argo()}}, the documentation for which
+created by \code{\link[oce:read.argo]{oce::read.argo()}}, the documentation for which
 provides information on what can be done with such objects.
 }
 \description{
