@@ -38,7 +38,7 @@ argosSI <- readProfiles(profilesSI)
 for (i in seq_len(length(argosSI))) {
     argo <- argosSI[[i]]
     if (i == 1) {
-        plotTS(argo, Slim=c(31, 36), Tlim=c(1,24))
+        plotTS(argo, Slim=c(31, 36), Tlim=c(1,24), eos="gsw")
     } else {
         SA <- argo[["SA"]]
         CT <- argo[["CT"]]
