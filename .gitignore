@@ -6,3 +6,4 @@
 .*.swp
 Rplot.*png
 .Rapp.history
+.DS_Store

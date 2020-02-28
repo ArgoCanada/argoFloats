@@ -1,3 +1,5 @@
+## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+
 #' A Package for Collections of Argo Float Profiles
 #'
 #' This package **FIXME(jlh) Please write a few paragraphs here, after
