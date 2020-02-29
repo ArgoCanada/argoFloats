@@ -55,7 +55,7 @@ setMethod(f="initialize",
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a
 #' shortcut for `"longitude"`.
 #'
-#' @param x a [argoFloats-class] object.
+#' @param x an [argoFloats-class] object.
 #' @param i a character value that specifies the item to be looked up;
 #' see \dQuote{Details}.
 #' @param j ignored.
@@ -64,6 +64,8 @@ setMethod(f="initialize",
 #' @author Dan Kelley
 #'
 #' @export
+#' @docType methods
+#' @rdname argoFloats-methods
 setMethod(f="[[",
           signature(x="argoFloats", i="ANY", j="ANY"),
           definition=function(x, i, j, ...) {
@@ -100,17 +102,17 @@ setMethod(f="[[",
 
 #' Summarize an argoFloats Object
 #'
-#' @param object a [argoFloats-class] object.
+#' Show some key facts about an [argoFloats-class] object.
 #'
+#' @param object an [argoFloats-class] object.
 #' @param ... Further arguments passed to or from other methods.
 #'
 #' @importFrom oce processingLogShow
 #' @importFrom methods callNextMethod
 #' @importFrom utils head
-#'
 #' @export
 #'
-#' @aliases summary.argoFloats
+#' @author Dan Kelley
 setMethod(f="summary",
           signature="argoFloats",
           definition=function(object, ...)
@@ -187,12 +189,10 @@ setMethod(f="summary",
 #' cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 #'}
 #'
-#' @author Dan Kelley
-#'
-#' @aliases subset.argoFloats
-#'
 #' @importFrom oce geodDist
 #' @export
+#'
+#' @author Dan Kelley
 setMethod(f="subset",
           signature="argoFloats",
           definition=function(x, subset=NULL, ...) {
