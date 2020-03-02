@@ -14,9 +14,10 @@
 indices of \code{x@data$index} to keep.  See example 1.}
 
 \item{...}{a single named list. At the moment, the only possibility
-is a list named \code{circle}, which holds elements named \code{longitude},
-\code{latitude} and \code{radius}.  The first two specify a location, and
-the third species a search radius in kilometers, as in Example 2.}
+is a list named \code{circle} and \code{rectangle}. \code{circle} holds elements named \code{longitude},
+\code{latitude} and \code{radius} . The first two specify a location, and
+the third species a search radius in kilometers, as in Example 2.
+\code{rectangle} holds elements named \code{longitude} and \code{latitude} as in Example 3.`}
 }
 \value{
 An \linkS4class{argoFloats} object.
@@ -30,7 +31,7 @@ a way to determine those indices (using the \code{...} argument).
 At the moment, this method only works for \linkS4class{argoFloats} objects
 of type \code{"index"}, as read by \code{\link[=getIndex]{getIndex()}}.
 A future version will also handle \code{...} arguments named
-\code{polygon}, \code{rectangle} and \code{time}.
+\code{polygon}, and \code{time}.
 }
 \examples{
 library(argoFloats)
@@ -44,6 +45,11 @@ cat("First three longitudes:", paste(aiFirstThree[["longitude"]]), "\n")
 aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
 cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 }
+
+# Example 3: Profiles within a rectangle radius of eachother
+
+## Not run:
+subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
 
 }
 \author{
