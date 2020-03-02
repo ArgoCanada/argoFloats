@@ -17,7 +17,7 @@ indices of \code{x@data$index} to keep.  See example 1.}
 is a list named \code{circle} and \code{rectangle}. \code{circle} holds elements named \code{longitude},
 \code{latitude} and \code{radius} . The first two specify a location, and
 the third species a search radius in kilometers, as in Example 2.
-\code{rectangle} holds elements named \code{longitude} and \code{latitude} as in Example 3.`}
+\code{rectangle} holds elements named \code{longitude} and \code{latitude} as in Example 3.}
 }
 \value{
 An \linkS4class{argoFloats} object.
@@ -46,7 +46,7 @@ aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200
 cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 }
 
-# Example 3: Profiles within a rectangle radius of eachother
+# Example 3: Profiles in a given rectangle radius
 
 ## Not run:
 subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
