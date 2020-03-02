@@ -221,14 +221,15 @@ setMethod(f="subset",
                       stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
                     if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
                       stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
-                    keeplon<- rectangle$longitude[1] <= x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2] 
+                    keeplon<- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2] 
                     keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[['latitude']] <= rectangle$latitude[2]
                     keeplon[is.na(keeplon)] <- FALSE
                     if (sum(keeplon) < 1)
                       warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given longitudes", call.=FALSE)
+                    keeplat[is.na(keeplat)] <- FALSE
                     if (sum(keeplat) < 1)
                       warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given latitudes", call.=FALSE)
-                    x@data$index <- x@data$index[keeplon&keeplat ]
+                    x@data$index <- x@data$index[keeplon&keeplat, ]
                   } else {  
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle' or 'rectangle'", call.=FALSE)
                   }
