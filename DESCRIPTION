@@ -3,7 +3,10 @@ Type: Package
 Title: Tools for analyzing collections of oceanographic Argo floats
 Version: 0.1.1
 Authors@R: c(
-    person(given="Dan", family="Kelley", email="Dan.Kelley@Dal.Ca", role=c("aut", "cre"), comment=c(ORCID="https://orcid.org/0000-0001-7808-5911")))
+    person(given="Dan", family="Kelley", email="Dan.Kelley@Dal.Ca", role=c("aut", "cre"),
+        comment=c(ORCID="https://orcid.org/0000-0001-7808-5911")),
+    person(given="Jaimie", family="Harbin", email="Jaimie.Harbin@dfo-mpo.gc.ca", role=c("ctb"),
+        comment=c(ORCID="https://orcid.org/0000-0003-3774-3732")))
 URL: https://dankelley.github.io/argoFloats/index.html
 Maintainer: Dan Kelley <dan.kelley@dal.ca>
 Description: The 'argoFloats' package provides support for downloading and analyzing Argo float datasets.
