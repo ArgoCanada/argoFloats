@@ -121,18 +121,18 @@ setMethod(f="summary",
               cat("* type:        ", object@metadata$type, "\n", sep="")
               if (object@metadata$type == "index") {
                   with(object@metadata, {
-                       cat("* server:      ", server, "\n", sep="")
-                       cat("* file:        ", file, "\n", sep="")
-                       cat("* url:         ", url, "\n", sep="")
-                       cat("* ftpRoot:     ", ftpRoot, "\n", sep="")
-                       cat("* destfileRda: ", destfileRda, "\n", sep="")
-                       if (length(header)) {
-                           cat("* header:\n", sep="")
-                           for (h in header)
-                               cat("    ", h, "'\n", sep="")
-                       } else {
-                           cat("* header: (none)\n", sep="")
-                       }})
+                      cat("* server:      ", server, "\n", sep="")
+                      cat("* file:        ", file, "\n", sep="")
+                      cat("* url:         ", url, "\n", sep="")
+                      cat("* ftpRoot:     ", ftpRoot, "\n", sep="")
+                      cat("* destfileRda: ", destfileRda, "\n", sep="")
+                      if (length(header)) {
+                          cat("* header:\n", sep="")
+                          for (h in header)
+                              cat("    ", h, "'\n", sep="")
+                      } else {
+                          cat("* header: (none)\n", sep="")
+                      }})
                   ndata <- length(object@data$index$file)
                   if (ndata > 0) {
                       cat("* index (each holding ", ndata, if (ndata>1) " elements):\n" else " element):\n", sep="")
@@ -150,7 +150,7 @@ setMethod(f="summary",
               processingLogShow(object)
               invisible()
           }
-          )
+)
 
 
 #' Subset an argoFloats Object
@@ -190,7 +190,6 @@ setMethod(f="summary",
 #' cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 #'}
 #'
-<<<<<<< HEAD
 #' # Example 3: Profiles in a given rectangle radius
 #' 
 #' ## Not run:
@@ -200,8 +199,6 @@ setMethod(f="summary",
 #'
 #' @aliases subset.argoFloats
 #'
-=======
->>>>>>> develop
 #' @importFrom oce geodDist
 #' @export
 #'
@@ -235,20 +232,20 @@ setMethod(f="subset",
                           warning("In subset,argoFloats-method(..., circle) : found no profiles within ", circle$radius, "km of ", circle$longitude, "E and ", circle$latitude, "N\n", call.=FALSE)
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1] == "rectangle") {
-                    rectangle <- dots[[1]]
-                    if (!is.list(dots[1]))
-                      stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
-                    if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
-                      stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
-                    keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
-                    keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[['latitude']] <= rectangle$latitude[2]
-                    keeplon[is.na(keeplon)] <- FALSE
-                    if (sum(keeplon) < 1)
-                      warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given longitudes", call.=FALSE)
-                    keeplat[is.na(keeplat)] <- FALSE
-                    if (sum(keeplat) < 1)
-                      warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given latitudes", call.=FALSE)
-                    x@data$index <- x@data$index[keeplon&keeplat, ]
+                      rectangle <- dots[[1]]
+                      if (!is.list(dots[1]))
+                          stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
+                      if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
+                          stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
+                      keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
+                      keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[['latitude']] <= rectangle$latitude[2]
+                      keeplon[is.na(keeplon)] <- FALSE
+                      if (sum(keeplon) < 1)
+                          warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given longitudes", call.=FALSE)
+                      keeplat[is.na(keeplat)] <- FALSE
+                      if (sum(keeplat) < 1)
+                          warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given latitudes", call.=FALSE)
+                      x@data$index <- x@data$index[keeplon&keeplat, ]
                   } else {  
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle' or 'rectangle'", call.=FALSE)
                   }
