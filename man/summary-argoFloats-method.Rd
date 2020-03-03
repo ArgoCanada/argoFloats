@@ -2,16 +2,18 @@
 % Please edit documentation in R/AllClass.R
 \name{summary,argoFloats-method}
 \alias{summary,argoFloats-method}
-\alias{summary.argoFloats}
 \title{Summarize an argoFloats Object}
 \usage{
 \S4method{summary}{argoFloats}(object, ...)
 }
 \arguments{
-\item{object}{a \linkS4class{argoFloats} object.}
+\item{object}{an \linkS4class{argoFloats} object.}
 
 \item{...}{Further arguments passed to or from other methods.}
 }
 \description{
-Summarize an argoFloats Object
+Show some key facts about an \linkS4class{argoFloats} object.
+}
+\author{
+Dan Kelley
 }

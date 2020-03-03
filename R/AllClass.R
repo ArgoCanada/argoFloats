@@ -1,3 +1,5 @@
+## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+
 #' A Package for Collections of Argo Float Profiles
 #'
 #' This package **FIXME(jlh) Please write a few paragraphs here, after
@@ -40,15 +42,20 @@ setMethod(f="initialize",
 #' 3. If `i=="ftpRoot"` then the value of `ftpRoot` in the `metadata`
 #' slot is returned.  This is used by [getProfiles()] to construct
 #' a vector of URLs to download.
-#' 4. If `i=="index"` then the `index` item in the `data` slot is
-#' returned. This can be useful in trying to understand more about
-#' the profiles, although the information provided is somewhat limited.
-#' 5. Otherwise, `i` must be the name of an item in the `index` item
+#' 3. If `i=="ftpRoot"` then the value of `ftpRoot` in the `metadata`
+#' 5. If `i=="destdir"` then the `destdir` item in the `metadata` slot is
+#' returned. This is used by [getProfiles()] to decide where to
+#' save downloaded files, and later by [readProfiles()], which
+#' works with the output from [getProfiles()].
+#' 6. If `i=="type"` then the `type` item in the `metadata` slot is
+#' returned. This is `"index"` if the object was created with
+#' [getIndex()] and `"profiles"` if it was created with [getProfiles()].
+#' 7. Otherwise, `i` must be the name of an item in the `index` item
 #' in the `data` slot, or a string that is made up of enough characters
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a
 #' shortcut for `"longitude"`.
 #'
-#' @param x a [argoFloats-class] object.
+#' @param x an [argoFloats-class] object.
 #' @param i a character value that specifies the item to be looked up;
 #' see \dQuote{Details}.
 #' @param j ignored.
@@ -57,30 +64,37 @@ setMethod(f="initialize",
 #' @author Dan Kelley
 #'
 #' @export
+#' @docType methods
+#' @rdname argoFloats-methods
 setMethod(f="[[",
           signature(x="argoFloats", i="ANY", j="ANY"),
           definition=function(x, i, j, ...) {
               if (missing(i))
                   stop("Must name an item to retrieve, e.g. 'x[[\"latitude\"]]'", call.=FALSE)
-              if (x@metadata$type == "index") {
-                  if (i == "data") {
-                      return(x@data)
-                  } else if (i == "metadata") {
-                      return(x@metadata)
-                  } else if (i == "ftpRoot") {
-                      return(x@metadata$ftpRoot)
-                  } else if (i == "index") {
+              if (i == "data") {
+                  return(x@data)
+              } else if (i == "metadata") {
+                  return(x@metadata)
+              } else if (i == "ftpRoot") {
+                  return(x@metadata$ftpRoot)
+              } else if (i == "destdir") {
+                  return(x@metadata$destdir)
+              } else if (i == "type") {
+                  return(x@metadata$type)
+              } else if (i == "index") {
+                  if (x@metadata$type == "index") {
                       return(x@data$index)
                   } else {
-                      names <- names(x@data$index)
-                      w <- pmatch(i, names)
-                      if (!is.finite(w))
-                          stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
-                      return(x@data$index[[names[w]]])
+                      stop("can only retrieve 'index' for objects created by getIndex()")
                   }
-              } else {
-                  stop("only for type 'index'")
+              } else if (x@metadata$type == "index") {
+                  names <- names(x@data$index)
+                  w <- pmatch(i, names)
+                  if (!is.finite(w))
+                      stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
+                  return(x@data$index[[names[w]]])
               }
+              return(NULL)
           })
 
 
@@ -88,17 +102,17 @@ setMethod(f="[[",
 
 #' Summarize an argoFloats Object
 #'
-#' @param object a [argoFloats-class] object.
+#' Show some key facts about an [argoFloats-class] object.
 #'
+#' @param object an [argoFloats-class] object.
 #' @param ... Further arguments passed to or from other methods.
 #'
 #' @importFrom oce processingLogShow
 #' @importFrom methods callNextMethod
 #' @importFrom utils head
-#'
 #' @export
 #'
-#' @aliases summary.argoFloats
+#' @author Dan Kelley
 setMethod(f="summary",
           signature="argoFloats",
           definition=function(object, ...)
@@ -176,6 +190,7 @@ setMethod(f="summary",
 #' cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 #'}
 #'
+<<<<<<< HEAD
 #' # Example 3: Profiles in a given rectangle radius
 #' 
 #' ## Not run:
@@ -185,8 +200,12 @@ setMethod(f="summary",
 #'
 #' @aliases subset.argoFloats
 #'
+=======
+>>>>>>> develop
 #' @importFrom oce geodDist
 #' @export
+#'
+#' @author Dan Kelley
 setMethod(f="subset",
           signature="argoFloats",
           definition=function(x, subset=NULL, ...) {

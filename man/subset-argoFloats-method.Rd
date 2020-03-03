@@ -2,7 +2,6 @@
 % Please edit documentation in R/AllClass.R
 \name{subset,argoFloats-method}
 \alias{subset,argoFloats-method}
-\alias{subset.argoFloats}
 \title{Subset an argoFloats Object}
 \usage{
 \S4method{subset}{argoFloats}(x, subset = NULL, ...)
