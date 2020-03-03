@@ -221,7 +221,7 @@ setMethod(f="subset",
                       stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
                     if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
                       stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
-                    keeplon<- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2] 
+                    keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
                     keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[['latitude']] <= rectangle$latitude[2]
                     keeplon[is.na(keeplon)] <- FALSE
                     if (sum(keeplon) < 1)
