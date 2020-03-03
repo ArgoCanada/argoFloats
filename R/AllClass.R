@@ -121,18 +121,18 @@ setMethod(f="summary",
               cat("* type:        ", object@metadata$type, "\n", sep="")
               if (object@metadata$type == "index") {
                   with(object@metadata, {
-                       cat("* server:      ", server, "\n", sep="")
-                       cat("* file:        ", file, "\n", sep="")
-                       cat("* url:         ", url, "\n", sep="")
-                       cat("* ftpRoot:     ", ftpRoot, "\n", sep="")
-                       cat("* destfileRda: ", destfileRda, "\n", sep="")
-                       if (length(header)) {
-                           cat("* header:\n", sep="")
-                           for (h in header)
-                               cat("    ", h, "'\n", sep="")
-                       } else {
-                           cat("* header: (none)\n", sep="")
-                       }})
+                      cat("* server:      ", server, "\n", sep="")
+                      cat("* file:        ", file, "\n", sep="")
+                      cat("* url:         ", url, "\n", sep="")
+                      cat("* ftpRoot:     ", ftpRoot, "\n", sep="")
+                      cat("* destfileRda: ", destfileRda, "\n", sep="")
+                      if (length(header)) {
+                          cat("* header:\n", sep="")
+                          for (h in header)
+                              cat("    ", h, "'\n", sep="")
+                      } else {
+                          cat("* header: (none)\n", sep="")
+                      }})
                   ndata <- length(object@data$index$file)
                   if (ndata > 0) {
                       cat("* index (each holding ", ndata, if (ndata>1) " elements):\n" else " element):\n", sep="")
@@ -150,7 +150,7 @@ setMethod(f="summary",
               processingLogShow(object)
               invisible()
           }
-          )
+)
 
 
 #' Subset an argoFloats Object
@@ -162,7 +162,7 @@ setMethod(f="summary",
 #' At the moment, this method only works for [argoFloats-class] objects
 #' of type `"index"`, as read by [getIndex()].
 #' A future version will also handle `...` arguments named
-#' `polygon`, `rectangle` and `time`.
+#' `polygon`, and `time`.
 #'
 #' @param x an [argoFloats-class] object.
 #'
@@ -170,9 +170,10 @@ setMethod(f="summary",
 #' indices of `x@data$index` to keep.  See example 1.
 #'
 #' @param ... a single named list. At the moment, the only possibility
-#' is a list named `circle`, which holds elements named `longitude`,
-#' `latitude` and `radius`.  The first two specify a location, and
+#' is a list named `circle` and `rectangle`. `circle` holds elements named `longitude`,
+#' `latitude` and `radius` . The first two specify a location, and
 #' the third species a search radius in kilometers, as in Example 2.
+#' `rectangle` holds elements named `longitude` and `latitude` as in Example 3.
 #'
 #' @return An [argoFloats-class] object.
 #'
@@ -187,7 +188,16 @@ setMethod(f="summary",
 #' # Example 2: Profiles within 200km of Sable Island
 #' aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
 #' cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
-#'}
+#'
+#'
+#' # Example 3: Profiles in a given rectangle radius
+#' 
+#' subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
+#' }
+#'
+#' @author Dan Kelley
+#'
+#' @aliases subset.argoFloats
 #'
 #' @importFrom oce geodDist
 #' @export
@@ -201,7 +211,7 @@ setMethod(f="subset",
               dotsNames <- names(dots)
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument or with 'circle'")
+                      stop("must specify the subset, with 'subset' argument,'circle', or 'rectangle'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
                   ## FIXME: permit args 'polygon', 'rectangle', and 'time'.
@@ -221,8 +231,23 @@ setMethod(f="subset",
                       if (sum(keep) < 1)
                           warning("In subset,argoFloats-method(..., circle) : found no profiles within ", circle$radius, "km of ", circle$longitude, "E and ", circle$latitude, "N\n", call.=FALSE)
                       x@data$index <- x@data$index[keep, ]
-                  } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle'", call.=FALSE)
+                  } else if (dotsNames[1] == "rectangle") {
+                      rectangle <- dots[[1]]
+                      if (!is.list(dots[1]))
+                          stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
+                      if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
+                          stop("In subset,argoFloats-method() : 'rectangle' must be a list containing 'longitude' and 'latitude'")
+                      keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
+                      keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[['latitude']] <= rectangle$latitude[2]
+                      keeplon[is.na(keeplon)] <- FALSE
+                      if (sum(keeplon) < 1)
+                          warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given longitudes", call.=FALSE)
+                      keeplat[is.na(keeplat)] <- FALSE
+                      if (sum(keeplat) < 1)
+                          warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given latitudes", call.=FALSE)
+                      x@data$index <- x@data$index[keeplon&keeplat, ]
+                  } else {  
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle' or 'rectangle'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)
