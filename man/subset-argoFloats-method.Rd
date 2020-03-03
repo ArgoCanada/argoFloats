@@ -2,6 +2,7 @@
 % Please edit documentation in R/AllClass.R
 \name{subset,argoFloats-method}
 \alias{subset,argoFloats-method}
+\alias{subset.argoFloats}
 \title{Subset an argoFloats Object}
 \usage{
 \S4method{subset}{argoFloats}(x, subset = NULL, ...)
@@ -43,14 +44,16 @@ cat("First three longitudes:", paste(aiFirstThree[["longitude"]]), "\n")
 # Example 2: Profiles within 200km of Sable Island
 aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
 cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
-}
+
 
 # Example 3: Profiles in a given rectangle radius
 
-## Not run:
 subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
+}
 
 }
 \author{
+Dan Kelley
+
 Dan Kelley
 }

@@ -190,9 +190,8 @@ setMethod(f="summary",
 #' cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 #'
 #'
-#' # Example 3: Profiles in a given rectangle radius
-#' 
-#' subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
+#' # Example 3: Profiles in a given rectangle 
+#' aiRect <- subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
 #' }
 #'
 #' @author Dan Kelley
