@@ -194,8 +194,8 @@ setMethod(f="summary",
 #' library(oce)
 #' data(coastlineWorldFine, package="ocedata")
 #' aiRect <- subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
-#' lat <- subRect[['latitude']]
-#' lon <- subRect[['longitude']]
+#' lat <- aiRect[['latitude']]
+#' lon <- aiRect[['longitude']]
 #' latlim <- c(40,43)
 #' lonlim<- c(-70,-64)
 #' mapPlot(coastlineWorldFine, col='lightgray', longitudelim=lonlim, latitudelim=latlim, projection="+proj=merc", grid=2)
