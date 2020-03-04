@@ -14,8 +14,8 @@
 indices of \code{x@data$index} to keep.  See example 1.}
 
 \item{...}{a single named list. At the moment, the only possibility
-is a list named \code{circle} and \code{rectangle}. \code{circle} holds elements named \code{longitude},
-\code{latitude} and \code{radius} . The first two specify a location, and
+is a list named \code{circle}and \code{rectangle}. \code{circle} holds elements
+named \code{longitude}, \code{latitude} and \code{radius} . The first two specify a location, and
 the third species a search radius in kilometers, as in Example 2.
 \code{rectangle} holds elements named \code{longitude} and \code{latitude} as in Example 3.}
 }
@@ -46,14 +46,20 @@ aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200
 cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
 
 
-# Example 3: Profiles in a given rectangle radius
-
-subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
+# Example 3: Profiles in a given rectangle
+library(oce)
+data(coastlineWorldFine, package="ocedata")
+aiRect <- subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
+lat <- aiRect[['latitude']]
+lon <- aiRect[['longitude']]
+latlim <- c(40,43)
+lonlim<- c(-70,-64)
+mapPlot(coastlineWorldFine, col='lightgray', longitudelim=lonlim, latitudelim=latlim, projection="+proj=merc", grid=2)
+mapPoints(lon,lat)
 }
+
 
 }
 \author{
-Dan Kelley
-
-Dan Kelley
+Dan Kelley and Jaimie Harbin
 }
