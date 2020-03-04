@@ -14,8 +14,8 @@
 indices of \code{x@data$index} to keep.  See example 1.}
 
 \item{...}{a single named list. At the moment, the only possibility
-is a list named \code{circle} and \code{rectangle}. \code{circle} holds elements named \code{longitude},
-\code{latitude} and \code{radius} . The first two specify a location, and
+is a list named \code{circle}and \code{rectangle}. \code{circle} holds elements
+named \code{longitude}, \code{latitude} and \code{radius} . The first two specify a location, and
 the third species a search radius in kilometers, as in Example 2.
 \code{rectangle} holds elements named \code{longitude} and \code{latitude} as in Example 3.}
 }
@@ -61,7 +61,5 @@ mapPoints(lon,lat)
 
 }
 \author{
-Dan Kelley
-
-Dan Kelley
+Dan Kelley and Jaimie Harbin
 }
