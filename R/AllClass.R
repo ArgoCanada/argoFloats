@@ -170,8 +170,8 @@ setMethod(f="summary",
 #' indices of `x@data$index` to keep.  See example 1.
 #'
 #' @param ... a single named list. At the moment, the only possibility
-#' is a list named `circle` and `rectangle`. `circle` holds elements named `longitude`,
-#' `latitude` and `radius` . The first two specify a location, and
+#' is a list named `circle`and `rectangle`. `circle` holds elements
+#' named `longitude`, `latitude` and `radius` . The first two specify a location, and
 #' the third species a search radius in kilometers, as in Example 2.
 #' `rectangle` holds elements named `longitude` and `latitude` as in Example 3.
 #'
@@ -203,14 +203,12 @@ setMethod(f="summary",
 #' }
 #' 
 #'
-#' @author Dan Kelley
+#' @author Dan Kelley and Jaimie Harbin
 #'
 #' @aliases subset.argoFloats
 #'
 #' @importFrom oce geodDist
 #' @export
-#'
-#' @author Dan Kelley
 setMethod(f="subset",
           signature="argoFloats",
           definition=function(x, subset=NULL, ...) {
