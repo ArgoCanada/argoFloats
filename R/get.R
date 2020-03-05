@@ -284,14 +284,14 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #' designed to work with them.)
 #' \tabular{lll}{
 #' *File Name*                       \tab *Nickname*  \tab *Contents*\cr
-#' `ar_greylist.txt`                 \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
-#' `ar_index_global_meta.txt.gz`     \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
+#' `ar_greylist.txt`                 \tab -           \tab Suspious or malfunctioning float sensors.\cr
+#' `ar_index_global_meta.txt.gz`     \tab -           \tab Metadata files of the argo GDAC ftp site.\cr
 #' `ar_index_global_prof.txt.gz`     \tab `"argo"`    \tab Argo data.\cr
-#' `ar_index_global_tech.txt.gz`     \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
-#' `ar_index_global_traj.txt.gz`     \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
-#' `argo_bio-profile_index.txt.gz`   \tab `"bcgargo"` \tab biogeochemical Argo data (without S or T).\cr
-#' `argo_bio-traj_index.txt.gz`      \tab -           \tab **FIXME(jlh)**: add something here, please.\cr
-#' `argo_merge-profile_index.txt.gz` \tab `"merged"`  \tab Merged argo and bgcargo data.\cr
+#' `ar_index_global_tech.txt.gz`     \tab -           \tab All technical files of the argo GDAC ftp site.\cr
+#' `ar_index_global_traj.txt.gz`     \tab -           \tab All trajectory files of the argo GDAC ftp site.\cr
+#' `argo_bio-profile_index.txt.gz`   \tab `"argo_bgc"` \tab Biogeochemical Argo data (without S or T).\cr
+#' `argo_bio-traj_index.txt.gz`      \tab -           \tab Bio-trajectory files of the argo GDAC ftp site.\cr
+#' `argo_merge-profile_index.txt.gz` \tab `"argo_merge"`  \tab Merged argo and bgc_argo data.\cr
 #' }
 #'
 #' @template server
