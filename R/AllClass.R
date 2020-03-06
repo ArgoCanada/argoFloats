@@ -198,14 +198,12 @@ setMethod(f="summary",
 #' lon <- aiRect[['longitude']]
 #' latlim <- c(40,43)
 #' lonlim<- c(-70,-64)
-#' mapPlot(coastlineWorldFine, col='lightgray', longitudelim=lonlim, latitudelim=latlim, projection="+proj=merc", grid=2)
+#' mapPlot(coastlineWorldFine, col='lightgray', longitudelim=lonlim, latitudelim=latlim,
+#'         projection="+proj=merc", grid=2)
 #' mapPoints(lon,lat)
 #' }
-#' 
 #'
 #' @author Dan Kelley and Jaimie Harbin
-#'
-#' @aliases subset.argoFloats
 #'
 #' @importFrom oce geodDist
 #' @export

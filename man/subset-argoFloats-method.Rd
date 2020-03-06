@@ -2,7 +2,6 @@
 % Please edit documentation in R/AllClass.R
 \name{subset,argoFloats-method}
 \alias{subset,argoFloats-method}
-\alias{subset.argoFloats}
 \title{Subset an argoFloats Object}
 \usage{
 \S4method{subset}{argoFloats}(x, subset = NULL, ...)
@@ -54,10 +53,10 @@ lat <- aiRect[['latitude']]
 lon <- aiRect[['longitude']]
 latlim <- c(40,43)
 lonlim<- c(-70,-64)
-mapPlot(coastlineWorldFine, col='lightgray', longitudelim=lonlim, latitudelim=latlim, projection="+proj=merc", grid=2)
+mapPlot(coastlineWorldFine, col='lightgray', longitudelim=lonlim, latitudelim=latlim,
+        projection="+proj=merc", grid=2)
 mapPoints(lon,lat)
 }
-
 
 }
 \author{

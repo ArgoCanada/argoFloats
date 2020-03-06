@@ -110,14 +110,14 @@ seem to be equivalent to the \code{.gz} versions, so \code{\link[=getIndex]{getI
 designed to work with them.)
 \tabular{lll}{
 \emph{File Name}                       \tab \emph{Nickname}  \tab \emph{Contents}\cr
-\code{ar_greylist.txt}                 \tab -           \tab \strong{FIXME(jlh)}: add something here, please.\cr
-\code{ar_index_global_meta.txt.gz}     \tab -           \tab \strong{FIXME(jlh)}: add something here, please.\cr
+\code{ar_greylist.txt}                 \tab -           \tab Suspious or malfunctioning float sensors.\cr
+\code{ar_index_global_meta.txt.gz}     \tab -           \tab Metadata files of the argo GDAC ftp site.\cr
 \code{ar_index_global_prof.txt.gz}     \tab \code{"argo"}    \tab Argo data.\cr
-\code{ar_index_global_tech.txt.gz}     \tab -           \tab \strong{FIXME(jlh)}: add something here, please.\cr
-\code{ar_index_global_traj.txt.gz}     \tab -           \tab \strong{FIXME(jlh)}: add something here, please.\cr
-\code{argo_bio-profile_index.txt.gz}   \tab \code{"bcgargo"} \tab biogeochemical Argo data (without S or T).\cr
-\code{argo_bio-traj_index.txt.gz}      \tab -           \tab \strong{FIXME(jlh)}: add something here, please.\cr
-\code{argo_merge-profile_index.txt.gz} \tab \code{"merged"}  \tab Merged argo and bgcargo data.\cr
+\code{ar_index_global_tech.txt.gz}     \tab -           \tab All technical files of the argo GDAC ftp site.\cr
+\code{ar_index_global_traj.txt.gz}     \tab -           \tab All trajectory files of the argo GDAC ftp site.\cr
+\code{argo_bio-profile_index.txt.gz}   \tab \code{"argo_bgc"} \tab Biogeochemical Argo data (without S or T).\cr
+\code{argo_bio-traj_index.txt.gz}      \tab -           \tab Bio-trajectory files of the argo GDAC ftp site.\cr
+\code{argo_merge-profile_index.txt.gz} \tab \code{"argo_merge"} \tab Merged \code{"argo"} and \code{"argo_bgc"} data.\cr
 }
 }
 \examples{

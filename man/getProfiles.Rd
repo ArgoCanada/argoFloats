@@ -10,9 +10,8 @@ getProfiles(index, force = FALSE, retries = 3, quiet = FALSE, debug = 0)
 \item{index}{an \linkS4class{argoFloats} object of type \code{"index"}, as created
 by \code{\link[=getIndex]{getIndex()}}.}
 
-\item{force}{A logical value that indicates whether to force the download,
-even if the pathname constructed from \code{destdir} and \code{destfile}
-already exists.}
+\item{force}{a logical value that indicates whether to force a file
+download, even if the destination file already exists.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}

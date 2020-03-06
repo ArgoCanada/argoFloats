@@ -291,7 +291,7 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #' `ar_index_global_traj.txt.gz`     \tab -           \tab All trajectory files of the argo GDAC ftp site.\cr
 #' `argo_bio-profile_index.txt.gz`   \tab `"argo_bgc"` \tab Biogeochemical Argo data (without S or T).\cr
 #' `argo_bio-traj_index.txt.gz`      \tab -           \tab Bio-trajectory files of the argo GDAC ftp site.\cr
-#' `argo_merge-profile_index.txt.gz` \tab `"argo_merge"`  \tab Merged argo and bgc_argo data.\cr
+#' `argo_merge-profile_index.txt.gz` \tab `"argo_merge"` \tab Merged `"argo"` and `"argo_bgc"` data.\cr
 #' }
 #'
 #' @template server

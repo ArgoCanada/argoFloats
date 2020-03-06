@@ -45,9 +45,8 @@ documentation for \code{\link[curl:curl_download]{curl::curl_download()}}.}
 that indicates whether to download silently.  Since some downloads
 can be slow, the default value is \code{quiet=FALSE}.}
 
-\item{force}{A logical value that indicates whether to force the download,
-even if the pathname constructed from \code{destdir} and \code{destfile}
-already exists.}
+\item{force}{a logical value that indicates whether to force a file
+download, even if the destination file already exists.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
