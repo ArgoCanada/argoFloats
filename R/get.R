@@ -153,7 +153,7 @@ downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quie
                 }
             }
             if (!success)
-                stop("failed to download, after ", retries, " retries")
+                stop("failed to download from '", url, "', after ", retries, " retries")
             if (1 == length(grep(".zip$", destfile[i]))) {
                 destinationClean <- gsub(".zip$", "", destination[i])
                 unzip(destination[i], exdir=destinationClean)
