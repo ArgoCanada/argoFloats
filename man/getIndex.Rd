@@ -17,7 +17,9 @@ getIndex(
 \item{server}{character value giving the base name of the server, used in the
 construction of URL queries. Since servers tend to change over time, this
 is a good argument to check, when debugging code that once worked but
-now fails.}
+now fails. As of March 2020, two useful values for \code{server} are
+\code{"ftp://usgodae.org/pub/outgoing/argo"} (which is the default)
+and \code{"ftp://ftp.ifremer.fr/ifremer/argo"}.}
 
 \item{file}{character value that indicates the file name on the server, as in
 the first column of the table given in \dQuote{Details}, or (for some file types)
