@@ -1,6 +1,6 @@
+*.rda
 *.nc
 *~
-
 .Rhistory
 .Rproj.user
 .*.swp
