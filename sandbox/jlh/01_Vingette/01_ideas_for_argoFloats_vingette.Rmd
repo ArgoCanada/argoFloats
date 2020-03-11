@@ -1,0 +1,240 @@
+# Introduction to argoFloats package
+
+* Dan Kelley (ORCID="https://orcid.org/0000-0001-7808-5911"), and Jaimie Harbin (ORCID="https://orcid.org/0000-0003-3774-3732")
+
+```{r, echo = FALSE}
+options(error = utils::recover)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+**Abstract.** The ```argoFloats``` package can be used for simple argo, argo_bgc, and argo_merge data downloading to create a virtal oceanographic mooring. It follows a four step process to allow argo data science to be accessible to countries, institutions, and the public without a high learning curve or expensive software resources.
+
+
+# Introduction
+The implementation of core Argo floats (referred to as argo in this package)into the world's ocean began in 1999 (Roemmich et al.2009) and has now grown to a global array of floats of more than 3000 floats as of 2008 (Roemmich and Gilson 2009).This Argo program has allowed for continous, long-term, ocean observations of the upper ocenaas layers to help predict climate (Wilson 2014). 
+
+With the desire to closely monitor the ocean's major processes such as ocean deoxygenation, acidification, and warming, six additional sensors, oxygen, pH, nitrate, downwelling light, chrolophyll fluoresence, and optical backscattering [Bittig et al. 2019], were added to the core argo floats, coining them the term biogeochemical (BGC)- Argo (referred to as argo_bgc in this package).
+
+Ocean tracking, through argo and argo_bgc data is considerably important for understanding changes in the ocean. Luckily,
+argo, argo_bgc, and argo_merge, which is a combination of argo and argo_bgc data, are freely available to the public. The problem, however, is although freely available, the data is difficult to access and analyze. Our goal with creating the ```argoFloats``` package was to make Argo data science accessible to countries, institutions, and the public without a high learning curve or expensive software resources.
+ 
+
+# Setup
+
+To begin to working with argo, argo_bgc, and argo_merge data it is first necessary to download the `argoFloats` package and install it. Then do
+```{r, warning= FALSE}
+library(argoFloats)
+library(oce)
+```
+to set up the libraries used in the examples.
+
+# *Step one:* Download data index from Argo server
+
+Once the proper libraries are installed, the first step to using the `argoFloats` package is to download the index from an argo server.  This download takes from a minute to an hour, and so the `getIndex()` used to download the index employs a caching mechanism, skipping the download if it was done recently.  (See the discussion of the `age` argument, in the documentation provided by `?getIndex`.)
+
+For the sake of this vignette, we will use the default server (`ftp://usgodae.org/pub/outgoing/argo`) and file (`ar_index_global_prof.txt.gz`), with the default directory for storing the results switched from the present working directory to `~/data/argo`.
+
+To download data index from an argo server, the following code is used:
+
+```{r, results="hide"}
+getIndex(
+    server = "ftp://usgodae.org/pub/outgoing/argo",
+    file = "ar_index_global_prof.txt.gz",
+    destdir = "~/data/argo",
+    age = 6,
+    quiet = FALSE,
+    debug = 3
+)
+
+if (!exists("ai"))
+    ai <- getIndex(file='ar_index_global_prof.txt.gz', destdir="~/data/argo",debug=3)
+```
+
+The ```getIndex()``` function provides an index of available argo float profiles with an ```argoFloat``` object type. Once the index is downloaded, a number of functions within the ```argoFloats``` package exists to easily analyze the data. 
+
+### 1.1 Histograms of entire temporal sampling frequency
+
+If the user is interested in the entire argo data set, it is possible to do analysis such as the sampling frequency of every argo each year. To do so, the following code is used, where ```date_updated``` indicates argos that have been managed and reanalyzed by the Global Argo Data Repository (GADAR) for corrections (https://www.nodc.noaa.gov/argo/overview.htm) 
+
+
+```{r dev='png', dpi=200, fig.cap='Histogram of temporal rate of Argo sampling. Top: categorized by the `date` field. Bottom: categorized by the `date_update` field.', fig.width=7, fig.height=4, dev.args=list(pointsize=10)}
+par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
+hist(ai@data$index$date, breaks="year", main="", xlab="Time")
+hist(ai@data$index$date_update, breaks="quarters", main="", xlab="Last Update Time")
+```
+
+*Exercise One:* Create a histogram of sampling frequency of argo_bgc data for ```date_updated```.
+
+# *Step two:* Subsetting index for space/time of interest
+
+If the user is interested in a specific area containing argos, the ```subset()``` function within the ```argoFloats``` package is the second step when using the package. The ```subset,argoFloats-method``` function contains subsetting for profiles, radius, and rectangles. The authors of ```argoFloats``` package are working on incorporating polygon and time subsetting.  
+
+For the user to get a visual of the desired subset data, the following code is used:
+
+
+```{r}
+place <- "Bahamas"
+lon0 <- -77.3963                       # latitude of a specifc place
+lat0 <- 25.0343                        # longitude of specific place
+radius <- 180                          # alter next 2 lines if this is altered
+dlat <- 2.0                            # yields about 150km
+dlon <- 2.2                            # yields about 150km but depends on lat
+
+
+aiBa <- subset(ai,
+             circle=list(longitude=lon0, latitude=lat0, radius=radius))
+latitude <- aiBa[['latitude']]
+longitude <- aiBa[['longitude']]
+latitudelim <- lat0 + dlat * c(-1, 1)
+longitudelim <- lon0 + dlon * c(-1, 1)
+data(coastlineWorldFine, package="ocedata")
+par(mar=c(2, 2, 1, 1))
+mapPlot(coastlineWorldFine,
+        longitudelim=longitudelim, latitudelim=latitudelim,
+        col="tan",
+        projection="+proj=merc +lon_0=-64.75")
+mapPoints(longitude, latitude, cex=0.5)
+```
+
+Many types of analysis can be completed once the desired subset function is applied. For example, if the user was interested in temporal sampling frequencies within a 180 km radius of Bahamas, the following code is used:
+
+
+```{r dev='png', dpi=200, fig.cap='Histogram indicating yearly incidence of Argo sampling within 200 km of Bahamas.', fig.height=3, dev.args=list(pointsize=8)}
+
+par(mfrow=c(1,1), mar=c(3,3,1,1))
+clon <- -77.3963 # Longitude of Bahamas
+clat <- 25.0343 # Latitude of Bahamas
+aiBahamas<- subset(ai, circle=list(longitude=clon, latitude=clat, radius=180))
+h <- hist(aiBahamas@data$index$date, breaks="years", freq=TRUE, main="", xlab="Date")
+abline(h=median(h$counts), col=2)
+mtext(sprintf("median=%.1f profiles per year", median(h$counts)),
+      side=4, at=median(h$counts), col=2)
+```
+
+Where the horizontal line indicates the median number of floats per year at the indicated radius. This type of function could be useful for using argo to monitor seasonal variations in water properties on the scale of `r radius` km.
+
+*Exercise Two:* Use the rectangle command in subset to subset argo floats between a latitude of 20N and 30N, and a longitude of 65W-64W and plot. 
+
+# *Step Three:* Downloading the files in a chosen subset
+
+Once the desired data is selected using the ```subset``` function, the next step when using the `argoFloats` package is to download files in the chosen subset to read and analyze files using standard R tools.
+
+The authors of ```argoFloats``` have made this possible using the `getProfiles()` command. The ```getProfiles()``` function takes an index constructed with ```getIndex()```, creates a list of files to download from the server named in the index. Then these files are downloaded to the destdir directory, using filenames inferred from the source filenames. The value returned by `getProfiles()` is suitable for use by `readProfiles()`. `readProfiles()` can read argo profiles, creating a list of argo objects.
+
+
+# *Step Four:* Read and Analayze files using standard R Tools
+The fourth and final step when using the `argoFloats` package is to read and analyze files using stand R Tools. 
+
+## 4.1 Temperature-salinity
+
+If, for example, the user wanted to create a Temperature-Salinity diagram using profiles near Bahamas, the following code would be used:
+
+``` {r}
+index <- getIndex(destdir="~/data/argo")
+indexB <- subset(index, circle=list(longitude=-77.3963, latitude=25.0343, radius=180))
+profiles <- getProfiles(indexB)
+argos <- readProfiles(profiles)
+salinity <- unlist(lapply(argos, function(profile) handleFlags(profile)[["salinity"]]))
+temperature <- unlist(lapply(argos, function(profile) handleFlags(profile)[["temperature"]]))
+pressure <- unlist(lapply(argos, function(profile) handleFlags(profile)[["pressure"]]))
+ctd<-as.ctd(salinity,temperature,pressure)
+plotTS(ctd, eos="unesco")
+#png('tprofile.png', width=7, height=7, unit='in', res=200, pointsize= 14)
+```
+
+**Exercise three:** Create a salinity and temperature profile for the floats within a 180 km radius of Bahamas. 
+
+
+### 4.2 Making a Z/T plot 
+Further analysis that is possible for the user is a Z/T plot that shows both spatial and temporal sampling. The following code is used:
+
+```{r}
+aiRect <- subset(ai, rectangle=list(longitude=c(-78,-74), latitude=c(24,27)))
+n <- length(aiRect[['longitude']])
+par(mar=c(3,3,1,1), mgp=c(2, 0.7, 0))
+layout(matrix(1:2, nrow=1), widths=c(0.4, 0.6))
+date <- aiRect[["date"]]
+longitude <- aiRect[["longitude"]]
+latitude <- aiRect[["latitude"]]
+data(coastlineWorldFine, package="ocedata")
+mapPlot(coastlineWorldFine, col="gray",
+        longitudelim=c(-78, -74), latitudelim=c(24, 27),
+        projection="+proj=aea +lon_0=137 +lat_1=0 +lat_2=35",
+        grid=5)
+mapPoints(longitude, latitude, col="blue3", pch=20, cex=1/4)
+plot(date, latitude, pch=20, cex=1, col="blue3")
+```
+
+
+# Future of argoFloats
+As previously mentioned, the authors of the `argoFloats` package intend to expand on the subset function. More specifically, they plan to incorporate an option for polygon and time subsetting. Additionally, it is being considered to have a list of locations with their identified longitude and latitude to avoid the user needing to look up the coordinates if they are spatially subsetting. 
+
+# Solutions to exercises
+
+*Exercise One:* Create a histogram of sampling frequency of argo_bgc data for ```date_updated```
+
+``` 
+getIndex(
+    server = "ftp://usgodae.org/pub/outgoing/argo",
+    file = "argo_bio-profile_index.txt",
+    destdir = "~/data/argo",
+    age = 6,
+    quiet = FALSE,
+    debug = 3
+)
+
+if (!exists("bai"))
+    bai <- getIndex(file='argo_bio-profile_index.txt', destdir="~/data/argo",debug=3)
+
+hist(bai@data$index$date, breaks="year", main="", xlab="Time")
+```
+
+*Exercise Two:* Use the rectangle command in subset to subset argo floats between a latitude of 20N and 30N, and a longitude of 65W-64W and plot.
+
+```
+library(oce)
+data(coastlineWorldFine, package="ocedata")
+aiRect <- subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(20,30)))
+lat <- aiRect[['latitude']]
+lon <- aiRect[['longitude']]
+latlim <- c(20,30)
+lonlim<- c(-70,-64)
+mapPlot(coastlineWorldFine, col='lightgray', longitudelim=lonlim, latitudelim=latlim, projection="+proj=merc", grid=2)
+mapPoints(lon,lat)
+```
+
+**Exercise three:** Create a salinity and temperature profile for the floats within a 180 km radius of Bahamas.
+
+```
+
+index <- getIndex(destdir="~/data/argo")
+indexB <- subset(index, circle=list(longitude=-77.3963, latitude=25.0343, radius=180))
+profiles <- getProfiles(indexB)
+argos <- readProfiles(profiles)
+salinity <- unlist(lapply(argos, function(profile) handleFlags(profile)[["salinity"]]))
+temperature <- unlist(lapply(argos, function(profile) handleFlags(profile)[["temperature"]]))
+pressure <- unlist(lapply(argos, function(profile) handleFlags(profile)[["pressure"]]))
+ctd<-as.ctd(salinity,temperature,pressure)
+plotProfile(ctd, xtype='temperature', type='p')
+plotProfile(ctd, xtype='salinity', type='p')
+
+```
+
+# References
+
+1. Klein, Birgit, and Nelson Hogg. “On the Variability of 18 Degree Water
+Formation as Observed from Moored Instruments at 55°W.” Deep Sea Research Part
+I: Oceanographic Research Papers 43, no. 11 (November 1, 1996): 1777–1806.
+https://doi.org/10.1016/S0967-0637(96)00069-6.
+
+2. Roemmich, Dean, Gregory C. Johnson, Stephen Riser, Russ Davis, John Gilson, W. Brechner Owens, Silvia L. Garzoli, Claudia Schmid, and Mark Ignaszewski. "The Argo Program: Observing the global ocean with profiling floats." Oceanography 22, no. 2 (2009): 34-43.
+
+3. Roemmich, D., & Gilson, J. (2009). The 2004-2008 mean and annual cycle of temperature, salinity, and steric height in the global ocean from the Argo Program. Progress in oceanography, 82(2), 81-100.
+
+4. Wilson, S. (2014). Launching the Argo armada. Life, 51(1).
+
+5. Bittig, H. C., Maurer, T. L., Plant, J. N., Wong, A. P., Schmechtig, C., Claustre, H., . & Organelli, E. (2019). A BGC-Argo guide: Planning, deployment, data handling and usage. Frontiers in Marine Science, 6, 502.
+
+6. https://www.nodc.noaa.gov/argo/overview.htm
+
+
