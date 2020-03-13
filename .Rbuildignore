@@ -6,4 +6,6 @@
 ^.*.nc$
 ^.*.png$
 ^sandbox$
+^.*index.*rda$
+^CODE_OF_CONDUCT.md$
 

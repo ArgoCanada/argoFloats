@@ -50,7 +50,11 @@ setMethod(f="initialize",
 #' 6. If `i=="type"` then the `type` item in the `metadata` slot is
 #' returned. This is `"index"` if the object was created with
 #' [getIndex()] and `"profiles"` if it was created with [getProfiles()].
-#' 7. Otherwise, `i` must be the name of an item in the `index` item
+#' 7. If `i=="profile"` and the object `type` is `argos`, as will
+#' be the case if `x` is a return value from [readProfiles()], return
+#' either a list containing all profiles, or a requested profile;
+#' see [readProfiles()] for examples.
+#' 8. Otherwise, `i` must be the name of an item in the `index` item
 #' in the `data` slot, or a string that is made up of enough characters
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a
 #' shortcut for `"longitude"`.
@@ -81,6 +85,22 @@ setMethod(f="[[",
                   return(x@metadata$destdir)
               } else if (i == "type") {
                   return(x@metadata$type)
+              } else if (i == "profile" && x@metadata$type == "argos") {
+                  if (missing(j))
+                      return(x@data$argos)
+                  if (any(j < 0))
+                      stop("cannot handle a negative index")
+                  nargos <- length(x@data$argos)
+                  if (any(j > nargos))
+                      stop("cannot handle an index exceeding ", nargos)
+                  if (length(j) == 1) {
+                      return(x@data$argos[[j]])
+                  } else {
+                      res <- vector("list", length(j))
+                      for (jj in j)
+                          res[jj] <- x@data$argos[jj]
+                      return(res)
+                  }
               } else if (i == "index") {
                   if (x@metadata$type == "index") {
                       return(x@data$index)
