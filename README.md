@@ -14,8 +14,8 @@ library(oce)
 indexAll <- getIndex(destdir="~/data/argo")
 # The next line yields 63 profiles as of February 2020
 index <- subset(indexAll, circle=list(longitude=-59.915, latitude=44.934, radius=180))
-profiles <- getProfiles(index)
-argos <- readProfiles(profiles)
+profileIndex <- getProfiles(index)
+argos <- readProfiles(profileIndex)
 # Note: the following may be made moot by new functions.
 argosList <- argos[["profile"]]
 for (i in seq_len(length(argosList))) {
