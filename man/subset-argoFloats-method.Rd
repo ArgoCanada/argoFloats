@@ -7,30 +7,39 @@
 \S4method{subset}{argoFloats}(x, subset = NULL, ...)
 }
 \arguments{
-\item{x}{an \linkS4class{argoFloats} object.}
+\item{x}{an \linkS4class{argoFloats} object as created by \code{\link[=getIndex]{getIndex()}}.}
 
 \item{subset}{optional numerical or logical vector that indicates which
 indices of \code{x@data$index} to keep.  See example 1.}
 
-\item{...}{a single named list. At the moment, the only possibility
-is a list named \code{circle}and \code{rectangle}. \code{circle} holds elements
-named \code{longitude}, \code{latitude} and \code{radius} . The first two specify a location, and
-the third species a search radius in kilometers, as in Example 2.
-\code{rectangle} holds elements named \code{longitude} and \code{latitude} as in Example 3.}
+\item{...}{a list named \code{circle} or \code{rectangle}. See \dQuote{Details}
+and Examples 2 and 3.}
 }
 \value{
 An \linkS4class{argoFloats} object.
 }
 \description{
-Return a subset of an \linkS4class{argoFloats} object, either by specifying
+Isolate a subset of an \linkS4class{argoFloats} object of type \code{"index"},
+as created by \code{\link[=getIndex]{getIndex()}}, either by specifying
 indices to keep (using the \code{subset} argument) or by specifying
 a way to determine those indices (using the \code{...} argument).
 }
 \details{
-At the moment, this method only works for \linkS4class{argoFloats} objects
-of type \code{"index"}, as read by \code{\link[=getIndex]{getIndex()}}.
-A future version will also handle \code{...} arguments named
-\code{polygon}, and \code{time}.
+The possibilities for the \code{...} argument are as follows.
+\enumerate{
+\item A list named \code{circle} with elements named \code{longitude},
+\code{latitude} and \code{radius}.  The first two give the center of
+the subset region, and the third gives the radius of
+that region, in kilometers.
+\item A list named \code{rectangle}, which has an element named \code{longitude}
+with two elements giving the western and eastern limits of the
+subset region, and similar one named \code{latitude} giving the southern
+and northern limits.
+}
+
+In both cases, the notation is that longitude is positive
+for degrees East and negative for degrees West, and that latitude
+is positive for degrees North and negative for degrees South.
 }
 \examples{
 library(argoFloats)
@@ -43,7 +52,6 @@ cat("First three longitudes:", paste(aiFirstThree[["longitude"]]), "\n")
 # Example 2: Profiles within 200km of Sable Island
 aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
 cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
-
 
 # Example 3: Profiles in a given rectangle
 library(oce)

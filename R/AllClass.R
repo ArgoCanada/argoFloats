@@ -155,25 +155,32 @@ setMethod(f="summary",
 
 #' Subset an argoFloats Object
 #'
-#' Return a subset of an [argoFloats-class] object, either by specifying
+#' Isolate a subset of an [argoFloats-class] object of type `"index"`,
+#' as created by [getIndex()], either by specifying
 #' indices to keep (using the `subset` argument) or by specifying
 #' a way to determine those indices (using the `...` argument).
 #'
-#' At the moment, this method only works for [argoFloats-class] objects
-#' of type `"index"`, as read by [getIndex()].
-#' A future version will also handle `...` arguments named
-#' `polygon`, and `time`.
+#' The possibilities for the `...` argument are as follows.
+#' 1. A list named `circle` with elements named `longitude`,
+#' `latitude` and `radius`.  The first two give the center of
+#' the subset region, and the third gives the radius of
+#' that region, in kilometers.
+#' 2. A list named `rectangle`, which has an element named `longitude`
+#' with two elements giving the western and eastern limits of the
+#' subset region, and similar one named `latitude` giving the southern
+#' and northern limits.
 #'
-#' @param x an [argoFloats-class] object.
+#' In both cases, the notation is that longitude is positive
+#' for degrees East and negative for degrees West, and that latitude
+#' is positive for degrees North and negative for degrees South.
+#'
+#' @param x an [argoFloats-class] object as created by [getIndex()].
 #'
 #' @param subset optional numerical or logical vector that indicates which
 #' indices of `x@data$index` to keep.  See example 1.
 #'
-#' @param ... a single named list. At the moment, the only possibility
-#' is a list named `circle`and `rectangle`. `circle` holds elements
-#' named `longitude`, `latitude` and `radius` . The first two specify a location, and
-#' the third species a search radius in kilometers, as in Example 2.
-#' `rectangle` holds elements named `longitude` and `latitude` as in Example 3.
+#' @param ... a list named `circle` or `rectangle`. See \dQuote{Details}
+#' and Examples 2 and 3.
 #'
 #' @return An [argoFloats-class] object.
 #'
@@ -188,7 +195,6 @@ setMethod(f="summary",
 #' # Example 2: Profiles within 200km of Sable Island
 #' aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
 #' cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
-#'
 #'
 #' # Example 3: Profiles in a given rectangle
 #' library(oce)

@@ -153,7 +153,7 @@ downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quie
                 }
             }
             if (!success)
-                stop("failed to download, after ", retries, " retries")
+                stop("failed to download from '", url, "', after ", retries, " retries")
             if (1 == length(grep(".zip$", destfile[i]))) {
                 destinationClean <- gsub(".zip$", "", destination[i])
                 unzip(destination[i], exdir=destinationClean)
@@ -358,13 +358,13 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
     ## Handle nicknames
     if (file == "argo") {
         file <- "ar_index_global_prof.txt.gz"
-        argoFloatsDebug(debug, "file=\"argo\" converted to file=\"", file, "\"", sep="")
+        argoFloatsDebug(debug, "Converted file=\"argo\" to file=\"", file, "\".\n", sep="")
     } else if (file == "bgcargo") {
         file <- "argo_bio-profile_index.txt.gz"
-        argoFloatsDebug(debug, "file=\"bgcargo\" converted to file=\"", file, "\"", sep="")
+        argoFloatsDebug(debug, "Converted file=\"bgcargo\" to file=\"", file, "\".\n", sep="")
     } else if (file == "merged") {
         file <- "argo_merge-profile_index.txt.gz"
-        argoFloatsDebug(debug, "file=\"argo_merge\" converted to file=\"", file, "\"", sep="")
+        argoFloatsDebug(debug, "Converted file=\"argo_merge\" to file=\"", file, "\".\n", sep="")
     }
     url <- paste(server, file, sep="/")
     destfile <- paste(destdir, file, sep="/")
@@ -378,10 +378,12 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
     if (file.exists(destfileRda)) {
         destfileAge <- (as.integer(Sys.time()) - as.integer(file.info(destfileRda)$mtime)) / 86400 # in days
         if (destfileAge < age) {
-            argoFloatsDebug(debug, "The local .rda file\n    ", destfileRda, "\nis not being updated from\n    ", url, "\nbecause it is only", round(destfileAge, 4), "days old.\n", showTime=FALSE)
-            argoFloatsDebug(debug, "about to load '", destfileRda, "'.\n", sep="")
+            argoFloatsDebug(debug, "The local .rda file\n    '", destfileRda, "'\n", sep="")
+            argoFloatsDebug(debug, "is not being updated from\n    ", url, "\n", showTime=FALSE)
+            argoFloatsDebug(debug, "because it is only", round(destfileAge, 4), "days old.\n", showTime=FALSE)
+            argoFloatsDebug(debug, "About to load '", destfileRda, "'.\n", sep="")
             load(destfileRda)
-            argoFloatsDebug(debug, "finished loading '", destfileRda, "'.\n", sep="")
+            argoFloatsDebug(debug, "Finished loading '", destfileRda, "'.\n", sep="")
             res@metadata$server <- server
             res@metadata$file <- file
             res@metadata$destdir <- destdir
@@ -397,9 +399,12 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
     ## We need to download data. We do that to a temporary file, because we will be saving
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
-    argoFloatsDebug(debug, "downloading temporary index file\n    ", destfileTemp, "\nfrom\n    ", url, "\n", sep="")
+    argoFloatsDebug(debug, "About to download temporary index file\n", sep="")
+    argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
+    argoFloatsDebug(debug, "from\n", sep="", showTime=FALSE)
+    argoFloatsDebug(debug, "    '", url, "'\n", sep="", showTime=FALSE)
     curl::curl_download(url=url, destfile=destfileTemp, quiet=quiet, mode="wb")
-    argoFloatsDebug(debug, "about to read header.\n", sep="")
+    argoFloatsDebug(debug, "About to read header.\n", sep="")
     first <- readLines(destfileTemp, 100)
     hash <- which(grepl("^#", first))
     ftpRoot <- gsub("^[^:]*:[ ]*(.*)$", "\\1", first[which(grepl("^# FTP", first))[1]])
