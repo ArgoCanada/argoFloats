@@ -5,7 +5,7 @@
 \title{Get an Index of Available Argo Float Profiles}
 \usage{
 getIndex(
-  server = "ftp://usgodae.org/pub/outgoing/argo",
+  server = "auto",
   file = "argo",
   destdir = ".",
   age = 7,
@@ -14,12 +14,14 @@ getIndex(
 )
 }
 \arguments{
-\item{server}{character value giving the base name of the server, used in the
-construction of URL queries. Since servers tend to change over time, this
-is a good argument to check, when debugging code that once worked but
-now fails. As of March 2020, two useful values for \code{server} are
-\code{"ftp://usgodae.org/pub/outgoing/argo"} (which is the default)
-and \code{"ftp://ftp.ifremer.fr/ifremer/argo"}.}
+\item{server}{character value, or vector of character values, giving
+the base name(s) of server(s) holding argo profile files.  These servers
+are tried sequentially until one of them works.  The default
+value of \code{server} is \code{"auto"}, which is automatically
+expanded to
+\code{c("ftp://usgodae.org/pub/outgoing/argo", "ftp://ftp.ifremer.fr/ifremer/argo")},
+meaning to try the USGODAE server first, but to switch to the IFREMER
+server if that fails.}
 
 \item{file}{character value that indicates the file name on the server, as in
 the first column of the table given in \dQuote{Details}, or (for some file types)

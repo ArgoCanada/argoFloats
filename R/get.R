@@ -335,7 +335,7 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
 #' @importFrom curl curl_download
 #' @importFrom oce processingLogAppend
 #' @export
-getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
+getIndex <- function(server="auto",
                      file="argo",
                      destdir=".",
                      age=7,
@@ -350,6 +350,12 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
     res <- new("argoFloats", type="index")
     res@metadata$destdir <- destdir
     argoFloatsDebug(debug,  "getIndex(server=\"", server, "\", file=\"", file, "\"", ", destdir=\"", destdir, "\") {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
+    if (server == "auto") {
+        server <- c("ftp://usgodae.org/pub/outgoing/argo",
+                    "ftp://ftp.ifremer.fr/ifremer/argo")
+        argoFloatsDebug(debug, 'server "auto" expanded to c("',
+                        paste(server, collapse='", "'), '")\n', sep="")
+    }
     ## Ensure that we can save the file
     if (!file.exists(destdir))
         stop("First, create a directory named '", destdir, "'")
@@ -367,10 +373,12 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
         argoFloatsDebug(debug, "Converted file=\"argo_merge\" to file=\"", file, "\".\n", sep="")
     }
     url <- paste(server, file, sep="/")
+    print("next is url:")
+    print(url)
     destfile <- paste(destdir, file, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
     destfileRda <- gsub(".gz$", ".rda", destfile)
-    res@metadata$url <- url
+    res@metadata$url <- url[1]
     res@metadata$header <- NULL
     res@metadata$file <- destfileRda
 
@@ -379,12 +387,12 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
         destfileAge <- (as.integer(Sys.time()) - as.integer(file.info(destfileRda)$mtime)) / 86400 # in days
         if (destfileAge < age) {
             argoFloatsDebug(debug, "The local .rda file\n    '", destfileRda, "'\n", sep="")
-            argoFloatsDebug(debug, "is not being updated from\n    ", url, "\n", showTime=FALSE)
+            argoFloatsDebug(debug, "is not being updated from\n    ", url[1], "\n", showTime=FALSE)
             argoFloatsDebug(debug, "because it is only", round(destfileAge, 4), "days old.\n", showTime=FALSE)
             argoFloatsDebug(debug, "About to load '", destfileRda, "'.\n", sep="")
             load(destfileRda)
             argoFloatsDebug(debug, "Finished loading '", destfileRda, "'.\n", sep="")
-            res@metadata$server <- server
+            res@metadata$server <- server[1]
             res@metadata$file <- file
             res@metadata$destdir <- destdir
             res@metadata$destfileRda <- destfileRda
@@ -399,11 +407,21 @@ getIndex <- function(server="ftp://usgodae.org/pub/outgoing/argo",
     ## We need to download data. We do that to a temporary file, because we will be saving
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
-    argoFloatsDebug(debug, "About to download temporary index file\n", sep="")
-    argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
-    argoFloatsDebug(debug, "from\n", sep="", showTime=FALSE)
-    argoFloatsDebug(debug, "    '", url, "'\n", sep="", showTime=FALSE)
-    curl::curl_download(url=url, destfile=destfileTemp, quiet=quiet, mode="wb")
+    downloadSuccess <- FALSE
+    for (iurl in seq_along(url)) {
+        argoFloatsDebug(debug, "About to download temporary index file\n", sep="")
+        argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
+        argoFloatsDebug(debug, "from\n", sep="", showTime=FALSE)
+        argoFloatsDebug(debug, "    '", url[1], "'\n", sep="", showTime=FALSE)
+        status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=TRUE)
+        if (!inherits(status, "try-error")) {
+            downloadSuccess <- TRUE
+            break                      # the download worked
+        }
+        warning('Cannot download from server "', server, '".\n', immediate.=TRUE)
+    }
+    if (!downloadSuccess)
+        stop("Could not download the file from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
     argoFloatsDebug(debug, "About to read header.\n", sep="")
     first <- readLines(destfileTemp, 100)
     hash <- which(grepl("^#", first))
