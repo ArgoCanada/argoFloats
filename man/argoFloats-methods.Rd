@@ -37,11 +37,14 @@ save downloaded files, and later by \code{\link[=readProfiles]{readProfiles()}},
 works with the output from \code{\link[=getProfiles]{getProfiles()}}.
 \item If \code{i=="type"} then the \code{type} item in the \code{metadata} slot is
 returned. This is \code{"index"} if the object was created with
-\code{\link[=getIndex]{getIndex()}} and \code{"profiles"} if it was created with \code{\link[=getProfiles]{getProfiles()}}.
-\item If \code{i=="profile"} and the object \code{type} is \code{argos}, as will
+\code{\link[=getIndex]{getIndex()}}, \code{"profiles"} if it was created with \code{\link[=getProfiles]{getProfiles()}},
+and \code{"argos"} if it ws created with \code{\link[=readProfiles]{readProfiles()}}.
+\item If \code{i=="profile"} and the object \code{type} is \code{"argos"}, as will
 be the case if \code{x} is a return value from \code{\link[=readProfiles]{readProfiles()}}, return
 either a list containing all profiles, or a requested profile;
 see \code{\link[=readProfiles]{readProfiles()}} for examples.
+\item If \code{i=="profile count"} and the object \code{type} is \code{"argos"}
+then the number of profiles is returned.
 \item Otherwise, \code{i} must be the name of an item in the \code{index} item
 in the \code{data} slot, or a string that is made up of enough characters
 to uniquely identify such an item, e.g. \code{"lon"} may be used as a

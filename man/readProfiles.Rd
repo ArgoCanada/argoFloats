@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.R
 \name{readProfiles}
 \alias{readProfiles}
-\title{Read argo profiles that have been downloaded locally}
+\title{Read argo profiles from local files}
 \usage{
 readProfiles(profiles, debug = 0)
 }
@@ -39,9 +39,8 @@ index <- subset(indexAll, circle=list(longitude=-59.915, latitude=44.934, radius
 profiles <- getProfiles(index)
 argos <- readProfiles(profiles)
 # Extract and plot
-argosList <- argos[["profile"]]
-for (i in seq_len(length(argosList))) {
-    argo <- argosList[[i]]
+for (i in seq_len(argos[["profile count"]])) {
+    argo <- argos[["profile", i]]
     if (i == 1) {
         plotTS(argo, Slim=c(31, 36), Tlim=c(1,24), eos="gsw")
     } else {

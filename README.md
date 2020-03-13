@@ -16,14 +16,13 @@ indexAll <- getIndex(destdir="~/data/argo")
 index <- subset(indexAll, circle=list(longitude=-59.915, latitude=44.934, radius=180))
 profileIndex <- getProfiles(index)
 argos <- readProfiles(profileIndex)
-# Note: the following may be made moot by new functions.
-argosList <- argos[["profile"]]
-for (i in seq_len(length(argosList))) {
-    a <- argosList[[i]]
+# Draw a TS diagram, colour coded (with repeats) by profile number.
+for (i in seq_len(argos[["profile count"]])) {
+    argo <- argos[["profile", i]]
     if (i == 1) {
-        plotTS(a, Slim=c(31, 36), Tlim=c(1,22), eos="gsw")
+        plotTS(argo, Slim=c(31, 36), Tlim=c(1,21), eos="gsw")
     } else {
-        points(a[["SA"]], a[["CT"]], col=i%%10)
+        points(argo[["SA"]], argo[["CT"]], col=i%%10)
     }
 }
 ```

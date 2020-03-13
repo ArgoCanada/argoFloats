@@ -1,6 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-#' Read argo profiles that have been downloaded locally
+#' Read argo profiles from local files
 #'
 #' This works with either a list of local (netCDF) files,
 #' or a [argoFloats-class] object of type `"profiles"`, as
@@ -31,9 +31,8 @@
 #' profiles <- getProfiles(index)
 #' argos <- readProfiles(profiles)
 #' # Extract and plot
-#' argosList <- argos[["profile"]]
-#' for (i in seq_len(length(argosList))) {
-#'     argo <- argosList[[i]]
+#' for (i in seq_len(argos[["profile count"]])) {
+#'     argo <- argos[["profile", i]]
 #'     if (i == 1) {
 #'         plotTS(argo, Slim=c(31, 36), Tlim=c(1,24), eos="gsw")
 #'     } else {

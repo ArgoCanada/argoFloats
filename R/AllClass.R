@@ -49,11 +49,14 @@ setMethod(f="initialize",
 #' works with the output from [getProfiles()].
 #' 6. If `i=="type"` then the `type` item in the `metadata` slot is
 #' returned. This is `"index"` if the object was created with
-#' [getIndex()] and `"profiles"` if it was created with [getProfiles()].
-#' 7. If `i=="profile"` and the object `type` is `argos`, as will
+#' [getIndex()], `"profiles"` if it was created with [getProfiles()],
+#' and `"argos"` if it ws created with [readProfiles()].
+#' 7. If `i=="profile"` and the object `type` is `"argos"`, as will
 #' be the case if `x` is a return value from [readProfiles()], return
 #' either a list containing all profiles, or a requested profile;
 #' see [readProfiles()] for examples.
+#' 8. If `i=="profile count"` and the object `type` is `"argos"`
+#' then the number of profiles is returned.
 #' 8. Otherwise, `i` must be the name of an item in the `index` item
 #' in the `data` slot, or a string that is made up of enough characters
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a
@@ -101,6 +104,8 @@ setMethod(f="[[",
                           res[jj] <- x@data$argos[jj]
                       return(res)
                   }
+              } else if (i == "profile count" && x@metadata$type == "argos") {
+                  return(length(x@data$argos))
               } else if (i == "index") {
                   if (x@metadata$type == "index") {
                       return(x@data$index)
