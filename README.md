@@ -23,9 +23,7 @@ for (i in seq_len(length(argosList))) {
     if (i == 1) {
         plotTS(a, Slim=c(31, 36), Tlim=c(1,24), eos="gsw")
     } else {
-        SA <- a[["SA"]]
-        CT <- a[["CT"]]
-        points(SA, CT, col=i%%10)
+        points(a[["SA"]], a[["CT"]], col=i%%10)
     }
 }
 ```
