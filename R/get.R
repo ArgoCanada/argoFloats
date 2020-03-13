@@ -373,8 +373,6 @@ getIndex <- function(server="auto",
         argoFloatsDebug(debug, "Converted file=\"argo_merge\" to file=\"", file, "\".\n", sep="")
     }
     url <- paste(server, file, sep="/")
-    print("next is url:")
-    print(url)
     destfile <- paste(destdir, file, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
     destfileRda <- gsub(".gz$", ".rda", destfile)
