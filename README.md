@@ -21,7 +21,7 @@ argosList <- argos[["profile"]]
 for (i in seq_len(length(argosList))) {
     a <- argosList[[i]]
     if (i == 1) {
-        plotTS(a, Slim=c(31, 36), Tlim=c(1,24), eos="gsw")
+        plotTS(a, Slim=c(31, 36), Tlim=c(1,22), eos="gsw")
     } else {
         points(a[["SA"]], a[["CT"]], col=i%%10)
     }
