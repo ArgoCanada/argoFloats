@@ -46,25 +46,24 @@ library(argoFloats)
 data(index)
 
 # Example 1: First three profiles in dataset.
-firstThree <- subset(index, 1:3)
-cat("First three longitudes:", paste(firstThree[["longitude"]]), "\n")
+index3 <- subset(index, 1:3)
+cat("First 3 longitudes:", paste(index3[["longitude"]]), "\n")
 
-# Example 2: Profiles near Abaca Island
+# Example 2: Subsets near Abaca Island
 # 2A: circle around the island
 indexC <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=200))
 cat("Found", length(indexC[["longitude"]]), "profiles in circle around Abaca Island\n")
-# 2B: rectangle to northeast of Abaca Island
+# 2B: rectangle to northeast of the island
 indexR <- subset(index, rectangle=list(longitude=c(-77,-76), latitude=c(27,28)))
 cat("Found", length(indexR[["longitude"]]), "profiles in rectangle north of Abaca Island\n")
+# Show these subsets on a map
 library(oce)
 data(coastlineWorldFine, package="ocedata")
 par(mar=c(2, 2, 1, 1))
-mapPlot(coastlineWorldFine, col="tan",
-        projection="+proj=merc +lon_0=-78",
-        longitudelim=-77.06+c(-3,3),
-        latitudelim=26.54+c(-2,2))
-mapPoints(indexC[["longitude"]], indexC[["latitude"]], col="red")
-mapPoints(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
+plot(coastlineWorldFine, col="tan",
+     longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
+points(indexC[["longitude"]], indexC[["latitude"]], col="red")
+points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
 
 }
 \author{

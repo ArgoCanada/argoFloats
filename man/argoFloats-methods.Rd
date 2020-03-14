@@ -65,6 +65,17 @@ to uniquely identify such an item, e.g. \code{"lon"} may be used as a
 shortcut for \code{"longitude"}.
 }
 }
+\examples{
+data(index)
+# Full remote filename for first two item in index
+paste(index[["ftpRoot"]], index[[1:2]], sep="/")
+# File names and geographical locations of first 5 items in index
+index5 <- subset(index, 1:5)
+data.frame(file=gsub(".*/", "", index5[["file"]][1]),
+           lon=index5[["longitude"]],
+           lat=index5[["latitude"]])
+
+}
 \author{
 Dan Kelley
 }
