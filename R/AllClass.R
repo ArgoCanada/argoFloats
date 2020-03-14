@@ -10,9 +10,44 @@
 #' guide.**
 #'
 #' @importFrom methods new
-## @importFrom oce subset summary
 #' @name argoFloats-package
 #' @docType package
+NULL
+
+
+#' A sample index of profiles
+#'
+#' This is created by subsetting a global index to the 1783 Argo profiles
+#' that were within a 300km radius of Sable Island as of 2020 March 14, using
+#' the following code. Note the `destdir` value, which controls where a
+#' subsequent [getProfiles()] call will save data files.
+#'\preformatted{
+#  library(argoFloats)
+#' library(oce)
+#' indexAll <- getIndex(destdir="~/data/argo")
+#' index <- subset(indexAll, circle=list(longitude=-59.91, latitude=43.93, radius=300))
+#'}
+#'
+#' @examples
+#' library(oce)
+#' library(ocedata)
+#' library(argoFloats)
+#' data(coastlineWorldFine, package="ocedata")
+#' data(topoWorld, package="oce")
+#' data(index, package="argoFloats")
+#' plot(coastlineWorldFine,
+#'      clongitude=-59.91, clatitude=43.93, span=1000)
+#' points(index[["longitude"]], index[["latitude"]], pch=20, col=rgb(1,0,0,0.1))
+#' contour(topoWorld[["longitude"]], topoWorld[["latitude"]], -topoWorld[["z"]],
+#'            add=TRUE, levels=c(1000, 2000), col="blue", lty=c(2,1))
+#' legend("topleft", col="blue", lty=c(2,1), title="Water Depth [m]", legend=c("1000", "2000"),
+#'        bg="white")
+#'
+#' @name index
+#'
+#' @docType data
+#'
+#' @family datasets provided with argoFloats
 NULL
 
 #'
