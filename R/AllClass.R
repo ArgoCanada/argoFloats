@@ -33,31 +33,40 @@ setMethod(f="initialize",
 #' Look up a Value Within an argoFloats Object
 #'
 #' This function provides an easy way to look up values within an [argoFloats-class]
-#' object, without the need to know the exact structure of the data. There are three
-#' modes of operation, as determined by the `i` argument.
+#' object, without the need to know the exact structure of the data. The action
+#' taken by `[[` depends on the `type` element in the `metadata` slot of
+#' the object (which is set by the function that created the object), on the
+#' value of `i` and, in some cases, on the value of `j`; see \dQuote{Details}.
 #'
-#' The possibilities for the value of `i` are as follows.
-#' 1. If `i=="metadata"` then the `metadata` slot is returned.
-#' 2. If `i=="data"` then the `data` slot is returned.
-#' 3. If `i=="ftpRoot"` then the value of `ftpRoot` in the `metadata`
-#' slot is returned.  This is used by [getProfiles()] to construct
-#' a vector of URLs to download.
-#' 3. If `i=="ftpRoot"` then the value of `ftpRoot` in the `metadata`
-#' 5. If `i=="destdir"` then the `destdir` item in the `metadata` slot is
+#' 1. If `i=="metadata"` then the `metadata` slot of `x` is returned.
+#'
+#' 2. If `i=="data"` then the `data` slot of `x` is returned.
+#'
+#' 3. If `i=="ftpRoot"` and the object was created with [getIndex()],
+#' then then the value of `ftpRoot` in the `metadata`
+#' slot is returned.  (This is used by [getProfiles()] to construct
+#' a vector of URLs to download.)
+#'
+#' 4. If `i=="destdir"` then the `destdir` item in the `metadata` slot is
 #' returned. This is used by [getProfiles()] to decide where to
 #' save downloaded files, and later by [readProfiles()], which
 #' works with the output from [getProfiles()].
-#' 6. If `i=="type"` then the `type` item in the `metadata` slot is
+#'
+#' 5. If `i=="type"` then the `type` item in the `metadata` slot is
 #' returned. This is `"index"` if the object was created with
 #' [getIndex()], `"profiles"` if it was created with [getProfiles()],
-#' and `"argos"` if it ws created with [readProfiles()].
-#' 7. If `i=="profile"` and the object `type` is `"argos"`, as will
-#' be the case if `x` is a return value from [readProfiles()], return
-#' either a list containing all profiles, or a requested profile;
-#' see [readProfiles()] for examples.
-#' 8. If `i=="profile count"` and the object `type` is `"argos"`
-#' then the number of profiles is returned.
-#' 9. If `i` is a single integer, then it is taken as an index to
+#' and `"argos"` if it was created with [readProfiles()].
+#'
+#' 6. If `i=="profile"` and `x` was created with [readProfiles()],
+#' then the return value depends on the value of `j`. There are 4
+#' sub-cases.  (a) If `j` is not supplied, the return values is a list containing
+#' all the profiles in `x`, each an `argo` object as created by
+#' [oce::read.argo()] in the `oce` package.  (b) If `j` is a single integer,
+#' then the return value is a single `argo` object. (c) If `j` is a vector
+#' of integers, then a list of `argo` objects is returned. (d) If `j` is
+#' the string `"count"`, then the number of profiles is returned.
+#'
+#' 7. If `i` is a single integer, then it is taken as an index to
 #' the most important element of the `data` slot of `x`. If `x` was
 #' created with [getIndex()], then that element is a file name on the
 #' remote Argo server, and that is what is returned.  If `x`
@@ -65,9 +74,11 @@ setMethod(f="initialize",
 #' is returned.  And if `x` was created with [readProfiles()], then the
 #' an `argo` object (as created with [oce::read.argo()]
 #' in the `oce` package) is returned.
-#' 10. If `i` is a vector of integers, then a list is returned, with
-#' elements defined as in case 9, immediately above.
-#' 11. Otherwise, if `x` was created with [getIndex()], 
+#'
+#' 8. If `i` is a vector of integers, then a vector is returned, with
+#' each element being as defined for case 7.
+#'
+#' 9. Otherwise, if `x` was created with [getIndex()], 
 #' `i` may be the name of an item in the `index` item
 #' in the `data` slot, or a string that is made up of enough characters
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a
@@ -76,7 +87,7 @@ setMethod(f="initialize",
 #' @param x an [argoFloats-class] object.
 #' @param i a character value that specifies the item to be looked up;
 #' see \dQuote{Details}.
-#' @param j ignored.
+#' @param j supplemental index value, ignored unless `i` is `"profile"` (see \dQuote{Details}).
 #' @param ... ignored.
 #'
 #' @author Dan Kelley
@@ -89,24 +100,25 @@ setMethod(f="[[",
           definition=function(x, i, j, ...) {
               if (missing(i))
                   stop("Must name an item to retrieve, e.g. 'x[[\"latitude\"]]'", call.=FALSE)
+              type <- x@metadata$type
               if (is.numeric(i)) {
                   if (length(i) == 1) {
-                      return(switch(x@metadata$type,
+                      return(switch(type,
                                     "argos"=x@data$argos[[i]],
-                                    "index"=x@data$file[[i]],
+                                    "index"=x@data$index$file[[i]],
                                     "profiles"=x@data$file[[i]]))
                   } else {
-                      return(switch(x@metadata$type,
-                                    "argos"=lapply(i, function(X) x@data$argos[[X]]),
-                                    "index"=lapply(i, function(X) x@data$file[[X]]),
-                                    "profiles"=lapply(i, function(X) x@data$file[[X]])))
+                      return(switch(type,
+                                    "argos"=sapply(i, function(X) x@data$argos[[X]]),
+                                    "index"=sapply(i, function(X) x@data$index$file[[X]]),
+                                    "profiles"=sapply(i, function(X) x@data$file[[X]])))
                   }
               } else {
                   if (i == "data") {
                       return(x@data)
                   } else if (i == "metadata") {
                       return(x@metadata)
-                  } else if (i == "ftpRoot") {
+                  } else if (i == "ftpRoot" && type == "index") {
                       return(x@metadata$ftpRoot)
                   } else if (i == "destdir") {
                       return(x@metadata$destdir)
