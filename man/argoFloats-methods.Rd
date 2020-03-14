@@ -45,7 +45,18 @@ either a list containing all profiles, or a requested profile;
 see \code{\link[=readProfiles]{readProfiles()}} for examples.
 \item If \code{i=="profile count"} and the object \code{type} is \code{"argos"}
 then the number of profiles is returned.
-\item Otherwise, \code{i} must be the name of an item in the \code{index} item
+\item If \code{i} is a single integer, then it is taken as an index to
+the most important element of the \code{data} slot of \code{x}. If \code{x} was
+created with \code{\link[=getIndex]{getIndex()}}, then that element is a file name on the
+remote Argo server, and that is what is returned.  If \code{x}
+was created with \code{\link[=getProfiles]{getProfiles()}}, then the name of the local file
+is returned.  And if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then the
+an \code{argo} object (as created with \code{\link[oce:read.argo]{oce::read.argo()}}
+in the \code{oce} package) is returned.
+\item If \code{i} is a vector of integers, then a list is returned, with
+elements defined as in case 9, immediately above.
+\item Otherwise, if \code{x} was created with \code{\link[=getIndex]{getIndex()}},
+\code{i} may be the name of an item in the \code{index} item
 in the \code{data} slot, or a string that is made up of enough characters
 to uniquely identify such an item, e.g. \code{"lon"} may be used as a
 shortcut for \code{"longitude"}.

@@ -18,7 +18,7 @@ profileIndex <- getProfiles(index)
 argos <- readProfiles(profileIndex)
 # Draw a TS diagram, colour coded (with repeats) by profile number.
 for (i in seq_len(argos[["profile count"]])) {
-    argo <- argos[["profile", i]]
+    argo <- argos[["profile", i]] # or argo <- argos[[i]]
     if (i == 1) {
         plotTS(argo, Slim=c(31, 36), Tlim=c(1,21), eos="gsw")
     } else {

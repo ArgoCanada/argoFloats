@@ -57,7 +57,18 @@ setMethod(f="initialize",
 #' see [readProfiles()] for examples.
 #' 8. If `i=="profile count"` and the object `type` is `"argos"`
 #' then the number of profiles is returned.
-#' 8. Otherwise, `i` must be the name of an item in the `index` item
+#' 9. If `i` is a single integer, then it is taken as an index to
+#' the most important element of the `data` slot of `x`. If `x` was
+#' created with [getIndex()], then that element is a file name on the
+#' remote Argo server, and that is what is returned.  If `x`
+#' was created with [getProfiles()], then the name of the local file
+#' is returned.  And if `x` was created with [readProfiles()], then the
+#' an `argo` object (as created with [oce::read.argo()]
+#' in the `oce` package) is returned.
+#' 10. If `i` is a vector of integers, then a list is returned, with
+#' elements defined as in case 9, immediately above.
+#' 11. Otherwise, if `x` was created with [getIndex()], 
+#' `i` may be the name of an item in the `index` item
 #' in the `data` slot, or a string that is made up of enough characters
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a
 #' shortcut for `"longitude"`.
@@ -78,46 +89,60 @@ setMethod(f="[[",
           definition=function(x, i, j, ...) {
               if (missing(i))
                   stop("Must name an item to retrieve, e.g. 'x[[\"latitude\"]]'", call.=FALSE)
-              if (i == "data") {
-                  return(x@data)
-              } else if (i == "metadata") {
-                  return(x@metadata)
-              } else if (i == "ftpRoot") {
-                  return(x@metadata$ftpRoot)
-              } else if (i == "destdir") {
-                  return(x@metadata$destdir)
-              } else if (i == "type") {
-                  return(x@metadata$type)
-              } else if (i == "profile" && x@metadata$type == "argos") {
-                  if (missing(j))
-                      return(x@data$argos)
-                  if (any(j < 0))
-                      stop("cannot handle a negative index")
-                  nargos <- length(x@data$argos)
-                  if (any(j > nargos))
-                      stop("cannot handle an index exceeding ", nargos)
-                  if (length(j) == 1) {
-                      return(x@data$argos[[j]])
+              if (is.numeric(i)) {
+                  if (length(i) == 1) {
+                      return(switch(x@metadata$type,
+                                    "argos"=x@data$argos[[i]],
+                                    "index"=x@data$file[[i]],
+                                    "profiles"=x@data$file[[i]]))
                   } else {
-                      res <- vector("list", length(j))
-                      for (jj in j)
-                          res[jj] <- x@data$argos[jj]
-                      return(res)
+                      return(switch(x@metadata$type,
+                                    "argos"=lapply(i, function(X) x@data$argos[[X]]),
+                                    "index"=lapply(i, function(X) x@data$file[[X]]),
+                                    "profiles"=lapply(i, function(X) x@data$file[[X]])))
                   }
-              } else if (i == "profile count" && x@metadata$type == "argos") {
-                  return(length(x@data$argos))
-              } else if (i == "index") {
-                  if (x@metadata$type == "index") {
-                      return(x@data$index)
-                  } else {
-                      stop("can only retrieve 'index' for objects created by getIndex()")
+              } else {
+                  if (i == "data") {
+                      return(x@data)
+                  } else if (i == "metadata") {
+                      return(x@metadata)
+                  } else if (i == "ftpRoot") {
+                      return(x@metadata$ftpRoot)
+                  } else if (i == "destdir") {
+                      return(x@metadata$destdir)
+                  } else if (i == "type") {
+                      return(x@metadata$type)
+                  } else if (i == "profile" && x@metadata$type == "argos") {
+                      if (missing(j))
+                          return(x@data$argos)
+                      if (any(j < 0))
+                          stop("cannot handle a negative index")
+                      nargos <- length(x@data$argos)
+                      if (any(j > nargos))
+                          stop("cannot handle an index exceeding ", nargos)
+                      if (length(j) == 1) {
+                          return(x@data$argos[[j]])
+                      } else {
+                          res <- vector("list", length(j))
+                          for (jj in j)
+                              res[jj] <- x@data$argos[jj]
+                          return(res)
+                      }
+                  } else if (i == "profile count" && x@metadata$type == "argos") {
+                      return(length(x@data$argos))
+                  } else if (i == "index") {
+                      if (x@metadata$type == "index") {
+                          return(x@data$index)
+                      } else {
+                          stop("can only retrieve 'index' for objects created by getIndex()")
+                      }
+                  } else if (x@metadata$type == "index") {
+                      names <- names(x@data$index)
+                      w <- pmatch(i, names)
+                      if (!is.finite(w))
+                          stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
+                      return(x@data$index[[names[w]]])
                   }
-              } else if (x@metadata$type == "index") {
-                  names <- names(x@data$index)
-                  w <- pmatch(i, names)
-                  if (!is.finite(w))
-                      stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
-                  return(x@data$index[[names[w]]])
               }
               return(NULL)
           })
