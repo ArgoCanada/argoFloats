@@ -1,12 +1,12 @@
-## An index of data near Sable Island, at the shelf break south of Halifax,
-## Nova Scotia.  This produced 10 profiles, as of 2020 March 14.
+## An index of data near Marsh Harbour, Abaco Island, Bahamas 26.54124N -77.0636W.
+## For the selection of this location, see
+## https://github.com/dankelley/argoFloats/wiki/Focus-Island
+##
+## The download was done on 2020 March 14, and yielded 1788 profiles.
 
 library(argoFloats)
-library(oce)
 indexAll <- getIndex(destdir="~/data/argo")
-## NB radius=160 gives 10 profiles
-## NB radius=300 gives 1783 profiles
-index <- subset(indexAll, circle=list(longitude=-59.91, latitude=43.93, radius=300))
+index <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=200))
 save(index, file="index.rda")
 tools::resaveRdaFiles('index.rda')
 

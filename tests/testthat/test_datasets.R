@@ -4,15 +4,21 @@
 library(argoFloats)
 
 context("built-in datasets")
+data(index)
+test_that("index is of expected dimension", {
+          expect_equal(dim(index[["index"]]), c(953, 8))
+          expect_equal(names(index[["index"]]), c("file", "date", "latitude", "longitude", "ocean", "profiler_type",
+                                                  "institution", "date_update"))
+})
 
-test_that("index is of expected length", {
-          data("index")
-          expect_equal(dim(index@data$index), c(1783, 8))
+test_that("accessors work on 'index' data file", {
+          expect_equal(index[[1]], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(index[[1:2]], c("aoml/1901584/profiles/R1901584_124.nc", "aoml/1901584/profiles/R1901584_125.nc"))
 })
 
 test_that("subset works as expected", {
           data("index")
-          indexSI <- expect_silent(subset(index, circle=list(longitude=-59.91, latitude=43.93, radius=200)))
-          expect_equal(dim(indexSI@data$index), c(770, 8))
+          indexAI <- expect_silent(subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100)))
+          expect_equal(dim(indexAI[["index"]]), c(304, 8))
 })
 

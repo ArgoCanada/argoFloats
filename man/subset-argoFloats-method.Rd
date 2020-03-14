@@ -13,7 +13,7 @@
 indices of \code{x@data$index} to keep.  See example 1.}
 
 \item{...}{a list named \code{circle} or \code{rectangle}. See \dQuote{Details}
-and Examples 2 and 3.}
+and Example 2.}
 }
 \value{
 An \linkS4class{argoFloats} object.
@@ -43,28 +43,28 @@ is positive for degrees North and negative for degrees South.
 }
 \examples{
 library(argoFloats)
-\dontrun{
-ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+data(index)
+
 # Example 1: First three profiles in dataset.
-aiFirstThree <- subset(ai, 1:3)
-cat("First three longitudes:", paste(aiFirstThree[["longitude"]]), "\n")
+firstThree <- subset(index, 1:3)
+cat("First three longitudes:", paste(firstThree[["longitude"]]), "\n")
 
-# Example 2: Profiles within 200km of Sable Island
-aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
-cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
-
-# Example 3: Profiles in a given rectangle
+# Example 2: Profiles near Abaca Island
+# 2A: circle around the island
+indexC <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=200))
+cat("Found", length(indexC[["longitude"]]), "profiles in circle around Abaca Island\n")
+# 2B: rectangle to northeast of Abaca Island
+indexR <- subset(index, rectangle=list(longitude=c(-77,-76), latitude=c(27,28)))
+cat("Found", length(indexR[["longitude"]]), "profiles in rectangle north of Abaca Island\n")
 library(oce)
 data(coastlineWorldFine, package="ocedata")
-aiRect <- subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
-lat <- aiRect[['latitude']]
-lon <- aiRect[['longitude']]
-latlim <- c(40,43)
-lonlim<- c(-70,-64)
-mapPlot(coastlineWorldFine, col='lightgray', longitudelim=lonlim, latitudelim=latlim,
-        projection="+proj=merc", grid=2)
-mapPoints(lon,lat)
-}
+par(mar=c(2, 2, 1, 1))
+mapPlot(coastlineWorldFine, col="tan",
+        projection="+proj=merc +lon_0=-78",
+        longitudelim=-77.06+c(-3,3),
+        latitudelim=26.54+c(-2,2))
+mapPoints(indexC[["longitude"]], indexC[["latitude"]], col="red")
+mapPoints(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
 
 }
 \author{

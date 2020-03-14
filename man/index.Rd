@@ -5,15 +5,18 @@
 \alias{index}
 \title{A sample index of profiles}
 \description{
-This is created by subsetting a global index to the 1783 Argo profiles
-that were within a 300km radius of Sable Island as of 2020 March 14, using
-the following code. Note the \code{destdir} value, which controls where a
-subsequent \code{\link[=getProfiles]{getProfiles()}} call will save data files.
+This is created by subsetting a global index to the 1788 Argo profiles
+that were within a 200km radius of Marsh Harbour, Abaco Island,
+Bahamas, as of 2020 March 14, using
+the following code.
 \preformatted{
 library(oce)
 indexAll <- getIndex(destdir="~/data/argo")
-index <- subset(indexAll, circle=list(longitude=-59.91, latitude=43.93, radius=300))
+index <- subset(indexAll,
+    circle=list(longitude=-77.06,latitude=26.54,radius=200))
 }
+Note the \code{destdir} value, which controls where a
+subsequent call to \code{\link[=getProfiles]{getProfiles()}} would save data files.
 }
 \examples{
 library(oce)
@@ -22,13 +25,14 @@ library(argoFloats)
 data(coastlineWorldFine, package="ocedata")
 data(topoWorld, package="oce")
 data(index, package="argoFloats")
-plot(coastlineWorldFine,
-     clongitude=-59.91, clatitude=43.93, span=1000)
-points(index[["longitude"]], index[["latitude"]], pch=20, col=rgb(1,0,0,0.1))
-contour(topoWorld[["longitude"]], topoWorld[["latitude"]], -topoWorld[["z"]],
-           add=TRUE, levels=c(1000, 2000), col="blue", lty=c(2,1))
-legend("topleft", col="blue", lty=c(2,1), title="Water Depth [m]", legend=c("1000", "2000"),
-       bg="white")
+plot(coastlineWorldFine, col="tan",
+    clongitude=-77.06, clatitude=26.54, span=1300)
+points(index[["longitude"]], index[["latitude"]], cex=0.5, col=2)
+contour(topoWorld[["longitude"]], topoWorld[["latitude"]],
+    -topoWorld[["z"]],
+    add=TRUE, levels=c(1000,2000), lwd=c(1,3), col="blue")
+legend("topleft", col="blue", bg="white", lwd=c(1, 3),
+    title="Water Depth [m]", legend=c("1000", "2000"))
 
 }
 \concept{datasets provided with argoFloats}
