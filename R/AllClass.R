@@ -326,7 +326,7 @@ setMethod(f="summary",
 setMethod(f="subset",
           signature="argoFloats",
           definition=function(x, subset=NULL, ...) {
-              subsetString <- paste(deparse(substitute(subset)), collapse=" ")
+              ##subsetString <- paste(deparse(substitute(subset)), collapse=" ")
               dots <- list(...)
               dotsNames <- names(dots)
               if (missing(subset)) {

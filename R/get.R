@@ -210,7 +210,7 @@ downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quie
 #'
 #' @importFrom curl curl_download
 #' @export
-getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
+getProfileFromUrl <- function(url=NULL, destdir=".", destfile=NULL,
                               force=FALSE, retries=3, quiet=FALSE, debug=0)
 {
     argoFloatsDebug(debug,  "getProfileFromUrl(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
@@ -218,7 +218,7 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile,
     ## If the ID starts with ftp://, thn we just download the file directly, ignoring server
     if (!grepl("^ftp://", url))
         stop("the url must start with \"ftp://\" -- contact authors if you need this limitation to be lifted")
-    if (missing(destfile)) {
+    if (is.null(destfile)) {
         destfile <- gsub(".*/(.*).nc", "\\1.nc", url)
         argoFloatsDebug(debug,  "inferred destfile=\"", destfile, "\" from url.\n", sep="")
     }
@@ -388,16 +388,16 @@ getIndex <- function(server="auto",
             argoFloatsDebug(debug, "is not being updated from\n    ", url[1], "\n", showTime=FALSE)
             argoFloatsDebug(debug, "because it is only", round(destfileAge, 4), "days old.\n", showTime=FALSE)
             argoFloatsDebug(debug, "About to load '", destfileRda, "'.\n", sep="")
+            argoFloatsIndex <- NULL # defined again in next line; this is to quieten code-diagnostics
             load(destfileRda)
             argoFloatsDebug(debug, "Finished loading '", destfileRda, "'.\n", sep="")
             res@metadata$server <- server[1]
             res@metadata$file <- file
             res@metadata$destdir <- destdir
             res@metadata$destfileRda <- destfileRda
-            res@metadata$server <- argoFloatsIndex$server
-            res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
-            res@metadata$header <- argoFloatsIndex$header
-            res@data$index <- argoFloatsIndex$index
+            res@metadata$ftpRoot <- argoFloatsIndex[["ftpRoot"]]
+            res@metadata$header <- argoFloatsIndex[["header"]]
+            res@data$index <- argoFloatsIndex[["index"]]
             argoFloatsDebug(debug, "} # getIndex()\n", style="bold", showTime=FALSE, unindent=1)
             return(res)
         }
