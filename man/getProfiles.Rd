@@ -4,11 +4,22 @@
 \alias{getProfiles}
 \title{Get Profiles Named in an argoFloats Index}
 \usage{
-getProfiles(index, force = FALSE, retries = 3, quiet = FALSE, debug = 0)
+getProfiles(
+  index,
+  destdir = NULL,
+  force = FALSE,
+  retries = 3,
+  quiet = FALSE,
+  debug = 0
+)
 }
 \arguments{
 \item{index}{an \linkS4class{argoFloats} object of type \code{"index"}, as created
 by \code{\link[=getIndex]{getIndex()}}.}
+
+\item{destdir}{character value naming the directory into which to store the
+downloaded Argo files, or \code{NULL} (the default) to use the value of
+\code{destdir} that was provided in the \code{\link[=getIndex]{getIndex()}} call that created \code{index}.}
 
 \item{force}{a logical value that indicates whether to force a file
 download, even if the destination file already exists.}
@@ -39,6 +50,18 @@ using filenames inferred from the source filenames. The
 value returned by \code{\link[=getProfiles]{getProfiles()}} is suitable for use
 by \code{\link[=readProfiles]{readProfiles()}}, and an example of this is given
 in the documentation for the latter function.
+}
+\examples{
+# Download some Argo data files.
+# Note: ?getProfiles explains how to read the files.
+\donttest{
+library(argoFloats)
+data(index)
+index4 <- subset(index, 1:4)
+profiles4 <- getProfiles(index4, destdir=".")
+# See ?readProfiles for how to read the files now downloaded.
+}
+
 }
 \author{
 Dan Kelley

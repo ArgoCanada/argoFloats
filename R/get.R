@@ -475,6 +475,9 @@ getIndex <- function(server="auto",
 #'
 #' @param index an [argoFloats-class] object of type `"index"`, as created
 #' by [getIndex()].
+#' @param destdir character value naming the directory into which to store the
+#' downloaded Argo files, or `NULL` (the default) to use the value of
+#' `destdir` that was provided in the [getIndex()] call that created `index`.
 #' @template force
 #' @template retries
 #' @template quiet
@@ -483,12 +486,23 @@ getIndex <- function(server="auto",
 #' @return An object of class [argoFloats-class] with type=`"profiles"`, which
 #' is suitable as the first argument of [readProfiles()].
 #'
+#' @examples
+#' # Download some Argo data files.
+#' # Note: ?getProfiles explains how to read the files.
+#'\donttest{
+#' library(argoFloats)
+#' data(index)
+#' index4 <- subset(index, 1:4)
+#' profiles4 <- getProfiles(index4, destdir=".")
+#' # See ?readProfiles for how to read the files now downloaded.
+#'}
+#'
 #' @author Dan Kelley
 #'
 #' @importFrom oce processingLogAppend vectorShow
 #'
 #' @export
-getProfiles <- function(index, force=FALSE, retries=3, quiet=FALSE, debug=0)
+getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE, debug=0)
 {
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
@@ -497,6 +511,8 @@ getProfiles <- function(index, force=FALSE, retries=3, quiet=FALSE, debug=0)
         stop("'index' must be an object created by getIndex()")
     res <- new("argoFloats", type="profiles")
     n <- length(index[["file"]])
+    if (is.null(destdir))
+        destdir <- index[["destdir"]]
     if (n == 0) {
         warning("In getProfiles() : the index has no files, so there is nothing to 'get'\n", call.=FALSE)
         file <- NULL
@@ -507,11 +523,11 @@ getProfiles <- function(index, force=FALSE, retries=3, quiet=FALSE, debug=0)
         urls <- paste0(index[["ftpRoot"]], "/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
         for (i in seq_along(urls)) {
-            file[i] <- getProfileFromUrl(urls[i], destdir=index[["destdir"]],
+            file[i] <- getProfileFromUrl(urls[i], destdir=destdir,
                                          force=force, retries=retries, quiet=quiet, debug=debug)
         }
     }
-    res@metadata$destdir <- index[["destdir"]]
+    res@metadata$destdir <- destdir
     res@data$file <- file
     res@processingLog <- processingLogAppend(res@processingLog, "getProfiles(index, ...)")
     argoFloatsDebug(debug,  "} # getProfiles()\n", style="bold", showTime=FALSE, unindent=1)

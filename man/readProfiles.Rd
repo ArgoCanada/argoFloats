@@ -29,25 +29,23 @@ or a \linkS4class{argoFloats} object of type \code{"profiles"}, as
 created by \code{\link[=getProfiles]{getProfiles()}}.
 }
 \examples{
-\dontrun{
+# Download and plot some profiles.
+\donttest{
 library(argoFloats)
-library(oce)
-# TS diagram using Argo profiles near Sable Island.
-indexAll <- getIndex(destdir="~/data/argo")
-# The next line yields 63 profiles as of February 2020
-index <- subset(indexAll, circle=list(longitude=-59.915, latitude=44.934, radius=180))
-profiles <- getProfiles(index)
+data(index)
+index4 <- subset(index, 1:4)
+profiles <- getProfiles(index4, destdir=".")
 argos <- readProfiles(profiles)
-# Extract and plot
-for (i in seq_len(argos[["profile count"]])) {
-    argo <- argos[["profile", i]]
-    if (i == 1) {
-        plotTS(argo, Slim=c(31, 36), Tlim=c(1,24), eos="gsw")
-    } else {
-        SA <- argo[["SA"]]
-        CT <- argo[["CT"]]
-        points(SA, CT, col=i\%\%10)
-    }
+par(mfrow=c(2, 2))
+library(oce)
+for (i in 1:2) {
+  A <- argos[[i]]
+  filename <- gsub(".*/", "", A[["filename"]])
+  plotTS(A, eos="unesco")
+  mtext(filename, line=0.7, cex=par("cex"))
+  Aclean <- handleFlags(A)
+  plotTS(Aclean, eos="unesco")
+  mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
 }
 }
 
