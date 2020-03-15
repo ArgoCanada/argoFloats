@@ -1,4 +1,4 @@
-png("exampleTS.png", width=7, height=5, unit="in", res=120, pointsize=14)
+png("exampleTS.png", width=5, height=3, unit="in", res=100, pointsize=12)
 library(argoFloats)
 library(oce)
 # TS diagram for profiles near Abaco Island, Bahamas.
