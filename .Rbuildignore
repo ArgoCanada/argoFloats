@@ -9,4 +9,5 @@
 ^.*_index_.*rda$
 ^CODE_OF_CONDUCT.md$
 ^create_data$
+^exampleTS.R$
 
