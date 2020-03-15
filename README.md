@@ -10,22 +10,30 @@ February of 2020.
 ```R
 library(argoFloats)
 library(oce)
-# TS diagram using Argo profiles near Sable Island.
+# TS diagram for profiles near Abaco Island, Bahamas.
 indexAll <- getIndex(destdir="~/data/argo")
-# The next line yields 63 profiles as of February 2020
-index <- subset(indexAll, circle=list(longitude=-59.915, latitude=44.934, radius=180))
+index <- subset(indexAll,
+                circle=list(longitude=-77.06,latitude=26.54,radius=30))
 profileIndex <- getProfiles(index)
 argos <- readProfiles(profileIndex)
-# Draw a TS diagram, colour coded (with repeats) by profile number.
+first <- TRUE
+# Semi-transparent colours hint at sample repeatability
+col <- rgb(0, 0, 1, 0.4)
 for (i in seq_len(argos[["profile count"]])) {
-    argo <- argos[["profile", i]] # or argo <- argos[[i]]
-    if (i == 1) {
-        plotTS(argo, Slim=c(31, 36), Tlim=c(1,21), eos="gsw")
-    } else {
-        points(argo[["SA"]], argo[["CT"]], col=i%%10)
+    argo <- handleFlags(argos[["profile", i]])
+    # Skip profiles which lack no valid salinities
+    ok <- sum(is.finite((argo[["salinity"]])))
+    if (ok > 0) {
+        if (first) {
+            plotTS(argo, Slim=c(35, 37), Tlim=c(3, 30), eos="gsw",
+                   cex=0.5, col=col, pch=20)
+            first <- FALSE
+        } else {
+            points(argo[["SA"]], argo[["CT"]],
+                   cex=0.5, col=col, pch=20)
+        }
     }
 }
 ```
-
 ![Sample TS plot.](exampleTS.png)
 
