@@ -280,8 +280,10 @@ setMethod(f="summary",
 #' with two elements giving the western and eastern limits of the
 #' subset region, and similar one named `latitude` giving the southern
 #' and northern limits.
+#' 3. A list named `parameter`, which has argo, argo_bgc, or argo_merge parameter
+#' elements indicating the parameter of interest`
 #'
-#' In both cases, the notation is that longitude is positive
+#' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
 #' is positive for degrees North and negative for degrees South.
 #'
@@ -290,7 +292,7 @@ setMethod(f="summary",
 #' @param subset optional numerical or logical vector that indicates which
 #' indices of `x@data$index` to keep.  See example 1.
 #'
-#' @param ... a list named `circle` or `rectangle`. See \dQuote{Details}
+#' @param ... a list named `circle`,`rectangle`, or `parameter`. See \dQuote{Details}
 #' and Example 2.
 #'
 #' @return An [argoFloats-class] object.
@@ -318,6 +320,9 @@ setMethod(f="summary",
 #'      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 #' points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 #' points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
+#' 
+#' Example 3: Subsetting argo_bgc data that contains 'DOXY'
+#' aiOxygen<- subset(ai, parameter="DOXY")
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -331,7 +336,7 @@ setMethod(f="subset",
               dotsNames <- names(dots)
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle', or 'rectangle'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', or 'parameter'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
                   ## FIXME: permit args 'polygon', 'rectangle', and 'time'.
@@ -366,8 +371,16 @@ setMethod(f="subset",
                       if (sum(keeplat) < 1)
                           warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given latitudes", call.=FALSE)
                       x@data$index <- x@data$index[keeplon&keeplat, ]
-                  } else {  
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle' or 'rectangle'", call.=FALSE)
+                  } 
+                  
+                  else if (dotsNames[1]=="parameter") {
+                      parameter<- dots[[1]]
+                      if (!is.list(dots[1]))
+                          stop('Jaimie')
+                                       }
+                  
+                  else {  
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle', or 'parameter'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)
