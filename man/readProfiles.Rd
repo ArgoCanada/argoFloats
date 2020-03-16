@@ -33,8 +33,8 @@ created by \code{\link[=getProfiles]{getProfiles()}}.
 \donttest{
 library(argoFloats)
 data(index)
-index4 <- subset(index, 1:4)
-profiles <- getProfiles(index4, destdir=".")
+index2 <- subset(index, 1:2)
+profiles <- getProfiles(index2, destdir=".")
 argos <- readProfiles(profiles)
 par(mfrow=c(2, 2))
 library(oce)
