@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.R
 \name{readProfiles}
 \alias{readProfiles}
-\title{Read argo profiles, creating a list of argo objects}
+\title{Read argo profiles from local files}
 \usage{
 readProfiles(profiles, debug = 0)
 }
@@ -18,32 +18,34 @@ a small amount of debugging information is printed.  Note that
 the file, and so it will print messages if \code{debug} exceeds 1.}
 }
 \value{
-\link{readProfiles} returns a list of \code{argo} objects,
-created by \code{\link[oce:read.argo]{oce::read.argo()}}, the documentation for which
-provides information on what can be done with such objects.
+\link{readProfiles} returns an \linkS4class{argoFloats} object
+with \code{type="argo"}, in which the \code{data} slot
+contains a list named \code{argos} that holds objects
+that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 }
 \description{
-Read argo profiles, creating a list of argo objects
+This works with either a list of local (netCDF) files,
+or a \linkS4class{argoFloats} object of type \code{"profiles"}, as
+created by \code{\link[=getProfiles]{getProfiles()}}.
 }
 \examples{
-\dontrun{
+# Download and plot some profiles.
+\donttest{
 library(argoFloats)
+data(index)
+index4 <- subset(index, 1:4)
+profiles <- getProfiles(index4, destdir=".")
+argos <- readProfiles(profiles)
+par(mfrow=c(2, 2))
 library(oce)
-# TS diagram using Argo profiles near Sable Island.
-index <- getIndex(destdir="~/data/argo")
-# The next line yields 63 profiles as of February 2020
-indexSI <- subset(index, circle=list(longitude=-59.915, latitude=44.934, radius=180))
-profilesSI <- getProfiles(indexSI)
-argosSI <- readProfiles(profilesSI)
-for (i in seq_len(length(argosSI))) {
-    argo <- argosSI[[i]]
-    if (i == 1) {
-        plotTS(argo, Slim=c(31, 36), Tlim=c(1,24), eos="gsw")
-    } else {
-        SA <- argo[["SA"]]
-        CT <- argo[["CT"]]
-        points(SA, CT, col=i\%\%10)
-    }
+for (i in 1:2) {
+  A <- argos[[i]]
+  filename <- gsub(".*/", "", A[["filename"]])
+  plotTS(A, eos="unesco")
+  mtext(filename, line=0.7, cex=par("cex"))
+  Aclean <- handleFlags(A)
+  plotTS(Aclean, eos="unesco")
+  mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
 }
 }
 

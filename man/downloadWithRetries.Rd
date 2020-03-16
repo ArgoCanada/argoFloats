@@ -26,9 +26,9 @@ File clutter is reduced by creating a top-level directory called
 \code{data}, with subdirectories for various file types; see
 \dQuote{Examples}.}
 
-\item{destfile}{character value indicating the name of the file.
-If not supplied, then the file name is constructed from the other
-parameters of the function call, so that subsequent calls with
+\item{destfile}{either character value indicating the name of the file
+or \code{NULL} (the default), in which case the file name is constructed from
+the other parameters of the function call, so that subsequent calls with
 the same parameters will yield the same result; this is useful
 for caching.}
 

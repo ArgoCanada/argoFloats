@@ -7,7 +7,7 @@
 getProfileFromUrl(
   url = NULL,
   destdir = ".",
-  destfile,
+  destfile = NULL,
   force = FALSE,
   retries = 3,
   quiet = FALSE,

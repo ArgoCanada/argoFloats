@@ -7,3 +7,5 @@
 Rplot.*png
 .Rapp.history
 .DS_Store
+*.out
+Rplot*.png

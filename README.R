@@ -1,13 +1,4 @@
-# argoFloats
-
-This R package provides tools for downloading and analyzing collections of
-oceanographic Argo float datasets.
-
-The code and graph below show an example of the construction of a
-temperature-salinity diagram inferred from the 63 float profiles that were
-within 160km of Sable Island, according to the Argo repository accessed in late
-February of 2020.
-```R
+png("exampleTS.png", width=5, height=5, unit="in", res=120, pointsize=10)
 library(argoFloats)
 library(oce)
 # TS diagram for profiles near Abaco Island, Bahamas.
@@ -34,6 +25,5 @@ for (i in seq_len(argos[["profile count"]])) {
         }
     }
 }
-```
-![Sample TS plot.](exampleTS.png)
+dev.off()
 

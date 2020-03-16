@@ -6,4 +6,9 @@
 ^.*.nc$
 ^.*.png$
 ^sandbox$
+^.*_index_.*rda$
+^CODE_OF_CONDUCT.md$
+^create_data$
+^exampleTS.R$
+^README.R$
 

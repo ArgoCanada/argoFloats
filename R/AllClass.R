@@ -10,9 +10,48 @@
 #' guide.**
 #'
 #' @importFrom methods new
-## @importFrom oce subset summary
 #' @name argoFloats-package
 #' @docType package
+NULL
+
+
+#' A sample index of profiles
+#'
+#' This is created by subsetting a global index to the 1788 Argo profiles
+#' that were within a 200km radius of Marsh Harbour, Abaco Island,
+#' Bahamas, as of 2020 March 14, using
+#' the following code.
+#'\preformatted{
+#  library(argoFloats)
+#' library(oce)
+#' indexAll <- getIndex(destdir="~/data/argo")
+#' index <- subset(indexAll,
+#'     circle=list(longitude=-77.06,latitude=26.54,radius=200))
+#'}
+#' Note the `destdir` value, which controls where a
+#' subsequent call to [getProfiles()] would save data files.
+#'
+#' @examples
+#' library(oce)
+#' library(ocedata)
+#' library(argoFloats)
+#' data(coastlineWorldFine, package="ocedata")
+#' data(topoWorld, package="oce")
+#' data(index, package="argoFloats")
+#' plot(coastlineWorldFine, col="tan",
+#'     clongitude=-77.06, clatitude=26.54, span=1300)
+#' points(index[["longitude"]], index[["latitude"]], cex=0.5, col=2)
+#' contour(topoWorld[["longitude"]], topoWorld[["latitude"]],
+#'     -topoWorld[["z"]],
+#'     add=TRUE, levels=c(1000,2000), lwd=c(1,3), col="blue")
+#' legend("topleft", col="blue", bg="white", lwd=c(1, 3),
+#'     title="Water Depth [m]", legend=c("1000", "2000"))
+#'
+#' @name index
+#'
+#' @docType data
+#'
+#' @family datasets provided with argoFloats
 NULL
 
 #'
@@ -33,24 +72,53 @@ setMethod(f="initialize",
 #' Look up a Value Within an argoFloats Object
 #'
 #' This function provides an easy way to look up values within an [argoFloats-class]
-#' object, without the need to know the exact structure of the data. There are three
-#' modes of operation, as determined by the `i` argument.
+#' object, without the need to know the exact structure of the data. The action
+#' taken by `[[` depends on the `type` element in the `metadata` slot of
+#' the object (which is set by the function that created the object), on the
+#' value of `i` and, in some cases, on the value of `j`; see \dQuote{Details}.
 #'
-#' The possibilities for the value of `i` are as follows.
-#' 1. If `i=="metadata"` then the `metadata` slot is returned.
-#' 2. If `i=="data"` then the `data` slot is returned.
-#' 3. If `i=="ftpRoot"` then the value of `ftpRoot` in the `metadata`
-#' slot is returned.  This is used by [getProfiles()] to construct
-#' a vector of URLs to download.
-#' 3. If `i=="ftpRoot"` then the value of `ftpRoot` in the `metadata`
-#' 5. If `i=="destdir"` then the `destdir` item in the `metadata` slot is
+#' 1. If `i=="metadata"` then the `metadata` slot of `x` is returned.
+#'
+#' 2. If `i=="data"` then the `data` slot of `x` is returned.
+#'
+#' 3. If `i=="ftpRoot"` and the object was created with [getIndex()],
+#' then then the value of `ftpRoot` in the `metadata`
+#' slot is returned.  (This is used by [getProfiles()] to construct
+#' a vector of URLs to download.)
+#'
+#' 4. If `i=="destdir"` then the `destdir` item in the `metadata` slot is
 #' returned. This is used by [getProfiles()] to decide where to
 #' save downloaded files, and later by [readProfiles()], which
 #' works with the output from [getProfiles()].
-#' 6. If `i=="type"` then the `type` item in the `metadata` slot is
+#'
+#' 5. If `i=="type"` then the `type` item in the `metadata` slot is
 #' returned. This is `"index"` if the object was created with
-#' [getIndex()] and `"profiles"` if it was created with [getProfiles()].
-#' 7. Otherwise, `i` must be the name of an item in the `index` item
+#' [getIndex()], `"profiles"` if it was created with [getProfiles()],
+#' and `"argos"` if it was created with [readProfiles()].
+#'
+#' 6. If `i=="profile"` and `x` was created with [readProfiles()],
+#' then the return value depends on the value of `j`. There are 4
+#' sub-cases.  (a) If `j` is not supplied, the return values is a list containing
+#' all the profiles in `x`, each an `argo` object as created by
+#' [oce::read.argo()] in the `oce` package.  (b) If `j` is a single integer,
+#' then the return value is a single `argo` object. (c) If `j` is a vector
+#' of integers, then a list of `argo` objects is returned. (d) If `j` is
+#' the string `"count"`, then the number of profiles is returned.
+#'
+#' 7. If `i` is a single integer, then it is taken as an index to
+#' the most important element of the `data` slot of `x`. If `x` was
+#' created with [getIndex()], then that element is a file name on the
+#' remote Argo server, and that is what is returned.  If `x`
+#' was created with [getProfiles()], then the name of the local file
+#' is returned.  And if `x` was created with [readProfiles()], then the
+#' an `argo` object (as created with [oce::read.argo()]
+#' in the `oce` package) is returned.
+#'
+#' 8. If `i` is a vector of integers, then a vector is returned, with
+#' each element being as defined for case 7.
+#'
+#' 9. Otherwise, if `x` was created with [getIndex()],
+#' `i` may be the name of an item in the `index` item
 #' in the `data` slot, or a string that is made up of enough characters
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a
 #' shortcut for `"longitude"`.
@@ -58,8 +126,18 @@ setMethod(f="initialize",
 #' @param x an [argoFloats-class] object.
 #' @param i a character value that specifies the item to be looked up;
 #' see \dQuote{Details}.
-#' @param j ignored.
+#' @param j supplemental index value, ignored unless `i` is `"profile"` (see \dQuote{Details}).
 #' @param ... ignored.
+#'
+#' @examples
+#' data(index)
+#' # Full remote filename for first two item in index
+#' paste(index[["ftpRoot"]], index[[1:2]], sep="/")
+#' # File names and geographical locations of first 5 items in index
+#' index5 <- subset(index, 1:5)
+#' data.frame(file=gsub(".*/", "", index5[["file"]][1]),
+#'            lon=index5[["longitude"]],
+#'            lat=index5[["latitude"]])
 #'
 #' @author Dan Kelley
 #'
@@ -71,28 +149,61 @@ setMethod(f="[[",
           definition=function(x, i, j, ...) {
               if (missing(i))
                   stop("Must name an item to retrieve, e.g. 'x[[\"latitude\"]]'", call.=FALSE)
-              if (i == "data") {
-                  return(x@data)
-              } else if (i == "metadata") {
-                  return(x@metadata)
-              } else if (i == "ftpRoot") {
-                  return(x@metadata$ftpRoot)
-              } else if (i == "destdir") {
-                  return(x@metadata$destdir)
-              } else if (i == "type") {
-                  return(x@metadata$type)
-              } else if (i == "index") {
-                  if (x@metadata$type == "index") {
-                      return(x@data$index)
+              type <- x@metadata$type
+              if (is.numeric(i)) {
+                  if (length(i) == 1) {
+                      return(switch(type,
+                                    "argos"=x@data$argos[[i]],
+                                    "index"=x@data$index$file[[i]],
+                                    "profiles"=x@data$file[[i]]))
                   } else {
-                      stop("can only retrieve 'index' for objects created by getIndex()")
+                      return(switch(type,
+                                    "argos"=sapply(i, function(X) x@data$argos[[X]]),
+                                    "index"=sapply(i, function(X) x@data$index$file[[X]]),
+                                    "profiles"=sapply(i, function(X) x@data$file[[X]])))
                   }
-              } else if (x@metadata$type == "index") {
-                  names <- names(x@data$index)
-                  w <- pmatch(i, names)
-                  if (!is.finite(w))
-                      stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
-                  return(x@data$index[[names[w]]])
+              } else {
+                  if (i == "data") {
+                      return(x@data)
+                  } else if (i == "metadata") {
+                      return(x@metadata)
+                  } else if (i == "ftpRoot" && type == "index") {
+                      return(x@metadata$ftpRoot)
+                  } else if (i == "destdir") {
+                      return(x@metadata$destdir)
+                  } else if (i == "type") {
+                      return(x@metadata$type)
+                  } else if (i == "profile" && x@metadata$type == "argos") {
+                      if (missing(j))
+                          return(x@data$argos)
+                      if (any(j < 0))
+                          stop("cannot handle a negative index")
+                      nargos <- length(x@data$argos)
+                      if (any(j > nargos))
+                          stop("cannot handle an index exceeding ", nargos)
+                      if (length(j) == 1) {
+                          return(x@data$argos[[j]])
+                      } else {
+                          res <- vector("list", length(j))
+                          for (jj in j)
+                              res[jj] <- x@data$argos[jj]
+                          return(res)
+                      }
+                  } else if (i == "profile count" && x@metadata$type == "argos") {
+                      return(length(x@data$argos))
+                  } else if (i == "index") {
+                      if (x@metadata$type == "index") {
+                          return(x@data$index)
+                      } else {
+                          stop("can only retrieve 'index' for objects created by getIndex()")
+                      }
+                  } else if (x@metadata$type == "index") {
+                      names <- names(x@data$index)
+                      w <- pmatch(i, names)
+                      if (!is.finite(w))
+                          stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
+                      return(x@data$index[[names[w]]])
+                  }
               }
               return(NULL)
           })
@@ -180,34 +291,33 @@ setMethod(f="summary",
 #' indices of `x@data$index` to keep.  See example 1.
 #'
 #' @param ... a list named `circle` or `rectangle`. See \dQuote{Details}
-#' and Examples 2 and 3.
+#' and Example 2.
 #'
 #' @return An [argoFloats-class] object.
 #'
 #' @examples
 #' library(argoFloats)
-#'\dontrun{
-#' ai <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+#' data(index)
+#'
 #' # Example 1: First three profiles in dataset.
-#' aiFirstThree <- subset(ai, 1:3)
-#' cat("First three longitudes:", paste(aiFirstThree[["longitude"]]), "\n")
+#' index3 <- subset(index, 1:3)
+#' cat("First 3 longitudes:", paste(index3[["longitude"]]), "\n")
 #'
-#' # Example 2: Profiles within 200km of Sable Island
-#' aiSable <- subset(ai, circle=list(longitude=-59.915, latitude=44.934, radius=200))
-#' cat("Found", length(aiSable[["longitude"]]), "profiles near Sable Island\n")
-#'
-#' # Example 3: Profiles in a given rectangle
+#' # Example 2: Subsets near Abaca Island
+#' # 2A: circle around the island
+#' indexC <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=200))
+#' cat("Found", length(indexC[["longitude"]]), "profiles in circle around Abaca Island\n")
+#' # 2B: rectangle to northeast of the island
+#' indexR <- subset(index, rectangle=list(longitude=c(-77,-76), latitude=c(27,28)))
+#' cat("Found", length(indexR[["longitude"]]), "profiles in rectangle north of Abaca Island\n")
+#' # Show these subsets on a map
 #' library(oce)
 #' data(coastlineWorldFine, package="ocedata")
-#' aiRect <- subset(ai, rectangle=list(longitude=c(-65,-64), latitude=c(40,45)))
-#' lat <- aiRect[['latitude']]
-#' lon <- aiRect[['longitude']]
-#' latlim <- c(40,43)
-#' lonlim<- c(-70,-64)
-#' mapPlot(coastlineWorldFine, col='lightgray', longitudelim=lonlim, latitudelim=latlim,
-#'         projection="+proj=merc", grid=2)
-#' mapPoints(lon,lat)
-#' }
+#' par(mar=c(2, 2, 1, 1))
+#' plot(coastlineWorldFine, col="tan",
+#'      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
+#' points(indexC[["longitude"]], indexC[["latitude"]], col="red")
+#' points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -216,7 +326,7 @@ setMethod(f="summary",
 setMethod(f="subset",
           signature="argoFloats",
           definition=function(x, subset=NULL, ...) {
-              subsetString <- paste(deparse(substitute(subset)), collapse=" ")
+              ##subsetString <- paste(deparse(substitute(subset)), collapse=" ")
               dots <- list(...)
               dotsNames <- names(dots)
               if (missing(subset)) {
