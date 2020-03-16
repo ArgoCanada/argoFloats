@@ -237,7 +237,7 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile=NULL,
 #'
 #' The first step is to construct a URL for downloading, based on the
 #' `url` and `file` arguments. That URL will be a string ending in `.gz`,
-#' and from this the name of a local file is constructed by changing the
+#' or `.txt` and from this the name of a local file is constructed by changing the
 #' suffix to `.rda` and prepending the file directory specified by
 #' `destdir`.  If an `.rda` file of that name already exists, and is less
 #' than `age` days old, then no downloading takes place. This caching
@@ -376,6 +376,7 @@ getIndex <- function(server="auto",
     destfile <- paste(destdir, file, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
     destfileRda <- gsub(".gz$", ".rda", destfile)
+    destfileRda <- gsub(".txt$", ".rda", destfile)
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
     res@metadata$file <- destfileRda

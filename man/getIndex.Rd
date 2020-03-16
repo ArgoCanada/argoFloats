@@ -65,7 +65,7 @@ by downloading information from a data repository or by reusing an index
 \details{
 The first step is to construct a URL for downloading, based on the
 \code{url} and \code{file} arguments. That URL will be a string ending in \code{.gz},
-and from this the name of a local file is constructed by changing the
+or \code{.txt} and from this the name of a local file is constructed by changing the
 suffix to \code{.rda} and prepending the file directory specified by
 \code{destdir}.  If an \code{.rda} file of that name already exists, and is less
 than \code{age} days old, then no downloading takes place. This caching
