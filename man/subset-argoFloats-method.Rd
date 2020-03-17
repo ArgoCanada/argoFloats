@@ -35,8 +35,8 @@ that region, in kilometers.
 with two elements giving the western and eastern limits of the
 subset region, and similar one named \code{latitude} giving the southern
 and northern limits.
-\item A list named \code{parameter}, which has argo, argo_bgc, or argo_merge parameter
-elements indicating the parameter of interest`
+\item A list named \code{parameter}, which has \verb{argo``, }argo_bgc``, or \code{argo_merge}
+parameter elements indicating the parameter of interest.
 }
 
 In all cases, the notation is that longitude is positive
@@ -66,9 +66,8 @@ plot(coastlineWorldFine, col="tan",
      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
-
 Example 3: Subsetting argo_bgc data that contains 'DOXY'
-aiOxygen<- subset(ai, parameter="DOXY")
+aiOxygen <- subset(ai, parameter="DOXY")
 
 }
 \author{

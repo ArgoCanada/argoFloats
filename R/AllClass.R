@@ -280,8 +280,8 @@ setMethod(f="summary",
 #' with two elements giving the western and eastern limits of the
 #' subset region, and similar one named `latitude` giving the southern
 #' and northern limits.
-#' 3. A list named `parameter`, which has argo, argo_bgc, or argo_merge parameter
-#' elements indicating the parameter of interest`
+#' 3. A list named `parameter`, which has `argo``, `argo_bgc``, or `argo_merge`
+#' parameter elements indicating the parameter of interest.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -320,9 +320,8 @@ setMethod(f="summary",
 #'      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 #' points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 #' points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
-#' 
 #' Example 3: Subsetting argo_bgc data that contains 'DOXY'
-#' aiOxygen<- subset(ai, parameter="DOXY")
+#' aiOxygen <- subset(ai, parameter="DOXY")
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -375,8 +374,11 @@ setMethod(f="subset",
                   
                   else if (dotsNames[1]=="parameter") {
                       parameter<- dots[[1]]
-                      if (!is.list(dots[1]))
-                          stop('Jaimie')
+                      if (!is.character(dots[1]))
+                          stop("In subset,argoFloats-method() : 'parameter' must be a character")
+                      keepparam <- grepl("([ ]DOXY)|(^DOXY)", argoFloatsIndex$index$parameters)
+                      if (sum(keepparam) < 1)
+                          warning("In subset,argoFloats-method(..., paramter) : found no profiles with given parameter", call.=FALSE)
                                        }
                   
                   else {  
