@@ -12,7 +12,7 @@
 \item{subset}{optional numerical or logical vector that indicates which
 indices of \code{x@data$index} to keep.  See example 1.}
 
-\item{...}{a list named \code{circle} or \code{rectangle}. See \dQuote{Details}
+\item{...}{a list named \code{circle},\code{rectangle}, or \code{parameter}. See \dQuote{Details}
 and Example 2.}
 }
 \value{
@@ -35,9 +35,11 @@ that region, in kilometers.
 with two elements giving the western and eastern limits of the
 subset region, and similar one named \code{latitude} giving the southern
 and northern limits.
+\item A list named \code{parameter}, which has argo, argo_bgc, or argo_merge parameter
+elements indicating the parameter of interest`
 }
 
-In both cases, the notation is that longitude is positive
+In all cases, the notation is that longitude is positive
 for degrees East and negative for degrees West, and that latitude
 is positive for degrees North and negative for degrees South.
 }
@@ -64,6 +66,9 @@ plot(coastlineWorldFine, col="tan",
      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
+
+Example 3: Subsetting argo_bgc data that contains 'DOXY'
+aiOxygen<- subset(ai, parameter="DOXY")
 
 }
 \author{
