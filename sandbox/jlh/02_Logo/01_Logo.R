@@ -20,6 +20,7 @@ topo <- read.topo(topoFile)
 tlon <- topo[["longitude"]]
 tlat <- topo[["latitude"]]
 tz <- topo[["z"]]
+par(mfrow=c(1,2))
 
 for (radius in seq(100, 1000, 100)) {
     message("processing for radius=", radius)
@@ -29,10 +30,10 @@ for (radius in seq(100, 1000, 100)) {
     longitudelim <- place$longitude + S * radius / 111 / cos(place$latitude*pi/180) * c(-1, 1)
     if (createPng)
         png(sprintf("02_map_%04dkm.png", radius), width=7, height=7, unit="in", res=120, pointsize=12)
-    col1000 <- "#0080ff"
-    col2000 <- "#0080ff"
+    col1000 <- "green"
+    col2000 <- "blue"
     lwd1000 <- 1.8*par("lwd")
-    lwd2000 <- 3.6*par("lwd")
+    lwd2000 <- 1.8*par("lwd")
     lty1000 <- 1
     lty2000 <- 1
     par(mar=c(2,2,1,1))
@@ -48,9 +49,30 @@ for (radius in seq(100, 1000, 100)) {
            lty=c(lty1000,lty2000),
            lwd=c(lwd1000, lwd2000),
            col=c(col1000, col2000),
-           legend=c("1000", "2000"))
-    mtext(paste0(length(i2[["longitude"]]), " Argo profiles within ", radius, " km of ", place$name))
+           legend=c("1000", "2000"), cex=0.7,'topleft')
+    #mtext(paste0(length(i2[["longitude"]]), " Argo profiles within ", radius, " km of ", place$name))
     if (createPng)
         dev.off()
 }
 
+
+## Creating second panel map
+getIndex(
+    server = "ftp://usgodae.org/pub/outgoing/argo",
+    file = "ar_index_global_prof.txt.gz",
+    destdir = "~/data/argo",
+    age = 6,
+    quiet = FALSE,
+    debug = 3
+)
+if (!exists("ai"))
+    ai <- getIndex(file='ar_index_global_prof.txt.gz', destdir="~/data/argo",debug=3)
+
+i2 <- subset(ai, circle=list(longitude=-77.3504, latitude=25.0443, radius=180))
+bahamProfiles <- getProfiles(i2, retries=3)
+bahamRead <- readProfiles(bahamProfiles) # To read each of the 368 profiles
+temperature <- unlist(lapply(bahamRead, function(bahamProfile) handleFlags(bahamProfile)[["temperature"]]))
+salinity <- unlist(lapply(bahamRead, function(bahamProfile) handleFlags(bahamProfile)[["salinity"]]))
+pressure <- unlist(lapply(bahamRead, function(bahamProfile) handleFlags(bahamProfile)[["pressure"]]))
+ctd <- as.ctd(temperature,salinity,pressure)
+plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)), xlab= 'Temperature (C)', ylab=' Pressure (m)')
