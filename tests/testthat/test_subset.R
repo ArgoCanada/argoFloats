@@ -9,7 +9,6 @@ data(indexBgc)
 data(indexMerged)
 
 test_that("subset by circle", {
-          data("index")
           indexAI <- expect_silent(subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100)))
           expect_equal(dim(indexAI[["index"]]), c(304, 8))
 })
