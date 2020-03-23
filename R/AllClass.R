@@ -54,6 +54,49 @@ NULL
 #' @family datasets provided with argoFloats
 NULL
 
+
+#' A sample index of biogeochemical profiles
+#'
+#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' that were within a 300km radius of Marsh Harbour, Abaco Island,
+#' Bahamas, as of 2020 March 23, using
+#' the following code.
+#'\preformatted{
+#' library(argoFloats)
+#' indexAll <- getIndex(file="argo_bio-profile_index.txt.gz", destdir="~/data/argo")
+#' indexBgc <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
+#' save(indexBgc, file="indexBgc.rda")
+#' tools::resaveRdaFiles('indexBgc.rda')
+#'}
+#' Note the `destdir` value, which controls where a
+#' subsequent call to [getProfiles()] would save data files.
+#'
+#' @examples
+#' library(oce)
+#' library(ocedata)
+#' library(argoFloats)
+#' data(coastlineWorldFine, package="ocedata")
+#' data(topoWorld, package="oce")
+#' data(indexBgc, package="argoFloats")
+#' plot(coastlineWorldFine, col="tan",
+#'     clongitude=-77.06, clatitude=26.54, span=1300)
+#' points(indexBgc[["longitude"]], indexBgc[["latitude"]], cex=0.5, col=2)
+#' contour(topoWorld[["longitude"]], topoWorld[["latitude"]],
+#'     -topoWorld[["z"]],
+#'     add=TRUE, levels=c(1000,2000), lwd=c(1,3), col="blue")
+#' legend("topleft", col="blue", bg="white", lwd=c(1, 3),
+#'     title="Water Depth [m]", legend=c("1000", "2000"))
+#' # Tabulate BGC parameters in these files (all the same, actually)
+#' table(indexBgc[["parameters"]])
+#'
+#' @name indexBgc
+#'
+#' @docType data
+#'
+#' @family datasets provided with argoFloats
+NULL
+
+
 #'
 #' Class to hold argoFloats objects
 setClass("argoFloats", slots=c(metadata="list", data="list", processingLog="list"))

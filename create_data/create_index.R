@@ -1,5 +1,5 @@
-## An index of data near Marsh Harbour, Abaco Island, Bahamas 26.54124N -77.0636W.
-## For the selection of this location, see
+## An indexBgc of Argo profile data within 200km
+## of Marsh Harbour, Abaco Island, Bahamas (26.54124N -77.0636W).
 ## https://github.com/dankelley/argoFloats/wiki/Focus-Island
 ##
 ## The download was done on 2020 March 14, and yielded 1788 profiles.
