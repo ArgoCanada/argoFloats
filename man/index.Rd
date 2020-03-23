@@ -37,6 +37,7 @@ legend("topleft", col="blue", bg="white", lwd=c(1, 3),
 }
 \seealso{
 Other datasets provided with argoFloats: 
-\code{\link{indexBgc}}
+\code{\link{indexBgc}},
+\code{\link{indexMerged}}
 }
 \concept{datasets provided with argoFloats}

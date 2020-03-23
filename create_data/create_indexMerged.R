@@ -6,9 +6,8 @@
 ## The download was done on 2020 March 23, and yielded 39 profiles.
 
 library(argoFloats)
-indexAll <- getIndex(file="bgc", destdir="~/data/argo")
-indexBgc <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
-str(indexBgc)
-save(indexBgc, file="indexBgc.rda")
-tools::resaveRdaFiles('indexBgc.rda')
+indexAll <- getIndex(file="merged", destdir="~/data/argo")
+indexMerged <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
+save(indexMerged, file="indexMerged.rda")
+tools::resaveRdaFiles('indexMerged.rda')
 
