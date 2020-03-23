@@ -45,7 +45,7 @@ for (radius in seq(100, 1000, 100)) {
     col <- rev(oceColorsGebco(5, region="water", type="line"))
     mapContour(tlon, tlat, -tz, levels=1000, col=col1000, lwd=lwd1000, lty=lty1000, drawlabels=FALSE)
     mapContour(tlon, tlat, -tz, levels=2000, col=col2000, lwd=lwd2000, lty=lty2000, drawlabels=FALSE)
-    legend("topright", title="Water Depth [m]", bg="white", seg.len=3,
+    legend("topleft", title="Water Depth [m]", bg="white", seg.len=3,
            lty=c(lty1000,lty2000),
            lwd=c(lwd1000, lwd2000),
            col=c(col1000, col2000),
@@ -76,3 +76,38 @@ salinity <- unlist(lapply(bahamRead, function(bahamProfile) handleFlags(bahamPro
 pressure <- unlist(lapply(bahamRead, function(bahamProfile) handleFlags(bahamProfile)[["pressure"]]))
 ctd <- as.ctd(temperature,salinity,pressure)
 plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)), xlab= 'Temperature (C)', ylab=' Pressure (m)')
+
+
+# Now learning hexSticker to figure out logo
+install.packages('tidyverse')
+library(tidyverse)
+install.packages('magick')
+library(magick)
+install.packages('png')
+library(png)
+install.packages('sp')
+library(sp)
+install.packages('grid')
+library(grid)
+install.packages('here')
+library(here)
+install.packages('hexSticker')
+library(hexSticker)
+install.packages('ggplot2')
+library(ggplot2)
+tempPlot <- plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)), xlab= 'Temperature (C)', ylab=' Pressure (m)')
+presRev <- rev(pressure)
+df <- data.frame(temperature, presRev)
+
+imgurl <- system.file("argoPractice.png", package="argoFloats")
+sticker(imgurl, package="argoFloats", p_size=20, s_x=1, s_y=.75, s_width=.6,
+        filename="inst/figures/imgfile.png")
+
+sticker(~plot(df),
+        package="argoFloats", p_size=5, s_x=.8, s_y=.6, s_width=1.4, s_height=1.2,
+        filename="practice.png", p_x=1, p_y=1.85, h_fill='white', p_color='red', h_color='red')
+ 
+
+
+
+img <- readPNG('argoFloatsLogo')
