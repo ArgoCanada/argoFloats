@@ -99,7 +99,7 @@ library(ggplot2)
 
 
 # Image File (Getting error- Made issue on hexSticker)
-imgurl <- system.file("argoFloatsLogo.png", package="hexSticker")
+imgurl <- "C:/Users/harbinj/Documents/GitHub/argoFloats/sandbox/jlh/02_Logo/argoFloatsLogo.png"
 sticker(imgurl, package="argoFloats", p_size=20, s_x=1, s_y=.75, s_width=.6,
         filename="inst/figures/imgfile.png")
 
