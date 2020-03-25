@@ -54,6 +54,92 @@ NULL
 #' @family datasets provided with argoFloats
 NULL
 
+
+#' A sample index of biogeochemical-argo profiles
+#'
+#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' that were within a 300km radius of Marsh Harbour, Abaco Island,
+#' Bahamas, as of 2020 March 23, using
+#' the following code.
+#'\preformatted{
+#' library(argoFloats)
+#' indexAll <- getIndex(file="bgc", destdir="~/data/argo")
+#' indexBgc <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
+#' save(indexBgc, file="indexBgc.rda")
+#' tools::resaveRdaFiles('indexBgc.rda')
+#'}
+#' Note the `destdir` value, which controls where a
+#' subsequent call to [getProfiles()] would save data files.
+#'
+#' @examples
+#' library(oce)
+#' library(ocedata)
+#' library(argoFloats)
+#' data(coastlineWorldFine, package="ocedata")
+#' data(topoWorld, package="oce")
+#' data(indexBgc, package="argoFloats")
+#' plot(coastlineWorldFine, col="tan",
+#'     clongitude=-77.06, clatitude=26.54, span=1300)
+#' points(indexBgc[["longitude"]], indexBgc[["latitude"]], cex=0.5, col=2)
+#' contour(topoWorld[["longitude"]], topoWorld[["latitude"]],
+#'     -topoWorld[["z"]],
+#'     add=TRUE, levels=c(1000,2000), lwd=c(1,3), col="blue")
+#' legend("topleft", col="blue", bg="white", lwd=c(1, 3),
+#'     title="Water Depth [m]", legend=c("1000", "2000"))
+#' # Tabulate BGC parameters in these files
+#' table(indexBgc[["parameters"]])
+#'
+#' @name indexBgc
+#'
+#' @docType data
+#'
+#' @family datasets provided with argoFloats
+NULL
+
+
+#' A sample index of merged argo and biogeochemical-argo profiles
+#'
+#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' that were within a 300km radius of Marsh Harbour, Abaco Island,
+#' Bahamas, as of 2020 March 23, using
+#' the following code.
+#'\preformatted{
+#' library(argoFloats)
+#' indexAll <- getIndex(file="merged", destdir="~/data/argo")
+#' indexMerged <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
+#' save(indexMerged, file="indexMerged.rda")
+#' tools::resaveRdaFiles('indexMerged.rda')
+#'}
+#' Note the `destdir` value, which controls where a
+#' subsequent call to [getProfiles()] would save data files.
+#'
+#' @examples
+#' library(oce)
+#' library(ocedata)
+#' library(argoFloats)
+#' data(coastlineWorldFine, package="ocedata")
+#' data(topoWorld, package="oce")
+#' data(indexMerged, package="argoFloats")
+#' plot(coastlineWorldFine, col="tan",
+#'     clongitude=-77.06, clatitude=26.54, span=1300)
+#' points(indexMerged[["longitude"]], indexMerged[["latitude"]], cex=0.5, col=2)
+#' contour(topoWorld[["longitude"]], topoWorld[["latitude"]],
+#'     -topoWorld[["z"]],
+#'     add=TRUE, levels=c(1000,2000), lwd=c(1,3), col="blue")
+#' legend("topleft", col="blue", bg="white", lwd=c(1, 3),
+#'     title="Water Depth [m]", legend=c("1000", "2000"))
+#' # Tabulate BGC parameters in these files
+#' table(indexMerged[["parameters"]])
+#'
+#' @name indexMerged
+#'
+#' @docType data
+#'
+#' @family datasets provided with argoFloats
+NULL
+
+
+
 #'
 #' Class to hold argoFloats objects
 setClass("argoFloats", slots=c(metadata="list", data="list", processingLog="list"))
@@ -105,19 +191,19 @@ setMethod(f="initialize",
 #' of integers, then a list of `argo` objects is returned. (d) If `j` is
 #' the string `"count"`, then the number of profiles is returned.
 #'
-#' 7. If `i` is a single integer, then it is taken as an index to
-#' the most important element of the `data` slot of `x`. If `x` was
-#' created with [getIndex()], then that element is a file name on the
-#' remote Argo server, and that is what is returned.  If `x`
-#' was created with [getProfiles()], then the name of the local file
-#' is returned.  And if `x` was created with [readProfiles()], then the
-#' an `argo` object (as created with [oce::read.argo()]
-#' in the `oce` package) is returned.
+## 7. If `i` is a single integer, then it is taken as an index to
+## the most important element of the `data` slot of `x`. If `x` was
+## created with [getIndex()], then that element is a file name on the
+## remote Argo server, and that is what is returned.  If `x`
+## was created with [getProfiles()], then the name of the local file
+## is returned.  And if `x` was created with [readProfiles()], then the
+## an `argo` object (as created with [oce::read.argo()]
+## in the `oce` package) is returned.
+##
+## 7. If `i` is a vector of integers, then a vector is returned, with
+## each element being as defined for case 7.
 #'
-#' 8. If `i` is a vector of integers, then a vector is returned, with
-#' each element being as defined for case 7.
-#'
-#' 9. Otherwise, if `x` was created with [getIndex()],
+#' 7. Otherwise, if `x` was created with [getIndex()],
 #' `i` may be the name of an item in the `index` item
 #' in the `data` slot, or a string that is made up of enough characters
 #' to uniquely identify such an item, e.g. `"lon"` may be used as a
@@ -132,7 +218,7 @@ setMethod(f="initialize",
 #' @examples
 #' data(index)
 #' # Full remote filename for first two item in index
-#' paste(index[["ftpRoot"]], index[[1:2]], sep="/")
+#' paste(index[["ftpRoot"]], index[["profile", 1:2]], sep="/")
 #' # File names and geographical locations of first 5 items in index
 #' index5 <- subset(index, 1:5)
 #' data.frame(file=gsub(".*/", "", index5[["file"]][1]),
@@ -150,61 +236,70 @@ setMethod(f="[[",
               if (missing(i))
                   stop("Must name an item to retrieve, e.g. 'x[[\"latitude\"]]'", call.=FALSE)
               type <- x@metadata$type
-              if (is.numeric(i)) {
-                  if (length(i) == 1) {
+              if (length(i) != 1)
+                  stop("length of index, 'i', must be one")
+              if (i == "data")
+                  return(x@data)
+              if (i == "metadata")
+                  return(x@metadata)
+              if (i == "ftpRoot" && type == "index")
+                  return(x@metadata$ftpRoot)
+              if (i == "destdir")
+                  return(x@metadata$destdir)
+              if (i == "type")
+                  return(x@metadata$type)
+              if (i == "profile") {
+                  ## if j not given, return full list (either 'file' or 'argos')
+                  if (missing(j)) {
                       return(switch(type,
-                                    "argos"=x@data$argos[[i]],
-                                    "index"=x@data$index$file[[i]],
-                                    "profiles"=x@data$file[[i]]))
+                                    index=length(x@data$index$file),
+                                    profile=length(x@data$file),
+                                    argo=length(x@data$argos)))
+                  }
+                  if (any(j < 1))
+                      stop("index, 'j', must be positive")
+                  n <- switch(type,
+                              index=length(x@data$index$file),
+                              profile=length(x@data$file),
+                              argo=length(x@data$argos))
+                  if (any(j > n))
+                      stop("index, j', cannot exceed ", n)
+                  if (length(j) == 1) {
+                      return(switch(type,
+                                    index=x@data$index$file[j],
+                                    profile=x@data$file[j],
+                                    argos=x@data$argos[[j]],
+                                    stop("unknown object type '", type, "': coding error (please report)")))
+                  }
+                  if (type == "index") {
+                      res <- x@data$index$file[j]
+                  } else if (type == "profile") {
+                      res <- x@data$file[j]
+                  } else if (type == "argo") {
+                      res <- vector("list", length(j))
+                      for (jj in j)
+                          res[jj] <- x@data$argos[jj]
                   } else {
-                      return(switch(type,
-                                    "argos"=sapply(i, function(X) x@data$argos[[X]]),
-                                    "index"=sapply(i, function(X) x@data$index$file[[X]]),
-                                    "profiles"=sapply(i, function(X) x@data$file[[X]])))
+                      stop("type='", type, "' is not handled (please report as a bug)")
                   }
-              } else {
-                  if (i == "data") {
-                      return(x@data)
-                  } else if (i == "metadata") {
-                      return(x@metadata)
-                  } else if (i == "ftpRoot" && type == "index") {
-                      return(x@metadata$ftpRoot)
-                  } else if (i == "destdir") {
-                      return(x@metadata$destdir)
-                  } else if (i == "type") {
-                      return(x@metadata$type)
-                  } else if (i == "profile" && x@metadata$type == "argos") {
-                      if (missing(j))
-                          return(x@data$argos)
-                      if (any(j < 0))
-                          stop("cannot handle a negative index")
-                      nargos <- length(x@data$argos)
-                      if (any(j > nargos))
-                          stop("cannot handle an index exceeding ", nargos)
-                      if (length(j) == 1) {
-                          return(x@data$argos[[j]])
-                      } else {
-                          res <- vector("list", length(j))
-                          for (jj in j)
-                              res[jj] <- x@data$argos[jj]
-                          return(res)
-                      }
-                  } else if (i == "profile count" && x@metadata$type == "argos") {
-                      return(length(x@data$argos))
-                  } else if (i == "index") {
-                      if (x@metadata$type == "index") {
-                          return(x@data$index)
-                      } else {
-                          stop("can only retrieve 'index' for objects created by getIndex()")
-                      }
-                  } else if (x@metadata$type == "index") {
-                      names <- names(x@data$index)
-                      w <- pmatch(i, names)
-                      if (!is.finite(w))
-                          stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
-                      return(x@data$index[[names[w]]])
-                  }
+                  return(res)
               }
+              if (i == "profile count") {
+                  return(switch(type,
+                                index=length(x@data$index$file),
+                                profile=length(x@data$file),
+                                argo=length(x@data$argos)))
+              }
+              if (i == "index" && type == "index")
+                  return(x@data$index)
+              if (x@metadata$type == "index") {
+                  names <- names(x@data$index)
+                  w <- pmatch(i, names)
+                  if (!is.finite(w))
+                      stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
+                  return(x@data$index[[names[w]]])
+              }
+              ## The request made no sense, so return NULL.
               return(NULL)
           })
 

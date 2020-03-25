@@ -48,16 +48,6 @@ all the profiles in \code{x}, each an \code{argo} object as created by
 then the return value is a single \code{argo} object. (c) If \code{j} is a vector
 of integers, then a list of \code{argo} objects is returned. (d) If \code{j} is
 the string \code{"count"}, then the number of profiles is returned.
-\item If \code{i} is a single integer, then it is taken as an index to
-the most important element of the \code{data} slot of \code{x}. If \code{x} was
-created with \code{\link[=getIndex]{getIndex()}}, then that element is a file name on the
-remote Argo server, and that is what is returned.  If \code{x}
-was created with \code{\link[=getProfiles]{getProfiles()}}, then the name of the local file
-is returned.  And if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then the
-an \code{argo} object (as created with \code{\link[oce:read.argo]{oce::read.argo()}}
-in the \code{oce} package) is returned.
-\item If \code{i} is a vector of integers, then a vector is returned, with
-each element being as defined for case 7.
 \item Otherwise, if \code{x} was created with \code{\link[=getIndex]{getIndex()}},
 \code{i} may be the name of an item in the \code{index} item
 in the \code{data} slot, or a string that is made up of enough characters
@@ -68,7 +58,7 @@ shortcut for \code{"longitude"}.
 \examples{
 data(index)
 # Full remote filename for first two item in index
-paste(index[["ftpRoot"]], index[[1:2]], sep="/")
+paste(index[["ftpRoot"]], index[["profile", 1:2]], sep="/")
 # File names and geographical locations of first 5 items in index
 index5 <- subset(index, 1:5)
 data.frame(file=gsub(".*/", "", index5[["file"]][1]),
