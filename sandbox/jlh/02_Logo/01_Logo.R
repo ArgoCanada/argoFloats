@@ -100,20 +100,15 @@ library(ggplot2)
 
 # Image File (Getting error- Made issue on hexSticker)
 imgurl <- "C:/Users/harbinj/Documents/GitHub/argoFloats/sandbox/jlh/02_Logo/argoFloatsLogo.png"
-sticker(imgurl, package="argoFloats", p_size=20, s_x=1, s_y=.75, s_width=.6,
-        filename="inst/figures/imgfile.png")
-
-#Direct Data 
-tempPlot <- plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)), xlab= 'Temperature (C)', ylab=' Pressure (m)')
-presRev <- rev(pressure)
-df <- data.frame(temperature, presRev)
-sticker(~plot(df),
-        package="argoFloats", p_size=5, s_x=.8, s_y=.6, s_width=1.4, s_height=1.2,
-        filename="practice.png", p_x=1, p_y=1.85, h_fill='white', p_color='red', h_color='red')
- 
+sticker(imgurl, package="argoFloats", p_size=15, s_x=1, s_y=0.95, s_width=0.8,h_fill='white', p_color='black', h_color='black', p_x=1, p_y=1.6,
+        filename="argoFloatsLogo.png")
 
 
-#Image File (PNG) (This does not work)
-img <- readPNG('argoFloatsLogo.png')
-sticker(img, package="argoFloats", p_size=20, s_x=1, s_y=.75, s_width=.6,
-        filename="inst/figures/imgfile.png")
+
+
+
+
+
+
+
+
