@@ -30,3 +30,12 @@ lines[look] # to solely write the lines that have isolates what we want.
 sum(look)/ length(look) # This indicates there is a lot of oxygen (94%). 
 
 # Now it's time to add this to subset method. 
+
+# Creating an example for the paramter subset. 
+ai <- getIndex(file='merge', destdir='~/data/argo')
+head(ai@data$index$parameters,3) # To focus on parameters
+aiDoxy<- grepl("([ ]DOXY)|(^DOXY)", ai@data$index$parameters)
+sum(aiDoxy)/length(aiDoxy)
+
+
+

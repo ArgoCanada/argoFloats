@@ -415,9 +415,16 @@ setMethod(f="summary",
 #'      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 #' points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 #' points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
-#' Example 3: Subsetting argo_bgc data that contains 'DOXY'
-#' aiOxygen <- subset(ai, parameter="DOXY")
-#'
+#' Example 3: Subsetting argo_merge data that contains all 'DOXY' parameters
+#' ai <- getIndex(file='merge', destdir='~/data/argo')
+#' summary(ai)
+#' aiDoxy <- subset(ai, parameter="DOXY")
+#' summary(aiDoxy)
+#' Example 4: Subsetting argo_merge data that contains solely 'DOXY' parameters
+#' ai <- getIndex(file='merge', destdir='~/data/argo')
+#' head(ai@data$index$parameters,3) # To focus on parameters
+#' subDoxy <- subset(ai, parameter='([ ]DOXY)|(^DOXY)')
+#' summary(subDoxy)
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
@@ -472,7 +479,7 @@ setMethod(f="subset",
                       keepparam <- grepl(parameter, ai@data$index$parameters)
                       if (sum(keepparam) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
-                      message("Fraction kept ", round(100*sum(keepparam)/length(keepparam),2))
+                      message("Fraction kept ", round(100*sum(keepparam)/length(keepparam),2), "%.")
                       x@data$index <- x@data$index[keepparam, ]
                   } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle', or 'parameter'", call.=FALSE)
