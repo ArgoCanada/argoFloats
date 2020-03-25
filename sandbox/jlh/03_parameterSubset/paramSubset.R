@@ -6,7 +6,7 @@ library(oce)
 #Download Index
 getIndex(
     server = "ftp://usgodae.org/pub/outgoing/argo",
-    file = "argo_bio-profile_index.txt",
+    file = "argo_merged-profile_index.txt.gz",
     destdir = "~/data/argo",
     age = 6,
     quiet = FALSE,
@@ -14,7 +14,7 @@ getIndex(
 )
 
 if (!exists("ai"))
-    ai <- getIndex(file='argo_bio-profile_index.txt', destdir="~/data/argo",debug=3, age=0)
+    ai <- getIndex(file='argo_merged-profile_index.txt.gz', destdir="~/data/argo",debug=3, age=0)
 
 
 load("~/data/argo/argo_bio-profile_index.txt") 
