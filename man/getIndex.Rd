@@ -65,7 +65,7 @@ by downloading information from a data repository or by reusing an index
 \details{
 The first step is to construct a URL for downloading, based on the
 \code{url} and \code{file} arguments. That URL will be a string ending in \code{.gz},
-and from this the name of a local file is constructed by changing the
+or \code{.txt} and from this the name of a local file is constructed by changing the
 suffix to \code{.rda} and prepending the file directory specified by
 \code{destdir}.  If an \code{.rda} file of that name already exists, and is less
 than \code{age} days old, then no downloading takes place. This caching
@@ -84,7 +84,7 @@ function, holds a list named \code{index} that holds following elements:
 with the \verb{#} character.
 \item \code{data}, a data frame containing the items in the source file.
 The names of these items are determined automatically from
-\code{"argo"} and \code{"bcgargo"} files, but for \code{"merged"} files,
+\code{"argo"} and \code{"bgcargo"} files, but for \code{"merged"} files,
 the header is malformed (as of February 2020) and so the names
 are set based on the authors' inspection of a downloaded file.
 }
@@ -113,15 +113,15 @@ of \code{.txt.gz}, but these files take longer to download and
 seem to be equivalent to the \code{.gz} versions, so \code{\link[=getIndex]{getIndex()}} is
 designed to work with them.)
 \tabular{lll}{
-\emph{File Name}                       \tab \emph{Nickname}  \tab \emph{Contents}\cr
-\code{ar_greylist.txt}                 \tab -           \tab Suspious or malfunctioning float sensors.\cr
-\code{ar_index_global_meta.txt.gz}     \tab -           \tab Metadata files of the argo GDAC ftp site.\cr
-\code{ar_index_global_prof.txt.gz}     \tab \code{"argo"}    \tab Argo data.\cr
-\code{ar_index_global_tech.txt.gz}     \tab -           \tab All technical files of the argo GDAC ftp site.\cr
-\code{ar_index_global_traj.txt.gz}     \tab -           \tab All trajectory files of the argo GDAC ftp site.\cr
-\code{argo_bio-profile_index.txt.gz}   \tab \code{"argo_bgc"} \tab Biogeochemical Argo data (without S or T).\cr
-\code{argo_bio-traj_index.txt.gz}      \tab -           \tab Bio-trajectory files of the argo GDAC ftp site.\cr
-\code{argo_merge-profile_index.txt.gz} \tab \code{"argo_merge"} \tab Merged \code{"argo"} and \code{"argo_bgc"} data.\cr
+\emph{File Name}                       \tab \emph{Nickname}              \tab \emph{Contents}\cr
+\code{ar_greylist.txt}                 \tab -                       \tab Suspious or malfunctioning float sensors.\cr
+\code{ar_index_global_meta.txt.gz}     \tab -                       \tab Metadata files of the argo GDAC ftp site.\cr
+\code{ar_index_global_prof.txt.gz}     \tab \code{"argo"}                \tab Argo data.\cr
+\code{ar_index_global_tech.txt.gz}     \tab -                       \tab All technical files of the argo GDAC ftp site.\cr
+\code{ar_index_global_traj.txt.gz}     \tab -                       \tab All trajectory files of the argo GDAC ftp site.\cr
+\code{argo_bio-profile_index.txt.gz}   \tab \code{"bgc"} or \code{"bgcargo"}  \tab Biogeochemical Argo data (without S or T).\cr
+\code{argo_bio-traj_index.txt.gz}      \tab -                       \tab Bio-trajectory files of the argo GDAC ftp site.\cr
+\code{argo_merge-profile_index.txt.gz} \tab \code{"merge"} or \code{"merged"} \tab Merged \code{"argo"} and \code{"bgc"} data.\cr
 }
 }
 \examples{

@@ -237,7 +237,7 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile=NULL,
 #'
 #' The first step is to construct a URL for downloading, based on the
 #' `url` and `file` arguments. That URL will be a string ending in `.gz`,
-#' and from this the name of a local file is constructed by changing the
+#' or `.txt` and from this the name of a local file is constructed by changing the
 #' suffix to `.rda` and prepending the file directory specified by
 #' `destdir`.  If an `.rda` file of that name already exists, and is less
 #' than `age` days old, then no downloading takes place. This caching
@@ -255,7 +255,7 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile=NULL,
 #'    with the `#` character.
 #' * `data`, a data frame containing the items in the source file.
 #'    The names of these items are determined automatically from
-#'    `"argo"` and `"bcgargo"` files, but for `"merged"` files,
+#'    `"argo"` and `"bgcargo"` files, but for `"merged"` files,
 #'    the header is malformed (as of February 2020) and so the names
 #'    are set based on the authors' inspection of a downloaded file.
 #'
@@ -283,15 +283,15 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile=NULL,
 #' seem to be equivalent to the `.gz` versions, so [getIndex()] is
 #' designed to work with them.)
 #' \tabular{lll}{
-#' *File Name*                       \tab *Nickname*  \tab *Contents*\cr
-#' `ar_greylist.txt`                 \tab -           \tab Suspious or malfunctioning float sensors.\cr
-#' `ar_index_global_meta.txt.gz`     \tab -           \tab Metadata files of the argo GDAC ftp site.\cr
-#' `ar_index_global_prof.txt.gz`     \tab `"argo"`    \tab Argo data.\cr
-#' `ar_index_global_tech.txt.gz`     \tab -           \tab All technical files of the argo GDAC ftp site.\cr
-#' `ar_index_global_traj.txt.gz`     \tab -           \tab All trajectory files of the argo GDAC ftp site.\cr
-#' `argo_bio-profile_index.txt.gz`   \tab `"argo_bgc"` \tab Biogeochemical Argo data (without S or T).\cr
-#' `argo_bio-traj_index.txt.gz`      \tab -           \tab Bio-trajectory files of the argo GDAC ftp site.\cr
-#' `argo_merge-profile_index.txt.gz` \tab `"argo_merge"` \tab Merged `"argo"` and `"argo_bgc"` data.\cr
+#' *File Name*                       \tab *Nickname*              \tab *Contents*\cr
+#' `ar_greylist.txt`                 \tab -                       \tab Suspious or malfunctioning float sensors.\cr
+#' `ar_index_global_meta.txt.gz`     \tab -                       \tab Metadata files of the argo GDAC ftp site.\cr
+#' `ar_index_global_prof.txt.gz`     \tab `"argo"`                \tab Argo data.\cr
+#' `ar_index_global_tech.txt.gz`     \tab -                       \tab All technical files of the argo GDAC ftp site.\cr
+#' `ar_index_global_traj.txt.gz`     \tab -                       \tab All trajectory files of the argo GDAC ftp site.\cr
+#' `argo_bio-profile_index.txt.gz`   \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T).\cr
+#' `argo_bio-traj_index.txt.gz`      \tab -                       \tab Bio-trajectory files of the argo GDAC ftp site.\cr
+#' `argo_merge-profile_index.txt.gz` \tab `"merge"` or `"merged"` \tab Merged `"argo"` and `"bgc"` data.\cr
 #' }
 #'
 #' @template server
@@ -365,10 +365,10 @@ getIndex <- function(server="auto",
     if (file == "argo") {
         file <- "ar_index_global_prof.txt.gz"
         argoFloatsDebug(debug, "Converted file=\"argo\" to file=\"", file, "\".\n", sep="")
-    } else if (file == "bgcargo") {
+    } else if (file == "bgcargo" || file == "bgc") {
         file <- "argo_bio-profile_index.txt.gz"
         argoFloatsDebug(debug, "Converted file=\"bgcargo\" to file=\"", file, "\".\n", sep="")
-    } else if (file == "merged") {
+    } else if (file == "merge" || file == "merged") {
         file <- "argo_merge-profile_index.txt.gz"
         argoFloatsDebug(debug, "Converted file=\"argo_merge\" to file=\"", file, "\".\n", sep="")
     }
@@ -376,6 +376,7 @@ getIndex <- function(server="auto",
     destfile <- paste(destdir, file, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
     destfileRda <- gsub(".gz$", ".rda", destfile)
+    destfileRda <- gsub(".txt$", ".rda", destfile)
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
     res@metadata$file <- destfileRda
@@ -492,8 +493,8 @@ getIndex <- function(server="auto",
 #'\donttest{
 #' library(argoFloats)
 #' data(index)
-#' index4 <- subset(index, 1:4)
-#' profiles4 <- getProfiles(index4, destdir=".")
+#' index2 <- subset(index, 1:2)
+#' profiles2 <- getProfiles(index2, destdir=".")
 #' # See ?readProfiles for how to read the files now downloaded.
 #'}
 #'

@@ -57,8 +57,8 @@ in the documentation for the latter function.
 \donttest{
 library(argoFloats)
 data(index)
-index4 <- subset(index, 1:4)
-profiles4 <- getProfiles(index4, destdir=".")
+index2 <- subset(index, 1:2)
+profiles2 <- getProfiles(index2, destdir=".")
 # See ?readProfiles for how to read the files now downloaded.
 }
 
