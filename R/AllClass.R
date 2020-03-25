@@ -374,8 +374,7 @@ setMethod(f="subset",
                       parameter <- dots[[1]]
                       if (!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'parameter' must be a list")
-                      keepparam <- grepl("([ ]DOXY)|(^DOXY)", argoFloatsIndex$index$parameters)
-                      
+                      keepparam <- grepl(parameter, ai@data$index$parameters)
                       if (sum(keepparam) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
                                        } else {  
