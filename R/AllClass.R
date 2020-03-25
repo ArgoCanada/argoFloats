@@ -370,19 +370,15 @@ setMethod(f="subset",
                       if (sum(keeplat) < 1)
                           warning("In subset,argoFloats-method(..., rectangle) : found no profiles between given latitudes", call.=FALSE)
                       x@data$index <- x@data$index[keeplon&keeplat, ]
-                  } 
-                  
-                  else if (dotsNames[1]=="parameter") {
-                      parameter<- dots[[1]]
+                  } else if (dotsNames[1]=="parameter") {
+                      parameter <- dots[[1]]
                       if (!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'parameter' must be a list")
                       keepparam <- grepl("([ ]DOXY)|(^DOXY)", argoFloatsIndex$index$parameters)
                       
                       if (sum(keepparam) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
-                                       }
-                  
-                  else {  
+                                       } else {  
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle', or 'parameter'", call.=FALSE)
                   }
               } else {
