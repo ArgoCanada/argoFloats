@@ -472,7 +472,9 @@ setMethod(f="subset",
                       keepparam <- grepl(parameter, ai@data$index$parameters)
                       if (sum(keepparam) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
-                                       } else {  
+                      message("Fraction kept ", round(100*sum(keepparam)/length(keepparam),2))
+                      x@data$index <- x@data$index[keepparam, ]
+                  } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle', or 'parameter'", call.=FALSE)
                   }
               } else {
