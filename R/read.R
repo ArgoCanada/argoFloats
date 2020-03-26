@@ -52,6 +52,8 @@ readProfiles <- function(profiles, debug=0)
     debug <- max(0, debug)
     res <- NULL
     argoFloatsDebug(debug, "readProfiles() {\n", style="bold", sep="", unindent=1)
+    ##if (!requireNamespace("ncdf4"))
+    ##    stop("please install.package(\"ncdf4\") so that readProfiles() can read argo files")
     res <- new("argoFloats", type="argos")
     if (is.character(profiles)) {
         argoFloatsDebug(debug, "case 1: vector of character strings\n")
