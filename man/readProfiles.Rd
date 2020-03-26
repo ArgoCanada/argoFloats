@@ -30,23 +30,23 @@ created by \code{\link[=getProfiles]{getProfiles()}}.
 }
 \examples{
 # Download and plot some profiles.
-\donttest{
 library(argoFloats)
 data(index)
 index2 <- subset(index, 1:2)
-profiles <- getProfiles(index2, destdir=".")
-argos <- readProfiles(profiles)
-par(mfrow=c(2, 2))
-library(oce)
-for (i in 1:2) {
-  A <- argos[["profile", i]]
-  filename <- gsub(".*/", "", A[["filename"]])
-  plotTS(A, eos="unesco")
-  mtext(filename, line=0.7, cex=par("cex"))
-  Aclean <- handleFlags(A)
-  plotTS(Aclean, eos="unesco")
-  mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
-}
+if (requireNamespace("ncdf4")) {
+    profiles <- getProfiles(index2, destdir=".")
+    argos <- readProfiles(profiles)
+    par(mfrow=c(2, 2))
+    library(oce)
+    for (i in 1:2) {
+      A <- argos[["profile", i]]
+      filename <- gsub(".*/", "", A[["filename"]])
+      plotTS(A, eos="unesco")
+      mtext(filename, line=0.7, cex=par("cex"))
+      Aclean <- handleFlags(A)
+      plotTS(Aclean, eos="unesco")
+      mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
+    }
 }
 
 }
