@@ -477,7 +477,7 @@ setMethod(f="subset",
                       parameter <- dots[[1]]
                       if (!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'parameter' must be a list")
-                      keepparam <- grepl(parameter, ai@data$index$parameters)
+                      keepparam <- grepl(parameter, x@data$index$parameters)
                       if (sum(keepparam) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
                       message("Fraction kept ", round(100*sum(keepparam)/length(keepparam),2), "%.")
