@@ -53,7 +53,6 @@ in the documentation for the latter function.
 }
 \examples{
 # Download some Argo data files.
-# Note: ?getProfiles explains how to read the files.
 \donttest{
 library(argoFloats)
 data(index)
