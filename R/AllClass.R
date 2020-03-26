@@ -415,12 +415,14 @@ setMethod(f="summary",
 #'      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 #' points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 #' points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
-#' Example 3: Subsetting argo_merge data that contains all 'DOXY' parameters
+#' 
+#' # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
+#' # 3A: Data containing all 'DOXY' parameters
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
 #' summary(ai)
 #' aiDoxy <- subset(ai, parameter="DOXY")
 #' summary(aiDoxy)
-#' Example 4: Subsetting argo_merge data that contains solely 'DOXY' parameters
+#' # 3B: Data containing strictly 'DOXY' parameters
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
 #' head(ai@data$index$parameters,3) # To focus on parameters
 #' subDoxy <- subset(ai, parameter='([ ]DOXY)|(^DOXY)')
