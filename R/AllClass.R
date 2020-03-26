@@ -489,6 +489,8 @@ setMethod(f="subset",
                       polygon <- dots[[1]]
                       if(!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'polygon' must be a list")
+                      if (2 != sum(c("longitude", "latitude")))
+                          stop("In subset,argoFloats-method() : 'polygon' must be a list containing 'longitude' and 'latitude'")
                   } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter', or 'polygon'", call.=FALSE)
                   }
