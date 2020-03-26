@@ -415,6 +415,8 @@ setMethod(f="summary",
 #'      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 #' points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 #' points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
+#' # 2C: Polygon to the northeast of the island
+#' indexP <- subset(index, polygon=list(longitude,latitude))
 #' 
 #' # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
 #' # 3A: Data containing all 'DOXY' parameters
@@ -439,7 +441,7 @@ setMethod(f="subset",
               dotsNames <- names(dots)
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', or 'parameter'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter', or 'polygon'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
                   ## FIXME: permit args 'polygon', 'rectangle', and 'time'.
@@ -483,8 +485,12 @@ setMethod(f="subset",
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
                       message("Fraction kept ", round(100*sum(keepparam)/length(keepparam),2), "%.")
                       x@data$index <- x@data$index[keepparam, ]
+                  } else if (dotsNames[1]=="polygon") {
+                      polygon <- dots[[1]]
+                      if(!is.list(dots[1]))
+                          stop("In subset,argoFloats-method() : 'polygon' must be a list")
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle', or 'parameter'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter', or 'polygon'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)

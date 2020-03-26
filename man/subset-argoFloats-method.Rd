@@ -66,9 +66,10 @@ plot(coastlineWorldFine, col="tan",
      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
+# 2C: Polygon to the northeast of the island
+indexP <- subset(index, polygon=list(longitude,latitude))
 
 # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
-\dontrun{
 # 3A: Data containing all 'DOXY' parameters
 ai <- getIndex(file='merge', destdir='~/data/argo')
 summary(ai)
@@ -79,7 +80,6 @@ ai <- getIndex(file='merge', destdir='~/data/argo')
 head(ai@data$index$parameters,3) # To focus on parameters
 subDoxy <- subset(ai, parameter='([ ]DOXY)|(^DOXY)')
 summary(subDoxy)
-}
 }
 \author{
 Dan Kelley and Jaimie Harbin
