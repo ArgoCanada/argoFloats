@@ -400,7 +400,6 @@ setMethod(f="summary",
 #' # Example 1: First three profiles in dataset.
 #' index3 <- subset(index, 1:3)
 #' cat("First 3 longitudes:", paste(index3[["longitude"]]), "\n")
-#'
 #' # Example 2: Subsets near Abaca Island
 #' # 2A: circle around the island
 #' indexC <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=200))
@@ -418,18 +417,23 @@ setMethod(f="summary",
 #' points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
 #' # 2C: Polygon to the northeast of the Abaco island
 #' library(oce)
+#' library(sp)
 #' data(package='ocedata')
 #' data('coastlineWorldFine', package='ocedata')
 #' latitudePolygon <- c(24, 27, 24) # Creating a polygon that closes
 #' longitudePolygon <- c(-79, -78, -74 )
-#' mapPlot(coastlineWorldFine, col='lightgray', longitudelim=c(-83,-71), latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
+#' mapPlot(coastlineWorldFine, col='lightgray', longitudelim=c(-83,-71),
+#' latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
 #' mapPoints(longitudePolygon, latitudePolygon, type="l", lwd=5, col="blue")
-#' abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35, radius=300))
+#' abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35, 
+#' radius=300))
 #' latitudePoint <- abacaSub[['latitude']]
 #' longitudePoint <- abacaSub[['longitude']]
-#' indexP <- subset(index, polygon=list(latitude=latitudePolygon, longitude=longitudePolygon))
+#' indexP <- subset(index, polygon=list(latitude=latitudePolygon, 
+#' longitude=longitudePolygon))
+#' inside <- sp::point.in.polygon(longitudePoint, latitudePoint,
+#' longitudePolygon, latitudePolygon)
 #' mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20)
-#' 
 #' # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
 #' # 3A: Data containing all 'DOXY' parameters
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
@@ -493,7 +497,7 @@ setMethod(f="subset",
                       parameter <- dots[[1]]
                       if (!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'parameter' must be a list")
-                      keepparam <- grepl(parameter, ai@data$index$parameters)
+                      keepparam <- grepl(parameter, x@data$index$parameters)
                       if (sum(keepparam) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
                       message("Fraction kept ", round(100*sum(keepparam)/length(keepparam),2), "%.")
@@ -503,7 +507,7 @@ setMethod(f="subset",
                       if(!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'polygon' must be a list")
                       keeppoly <- sp::point.in.polygon(x@data$index$longitude,x@data$index$latitude,
-                                                     longitudePolygon, latitudePolygon)
+                                                     polygon$longitude, polygon$latitude)
                       if (sum(keeppoly) < 1)
                           warning("In subset,argoFloats-method(..., polygon) : found no profiles with given latitude and longitude", call.=FALSE)
                       message("Fraction kept ", round(100*sum(keeppoly)/length(keeppoly),2), "%.")
