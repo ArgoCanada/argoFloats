@@ -12,7 +12,7 @@ Authors@R: c(
 URL: https://dankelley.github.io/argoFloats/index.html
 Maintainer: Dan Kelley <dan.kelley@dal.ca>
 Description: The 'argoFloats' package provides support for downloading and analyzing Argo float datasets.
-Imports: curl, methods, oce
+Imports: curl, methods, oce, sp
 Suggests: testthat, ocedata
 License: GPL (>= 2)
 Roxygen: list(markdown = TRUE)
