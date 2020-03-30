@@ -379,7 +379,9 @@ setMethod(f="summary",
 #' 3. A list named `parameter`, which has `argo`, `argo_bgc`, or `argo_merge`
 #' parameter elements indicating the parameter of interest.
 #' 4. A list named `polygon` that has elements named `longitude` and `latitude`.
-#' Profiles within this polygon will be retained. 
+#' Profiles within this polygon will be retained.
+#' 5. A list named `time` that has elements `from` and `to`. Profiles within
+#' that time frame will be retained.  
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -390,7 +392,7 @@ setMethod(f="summary",
 #' @param subset optional numerical or logical vector that indicates which
 #' indices of `x@data$index` to keep.  See example 1.
 #'
-#' @param ... a list named `circle`, `rectangle`, `parameter`, or `polygon`. See \dQuote{Details}
+#' @param ... a list named `circle`, `rectangle`, `parameter`, `polygon` , or `time`. See \dQuote{Details}
 #' and Example 2.
 #'
 #' @return An [argoFloats-class] object.
@@ -447,6 +449,11 @@ setMethod(f="summary",
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
 #'                subDoxy <- subset(ai, parameter='\\bDOXY\\b')
 #'                summary(subDoxy)
+#' # Example 4: Subsetting data for the year 2019
+#' ai <- getIndex(file='merge', destdir ='~/data/argo')
+#' summary(ai)
+#' ait <- subset(ai, time=list(from=X, to=Y))
+#' summary(ait)
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
@@ -460,7 +467,7 @@ setMethod(f="subset",
               dotsNames <- names(dots)
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter', or 'polygon'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', or 'time'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
                   ## FIXME: permit args 'polygon', 'rectangle', and 'time'.
@@ -514,8 +521,19 @@ setMethod(f="subset",
                           warning("In subset,argoFloats-method(..., polygon) : found no profiles with given latitude and longitude", call.=FALSE)
                       message("Fraction kept ", round(100*sum(keeppoly)/length(keeppoly),2), "%.")
                       x@data$index <- x@data$index[keeppoly, ]
+                 } else if (dotsNames[1]=="time") {
+                     time <- dots[[1]]
+                     if(!is.list(dots[1]))
+                         if(!is.list(dots[1]))
+                             stop("In subset,argoFloats-method() : 'time' must be a list")
+                     keeptime <- time$date[1] <=x[["date"]] & x[["date"]] <= time$date[2]
+                     if (sum(keeptime) < 1)
+                         warning("In subset,argoFloats-method(..., time) : found no profiles with given time frame", call.=FALSE)
+                     message("Fraction kept ", round(100*sum(keeptime)/length(keeptime),2), "%.")
+                     x@data$index <- x@data$index[keeptime, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter', or 'polygon'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', or 'time'", call.=FALSE)
+                      
                   }
               } else {
                   if (length(dotsNames) != 0)

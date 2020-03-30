@@ -12,7 +12,7 @@
 \item{subset}{optional numerical or logical vector that indicates which
 indices of \code{x@data$index} to keep.  See example 1.}
 
-\item{...}{a list named \code{circle},\code{rectangle}, or \code{parameter}. See \dQuote{Details}
+\item{...}{a list named \code{circle}, \code{rectangle}, \code{parameter}, \code{polygon} , or \code{time}. See \dQuote{Details}
 and Example 2.}
 }
 \value{
@@ -35,8 +35,12 @@ that region, in kilometers.
 with two elements giving the western and eastern limits of the
 subset region, and similar one named \code{latitude} giving the southern
 and northern limits.
-\item A list named \code{parameter}, which has \verb{argo``, }argo_bgc``, or \code{argo_merge}
+\item A list named \code{parameter}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge}
 parameter elements indicating the parameter of interest.
+\item A list named \code{polygon} that has elements named \code{longitude} and \code{latitude}.
+Profiles within this polygon will be retained.
+\item A list named \code{time} that has elements \code{from} and \code{to}. Profiles within
+that time frame will be retained.
 }
 
 In all cases, the notation is that longitude is positive
@@ -93,8 +97,13 @@ aiDoxy <- subset(ai, parameter="DOXY")
 summary(aiDoxy)
 # 3B: Data containing strictly 'DOXY' parameters (single word)
 ai <- getIndex(file='merge', destdir='~/data/argo')
-subDoxy <- subset(ai, parameter='\\\\bDOXY\\\\b')
-summary(subDoxy)
+               subDoxy <- subset(ai, parameter='\\\\bDOXY\\\\b')
+               summary(subDoxy)
+# Example 4: Subsetting data based on time
+ai <- getIndex(file='merge', destdir ='~/data/argo')
+summary(ai)
+ait <- subset(ai, time=list(from=X, to=Y))
+summary(ait)
 }
 \author{
 Dan Kelley and Jaimie Harbin
