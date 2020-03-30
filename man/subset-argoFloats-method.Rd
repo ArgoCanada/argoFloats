@@ -50,7 +50,6 @@ data(index)
 # Example 1: First three profiles in dataset.
 index3 <- subset(index, 1:3)
 cat("First 3 longitudes:", paste(index3[["longitude"]]), "\n")
-
 # Example 2: Subsets near Abaca Island
 # 2A: circle around the island
 indexC <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=200))
@@ -66,7 +65,26 @@ plot(coastlineWorldFine, col="tan",
      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
-
+# 2C: Polygon to the northeast of the Abaco island
+\dontrun{
+library(oce)
+library(sp)
+data(package='ocedata')
+data('coastlineWorldFine', package='ocedata')
+latitudePolygon <- c(24, 27, 24) # Creating a polygon that closes
+longitudePolygon <- c(-79, -78, -74 )
+mapPlot(coastlineWorldFine, col='lightgray', longitudelim=c(-83,-71),
+latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
+mapPoints(longitudePolygon, latitudePolygon, type="l", lwd=5, col="blue")
+abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35,
+radius=300))
+latitudePoint <- abacaSub[['latitude']]
+longitudePoint <- abacaSub[['longitude']]
+indexP <- subset(index, polygon=list(latitude=latitudePolygon,
+longitude=longitudePolygon))
+inside <- sp::point.in.polygon(longitudePoint, latitudePoint,
+longitudePolygon, latitudePolygon)
+mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20) }
 # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
 # 3A: Data containing all 'DOXY' parameters (single or full word)
 ai <- getIndex(file='merge', destdir='~/data/argo')

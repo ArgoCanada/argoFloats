@@ -75,6 +75,7 @@ NULL
 #' library(oce)
 #' library(ocedata)
 #' library(argoFloats)
+#' library(sp)
 #' data(coastlineWorldFine, package="ocedata")
 #' data(topoWorld, package="oce")
 #' data(indexBgc, package="argoFloats")
@@ -402,7 +403,6 @@ setMethod(f="summary",
 #' # Example 1: First three profiles in dataset.
 #' index3 <- subset(index, 1:3)
 #' cat("First 3 longitudes:", paste(index3[["longitude"]]), "\n")
-#'
 #' # Example 2: Subsets near Abaca Island
 #' # 2A: circle around the island
 #' indexC <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=200))
@@ -418,7 +418,26 @@ setMethod(f="summary",
 #'      longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
 #' points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 #' points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
-#'
+#' # 2C: Polygon to the northeast of the Abaco island
+#' \dontrun{
+#' library(oce)
+#' library(sp)
+#' data(package='ocedata')
+#' data('coastlineWorldFine', package='ocedata')
+#' latitudePolygon <- c(24, 27, 24) # Creating a polygon that closes
+#' longitudePolygon <- c(-79, -78, -74 )
+#' mapPlot(coastlineWorldFine, col='lightgray', longitudelim=c(-83,-71),
+#' latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
+#' mapPoints(longitudePolygon, latitudePolygon, type="l", lwd=5, col="blue")
+#' abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35,
+#' radius=300))
+#' latitudePoint <- abacaSub[['latitude']]
+#' longitudePoint <- abacaSub[['longitude']]
+#' indexP <- subset(index, polygon=list(latitude=latitudePolygon,
+#' longitude=longitudePolygon))
+#' inside <- sp::point.in.polygon(longitudePoint, latitudePoint,
+#' longitudePolygon, latitudePolygon)
+#' mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20) }
 #' # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
 #' # 3A: Data containing all 'DOXY' parameters (single or full word)
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
@@ -432,6 +451,7 @@ setMethod(f="summary",
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
+#' @importFrom sp point.in.polygon
 #' @export
 setMethod(f="subset",
           signature="argoFloats",
@@ -441,7 +461,7 @@ setMethod(f="subset",
               dotsNames <- names(dots)
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', or 'parameter'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter', or 'polygon'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
                   ## FIXME: permit args 'polygon', 'rectangle', and 'time'.
@@ -485,8 +505,18 @@ setMethod(f="subset",
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
                       message("Fraction kept ", round(100*sum(keepparam)/length(keepparam),2), "%.")
                       x@data$index <- x@data$index[keepparam, ]
+                  } else if (dotsNames[1]=="polygon") {
+                      polygon <- dots[[1]]
+                      if(!is.list(dots[1]))
+                          stop("In subset,argoFloats-method() : 'polygon' must be a list")
+                      keeppoly <- sp::point.in.polygon(x@data$index$longitude,x@data$index$latitude,
+                                                     polygon$longitude, polygon$latitude)
+                      if (sum(keeppoly) < 1)
+                          warning("In subset,argoFloats-method(..., polygon) : found no profiles with given latitude and longitude", call.=FALSE)
+                      message("Fraction kept ", round(100*sum(keeppoly)/length(keeppoly),2), "%.")
+                      x@data$index <- x@data$index[keeppoly, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle', or 'parameter'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter', or 'polygon'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)
@@ -499,5 +529,3 @@ setMethod(f="subset",
               }
               x
           })
-
-
