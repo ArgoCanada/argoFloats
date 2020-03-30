@@ -489,7 +489,6 @@ getIndex <- function(server="auto",
 #'
 #' @examples
 #' # Download some Argo data files.
-#' # Note: ?getProfiles explains how to read the files.
 #'\donttest{
 #' library(argoFloats)
 #' data(index)

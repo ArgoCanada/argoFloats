@@ -425,25 +425,24 @@ setMethod(f="summary",
 #' mapPlot(coastlineWorldFine, col='lightgray', longitudelim=c(-83,-71),
 #' latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
 #' mapPoints(longitudePolygon, latitudePolygon, type="l", lwd=5, col="blue")
-#' abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35, 
+#' abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35,
 #' radius=300))
 #' latitudePoint <- abacaSub[['latitude']]
 #' longitudePoint <- abacaSub[['longitude']]
-#' indexP <- subset(index, polygon=list(latitude=latitudePolygon, 
+#' indexP <- subset(index, polygon=list(latitude=latitudePolygon,
 #' longitude=longitudePolygon))
 #' inside <- sp::point.in.polygon(longitudePoint, latitudePoint,
 #' longitudePolygon, latitudePolygon)
 #' mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20)
 #' # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
-#' # 3A: Data containing all 'DOXY' parameters
+#' # 3A: Data containing all 'DOXY' parameters (single or full word)
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
 #' summary(ai)
 #' aiDoxy <- subset(ai, parameter="DOXY")
 #' summary(aiDoxy)
-#' # 3B: Data containing strictly 'DOXY' parameters
+#' # 3B: Data containing strictly 'DOXY' parameters (single word)
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
-#' head(ai@data$index$parameters,3) # To focus on parameters
-#' subDoxy <- subset(ai, parameter='([ ]DOXY)|(^DOXY)')
+#' subDoxy <- subset(ai, parameter='\\bDOXY\\b')
 #' summary(subDoxy)
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -526,5 +525,3 @@ setMethod(f="subset",
               }
               x
           })
-
-

@@ -22,24 +22,24 @@
 #'
 #' @examples
 #' # Download and plot some profiles.
-#'\donttest{
 #' library(argoFloats)
 #' data(index)
 #' index2 <- subset(index, 1:2)
-#' profiles <- getProfiles(index2, destdir=".")
-#' argos <- readProfiles(profiles)
-#' par(mfrow=c(2, 2))
-#' library(oce)
-#' for (i in 1:2) {
-#'   A <- argos[["profile", i]]
-#'   filename <- gsub(".*/", "", A[["filename"]])
-#'   plotTS(A, eos="unesco")
-#'   mtext(filename, line=0.7, cex=par("cex"))
-#'   Aclean <- handleFlags(A)
-#'   plotTS(Aclean, eos="unesco")
-#'   mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
+#' if (requireNamespace("ncdf4")) {
+#'     profiles <- getProfiles(index2, destdir=".")
+#'     argos <- readProfiles(profiles)
+#'     par(mfrow=c(2, 2))
+#'     library(oce)
+#'     for (i in 1:2) {
+#'       A <- argos[["profile", i]]
+#'       filename <- gsub(".*/", "", A[["filename"]])
+#'       plotTS(A, eos="unesco")
+#'       mtext(filename, line=0.7, cex=par("cex"))
+#'       Aclean <- handleFlags(A)
+#'       plotTS(Aclean, eos="unesco")
+#'       mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
+#'     }
 #' }
-#'}
 #'
 #' @importFrom oce read.argo
 #'
@@ -52,6 +52,8 @@ readProfiles <- function(profiles, debug=0)
     debug <- max(0, debug)
     res <- NULL
     argoFloatsDebug(debug, "readProfiles() {\n", style="bold", sep="", unindent=1)
+    ##if (!requireNamespace("ncdf4"))
+    ##    stop("please install.package(\"ncdf4\") so that readProfiles() can read argo files")
     res <- new("argoFloats", type="argos")
     if (is.character(profiles)) {
         argoFloatsDebug(debug, "case 1: vector of character strings\n")
