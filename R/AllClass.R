@@ -378,9 +378,8 @@ setMethod(f="summary",
 #' and northern limits.
 #' 3. A list named `parameter`, which has `argo`, `argo_bgc`, or `argo_merge`
 #' parameter elements indicating the parameter of interest.
-#' 4. A list named `polygon` which has elements named `longitude` giving a
-#' list of western and eastern limits and `latitude` giving a list of 
-#' southern and northern limits. 
+#' 4. A list named `polygon` that has elements named `longitude` and `latitude`.
+#' Profiles within this polygon will be retained. 
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
