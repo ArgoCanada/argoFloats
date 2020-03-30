@@ -23,6 +23,7 @@ subsequent call to \code{\link[=getProfiles]{getProfiles()}} would save data fil
 library(oce)
 library(ocedata)
 library(argoFloats)
+library(sp)
 data(coastlineWorldFine, package="ocedata")
 data(topoWorld, package="oce")
 data(indexBgc, package="argoFloats")
