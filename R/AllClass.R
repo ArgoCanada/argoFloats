@@ -416,6 +416,7 @@ setMethod(f="summary",
 #' points(indexC[["longitude"]], indexC[["latitude"]], col="red")
 #' points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
 #' # 2C: Polygon to the northeast of the Abaco island
+#' \dontrun{
 #' library(oce)
 #' library(sp)
 #' data(package='ocedata')
@@ -433,7 +434,7 @@ setMethod(f="summary",
 #' longitude=longitudePolygon))
 #' inside <- sp::point.in.polygon(longitudePoint, latitudePoint,
 #' longitudePolygon, latitudePolygon)
-#' mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20)
+#' mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20) }
 #' # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
 #' # 3A: Data containing all 'DOXY' parameters (single or full word)
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
