@@ -375,8 +375,11 @@ setMethod(f="summary",
 #' with two elements giving the western and eastern limits of the
 #' subset region, and similar one named `latitude` giving the southern
 #' and northern limits.
-#' 3. A list named `parameter`, which has `argo``, `argo_bgc``, or `argo_merge`
+#' 3. A list named `parameter`, which has `argo`, `argo_bgc`, or `argo_merge`
 #' parameter elements indicating the parameter of interest.
+#' 4. A list named `polygon` which has elements named `longitude` giving a
+#' list of western and eastern limits and `latitude` giving a list of 
+#' southern and northern limits. 
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -387,7 +390,7 @@ setMethod(f="summary",
 #' @param subset optional numerical or logical vector that indicates which
 #' indices of `x@data$index` to keep.  See example 1.
 #'
-#' @param ... a list named `circle`,`rectangle`, or `parameter`. See \dQuote{Details}
+#' @param ... a list named `circle`, `rectangle`, `parameter`, or `polygon`. See \dQuote{Details}
 #' and Example 2.
 #'
 #' @return An [argoFloats-class] object.
@@ -424,8 +427,8 @@ setMethod(f="summary",
 #' summary(aiDoxy)
 #' # 3B: Data containing strictly 'DOXY' parameters (single word)
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
-#' subDoxy <- subset(ai, parameter='\\bDOXY\\b')
-#' summary(subDoxy)
+#'                subDoxy <- subset(ai, parameter='\\bDOXY\\b')
+#'                summary(subDoxy)
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
