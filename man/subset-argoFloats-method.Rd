@@ -39,9 +39,10 @@ and northern limits.
 parameter elements indicating the parameter of interest.
 \item A list named \code{polygon} that has elements named \code{longitude} and \code{latitude}.
 Profiles within this polygon will be retained.
-\item A list named \code{time} that has elements \code{from} and \code{to} that are POSTIX
-times created with eg. POSIXct(), with timezone \code{"UTC"}. Profiles within
-that time frame will be retained.
+\item A list named \code{time} that has elements \code{from} and \code{to} that are POSIXt
+times created with eg. \code{\link[=POSIXct]{POSIXct()}}, with \code{tz="UTC"} to match
+the timezone used in Argo data. Profiles within that time frame will
+be retained.
 }
 
 In all cases, the notation is that longitude is positive

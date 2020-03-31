@@ -380,9 +380,10 @@ setMethod(f="summary",
 #' parameter elements indicating the parameter of interest.
 #' 4. A list named `polygon` that has elements named `longitude` and `latitude`.
 #' Profiles within this polygon will be retained.
-#' 5. A list named `time` that has elements `from` and `to` that are POSTIX
-#' times created with eg. POSIXct(), with timezone `"UTC"`. Profiles within
-#' that time frame will be retained.  
+#' 5. A list named `time` that has elements `from` and `to` that are POSIXt
+#' times created with eg. [POSIXct()], with `tz="UTC"` to match
+#' the timezone used in Argo data. Profiles within that time frame will
+#' be retained.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
