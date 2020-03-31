@@ -78,16 +78,16 @@ data('coastlineWorldFine', package='ocedata')
 latitudePolygon <- c(24, 27, 24) # Creating a polygon that closes
 longitudePolygon <- c(-79, -78, -74 )
 mapPlot(coastlineWorldFine, col='lightgray', longitudelim=c(-83,-71),
-latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
+        latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
 mapPoints(longitudePolygon, latitudePolygon, type="l", lwd=5, col="blue")
 abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35,
-radius=300))
+                   radius=300))
 latitudePoint <- abacaSub[['latitude']]
 longitudePoint <- abacaSub[['longitude']]
 indexP <- subset(index, polygon=list(latitude=latitudePolygon,
-longitude=longitudePolygon))
+                 longitude=longitudePolygon))
 inside <- sp::point.in.polygon(longitudePoint, latitudePoint,
-longitudePolygon, latitudePolygon)
+                               longitudePolygon, latitudePolygon)
 mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20) }
 # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
 # 3A: Data containing all 'DOXY' parameters (single or full word)
@@ -97,13 +97,16 @@ aiDoxy <- subset(ai, parameter="DOXY")
 summary(aiDoxy)
 # 3B: Data containing strictly 'DOXY' parameters (single word)
 ai <- getIndex(file='merge', destdir='~/data/argo')
-               subDoxy <- subset(ai, parameter='\\\\bDOXY\\\\b')
-               summary(subDoxy)
+subDoxy <- subset(ai, parameter='\\\\bDOXY\\\\b')
+summary(subDoxy)
 # Example 4: Subsetting data for the year 2019
+\dontrun{
 ai <- getIndex(file='merge', destdir ='~/data/argo')
 summary(ai)
-ait <- subset(ai, time=list(from='2019-01-01 00:00:00', to= '2019-12-31 00:00:00'))
-summary(ait)
+from <- as.POSIXct("2019-01-01", tz="UTC")
+to <- as.POSIXct("2019-12-31", tz="UTC")
+ait <- subset(ai, time=list(from=from, to=to))
+summary(ait) }
 }
 \author{
 Dan Kelley and Jaimie Harbin
