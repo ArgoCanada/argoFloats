@@ -379,7 +379,10 @@ setMethod(f="summary",
 #' 3. A list named `parameter`, which has `argo`, `argo_bgc`, or `argo_merge`
 #' parameter elements indicating the parameter of interest.
 #' 4. A list named `polygon` that has elements named `longitude` and `latitude`.
-#' Profiles within this polygon will be retained. 
+#' Profiles within this polygon will be retained.
+#' 5. A list named `time` that has elements `from` and `to` that are POSTIX
+#' times created with eg. POSIXct(), with timezone `"UTC"`. Profiles within
+#' that time frame will be retained.  
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -390,7 +393,7 @@ setMethod(f="summary",
 #' @param subset optional numerical or logical vector that indicates which
 #' indices of `x@data$index` to keep.  See example 1.
 #'
-#' @param ... a list named `circle`, `rectangle`, `parameter`, or `polygon`. See \dQuote{Details}
+#' @param ... a list named `circle`, `rectangle`, `parameter`, `polygon` , or `time`. See \dQuote{Details}
 #' and Example 2.
 #'
 #' @return An [argoFloats-class] object.
@@ -426,16 +429,16 @@ setMethod(f="summary",
 #' latitudePolygon <- c(24, 27, 24) # Creating a polygon that closes
 #' longitudePolygon <- c(-79, -78, -74 )
 #' mapPlot(coastlineWorldFine, col='lightgray', longitudelim=c(-83,-71),
-#' latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
+#'         latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
 #' mapPoints(longitudePolygon, latitudePolygon, type="l", lwd=5, col="blue")
 #' abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35,
-#' radius=300))
+#'                    radius=300))
 #' latitudePoint <- abacaSub[['latitude']]
 #' longitudePoint <- abacaSub[['longitude']]
 #' indexP <- subset(index, polygon=list(latitude=latitudePolygon,
-#' longitude=longitudePolygon))
+#'                  longitude=longitudePolygon))
 #' inside <- sp::point.in.polygon(longitudePoint, latitudePoint,
-#' longitudePolygon, latitudePolygon)
+#'                                longitudePolygon, latitudePolygon)
 #' mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20) }
 #' # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
 #' # 3A: Data containing all 'DOXY' parameters (single or full word)
@@ -444,9 +447,18 @@ setMethod(f="summary",
 #' aiDoxy <- subset(ai, parameter="DOXY")
 #' summary(aiDoxy)
 #' # 3B: Data containing strictly 'DOXY' parameters (single word)
+#' \dontrun{
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
-#'                subDoxy <- subset(ai, parameter='\\bDOXY\\b')
-#'                summary(subDoxy)
+#' subDoxy <- subset(ai, parameter='\\bDOXY\\b')
+#' summary(subDoxy)}
+#' # Example 4: Subsetting data for the year 2019
+#' \dontrun{
+#' ai <- getIndex(file='merge', destdir ='~/data/argo')
+#' summary(ai)
+#' from <- as.POSIXct("2019-01-01", tz="UTC")
+#' to <- as.POSIXct("2019-12-31", tz="UTC")
+#' ait <- subset(ai, time=list(from=from, to=to))
+#' summary(ait) }
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
@@ -460,7 +472,7 @@ setMethod(f="subset",
               dotsNames <- names(dots)
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter', or 'polygon'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', or 'time'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
                   ## FIXME: permit args 'polygon', 'rectangle', and 'time'.
@@ -514,10 +526,32 @@ setMethod(f="subset",
                           warning("In subset,argoFloats-method(..., polygon) : found no profiles with given latitude and longitude", call.=FALSE)
                       message("Fraction kept ", round(100*sum(keeppoly)/length(keeppoly),2), "%.")
                       x@data$index <- x@data$index[keeppoly, ]
+                 } else if (dotsNames[1]=="time") {
+                     time <- dots[[1]]
+                      if(!is.list(dots[1]))
+                             stop("In subset,argoFloats-method() : 'time' must be a list")
+                      if (!inherits(time$from, "POSIXt"))
+                         stop("'time' must be a list containing POSIX times")
+                      if (2 != sum(c("from", "to") %in% names(time))) 
+                         stop("In subset,argoFloats-method() : 'time' must be a list containing 'to'and 'from'")
+                      if (length(time$from) != 1)
+                         stop("from must be of length 1")
+                      if (length(time$to) != 1)
+                         stop("to must be of length 1")
+                      if (time$to <= time$from)
+                          stop ("'to' must be greater than 'from'")
+                     keeptime <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
+                     keeptime[is.na(keeptime)] <- FALSE
+                     #browser()
+                     if (sum(keeptime) < 1)
+                         warning("In subset,argoFloats-method(..., time) : found no profiles within the given time frame", call.=FALSE)
+                     message("Fraction kept ", round(100*sum(keeptime)/length(keeptime),2), "%.")
+                     x@data$index <- x@data$index[keeptime, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter', or 'polygon'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', or 'time'", call.=FALSE)
+                      
                   }
-              } else {
+                  } else {
                   if (length(dotsNames) != 0)
                       stop("in subset,argoFloats-method() : cannot give both 'subset' and '...' arguments", call.=FALSE)
                   if (x@metadata$type == "index") {

@@ -12,7 +12,7 @@
 \item{subset}{optional numerical or logical vector that indicates which
 indices of \code{x@data$index} to keep.  See example 1.}
 
-\item{...}{a list named \code{circle},\code{rectangle}, or \code{parameter}. See \dQuote{Details}
+\item{...}{a list named \code{circle}, \code{rectangle}, \code{parameter}, \code{polygon} , or \code{time}. See \dQuote{Details}
 and Example 2.}
 }
 \value{
@@ -35,8 +35,13 @@ that region, in kilometers.
 with two elements giving the western and eastern limits of the
 subset region, and similar one named \code{latitude} giving the southern
 and northern limits.
-\item A list named \code{parameter}, which has \verb{argo``, }argo_bgc``, or \code{argo_merge}
+\item A list named \code{parameter}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge}
 parameter elements indicating the parameter of interest.
+\item A list named \code{polygon} that has elements named \code{longitude} and \code{latitude}.
+Profiles within this polygon will be retained.
+\item A list named \code{time} that has elements \code{from} and \code{to} that are POSTIX
+times created with eg. POSIXct(), with timezone \code{"UTC"}. Profiles within
+that time frame will be retained.
 }
 
 In all cases, the notation is that longitude is positive
@@ -74,16 +79,16 @@ data('coastlineWorldFine', package='ocedata')
 latitudePolygon <- c(24, 27, 24) # Creating a polygon that closes
 longitudePolygon <- c(-79, -78, -74 )
 mapPlot(coastlineWorldFine, col='lightgray', longitudelim=c(-83,-71),
-latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
+        latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
 mapPoints(longitudePolygon, latitudePolygon, type="l", lwd=5, col="blue")
 abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35,
-radius=300))
+                   radius=300))
 latitudePoint <- abacaSub[['latitude']]
 longitudePoint <- abacaSub[['longitude']]
 indexP <- subset(index, polygon=list(latitude=latitudePolygon,
-longitude=longitudePolygon))
+                 longitude=longitudePolygon))
 inside <- sp::point.in.polygon(longitudePoint, latitudePoint,
-longitudePolygon, latitudePolygon)
+                               longitudePolygon, latitudePolygon)
 mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20) }
 # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
 # 3A: Data containing all 'DOXY' parameters (single or full word)
@@ -92,9 +97,18 @@ summary(ai)
 aiDoxy <- subset(ai, parameter="DOXY")
 summary(aiDoxy)
 # 3B: Data containing strictly 'DOXY' parameters (single word)
+\dontrun{
 ai <- getIndex(file='merge', destdir='~/data/argo')
 subDoxy <- subset(ai, parameter='\\\\bDOXY\\\\b')
-summary(subDoxy)
+summary(subDoxy)}
+# Example 4: Subsetting data for the year 2019
+\dontrun{
+ai <- getIndex(file='merge', destdir ='~/data/argo')
+summary(ai)
+from <- as.POSIXct("2019-01-01", tz="UTC")
+to <- as.POSIXct("2019-12-31", tz="UTC")
+ait <- subset(ai, time=list(from=from, to=to))
+summary(ait) }
 }
 \author{
 Dan Kelley and Jaimie Harbin
