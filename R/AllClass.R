@@ -452,7 +452,7 @@ setMethod(f="summary",
 #' # Example 4: Subsetting data for the year 2019
 #' ai <- getIndex(file='merge', destdir ='~/data/argo')
 #' summary(ai)
-#' ait <- subset(ai, time=list(from=X, to=Y))
+#' ait <- subset(ai, time=list(from='2019-01-01 00:00:00', to= '2019-12-31 00:00:00'))
 #' summary(ait)
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -526,9 +526,11 @@ setMethod(f="subset",
                      if(!is.list(dots[1]))
                          if(!is.list(dots[1]))
                              stop("In subset,argoFloats-method() : 'time' must be a list")
+                     if (2 != sum(c("from", "to") %in% sort(names(time))))
+                         stop("In subset,argoFloats-method() : 'time' must be a list containing 'to'and 'from'")
                      keeptime <- time$date[1] <=x[["date"]] & x[["date"]] <= time$date[2]
                      if (sum(keeptime) < 1)
-                         warning("In subset,argoFloats-method(..., time) : found no profiles with given time frame", call.=FALSE)
+                         warning("In subset,argoFloats-method(..., time) : found no profiles within the given time frame", call.=FALSE)
                      message("Fraction kept ", round(100*sum(keeptime)/length(keeptime),2), "%.")
                      x@data$index <- x@data$index[keeptime, ]
                   } else {

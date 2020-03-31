@@ -99,10 +99,10 @@ summary(aiDoxy)
 ai <- getIndex(file='merge', destdir='~/data/argo')
                subDoxy <- subset(ai, parameter='\\\\bDOXY\\\\b')
                summary(subDoxy)
-# Example 4: Subsetting data based on time
+# Example 4: Subsetting data for the year 2019
 ai <- getIndex(file='merge', destdir ='~/data/argo')
 summary(ai)
-ait <- subset(ai, time=list(from=X, to=Y))
+ait <- subset(ai, time=list(from='2019-01-01 00:00:00', to= '2019-12-31 00:00:00'))
 summary(ait)
 }
 \author{
