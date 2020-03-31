@@ -39,7 +39,8 @@ and northern limits.
 parameter elements indicating the parameter of interest.
 \item A list named \code{polygon} that has elements named \code{longitude} and \code{latitude}.
 Profiles within this polygon will be retained.
-\item A list named \code{time} that has elements \code{from} and \code{to}. Profiles within
+\item A list named \code{time} that has elements \code{from} and \code{to} that are POSTIX
+times created with eg. POSIXct(), with timezone \code{"UTC"}. Profiles within
 that time frame will be retained.
 }
 
@@ -96,9 +97,10 @@ summary(ai)
 aiDoxy <- subset(ai, parameter="DOXY")
 summary(aiDoxy)
 # 3B: Data containing strictly 'DOXY' parameters (single word)
+\dontrun{
 ai <- getIndex(file='merge', destdir='~/data/argo')
 subDoxy <- subset(ai, parameter='\\\\bDOXY\\\\b')
-summary(subDoxy)
+summary(subDoxy)}
 # Example 4: Subsetting data for the year 2019
 \dontrun{
 ai <- getIndex(file='merge', destdir ='~/data/argo')

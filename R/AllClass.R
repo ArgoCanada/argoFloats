@@ -380,7 +380,8 @@ setMethod(f="summary",
 #' parameter elements indicating the parameter of interest.
 #' 4. A list named `polygon` that has elements named `longitude` and `latitude`.
 #' Profiles within this polygon will be retained.
-#' 5. A list named `time` that has elements `from` and `to`. Profiles within
+#' 5. A list named `time` that has elements `from` and `to` that are POSTIX
+#' times created with eg. POSIXct(), with timezone `"UTC"`. Profiles within
 #' that time frame will be retained.  
 #'
 #' In all cases, the notation is that longitude is positive
@@ -446,9 +447,10 @@ setMethod(f="summary",
 #' aiDoxy <- subset(ai, parameter="DOXY")
 #' summary(aiDoxy)
 #' # 3B: Data containing strictly 'DOXY' parameters (single word)
+#' \dontrun{
 #' ai <- getIndex(file='merge', destdir='~/data/argo')
 #' subDoxy <- subset(ai, parameter='\\bDOXY\\b')
-#' summary(subDoxy)
+#' summary(subDoxy)}
 #' # Example 4: Subsetting data for the year 2019
 #' \dontrun{
 #' ai <- getIndex(file='merge', destdir ='~/data/argo')
@@ -530,13 +532,13 @@ setMethod(f="subset",
                              stop("In subset,argoFloats-method() : 'time' must be a list")
                       if (!inherits(time$from, "POSIXt"))
                          stop("'time' must be a list containing POSIX times")
-                      if (2 != sum(c("from", "to") %in% sort(names(time))))
+                      if (2 != sum(c("from", "to")))
                          stop("In subset,argoFloats-method() : 'time' must be a list containing 'to'and 'from'")
                       if (length(time$from) != 1)
                          stop("from must be of length 1")
                       if (length(time$to) != 1)
                          stop("to must be of length 1")
-                      if (time$to < time$from)
+                      if (time$to <= time$from)
                           stop ("'to' must be greater than 'from'")
                      keeptime <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
                      keeptime[is.na(keeptime)] <- FALSE
