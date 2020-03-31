@@ -532,7 +532,7 @@ setMethod(f="subset",
                              stop("In subset,argoFloats-method() : 'time' must be a list")
                       if (!inherits(time$from, "POSIXt"))
                          stop("'time' must be a list containing POSIX times")
-                      if (2 != sum(c("from", "to")))
+                      if (2 != sum(c("from", "to") %n% names(time))) 
                          stop("In subset,argoFloats-method() : 'time' must be a list containing 'to'and 'from'")
                       if (length(time$from) != 1)
                          stop("from must be of length 1")
