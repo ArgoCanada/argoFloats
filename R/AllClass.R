@@ -384,6 +384,8 @@ setMethod(f="summary",
 #' times created with eg. [POSIXct()], with `tz="UTC"` to match
 #' the timezone used in Argo data. Profiles within that time frame will
 #' be retained.
+#' 6. A list named `institution`, which has `argo`, `argo_bgc`, or `argo_merge`
+#' institutions (ie. `AO` `BO` `CS` `HZ` `IF` `IN` `JA` `KM` `KO` `ME` `NM`). 
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -459,7 +461,13 @@ setMethod(f="summary",
 #' from <- as.POSIXct("2019-01-01", tz="UTC")
 #' to <- as.POSIXct("2019-12-31", tz="UTC")
 #' ait <- subset(ai, time=list(from=from, to=to))
-#' summary(ait) }
+#' summary(ait) 
+#' # Example 5: Subsetting by institution
+#' ai <- getIndex(file='merge', destdir="~/data/argo")
+#' summary (ai)
+#' aiAO <- subset(ai, institution="AO")
+#' summary(aiAO)
+#' }
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
@@ -473,7 +481,7 @@ setMethod(f="subset",
               dotsNames <- names(dots)
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', or 'time'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', or 'institution'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
                   ## FIXME: permit args 'polygon', 'rectangle', and 'time'.
@@ -540,7 +548,7 @@ setMethod(f="subset",
                       if (length(time$to) != 1)
                          stop("to must be of length 1")
                       if (time$to <= time$from)
-                          stop ("'to' must be greater than 'from'")
+                         stop ("'to' must be greater than 'from'")
                      keeptime <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
                      keeptime[is.na(keeptime)] <- FALSE
                      #browser()
@@ -548,8 +556,17 @@ setMethod(f="subset",
                          warning("In subset,argoFloats-method(..., time) : found no profiles within the given time frame", call.=FALSE)
                      message("Fraction kept ", round(100*sum(keeptime)/length(keeptime),2), "%.")
                      x@data$index <- x@data$index[keeptime, ]
+                } else if(dotsNames[1]=="institution") {
+                    institution <- dots[[1]]
+                    if(!is.list(dots[1]))
+                        stop("In subset,argoFloats-method() : 'institution' must be a list")
+                    keepinst <- grepl(institution, x@data$index$institution)
+                    if (sum(keepinst) < 1)
+                        warning("In subset,argoFloats-method(..., institution) : found no profiles from given institution", call.=FALSE)
+                    message("Fraction kept ", round(100*sum(keepinst)/length(keepinst),2), "%.")
+                    x@data$index <- x@data$index[keepinst, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', or 'time'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time', or 'institution'", call.=FALSE)
                       
                   }
                   } else {

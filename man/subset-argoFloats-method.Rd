@@ -43,6 +43,8 @@ Profiles within this polygon will be retained.
 times created with eg. \code{\link[=POSIXct]{POSIXct()}}, with \code{tz="UTC"} to match
 the timezone used in Argo data. Profiles within that time frame will
 be retained.
+\item A list named \code{institution}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge}
+institutions (ie. \code{AO} \code{BO} \code{CS} \code{HZ} \code{IF} \code{IN} \code{JA} \code{KM} \code{KO} \code{ME} \code{NM}).
 }
 
 In all cases, the notation is that longitude is positive
@@ -109,7 +111,13 @@ summary(ai)
 from <- as.POSIXct("2019-01-01", tz="UTC")
 to <- as.POSIXct("2019-12-31", tz="UTC")
 ait <- subset(ai, time=list(from=from, to=to))
-summary(ait) }
+summary(ait) 
+# Example 5: Subsetting by institution
+ai <- getIndex(file='merge', destdir="~/data/argo")
+summary (ai)
+aiAO <- subset(ai, institution="AO")
+summary(aiAO)
+}
 }
 \author{
 Dan Kelley and Jaimie Harbin
