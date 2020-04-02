@@ -30,6 +30,7 @@ created by \code{\link[=getProfiles]{getProfiles()}}.
 }
 \examples{
 # Download and plot some profiles.
+\dontrun{
 library(argoFloats)
 data(index)
 index2 <- subset(index, 1:2)
@@ -47,6 +48,7 @@ if (requireNamespace("ncdf4")) {
       plotTS(Aclean, eos="unesco")
       mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
     }
+}
 }
 
 }

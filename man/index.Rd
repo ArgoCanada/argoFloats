@@ -11,28 +11,15 @@ Bahamas, as of 2020 March 14, using
 the following code.
 \preformatted{
 library(oce)
-indexAll <- getIndex(destdir="~/data/argo")
+indexAll <- getIndex()
 index <- subset(indexAll,
     circle=list(longitude=-77.06,latitude=26.54,radius=200))
 }
-Note the \code{destdir} value, which controls where a
-subsequent call to \code{\link[=getProfiles]{getProfiles()}} would save data files.
 }
 \examples{
-library(oce)
-library(ocedata)
 library(argoFloats)
-data(coastlineWorldFine, package="ocedata")
-data(topoWorld, package="oce")
 data(index, package="argoFloats")
-plot(coastlineWorldFine, col="tan",
-    clongitude=-77.06, clatitude=26.54, span=1300)
-points(index[["longitude"]], index[["latitude"]], cex=0.5, col=2)
-contour(topoWorld[["longitude"]], topoWorld[["latitude"]],
-    -topoWorld[["z"]],
-    add=TRUE, levels=c(1000,2000), lwd=c(1,3), col="blue")
-legend("topleft", col="blue", bg="white", lwd=c(1, 3),
-    title="Water Depth [m]", legend=c("1000", "2000"))
+plot(index, which="map")
 
 }
 \seealso{
