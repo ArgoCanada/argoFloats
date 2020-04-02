@@ -9,6 +9,8 @@ test_that("subset by circle", {
           data("index")
           indexc <- expect_silent(subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100)))
           expect_equal(dim(indexc[["index"]]), c(304, 8))
+          expect_equal(indexc[["index"]][["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
+          expect_equal(indexc[["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
 })
 
 test_that("subset by rectangle", {
@@ -18,9 +20,25 @@ test_that("subset by rectangle", {
                                                         latitude=c(25, 26))))
           expect_equal(dim(indexr[["index"]]), c(76, 8))
           expect_equal(indexr[["index"]][["file"]][1], "aoml/4900183/profiles/D4900183_024.nc")
+          expect_equal(indexr[["file"]][1], "aoml/4900183/profiles/D4900183_024.nc")
 })
 
-# Add test for polygon method here
+test_that("subset by polygon", {
+          data("index")
+          indexp <- expect_message(subset(index, polygon=list(latitude=c(25,27,25),
+                                               longitude=c(-78,-77,-74))), 'Fraction kept 39.87%.')
+          expect_equal(dim(indexp[["index"]]), c(379,8))
+          expect_equal(indexp[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexp[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+})
 
-# Add test for time method here
+test_that("subset by time", {
+          data("index")
+          from <- as.POSIXct("2019-01-01", tz="UTC")
+          to <- as.POSIXct("2019-12-31", tz="UTC")
+          indext <- expect_message(subset(index, time=list(from=from, to=to)), 'Fraction kept 0.94%.')
+          expect_equal(dim(indext[["index"]]), c(9,8))
+          expect_equal(indext[["index"]][["file"]][1], "aoml/4901628/profiles/R4901628_212.nc")
+          expect_equal(indext[["file"]][1], "aoml/4901628/profiles/R4901628_212.nc")
+})
 
