@@ -93,6 +93,7 @@ data(index)
 from <- as.POSIXct("2019-01-01", tz="UTC")
 to <- as.POSIXct("2019-12-31", tz="UTC")
 index4 <- subset(index, time=list(from=from, to=to))
+
 }
 \author{
 Dan Kelley and Jaimie Harbin

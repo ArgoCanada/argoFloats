@@ -466,6 +466,7 @@ setMethod(f="subset",
                           stop("In subset,argoFloats-method() : 'polygon' must be a list")
                       keep <- as.logical(sp::point.in.polygon(x[["longitude"]], x[["latitude"]],
                                                               polygon$longitude, polygon$latitude))
+                      keep[is.na(keep)] <- FALSE
                       message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="time") {
@@ -479,25 +480,21 @@ setMethod(f="subset",
                       if (length(time$from) != 1)
                           stop("from must be of length 1")
                       if (length(time$to) != 1)
-                         stop("to must be of length 1")
+                          stop("to must be of length 1")
                       if (time$to <= time$from)
-                         stop ("'to' must be greater than 'from'")
-                     keeptime <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
-                     keeptime[is.na(keeptime)] <- FALSE
-                     #browser()
-                     if (sum(keeptime) < 1)
-                         warning("In subset,argoFloats-method(..., time) : found no profiles within the given time frame", call.=FALSE)
-                     message("Fraction kept ", round(100*sum(keeptime)/length(keeptime),2), "%.")
-                     x@data$index <- x@data$index[keeptime, ]
-                } else if(dotsNames[1]=="institution") {
-                    institution <- dots[[1]]
-                    if(!is.list(dots[1]))
-                        stop("In subset,argoFloats-method() : 'institution' must be a list")
-                    keepinst <- grepl(institution, x@data$index$institution)
-                    if (sum(keepinst) < 1)
-                        warning("In subset,argoFloats-method(..., institution) : found no profiles from given institution", call.=FALSE)
-                    message("Fraction kept ", round(100*sum(keepinst)/length(keepinst),2), "%.")
-                    x@data$index <- x@data$index[keepinst, ]
+                          stop ("'to' must be greater than 'from'")
+                      keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
+                      keep[is.na(keep)] <- FALSE
+                      message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
+                      x@data$index <- x@data$index[keep, ]
+                  } else if(dotsNames[1]=="institution") {
+                      institution <- dots[[1]]
+                      if(!is.list(dots[1]))
+                          stop("In subset,argoFloats-method() : 'institution' must be a list")
+                      keep <- grepl(institution, x@data$index$institution)
+                      keep[is.na(keep)] <- FALSE
+                      message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
+                      x@data$index <- x@data$index[keep, ]
                   } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time', or 'institution'", call.=FALSE)
                   }
