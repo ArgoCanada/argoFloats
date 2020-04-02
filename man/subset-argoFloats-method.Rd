@@ -42,7 +42,9 @@ see examples 3A and 3B.
 \item A list named \code{time} that has elements \code{from} and \code{to} that are POSIXt
 times created with eg. \code{\link[=POSIXct]{POSIXct()}}, with \code{tz="UTC"} to match
 the timezone used in Argo data. Profiles within that time frame will
-be retained. See Example 4.
+be retained.
+\item A list named \code{institution}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge}
+institutions (ie. \code{AO} \code{BO} \code{CS} \code{HZ} \code{IF} \code{IN} \code{JA} \code{KM} \code{KO} \code{ME} \code{NM}).
 }
 
 In all cases, the notation is that longitude is positive
@@ -91,7 +93,6 @@ data(index)
 from <- as.POSIXct("2019-01-01", tz="UTC")
 to <- as.POSIXct("2019-12-31", tz="UTC")
 index4 <- subset(index, time=list(from=from, to=to))
-
 }
 \author{
 Dan Kelley and Jaimie Harbin

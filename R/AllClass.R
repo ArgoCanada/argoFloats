@@ -342,7 +342,9 @@ setMethod(f="summary",
 #' 5. A list named `time` that has elements `from` and `to` that are POSIXt
 #' times created with eg. [POSIXct()], with `tz="UTC"` to match
 #' the timezone used in Argo data. Profiles within that time frame will
-#' be retained. See Example 4.
+#' be retained.
+#' 6. A list named `institution`, which has `argo`, `argo_bgc`, or `argo_merge`
+#' institutions (ie. `AO` `BO` `CS` `HZ` `IF` `IN` `JA` `KM` `KO` `ME` `NM`). 
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -414,7 +416,7 @@ setMethod(f="subset",
               dotsNames <- names(dots)
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', or 'time'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', or 'institution'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
                   ## FIXME: permit args 'polygon', 'rectangle', and 'time'.
@@ -479,13 +481,25 @@ setMethod(f="subset",
                       if (length(time$to) != 1)
                          stop("to must be of length 1")
                       if (time$to <= time$from)
-                          stop ("'to' must be greater than 'from'")
-                      keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
-                      keep[is.na(keep)] <- FALSE
-                      message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
-                      x@data$index <- x@data$index[keep, ]
+                         stop ("'to' must be greater than 'from'")
+                     keeptime <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
+                     keeptime[is.na(keeptime)] <- FALSE
+                     #browser()
+                     if (sum(keeptime) < 1)
+                         warning("In subset,argoFloats-method(..., time) : found no profiles within the given time frame", call.=FALSE)
+                     message("Fraction kept ", round(100*sum(keeptime)/length(keeptime),2), "%.")
+                     x@data$index <- x@data$index[keeptime, ]
+                } else if(dotsNames[1]=="institution") {
+                    institution <- dots[[1]]
+                    if(!is.list(dots[1]))
+                        stop("In subset,argoFloats-method() : 'institution' must be a list")
+                    keepinst <- grepl(institution, x@data$index$institution)
+                    if (sum(keepinst) < 1)
+                        warning("In subset,argoFloats-method(..., institution) : found no profiles from given institution", call.=FALSE)
+                    message("Fraction kept ", round(100*sum(keepinst)/length(keepinst),2), "%.")
+                    x@data$index <- x@data$index[keepinst, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', or 'time'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time', or 'institution'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)
