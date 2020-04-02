@@ -9,3 +9,4 @@ Rplot.*png
 .DS_Store
 *.out
 Rplot*.png
+.RData

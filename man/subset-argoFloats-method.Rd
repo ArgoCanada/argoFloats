@@ -13,7 +13,7 @@
 indices of \code{x@data$index} to keep.  See example 1.}
 
 \item{...}{a list named \code{circle}, \code{rectangle}, \code{parameter}, \code{polygon} , or \code{time}. See \dQuote{Details}
-and Example 2.}
+and \dQuote{Examples}.}
 }
 \value{
 An \linkS4class{argoFloats} object.
@@ -30,19 +30,19 @@ The possibilities for the \code{...} argument are as follows.
 \item A list named \code{circle} with elements named \code{longitude},
 \code{latitude} and \code{radius}.  The first two give the center of
 the subset region, and the third gives the radius of
-that region, in kilometers.
+that region, in kilometers. See Example 2A.
 \item A list named \code{rectangle}, which has an element named \code{longitude}
 with two elements giving the western and eastern limits of the
 subset region, and similar one named \code{latitude} giving the southern
-and northern limits.
-\item A list named \code{parameter}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge}
-parameter elements indicating the parameter of interest.
+and northern limits. See Example 2B.
 \item A list named \code{polygon} that has elements named \code{longitude} and \code{latitude}.
-Profiles within this polygon will be retained.
+Profiles within this polygon will be retained. See Example 2C.
+\item A vector or list named \code{parameter} that holds names of parameters to keep;
+see examples 3A and 3B.
 \item A list named \code{time} that has elements \code{from} and \code{to} that are POSIXt
 times created with eg. \code{\link[=POSIXct]{POSIXct()}}, with \code{tz="UTC"} to match
 the timezone used in Argo data. Profiles within that time frame will
-be retained.
+be retained. See Example 4.
 }
 
 In all cases, the notation is that longitude is positive
@@ -54,62 +54,44 @@ library(argoFloats)
 data(index)
 
 # Example 1: First three profiles in dataset.
-index3 <- subset(index, 1:3)
-cat("First 3 longitudes:", paste(index3[["longitude"]]), "\n")
-# Example 2: Subsets near Abaca Island
-# 2A: circle around the island
-indexC <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=200))
-cat("Found", length(indexC[["longitude"]]), "profiles in circle around Abaca Island\n")
-# 2B: rectangle to northeast of the island
-indexR <- subset(index, rectangle=list(longitude=c(-77,-76), latitude=c(27,28)))
-cat("Found", length(indexR[["longitude"]]), "profiles in rectangle north of Abaca Island\n")
+index1 <- subset(index, 1:3)
+cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
+
+# Example 2: Demonstrate geographical subsets. These examples use
+# built-in datasets; to use these in other  work, start by
+# using getIndex() to create an index.
+# 2A: circle north of Abaca Island
+index2A <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+# 2B: rectangle northeast of Abaca Island
+lonRect <- c(-76.5, -76)
+latRect <- c(26.5, 27.5)
+index2B <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
+# 2C: polygon to the southeast of Abaco Island
+lonPoly <- c(-76.5, -76.0, -75.5)
+latPoly <- c(25.5, 26.5, 25.5)
+index2C <- subset(index, polygon=list(longitude=lonPoly, latitude=latPoly))
 # Show these subsets on a map
-library(oce)
-data(coastlineWorldFine, package="ocedata")
-par(mar=c(2, 2, 1, 1))
-plot(coastlineWorldFine, col="tan",
-     longitudelim=-77.06+c(-3, 3), latitudelim=26.54+c(-2, 2))
-points(indexC[["longitude"]], indexC[["latitude"]], col="red")
-points(indexR[["longitude"]], indexR[["latitude"]], col="blue", pch=20)
-# 2C: Polygon to the northeast of the Abaco island
-\dontrun{
-library(oce)
-library(sp)
-data(package='ocedata')
-data('coastlineWorldFine', package='ocedata')
-latitudePolygon <- c(24, 27, 24) # Creating a polygon that closes
-longitudePolygon <- c(-79, -78, -74 )
-mapPlot(coastlineWorldFine, col='lightgray', longitudelim=c(-83,-71),
-        latitudelim=c(20,30), projection="+proj=merc", grid=TRUE)
-mapPoints(longitudePolygon, latitudePolygon, type="l", lwd=5, col="blue")
-abacaSub <- subset(index, circle=list(longitude=-77.15, latitude=26.35,
-                   radius=300))
-latitudePoint <- abacaSub[['latitude']]
-longitudePoint <- abacaSub[['longitude']]
-indexP <- subset(index, polygon=list(latitude=latitudePolygon,
-                 longitude=longitudePolygon))
-inside <- sp::point.in.polygon(longitudePoint, latitudePoint,
-                               longitudePolygon, latitudePolygon)
-mapPoints(longitudePoint, latitudePoint, col=inside+1, pch=20) }
+plot(index)
+points(index2A[["longitude"]], index2A[["latitude"]], col=2, pch=20, cex=1.4)
+points(index2B[["longitude"]], index2B[["latitude"]], col=3, pch=20, cex=1.4)
+rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
+points(index2C[["longitude"]], index2C[["latitude"]], col=4, pch=20, cex=1.4)
+polygon(lonPoly, latPoly, border=4, lwd=2)
+
 # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
-# 3A: Data containing all 'DOXY' parameters (single or full word)
-ai <- getIndex(file='merge', destdir='~/data/argo')
-summary(ai)
-aiDoxy <- subset(ai, parameter="DOXY")
-summary(aiDoxy)
-# 3B: Data containing strictly 'DOXY' parameters (single word)
-\dontrun{
-ai <- getIndex(file='merge', destdir='~/data/argo')
-subDoxy <- subset(ai, parameter='\\\\bDOXY\\\\b')
-summary(subDoxy)}
+# 3A: Data containing 'DOXY' data
+data(indexMerged)
+index3A <- subset(indexMerged, parameter="DOXY")
+# 3B: Data containing both 'PSAL' and 'DOWN_IRRADIANCE380' data
+data(indexMerged)
+index3B <- subset(indexMerged, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
+
 # Example 4: Subsetting data for the year 2019
-\dontrun{
-ai <- getIndex(file='merge', destdir ='~/data/argo')
-summary(ai)
+data(index)
 from <- as.POSIXct("2019-01-01", tz="UTC")
 to <- as.POSIXct("2019-12-31", tz="UTC")
-ait <- subset(ai, time=list(from=from, to=to))
-summary(ait) }
+index4 <- subset(index, time=list(from=from, to=to))
+
 }
 \author{
 Dan Kelley and Jaimie Harbin
