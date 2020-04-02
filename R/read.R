@@ -22,6 +22,7 @@
 #'
 #' @examples
 #' # Download and plot some profiles.
+#'\dontrun{
 #' library(argoFloats)
 #' data(index)
 #' index2 <- subset(index, 1:2)
@@ -40,6 +41,7 @@
 #'       mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
 #'     }
 #' }
+#'}
 #'
 #' @importFrom oce read.argo
 #'

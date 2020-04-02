@@ -489,7 +489,7 @@ getIndex <- function(server="auto",
 #'
 #' @examples
 #' # Download some Argo data files.
-#'\donttest{
+#'\dontrun{
 #' library(argoFloats)
 #' data(index)
 #' index2 <- subset(index, 1:2)
