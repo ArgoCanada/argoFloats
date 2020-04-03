@@ -2,6 +2,7 @@
 ## The tests relating to data dimensions will need to be altered if the dataset is altered.
 
 library(argoFloats)
+library(testthat)
 
 context("subset")
 
