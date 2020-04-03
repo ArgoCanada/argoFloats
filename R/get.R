@@ -18,7 +18,7 @@
 #' @importFrom curl curl_download
 #' @export
 #' @author Dan Kelley
-downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quiet=FALSE,
+downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode="wb", quiet=FALSE,
                                 force=FALSE, retries=3, debug=0)
 {
     if (missing(url))
@@ -112,7 +112,7 @@ downloadWithRetries <- function(url, destdir=".", destfile=NULL, mode="wb", quie
 #'
 #' @importFrom curl curl_download
 #' @export
-getProfileFromUrl <- function(url=NULL, destdir=".", destfile=NULL,
+getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
                               force=FALSE, retries=3, quiet=FALSE, debug=0)
 {
     argoFloatsDebug(debug,  "getProfileFromUrl(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
@@ -239,7 +239,7 @@ getProfileFromUrl <- function(url=NULL, destdir=".", destfile=NULL,
 #' @export
 getIndex <- function(server="auto",
                      file="argo",
-                     destdir=".",
+                     destdir="~/data/argo",
                      age=7,
                      quiet=FALSE,
                      debug=0)
@@ -395,7 +395,7 @@ getIndex <- function(server="auto",
 #' library(argoFloats)
 #' data(index)
 #' index2 <- subset(index, 1:2)
-#' profiles2 <- getProfiles(index2, destdir=".")
+#' profiles2 <- getProfiles(index2, destdir="~/data/argo")
 #' # See ?readProfiles for how to read the files now downloaded.
 #'}
 #'

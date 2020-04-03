@@ -244,6 +244,25 @@ setMethod(f="[[",
                   }
                   return(res)
               }
+              if (i == "argos") {
+                  if (type != "argos")
+                      stop("[[\"argos\"]] only works for objects created by readProfiles()")
+                  return(x@data$argos)
+              }
+              if (i %in% c("salinity", "temperature", "pressure")) {
+                  if (type != "argos")
+                      stop("[[\"", i, "\"]] only works for objects created by readProfiles()")
+                  return(unlist(lapply(x[["argos"]], function(a) a[[i]])))
+              }
+              if (i %in% c("longitude", "latitude")) {
+                  if (type == "argos") {
+                      return(unlist(lapply(x[["argos"]], function(a) rep(a[[i]], length(a[["salinity"]])))))
+                  } else if (type == "index") {
+                      return(x@data$index[[i]])
+                  } else {
+                      stop("[[\"", i, "\"]] only works for objects created by readProfiles()")
+                  }
+              }
               if (i == "profile count") {
                   return(switch(type,
                                 index=length(x@data$index$file),

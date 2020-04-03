@@ -57,7 +57,7 @@ in the documentation for the latter function.
 library(argoFloats)
 data(index)
 index2 <- subset(index, 1:2)
-profiles2 <- getProfiles(index2, destdir=".")
+profiles2 <- getProfiles(index2, destdir="~/data/argo")
 # See ?readProfiles for how to read the files now downloaded.
 }
 

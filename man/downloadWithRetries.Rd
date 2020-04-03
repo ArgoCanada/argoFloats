@@ -6,7 +6,7 @@
 \usage{
 downloadWithRetries(
   url,
-  destdir = ".",
+  destdir = "~/data/argo",
   destfile = NULL,
   mode = "wb",
   quiet = FALSE,

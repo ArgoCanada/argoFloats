@@ -4,12 +4,18 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(profiles, debug = 0)
+readProfiles(profiles, handleFlags = TRUE, debug = 0)
 }
 \arguments{
 \item{profiles}{either a character vector holding the names
 of local files to read, or (better) an \linkS4class{argoFloats} object created
 by \code{\link[=getProfiles]{getProfiles()}}.}
+
+\item{handleFlags}{a logical value (with default \code{TRUE}) that
+indicates whether to call \code{\link[oce:handleFlags]{oce::handleFlags()}} on the individual argo
+files that are to be read. This cleans up some common errors
+that are identified in the quality-control analysis that is usually
+done before data are place on the argo servers.}
 
 \item{debug}{an integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,
@@ -19,7 +25,7 @@ the file, and so it will print messages if \code{debug} exceeds 1.}
 }
 \value{
 \link{readProfiles} returns an \linkS4class{argoFloats} object
-with \code{type="argo"}, in which the \code{data} slot
+with \code{type="argos"}, in which the \code{data} slot
 contains a list named \code{argos} that holds objects
 that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 }
@@ -35,18 +41,15 @@ library(argoFloats)
 data(index)
 index2 <- subset(index, 1:2)
 if (requireNamespace("ncdf4")) {
-    profiles <- getProfiles(index2, destdir=".")
-    argos <- readProfiles(profiles)
-    par(mfrow=c(2, 2))
+    profiles <- getProfiles(index2, destdir="~/data/argo")
+    argos <- readProfiles(profiles, handleFlags=TRUE)
+    par(mfrow=c(1, 2))
     library(oce)
     for (i in 1:2) {
       A <- argos[["profile", i]]
       filename <- gsub(".*/", "", A[["filename"]])
       plotTS(A, eos="unesco")
       mtext(filename, line=0.7, cex=par("cex"))
-      Aclean <- handleFlags(A)
-      plotTS(Aclean, eos="unesco")
-      mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
     }
 }
 }

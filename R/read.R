@@ -9,6 +9,11 @@
 #' @param profiles either a character vector holding the names
 #' of local files to read, or (better) an [argoFloats-class] object created
 #' by [getProfiles()].
+#' @param handleFlags a logical value (with default `TRUE`) that
+#' indicates whether to call [oce::handleFlags()] on the individual argo
+#' files that are to be read. This cleans up some common errors
+#' that are identified in the quality-control analysis that is usually
+#' done before data are place on the argo servers.
 #' @param debug an integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
 #' a small amount of debugging information is printed.  Note that
@@ -16,7 +21,7 @@
 #' the file, and so it will print messages if `debug` exceeds 1.
 #'
 #' @return [readProfiles] returns an [argoFloats-class] object
-#' with `type="argo"`, in which the `data` slot
+#' with `type="argos"`, in which the `data` slot
 #' contains a list named `argos` that holds objects
 #' that are created by [oce::read.argo()].
 #'
@@ -27,28 +32,25 @@
 #' data(index)
 #' index2 <- subset(index, 1:2)
 #' if (requireNamespace("ncdf4")) {
-#'     profiles <- getProfiles(index2, destdir=".")
-#'     argos <- readProfiles(profiles)
-#'     par(mfrow=c(2, 2))
+#'     profiles <- getProfiles(index2, destdir="~/data/argo")
+#'     argos <- readProfiles(profiles, handleFlags=TRUE)
+#'     par(mfrow=c(1, 2))
 #'     library(oce)
 #'     for (i in 1:2) {
 #'       A <- argos[["profile", i]]
 #'       filename <- gsub(".*/", "", A[["filename"]])
 #'       plotTS(A, eos="unesco")
 #'       mtext(filename, line=0.7, cex=par("cex"))
-#'       Aclean <- handleFlags(A)
-#'       plotTS(Aclean, eos="unesco")
-#'       mtext(paste(filename, "(cleaned)"), line=0.7, cex=par("cex"))
 #'     }
 #' }
 #'}
 #'
-#' @importFrom oce read.argo
+#' @importFrom oce handleFlags read.argo
 #'
 #' @export
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, debug=0)
+readProfiles <- function(profiles, handleFlags=TRUE, debug=0)
 {
     debug <- floor(0.5 + debug)
     debug <- max(0, debug)
@@ -75,7 +77,13 @@ readProfiles <- function(profiles, debug=0)
     } else {
         stop("'profiles' must be a character vector or an object created by getProfiles().")
     }
+    if (handleFlags) {
+        for (i in seq_along(res@data$argos)) {
+            res@data$argos[[i]] <- oce::handleFlags(res@data$argos[[i]])
+        }
+    }
     argoFloatsDebug(debug, "} # readProfiles\n", style="bold", sep="", unindent=1)
+    res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     res
 }
 

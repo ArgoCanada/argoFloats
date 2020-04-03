@@ -52,7 +52,7 @@ see \dQuote{Details}.
 \details{
 The various plot types are as follows.
 \itemize{
-\item for \code{which="map"}, a map of profile locations is created. This
+\item For \code{which="map"}, a map of profile locations is created. This
 only works if the \code{type} is \code{"index"} (meaning that \code{x} was created
 by \code{\link[=getIndex]{getIndex()}} or a subset of such an object, created with
 \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}}), or \code{argos} (meaning that
@@ -62,13 +62,31 @@ is available, then its \code{coastlineWorldFine} dataset is used to draw
 a coastline (which will be visible only if the plot region
 is large enough); otherwise, if the \code{oce} package is available, then its
 \code{coastlineWorld} dataset is used.
+\item For \code{which="TS"},  an overall TS plot is created.  This
+only works if \code{x} is an object that was created by  \code{\link[=getProfiles]{getProfiles()}}.
+The scales for the plot can be altered by putting \code{Slim} and \code{Tlim}
+arguments in the \code{...} list; see the documentation for \code{\link[oce:plotTS]{oce::plotTS()}}
+for other arguments that can be provided.
 }
 }
 \examples{
-# Example 1
+# Example 1: map profiles in index, highlighting a neighborhood of 10
 library(argoFloats)
+library(oce)
 data(index)
 plot(index, which="map")
+lon <- index[["longitude"]]
+lat <- index[["latitude"]]
+dist <- geodDist(lon, lat, -77.06, 26.54)
+o <- order(dist)
+index10 <- subset(index, o[1:10])
+points(index10[["longitude"]], index10[["latitude"]], col=2)
+
+# Example 2: TS of first 10 profiles in the index
+\dontrun{
+profiles10 <- getProfiles(index10, destdir="~/data/argo")
+argos10 <- readProfiles(profiles10)
+plot(argos10, which="TS")}
 
 }
 \author{

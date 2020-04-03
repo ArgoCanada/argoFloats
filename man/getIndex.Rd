@@ -7,7 +7,7 @@
 getIndex(
   server = "auto",
   file = "argo",
-  destdir = ".",
+  destdir = "~/data/argo",
   age = 7,
   quiet = FALSE,
   debug = 0

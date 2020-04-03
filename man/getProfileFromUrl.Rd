@@ -6,7 +6,7 @@
 \usage{
 getProfileFromUrl(
   url = NULL,
-  destdir = ".",
+  destdir = "~/data/argo",
   destfile = NULL,
   force = FALSE,
   retries = 3,

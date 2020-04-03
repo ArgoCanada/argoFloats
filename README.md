@@ -3,37 +3,24 @@
 This R package provides tools for downloading and analyzing collections of
 oceanographic Argo float datasets.
 
-The code and graph below show an example of the construction of a
-temperature-salinity diagram inferred from the 63 float profiles that were
-within 160km of Sable Island, according to the Argo repository accessed in late
-February of 2020.
+The following shows how to create a map and a temperature-salinity diagram for
+several Argo float profiles made near Abaco Island in the Bahamas.  The
+`getIndex()` call specifies a directory to hold the index of float profiles,
+and this directory carries through to the `getProfiles()` call, which downloads
+the netcdf files that contain the profile data, and later to the
+`readProfiles()` call, which reads those files.
 ```R
 library(argoFloats)
 library(oce)
-# TS diagram for profiles near Abaco Island, Bahamas.
+# Profiles near Abaco Island, Bahamas.
 indexAll <- getIndex(destdir="~/data/argo")
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))
-profileIndex <- getProfiles(index)
-argos <- readProfiles(profileIndex)
-first <- TRUE
-# Semi-transparent colours hint at sample repeatability
-col <- rgb(0, 0, 1, 0.4)
-for (i in seq_len(argos[["profile count"]])) {
-    argo <- handleFlags(argos[["profile", i]])
-    # Skip profiles which lack no valid salinities
-    ok <- sum(is.finite((argo[["salinity"]])))
-    if (ok > 0) {
-        if (first) {
-            plotTS(argo, Slim=c(35, 37), Tlim=c(3, 30), eos="gsw",
-                   cex=0.5, col=col, pch=20)
-            first <- FALSE
-        } else {
-            points(argo[["SA"]], argo[["CT"]],
-                   cex=0.5, col=col, pch=20)
-        }
-    }
-}
+profiles  <- getProfiles(index)
+argos <- readProfiles(profiles, handleFlags=TRUE)
+par(mfrow=c(1, 2))
+plot(index, which="map")
+plot(argos, which="TS")
 ```
 ![Sample TS plot.](exampleTS.png)
 
