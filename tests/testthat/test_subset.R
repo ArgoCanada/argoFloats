@@ -2,6 +2,7 @@
 ## The tests relating to data dimensions will need to be altered if the dataset is altered.
 
 library(argoFloats)
+library(testthat)
 
 context("subset")
 
@@ -44,3 +45,11 @@ test_that("subset by time", {
           expect_equal(indext[["file"]][1], "aoml/4901628/profiles/R4901628_212.nc")
 })
 
+test_that("subset by institution", {
+    data("index")
+    indexi <- expect_message(subset(index, institution="AO"),
+                             "Kept 897 profiles \\(94.12%\\)")
+    expect_equal(dim(indexi[["index"]]), c(897,8))
+    expect_equal(indexi[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+    expect_equal(indexi[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+})
