@@ -1,3 +1,5 @@
+## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+
 #' Plot an argoFloats object
 #'
 #' The action depends on the `type` of the object, and
