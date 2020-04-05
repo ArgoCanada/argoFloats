@@ -2,7 +2,10 @@
 #'
 #' @param object an [argoFloats-class] object.
 #'
+#' @importFrom methods show
 #' @export
+#' @docType methods
+#' @rdname argoFloats-methods
 #'
 #' @author Jaimie Harbin`
 setMethod(f="show",
