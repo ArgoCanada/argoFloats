@@ -1,4 +1,4 @@
-png("exampleTS.png", width=7, height=4, unit="in", res=120, pointsize=8)
+png("exampleTS.png", width=7, height=3, unit="in", res=120, pointsize=8)
 library(argoFloats)
 library(oce)
 # Profiles near Abaco Island, Bahamas.
