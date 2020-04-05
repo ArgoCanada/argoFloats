@@ -85,13 +85,13 @@ setMethod(f="plot",
               if (which == "map") {
                   longitude <- x[["longitude"]]
                   latitude <- x[["latitude"]]
+                  omar <- par("mar")
                   if (is.null(cex))
                       cex <- 1
                   if (is.null(col))
                       col <- rgb(0, 0, 1, 0.5)
                   if (is.null(pch))
                       pch <- 20
-                  omar <- par("mar")
                   if (is.null(mar))
                       mar <- c(2, 2, 1, 1)
                   omgp <- par("mgp")
@@ -121,7 +121,13 @@ setMethod(f="plot",
                                      pressure=x[["pressure"]],
                                      latitude=x[["latitude"]],
                                      longitude= x[["longitude"]])
-                  plotTS(ctd, ...)
+                  if (is.null(cex))
+                      cex <- 0.5
+                  if (is.null(col))
+                      col <- rgb(0, 0, 1, 0.5)
+                  if (is.null(pch))
+                      pch <- 20
+                  oce::plotTS(ctd, cex=cex, col=col, pch=pch, mar=mar, mgp=mgp, ...)
               } else {
                   stop("cannot handle which=\"", which, "\"; try \"map\".")
               }
