@@ -2,17 +2,20 @@
 % Please edit documentation in R/plot.R
 \name{plot,argoFloats,ANY-method}
 \alias{plot,argoFloats,ANY-method}
-\alias{plot,argoFloat-method}
+\alias{plot,argoFloats-method}
 \title{Plot an argoFloats object}
 \usage{
 \S4method{plot}{argoFloats,ANY}(
   x,
   which = "map",
+  xlab = NULL,
+  ylab = NULL,
   cex = NULL,
   col = NULL,
   pch = NULL,
   mar = NULL,
   mgp = NULL,
+  eos = "gsw",
   debug = 0,
   ...
 )
@@ -21,6 +24,13 @@
 \item{x}{an \linkS4class{argoFloats} object.}
 
 \item{which}{a string that indicates the type of plot; see \dQuote{Details}.}
+
+\item{xlab}{character value indicating the name for the horizontal axis, or
+\code{NULL}, which indicates that this function should choose an appropriate name
+depending on the value of \code{which}. Note that \code{xlab} is not obeyed if
+\code{which="TS"}, because altering that label can be confusing to the user.}
+
+\item{ylab}{as \code{xlab}, but for th vertical axis.}
 
 \item{cex}{character expansion factor for plot symbols, or \code{NULL}, to get an
 value that depends on the value of \code{which}.}
@@ -36,6 +46,10 @@ be used for the plot, or \code{NULL}, which means that this function will determ
 the margin based on the plot type.}
 
 \item{mgp}{similar to \code{mar}, but for \code{par("mgp")}.}
+
+\item{eos}{character value indicating the equation of state to use
+if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
+see \code{\link[oce:plotTS]{oce::plotTS()}}.}
 
 \item{debug}{an integer specifying the level of debugging.}
 
