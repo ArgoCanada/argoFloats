@@ -26,6 +26,8 @@
 #' be retained.
 #' 6. A list named `institution`, which has `argo`, `argo_bgc`, or `argo_merge`
 #' institutions (ie. `AO` `BO` `CS` `HZ` `IF` `IN` `JA` `KM` `KO` `ME` `NM`).
+#' 7. A list named `deep`, which has a logical value indicating weather argo floats
+#' are deep argo (ie. profiler_type 849, 862, and 864).
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -35,9 +37,6 @@
 #'
 #' @param subset optional numerical or logical vector that indicates which
 #' indices of `x@data$index` to keep.  See example 1.
-#' 
-#' @param deep is a logical value indicating weather to solely
-#' keep deep argo or not (ie. profiler_type 849, 862, and 864)
 #'
 #' @param ... a list named `circle`, `rectangle`, `parameter`, `polygon` , or `time`.
 #' See \dQuote{Details} and \dQuote{Examples}.
@@ -109,11 +108,6 @@ setMethod(f="subset",
                       stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', or 'deep'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
-                  ## FIXME: permit args 'polygon', 'rectangle', and 'time'.
-                  ##
-                  ## note the [1] and [[1]] in next few lines, since we may want to
-                  ## permit multiple '...' elements in a future version, e.g. maybe
-                  ## the user would like to subset by both location and by time.
                   if (dotsNames[1] == "circle") {
                       circle <- dots[[1]]
                       if (!is.list(dots[1]))
@@ -185,8 +179,15 @@ setMethod(f="subset",
                       keep[is.na(keep)] <- FALSE
                       message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
+                  } else if(dotsNames[1]=='deep') {
+                      deep <- dots[[1]]
+                      if(!as.logical(dots[1]))
+                          stop("deep must be a logical vector indicating TRUE or FALSE")
+                      keep <- grepl("849|862|864", x@data$index$profiler_type)
+                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      x@data$index <- x@data$index[keep, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time', or 'institution'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', or'deep'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)
@@ -198,17 +199,7 @@ setMethod(f="subset",
                   }
               }
               x
-          
           }
-deep <- FALSE,
-if (!as.logical(deep)){
-    stop("deep must be a logical vector indicating TRUE or FALSE")
-keep<- grepl("849|862|864", x@data$index$profiler_type)
-message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
-x@data$index <- x@data$index[keep, ]
-}
-
-
 )
 
 
