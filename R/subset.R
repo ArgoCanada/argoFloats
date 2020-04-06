@@ -124,7 +124,7 @@ setMethod(f="subset",
                       keep <- dist < circle$radius
                       keep[is.na(keep)] <- FALSE
                       x@data$index <- x@data$index[keep, ]
-                      message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
+                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                   } else if (dotsNames[1] == "rectangle") {
                       rectangle <- dots[[1]]
                       if (!is.list(dots[1]))
@@ -138,7 +138,7 @@ setMethod(f="subset",
                       keeplat[!ok] <- FALSE
                       keep <- keeplon & keeplat
                       x@data$index <- x@data$index[keep, ]
-                      message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
+                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                   } else if (dotsNames[1]=="parameter") {
                       parameter <- dots[[1]]
                       if (is.list(dots[1]))
@@ -148,7 +148,7 @@ setMethod(f="subset",
                       keep <- unlist(lapply(parametersList, function(pl) nparameters == sum(parameters %in% pl)))
                       if (sum(keep) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
-                      message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
+                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="polygon") {
                       polygon <- dots[[1]]
@@ -157,7 +157,7 @@ setMethod(f="subset",
                       keep <- as.logical(sp::point.in.polygon(x[["longitude"]], x[["latitude"]],
                                                               polygon$longitude, polygon$latitude))
                       keep[is.na(keep)] <- FALSE
-                      message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
+                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="time") {
                       time <- dots[[1]]
@@ -175,7 +175,7 @@ setMethod(f="subset",
                           stop ("'to' must be greater than 'from'")
                       keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
                       keep[is.na(keep)] <- FALSE
-                      message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
+                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if(dotsNames[1]=="institution") {
                       institution <- dots[[1]]
@@ -183,7 +183,7 @@ setMethod(f="subset",
                           stop("In subset,argoFloats-method() : 'institution' must be a list")
                       keep <- grepl(institution, x@data$index$institution)
                       keep[is.na(keep)] <- FALSE
-                      message("Kept ", sum(keep), " profiles (", round(100*sum(keep)/length(keep),2), "%)")
+                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time', or 'institution'", call.=FALSE)

@@ -1,13 +1,36 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-#' A Package for Collections of Argo Float Profiles
+#' A Package for Processing Argo Float Profiles
 #'
-#' This package **FIXME(jlh) Please write a few paragraphs here, after
-#' discussions with dek and cgr.  The idea will be to get a clean
-#' introductory paragraph that will organize our intentions for
-#' the object structure.  Details ought to be added later, as
-#' new things get written.  The oce package may provide a useful
-#' guide.**
+#' This package provides tools for downloading and processing Argo profile data.
+#' **FIXME(jlh) Please write the remainder of a paragraph here.  According to
+#' the way Roxygen works, this paragarph will be called
+#' 'Description', and any later paragraphs (as I've started below)
+#' will be called 'Details'. It is conventional
+#' that the first paragraph be an overall
+#' introduction, like an abstract.
+#' I don't think we want a lot of
+#' depth though, because the function documentation is the main source
+#' that we want users to consult. Note, for example, how in the text I put
+#' after the diagram, I used links instead of discussing what those functions do.
+#' We could chat about what goes here, if that would help. --dek.**
+#'
+#'
+#' The sketch given below illustrates the typical workflow with the `argoFloats` package, with
+#' descriptions of the steps on the left, and names of the relevant `argoFloats` files
+#' on the right.
+#'
+#' \if{html}{\figure{workflow.png}{options: width=600px alt="Figure: workflow.png"}}
+#'
+#' The package vignette provides more concrete examples of the workflow, and the
+#' documentation entries for [getIndex()], [getProfiles()], and [readProfiles()]
+#' provide details along with some examples.
+#'
+#' **FIXME: add paragraph on [[**
+#'
+#' **FIXME: add paragraph on subset**
+#'
+#' **FIXME: add paragraph on plot**
 #'
 #' @importFrom methods new
 #' @name argoFloats-package

@@ -27,6 +27,11 @@
 #'
 #' @param x an [argoFloats-class] object.
 #' @param which a string that indicates the type of plot; see \dQuote{Details}.
+#' @param xlab character value indicating the name for the horizontal axis, or
+#' `NULL`, which indicates that this function should choose an appropriate name
+#' depending on the value of `which`. Note that `xlab` is not obeyed if
+#' `which="TS"`, because altering that label can be confusing to the user.
+#' @param ylab as `xlab`, but for th vertical axis.
 #' @param cex character expansion factor for plot symbols, or `NULL`, to get an
 #' value that depends on the value of `which`.
 #' @param col colour to be used for plot symbols, or `NULL`, to get an
@@ -37,6 +42,9 @@
 #' be used for the plot, or `NULL`, which means that this function will determine
 #' the margin based on the plot type.
 #' @param mgp similar to `mar`, but for `par("mgp")`.
+#' @param eos character value indicating the equation of state to use
+#' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
+#' see [oce::plotTS()].
 #' @param debug an integer specifying the level of debugging.
 #' @param \dots extra arguments passed to the plot calls that are made
 #' to within this function. A common use for `which="map"` cases is
@@ -67,16 +75,16 @@
 #' @importFrom utils data
 #' @importFrom oce as.ctd plotTS
 #' @export
-#' @aliases plot,argoFloat-method
+#' @aliases plot,argoFloats-method
 #' @author Dan Kelley
 setMethod(f="plot",
           signature=signature("argoFloats"),
           definition=function(x,
                               which="map",
-                              cex=NULL,
-                              col=NULL,
-                              pch=NULL,
+                              xlab=NULL, ylab=NULL,
+                              cex=NULL, col=NULL, pch=NULL,
                               mar=NULL, mgp=NULL,
+                              eos="gsw",
                               debug=0,
                               ...)
           {
@@ -91,15 +99,17 @@ setMethod(f="plot",
                       col <- rgb(0, 0, 1, 0.5)
                   if (is.null(pch))
                       pch <- 20
-                  omar <- par("mar")
-                  if (is.null(mar))
-                      mar <- c(2, 2, 1, 1)
+                  xlab <- if (is.null(xlab)) "Longitude" else xlab
+                  ylab <- if (is.null(ylab)) "Latitude" else ylab
                   omgp <- par("mgp")
                   if (is.null(mgp))
                       mgp <- c(2, 0.7, 0)
+                  omar <- par("mar")
+                  if (is.null(mar))
+                      mar <- c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
                   par(mar=mar, mgp=mgp)
                   plot(longitude, latitude, asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
-                       xlab="", ylab="",
+                       xlab=xlab, ylab=ylab,
                        cex=cex, col=col, pch=pch, ...)
                   if (requireNamespace("ocedata", quietly=TRUE)) {
                       data("coastlineWorldFine", package="ocedata", envir=environment())
@@ -116,12 +126,28 @@ setMethod(f="plot",
               } else if (which == "TS") {
                   if ((x[["type"]] != "argos"))
                       stop("In plot() : x must have been created by readProfiles()", call.=FALSE)
+                  if (!(eos %in% c("gsw", "unesco")))
+                      stop("eos must be \"gsw\" or \"unesco\", not \"", eos, "\"")
                   ctd <- oce::as.ctd(salinity=x[["salinity"]],
                                      temperature=x[["temperature"]],
                                      pressure=x[["pressure"]],
                                      latitude=x[["latitude"]],
                                      longitude= x[["longitude"]])
-                  plotTS(ctd, ...)
+                  if (is.null(cex))
+                      cex <- 0.5
+                  if (is.null(col))
+                      col <- rgb(0, 0, 1, 0.5)
+                  if (is.null(pch))
+                      pch <- 20
+                  omgp <- par("mgp")
+                  if (is.null(mgp))
+                      mgp <- c(2, 0.7, 0)
+                  omar <- par("mar")
+                  if (is.null(mar))
+                      mar <- c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
+                  par(mar=mar, mgp=mgp)
+                  oce::plotTS(ctd, cex=cex, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
+                  par(mar=omar, mgp=omgp)
               } else {
                   stop("cannot handle which=\"", which, "\"; try \"map\".")
               }
