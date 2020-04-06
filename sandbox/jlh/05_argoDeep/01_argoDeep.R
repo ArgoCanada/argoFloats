@@ -24,3 +24,4 @@ sum(deep2)
 deep3 <- grepl("864", ai@data$index$profiler_type)
 sum(deep3)
 keepdeep <- grepl("849|862|864", ai@data$index$profiler_type)
+keepdeep
