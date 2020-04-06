@@ -12,8 +12,8 @@
 \item{subset}{optional numerical or logical vector that indicates which
 indices of \code{x@data$index} to keep.  See example 1.}
 
-\item{...}{a list named \code{circle}, \code{rectangle}, \code{parameter}, \code{polygon} , or \code{time}. See \dQuote{Details}
-and \dQuote{Examples}.}
+\item{...}{a list named \code{circle}, \code{rectangle}, \code{parameter}, \code{polygon} , or \code{time}.
+See \dQuote{Details} and \dQuote{Examples}.}
 }
 \value{
 An \linkS4class{argoFloats} object.
@@ -45,6 +45,8 @@ the timezone used in Argo data. Profiles within that time frame will
 be retained.
 \item A list named \code{institution}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge}
 institutions (ie. \code{AO} \code{BO} \code{CS} \code{HZ} \code{IF} \code{IN} \code{JA} \code{KM} \code{KO} \code{ME} \code{NM}).
+\item A list named \code{deep}, which has a logical value indicating weather argo floats
+are deep argo (ie. profiler_type 849, 862, and 864).
 }
 
 In all cases, the notation is that longitude is positive
@@ -93,6 +95,12 @@ data(index)
 from <- as.POSIXct("2019-01-01", tz="UTC")
 to <- as.POSIXct("2019-12-31", tz="UTC")
 index4 <- subset(index, time=list(from=from, to=to))
+
+# Example 5: Subsetting data to only include deep argo
+\dontrun{
+ai <- getIndex(file='merged', destdir = '~/data/argo')
+index5 <- subset(ai, deep=TRUE)
+summary(index5) }
 
 }
 \author{
