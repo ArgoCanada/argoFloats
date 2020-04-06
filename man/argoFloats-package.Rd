@@ -3,12 +3,35 @@
 \docType{package}
 \name{argoFloats-package}
 \alias{argoFloats-package}
-\title{A Package for Collections of Argo Float Profiles}
+\title{A Package for Processing Argo Float Profiles}
 \description{
-This package \strong{FIXME(jlh) Please write a few paragraphs here, after
-discussions with dek and cgr.  The idea will be to get a clean
-introductory paragraph that will organize our intentions for
-the object structure.  Details ought to be added later, as
-new things get written.  The oce package may provide a useful
-guide.}
+This package provides tools for downloading and processing Argo profile data.
+\strong{FIXME(jlh) Please write the remainder of a paragraph here.  According to
+the way Roxygen works, this paragarph will be called
+'Description', and any later paragraphs (as I've started below)
+will be called 'Details'. It is conventional
+that the first paragraph be an overall
+introduction, like an abstract.
+I don't think we want a lot of
+depth though, because the function documentation is the main source
+that we want users to consult. Note, for example, how in the text I put
+after the diagram, I used links instead of discussing what those functions do.
+We could chat about what goes here, if that would help. --dek.}
+}
+\details{
+The sketch given below illustrates the typical workflow with the \code{argoFloats} package, with
+descriptions of the steps on the left, and names of the relevant \code{argoFloats} files
+on the right.
+
+\if{html}{\figure{workflow.png}{options: width=600px alt="Figure: workflow.png"}}
+
+The package vignette provides more concrete examples of the workflow, and the
+documentation entries for \code{\link[=getIndex]{getIndex()}}, \code{\link[=getProfiles]{getProfiles()}}, and \code{\link[=readProfiles]{readProfiles()}}
+provide details, and some examples.
+
+\strong{FIXME: add paragraph on [[}
+
+\strong{FIXME: add paragraph on subset}
+
+\strong{FIXME: add paragraph on plot}
 }
