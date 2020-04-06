@@ -25,13 +25,14 @@ dy <- 0.25
 wh <- textInBox(x0, y0, "Get index of profiles from server", col=colText)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+length <- 0.07
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=length, col=colText)
 y0 <- y0 - dy
 textInBox(x0, y0, "Get profile data files from server", col=colText)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=length, col=colText)
 y0 <- y0 - dy
 textInBox(x0, y0, "Read profile data files", col=colText)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=length, col=colText)
 y0 <- y0 - dy
 textInBox(x0, y0, "Process the data", col=colText)
 
@@ -41,13 +42,13 @@ dy <- 0.25
 wh <- textInBox(x0, y0, "getIndex()    ", family="sans", col=colCode)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=length)
 y0 <- y0 - dy
 textInBox(x0, y0, "getProfiles()    ", family="sans", col=colCode)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=length)
 y0 <- y0 - dy
 textInBox(x0, y0, "readProfiles()    ", family="sans", col=colCode)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=length)
 y0 <- y0 - dy
 textInBox(x0, y0, " ...      ", family="sans", col=colCode)
 
