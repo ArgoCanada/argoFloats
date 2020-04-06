@@ -27,7 +27,7 @@ on the right.
 
 The package vignette provides more concrete examples of the workflow, and the
 documentation entries for \code{\link[=getIndex]{getIndex()}}, \code{\link[=getProfiles]{getProfiles()}}, and \code{\link[=readProfiles]{readProfiles()}}
-provide details, and some examples.
+provide details along with some examples.
 
 \strong{FIXME: add paragraph on [[}
 
