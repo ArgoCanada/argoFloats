@@ -27,7 +27,7 @@ h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
-textInBox(x0, y0, "Get profile data files server", col=colText)
+textInBox(x0, y0, "Get profile data files from server", col=colText)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
 textInBox(x0, y0, "Read profile data files", col=colText)
