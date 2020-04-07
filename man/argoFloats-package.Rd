@@ -22,7 +22,7 @@ provide details along with some examples.
 
 The package specializes three generic methods, as follows.
 \enumerate{
-\item The \code{[[} method is specialized to extract items from within \code{argoFloats} objects,
+\item The \code{[[} method is specialized to extract items within \code{argoFloats} objects,
 as a convenient way for users to look up values of interest, without getting
 into the details of storage.
 See \code{\link{[[,argoFloats-method}} for details.

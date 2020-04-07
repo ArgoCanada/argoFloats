@@ -184,11 +184,11 @@ setMethod(f="subset",
                       if (!as.logical(deep))
                           stop("deep must be a logical vector indicating TRUE or FALSE")
                       if (deep) {
-                          keep <- grepl("849|862|864", x@data$index$profiler_type)
+                          keep <- grep("849|862|864", x@data$index$profiler_type)
                       } else {
-                          keep <- grepl("849|862|864", x@data$index$profiler_type, invert=TRUE)
+                          keep <- grep("849|862|864", x@data$index$profiler_type, invert=TRUE)
                       }
-                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', or'deep'", call.=FALSE)

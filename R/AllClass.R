@@ -18,7 +18,7 @@
 #'
 #' The package specializes three generic methods, as follows.
 #'
-#' 1. The `[[` method is specialized to extract items from within `argoFloats` objects,
+#' 1. The `[[` method is specialized to extract items within `argoFloats` objects,
 #' as a convenient way for users to look up values of interest, without getting
 #' into the details of storage.
 #' See \code{\link{[[,argoFloats-method}} for details.
