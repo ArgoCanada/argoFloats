@@ -2,47 +2,50 @@
 
 #' A Package for Processing Argo Float Profiles
 #'
-#' This package provides tools for downloading and processing Argo profile data. It allows
-#' users to focus on core argo, bgc argo, or deep argo individual profiles, and specific profiles
-#' based on time, geography, and institution.
+#' The `argoFloats` package provides tools for downloading and processing Argo profile data.
+#' It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
+#' also to sift these profiles based on ID, time, geography, and institution. Once downloaded,
+#' such datasets can be analysed within `argoFloats` or using other R tools and packages.
 #'
-#' The sketch given below illustrates the typical workflow with the `argoFloats` package, with
-#' descriptions of the steps on the left, and names of the relevant `argoFloats` files
+#' The sketch given below illustrates the typical workflow with the package, with
+#' descriptions of the steps on the left, and names of the relevant functions
 #' on the right.
 #'
 #' \if{html}{\figure{workflow.png}{options: width=455px alt="Figure: workflow.png"}}
 #'
-#' As the sketch illustrates, the workflow centres on functions named
-#' [getIndex()], [subset][subset,argoFloats-method()],
+#' As illustrated, the central functions are named
+#' [getIndex()], [subset()][subset,argoFloats-method()],
 #' [getProfiles()], and [readProfiles()], and so a good way to
 #' get familiar with the package is to read their documentation entries
-#' and try the examples provided therein.  Some built-in dataset are provided
+#' and try the examples provided therein.  Some built-in datasets are provided
 #' for concreteness of illustration and for testing, but actual work always
-#' starts with a call to [getIndex()] to download a full index of float data.,
+#' starts with a call to [getIndex()] to download a full index of float data.
 #'
-#' In addition to the `get` and `read` core functions, the package specializes
-#' three generic methods, as follows.
+#' In addition to these functions, `argoFloats` also provides
+#' specialized versions of R "generic" functions, as follows.
 #'
-#' 1. The `[[` method is specialized to extract items within `argoFloats` objects,
-#' as a convenient way for users to look up values of interest, without getting
-#' into the details of storage.
+#' 1. `[[` provides a way to extract items from `argoFloats` objects,
+#' without getting lost in the details of storage.
 #' See \code{\link{[[,argoFloats-method}} for details.
 #' (Note that `[[<-` is *not* specialized, since the
 #' user is highly discouraged from altering values within `argoFloats`
 #' objects.)
 #'
-#' 2. The `subset` method is specialized to isolate profiles of interest from
-#' a general index. See [subset,argoFloats-method()] for details.
+#' 2. `plot()` provides simple ways to plot aspects of [argoFloats-class] objects.
+#' See [plot,argoFloats-method()] for details.
 #'
-#' 3. The `plot` method is specialized to provide some simple ways to plot
-#' groups of `argoFloats` profiles.  See [plot,argoFloats-method()] for details.
+#' 3. `summary()` displays key features of [argoFloats-class] objects.
+#' See [summary,argoFloats-method()] for details.
 #'
-#' In addition to these and other functions provided by the `argoFloats` package,
-#' the profile elements within `argoFloats` objects are stored as
-#' objects of the `argo` defined by the `oce` package.  That means
-#' that a wide variety of `oce` functions can be used in the analysis
-#' of those profiles.  And, of course, the full suite of R tools is
-#' also available; that is the whole point of writing this package in R.
+#' 4. `show()` provides a one-line sketch of [argoFloats-class] objects.
+#' See [show,argoFloats-method()] for details.
+#'
+#' It should be noted that the profile elements within `argoFloats` objects are stored as
+#' in the form of `argo` objects as defined by the `oce` package.
+#' This means that `argoFloats` users can rely on
+#' a wide variety of `oce` functions to analyse their data.
+#' The full suite of R tools is also available, and the vastness of
+#' that suite explains why `argoFloats` is written in R.
 #'
 #' @importFrom methods new
 #' @name argoFloats-package

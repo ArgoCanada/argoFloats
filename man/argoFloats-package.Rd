@@ -5,45 +5,47 @@
 \alias{argoFloats-package}
 \title{A Package for Processing Argo Float Profiles}
 \description{
-This package provides tools for downloading and processing Argo profile data. It allows
-users to focus on core argo, bgc argo, or deep argo individual profiles, and specific profiles
-based on time, geography, and institution.
+The \code{argoFloats} package provides tools for downloading and processing Argo profile data.
+It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
+also to sift these profiles based on ID, time, geography, and institution. Once downloaded,
+such datasets can be analysed within \code{argoFloats} or using other R tools and packages.
 }
 \details{
-The sketch given below illustrates the typical workflow with the \code{argoFloats} package, with
-descriptions of the steps on the left, and names of the relevant \code{argoFloats} files
+The sketch given below illustrates the typical workflow with the package, with
+descriptions of the steps on the left, and names of the relevant functions
 on the right.
 
 \if{html}{\figure{workflow.png}{options: width=455px alt="Figure: workflow.png"}}
 
-As the sketch illustrates, the workflow centres on functions named
-\code{\link[=getIndex]{getIndex()}}, \link[=subset,argoFloats-method]{subset},
+As illustrated, the central functions are named
+\code{\link[=getIndex]{getIndex()}}, \link[=subset,argoFloats-method]{subset()},
 \code{\link[=getProfiles]{getProfiles()}}, and \code{\link[=readProfiles]{readProfiles()}}, and so a good way to
 get familiar with the package is to read their documentation entries
-and try the examples provided therein.  Some built-in dataset are provided
+and try the examples provided therein.  Some built-in datasets are provided
 for concreteness of illustration and for testing, but actual work always
-starts with a call to \code{\link[=getIndex]{getIndex()}} to download a full index of float data.,
+starts with a call to \code{\link[=getIndex]{getIndex()}} to download a full index of float data.
 
-In addition to the \code{get} and \code{read} core functions, the package specializes
-three generic methods, as follows.
+In addition to these functions, \code{argoFloats} also provides
+specialized versions of R "generic" functions, as follows.
 \enumerate{
-\item The \code{[[} method is specialized to extract items within \code{argoFloats} objects,
-as a convenient way for users to look up values of interest, without getting
-into the details of storage.
+\item \code{[[} provides a way to extract items from \code{argoFloats} objects,
+without getting lost in the details of storage.
 See \code{\link{[[,argoFloats-method}} for details.
 (Note that \verb{[[<-} is \emph{not} specialized, since the
 user is highly discouraged from altering values within \code{argoFloats}
 objects.)
-\item The \code{subset} method is specialized to isolate profiles of interest from
-a general index. See \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}} for details.
-\item The \code{plot} method is specialized to provide some simple ways to plot
-groups of \code{argoFloats} profiles.  See \code{\link[=plot,argoFloats-method]{plot,argoFloats-method()}} for details.
+\item \code{plot()} provides simple ways to plot aspects of \linkS4class{argoFloats} objects.
+See \code{\link[=plot,argoFloats-method]{plot,argoFloats-method()}} for details.
+\item \code{summary()} displays key features of \linkS4class{argoFloats} objects.
+See \code{\link[=summary,argoFloats-method]{summary,argoFloats-method()}} for details.
+\item \code{show()} provides a one-line sketch of \linkS4class{argoFloats} objects.
+See \code{\link[=show,argoFloats-method]{show,argoFloats-method()}} for details.
 }
 
-In addition to these and other functions provided by the \code{argoFloats} package,
-the profile elements within \code{argoFloats} objects are stored as
-objects of the \code{argo} defined by the \code{oce} package.  That means
-that a wide variety of \code{oce} functions can be used in the analysis
-of those profiles.  And, of course, the full suite of R tools is
-also available; that is the whole point of writing this package in R.
+It should be noted that the profile elements within \code{argoFloats} objects are stored as
+in the form of \code{argo} objects as defined by the \code{oce} package.
+This means that \code{argoFloats} users can rely on
+a wide variety of \code{oce} functions to analyse their data.
+The full suite of R tools is also available, and the vastness of
+that suite explains why \code{argoFloats} is written in R.
 }
