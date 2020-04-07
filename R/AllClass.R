@@ -2,19 +2,9 @@
 
 #' A Package for Processing Argo Float Profiles
 #'
-#' This package provides tools for downloading and processing Argo profile data.
-#' **FIXME(jlh) Please write the remainder of a paragraph here.  According to
-#' the way Roxygen works, this paragarph will be called
-#' 'Description', and any later paragraphs (as I've started below)
-#' will be called 'Details'. It is conventional
-#' that the first paragraph be an overall
-#' introduction, like an abstract.
-#' I don't think we want a lot of
-#' depth though, because the function documentation is the main source
-#' that we want users to consult. Note, for example, how in the text I put
-#' after the diagram, I used links instead of discussing what those functions do.
-#' We could chat about what goes here, if that would help. --dek.**
-#'
+#' This package provides tools for downloading and processing Argo profile data. It allows
+#' users to focus on core argo, bgc argo, or deep argo individual profiles, and specific profiles
+#' based on time, geography, and institution. 
 #'
 #' The sketch given below illustrates the typical workflow with the `argoFloats` package, with
 #' descriptions of the steps on the left, and names of the relevant `argoFloats` files
