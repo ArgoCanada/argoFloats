@@ -4,23 +4,40 @@
 #'
 #' This package provides tools for downloading and processing Argo profile data. It allows
 #' users to focus on core argo, bgc argo, or deep argo individual profiles, and specific profiles
-#' based on time, geography, and institution. 
+#' based on time, geography, and institution.
 #'
 #' The sketch given below illustrates the typical workflow with the `argoFloats` package, with
 #' descriptions of the steps on the left, and names of the relevant `argoFloats` files
 #' on the right.
 #'
-#' \if{html}{\figure{workflow.png}{options: width=600px alt="Figure: workflow.png"}}
+#' \if{html}{\figure{workflow.png}{options: width=455px alt="Figure: workflow.png"}}
 #'
 #' The package vignette provides more concrete examples of the workflow, and the
 #' documentation entries for [getIndex()], [getProfiles()], and [readProfiles()]
 #' provide details along with some examples.
 #'
-#' **FIXME: add paragraph on [[**
+#' The package specializes three generic methods, as follows.
 #'
-#' **FIXME: add paragraph on subset**
+#' 1. The `[[` method is specialized to extract items from within `argoFloats` objects,
+#' as a convenient way for users to look up values of interest, without getting
+#' into the details of storage.
+#' See \code{\link{[[,argoFloats-method}} for details.
+#' (Note that `[[<-` is *not* specialized, since the
+#' user is highly discouraged from altering values within `argoFloats`
+#' objects.)
 #'
-#' **FIXME: add paragraph on plot**
+#' 2. The `subset` method is specialized to isolate profiles of interest from
+#' a general index. See [subset,argoFloats-method()] for details.
+#'
+#' 3. The `plot` method is specialized to provide some simple ways to plot
+#' groups of `argoFloats` profiles.  See [plot,argoFloats-method()] for details.
+#'
+#' In addition to these and other functions provided by the `argoFloats` package,
+#' the profile elements within `argoFloats` objects are stored as
+#' objects of the `argo` defined by the `oce` package.  That means
+#' that a wide variety of `oce` functions can be used in the analysis
+#' of those profiles.  And, of course, the full suite of R tools is
+#' also available; that is the whole point of writing this package in R.
 #'
 #' @importFrom methods new
 #' @name argoFloats-package
@@ -202,7 +219,8 @@ setMethod(f="initialize",
 #'
 #' @export
 #' @docType methods
-#' @rdname argoFloats-methods
+## @rdname argoFloats-methods
+#' @aliases [[,argoFloats-method
 setMethod(f="[[",
           signature(x="argoFloats", i="ANY", j="ANY"),
           definition=function(x, i, j, ...) {

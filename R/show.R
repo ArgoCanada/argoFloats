@@ -7,7 +7,7 @@
 #' @docType methods
 #' @rdname argoFloats-methods
 #'
-#' @author Jaimie Harbin`
+#' @author Jaimie Harbin
 setMethod(f="show",
           signature="argoFloats",
           definition=function(object) {
@@ -16,21 +16,21 @@ setMethod(f="show",
                   cat('argoFloats object of type "',
                       object[['type']],
                       '" with ',
-                      dim(object[['index']])[1], 
+                      dim(object[['index']])[1],
                       " items",
-                      sep="") 
+                      sep="")
               } else if (type == "profiles") {
                   cat('argoFloats object of type "',
                       object[['type']],
                       '" with ',
-                      length(object@data$file), 
+                      length(object@data$file),
                       " items",
-                      sep="") 
-              } else if (type == "argos") { 
+                      sep="")
+              } else if (type == "argos") {
                   cat('argoFloats object of type "',
                       object[['type']],
                       '" with ',
-                      length(object@data$argos), 
+                      length(object@data$argos),
                       " items",
                       sep="")
               } else stop("Unknown type =", type)

@@ -16,7 +16,7 @@ textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New R
     rect(x, y-h, x+w, y+h, border=col)
     invisible(list(w=w, h=h))
 }
-if (PNG) png("workflow.png", width=3.5, height=1.5, unit="in", res=150, pointsize=8)
+if (PNG) png("workflow.png", width=3.5, height=1.5, unit="in", res=130, pointsize=8)
 par(mar=rep(0,4))
 plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
 x0 <- 0.3

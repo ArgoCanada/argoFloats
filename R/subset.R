@@ -85,7 +85,7 @@
 #' from <- as.POSIXct("2019-01-01", tz="UTC")
 #' to <- as.POSIXct("2019-12-31", tz="UTC")
 #' index4 <- subset(index, time=list(from=from, to=to))
-#' 
+#'
 #' # Example 5: Subsetting data to only include deep argo
 #' \dontrun{
 #' ai <- getIndex(file='merged', destdir = '~/data/argo')

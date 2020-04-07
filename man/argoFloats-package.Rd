@@ -5,33 +5,37 @@
 \alias{argoFloats-package}
 \title{A Package for Processing Argo Float Profiles}
 \description{
-This package provides tools for downloading and processing Argo profile data.
-\strong{FIXME(jlh) Please write the remainder of a paragraph here.  According to
-the way Roxygen works, this paragarph will be called
-'Description', and any later paragraphs (as I've started below)
-will be called 'Details'. It is conventional
-that the first paragraph be an overall
-introduction, like an abstract.
-I don't think we want a lot of
-depth though, because the function documentation is the main source
-that we want users to consult. Note, for example, how in the text I put
-after the diagram, I used links instead of discussing what those functions do.
-We could chat about what goes here, if that would help. --dek.}
+This package provides tools for downloading and processing Argo profile data. It allows
+users to focus on core argo, bgc argo, or deep argo individual profiles, and specific profiles
+based on time, geography, and institution.
 }
 \details{
 The sketch given below illustrates the typical workflow with the \code{argoFloats} package, with
 descriptions of the steps on the left, and names of the relevant \code{argoFloats} files
 on the right.
 
-\if{html}{\figure{workflow.png}{options: width=600px alt="Figure: workflow.png"}}
+\if{html}{\figure{workflow.png}{options: width=455px alt="Figure: workflow.png"}}
 
 The package vignette provides more concrete examples of the workflow, and the
 documentation entries for \code{\link[=getIndex]{getIndex()}}, \code{\link[=getProfiles]{getProfiles()}}, and \code{\link[=readProfiles]{readProfiles()}}
 provide details along with some examples.
 
-\strong{FIXME: add paragraph on [[}
+The package specializes three generic methods, as follows.
+\enumerate{
+\item The \code{[[} method is specialized to extract items from within \code{argoFloats} objects,
+as a convenient way for users to look up values of interest, without getting
+into the details of storage.  See \code{\link{[[,argoFloats-method}}
+for details. (Note that \verb{[[<-} is \emph{not} specialized, since the
+user is highly discouraged from altering values within \code{argoFloats}
+objects.)
+\item The \code{subset} method is specialized to isolate profiles of interest from
+a general index. See \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}} for details.
+\item The \code{plot} method is specialized to provide some simple ways to plot
+groups of \code{argoFloats} profiles.  See \code{\link[=plot,argoFloats-method]{plot,argoFloats-method()}} for details.
+}
 
-\strong{FIXME: add paragraph on subset}
-
-\strong{FIXME: add paragraph on plot}
+In addition to the functions provided by the \code{argoFloats} package, the profile
+elements within \code{argoFloats} objects are stored as objects of the \code{argo} defined
+by the \code{oce} package.  And, of course, the full suite of R tools can be used
+on the data stored within thos profiles.
 }
