@@ -24,8 +24,9 @@ The package specializes three generic methods, as follows.
 \enumerate{
 \item The \code{[[} method is specialized to extract items from within \code{argoFloats} objects,
 as a convenient way for users to look up values of interest, without getting
-into the details of storage.  See \code{\link{[[,argoFloats-method}}
-for details. (Note that \verb{[[<-} is \emph{not} specialized, since the
+into the details of storage.
+See \code{\link{[[,argoFloats-method}} for details.
+(Note that \verb{[[<-} is \emph{not} specialized, since the
 user is highly discouraged from altering values within \code{argoFloats}
 objects.)
 \item The \code{subset} method is specialized to isolate profiles of interest from
@@ -34,8 +35,10 @@ a general index. See \code{\link[=subset,argoFloats-method]{subset,argoFloats-me
 groups of \code{argoFloats} profiles.  See \code{\link[=plot,argoFloats-method]{plot,argoFloats-method()}} for details.
 }
 
-In addition to the functions provided by the \code{argoFloats} package, the profile
-elements within \code{argoFloats} objects are stored as objects of the \code{argo} defined
-by the \code{oce} package.  And, of course, the full suite of R tools can be used
-on the data stored within thos profiles.
+In addition to these and other functions provided by the \code{argoFloats} package,
+the profile elements within \code{argoFloats} objects are stored as
+objects of the \code{argo} defined by the \code{oce} package.  That means
+that a wide variety of \code{oce} functions can be used in the analysis
+of those profiles.  And, of course, the full suite of R tools is
+also available; that is the whole point of writing this package in R.
 }
