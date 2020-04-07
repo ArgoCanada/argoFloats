@@ -181,9 +181,13 @@ setMethod(f="subset",
                       x@data$index <- x@data$index[keep, ]
                   } else if(dotsNames[1]=='deep') {
                       deep <- dots[[1]]
-                      if(!as.logical(dots[1]))
+                      if (!as.logical(deep))
                           stop("deep must be a logical vector indicating TRUE or FALSE")
-                      keep <- grepl("849|862|864", x@data$index$profiler_type)
+                      if (deep) {
+                          keep <- grepl("849|862|864", x@data$index$profiler_type)
+                      } else {
+                          keep <- grepl("849|862|864", x@data$index$profiler_type, invert=TRUE)
+                      }
                       message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else {
