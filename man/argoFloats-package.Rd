@@ -16,11 +16,16 @@ on the right.
 
 \if{html}{\figure{workflow.png}{options: width=455px alt="Figure: workflow.png"}}
 
-The package vignette provides more concrete examples of the workflow, and the
-documentation entries for \code{\link[=getIndex]{getIndex()}}, \code{\link[=getProfiles]{getProfiles()}}, and \code{\link[=readProfiles]{readProfiles()}}
-provide details along with some examples.
+As the sketch illustrates, the workflow centres on functions named
+\code{\link[=getIndex]{getIndex()}}, \link[=subset,argoFloats-method]{subset},
+\code{\link[=getProfiles]{getProfiles()}}, and \code{\link[=readProfiles]{readProfiles()}}, and so a good way to
+get familiar with the package is to read their documentation entries
+and try the examples provided therein.  Some built-in dataset are provided
+for concreteness of illustration and for testing, but actual work always
+starts with a call to \code{\link[=getIndex]{getIndex()}} to download a full index of float data.,
 
-The package specializes three generic methods, as follows.
+In addition to the \code{get} and \code{read} core functions, the package specializes
+three generic methods, as follows.
 \enumerate{
 \item The \code{[[} method is specialized to extract items within \code{argoFloats} objects,
 as a convenient way for users to look up values of interest, without getting

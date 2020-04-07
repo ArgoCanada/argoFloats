@@ -12,11 +12,16 @@
 #'
 #' \if{html}{\figure{workflow.png}{options: width=455px alt="Figure: workflow.png"}}
 #'
-#' The package vignette provides more concrete examples of the workflow, and the
-#' documentation entries for [getIndex()], [getProfiles()], and [readProfiles()]
-#' provide details along with some examples.
+#' As the sketch illustrates, the workflow centres on functions named
+#' [getIndex()], [subset][subset,argoFloats-method()],
+#' [getProfiles()], and [readProfiles()], and so a good way to
+#' get familiar with the package is to read their documentation entries
+#' and try the examples provided therein.  Some built-in dataset are provided
+#' for concreteness of illustration and for testing, but actual work always
+#' starts with a call to [getIndex()] to download a full index of float data.,
 #'
-#' The package specializes three generic methods, as follows.
+#' In addition to the `get` and `read` core functions, the package specializes
+#' three generic methods, as follows.
 #'
 #' 1. The `[[` method is specialized to extract items within `argoFloats` objects,
 #' as a convenient way for users to look up values of interest, without getting
