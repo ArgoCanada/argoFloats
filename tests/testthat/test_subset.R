@@ -53,3 +53,12 @@ test_that("subset by institution", {
     expect_equal(indexi[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
     expect_equal(indexi[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
+
+test_that("subset by float ID", {
+    data("index")
+    indexID <- expect_message(subset(index, ID="1901584"),
+                             "Kept 9 profiles \\(0.94%\\)")
+    expect_equal(dim(indexID[["index"]]), c(9,8))
+    expect_equal(indexID[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+    expect_equal(indexID[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+})
