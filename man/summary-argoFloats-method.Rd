@@ -14,6 +14,12 @@
 \description{
 Show some key facts about an \linkS4class{argoFloats} object.
 }
+\examples{
+library(argoFloats)
+data(index)
+summary(index)
+
+}
 \author{
 Dan Kelley
 }

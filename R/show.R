@@ -2,6 +2,11 @@
 #'
 #' @param object an [argoFloats-class] object.
 #'
+#' @examples
+#' library(argoFloats)
+#' data(index)
+#' index
+#'
 #' @importFrom methods show
 #' @export
 #' @docType methods

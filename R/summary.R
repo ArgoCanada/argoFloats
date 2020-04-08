@@ -7,6 +7,11 @@
 #' @param object an [argoFloats-class] object.
 #' @param ... Further arguments passed to or from other methods.
 #'
+#' @examples
+#' library(argoFloats)
+#' data(index)
+#' summary(index)
+#'
 #' @importFrom oce processingLogShow
 #' @importFrom methods callNextMethod
 #' @importFrom utils head

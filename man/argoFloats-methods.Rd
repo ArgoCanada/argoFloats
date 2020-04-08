@@ -13,6 +13,12 @@
 \description{
 Show information about argoFloats object
 }
+\examples{
+library(argoFloats)
+data(index)
+index
+
+}
 \author{
 Jaimie Harbin
 }
