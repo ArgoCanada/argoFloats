@@ -28,6 +28,8 @@
 #' institutions (ie. `AO` `BO` `CS` `HZ` `IF` `IN` `JA` `KM` `KO` `ME` `NM`).
 #' 7. A list named `deep`, which has a logical value indicating weather argo floats
 #' are deep argo (ie. profiler_type 849, 862, and 864).
+#' 8. A list named `ID`, which has `argo`, `argo_bgc`, or `argo_merge` float ID
+#' numbers.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -91,6 +93,12 @@
 #' ai <- getIndex(file='merged', destdir = '~/data/argo')
 #' index5 <- subset(ai, deep=TRUE)
 #' summary(index5) }
+#' 
+#' # Example 6: Subsetting by specific argo ID
+#' \dontrun{
+#' ai <- getIndex(file='merged', destdir = '~/data/argo')
+#' index6 <- subset(ai, ID='1900722')
+#' summary(index6) }
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -105,7 +113,7 @@ setMethod(f="subset",
               dotsNames <- names(dots)
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', or 'deep'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID'")
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
                   if (dotsNames[1] == "circle") {
@@ -179,7 +187,7 @@ setMethod(f="subset",
                       keep[is.na(keep)] <- FALSE
                       message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
-                  } else if(dotsNames[1]=='deep') {
+                  } else if (dotsNames[1]=='deep') {
                       deep <- dots[[1]]
                       if (!as.logical(deep))
                           stop("deep must be a logical vector indicating TRUE or FALSE")
@@ -190,8 +198,15 @@ setMethod(f="subset",
                       }
                       message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
+                  } else if (dotsNames[1] == 'ID') {
+                      ID <- dots[[1]]
+                      file <- x@data$index$file
+                      fileID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}.nc$", "\\1", file)
+                      keep <- ID == fileID
+                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      x@data$index <- x@data$index[keep, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', or'deep'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', or 'ID'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)

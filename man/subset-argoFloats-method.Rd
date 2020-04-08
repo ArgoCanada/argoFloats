@@ -47,6 +47,8 @@ be retained.
 institutions (ie. \code{AO} \code{BO} \code{CS} \code{HZ} \code{IF} \code{IN} \code{JA} \code{KM} \code{KO} \code{ME} \code{NM}).
 \item A list named \code{deep}, which has a logical value indicating weather argo floats
 are deep argo (ie. profiler_type 849, 862, and 864).
+\item A list named \code{ID}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge} float ID
+numbers.
 }
 
 In all cases, the notation is that longitude is positive
@@ -101,6 +103,12 @@ index4 <- subset(index, time=list(from=from, to=to))
 ai <- getIndex(file='merged', destdir = '~/data/argo')
 index5 <- subset(ai, deep=TRUE)
 summary(index5) }
+
+# Example 6: Subsetting by specific argo ID
+\dontrun{
+ai <- getIndex(file='merged', destdir = '~/data/argo')
+index6 <- subset(ai, ID='1900722')
+summary(index6) }
 
 }
 \author{
