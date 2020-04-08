@@ -1,6 +1,6 @@
 # argoFloats
 
-[![Build Status](https://travis-ci.org/dankelley/argoFloats.svg?branch=develop)](https://travis-ci.org/dankelley/argoFloats)
+[![TravisCI Build Status](https://travis-ci.org/dankelley/argoFloats.svg?branch=develop)](https://travis-ci.org/dankelley/argoFloats.svg?branch=develop)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dankelley/argoFloats?branch=develop&svg=true)](https://ci.appveyor.com/project/dankelley/argoFloats)
 [![codecov](https://codecov.io/gh/dankelley/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/dankelley/argoFloats)
 
