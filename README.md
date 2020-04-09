@@ -4,8 +4,16 @@
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dankelley/argoFloats?branch=develop&svg=true)](https://ci.appveyor.com/project/dankelley/argoFloats)
 [![codecov](https://codecov.io/gh/dankelley/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/dankelley/argoFloats)
 
-This R package provides tools for downloading and analyzing collections of
-oceanographic Argo float datasets.
+The argoFloats package for the R language provides tools for downloading and
+analyzing collections of oceanographic Argo float datasets.  It is still in a
+phase of active development, so it is not yet available on CRAN, and instead is
+installed as follows
+```R
+library(devtools)
+install_github('dankelley/argoFloats', ref='develop')
+```
+where, of course, the `devtools` package must be installed first, if it is not already
+present on the user's system.
 
 The following shows how to create a map and a temperature-salinity diagram for
 several Argo float profiles made near Abaco Island in the Bahamas.  The
@@ -16,7 +24,6 @@ the netcdf files that contain the profile data, and later to the
 ```R
 library(argoFloats)
 library(oce)
-# Profiles near Abaco Island, Bahamas.
 indexAll <- getIndex(destdir="~/data/argo")
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))
