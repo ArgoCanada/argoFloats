@@ -5,9 +5,13 @@
 [![codecov](https://codecov.io/gh/dankelley/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/dankelley/argoFloats)
 
 The argoFloats package for the R language provides tools for downloading and
-analyzing collections of oceanographic Argo float datasets.  It is still in a
-phase of active development, so it is not yet available on CRAN, and instead is
-installed as follows
+analyzing collections of oceanographic Argo float datasets.  Its developers are
+* Dan Kelley, Dalhousie University
+* Jaimie Harbin, Bedford Institute of Oceanography and Dalhousie University
+* Clark Richards, Bedford Institute of Oceanography
+
+Since argoFloats is still in a phase of active development, it is not yet
+available on CRAN.  Still, it is easily installed in R with
 ```R
 library(devtools)
 install_github('dankelley/argoFloats', ref='develop')
