@@ -1,7 +1,6 @@
 png("exampleTS.png", width=7, height=3, unit="in", res=120, pointsize=8)
 library(argoFloats)
 library(oce)
-# Profiles near Abaco Island, Bahamas.
 indexAll <- getIndex(destdir="~/data/argo")
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))
