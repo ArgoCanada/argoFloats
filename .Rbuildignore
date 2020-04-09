@@ -3,6 +3,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^man-roxygen$
+^man/figures/*R$
 ^docs$
 ^.*~$
 ^.*.nc$
