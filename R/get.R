@@ -133,7 +133,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 
 #' Get an Index of Available Argo Float Profiles
 #'
-#' This function gets an index of available Argo float profiles, either by
+#' This function gets an index of available Argo float profiles, either
 #' by downloading information from a data repository or by reusing an index
 #' (stored as an `.rda` file) that was prepared by a recent call to the function.
 #'
