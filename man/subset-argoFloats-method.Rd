@@ -44,9 +44,13 @@ times created with eg. \code{\link[=POSIXct]{POSIXct()}}, with \code{tz="UTC"} t
 the timezone used in Argo data. Profiles within that time frame will
 be retained.
 \item A list named \code{institution}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge}
-institutions (ie. \code{AO} \code{BO} \code{CS} \code{HZ} \code{IF} \code{IN} \code{JA} \code{KM} \code{KO} \code{ME} \code{NM}).
+institutions (ie. \code{AO} meaning AOML, USA, \code{BO} meaning BODC, United Kingdom,
+\code{CS} meaning CSIRO, Austrialia, \code{HZ} meaning CSIO, China Second Institute of
+Oceanography, \code{IF} meaning Ifremer, France, \code{IN} meaning INCOIS, India, \code{JA}
+meaning JMA, Japan, \code{KM} meaning KMA, Korea, \code{KO} meaning KORDI, Korea, \code{ME}
+meaning MEDS, Canada, and \code{NM} meaning NMDIS, China).
 \item A list named \code{deep}, which has a logical value indicating weather argo floats
-are deep argo (ie. profiler_type 849, 862, and 864).
+are deep argo (ie. `profiler_type`` 849, 862, and 864).
 \item A list named \code{ID}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge} float ID
 numbers.
 }

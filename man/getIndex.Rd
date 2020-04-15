@@ -58,7 +58,7 @@ An object of class \linkS4class{argoFloats} with type=\code{"index"}, which
 is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 }
 \description{
-This function gets an index of available Argo float profiles, either by
+This function gets an index of available Argo float profiles, either
 by downloading information from a data repository or by reusing an index
 (stored as an \code{.rda} file) that was prepared by a recent call to the function.
 }

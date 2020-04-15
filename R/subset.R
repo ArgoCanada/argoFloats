@@ -25,9 +25,13 @@
 #' the timezone used in Argo data. Profiles within that time frame will
 #' be retained.
 #' 6. A list named `institution`, which has `argo`, `argo_bgc`, or `argo_merge`
-#' institutions (ie. `AO` `BO` `CS` `HZ` `IF` `IN` `JA` `KM` `KO` `ME` `NM`).
+#' institutions (ie. `AO` meaning AOML, USA, `BO` meaning BODC, United Kingdom,
+#' `CS` meaning CSIRO, Austrialia, `HZ` meaning CSIO, China Second Institute of
+#' Oceanography, `IF` meaning Ifremer, France, `IN` meaning INCOIS, India, `JA`
+#' meaning JMA, Japan, `KM` meaning KMA, Korea, `KO` meaning KORDI, Korea, `ME`
+#' meaning MEDS, Canada, and `NM` meaning NMDIS, China).
 #' 7. A list named `deep`, which has a logical value indicating weather argo floats
-#' are deep argo (ie. profiler_type 849, 862, and 864).
+#' are deep argo (ie. `profiler_type`` 849, 862, and 864).
 #' 8. A list named `ID`, which has `argo`, `argo_bgc`, or `argo_merge` float ID
 #' numbers.
 #'
