@@ -8,32 +8,50 @@
 #' a way to determine those indices (using the `...` argument).
 #'
 #' The possibilities for the `...` argument are as follows.
-#' 1. A list named `circle` with elements named `longitude`,
+#'
+#' 1. An integer vector giving indices to keep. See example 1.
+#'
+#' 2. A list named `circle` with numeric elements named `longitude`,
 #' `latitude` and `radius`.  The first two give the center of
 #' the subset region, and the third gives the radius of
-#' that region, in kilometers. See Example 2A.
-#' 2. A list named `rectangle`, which has an element named `longitude`
-#' with two elements giving the western and eastern limits of the
-#' subset region, and similar one named `latitude` giving the southern
-#' and northern limits. See Example 2B.
-#' 3. A list named `polygon` that has elements named `longitude` and `latitude`.
-#' Profiles within this polygon will be retained. See Example 2C.
-#' 4. A vector or list named `parameter` that holds names of parameters to keep;
-#' see examples 3A and 3B.
-#' 5. A list named `time` that has elements `from` and `to` that are POSIXt
-#' times created with eg. [POSIXct()], with `tz="UTC"` to match
+#' that region, in kilometers. See example 2.
+#'
+#' 3. A list named `rectangle`, which has elements named
+#' `longitude` and `latitude`, two-element numeric vectors
+#' giving the western and eastern, and southern and northern
+#' limits of the selection region. See example 3.
+#'
+#' 4. A list named `polygon` that has elements named `longitude` and `latitude`
+#' that are numeric vectors specifying a polygon within which profiles
+#' will be retained. See example 4.
+#'
+#' 5. A vector or list named `parameter` that holds character values that
+#' specify the names of measured parameters to keep. See example 5.
+#'
+#' 6. A list named `time` that has elements `from` and `to` that are POSIXt
+#' times that were created with eg. [POSIXct()], with `tz="UTC"` to match
 #' the timezone used in Argo data. Profiles within that time frame will
-#' be retained.
-#' 6. A list named `institution`, which has `argo`, `argo_bgc`, or `argo_merge`
-#' institutions (ie. `AO` meaning AOML, USA, `BO` meaning BODC, United Kingdom,
-#' `CS` meaning CSIRO, Austrialia, `HZ` meaning CSIO, China Second Institute of
-#' Oceanography, `IF` meaning Ifremer, France, `IN` meaning INCOIS, India, `JA`
-#' meaning JMA, Japan, `KM` meaning KMA, Korea, `KO` meaning KORDI, Korea, `ME`
-#' meaning MEDS, Canada, and `NM` meaning NMDIS, China).
-#' 7. A list named `deep`, which has a logical value indicating weather argo floats
-#' are deep argo (ie. `profiler_type`` 849, 862, and 864).
-#' 8. A list named `ID`, which has `argo`, `argo_bgc`, or `argo_merge` float ID
-#' numbers.
+#' be retained. See example 6.
+#'
+#' 7. A list named `institution`, which holds a single character element that
+#' names the institution.  The permitted values are:
+#'`"AO"` for AOML, USA;
+#'`"BO"` for BODC, United Kingdom;
+#'`"CS"` for CSIRO, Australia;
+#'`"HZ"` for CSIO, China Second Institute of Oceanography;
+#'`"IF"` for Ifremer, France;
+#'`"IN"` for INCOIS, India;
+#'`"JA"` for JMA, Japan;
+#'`"KM"` for KMA, Korea;
+#'`"KO"` for KORDI, Korea;
+# `"ME"` for MEDS, Canada; or
+#' `"NM"` for NMDIS, China.
+#'
+#' 8. A list named `deep` that holds a logical value indicating weather argo floats
+#' are deep argo (ie. `profiler_type` 849, 862, and 864). See example 8.
+#'
+#' 9. A list named `ID` that holds a character value specifying a float identifier.
+#' See example 9.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -53,56 +71,57 @@
 #' library(argoFloats)
 #' data(index)
 #'
-#' # Example 1: First three profiles in dataset.
+#' # Example 1: subset to the first 3 profiles in the (built-in) index
 #' index1 <- subset(index, 1:3)
 #' cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
 #'
-#' # Example 2: Demonstrate geographical subsets. These examples use
-#' # built-in datasets; to use these in other  work, start by
-#' # using getIndex() to create an index.
-#' # 2A: circle north of Abaca Island
-#' index2A <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
-#' # 2B: rectangle northeast of Abaca Island
+#' # Example 2: subset to a circle near Abaca Island
+#' index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+#'
+#' # Example 3: subset to a rectangle near Abaca Island
 #' lonRect <- c(-76.5, -76)
 #' latRect <- c(26.5, 27.5)
-#' index2B <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
-#' # 2C: polygon to the southeast of Abaco Island
+#' index3 <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
+#'
+#' # Example 4: subset to a polygon to near Abaco Island
 #' lonPoly <- c(-76.5, -76.0, -75.5)
 #' latPoly <- c(25.5, 26.5, 25.5)
-#' index2C <- subset(index, polygon=list(longitude=lonPoly, latitude=latPoly))
-#' # Show these subsets on a map
+#' index4 <- subset(index, polygon=list(longitude=lonPoly, latitude=latPoly))
+#'
+#' # Show some of these subsets on a map
 #' plot(index)
-#' points(index2A[["longitude"]], index2A[["latitude"]], col=2, pch=20, cex=1.4)
-#' points(index2B[["longitude"]], index2B[["latitude"]], col=3, pch=20, cex=1.4)
+#' points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
+#' points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
 #' rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
-#' points(index2C[["longitude"]], index2C[["latitude"]], col=4, pch=20, cex=1.4)
-#' polygon(lonPoly, latPoly, border=4, lwd=2)
+#' points(index4[["longitude"]], index4[["latitude"]], col="magenta", pch=20, cex=1.4)
+#' polygon(lonPoly, latPoly, border="magenta", lwd=2)
 #'
-#' # Example 3: Subsetting argo_merge data containing 'DOXY' parameters
-#' # 3A: Data containing 'DOXY' data
+#' # Example 5: subset argo_merge data containing 'DOXY' parameters
+#' # Data containing 'DOXY' data
 #' data(indexMerged)
-#' index3A <- subset(indexMerged, parameter="DOXY")
-#' # 3B: Data containing both 'PSAL' and 'DOWN_IRRADIANCE380' data
+#' index5A <- subset(indexMerged, parameter="DOXY")
+#' # Data containing both 'PSAL' and 'DOWN_IRRADIANCE380' data
 #' data(indexMerged)
-#' index3B <- subset(indexMerged, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
+#' index5B <- subset(indexMerged, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
 #'
-#' # Example 4: Subsetting data for the year 2019
+#' # Example 6: subset data for the year 2019
 #' data(index)
 #' from <- as.POSIXct("2019-01-01", tz="UTC")
 #' to <- as.POSIXct("2019-12-31", tz="UTC")
-#' index4 <- subset(index, time=list(from=from, to=to))
+#' index6 <- subset(index, time=list(from=from, to=to))
 #'
-#' # Example 5: Subsetting data to only include deep argo
+#' # Example 7: subset to the Canadian MEDS data
+#' index7 <- subset(index, institution="ME")
+#'
+#' # Example 8: subset data to only include deep argo
 #' \dontrun{
 #' ai <- getIndex(file='merged', destdir = '~/data/argo')
-#' index5 <- subset(ai, deep=TRUE)
-#' summary(index5) }
-#' 
-#' # Example 6: Subsetting by specific argo ID
+#' index8 <- subset(ai, deep=TRUE) }
+#'
+#' # Example 9: subset to a specific ID
 #' \dontrun{
 #' ai <- getIndex(file='merged', destdir = '~/data/argo')
-#' index6 <- subset(ai, ID='1900722')
-#' summary(index6) }
+#' index9 <- subset(ai, ID='1900722') }
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -187,6 +206,8 @@ setMethod(f="subset",
                       institution <- dots[[1]]
                       if(!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'institution' must be a list")
+                      if (length(institution) > 1)
+                          stop("'institution' cannot hold more than one element")
                       keep <- grepl(institution, x@data$index$institution)
                       keep[is.na(keep)] <- FALSE
                       message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
