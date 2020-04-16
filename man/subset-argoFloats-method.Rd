@@ -27,32 +27,40 @@ a way to determine those indices (using the \code{...} argument).
 \details{
 The possibilities for the \code{...} argument are as follows.
 \enumerate{
-\item A list named \code{circle} with elements named \code{longitude},
+\item An integer vector giving indices to keep. See example 1.
+\item A list named \code{circle} with numeric elements named \code{longitude},
 \code{latitude} and \code{radius}.  The first two give the center of
 the subset region, and the third gives the radius of
-that region, in kilometers. See Example 2A.
-\item A list named \code{rectangle}, which has an element named \code{longitude}
-with two elements giving the western and eastern limits of the
-subset region, and similar one named \code{latitude} giving the southern
-and northern limits. See Example 2B.
-\item A list named \code{polygon} that has elements named \code{longitude} and \code{latitude}.
-Profiles within this polygon will be retained. See Example 2C.
-\item A vector or list named \code{parameter} that holds names of parameters to keep;
-see examples 3A and 3B.
+that region, in kilometers. See example 2.
+\item A list named \code{rectangle}, which has elements named
+\code{longitude} and \code{latitude}, two-element numeric vectors
+giving the western and eastern, and southern and northern
+limits of the selection region. See example 3.
+\item A list named \code{polygon} that has elements named \code{longitude} and \code{latitude}
+that are numeric vectors specifying a polygon within which profiles
+will be retained. See example 4.
+\item A vector or list named \code{parameter} that holds character values that
+specify the names of measured parameters to keep. See example 5.
 \item A list named \code{time} that has elements \code{from} and \code{to} that are POSIXt
-times created with eg. \code{\link[=POSIXct]{POSIXct()}}, with \code{tz="UTC"} to match
+times that were created with eg. \code{\link[=POSIXct]{POSIXct()}}, with \code{tz="UTC"} to match
 the timezone used in Argo data. Profiles within that time frame will
-be retained.
-\item A list named \code{institution}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge}
-institutions (ie. \code{AO} meaning AOML, USA, \code{BO} meaning BODC, United Kingdom,
-\code{CS} meaning CSIRO, Austrialia, \code{HZ} meaning CSIO, China Second Institute of
-Oceanography, \code{IF} meaning Ifremer, France, \code{IN} meaning INCOIS, India, \code{JA}
-meaning JMA, Japan, \code{KM} meaning KMA, Korea, \code{KO} meaning KORDI, Korea, \code{ME}
-meaning MEDS, Canada, and \code{NM} meaning NMDIS, China).
-\item A list named \code{deep}, which has a logical value indicating weather argo floats
-are deep argo (ie. `profiler_type`` 849, 862, and 864).
-\item A list named \code{ID}, which has \code{argo}, \code{argo_bgc}, or \code{argo_merge} float ID
-numbers.
+be retained. See example 6.
+\item A list named \code{institution}, which holds a single character element that
+names the institution.  The permitted values are:
+\code{"AO"} for AOML, USA;
+\code{"BO"} for BODC, United Kingdom;
+\code{"CS"} for CSIRO, Australia;
+\code{"HZ"} for CSIO, China Second Institute of Oceanography;
+\code{"IF"} for Ifremer, France;
+\code{"IN"} for INCOIS, India;
+\code{"JA"} for JMA, Japan;
+\code{"KM"} for KMA, Korea;
+\code{"KO"} for KORDI, Korea;
+\code{"NM"} for NMDIS, China.
+\item A list named \code{deep} that holds a logical value indicating weather argo floats
+are deep argo (ie. \code{profiler_type} 849, 862, and 864). See example 8.
+\item A list named \code{ID} that holds a character value specifying a float identifier.
+See example 9.
 }
 
 In all cases, the notation is that longitude is positive
@@ -63,56 +71,57 @@ is positive for degrees North and negative for degrees South.
 library(argoFloats)
 data(index)
 
-# Example 1: First three profiles in dataset.
+# Example 1: subset to the first 3 profiles in the (built-in) index
 index1 <- subset(index, 1:3)
 cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
 
-# Example 2: Demonstrate geographical subsets. These examples use
-# built-in datasets; to use these in other  work, start by
-# using getIndex() to create an index.
-# 2A: circle north of Abaca Island
-index2A <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
-# 2B: rectangle northeast of Abaca Island
+# Example 2: subset to a circle near Abaca Island
+index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+
+# Example 3: subset to a rectangle near Abaca Island
 lonRect <- c(-76.5, -76)
 latRect <- c(26.5, 27.5)
-index2B <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
-# 2C: polygon to the southeast of Abaco Island
+index3 <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
+
+# Example 4: subset to a polygon to near Abaco Island
 lonPoly <- c(-76.5, -76.0, -75.5)
 latPoly <- c(25.5, 26.5, 25.5)
-index2C <- subset(index, polygon=list(longitude=lonPoly, latitude=latPoly))
-# Show these subsets on a map
+index4 <- subset(index, polygon=list(longitude=lonPoly, latitude=latPoly))
+
+# Show some of these subsets on a map
 plot(index)
-points(index2A[["longitude"]], index2A[["latitude"]], col=2, pch=20, cex=1.4)
-points(index2B[["longitude"]], index2B[["latitude"]], col=3, pch=20, cex=1.4)
+points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
+points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
 rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
-points(index2C[["longitude"]], index2C[["latitude"]], col=4, pch=20, cex=1.4)
-polygon(lonPoly, latPoly, border=4, lwd=2)
+points(index4[["longitude"]], index4[["latitude"]], col="magenta", pch=20, cex=1.4)
+polygon(lonPoly, latPoly, border="magenta", lwd=2)
 
-# Example 3: Subsetting argo_merge data containing 'DOXY' parameters
-# 3A: Data containing 'DOXY' data
+# Example 5: subset argo_merge data containing 'DOXY' parameters
+# Data containing 'DOXY' data
 data(indexMerged)
-index3A <- subset(indexMerged, parameter="DOXY")
-# 3B: Data containing both 'PSAL' and 'DOWN_IRRADIANCE380' data
+index5A <- subset(indexMerged, parameter="DOXY")
+# Data containing both 'PSAL' and 'DOWN_IRRADIANCE380' data
 data(indexMerged)
-index3B <- subset(indexMerged, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
+index5B <- subset(indexMerged, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
 
-# Example 4: Subsetting data for the year 2019
+# Example 6: subset data for the year 2019
 data(index)
 from <- as.POSIXct("2019-01-01", tz="UTC")
 to <- as.POSIXct("2019-12-31", tz="UTC")
-index4 <- subset(index, time=list(from=from, to=to))
+index6 <- subset(index, time=list(from=from, to=to))
 
-# Example 5: Subsetting data to only include deep argo
+# Example 7: subset to the Canadian MEDS data
+index7 <- subset(index, institution="ME")
+
+# Example 8: subset data to only include deep argo
 \dontrun{
 ai <- getIndex(file='merged', destdir = '~/data/argo')
-index5 <- subset(ai, deep=TRUE)
-summary(index5) }
+index8 <- subset(ai, deep=TRUE) }
 
-# Example 6: Subsetting by specific argo ID
+# Example 9: subset to a specific ID
 \dontrun{
 ai <- getIndex(file='merged', destdir = '~/data/argo')
-index6 <- subset(ai, ID='1900722')
-summary(index6) }
+index9 <- subset(ai, ID='1900722') }
 
 }
 \author{
