@@ -28,48 +28,38 @@ library(argoFloats)
 data('indexMerged', package='argoFloats')
 ```
 
-It is now possible to apply the  `argoFloats`  specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()`.
+It's now possible to apply the  `argoFloats`  specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()`.
 
 ## plotting the data
-The `plot()` function within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot to visualize the coordinates of a section of argo floats off of the Bahamas, the following code is used:
+The `plot()` function within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot and visualize the coordinates of a section of argo floats off of the Bahamas, the following code is used:
 
 ```{r}
+library(devtools)
+install_github('dankelley/argoFloats', ref='develop')
+install_github("dankelley/oce", ref='develop')
+install_github('dankelley/ocedata', ref='develop')
 library(argoFloats)
-data('indexMerged', package='argoFloats')
+library(oce)
+library(ocedata)
+data('indexMerged')
 plot(indexMerged)
 ```
 
 ### Extracting data 
-`[[` provides a way to extract items from `argoFloats` objects, without getting lost in the details of storage. (Note that `[[<-` is *not* specialized, since the user is highly discouraged from altering values within `argoFloats` objects.)
+`[[` provides a way to extract items from `argoFloats` objects, without getting lost in the details of storage. (Note that `[[<-` is *not* specialized, since the user is highly discouraged from altering values within `argoFloats` objects.). For example, if the user wanted to extract the `parameters` within the `indexMerged` dataset, instead of doing `indexMerged@data$index$parameters`, instead they can simply do `indexMerged[['parameters']]`
 
-For example, if the user wanted to extract the `parameters` within the `indexMerged` dataset, instead of doing `indexMerged@data$index$parameters`, instead they can simply do `indexMerged[['parameters']]`
-
-To apply this method to plot the temperature profile of the first float, the following code can be used:
-
-```{r}
-library(argoFloats)
-data("indexMerged", package='argoFloats)
-indexMerged[['parameters']]
-
-
-```
-
-
- 
-
- 
 ### Summarizing data
 
-  `summary()` displays key features of [argoFloats-class] objects. See [summary,argoFloats-method()] for details.
+The `summary()` command displays key features of `argoFloats-class` objects. See `summary,argoFloats-method()` for details.
  
 ### Showing information about argoFloats objects
+The `show()` command provides a one-line sketch of `argoFloats-class` objects. See `show,argoFloats-method()` for details.
 
- `show()` provides a one-line sketch of [argoFloats-class] objects. See [show,argoFloats-method()] for details.
+It should be noted that the profile elements within `argoFloats` objects are stored as in the form of `argo` objects as defined by the `oce` package. This means that `argoFloats` users can rely on a wide variety of `oce` functions to analyse their data. The full suite of R tools is also available, and the vastness of that suite explains why `argoFloats` is written in R.
+ 
+ 
+# Steps to working with data that is not built in
 
- It should be noted that the profile elements within `argoFloats` objects are stored as in the form of `argo` objects as defined by the `oce` package. This means that `argoFloats` users can rely on a wide variety of `oce` functions to analyse their data. The full suite of R tools is also available, and the vastness of that suite explains why `argoFloats` is written in R.
- 
- 
- 
 ## getIndex()
 As shown by Figure 1, the `getIndex()` command is used to get an index of available argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.
 
@@ -93,17 +83,128 @@ As shown by Figure 1, the next step when working with the `argoFloats` package i
 If, for example, the user wanted to plot the position of floats within a 100 km radius of the Bermuda, the following code is used:
 
 ```{r}
+# Installing necessary packages
+library(devtools)
+install_github('dankelley/argoFloats', ref='develop')
+install_github("dankelley/oce", ref='develop')
+install_github('dankelley/ocedata', ref='develop')
 library(argoFloats)
 library(oce)
+library(ocedata)
+#Subsetting by circle
 Belon <- -64.7505 # Longitude of Bermuda
 Belat <- 32.3078 # Latitude of Bermuda
-aiBermuda<- subset(ai, circle=list(longitude=Belon, latitude=Belat, radius=100))
-latbe<- aiBermuda[['latitude']]
-lonbe<- aiBermuda[['longitude']]
-library(ocedata)
-belat<- 32
-belon<- -64.5
+aiBermuda <- subset(ai, circle=list(longitude=Belon, latitude=Belat, radius=100))
+# Plotting circle subset
+latbe <- aiBermuda[['latitude']]
+lonbe <- aiBermuda[['longitude']]
+belat <- 32
+belon <- -64.5
 data(coastlineWorldFine, package="ocedata")
-plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=500)
+plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=400)
 points(lonbe,latbe)
+```
+
+*Exercise 1:* Produce the same plot as shown above, however, only include data from 2010.
+
+In addition to the `circle` subset function, the argoFloats package also has the ability to subset by `rectangle`. This can be useful when looking at section data found within the oce package, which includes a westward transect from the Mediterranean outlow region across to North America. To view this data the following code is used:
+
+```{r}
+library(oce)
+data(section, package='oce')
+plot(section)
+```
+
+*Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2010. 
+
+## getProfiles()
+
+The next step within the `argoFloats` package is the `getProfiles()` function. This takes an index constructed with `getIndex()`, possibly after focusing with `subset,argoFloats-method()`, and creates a list of files to download from the server named in the index. Then these files are downloaded to the destdir directory, using filenames inferred from the source filenames. The value returned by `getProfiles()` is suitable for use by `readProfiles()` function.
+
+## readProfiles()
+
+The `readProfiles()` command works with either a list of local netCDF files, or a `argoFloats` object type `profiles`, as created by `getProfiles`.
+
+The command can be useful for analyzing individual profiles, for example:
+
+```{r}
+library(argoFloats)
+ai <- getIndex(file='merge', destdir = '~/data/argo')
+sub <- subset(ai, 1:2) # To subset for profiles
+profiles <- getProfiles(sub, destdir='~/data/argo')
+argos <- readProfiles(profiles, handleFlags = TRUE)
+pressure <- argos[['argos']][[1]][['pressure']]
+temperature <- argos[['argos']][[1]][['temperature']]
+plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)), xlab='Temperature (C)', ylab='Depth (dbar)')
+```
+
+*Exercise 3:* Using the profile in the previous example, plot a TS diagram.
+
+# Solutions
+
+*Exercise 1:* Produce the same plot as shown above, however, only include data from 2018.
+
+```
+#Installing necessary packages
+library(devtools)
+install_github('dankelley/argoFloats', ref='develop')
+install_github("dankelley/oce", ref='develop')
+install_github('dankelley/ocedata', ref='develop')
+#Subsetting index by circle
+ai <- getIndex(file='merge', destdir='~/data/argo')
+Belon <- -64.7505 # Longitude of Bermuda
+Belat <- 32.3078 # Latitude of Bermuda
+aiBermuda <- subset(ai, circle=list(longitude=Belon, latitude=Belat, radius=100))
+#Subsetting circle by time
+from <- as.POSIXct("2010-01-01", tz="UTC")
+to <- as.POSIXct("2018-10-31", tz="UTC")
+ait <- subset(aiBermuda, time=list(from=from, to=to))
+#Plotting new subset on a map
+latbe <- ait[['latitude']]
+lonbe <- ait[['longitude']]
+belat <- 32
+belon <- -64.5
+data(coastlineWorldFine, package="ocedata")
+plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=400)
+points(lonbe,latbe)
+```
+*Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2010.
+
+```
+library(argoFloats)
+library(oce)
+data(section, package='oce')
+summary(section[['latitude']]) # To determine min and max latitude
+summary(section[['longitude']]) # To determine min and max longitude
+# Subset by rectangle
+ai <- getIndex(file='merge', destdir='~/data/argo')
+lonRect <- c(-73, -8)
+latRect <- c(35, 39)
+air <- subset(ai, rectangle=list(longitude=lonRect, latitude=latRect))
+# Subset the rectangle by time
+from <- as.POSIXct("2010-01-01", tz="UTC")
+to <- as.POSIXct("2018-10-31", tz="UTC")
+aiTime <- subset(air, time=list(from=from, to=to))
+#Plot this subset
+latbe <- aiTime[['latitude']]
+lonbe <- aiTime[['longitude']]
+belat <- 37
+belon <- -35
+data(coastlineWorldFine, package="ocedata")
+plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=6000)
+points(lonbe,latbe)
+```
+
+*Exercise 3:* Using the profile in the previous example, plot a TS diagram.
+
+```
+ai <- getIndex(file='merge', destdir = '~/data/argo')
+sub <- subset(ai, 1:2) # To subset for profiles
+profiles <- getProfiles(sub, destdir='~/data/argo')
+argos <- readProfiles(profiles, handleFlags = TRUE)
+pressure <- argos[['argos']][[1]][['pressure']]
+temperature <- argos[['argos']][[1]][['temperature']]
+salinity <- argos[['argos']][[1]][['salinity']]
+ctd<-as.ctd(salinity,temperature,pressure)
+plotTS(ctd, eos="unesco")
 ```
