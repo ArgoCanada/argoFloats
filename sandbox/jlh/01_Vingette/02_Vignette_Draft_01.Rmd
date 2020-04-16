@@ -81,12 +81,8 @@ To get the index from the USGODAE server, the following code is used:
 
 ```{r}
 ai <- getIndex(
-    server = "auto",
     file = "merge",
-    destdir = "~/data/argo",
-    age = 7,
-    quiet = FALSE,
-    debug = 3
+    destdir = "~/data/argo"
 )
 ```
 
@@ -97,16 +93,17 @@ As shown by Figure 1, the next step when working with the `argoFloats` package i
 If, for example, the user wanted to plot the position of floats within a 100 km radius of the Bermuda, the following code is used:
 
 ```{r}
+library(argoFloats)
+library(oce)
 Belon <- -64.7505 # Longitude of Bermuda
 Belat <- 32.3078 # Latitude of Bermuda
 aiBermuda<- subset(ai, circle=list(longitude=Belon, latitude=Belat, radius=100))
 latbe<- aiBermuda[['latitude']]
 lonbe<- aiBermuda[['longitude']]
 library(ocedata)
-belat<- c(31,33.3)
-belon<- c(-65, -64)
+belat<- 32
+belon<- -64.5
 data(coastlineWorldFine, package="ocedata")
-png('bermudaprofile.png', width=7, height=7, unit='in', res=200, pointsize= 14)
-mapPlot(coastlineWorldFine, longitudelim=belon, latitudelim=belat, col="pink")
-mapPoints(lonbe,latbe)
+plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=500)
+points(lonbe,latbe)
 ```
