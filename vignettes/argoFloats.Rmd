@@ -1,6 +1,6 @@
 ---
-title: "1. Introduction to argoFloats"
-author: "Dan Kelley (https://orcid.org/0000-0001-7808-5911) and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
+title: "Introduction to argoFloats"
+author: "Dan Kelley (https://orcid.org/0000-0001-7808-5911), Jaimie Harbin ( https://orcid.org/0000-0003-3774-3732) and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -12,29 +12,26 @@ output:
     dpi: 72
     dev.args: list(pointsize=11)
 vignette: >
-%\VignetteIndexEntry{1. Introduction to argoFloats}
+  %\VignetteIndexEntry{Introduction to argoFloats}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteEncoding[utf-8]{inputenc}
 ---
 
-<!-- HOW TO BUILD AND VIEW THE VIGNETTES. -->
-<!-- 1. Edit this file in vignettes/argoFloats.Rmd -->
-<!-- 2. Do not bother trying to build vignettes in RStudio. Instead, ->
-<!--    in a unix shell, type the following: -->
-<!--        R CMD build --compact-vignettes="qpdf" argoFloats -->
-<!--        R CMD install argoFloats_1.1-2.tar.gz -->
-<!--    where the version number may need adjustment in the second command. -->
-<!-- 3. To see the results, type the following in an R console: -->
-<!--       browseVignettes("argoFloats") -->
+<!-- HOW TO BUILD AND VIEW THE VIGNETTES.
+1. Edit this file in vignettes/argoFloats.Rmd
+2. Do not bother trying to build vignettes in RStudio. Instead,
+   in a unix shell, type the following:
+       R CMD build --compact-vignettes="qpdf" argoFloats
+       R CMD install argoFloats_0.1.1.tar.gz
+   where the version number may need adjustment in the second command.
+3. To see the results, type the following in an R console:
+      browseVignettes("argoFloats")
+-->
 
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
-
-# A Package for Processing Argo Float Profiles
-
-*Dan Kelley (https://orcid.org/0000-0001-7808-5911), Jaimie Harbin ( https://orcid.org/0000-0003-3774-3732), and Clark Richards (https://orcid.org/0000-0002-7833-206X)*
 
 ## 1. Introduction
 
