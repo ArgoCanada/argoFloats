@@ -32,7 +32,7 @@ vignette: >
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
-**Abstract.** *FIXME: write abstract here.*
+**Abstract.** The `argoFloats` package makes it easy to get, read, and analyze core, biogeochemical(bgc), and deep argo data. Our goal in making this package was to eliminate the gap between the freely available argo data and the end user.
 
 # Introduction
 
@@ -127,18 +127,9 @@ As shown by Figure 1, the `getIndex()` command is used to get an index of availa
 
 The `getIndex()` command works by specifying the server, with first trying the USGODAE (ftp://usgodae.org/pub/outgoing/argo) and then the IRREMER (ftp://ftp.ifremer.fr/ifremer/argo) if that doesn't work. The next step is to specify the file name. As shown by Table 1,the user has the ability to write the specific file name, which are listed when using the `?getIndex()` function, or to simply use the embedded nicknames within the package, 'argo', 'bgc' or 'bgcargo', and 'merge' or 'merged'. To further help the user, and avoid them needing to specifically locate the server, a description of the contents found within each file name are displayed as well.
 
-
-\tabular{lll}{
-*File Name*                       \tab *Nickname*              \tab *Contents*\cr
-`ar_greylist.txt`                 \tab -                       \tab Suspious or malfunctioning float sensors.\cr
-`ar_index_global_meta.txt.gz`     \tab -                       \tab Metadata files of the argo GDAC ftp site.\cr
-`ar_index_global_prof.txt.gz`     \tab `"argo"`                \tab Argo data.\cr
-`ar_index_global_tech.txt.gz`     \tab -                       \tab All technical files of the argo GDAC ftp site.\cr
-`ar_index_global_traj.txt.gz`     \tab -                       \tab All trajectory files of the argo GDAC ftp site.\cr
-`argo_bio-profile_index.txt.gz`   \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T).\cr
-`argo_bio-traj_index.txt.gz`      \tab -                       \tab Bio-trajectory files of the argo GDAC ftp site.\cr
-`argo_merge-profile_index.txt.gz` \tab `"merge"` or `"merged"` \tab Merged `"argo"` and `"bgc"` data.\cr
-}
+```{r table, echo=FALSE, fig.cap="Table 1: file argument summary for the getIndex() command", out.width = '700px', fig.align='center'}
+knitr::include_graphics("getIndex.png")
+```
 
 
 See `?getIndex()` for further description about the further arguments.
@@ -182,7 +173,7 @@ data(section, package='oce')
 plot(section)
 ```
 
-*Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2010. 
+*Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2017. 
 
 ## getProfiles()
 
@@ -209,7 +200,7 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)), xlab='Tempera
 
 *Exercise 1:* Produce the same plot as shown above, however, only include data from 2018.
 
-```
+```{r, eval=FALSE}
 #Installing necessary packages
 library(devtools)
 install_github('dankelley/argoFloats', ref='develop')
@@ -233,9 +224,9 @@ data(coastlineWorldFine, package="ocedata")
 plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=400)
 points(lonbe,latbe)
 ```
-*Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2010.
+*Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2017.
 
-```
+```{r, eval=FALSE}
 library(argoFloats)
 library(oce)
 data(section, package='oce')
@@ -247,8 +238,8 @@ lonRect <- c(-73, -8)
 latRect <- c(35, 39)
 air <- subset(ai, rectangle=list(longitude=lonRect, latitude=latRect))
 # Subset the rectangle by time
-from <- as.POSIXct("2010-01-01", tz="UTC")
-to <- as.POSIXct("2018-10-31", tz="UTC")
+from <- as.POSIXct("2017-01-01", tz="UTC")
+to <- as.POSIXct("2017-12-31", tz="UTC")
 aiTime <- subset(air, time=list(from=from, to=to))
 #Plot this subset
 latbe <- aiTime[['latitude']]
@@ -262,7 +253,7 @@ points(lonbe,latbe)
 
 *Exercise 3:* Using the profile in the previous example, plot a TS diagram.
 
-```{r eval=FALSE}
+```{r, eval=FALSE}
 ai <- getIndex(file='merge', destdir = '~/data/argo')
 sub <- subset(ai, 1:2) # To subset for profiles
 profiles <- getProfiles(sub, destdir='~/data/argo')
