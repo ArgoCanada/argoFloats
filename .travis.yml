@@ -17,7 +17,6 @@ r_packages:
     - covr
     - sf
     - sp
-    - units
 
 r_github_packages:
     - codecov/example-r
