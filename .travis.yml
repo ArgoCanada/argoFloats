@@ -15,7 +15,9 @@ r_packages:
     - devtools
     - ncdf4
     - covr
+    - sf
     - sp
+    - units
 
 r_github_packages:
     - codecov/example-r
