@@ -14,7 +14,7 @@ r_packages:
     - devtools
     - ncdf4
     - covr
-    - sp
+    - sf
 
 env:
     global:
