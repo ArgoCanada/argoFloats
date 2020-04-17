@@ -1,9 +1,8 @@
 language: r
 warnings_are_errors: false
 sudo: required
-
-after_success:
-    - Rscript -e 'library(covr);codecov()'
+dist: trusty
+after_success: travis_wait 30 Rscript -e 'library(covr); codecov(type="all")'
 
 addons:
     apt:
@@ -15,11 +14,7 @@ r_packages:
     - devtools
     - ncdf4
     - covr
-    - sf
     - sp
-
-r_github_packages:
-    - codecov/example-r
 
 env:
     global:
