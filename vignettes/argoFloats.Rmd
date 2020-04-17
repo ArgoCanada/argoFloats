@@ -230,12 +230,12 @@ points(lonbe,latbe)
 library(argoFloats)
 library(oce)
 data(section, package='oce')
-summary(section[['latitude']]) # To determine min and max latitude
-summary(section[['longitude']]) # To determine min and max longitude
+lat0 <- median(section[['latitude']])
+lon0 <- median(section[['longitude']])
 # Subset by rectangle
 ai <- getIndex(file='merge', destdir='~/data/argo')
-lonRect <- c(-73, -8)
-latRect <- c(35, 39)
+latRect <- lat0 + c(-2,2)
+lonRect <- lon0 + c(-30,30)
 air <- subset(ai, rectangle=list(longitude=lonRect, latitude=latRect))
 # Subset the rectangle by time
 from <- as.POSIXct("2017-01-01", tz="UTC")
