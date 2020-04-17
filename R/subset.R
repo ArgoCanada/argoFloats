@@ -23,7 +23,9 @@
 #'
 #' 4. A list named `polygon` that has elements named `longitude` and `latitude`
 #' that are numeric vectors specifying a polygon within which profiles
-#' will be retained. See example 4.
+#' will be retained. If the polygon is not closed (i.e. if the first and
+#' last points do not coincide) then a warning is issued, and the first
+#' point is pasted onto the end.  See example 4.
 #'
 #' 5. A vector or list named `parameter` that holds character values that
 #' specify the names of measured parameters to keep. See example 5.
@@ -127,6 +129,7 @@
 #'
 #' @importFrom oce geodDist
 #' @importFrom sp point.in.polygon
+#' @importFrom sf st_polygon st_multipoint st_intersection
 #' @export
 setMethod(f="subset",
           signature="argoFloats",
@@ -179,9 +182,40 @@ setMethod(f="subset",
                       polygon <- dots[[1]]
                       if(!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'polygon' must be a list")
-                      keep <- as.logical(sp::point.in.polygon(x[["longitude"]], x[["latitude"]],
-                                                              polygon$longitude, polygon$latitude))
-                      keep[is.na(keep)] <- FALSE
+                      if (length(polygon) != 2)
+                          stop("In subset,argoFloats-method() : 'polygon' must be a list of two elements")
+                      if (2 != sum(c("longitude", "latitude") %in% names(polygon)))
+                          stop("In subset,argoFloats-method() : 'polygon' must be a list containing 'longitude' and 'latitude'")
+                      plat <- polygon$latitude
+                      plon <- polygon$longitude
+                      if (length(plat) != length(plon))
+                          stop("lengths of polygon$longitude and polygon$latitude must match, but they are ",
+                               length(plat), " and ", length(plon))
+                      if ((head(plon, 1) != tail(plon, 1)) || head(plat, 1) != tail(plat, 1)) {
+                          warning("In subset,argoFloats-method(): closing the polygon, since its first and last points did not match\n", call.=FALSE)
+                          ##debug cat("before\n")
+                          ##debug print(data.frame(plon, plat))
+                          plon <- c(plon, plon[1])
+                          plat <- c(plat, plat[1])
+                          ##debug cat("after\n")
+                          ##debug print(data.frame(plon, plat))
+                      }
+                      Polygon <- sf::st_polygon(list(outer=cbind(plon, plat)))
+                      Points <- sf::st_multipoint(cbind(x[["longitude"]], x[["latitude"]]))
+                      Inside <- sf::st_intersection(Points, Polygon)
+                      M <- matrix(Points %in% Inside, ncol=2)
+                      keep <- M[,1] & M[,2]
+                      keepOLD <- as.logical(sp::point.in.polygon(x[["longitude"]], x[["latitude"]],
+                                                                 polygon$longitude, polygon$latitude))
+                      if (sum(keep != keepOLD) != 0) {
+                          message("problem with 'keep' and 'keepOLD'.  Developers should uncomment the 'browser' in next line and rebuilt, then retest")
+                          # browser()
+                      }
+                      ## TMPInside<<-Inside
+                      ## TMPPolygon<<-Polygon
+                      ## TMPPoints<<-Points
+                      ## TMPkeep<<-keep
+                      ## TMPkeepOLD<<-keepOLD
                       message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="time") {
