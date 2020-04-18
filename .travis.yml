@@ -14,11 +14,15 @@ after_success: travis_wait 30 Rscript -e 'library(covr); codecov(type="all")'
 addons:
     apt:
         packages:
+            - libgdal-dev
+            - libproj-dev
             - libnetcdf-dev
             - netcdf-bin
 
 r_packages:
     - devtools
+    - rgdal
+    - rgeos
     - ncdf4
     - covr
     - sf
