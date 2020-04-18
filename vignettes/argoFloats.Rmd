@@ -181,9 +181,14 @@ See `?getIndex()` for further description about the further arguments.
 
 To get the indexMerged index from the USGODAE server, the following code is used:
 
-```{r}
+```{r eval=FALSE}
 ai <- getIndex(file = "merge", destdir = "~/data/argo")
 ```
+```{r echo=FALSE}
+data(index)
+ai <- index
+```
+
 
 ## subset()
 
@@ -227,7 +232,7 @@ The `readProfiles()` command works with either a list of local netCDF files, or 
 
 The command can be useful for analyzing individual profiles, for example:
 
-```{r}
+```{r eval=FALSE}
 sub <- subset(ai, 1:2) # To subset for profiles
 profiles <- getProfiles(sub, destdir='~/data/argo')
 argos <- readProfiles(profiles, handleFlags = TRUE)
