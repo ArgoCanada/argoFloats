@@ -58,6 +58,7 @@ names the institution.  The permitted values are:
 \code{"JA"} for JMA, Japan;
 \code{"KM"} for KMA, Korea;
 \code{"KO"} for KORDI, Korea;
+\code{"ME"} for MEDS, Canada; and
 \code{"NM"} for NMDIS, China.
 \item A list named \code{deep} that holds a logical value indicating weather argo floats
 are deep argo (ie. \code{profiler_type} 849, 862, and 864). See example 8.

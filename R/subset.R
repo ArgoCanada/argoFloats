@@ -37,16 +37,16 @@
 #'
 #' 7. A list named `institution`, which holds a single character element that
 #' names the institution.  The permitted values are:
-#'`"AO"` for AOML, USA;
-#'`"BO"` for BODC, United Kingdom;
-#'`"CS"` for CSIRO, Australia;
-#'`"HZ"` for CSIO, China Second Institute of Oceanography;
-#'`"IF"` for Ifremer, France;
-#'`"IN"` for INCOIS, India;
-#'`"JA"` for JMA, Japan;
-#'`"KM"` for KMA, Korea;
-#'`"KO"` for KORDI, Korea;
-# `"ME"` for MEDS, Canada; or
+#' `"AO"` for AOML, USA;
+#' `"BO"` for BODC, United Kingdom;
+#' `"CS"` for CSIRO, Australia;
+#' `"HZ"` for CSIO, China Second Institute of Oceanography;
+#' `"IF"` for Ifremer, France;
+#' `"IN"` for INCOIS, India;
+#' `"JA"` for JMA, Japan;
+#' `"KM"` for KMA, Korea;
+#' `"KO"` for KORDI, Korea;
+#' `"ME"` for MEDS, Canada; and
 #' `"NM"` for NMDIS, China.
 #'
 #' 8. A list named `deep` that holds a logical value indicating weather argo floats

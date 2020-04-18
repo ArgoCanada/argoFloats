@@ -47,22 +47,60 @@ devtools::install_github('dankelley/argoFloats', ref='develop')
 ```
 Note that the `install_github()` function is provided by the `devtools` package, so the above will fail if that package has not already been installed.  To install it, use
 ```{r eval=FALSE}
-install.packages(devtools) # if not already installed
-```
-
-DK TESTING:
-```{r}
-library(devtools)
-library(argoFloats)
-library(oce)
-library(ocedata)
+install.packages(devtools)
 ```
 
 # Work flow
 
-The sketch given below illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
-```{r pressure, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package", out.width = '455px', fig.align='center'}
-knitr::include_graphics("workflow.png")
+The figure below illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
+```{r workflow, echo=FALSE, fig.cap="Work flow of the argoFloats package.", fig.height=2.5, fig.width=7, fig.align='center', dev.args=list(pointsize=10)}
+colText <- "darkblue"
+colCode <- "black"
+library(graphics)
+textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New Roman", col="black")
+{
+    w <- graphics::strwidth(text)
+    h <- graphics::strheight(text)
+    if (center)
+        x <- x - w/2
+    text(x, y, text, cex=cex, pos=pos, family=family, col=col)
+    rect(x, y-h, x+1.1*w, y+h, border=col)
+    invisible(list(w=w, h=h))
+}
+omar <- par("mar")
+par(mar=c(0,1,0,0))
+plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
+x0 <- 0.25
+y0 <- 0.9
+dy <- 0.25
+wh <- textInBox(x0, y0, "Get index from server", col=colText)
+h <- wh$h * 1.2
+xarrow <- x0 + 0.01 # not sure why we need to move it
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+y0 <- y0 - dy
+textInBox(x0, y0, "Get profile data files from server", col=colText)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+y0 <- y0 - dy
+textInBox(x0, y0, "Read profile data files", col=colText)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+y0 <- y0 - dy
+textInBox(x0, y0, "Process the data", col=colText)
+x0 <- 0.8
+y0 <- 0.9
+dy <- 0.25
+wh <- textInBox(x0, y0, "getIndex() ", family="sans", col=colCode)
+h <- wh$h * 1.2
+xarrow <- x0 + 0.01 # not sure why we need to move it
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+y0 <- y0 - dy
+textInBox(x0, y0, "getProfiles() ", family="sans", col=colCode)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+y0 <- y0 - dy
+textInBox(x0, y0, "readProfiles() ", family="sans", col=colCode)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+y0 <- y0 - dy
+textInBox(x0, y0, " ...    ", family="sans", col=colCode)
+par(mar=omar)
 ```
 
 As illustrated, the central functions are `getIndex()`, `subset()`, `subset,argoFloats-method()`, `getProfiles()`, and `readProfiles()`. 
@@ -74,7 +112,7 @@ Some built-in datasets are also provided for concreteness of illustration and fo
 To begin to get familiar with how the `argoFloats` package works, we will begin looking at the built in data sets. Built into the `argoFloats` package is the `index`, `indexBgc`, and `indexMerged`, referring to core argo, bgc-argo, and a combinaton respectively. For the sake of this vignette we will focus on the `indexMerged` data set. 
 
 The first step is to access the required packages that will be needed during this tutorial, with
-```{r}
+```{r message=FALSE}
 library(oce)
 library(ocedata)
 library(argoFloats)
@@ -125,11 +163,18 @@ It should be noted that the profile elements within `argoFloats` objects are sto
 ##  getIndex()
 As shown by Figure 1, the `getIndex()` command is used to get an index of available argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.
 
-The `getIndex()` command works by specifying the server, with first trying the USGODAE (ftp://usgodae.org/pub/outgoing/argo) and then the IRREMER (ftp://ftp.ifremer.fr/ifremer/argo) if that doesn't work. The next step is to specify the file name. As shown by Table 1,the user has the ability to write the specific file name, which are listed when using the `?getIndex()` function, or to simply use the embedded nicknames within the package, 'argo', 'bgc' or 'bgcargo', and 'merge' or 'merged'. To further help the user, and avoid them needing to specifically locate the server, a description of the contents found within each file name are displayed as well.
+The `getIndex()` command works by specifying the server, with first trying the USGODAE (ftp://usgodae.org/pub/outgoing/argo) and then the IRREMER (ftp://ftp.ifremer.fr/ifremer/argo) if that doesn't work. The next step is to specify the file name. As shown in the table below, the user has the ability to write the specific file name, which are listed when using the `?getIndex()` function, or to simply use the embedded nicknames within the package, 'argo', 'bgc' or 'bgcargo', and 'merge' or 'merged'. To further help the user, and avoid them needing to specifically locate the server, a description of the contents found within each file name are displayed as well.
 
-```{r table, echo=FALSE, fig.cap="Table 1: file argument summary for the getIndex() command", out.width = '700px', fig.align='center'}
-knitr::include_graphics("getIndex.png")
-```
+File Name                         | Nickname                | Contents
+----------------------------------|-------------------------|--------------------------------------
+`ar_greylist.txt`                 | -                       | Suspious/malfunctioning floats
+`ar_index_global_meta.txt.gz`     | -                       | Metadata files
+`ar_index_global_prof.txt.gz`     | `"argo"`                | Argo data
+`ar_index_global_tech.txt.gz`     | -                       | Technical files
+`ar_index_global_traj.txt.gz`     | -                       | Trajectory files
+`argo_bio-profile_index.txt.gz`   | `"bgc"` or `"bgcargo"`  | Biogeochemical data (without S or T)
+`argo_bio-traj_index.txt.gz`      | -                       | Biogochemica trajectory files
+`argo_merge-profile_index.txt.gz` | `"merge"` or `"merged"` | Merged `"argo"` and `"bgc"` data
 
 
 See `?getIndex()` for further description about the further arguments.
@@ -137,10 +182,7 @@ See `?getIndex()` for further description about the further arguments.
 To get the indexMerged index from the USGODAE server, the following code is used:
 
 ```{r}
-ai <- getIndex(
-    file = "merge",
-    destdir = "~/data/argo"
-)
+ai <- getIndex(file = "merge", destdir = "~/data/argo")
 ```
 
 ## subset()
@@ -168,7 +210,7 @@ points(lonbe,latbe)
 
 In addition to the `circle` subset function, the argoFloats package also has the ability to subset by `rectangle` and `polygon`. The `rectangle` subset can be useful when analyzing the section data found within the oce package, which includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
 
-```{r}
+```{r fig.cap="Section plot made by oce package.", fig.height=4, fig.width=7, fig.align='center', dev.args=list(pointsize=10)}
 data(section, package='oce')
 plot(section)
 ```
