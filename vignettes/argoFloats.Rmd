@@ -196,22 +196,20 @@ As shown by Figure 1, the next step when working with the `argoFloats` package i
 
 If, for example, the user wanted to plot the position of floats within a 100 km radius of the Bermuda, the following code is used:
 
-```{r, message=FALSE, fig.cap="Figure 3: Argo floats found within a 100 km radius of Bermuda"}
+```{r, message=FALSE, fig.cap="Figure 3: 50 km radius subset of argo floats found off the coast of Bahamas"}
 # Subsetting by circle
-Belon <- -64.7505 # Longitude of Bermuda
-Belat <- 32.3078 # Latitude of Bermuda
-aiBermuda <- subset(ai, circle=list(longitude=Belon, latitude=Belat, radius=100))
+aiBahamas <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 # Plotting circle subset
-latbe <- aiBermuda[['latitude']]
-lonbe <- aiBermuda[['longitude']]
-belat <- 32
-belon <- -64.5
+latba <- aiBahamas[['latitude']]
+lonba <- aiBahamas[['longitude']]
+balat <- 26.54
+balon <- -77.06
 data(coastlineWorldFine, package="ocedata")
-plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=400)
-points(lonbe,latbe)
+plot(coastlineWorldFine, clongitude=balon, clatitude=balat, col="pink", span=600)
+points(lonba,latba, pch=20)
 ```
 
-*Exercise 1:* Produce the same plot as shown above, however, only include data from 2010.
+*Exercise 1:* Produce the same plot as shown above, however, only include data from 2017.
 
 In addition to the `circle` subset function, the argoFloats package also has the ability to subset by `rectangle` and `polygon`. The `rectangle` subset can be useful when analyzing the section data found within the oce package, which includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
 
@@ -245,7 +243,7 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)), xlab='Tempera
 
 # Solutions
 
-*Exercise 1:* Produce the same plot as shown above, however, only include data from 2018.
+*Exercise 1:* Produce the same plot as shown above, however, only include data from 2017.
 
 ```{r, eval=FALSE}
 #Installing necessary packages
@@ -255,21 +253,19 @@ install_github("dankelley/oce", ref='develop')
 install_github('dankelley/ocedata', ref='develop')
 #Subsetting index by circle
 ai <- getIndex(file='merge', destdir='~/data/argo')
-Belon <- -64.7505 # Longitude of Bermuda
-Belat <- 32.3078 # Latitude of Bermuda
-aiBermuda <- subset(ai, circle=list(longitude=Belon, latitude=Belat, radius=100))
-#Subsetting circle by time
-from <- as.POSIXct("2010-01-01", tz="UTC")
-to <- as.POSIXct("2018-10-31", tz="UTC")
-ait <- subset(aiBermuda, time=list(from=from, to=to))
+aiBahamas <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+#Subset by time
+from <- as.POSIXct("2017-01-01", tz="UTC")
+to <- as.POSIXct("2017-12-31", tz="UTC")
+ait <- subset(aiBahamas, time=list(from=from, to=to))
 #Plotting new subset on a map
-latbe <- ait[['latitude']]
-lonbe <- ait[['longitude']]
-belat <- 32
-belon <- -64.5
+latba <- ait[['latitude']]
+lonba <- ait[['longitude']]
+balat <- 26.54
+balon <- -77.06
 data(coastlineWorldFine, package="ocedata")
-plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=400)
-points(lonbe,latbe)
+plot(coastlineWorldFine, clongitude=balon, clatitude=balat, col="pink", span=400)
+points(lonba,latba, pch=20)
 ```
 *Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2017.
 
