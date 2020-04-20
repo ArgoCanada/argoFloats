@@ -53,7 +53,7 @@ install.packages(devtools)
 # Work flow
 
 The figure below illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
-```{r workflow, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.5, fig.width=7, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
+```{r workflow, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.8, fig.width=7, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
 colText <- "darkblue"
 colCode <- "black"
 library(graphics)
@@ -72,10 +72,13 @@ par(mar=c(0,1,0,0))
 plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
 x0 <- 0.25
 y0 <- 0.9
-dy <- 0.25
+dy <- 0.2
 wh <- textInBox(x0, y0, "Get index from server", col=colText)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+y0 <- y0 - dy
+textInBox(x0, y0, "Focus on a subset of profiles", col=colText)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
 textInBox(x0, y0, "Get profile data files from server", col=colText)
@@ -87,10 +90,12 @@ y0 <- y0 - dy
 textInBox(x0, y0, "Process the data", col=colText)
 x0 <- 0.8
 y0 <- 0.9
-dy <- 0.25
 wh <- textInBox(x0, y0, "getIndex() ", family="sans", col=colCode)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+y0 <- y0 - dy
+textInBox(x0, y0, "subset() ", family="sans", col=colCode)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
 textInBox(x0, y0, "getProfiles() ", family="sans", col=colCode)
@@ -106,8 +111,6 @@ par(mar=omar)
 As illustrated, the central functions are `getIndex()`, `subset()`, `subset,argoFloats-method()`, `getProfiles()`, and `readProfiles()`. 
 
 Some built-in datasets are also provided for concreteness of illustration and for testing, but actual work always starts with a call to `getIndex()` to download a full index of float data, which we will demonstrate later in this vignette.
-
-# argoFloats Functions
 
 To begin to get familiar with how the `argoFloats` package works, we will begin looking at the built in data sets. Built into the `argoFloats` package is the `index`, `indexBgc`, and `indexMerged`, referring to core argo, bgc-argo, and a combinaton respectively. For the sake of this vignette we will focus on the `indexMerged` data set. 
 
@@ -125,6 +128,8 @@ data('indexMerged')
 ```
 
 It's now possible to apply the  `argoFloats`  specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()`.
+
+# Specialized generic functions
 
 ## Plotting the Data
 The `plot()` function within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot and visualize the coordinates of a section of argo floats off of the Bahamas, the following code is used:
@@ -158,7 +163,7 @@ See `show,argoFloats-method()` for details.
 It should be noted that the profile elements within `argoFloats` objects are stored as in the form of `argo` objects as defined by the `oce` package. This means that `argoFloats` users can rely on a wide variety of `oce` functions to analyse their data. The full suite of R tools is also available, and the vastness of that suite explains why `argoFloats` is written in R.
  
  
-# Steps to working with data that is not built in
+# Central argoFloats functions
 
 ##  getIndex()
 As shown by Figure 1, the `getIndex()` command is used to get an index of available argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.
@@ -179,10 +184,10 @@ File Name                         | Nickname                | Contents
 
 See `?getIndex()` for further description about the further arguments.
 
-To get the indexMerged index from the USGODAE server, the following code is used:
+To get the index from the USGODAE server, the following code is used:
 
 ```{r eval=FALSE}
-ai <- getIndex(file = "merge", destdir = "~/data/argo")
+ai <- getIndex(file = "argo", destdir = "~/data/argo")
 ```
 ```{r echo=FALSE}
 data(index)
@@ -241,7 +246,7 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)), xlab='Tempera
 
 *Exercise 3:* Using the profile in the previous example, plot a TS diagram.
 
-# Solutions
+# Solution to Exercises
 
 *Exercise 1:* Produce the same plot as shown above, however, only include data from 2017.
 
@@ -276,7 +281,7 @@ data(section, package='oce')
 lat0 <- median(section[['latitude']])
 lon0 <- median(section[['longitude']])
 # Subset by rectangle
-ai <- getIndex(file='merge', destdir='~/data/argo')
+ai <- getIndex(file='argo', destdir='~/data/argo')
 latRect <- lat0 + c(-2,2)
 lonRect <- lon0 + c(-30,30)
 air <- subset(ai, rectangle=list(longitude=lonRect, latitude=latRect))
