@@ -38,7 +38,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical (bgc) , or deep argo profiles, and also allows the user to sift these profiles based on ID, time, geography, and institution. Once downloaded, such datasets can be analysed within `argoFloats` or using other R tools and packages.
 
-# Preliminary setup
+# Preliminary Setup
 To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = TRUE)` command if you receive a Zero Exit Status Error):
 ```{r eval=FALSE}
 devtools::install_github("dankelley/oce", ref='develop')
@@ -50,7 +50,7 @@ Note that the `install_github()` function is provided by the `devtools` package,
 install.packages(devtools)
 ```
 
-# Work flow
+# Work Flow
 
 The figure below illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
 ```{r workflow, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.8, fig.width=7, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
@@ -108,11 +108,11 @@ textInBox(x0, y0, " ...    ", family="sans", col=colCode)
 par(mar=omar)
 ```
 
-As illustrated, the central functions are `getIndex()`, `subset()`, `subset,argoFloats-method()`, `getProfiles()`, and `readProfiles()`. 
+As illustrated by Figure 1, the central functions are for the argoFloats package are `getIndex()`, `subset()`, `getProfiles()`, and `readProfiles()`. 
 
-Some built-in datasets are also provided for concreteness of illustration and for testing, but actual work always starts with a call to `getIndex()` to download a full index of float data, which we will demonstrate later in this vignette.
+Additionally, some built-in datasets are provided for concreteness of illustration and for testing, but actual work always starts with a call to `getIndex()` to download a full index of float data, which we will demonstrate later in this vignette.
 
-To begin to get familiar with how the `argoFloats` package works, we will begin looking at the built in data sets. Built into the `argoFloats` package is the `index`, `indexBgc`, and `indexMerged`, referring to core argo, bgc-argo, and a combinaton respectively. For the sake of this vignette we will focus on the `indexMerged` data set. 
+To begin to get familiar with how the `argoFloats` package works, we will begin looking at the built in data sets. Built into the `argoFloats` package is the `index`, `indexBgc`, and `indexMerged`indices, referring to core argo, bgc-argo, and a combinaton respectively. For the sake of this vignette we will focus on the `index` data set. 
 
 The first step is to access the required packages that will be needed during this tutorial, with
 ```{r message=FALSE}
@@ -124,38 +124,38 @@ library(argoFloats)
 To access the embedded data set within `argoFloats`, the following code is used:
 
 ```{r}
-data('indexMerged')
+data('index')
 ```
 
-It's now possible to apply the  `argoFloats`  specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()`.
+It's now possible to process the downloaded index using the `argoFloats`  specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()` as shown below.
 
-# Specialized generic functions
+# Processing Data
 
-## Plotting the Data
-The `plot()` function within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot and visualize the coordinates of a section of argo floats off of the Bahamas, the following code is used:
+## Plotting Data
+The specalized `plot()` command within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot and visualize the coordinates of a section of argo floats off of the Bahamas, the following code is used:
 
-```{r, fig.cap="Figure 2: Built in indexMerged demonstrating argo floats within 300 km of Bahamas"}
-plot(indexMerged)
+```{r, fig.cap="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas"}
+plot(index)
 ```
 
 ## Extracting Data 
-`[[` provides a way to extract items from `argoFloats` objects, without getting lost in the details of storage. (Note that `[[<-` is *not* specialized, since the user is highly discouraged from altering values within `argoFloats` objects.). For example, if the user wanted to extract the `parameters` within the `indexMerged` dataset, instead of doing `indexMerged@data$index$parameters`, instead they can simply do `indexMerged[['parameters']]`
+Furthermore, the `[[` command provides a way to extract items from `argoFloats` objects, without getting lost in the details of storage. For example, if the user wanted to extract the `file` within the `index` dataset, instead of doing `index@data$index$file`, instead they can simply do `index[['file']]`. (Note that `[[<-` is *not* specialized, since the user is highly discouraged from altering values within `argoFloats` objects.). 
 
 ## Summarizing Data
 
-The `summary()` command displays key features of `argoFloats-class` objects. See `summary,argoFloats-method()` further details.
+Additionally, the `summary()` command displays key features of `argoFloats-class` objects such as the type, server, file, url etc. See `summary,argoFloats-method()` further details.
  
 ## Showing Information About argoFloats Objects
-Lastly, `show()` command provides a one-line sketch of `argoFloats-class` objects. For example if the user types in:
+Lastly, the `show()` command provides a one-line sketch of `argoFloats-class` objects. For example if the user types in:
 
 ```
-indexMerged
+index
 
 ```
 The following output occurs:
 
 ```
-argoFloats object of type "index" with 39 items
+argoFloats object of type "index" with 953 items
 ```
 
 See `show,argoFloats-method()` for details.
@@ -163,12 +163,12 @@ See `show,argoFloats-method()` for details.
 It should be noted that the profile elements within `argoFloats` objects are stored as in the form of `argo` objects as defined by the `oce` package. This means that `argoFloats` users can rely on a wide variety of `oce` functions to analyse their data. The full suite of R tools is also available, and the vastness of that suite explains why `argoFloats` is written in R.
  
  
-# Central argoFloats functions
+# Work Flow Examples
 
 ##  getIndex()
-As shown by Figure 1, the `getIndex()` command is used to get an index of available argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.
+Until this point, we have demonstrated how the user can become familiar with embedded indices. As previously described, however, actual work always starts with downloaded a full index of float data. As shown by Figure 1, the `getIndex()` command is used to get an index of available argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.
 
-The `getIndex()` command works by specifying the server, with first trying the USGODAE (ftp://usgodae.org/pub/outgoing/argo) and then the IRREMER (ftp://ftp.ifremer.fr/ifremer/argo) if that doesn't work. The next step is to specify the file name. As shown in the table below, the user has the ability to write the specific file name, which are listed when using the `?getIndex()` function, or to simply use the embedded nicknames within the package, 'argo', 'bgc' or 'bgcargo', and 'merge' or 'merged'. To further help the user, and avoid them needing to specifically locate the server, a description of the contents found within each file name are displayed as well.
+The `getIndex()` command works by specifying the server, with first trying the USGODAE server (ftp://usgodae.org/pub/outgoing/argo) and then the IRREMER server (ftp://ftp.ifremer.fr/ifremer/argo) if that doesn't work. The next step is to specify the file name. The table below can be obtained using the `getIndex()` command. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: 'argo', 'bgc' or 'bgcargo', and 'merge' or 'merged'. To futher aid the user, the table provides a list of contents found within each file name.
 
 File Name                         | Nickname                | Contents
 ----------------------------------|-------------------------|--------------------------------------
@@ -182,7 +182,7 @@ File Name                         | Nickname                | Contents
 `argo_merge-profile_index.txt.gz` | `"merge"` or `"merged"` | Merged `"argo"` and `"bgc"` data
 
 
-See `?getIndex()` for further description about the further arguments.
+See `?getIndex()` for further description about the additional arguments for this command.
 
 To get the index from the USGODAE server, the following code is used:
 
@@ -199,7 +199,7 @@ ai <- index
 
 As shown by Figure 1, the next step when working with the `argoFloats` package is to use the `subset()` function to focus on a subset of profiles. The `argoFloats` package provides tools to sift through profiles based on ID, time, geography and instituion. 
 
-If, for example, the user wanted to plot the position of floats within a 100 km radius of the Bermuda, the following code is used:
+If, for example, the user wanted to plota 50 km radius subset of argo floats off the coast of Bahamas, the following code is used:
 
 ```{r, message=FALSE, fig.cap="Figure 3: 50 km radius subset of argo floats found off the coast of Bahamas"}
 # Subsetting by circle
@@ -216,7 +216,7 @@ points(lonba,latba, pch=20)
 
 *Exercise 1:* Produce the same plot as shown above, however, only include data from 2017.
 
-In addition to the `circle` subset function, the argoFloats package also has the ability to subset by `rectangle` and `polygon`. The `rectangle` subset can be useful when analyzing the section data found within the oce package, which includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
+In addition to the geographical `circle` subset function, the argoFloats package also has the ability to subset by `rectangle` and `polygon`. The `rectangle` subset can be useful when analyzing the section data found within the oce package, which includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
 
 ```{r fig.cap="Figure 4: Line A03 section plot made by oce package.", fig.height=4, fig.width=7, fig.align='center', dev.args=list(pointsize=10)}
 data(section, package='oce')
