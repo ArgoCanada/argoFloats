@@ -53,7 +53,7 @@ install.packages(devtools)
 # Work flow
 
 The figure below illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
-```{r workflow, echo=FALSE, fig.cap="Figure One: Work flow of the argoFloats package.", fig.height=2.5, fig.width=7, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
+```{r workflow, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.5, fig.width=7, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
 colText <- "darkblue"
 colCode <- "black"
 library(graphics)
@@ -129,7 +129,7 @@ It's now possible to apply the  `argoFloats`  specialized versions of R "generic
 ## Plotting the Data
 The `plot()` function within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot and visualize the coordinates of a section of argo floats off of the Bahamas, the following code is used:
 
-```{r, fig.cap="Figure Two: Built in indexMerged demonstrating argo floats within 300 km of Bahamas"}
+```{r, fig.cap="Figure 2: Built in indexMerged demonstrating argo floats within 300 km of Bahamas"}
 plot(indexMerged)
 ```
 
@@ -196,7 +196,7 @@ As shown by Figure 1, the next step when working with the `argoFloats` package i
 
 If, for example, the user wanted to plot the position of floats within a 100 km radius of the Bermuda, the following code is used:
 
-```{r, message=FALSE, fig.cap="Figure Three: Argo floats found within a 100 km radius of Bermuda"}
+```{r, message=FALSE, fig.cap="Figure 3: Argo floats found within a 100 km radius of Bermuda"}
 # Subsetting by circle
 Belon <- -64.7505 # Longitude of Bermuda
 Belat <- 32.3078 # Latitude of Bermuda
@@ -215,7 +215,7 @@ points(lonbe,latbe)
 
 In addition to the `circle` subset function, the argoFloats package also has the ability to subset by `rectangle` and `polygon`. The `rectangle` subset can be useful when analyzing the section data found within the oce package, which includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
 
-```{r fig.cap="Figure Four: Line A03 section plot made by oce package.", fig.height=4, fig.width=7, fig.align='center', dev.args=list(pointsize=10)}
+```{r fig.cap="Figure 4: Line A03 section plot made by oce package.", fig.height=4, fig.width=7, fig.align='center', dev.args=list(pointsize=10)}
 data(section, package='oce')
 plot(section)
 ```
