@@ -128,7 +128,6 @@
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
-#' @importFrom sp point.in.polygon
 #' @importFrom sf st_polygon st_multipoint st_intersection
 #' @export
 setMethod(f="subset",
@@ -205,17 +204,12 @@ setMethod(f="subset",
                       Inside <- sf::st_intersection(Points, Polygon)
                       M <- matrix(Points %in% Inside, ncol=2)
                       keep <- M[,1] & M[,2]
-                      keepOLD <- as.logical(sp::point.in.polygon(x[["longitude"]], x[["latitude"]],
-                                                                 polygon$longitude, polygon$latitude))
-                      if (sum(keep != keepOLD) != 0) {
-                          message("problem with 'keep' and 'keepOLD'.  Developers should uncomment the 'browser' in next line and rebuilt, then retest")
-                          # browser()
-                      }
-                      ## TMPInside<<-Inside
-                      ## TMPPolygon<<-Polygon
-                      ## TMPPoints<<-Points
-                      ## TMPkeep<<-keep
-                      ## TMPkeepOLD<<-keepOLD
+                      ##> keepOLD <- as.logical(sp::point.in.polygon(x[["longitude"]], x[["latitude"]],
+                      ##>                                            polygon$longitude, polygon$latitude))
+                      ##> if (sum(keep != keepOLD) != 0) {
+                      ##>     message("problem with 'keep' and 'keepOLD'.  Developers should uncomment the 'browser' in next line and rebuilt, then retest")
+                      ##>     # browser()
+                      ##> }
                       message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="time") {

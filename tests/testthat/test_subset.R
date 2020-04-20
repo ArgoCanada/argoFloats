@@ -27,8 +27,8 @@ test_that("subset by rectangle", {
 
 test_that("subset by polygon", {
           data("index")
-          indexp <- expect_message(subset(index, polygon=list(latitude=c(25,27,25), longitude=c(-78,-77,-74))),
-                                   "Kept 379 profiles \\(40%\\)")
+          indexp <- expect_warning(expect_message(subset(index, polygon=list(latitude=c(25,27,25), longitude=c(-78,-77,-74))),
+                                   "Kept 379 profiles \\(40%\\)"), "closing the polygon, since its first and last points did not match")
           expect_equal(dim(indexp[["index"]]), c(379,8))
           expect_equal(indexp[["index"]][["file"]][1], "aoml/3900582/profiles/D3900582_069.nc")
           expect_equal(indexp[["file"]][1], "aoml/3900582/profiles/D3900582_069.nc")
