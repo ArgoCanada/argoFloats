@@ -200,10 +200,15 @@ setMethod(f="subset",
                           ##debug print(data.frame(plon, plat))
                       }
                       Polygon <- sf::st_polygon(list(outer=cbind(plon, plat)))
-                      Points <- sf::st_multipoint(cbind(x[["longitude"]], x[["latitude"]]))
+                      ## multipoint does not permit NA values, so we set them to zero and remove them later
+                      alon <- x[["longitude"]]
+                      alat <- x[["latitude"]]
+                      ok <- is.finite(alon) & is.finite(alat)
+                      Points <- sf::st_multipoint(cbind(ifelse(ok, alon, 0),
+                                                        ifelse(ok, alat, 0)))
                       Inside <- sf::st_intersection(Points, Polygon)
                       M <- matrix(Points %in% Inside, ncol=2)
-                      keep <- M[,1] & M[,2]
+                      keep <- M[,1] & M[,2] & ok
                       ##> keepOLD <- as.logical(sp::point.in.polygon(x[["longitude"]], x[["latitude"]],
                       ##>                                            polygon$longitude, polygon$latitude))
                       ##> if (sum(keep != keepOLD) != 0) {
