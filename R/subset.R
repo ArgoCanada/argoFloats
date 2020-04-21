@@ -192,12 +192,8 @@ setMethod(f="subset",
                                length(plat), " and ", length(plon))
                       if ((head(plon, 1) != tail(plon, 1)) || head(plat, 1) != tail(plat, 1)) {
                           warning("In subset,argoFloats-method(): closing the polygon, since its first and last points did not match\n", call.=FALSE)
-                          ##debug cat("before\n")
-                          ##debug print(data.frame(plon, plat))
                           plon <- c(plon, plon[1])
                           plat <- c(plat, plat[1])
-                          ##debug cat("after\n")
-                          ##debug print(data.frame(plon, plat))
                       }
                       Polygon <- sf::st_polygon(list(outer=cbind(plon, plat)))
                       ## multipoint does not permit NA values, so we set them to zero and remove them later
@@ -209,12 +205,6 @@ setMethod(f="subset",
                       Inside <- sf::st_intersection(Points, Polygon)
                       M <- matrix(Points %in% Inside, ncol=2)
                       keep <- M[,1] & M[,2] & ok
-                      ##> keepOLD <- as.logical(sp::point.in.polygon(x[["longitude"]], x[["latitude"]],
-                      ##>                                            polygon$longitude, polygon$latitude))
-                      ##> if (sum(keep != keepOLD) != 0) {
-                      ##>     message("problem with 'keep' and 'keepOLD'.  Developers should uncomment the 'browser' in next line and rebuilt, then retest")
-                      ##>     # browser()
-                      ##> }
                       message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="time") {
