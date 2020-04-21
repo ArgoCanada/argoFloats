@@ -9,7 +9,11 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ## ----eval=FALSE---------------------------------------------------------------
 #  install.packages(devtools)
 
+<<<<<<< HEAD
 ## ----workflow, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.8, fig.width=7, fig.align='center', dev.args=list(pointsize=10), warning=FALSE----
+=======
+## ----workflow, echo=FALSE, fig.cap="Work flow of the argoFloats package.", fig.height=2.5, fig.width=7, fig.align='center', dev.args=list(pointsize=10)----
+>>>>>>> develop
 colText <- "darkblue"
 colCode <- "black"
 library(graphics)
@@ -28,15 +32,22 @@ par(mar=c(0,1,0,0))
 plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
 x0 <- 0.25
 y0 <- 0.9
+<<<<<<< HEAD
 dy <- 0.2
+=======
+dy <- 0.25
+>>>>>>> develop
 wh <- textInBox(x0, y0, "Get index from server", col=colText)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
+<<<<<<< HEAD
 textInBox(x0, y0, "Focus on a subset of profiles", col=colText)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
+=======
+>>>>>>> develop
 textInBox(x0, y0, "Get profile data files from server", col=colText)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
@@ -46,14 +57,21 @@ y0 <- y0 - dy
 textInBox(x0, y0, "Process the data", col=colText)
 x0 <- 0.8
 y0 <- 0.9
+<<<<<<< HEAD
+=======
+dy <- 0.25
+>>>>>>> develop
 wh <- textInBox(x0, y0, "getIndex() ", family="sans", col=colCode)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
+<<<<<<< HEAD
 textInBox(x0, y0, "subset() ", family="sans", col=colCode)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
+=======
+>>>>>>> develop
 textInBox(x0, y0, "getProfiles() ", family="sans", col=colCode)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
@@ -71,16 +89,25 @@ library(argoFloats)
 ## -----------------------------------------------------------------------------
 data('indexMerged')
 
+<<<<<<< HEAD
 ## ---- fig.cap="Figure 2: Built in indexMerged demonstrating argo floats within 300 km of Bahamas"----
 plot(indexMerged)
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  ai <- getIndex(file = "argo", destdir = "~/data/argo")
+=======
+## -----------------------------------------------------------------------------
+plot(indexMerged)
+
+## ----eval=FALSE---------------------------------------------------------------
+#  ai <- getIndex(file = "merge", destdir = "~/data/argo")
+>>>>>>> develop
 
 ## ----echo=FALSE---------------------------------------------------------------
 data(index)
 ai <- index
 
+<<<<<<< HEAD
 ## ---- message=FALSE, fig.cap="Figure 3: 50 km radius subset of argo floats found off the coast of Bahamas"----
 # Subsetting by circle
 aiBahamas <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
@@ -94,6 +121,23 @@ plot(coastlineWorldFine, clongitude=balon, clatitude=balat, col="pink", span=600
 points(lonba,latba, pch=20)
 
 ## ----fig.cap="Figure 4: Line A03 section plot made by oce package.", fig.height=4, fig.width=7, fig.align='center', dev.args=list(pointsize=10)----
+=======
+## ---- message=FALSE-----------------------------------------------------------
+# Subsetting by circle
+Belon <- -64.7505 # Longitude of Bermuda
+Belat <- 32.3078 # Latitude of Bermuda
+aiBermuda <- subset(ai, circle=list(longitude=Belon, latitude=Belat, radius=100))
+# Plotting circle subset
+latbe <- aiBermuda[['latitude']]
+lonbe <- aiBermuda[['longitude']]
+belat <- 32
+belon <- -64.5
+data(coastlineWorldFine, package="ocedata")
+plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=400)
+points(lonbe,latbe)
+
+## ----fig.cap="Section plot made by oce package.", fig.height=4, fig.width=7, fig.align='center', dev.args=list(pointsize=10)----
+>>>>>>> develop
 data(section, package='oce')
 plot(section)
 
@@ -113,6 +157,7 @@ plot(section)
 #  install_github('dankelley/ocedata', ref='develop')
 #  #Subsetting index by circle
 #  ai <- getIndex(file='merge', destdir='~/data/argo')
+<<<<<<< HEAD
 #  aiBahamas <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 #  #Subset by time
 #  from <- as.POSIXct("2017-01-01", tz="UTC")
@@ -126,6 +171,23 @@ plot(section)
 #  data(coastlineWorldFine, package="ocedata")
 #  plot(coastlineWorldFine, clongitude=balon, clatitude=balat, col="pink", span=400)
 #  points(lonba,latba, pch=20)
+=======
+#  Belon <- -64.7505 # Longitude of Bermuda
+#  Belat <- 32.3078 # Latitude of Bermuda
+#  aiBermuda <- subset(ai, circle=list(longitude=Belon, latitude=Belat, radius=100))
+#  #Subsetting circle by time
+#  from <- as.POSIXct("2010-01-01", tz="UTC")
+#  to <- as.POSIXct("2018-10-31", tz="UTC")
+#  ait <- subset(aiBermuda, time=list(from=from, to=to))
+#  #Plotting new subset on a map
+#  latbe <- ait[['latitude']]
+#  lonbe <- ait[['longitude']]
+#  belat <- 32
+#  belon <- -64.5
+#  data(coastlineWorldFine, package="ocedata")
+#  plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=400)
+#  points(lonbe,latbe)
+>>>>>>> develop
 
 ## ---- eval=FALSE--------------------------------------------------------------
 #  library(argoFloats)
@@ -134,7 +196,11 @@ plot(section)
 #  lat0 <- median(section[['latitude']])
 #  lon0 <- median(section[['longitude']])
 #  # Subset by rectangle
+<<<<<<< HEAD
 #  ai <- getIndex(file='argo', destdir='~/data/argo')
+=======
+#  ai <- getIndex(file='merge', destdir='~/data/argo')
+>>>>>>> develop
 #  latRect <- lat0 + c(-2,2)
 #  lonRect <- lon0 + c(-30,30)
 #  air <- subset(ai, rectangle=list(longitude=lonRect, latitude=latRect))
