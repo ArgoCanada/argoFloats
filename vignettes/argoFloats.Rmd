@@ -216,7 +216,7 @@ CP <- merge(aiCircle, aiPoly)
 plot(CP)
 ```
 
-*Exercise 1:* Produce the same plot as shown above, however, only include data from 2017.
+*Exercise 1:* Produce the same plot as shown above, however, only include data from 2013.
 
 
 Additionally, a practical use of `rectangle` subset can be shown while analyzing the section data found within the oce package. This data includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
@@ -252,7 +252,7 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 
 # Solution to Exercises
 
-*Exercise 1:* Produce the same plot as shown above, however, only include data from 2017.
+*Exercise 1:* Produce the same plot as shown above, however, only include data from 2013.
 
 
 ```{r, eval=FALSE}
@@ -265,20 +265,13 @@ latPoly <- c(25.5, 26.5, 25.5)
 aiPoly <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly)) 
 aiPoly # To determine it is type 'index'
 #Subset by time
-from <- as.POSIXct("2017-01-01", tz="UTC")
-to <- as.POSIXct("2017-12-31", tz="UTC")
+from <- as.POSIXct("2013-01-01", tz="UTC")
+to <- as.POSIXct("2013-12-31", tz="UTC")
 aic <- subset(aiCircle, time=list(from=from, to=to))
-aip <- subset(aiCircle, time=list(from=from, to=to))
+aip <- subset(aiPoly, time=list(from=from, to=to))
 # Plotting the subsets together
 cp <- merge(aic, aip)
-loncp <- cp[['longitude']]
-latcp <- cp[['latitude']]
-balat <- 27.5
-balon <- -77.5
-data(coastlineWorldFine, package="ocedata")
-plot(coastlineWorldFine, clongitude=balon, clatitude=balat, col="pink", span=400)
-points(loncp,latcp, pch=20)
-
+plot(cp)
 ```
 
 *Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2017.
