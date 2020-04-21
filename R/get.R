@@ -314,7 +314,7 @@ getIndex <- function(server="auto",
         argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
         argoFloatsDebug(debug, "from\n", sep="", showTime=FALSE)
         argoFloatsDebug(debug, "    '", url[1], "'\n", sep="", showTime=FALSE)
-        status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=TRUE)
+        status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE)
         if (!inherits(status, "try-error")) {
             downloadSuccess <- TRUE
             break                      # the download worked
