@@ -52,7 +52,7 @@ install.packages(devtools)
 
 # Work Flow
 
-The figure below illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
+Figure 1 illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
 ```{r workflow, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.8, fig.width=5, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
 colText <- "darkblue"
 colCode <- "black"
@@ -108,7 +108,7 @@ textInBox(x0, y0, ". . .   ", family="sans", col=colCode)
 par(mar=omar)
 ```
 
-As illustrated by Figure 1, the central functions for the argoFloats package are `getIndex()`, `subset()`, `getProfiles()`, and `readProfiles()`. 
+As shown above, the central functions for the argoFloats package are `getIndex()`, `subset()`, `getProfiles()`, and `readProfiles()`. 
 
 Some built-in data sets are provided for concreteness of illustration and for testing, but actual work always starts with a call to `getIndex()` to download a full index of float data, which we will demonstrate later in this vignette.
 
@@ -207,12 +207,10 @@ To subset for specific groups of Argos off the coast of Bahamas, the following c
 ```{r, message=FALSE, fig.cap="Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas", warning=FALSE}
 # Subsetting by circle
 aiCircle <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
-aiCircle # To determine it is type 'index'
 # Subsetting by polygon
 lonPoly <- c(-76.5, -76.0, -75.5)
 latPoly <- c(25.5, 26.5, 25.5)
 aiPoly <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly)) 
-aiPoly # To determine it is type index
 # Plotting the subsets together
 CP <- merge(aiCircle, aiPoly)
 plot(CP)
