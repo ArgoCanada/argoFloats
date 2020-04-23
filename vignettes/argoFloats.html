@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Dan Kelley (https://orcid.org/0000-0001-7808-5911), Jaimie Harbin (https://orcid.org/0000-0003-3774-3732) and Clark Richards (https://orcid.org/0000-0002-7833-206X)" />
+
+<meta name="date" content="2020-04-21" />
+
+<title>Introduction to argoFloats</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to argoFloats</h1>
+<h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
+<h4 class="date">2020-04-21</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#preliminary-setup"><span class="toc-section-number">2</span> Preliminary Setup</a></li>
+<li><a href="#work-flow"><span class="toc-section-number">3</span> Work Flow</a></li>
+<li><a href="#overview-of-processing-steps"><span class="toc-section-number">4</span> Overview of Processing Steps</a><ul>
+<li><a href="#plotting"><span class="toc-section-number">4.1</span> Plotting</a></li>
+<li><a href="#extracting-data"><span class="toc-section-number">4.2</span> Extracting Data</a></li>
+<li><a href="#summarizing"><span class="toc-section-number">4.3</span> Summarizing</a></li>
+<li><a href="#printing"><span class="toc-section-number">4.4</span> Printing</a></li>
+</ul></li>
+<li><a href="#function-details"><span class="toc-section-number">5</span> Function Details</a><ul>
+<li><a href="#getindex"><span class="toc-section-number">5.1</span> getIndex()</a></li>
+<li><a href="#subset"><span class="toc-section-number">5.2</span> subset()</a></li>
+<li><a href="#getprofiles"><span class="toc-section-number">5.3</span> getProfiles()</a></li>
+<li><a href="#readprofiles"><span class="toc-section-number">5.4</span> readProfiles()</a></li>
+</ul></li>
+<li><a href="#solution-to-exercises"><span class="toc-section-number">6</span> Solution to Exercises</a></li>
+</ul>
+</div>
+
+<!-- HOW TO BUILD AND VIEW THE VIGNETTES.
+1. Edit this file in vignettes/argoFloats.Rmd
+2. Do not bother trying to build vignettes in RStudio. Instead,
+   in a unix shell, type the following:
+       R CMD build --compact-vignettes="qpdf" argoFloats
+       R CMD install argoFloats_0.1.1.tar.gz
+   where the version number may need adjustment in the second command.
+3. To see the results, type the following in an R console:
+      browseVignettes("argoFloats")
+-->
+<p><strong>Abstract.</strong> The <code>argoFloats</code> package makes it easy to get, read, and analyze core, biogeochemical(bgc), and deep Argo data. Our goal in making this package was to eliminate the gap between the freely available Argo data and the end user.</p>
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical (BGC) , or deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, and institution. Once downloaded, such data sets can be analysed within <code>argoFloats</code> or using other R tools and packages.</p>
+</div>
+<div id="preliminary-setup" class="section level1">
+<h1><span class="header-section-number">2</span> Preliminary Setup</h1>
+<p>To set up a computer to use <code>argoFloats</code>, the user should first install the following packages (<em>Hint:</em> you may have to use the <code>Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = TRUE)</code> command if you receive a Zero Exit Status Error):</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;dankelley/oce&quot;</span>, <span class="dt">ref=</span><span class="st">&#39;develop&#39;</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;dankelley/ocedata&#39;</span>, <span class="dt">ref=</span><span class="st">&#39;develop&#39;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;dankelley/argoFloats&#39;</span>, <span class="dt">ref=</span><span class="st">&#39;develop&#39;</span>)</a></code></pre></div>
+<p>Note that the <code>install_github()</code> function is provided by the <code>devtools</code> package, so the above will fail if that package has not already been installed. To install it, use</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">install.packages</span>(devtools)</a></code></pre></div>
+</div>
+<div id="work-flow" class="section level1">
+<h1><span class="header-section-number">3</span> Work Flow</h1>
+Figure 1 illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
+<div class="figure" style="text-align: center">
+<img src="data:image/png;base64,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" alt="Figure 1: Work flow of the argoFloats package." />
+<p class="caption">
+Figure 1: Work flow of the argoFloats package.
+</p>
+</div>
+<p>As shown above, the central functions for the argoFloats package are <code>getIndex()</code>, <code>subset()</code>, <code>getProfiles()</code>, and <code>readProfiles()</code>.</p>
+<p>Some built-in data sets are provided for concreteness of illustration and for testing, but actual work always starts with a call to <code>getIndex()</code> to download a full index of float data, which we will demonstrate later in this vignette.</p>
+<p>To begin to get familiar with how the <code>argoFloats</code> package works, we will begin looking at the built in data sets. Built into the <code>argoFloats</code> package is the <code>index</code>, <code>indexBgc</code>, and <code>indexMerged</code> indices, referring to core Argo, BGC-Argo, and a combination respectively. For the sake of this vignette we will focus on the <code>index</code> data set.</p>
+<p>The first step is to access the required packages that will be needed during this tutorial, with</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">library</span>(oce)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">library</span>(ocedata)</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">library</span>(argoFloats)</a></code></pre></div>
+<p>To access the embedded index within <code>argoFloats</code>, the following code is used:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">data</span>(<span class="st">&#39;index&#39;</span>)</a></code></pre></div>
+<p>It’s now possible to process the downloaded index using the <code>argoFloats</code> specialized versions of R “generic” functions, <code>plot()</code>, <code>[[</code>, <code>summary()</code>, and <code>show()</code> as shown below.</p>
+</div>
+<div id="overview-of-processing-steps" class="section level1">
+<h1><span class="header-section-number">4</span> Overview of Processing Steps</h1>
+<p>The following subsections use built-in data.</p>
+<div id="plotting" class="section level2">
+<h2><span class="header-section-number">4.1</span> Plotting</h2>
+<p>The specialized <code>plot()</code> command within the <code>argoFloats</code> package provides simple ways to plot aspects of <code>argoFloats-class</code> objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">plot</span>(index)</a></code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas" />
+<p class="caption">Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas</p>
+</div>
+</div>
+<div id="extracting-data" class="section level2">
+<h2><span class="header-section-number">4.2</span> Extracting Data</h2>
+<p>Furthermore, the <code>[[</code> command provides a way to extract items from <code>argoFloats</code> objects, without getting lost in the details of storage. For example, if the user wanted to extract the <code>file</code> within the <code>index</code> data set, instead of doing <code>index@data$index$file</code>, instead they can simply do <code>index[[&#39;file&#39;]]</code>. (Note that <code>[[&lt;-</code> is <em>not</em> specialized, since the user is highly discouraged from altering values within <code>argoFloats</code> objects).</p>
+</div>
+<div id="summarizing" class="section level2">
+<h2><span class="header-section-number">4.3</span> Summarizing</h2>
+<p>Additionally, the <code>summary()</code> command displays key features of <code>argoFloats-class</code> objects such as the type, server, file, URL etc. See <code>summary,argoFloats-method()</code> further details.</p>
+</div>
+<div id="printing" class="section level2">
+<h2><span class="header-section-number">4.4</span> Printing</h2>
+<p>Lastly, the <code>show()</code> command provides a one-line sketch of <code>argoFloats-class</code> objects. This gets used by the <code>print()</code> function. For example if the user types in:</p>
+<pre><code>index
+</code></pre>
+<p>The following output occurs:</p>
+<pre><code>argoFloats object of type &quot;index&quot; with 953 items</code></pre>
+<p><strong>Hint:</strong> This command can be particularly useful when doing the <code>merge()</code> command, which will be explained in greater detail further down.</p>
+<p>It should be noted that the profile elements within <code>argoFloats</code> objects are stored as in the form of <code>argo</code> objects as defined by the <code>oce</code> package. This means that <code>argoFloats</code> users can rely on a wide variety of <code>oce</code> functions to analyse their data. The full suite of R tools is also available, and the vastness of that suite explains why <code>argoFloats</code> is written in R.</p>
+</div>
+</div>
+<div id="function-details" class="section level1">
+<h1><span class="header-section-number">5</span> Function Details</h1>
+<div id="getindex" class="section level2">
+<h2><span class="header-section-number">5.1</span> getIndex()</h2>
+<p>Until this point, we have demonstrated how the user can become familiar with embedded indices. As previously described, however, actual work always starts with downloading a full index of float data. As shown by Figure 1, the <code>getIndex()</code> command is used to get an index of available Argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.</p>
+<p>The <code>getIndex()</code> command works by specifying the server, with first trying the USGODAE server (<a href="ftp://usgodae.org/pub/outgoing/argo" class="uri">ftp://usgodae.org/pub/outgoing/argo</a>) and then the IRREMER server (<a href="ftp://ftp.ifremer.fr/ifremer/argo" class="uri">ftp://ftp.ifremer.fr/ifremer/argo</a>) if that doesn’t work. The next step is to specify the file name. The table below can be obtained using <code>?getIndex()</code>. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: ‘argo’, ‘bgc’ or ‘bgcargo’, and ‘merge’ or ‘merged’. To further aid the user, the table provides a list of contents found within each file name.</p>
+<table>
+<colgroup>
+<col width="35%"></col>
+<col width="25%"></col>
+<col width="39%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th>File Name</th>
+<th>Nickname</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ar_greylist.txt</code></td>
+<td>-</td>
+<td>Suspicious/malfunctioning floats</td>
+</tr>
+<tr class="even">
+<td><code>ar_index_global_meta.txt.gz</code></td>
+<td>-</td>
+<td>Metadata files</td>
+</tr>
+<tr class="odd">
+<td><code>ar_index_global_prof.txt.gz</code></td>
+<td><code>&quot;argo&quot;</code></td>
+<td>Argo data</td>
+</tr>
+<tr class="even">
+<td><code>ar_index_global_tech.txt.gz</code></td>
+<td>-</td>
+<td>Technical files</td>
+</tr>
+<tr class="odd">
+<td><code>ar_index_global_traj.txt.gz</code></td>
+<td>-</td>
+<td>Trajectory files</td>
+</tr>
+<tr class="even">
+<td><code>argo_bio-profile_index.txt.gz</code></td>
+<td><code>&quot;bgc&quot;</code> or <code>&quot;bgcargo&quot;</code></td>
+<td>Biogeochemical data (without S or T)</td>
+</tr>
+<tr class="odd">
+<td><code>argo_bio-traj_index.txt.gz</code></td>
+<td>-</td>
+<td>Biogeochemical trajectory files</td>
+</tr>
+<tr class="even">
+<td><code>argo_merge-profile_index.txt.gz</code></td>
+<td><code>&quot;merge&quot;</code> or <code>&quot;merged&quot;</code></td>
+<td>Merged <code>&quot;argo&quot;</code> and <code>&quot;bgc&quot;</code> data</td>
+</tr>
+</tbody>
+</table>
+<p>See <code>?getIndex()</code> for further description about the additional arguments for this command.</p>
+<p>To get the index from the USGODAE server, the following code is used:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">ai &lt;-<span class="st"> </span><span class="kw">getIndex</span>(<span class="dt">file =</span> <span class="st">&quot;argo&quot;</span>, <span class="dt">destdir =</span> <span class="st">&quot;~/data/argo&quot;</span>)</a></code></pre></div>
+</div>
+<div id="subset" class="section level2">
+<h2><span class="header-section-number">5.2</span> subset()</h2>
+<p>As shown by Figure 1, the next step when working with the <code>argoFloats</code> package is to use the <code>subset()</code> function to focus on a subset of profiles. The <code>argoFloats</code> package provides tools to sift through profiles based on ID, time, geography and institution.</p>
+<p>For geographic subsetting, the user has the ability to subset by <code>circle</code>, <code>rectangle</code>, or <code>polygon</code>.</p>
+<p>To subset for specific groups of Argos off the coast of Bahamas, the following code is used:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co"># Subsetting by circle</span></a>
+<a class="sourceLine" id="cb9-2" title="2">aiCircle &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dt">circle=</span><span class="kw">list</span>(<span class="dt">longitude=</span><span class="op">-</span><span class="fl">77.5</span>, <span class="dt">latitude=</span><span class="fl">27.5</span>, <span class="dt">radius=</span><span class="dv">50</span>))</a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="co"># Subsetting by polygon</span></a>
+<a class="sourceLine" id="cb9-4" title="4">lonPoly &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">76.5</span>, <span class="fl">-76.0</span>, <span class="fl">-75.5</span>)</a>
+<a class="sourceLine" id="cb9-5" title="5">latPoly &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">25.5</span>, <span class="fl">26.5</span>, <span class="fl">25.5</span>)</a>
+<a class="sourceLine" id="cb9-6" title="6">aiPoly &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dt">polygon=</span><span class="kw">list</span>(<span class="dt">longitude=</span>lonPoly, <span class="dt">latitude=</span>latPoly)) </a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="co"># Plotting the subsets together</span></a>
+<a class="sourceLine" id="cb9-8" title="8">CP &lt;-<span class="st"> </span><span class="kw">merge</span>(aiCircle, aiPoly)</a>
+<a class="sourceLine" id="cb9-9" title="9"><span class="kw">plot</span>(CP)</a></code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas" />
+<p class="caption">Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas</p>
+</div>
+<p><em>Exercise 1:</em> Produce the same plot as shown above, however, only include data from 2017.</p>
+<p>Additionally, a practical use of <code>rectangle</code> subset can be shown while analyzing the section data found within the oce package. This data includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">data</span>(section, <span class="dt">package=</span><span class="st">&#39;oce&#39;</span>)</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="kw">plot</span>(section)</a></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAGACAMAAABFpiBcAAABAlBMVEUAAAAAACsAAFUAKysAK1UAK4AAVVUAVYAAVaorAAArACsrAFUrKwArKysrK1UrK4ArVVUrVYArVaorgI4rgKorgNRVAABVACtVAFVVKwBVKytVK1VVK4BVVQBVVStVVYBVVapVgIBVgNRVqqpVqtRVqv+AKwCAKyuAK1WAVQCAVSuAVVWAVYCAgCuAgNSAqoCAqv+A1KqA1NSA1P+qVQCqVSuqVVWqgCuqgFWqqoCqqqqqqtSq1ICq1P+q/6qq/9Sq///T09PUgCvUgFXUgIDUqlXUqoDUqqrU1IDU1KrU1NTU1P/U/6rU/9TU////qlX/qoD/1ID/1NT//6r//9T///+0Gr9UAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nO19C2MkuXEelhId8lbS2oqHe+dIji2bvHPiyHE4l0tkWyZHuWgtnziZJfv//5U03gWg8KhudA+aRN0eZ6YbKAAfPgBVABrNhi5dGhZ27gx06ZKSTtAuTUsnaJempRO0S9PSCdqlaekE7dK0dIJ2aVo6Qbs0LZ2gXZqWTtAuTUsnaJempRO0S9PSCdqlaekE7dK0dIJ2aVo6Qbs0LTSCMiEiEuP/GPxErwzmylAWYd4VN9UwFPKZu+/kn//2ZBb6Hc8cnp2glQHteHaCNg1ox3M1gh5F+Hf3HdA6BO141iXoy90t/zh9eOqA1iBox3MSnnF8n798sB++li6e5Ana8aRIAUF1i3//AFs8Du1THvFMpXi6h+ePBQVQX50iGS0DCJLVpRSZGLDIjvb5PaiDJ8igc3UIFCeSNCUoyofqtgak7pn9AHiGGrC0/MwF+XeiOoVhbtWjecLkdM3DuzaTA6mOy42rw9WesZ2TU8aeb2Sw/UXIBpg9q+woPg8M6goxYBj9YCgEoSB9D1Wmas1haZhfxgyBcECJeKKS1LqX4HDQL5/iweICi+bdwTLlltSUGL2YKoVtEnjxIniW4yuVBC1jlOMI1IHdDs83t36S74OKdMrkkUlg7rHBb5uwCBigbhRfF4hvi6JIZ/lrSxui6SulAehJSWQDlGrCFw+8F37+eK/7ZNNuLHNgbHJ2EDyjWRsAhIg65vxKF1f2okEYMkH1F1BHgqCXjHejDht+P36O49nLN/+shjXLSiZ7dauU2XtC37DfqRhu+thoRkHUxgd9Ltbbwu+wobhhfPoSBccT5NVpMiap0xf3xyube6PKjgIsoqIsV4lf3q2kJeBe9mstCM78GLnk8RyFFsj4k3d7TwgKwuA67KDd5RRJ/W+vcW4yxsE/XIFwXtQgWwm+Ru5kYwT9boCcbGIze1CXlDDlIVrg4zjEH/7DnTKDPIVQCfgxYCnpgOElVGc0MTwUbCoFwpyPfOoxJUiVHC+ZGN7VkAOEM/P5F0+OYyCjjAPVASCmKkR2nidx/XbwGmGMRjZ+pkhOP4TggVZgVBlq6RIlN+yhcvqzu4sHzKRCtOeuAbPbu57vF9jpV8nEIoyLCKtFUEQkq65lz+cIZ+b+dggIemAXD+M4pQdylUOmVEknyVgCbmfmcAgZExjgjrUb5G95H/z0e5kBZ2mqh51LULp8fhphOwgzKACclCQ0J9JxWPhNeGnQ40NGGPxGDM+ImmTOEpojZYJMEgRVnrzT1g+Xn94/fP7DExjIEynCtux5MUgRGAxpMmpz5XiTwwDZ77QCOL7jXQzL21U5mRD59POBMxPY6ROTxP2aSIEsIPZzrNL//U9Apdsh+A0hg2dNgmqOuJXo9XIyj6rrlB+wv1E31CAVaIH8wvLqG23hr9iwpKcAMYj89AZtZ9qrGnpmjQs8oTKZEPkw9lojbBy53BAfSVNXTiQ/4YgUZIFr+OFLOyo6aAJ8IT3APU+rHtjw9IgE1YOufy3RnaJjoVzwe7m7AkF9cpg7NgD4BPlxO8z4gKXTiFBUz3NEcmG6h0HPBg/Rii6VKZHVJDE3qXbTE47yM89Qbps93/z1+3+9szOxeHeMafPGKAtqJYJOiISJIOjzjTPA+4UEgxFzWmRyiFedu4np6WPmfpicBjTAyAsKBve5Q/x8JOcJmn/GnOt+EO7gvtz9zcefcLd4Z0KFamI3/GCOfUUgKLr7JpNaqXAT6nSdcUL9fpeF31SP7pDWNlxnQFGhzBg9fHY6UzCDJoI/31w+sSPvIgLKOtZnOSJL4pkSFk/JG33sdRYEc2V0z/a89xzrkUUCMVA7WI681JiDaiptLfjum2hwmowFy/HTJAnNmIMaU8Bwz9x+gJkaATYBaJ3m/9P1JWNi+dGEGQBOXPREmDfuTyPocni6pXfcETOG4n4ejDa4UZ1bfuTD7YH9dOxIR18CJBZEZEPYuoew1BBPAkGd3TcR1ZNlJOheoLErCCxRvuW92u7IAlp7RAnMSHBjMP0tu+Yaj+/uj6pLY7YD5b3r0/PHe+GEcHcODuaWwTD1AlkKT9hJ2WUU68EZvxCOF37GAYa6mO4day8qOfzoemeS8QLBkQi0d6sR7bPxBp/vQd9XBjSlLa5f9Ld8UuoIdkjoDg4ixyzXDFDQ7FQBP7Nns5nFaFHxTZPmn7yPMPVgK59OUBzPGgwFPaCZYoD9kuHPYP07mO/AxHb84EgWT+//eWzjFw/xQAFAkKiBEUEnKLr7Ziqe0GsBg6NlkG3kQVvlcnw3muRi3o/vkkgWwXeAoJnpjIbsQWwVUIx35zkYk5ftSA41gusEGxTFs0aL94Z438kZQCYNDRyAwnGdBQgCEZ0FXyRgQzxQaD8II/xK4bBz+hA2TCEoIhMBtd3YYP8Hhg+qG44T47g4klP0Qc56KuzR9CXYATpAM5dah0u5uUWsFTDrI6nbcpXmKFfHmM2fytQEgqLAVCao1hqAGQkq74XZCOrC4Sy3zS8eENcxTBB811O3YHFGctUxkgkExZ+hiYf3NdveJywCNJxSebFReO/JLVZIUMMbv70HHYSmHiDZfqc7V31P6+RfRDKna1F6e880iCk9aB7PvRoyqbwlEDQNcixjwwCspkiqBukwuvz1+UnCCta/DmBPFpmgkWdoouGD7Oo/eBRq3zGWhe0FNSJekpcwyn/QQgRUsEd261Du6L81F0C9OCP8XC8eRh9rzp2lmCgIQW31l2lG+tQBNskwgVRcK/vLp5c7ZnZtGK6yCQTFvU4iQdFpBqLIRMdhRcy6CeaESflDPBzk9S5ot2P9eC+mmU9mr6qJyD/H7u7ILhiIBzpiqKq4dAk8xzrTOflsCToZN4ygdgwoUxESBW7wnpi10Sm9fJILUTv+W3HVGWfpPegUrxPQcraVpYA5MGnFiD7Gp0foJkDTwDU1VOXxh0uOFw9qLcRxotTnb8TTFWKDKlDI5vagIZ68WKPJO/atB6Y9tvLODmgzn5gFRasIzCqtYTCrDVhypJBcdQ3BcoLO8DqNc1NB9IDN1J6+iwfnJjqS6zwMihZqd76jT3w9ALvK+Gp2EJN33AvD1B40jiefMOArF+9/uZPrM7oDpWFoMsVQYGZWyHx+vvy93L7GB4mDnSw8TCaoEywwkVOBJ/abvAa958AsD47YE2JoSq77YubiFckGcNOJy+wXxxVgzk1zlRkdpbB48d2IYpJiLKJoUCZJitrQ0fPvz5PZ/SevhnHAUh/ikuCqR1APz0SqkZMwsKCwPnMFid7nuQY+eiSfIalCgsCfBwb23CSykYKEKUbu2TvQr1J3MyW8eG6MXcluRcxW6GwUdgdaF5PGs8ZDfN3Fi7W2qKo4MO0kSa66XUB5D0rx4v25hwQYDCOx+A1G49Cq1MnDvSAJVtla4yaf3nnOsCB+cmFbMIM/l3tnACb0nRk8R0OUm2QvX9sE4rWG5PyZ3bPxfzjL6OwGPz8/HZF96ME6SXSCUrx47/HTWK2BEdnWgaXr2KAO0sR0+RKy31ImVhBmOxS7POr1szBccMNMJ5lG4WxityM8XtRQcniOmo+qx7Mds81KTDQ8n5/kFNzezsLtnSWN0nxWlfJk3c4guI4IwYtngDvxHLh+IGPBA6JwNIbK/cZFAfv0xRha9aBILxsbELCCOs9PlXDHlQSenLRwCZfF6yvMKGj0oxErthfI4oKv56PnggRFvc5HMP4543rYEbl2KcvXp6i64DEb0NXGoyZEOOpm7sZTTVEpJu3UgSdWHSFXcTw//x1z9nXlt2rocJ5+Z5YRfF1BjrJo0NGN9wCITCAopuVR24AMpo4psQOka96B6J6IIfTgd6FsgB3WRGF4TZN0iroG/R+ZoFi+HtHooriI7QFC4HdV847ZoQsKbw18q709UCIxqCLFio6OZII6kzARnKL1xgbT9TqDk5CxjIj7lNRXnvH5Y5wYg8FAXIugwBSGquN1iN40s4y/t63891iDz+fJ+5krIPDzRnCgHRTLKtZd1CRoNlB86HSR17PgmubSBlXMzRu1JJmvSNiQx4vaPaiz8STa4CGqeABnlvHWXqE++EldwAKD29gYxCSEuQE+vCgaOOa7IgSC6t28tkqKCBp0jMI82SUyy/SHa3ilRrizyFjh0KSjErQEz7gypJ/1RE0vig84iUMUjKCpk/RMaLH16/njT1wrGxkNABflTWfwIPSg4dZgF1DvazhmKzlw3/I2khhzMty2jBSDEzfyb3mmc3imZD1s2DCgrSBmzIKQR3lcjDOR5hPU0a1HSZxUgf5AwtVFDqjZGQiGZ50RTJusl9/EbjdPy4hMMI5xPNP6yYnMlVi50KXmwcmnaoFeQ3SfH0lrqOQkodoCRfomP/7mF5NOWl1bSDyo4r2VEHRlQwdN7Ftp3BwRg7aIoMZoyye/mJPk2Rl2vD+9/+UUW6g4SzX9KAIZahE0otcOfOuOMGFqp/8+PP/mhnsRB6waVQRxru6HJ/XhBNC2UFFBKsyDxm7pBHxDXpwfIo6yW0R8oz7rWsUcDSIdKhLUTLwNoDjgSnlu5gtifHKvjlugh3f3L3fv7iPhD9L9O7heIDlr9QnKnE9EXfioGznZVI4wXSnWxHwb5nxwsUNVwnKqMc0k9TDNTsbMwgRaOkzPggTV6ycH4SH686q1+/c6BAWdUH7OXqyE+x7sBGsvfhPxz+JxQiK6F+yNAzNHwCf0zCaoY8j79n3BwBj1TqflKLjCp6yO7Pbln4a9f8xGafuhpF/DBgVGhbQ0YxNMUk7XeqN4PBvJRLP3kGpEI8ERk+WuP3/5y51/M9Rf3QY1t0oVs5pEQdXsGbsdLVFnmUIGru/AVehBw0krhmq2Ip8JczNRxih5w7n12WV6PKteJuVXP/Pa7gsm5/i69mEHY+J5aoCgDCXolHwlVpGEJRr45/UnwBZ0kgiAYukWEvTgNOJk56rsufgkHLD7gvyJR9iw0yE9U6Zdgk7IWIqg4iw7ZxWsrm0Btbp5IkWfDyiwAd39Ea4x64S3v04/9V7UlkzKbQuRHEYu72+DuWm4JpGJXSh18NQjEo6nCoSJ+0xIkqDSEt2BnOXGzWkSI6g9RsubJPBCVyPowNwSanvWd75UIPXz5et/DNcLC5OkQXn62Vc81exWi0ix18WTmQ8fXuTHILe28nwdvYe1khtF9maRHTT79Qiq10/dhdQg+mxAgyZuJ1WSp+HIL4cdsqBdliYRSX50bUlaMYKuhaczIg0+QQ24rjJuu/C5FTulzkCksiRXJmhp9Cig0TuOvRYZg7yxOJq9EdC1CMql5CUFSw3xCep6Ae0nLCezlA2MRblxkJ9x/eE7d5tS4WqPTWdNgu5TA5IesB4NboedG8AB1NCI4RBhOcnnlQP7/PEff52LGCgyf+qLBia8Q8TTDxCnrnMjbPCmtH7H6a3v3coJQPAii1JxG0JdCfA039JjkQ5tAD1du4/yuoCaOW6QLj2v/sK/Mux2dE30Y2QIqnEh4hneiRIU/+V4majJBPE8XRv7OnwNYE6WbfBYYkK+LRg7LaD7n14pfcy7M9g57lkyakQqib5FXCpbnaBEPMvveOHQjKBDlsDTXtRzRnSj6UwEPWR9TgDb8fL7S8fA5ndMN3nYVXhWiwMaVtJEgi4mcYKS8CTc8cIlMhISFOo8fSEP4Y9t9MwkujpBSUPSy9f3YFOVGFNA4UdVx6UI2posN8QTCZplDMBTEvOCv8/3ap+fSkMTbXuIH/nnmS4QUH5GBr1ZImm1T9CEs738EI8uGafSMjqPhpiHSW9THJYiaIin7fZuyockfmS8N4sNAD19+LuiOe5cVrdNUAqepDs6ALpOm0wK4jmJmEbXcAaCFsYXCvgZFj98vP9DeGcQd8vmuLNJPXpmfYNSPF0Ziz6RoGa5kUjQSniSum6S4hhBi1c+jALPW/EAnfYiXk+hAHQmBRaWWO7oeBbfGdzpu2wWrcJ6eJ6BoKVrx4UEnS0Kz9aH+ShByXiaS/4doWqnzoaS2so9I5hSRTzXJ2hxfKiARe/MFwBoFcVLOZ01h3hp2jHvjn69XvoJlIKUKuK5mOG1GYJCPN8SQQVHmXOHW/riYUnyio+b0Ebx7ASdp7YGQfXqM1xOh3gexUY3sXlz6vTydvG0v4OVD+xMdad4LHpnfj43C6iRYjytx2Ove3juRz1imJ/oe24YTzsP6k8MoWeqn4Wglcz6JSQxD1oTT76fXUzqBef7lmZzs3hagvrzIeiZ6p2gnto4QWvhKVaNR2Kefj68aYIGawvomerrENTDs4rfuQiiKcu7Fp6H0SjgB7Poz2nZ3Cye3jwotJnQM9U7QR2tsazVxFOd/m4+J2Vzs3iSvfgVCBrgWUH1+j1oYfyOJ9SaIKiwjRwDKefFO/ZCB9STjucUrVGCynesOE9QZb3OpQBF8Jyve2WCvlo8dbwknnnlsTMKcj0olKzXuQlAjdKz9KDIhebxTKQKnmZLEzST8+gzYkkblNv1cJtx1uuEgFbcXYziOVf3MnuikixaFU9IbeRZpEp4MpNQEs/cJkDm5xhmNUpQ87C0kZzXuSpBZypfn6Dnw7OIoJOUgw40GT+nG39OO0PQ0Kj3VcrnuJcmaATPdgkaeS7+NeIJ8zfPBo3EQ/C03/gihfOsG8XrpAGaGh4ieLZL0NjNjucErake1J9aJnmdtQCN4rkZQLV0PKdopUzUk7xORio01oFDPVsGNCodzwKtGS/+b78G4w/d6yzNNGphiOtxPOcv2SyAaM6L73iStSa9+P2tM/6Qvc5iQIEOONuQQLNJQJPjcMdzitK0F7+/zR2H4aioAKj4ph+hTePZHqAsSdCOJ1lnmqCixTvzdkf27h+u3acS6wNqn4PdHqDJbHU8J+hMEVS4nRA9fv7S9W3odVYGVMfL4TkPkfUJ2vGcoDNJUF/G4enlm4fQ65wNKHtEAM3jCVMrSieSZjWhedodzwKdJIIqr9N5U3FlQJnF6tUAGpWOZ15niqCH4MAv8XzBMfA6IRrMuVEOqG8mJedDAkAnnda8NkE7nhN0Jggq3lXIHx7M63ABhdBMBvSxBFDb1bQMqJKO5xSdcYJiyxwxHUsAWiQ2YTI4axO040mXZQjKVgaUNQMo8JhD6XiSJYLn+gS1Ooh4ctOKPbLGAZXS8SRLhqDIY7IxJRBQ5mBTDmjhVJ0PqEqyZUCldDzJkiYoRUkc0KJMzwDUokrK9bA+QSk6Op6gHLUJ+rg+oKXpBIlWRnQRgnY8z05QG3I6nnRwXi9BXzue8whqfpIBfSxa7NggoHQdHU9YkE7QSsIm5iRU0vF0y+Fdp2vxAIWjS6uAsglxissxV0nH0y2Hd32CFm9WmASojTUHT5hQsSPRKkE7nrAgEwkKnuOuBGjZcnEe0KKF5CUBjTwXn4nd8YwUJP5cfLmWBgA1KZU9XvgGetDXimddguYzPQ/GDQA6QUnHc2iGoLXwBJ7FeQAtp1BeS8czUeLJBGWwcB3QOVo6npUJKpScGVBQq6VzMc0StOO5HkFzuX79gE7R0vFshaD18AR5OAegxQwqUtPxjBd4EkEdO/7RmSR+G4AWFzinp+Mp9dUm6KO3sFYIaEU8xYxuQZIg4ZqAuhU7X0/HM1bgOgR9jCcQyUcFQEtSdBKuhqjT21VR1PGMpT6RoPGl34TCqngWpeim3DBBO56x1KcSNLqy9voBdblUiaAdz0jqiUQiZ6pTi8cIkSfJyoAycupKOp4JXdHU44nEzlSnlo8R4k6SdQH1i1GstOOZUJUvbiixM9Wp5Ss8T3W6zAeUsF8uKEZxLXU845pSxY1GjZ2pTixf6XmqMyQPRg5QjAalkk1cydvGEwtVhGdCUeRMdTKg/kLJJgAt5l35OPem8cRCFV2d7MWXlo8F6yTLAooWKA9owINiSEoDxhJ+G3hioYquVvfiEUBnPi9DShDfcJsGFFsXWYCgbxpPNwD4i9+L/7Yy1ev0GqC4shiWfoKRttsCQd82ns79OgSd6nUigC4szE1tFqBmEieKix+5NODbxtO9zeLILe/F+0PE8iKLay2zoEyZXRAAbvOiIRPWujZHdvnDV+OXlzvGbsc/txkAO54AT3tTd8qR+Y/lvfj1AVVurbHMJgLKrIHHHFwOO/FxvBp+d//8a36u9/PH+2FPJOjbxjOMCgl6tOf5T/Tinee4S8q3NqDIfgMMlQSg0PeIEfR57EGFEflv/24IOv+5+ILibR5PXWxzAXpffFQRr5hA8FzAi/eN7BXE3045DVCoASco+KD3oG8az8Frj063Ch3HFbz4cwDqpmOMKC8XmMUeyWN9gr5xPJFLNtaemaOoV/DiEZNjccEAlaZUDtDIVuE4QTXDqAR923hiaTjo3CiKruHFnwFQJH3pQDrrgsYUgvnDDcE4QYWTdLOb3IO+TTxjWgOU1/Dizw6odkOLAMWnveMEFS9I2E2wQd80nhGlUo5j76na7xpr8SDpM+Gp3FCmF0I8QFlBBhFcNEGVkAn6pvHElWrh743cDSieaRt0jAjfeE4wL1gDgKrRhsUBjecPIyjEgj5R/7bxxJUiQiIo7zMmeJ28JOcFVDd2nRtzVWeK5cpTzDsKQd8wnqjOEjyTBOXG1xSv08xynRlQkB11tRjQRQj6hvFEdZbgmSDozeWnX2HvNy9P/mx4xlxJu8AsVisS+VuAoG8aTyxyEZ4pfE/X7+71ChQZUH+9bGWJJQ2XM1ITIvUJ+rbxxKIW4Un04rsEQgKw45mVeQQl18DC4VuMsKTut4dnJ2j1CEvqfnt4doJWj7Ck7reHZydo9QhL6n57eHaCVo+wpO63h2cnaPUIS+p+e3guCX+XLrOlE7RL09IJ2qVp6QTt0rR0gnZpWigEPZqn6zMitpTJ0PBvRPhJHVeE8PwhQD9oNmt8pxsthYsHWgp06XgWCIGgzx/vnSe+4gH5E3oyNPwbC3644g+klIcXJyh8+UCIwDcS7Qg5Gl6+vjcFLkyBLh3PksJTdot9eJIJZeTlm9+OLV6Ghn9TcQ47WvgRUEqEl6//ckfJkcSOliWydDxL8CQQlD+wsC/qlvmQJEPDv+kIpPCHcXigRDjsxiGJEOH4o+txlCRliS4dz5LCN0FQfhYXMfdu0EyEsbnSAB0+Pw0HSgpTpONZmaDlo9wzbUgSu8yJ/T9pDONPtTLioEceJcnS8aw8xJf7CRzQcotY3qIZ9WPro5ncB5JRz1M4EFMgS8ezspO01LTIXrRH4qTFbvFpEWoKdOl4FkifqO/StHSCdmlaOkG7NC2doF2alk7QLk1LJ2iXpqUTtEvT0ihB+Rsx3t2bswqdE7eQwJefPiBHd3Yxsl08WyXolXOau3OoJhbYDVB50fwVyHbxbJigIy6nD3+8Y2w3tuHLpwPfhnv60xu+Gfd0rfa/XqnAfPvC1elnX7E/v2O7TtBAtotnywTl2wu+v1J7Fcd//Mv7B7m3dhjxG1u5gE4A+v2Ob5Lg/z48dYL6sl08Wyfop2umzs0eW/k7uxVmUG9u28nAp+sLseFH/usE9WW7eLZMUD4kCSD55/FC7ICBgF7ZwKcP3+3aALRN2S6eDRN0HH5GnPhWML6TcLxy1C1ebMi9/PTFvXy5jgD0B4H2+QFtU7aLZ6sENdMie/7mluebyx9u2J/c3Kp9rphRf+RzI+cHtE3ZLp6NEpQk3hu2+jTTTGkKz1dBUPftWH2ifqY0hedrIGiXVyydoF2alk7QLk1LJ2iXpqUTtEvT0gnapWnpBO3StHSCdmlaOkG7NC2doF2alk7QLk1LJ2iXpqUTtEvT0gnapWnpBO3StHSCdmlaOkG7NC2doF2alk7QLk0LjaBMiIjE+D8GP9Erg7kylEWYd8VNNQyFfObuO/nnvz0pxY6/CeHA3Md9umSlE3RFgh6vcud2dfGlE3RFgh526pUyXYolga84q4c/7g9Cd4JOJ+jN5adf5Y7m7OJLHF95DIo7JHWCTicoP+Tw3b14TWGXconjq8Yi+eHXShdPqLB3iUkxQXUPCt+o6Gl6vrk9vTdawctBmQyL1cRgYmM3dOPgih/QVFVULDv22mCvxMrPD8zSmQWZ0rr1zz8oJEDwNKBRwbx49qjFZv9xnhBytJZwlEDeWDKj5QTlJ0ox3wZ1Yxwun46X3+mXLj5//IkJLUgyAD6a7ARUywhWWvcyQlBIN33jeOEqvgYBJeeZthFgbv0sq+YxiaCBFx8SdJhJ0Nb4qVF65ByVGNs2iGWVQNBs7IM4EW3Hj/HjP7l55fioyfpTVQ/C4ooZjMLCWGgKMa4fx/5r7J15kCN7Ykx+ZcrMVBSFPa/4vL4FMf3WQyHoYed58RhB5zCU1mRWEEFNkbFH27hNGbGsziQoDH7g9OGpKmOAix0JufD37o4VK6cD/CPT4sIVC0YIxbYTDrODFCFSoKM9AOtwZcoiv+q+U8d1EgNUdDOh+9HSUmFePCDj/C5UdFTqszRTiwtD2mBykK9DUNuFjKYikwSVYyXkEjcjX+524vvx4iHQE0n7IILKyLclWSxgqOrkn/9KZ1R+3V9Fo+iSqJgizn4XpjPLi69JUMBPtGs6jzC/iMAKDcd4pG3RCar6G430WGmMM4pxDjJtYYkgn58GXanPdjCFQyqWBFDssjqeK6cgmFat88AR4N8Z4920vgzNiFhMENwJOYsKzKGXgmUyQeGPObmqKbrZ6ExpkxTNJzZOUm1QNQsqh2/uHr3cyZ5zJ6o/YJRi5kE7ryYLTPsm/rjJgOLCcyndciFFkpndjbTkqkWvLr8GavzIKqbk9q0TOJpauTgEfdTNdyJDHbbOyVVdCQjqNCq38hnSqdISI14f+bmTHzjVoMlgfsYszvJcWq3YZf0T/AW3HfPTCRokQnOS0JxidfW6CAr6y5Cg0oEyQbGc1yFoTE7XO/F5LNjD43NyDsbAX7SCBFLjqhpcYYAjOGcAABWvSURBVGxw0QwaXm4Z2uXS8olxqkIX2o6bBIfzSPs7I0GN6+x4F8WJBXZqlGt45HwgE9JvHHYA96dTjXrX858m7nBnUpxN0Ga8JGZnlAyQMYIyl676KjE9SujTteInmIciJ4cal/MMgGjkpI0OJilgxqoR1DoR8/n5iHX65xBZGtvekcIZfjK0ZSXKge5mouTOOBju7ChRnEUdc1FdCimVy2HCbsyalDAnlZ0kyND59GxmiPdHPKYZC7Jq7hAJiu9mqpZ1gqSHddqYEHhC/r1S82EJgqqVoJnUnOtj1hXM9nf4CfsaZAY3XhBnN1M0tQbEr49EJoGHHr1XWMRFetBHtTI4naAyaw158b74TVAvyGlbgN6Dvl+BoDS90UXPjLo0jVPcTSir2oN60+1kemp+NuMkBeJ2nsqgt6WmEBTdzRR41XVyTapnhqTrOwVm/ghM3qSLHjpj1vFEObsMQeeIncdpxUcKxPSToGoco3T2Uqf2NMF3NAxVLSUOAj/eqSpbMWaTMSjhDZUUbpmem6BO3hkcHNvuPzG3VhdIfvpR4trwZ5K0L4HOv6jOJmqnuy3HTpKbvirDVBahC8JZ65L7eDAnjJ87RA1I2epgXgCaWGZNpqenzf5oyYt3JcIJWybSEB/x4vFEUH2Aqw5l7Q/TCYPbCZYy77bT03kZYFhHK+/HTFQ///59pyDzCKojT+Snk6NApYNuqxLO2zO5IcEPF9VQwYsvbMjhkhE2+jq9RGAxQmNTf2DjPr4w5MYryG4bBFUOkZu5FueafDGt3J/GmNKDLu/Fgz1S+P002GEnwoaIK8Xw7yoX7hdu4Vw8KFfxIgDhbATVVat7SRcc6A83PNukhnOk/AQbFPXi62bSZmKeYp/ASJ88hCZn7Jf4KjZgqQ3NejOWQGR3XoIqdprvbuFtnbPHhp2lIV50AkGdYPUHDdjF1UcyO1eqL2AF4z8+/+HJ7MJSPB2OV0Y1pMR0XOgEZdBsQ4YIl8sNjvIyU3jvSSTo7LX4TE6rTaNG9EOPBq+qWAXqi+p5FbOxX23Kcrrn1XpQJu1N5xmKwLZJbAduQ9SKe3y9bLYXXy+rq3mZk9PZiw5UP1YlHx648nK+5hDPux5AV8SICZ2OOdlbQLIza6t68bm8toaeKy93coA3biLflKUeETAyrwxkgkIXKOwf4ZTNY6s9aKbMLXrxbYp+GsBYoPIhwIP7cMDKBHXZGk6tGbFzTXPyt4Ck7E8aQVEvvt2Ji9piHqPydlufkaDM2+3k8xPmytJ0Tv6WkgRFJ3rxOvTbISiy25o/Im8MUiUzCUrzkvRyoP4drlIYvco3bLW+4gztBJ0kkpcHFhyQMrcHLaaoXCKSX01dOhOgTq70dGmr9dV70JVk9hCf9RokO+U+tUeHoOC0h0jNNDrCD/Gxg7DU+Xwj7Rhnla8T1JNyBsSOXywgqFk4wggqJ76bXjVCBS83gaDYo26doL6QCIofv5ifefGIaQlq+tAW/fWMzCcoctxCgqAbg6eWkAh62KHHL6YJClY2A4KC2aRXQtDlbFA2Rd/2hUDQxPGLiVkXMDnvUJbZPeimI92WRLpQPxRNZ46g661fNiKU4qaOX4zOuoAN5+CimOBUc52PLS5pFsiZCPrG+tCJzDAz6WmCwqUh77qc5dwuPYfIhpHle1ByTjctRG6AF02I2GmCRqdimN7VtMmxXcrqNmhkUeOVC8UGxabtElxEa1Azcst9p5T5+0FRpTmCvjUhFJvvPiH0oLFpGGZjbhrzTtBVhFTsw7v/ESWoX1/o8zq2x0SOD9lYDXSCriK0Yr/cvYsQFG5SQrwip/dUCW8HcXSqNmiRnaBLSLXtdsF0PMLPiimvKSxofEgD1BcjBNUWPPIaBCd0J6gntQianxHd6ipzzFv3HvBTYWNLnWYBLv06805QXzpBcxLf+cns5lZbtqWG+OidV07cSgQFDxtF+blVIBNbDcxgX0LQfWqAt4ZDjIf4DfwEhTLZRI2kNmqMdtPffp08/NylJe4abZ6gmQdbPACjBE2P7TYpIkGxNAtlE3scE1l8ubvd3zq768LYupKSfaetyfr5X0MYeBog2/riPei3BS86SBE0/nLlicvVj1swuxKkGZv8/jZn05setICemyVo9uz9kh5Uvscy6cNPICg4ppMqctSbFHVFyfWg6VeYhTbo6yRopozO9KgfWX+ZPcR3gvrC5+7SLb7kcaRHbaNtnKAJb94J7Ec23xYZ4mfsv9sEQWc+A1P4vNxmqSmFpfgZnI7iR9Zf5FR99SF+8gY8f36sTYkTFNu8hEQvJOgSeV9NVFUW8XP2POjKBH1sfIt+sgfd3+oTG+PRC/hZO8+rS4KgyPln+O/ilSQyQWeN8NK/naZgFUnlTkBZ5sWnGFo/02tLYogPSzd3LZ5O0GnCtlFFKYKKQ50iXnxkx0TQv7Rd+jJJdaA6CIu+PXrOEM+id+YLQ4oxS18FHZjaVOZ4q0/OMqV7UNb0K+PKJd6BAn4WzIMWprUOQZGdLjMVVtCBqV3Oi1d7KWrldHIWZytgJR1oJ2gFHZjalA2anxdJL67ohzfrZ3tNYXGGynVGt3yElSTsjHqHLix6Z66wsBxzNVbQganNZe64S0eP8vPRErQVik7LB0vZoGEDjM+D+icxoWfUn4WgNRSfi6ATvXiwdayNedDp07EMHsyHdKHFBPWRRM+o7wT11Oby5pygjkRPEdSRqtmeIJPZaQTnZxAj+vtw695Bz6hfh6BBWeZrXqaGk5a3tEF3mfjFDD07RaeItDJlgYr4mZsHhTYoekZ9J6ijdWbW0vuTmRnhG6IoLRvKDXpE34xEIWhpeqsQtHAwoOk8Qw86ayXJEHLTvWiCoJHSpG1QB86cF+/YX52gnoi3frHMTH3GBpVh/JFe9KvwPzaw0gsyrlagXlnuB4v8tvrQj1ho5e4F7xiLQYL/RuDMevFLEbRw0Zao9Ew9aDZ+gqImVG2CMoegMULGKUcmqJouS9WnbpAVvfhO0BRBn7/87ayJeseW2j5BmZkPRY0VyV7MirG//ZXjrBcPCVpxd3F8xmyW0iUIOrtVFhI0NEQ3Q1CbZzXQ+wgwZQPEKtr8Dvfe5Lz4VQk6U/k5COpZ9bG3fMTo6VWmb4puTAbJ1gDB7IRNwknC4FmeoNEnV2ZqXYygugI8Caz66Fs+yghq6mCLQ7zIfmBnKUIVElS8DN3Z/03x4mkETQSM+7WlyiNqz9SDOj8PO/QtH3GKesltlaAy934llNlytgf1p+pJXnwtgiaWVkqVR/SewQZ1t9+k3vKBspOFOG2PoHCUN9tbWaLs8R7UF5IXz0gkYsg3qOd1EPT54/3+Fo5Jqbd8YARdZubhbMJsudDBPUdQ/yQhuhdfSgIWIWg817MZusyzE9kh/rCLWPWZWoqus2xZ3D2+ZIKGJwmRvfhiggIdDF5OSnsEzdg1L1/fH68AQY/s3T9c2yHfaIjw83UTNP5iKD+W/lJwkpBXJRUIKr5pIzrNz/YIynKG9/Hyj3d2N9PI19P1bZkX//rYGZR1Wg/qzIPGWnxVgtrnirdHUFq2xsb/8s1DkRf/Kvk5l6DBSULRFl+XoDpejp/zGHY2glo+Kps+78W/wtEdmZGnE9SXaIufS1D2iBA0z8/IPr8yaYCgg3Dgj4FNX7MdtirYhPxsgkZbfD2CMpurN0DQqAq3lK+PoPgz8VSCilll56mPWIsH7GLOjXKC+mZn/nhMJ7FXTNBXyM+IIUMk6J67Ry93u4KkXIJCqk0maPZ8YUf9Jgg67XS7LfMzlveYJ0giKLZsFEtrCYIWiU2YXI0NePFxFYCeNG2bYHN8rncVgrKVCcqaISiYgZirwxKUFnuzBE2sop2foFYHkZ+P8jiY10vQbRCOKDg/E3Xsx5cfRRYTQlDmcK2coIVTn37mdeFeJUFfJT9RPzBZx358empxghbV1gyCWpaScj10gp5PymdAFyHo4/oEncSKSawuKUdNgtbKWVOyOYKSFo+qMbQT9FyCzKStSFDzk0zQssWj4mKUpNoJeg4JJiqINdsJOlHYxJygSuZrala8iQpyzc4nKBytWyUomxCnuByTYtst9awK1ZsVzw9cg6DBQjqltmysOfyECRU7Zi0RVCvRD5PVz18rApazaTsudPzCZOAzNFUIWrb8ni9G0eTMkgSd83ibivmKGQphItasUjAhuQYIajeOlE9ttdiDOspeD0FB/6HpSa3YUFVRwkAHRtA8xvNoGZbjdRB0iQyeUcyAYg4Mo1es0UVLGeiYRNBa/CTubKpf/+VNMqnFUbflpSTn8Vx3YKC5G9UIyqDOTtCJWlx1m2boYA4HY7ZyZLEmVCzUS8mFVXJmgoJWUjq3tQGCzs/X+UROSDDDT2t3tkTQHMadoK4W8+UVjPGGoANk5+OmCFqPnyAP5yBocYvMqDFftk7QyOguIaLWq6OYlg2rBabK3hpBiwuc02O+VFDWkFDXN716dVRNS5jF2khSX0V+grm1cxA0DihNj6dxw12oI9D6LJ6ix/GsQ9BEAmj0GkKxAiv7IM7oMUuR/WazyLCzsrclZnqexV7iFa9WX9WEhGXihQmgsavKqyCoPYrMOBubFbMkriGiTIXWImjxg/d47JqyNkFdsIuVoi9R8LXaJZg6eT2HGNPLmWYqrXwCQSNn1FPp4jsC1WUeQdlcyacuBX2Jgp/HV0FQVS1W1O9JtRkHInZG/dQUluLnXILmY6dVlwZEX6IAFTGQxS3zUxM0qKciBpQTNHZGPTkFVhx1mmyFoNhLFBxNTg43S9HE+lEJRek9qH9GPTGF0vNpZ0i+LlsgKPoSBVeVmeaWv2bm7EyS2iFSlaCxM+qJKbBg4am6bIWgMBZmwFqCgiXtzUmMoNAeJVTmZC++NAkWrDtVF3egjOf7zAQdG/xV0ga164RsGDY7GWrmQP1acj7KKnNYwItHCDrz+SNSgvgG5hYIyk2m48VDgqD2G/OubEiMyx46Sc5HSWUKfdGUpnrxXodWkKe5wtzkkCJVJujLf/2zfyHHVy9D/W2MoDBP1hbdGkctC2MErXayyFQvHiHowsLc1JYiqA35u3vri5f3oOItac9/8T5PUPjMRHH2mhC9K+sxQdA0Q5f34v0hd3kxTm9s90hqV8kUgg4v/+tX9Pj8nSkDH+XzicsSba77hPxMEHTK8YuYTPTi1yeomiaIn4BQhaBOwH/7z+QelJ749twksAaPvAk+8j2sS0dlYcqFkwRBGmsRFNm/wfxMVCPo/30YvtXtlrjgGdGJr5tumKDYNH30h1eXrsp4alO9eN9pWUH87ale0SYQ9MguP0H30Al4+k//5T/eqVeiVOhBbcNHKLoljtpdTPlZ+tLNRgt48ecgqFd4iVaQC8x9ihH0yi15iNS+FkHZIziz3d9qtymGJlz4x+BaZDhewYsP3OoVBCOo2v07lBL05duRDfr17pKgh6uxK734b7dK0elnX7E/1++HrUVQwU/R+yjbzeHkltaUwLalonVOlBxrePFnICiSvnyTsrPOaiZvQP7s9+PPn/6fsWcEQb/fDc8f759vDEG/4GvpqmetRlBFSNiLMifE3FTWEjATX7YQj4bylcbTm+zFn52g2q2nEXRk3MvfP73c/Zi3SE7Q64sHMc7vDUE/PMl/KngGwLywwV13t3t9vXCb6ERtB1pIUPSSr3RCFor4QQlfXaRbz/TCkkdQBjNoATjc8sn0/3P//OtB9aDf7ZYnqPwEM/OyghkSqnGBMz346F1yiWaDBo8oFBOEkcLXFkVK/RhFlKAMAnL68C+jPbOXdqgg6A/j+K6GeCZDLERQ96KyRe3vOUmsJ85zBmitYNeCPSW+1mh66CMKpQRZfJdyLgMDGGi8GXywXu8QdPjd9bvb4X8+PP/VoJ2k4+XT6CT9cl2C2g1r8td2CJqrFPSi79z7WqPpoY8olPLDOCpnEnditJCgQn53e+LLmMcrc0Usooc4LUdQPTG6GWpKya7jROaV/JrztEbTQx9RoFDkjPyMTrIZg1T4zoCqtthfSSdJ2Tb8FXw7BJ2XihP16B2b4e3IJIJiU4RQZyI95BEFCkfOSdD4QgU8tQYjKLlSFokM1pa2Y4TmKjxGUKc3menFdwlkVoV2CWQeQck1sHD4FiPMkTmJnSnuwsl2glaPMEc6Qeep7wRdWDpB56nvBF1YOkHnqe8EXVg6Qeep7wRdWDpBa6rv0mVx6QTt0rR0gnZpWjpBuzQtnaBdmhYKQY9M7eDJidiiJ0PDvxF5uRN7hIvDD8M+CJrNGt85SEvh4oGWwnw5ABzWjAvRoYlTdWQpikYg6PPHe+cJunjAm7FyZWj4Nxb8cMUf0CsPz/dqjk2AEIFvzNoRcqTPUaKkMF9OH54MDmvGhegQI8KqI6daFo1AUA7C1/f5cC/f8BPcZGj4NxXnsKOFHwlKifDy9V/uKDmSwNGyNFvmJMS7wPIa8gSgQ45rq44csSwagaB8k/m+qCvnQ7wMDf+mI5DCH8axgRLhsBtrkBDh+CN+2CwpSxWE778loAxl/9c2w+R0ATrkuLbqyDHLojVB0LGzp7LBDZqJwI9gIBF0+Pw0HCgp1JDjJR+mJxL08mlyJiE61Lig6shRqxO0vCd/pg3xYtc+cTwl2QQHvhGWaESQrY5Zwp8lFZ7KFT0hHpdX9JSxVqQL0CFGhVVHSVZI9SG+3BbmBC33MOQtmpM0Nj2aC3MgOUk8hQMxhdly5L3gblpCEJIJSR8mOkmw6siJVneSlppm2osWTJwE2i0+zURNYb7s500z7dafZnKqjiy1p5m6dFlfOkG7NC2doF2alk7QLk1LJ2iXpqUTtEvT0gnapWlplKD8DSPv7s3Zj84JZkhg540c5lyvLq9AWiXolXM6vvfCjTCwG2DpXR1d1pOGCTry7PThj3eM7cY+8fJJbMk9/ekNX205Xav9xFcqsHgjh3kJRydoTGIt/fThh1/AMagdAFsmKN/98P2V2vs5/uNf3j/IvcrD4cocH6/fyGFewtEJGpP4UHT60AlKEEPQT9dMnUM+9prv7NaiQb0Jbzc4b+SQ/zpBY6JoKFbu1WgkXgTFBx9uyPPtRQf2469uzfB0bmmZoHyIF8Tkn8cLsaMIEtR56dZ3u07QvEjk7B4tMRo934wAfxLIcXDfP5yub83wdG5pmKAcqQ/f8X1kfLPieOWoe1CxS/by0xf3cizSb+ToBM2Kbdqi9avGvocE5Tub9rdmeDq3tEpQM82052/Ceb65/OGG/cmNAhV1ko6XnzpBc5Ij6Nj0FUGbGN+HZglKkgDMTtCYOEO8Ho3MED8OWV+IkX+8oIenc8urIKj7trE+UR8X8XrLK+4k3epHLsSLoEYT6eZyHK1+/BfcSXr3k+4kdWlHln6eepZ0gr5xib0IqhX5/2KwVi1Rxa+hAAAAAElFTkSuQmCC" alt="Figure 4: Line A03 section plot made by oce package." />
+<p class="caption">
+Figure 4: Line A03 section plot made by oce package.
+</p>
+</div>
+<p><em>Exercise 2:</em> Create a rectangle subset for this transect and plot the positions for the year 2017.</p>
+</div>
+<div id="getprofiles" class="section level2">
+<h2><span class="header-section-number">5.3</span> getProfiles()</h2>
+<p>The next step within the <code>argoFloats</code> package is the <code>getProfiles()</code> function. This takes an index constructed with <code>getIndex()</code>, possibly after focusing with <code>subset,argoFloats-method()</code>, and creates a list of files to download from the server named in the index. Then these files are downloaded to the <code>destdir</code> directory, using filenames inferred from the source filenames. The value returned by <code>getProfiles()</code> is suitable for use by <code>readProfiles()</code> function.</p>
+</div>
+<div id="readprofiles" class="section level2">
+<h2><span class="header-section-number">5.4</span> readProfiles()</h2>
+<p>The <code>readProfiles()</code> command works with either a list of local netCDF files, or a <code>argoFloats</code> object type <code>profiles</code>, as created by <code>getProfiles()</code>.</p>
+<p>The command can be useful for analyzing individual profiles, for example:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">sub &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) <span class="co"># To subset for profiles</span></a>
+<a class="sourceLine" id="cb11-2" title="2">profiles &lt;-<span class="st"> </span><span class="kw">getProfiles</span>(sub, <span class="dt">destdir=</span><span class="st">&#39;~/data/argo&#39;</span>)</a>
+<a class="sourceLine" id="cb11-3" title="3">argos &lt;-<span class="st"> </span><span class="kw">readProfiles</span>(profiles, <span class="dt">handleFlags =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb11-4" title="4">pressure &lt;-<span class="st"> </span>argos[[<span class="st">&#39;argos&#39;</span>]][[<span class="dv">1</span>]][[<span class="st">&#39;pressure&#39;</span>]]</a>
+<a class="sourceLine" id="cb11-5" title="5">temperature &lt;-<span class="st"> </span>argos[[<span class="st">&#39;argos&#39;</span>]][[<span class="dv">1</span>]][[<span class="st">&#39;temperature&#39;</span>]]</a>
+<a class="sourceLine" id="cb11-6" title="6"><span class="kw">plot</span>(temperature, pressure, <span class="dt">ylim=</span><span class="kw">rev</span>(<span class="kw">range</span>(pressure, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)),</a>
+<a class="sourceLine" id="cb11-7" title="7">     <span class="dt">xlab=</span><span class="st">&#39;Temperature (C)&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;Depth (dbar)&#39;</span>)</a></code></pre></div>
+<p><em>Exercise 3:</em> Using the profile in the previous example, plot a TS diagram.</p>
+</div>
+</div>
+<div id="solution-to-exercises" class="section level1">
+<h1><span class="header-section-number">6</span> Solution to Exercises</h1>
+<p><em>Exercise 1:</em> Produce the same plot as shown above, however, only include data from 2017.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co"># Subsetting by circle</span></a>
+<a class="sourceLine" id="cb12-2" title="2">aiCircle &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dt">circle=</span><span class="kw">list</span>(<span class="dt">longitude=</span><span class="op">-</span><span class="fl">77.5</span>, <span class="dt">latitude=</span><span class="fl">27.5</span>, <span class="dt">radius=</span><span class="dv">50</span>))</a>
+<a class="sourceLine" id="cb12-3" title="3">aiCircle <span class="co"># To determine it is type &#39;index&#39;</span></a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="co"># Subsetting by polygon</span></a>
+<a class="sourceLine" id="cb12-5" title="5">lonPoly &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">76.5</span>, <span class="fl">-76.0</span>, <span class="fl">-75.5</span>)</a>
+<a class="sourceLine" id="cb12-6" title="6">latPoly &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">25.5</span>, <span class="fl">26.5</span>, <span class="fl">25.5</span>)</a>
+<a class="sourceLine" id="cb12-7" title="7">aiPoly &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dt">polygon=</span><span class="kw">list</span>(<span class="dt">longitude=</span>lonPoly, <span class="dt">latitude=</span>latPoly)) </a>
+<a class="sourceLine" id="cb12-8" title="8">aiPoly <span class="co"># To determine it is type &#39;index&#39;</span></a>
+<a class="sourceLine" id="cb12-9" title="9"><span class="co">#Subset by time</span></a>
+<a class="sourceLine" id="cb12-10" title="10">from &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2017-01-01&quot;</span>, <span class="dt">tz=</span><span class="st">&quot;UTC&quot;</span>)</a>
+<a class="sourceLine" id="cb12-11" title="11">to &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2017-12-31&quot;</span>, <span class="dt">tz=</span><span class="st">&quot;UTC&quot;</span>)</a>
+<a class="sourceLine" id="cb12-12" title="12">aic &lt;-<span class="st"> </span><span class="kw">subset</span>(aiCircle, <span class="dt">time=</span><span class="kw">list</span>(<span class="dt">from=</span>from, <span class="dt">to=</span>to))</a>
+<a class="sourceLine" id="cb12-13" title="13">aip &lt;-<span class="st"> </span><span class="kw">subset</span>(aiCircle, <span class="dt">time=</span><span class="kw">list</span>(<span class="dt">from=</span>from, <span class="dt">to=</span>to))</a>
+<a class="sourceLine" id="cb12-14" title="14"><span class="co"># Plotting the subsets together</span></a>
+<a class="sourceLine" id="cb12-15" title="15">cp &lt;-<span class="st"> </span><span class="kw">merge</span>(aic, aip)</a>
+<a class="sourceLine" id="cb12-16" title="16">loncp &lt;-<span class="st"> </span>cp[[<span class="st">&#39;longitude&#39;</span>]]</a>
+<a class="sourceLine" id="cb12-17" title="17">latcp &lt;-<span class="st"> </span>cp[[<span class="st">&#39;latitude&#39;</span>]]</a>
+<a class="sourceLine" id="cb12-18" title="18">balat &lt;-<span class="st"> </span><span class="fl">27.5</span></a>
+<a class="sourceLine" id="cb12-19" title="19">balon &lt;-<span class="st"> </span><span class="fl">-77.5</span></a>
+<a class="sourceLine" id="cb12-20" title="20"><span class="kw">data</span>(coastlineWorldFine, <span class="dt">package=</span><span class="st">&quot;ocedata&quot;</span>)</a>
+<a class="sourceLine" id="cb12-21" title="21"><span class="kw">plot</span>(coastlineWorldFine, <span class="dt">clongitude=</span>balon, <span class="dt">clatitude=</span>balat, <span class="dt">col=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">span=</span><span class="dv">400</span>)</a>
+<a class="sourceLine" id="cb12-22" title="22"><span class="kw">points</span>(loncp,latcp, <span class="dt">pch=</span><span class="dv">20</span>)</a></code></pre></div>
+<p><em>Exercise 2:</em> Create a rectangle subset for this transect and plot the positions for the year 2017.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">library</span>(argoFloats)</a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="kw">library</span>(oce)</a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="kw">data</span>(section, <span class="dt">package=</span><span class="st">&#39;oce&#39;</span>)</a>
+<a class="sourceLine" id="cb13-4" title="4">lat0 &lt;-<span class="st"> </span><span class="kw">median</span>(section[[<span class="st">&#39;latitude&#39;</span>]])</a>
+<a class="sourceLine" id="cb13-5" title="5">lon0 &lt;-<span class="st"> </span><span class="kw">median</span>(section[[<span class="st">&#39;longitude&#39;</span>]])</a>
+<a class="sourceLine" id="cb13-6" title="6"><span class="co"># Subset by rectangle</span></a>
+<a class="sourceLine" id="cb13-7" title="7">ai &lt;-<span class="st"> </span><span class="kw">getIndex</span>(<span class="dt">file=</span><span class="st">&#39;argo&#39;</span>, <span class="dt">destdir=</span><span class="st">&#39;~/data/argo&#39;</span>)</a>
+<a class="sourceLine" id="cb13-8" title="8">latRect &lt;-<span class="st"> </span>lat0 <span class="op">+</span><span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb13-9" title="9">lonRect &lt;-<span class="st"> </span>lon0 <span class="op">+</span><span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">30</span>,<span class="dv">30</span>)</a>
+<a class="sourceLine" id="cb13-10" title="10">air &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dt">rectangle=</span><span class="kw">list</span>(<span class="dt">longitude=</span>lonRect, <span class="dt">latitude=</span>latRect))</a>
+<a class="sourceLine" id="cb13-11" title="11"><span class="co"># Subset the rectangle by time</span></a>
+<a class="sourceLine" id="cb13-12" title="12">from &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2017-01-01&quot;</span>, <span class="dt">tz=</span><span class="st">&quot;UTC&quot;</span>)</a>
+<a class="sourceLine" id="cb13-13" title="13">to &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2017-12-31&quot;</span>, <span class="dt">tz=</span><span class="st">&quot;UTC&quot;</span>)</a>
+<a class="sourceLine" id="cb13-14" title="14">aiTime &lt;-<span class="st"> </span><span class="kw">subset</span>(air, <span class="dt">time=</span><span class="kw">list</span>(<span class="dt">from=</span>from, <span class="dt">to=</span>to))</a>
+<a class="sourceLine" id="cb13-15" title="15"><span class="co">#Plot this subset</span></a>
+<a class="sourceLine" id="cb13-16" title="16">latbe &lt;-<span class="st"> </span>aiTime[[<span class="st">&#39;latitude&#39;</span>]]</a>
+<a class="sourceLine" id="cb13-17" title="17">lonbe &lt;-<span class="st"> </span>aiTime[[<span class="st">&#39;longitude&#39;</span>]]</a>
+<a class="sourceLine" id="cb13-18" title="18">belat &lt;-<span class="st"> </span><span class="dv">37</span></a>
+<a class="sourceLine" id="cb13-19" title="19">belon &lt;-<span class="st"> </span><span class="dv">-35</span></a>
+<a class="sourceLine" id="cb13-20" title="20"><span class="kw">data</span>(coastlineWorldFine, <span class="dt">package=</span><span class="st">&quot;ocedata&quot;</span>)</a>
+<a class="sourceLine" id="cb13-21" title="21"><span class="kw">plot</span>(coastlineWorldFine, <span class="dt">clongitude=</span>belon, <span class="dt">clatitude=</span>belat, <span class="dt">col=</span><span class="st">&quot;pink&quot;</span>, <span class="dt">span=</span><span class="dv">6000</span>)</a>
+<a class="sourceLine" id="cb13-22" title="22"><span class="kw">points</span>(lonbe,latbe)</a></code></pre></div>
+<p><em>Exercise 3:</em> Using the profile in the previous example, plot a TS diagram.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">ai &lt;-<span class="st"> </span><span class="kw">getIndex</span>(<span class="dt">file=</span><span class="st">&#39;merge&#39;</span>, <span class="dt">destdir =</span> <span class="st">&#39;~/data/argo&#39;</span>)</a>
+<a class="sourceLine" id="cb14-2" title="2">sub &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) <span class="co"># To subset for profiles</span></a>
+<a class="sourceLine" id="cb14-3" title="3">profiles &lt;-<span class="st"> </span><span class="kw">getProfiles</span>(sub, <span class="dt">destdir=</span><span class="st">&#39;~/data/argo&#39;</span>)</a>
+<a class="sourceLine" id="cb14-4" title="4">argos &lt;-<span class="st"> </span><span class="kw">readProfiles</span>(profiles, <span class="dt">handleFlags =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb14-5" title="5">pressure &lt;-<span class="st"> </span>argos[[<span class="st">&#39;argos&#39;</span>]][[<span class="dv">1</span>]][[<span class="st">&#39;pressure&#39;</span>]]</a>
+<a class="sourceLine" id="cb14-6" title="6">temperature &lt;-<span class="st"> </span>argos[[<span class="st">&#39;argos&#39;</span>]][[<span class="dv">1</span>]][[<span class="st">&#39;temperature&#39;</span>]]</a>
+<a class="sourceLine" id="cb14-7" title="7">salinity &lt;-<span class="st"> </span>argos[[<span class="st">&#39;argos&#39;</span>]][[<span class="dv">1</span>]][[<span class="st">&#39;salinity&#39;</span>]]</a>
+<a class="sourceLine" id="cb14-8" title="8">ctd&lt;-<span class="kw">as.ctd</span>(salinity,temperature,pressure)</a>
+<a class="sourceLine" id="cb14-9" title="9"><span class="kw">plotTS</span>(ctd, <span class="dt">eos=</span><span class="st">&quot;unesco&quot;</span>)</a></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
