@@ -57,14 +57,14 @@ Figure 1 illustrates the typical workflow with the package, with descriptions of
 colText <- "darkblue"
 colCode <- "black"
 library(graphics)
-textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New Roman", col="black")
+textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New Roman", col="black", tweakx=0)
 {
     w <- graphics::strwidth(text)
     h <- graphics::strheight(text)
     if (center)
         x <- x - w/2
-    text(x, y, text, cex=cex, pos=pos, family=family, col=col)
-    rect(x, y-h, x+1.1*w, y+h, border=col)
+    text(x+tweakx, y, text, cex=cex, pos=pos, family=family, col=col)
+    rect(x+tweakx, y-h, x+tweakx+1.1*w, y+h, border=col)
     invisible(list(w=w, h=h))
 }
 omar <- par("mar")
@@ -104,7 +104,7 @@ y0 <- y0 - dy
 textInBox(x0, y0, "readProfiles() ", family="sans", col=colCode)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
-textInBox(x0, y0, ". . .   ", family="sans", col=colCode)
+textInBox(x0, y0, ". . .   ", family="sans", col=colCode, tweakx=0.005)
 par(mar=omar)
 ```
 
