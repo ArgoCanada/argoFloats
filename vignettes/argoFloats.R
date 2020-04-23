@@ -13,14 +13,14 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 colText <- "darkblue"
 colCode <- "black"
 library(graphics)
-textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New Roman", col="black")
+textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New Roman", col="black", tweakx=0)
 {
     w <- graphics::strwidth(text)
     h <- graphics::strheight(text)
     if (center)
         x <- x - w/2
-    text(x, y, text, cex=cex, pos=pos, family=family, col=col)
-    rect(x, y-h, x+1.1*w, y+h, border=col)
+    text(x+tweakx, y, text, cex=cex, pos=pos, family=family, col=col)
+    rect(x+tweakx, y-h, x+tweakx+1.1*w, y+h, border=col)
     invisible(list(w=w, h=h))
 }
 omar <- par("mar")
@@ -60,7 +60,7 @@ y0 <- y0 - dy
 textInBox(x0, y0, "readProfiles() ", family="sans", col=colCode)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
-textInBox(x0, y0, ". . .   ", family="sans", col=colCode)
+textInBox(x0, y0, ". . .   ", family="sans", col=colCode, tweakx=0.005)
 par(mar=omar)
 
 ## ----message=FALSE, warning=FALSE---------------------------------------------
@@ -115,20 +115,13 @@ plot(section)
 #  aiPoly <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
 #  aiPoly # To determine it is type 'index'
 #  #Subset by time
-#  from <- as.POSIXct("2017-01-01", tz="UTC")
-#  to <- as.POSIXct("2017-12-31", tz="UTC")
+#  from <- as.POSIXct("2013-01-01", tz="UTC")
+#  to <- as.POSIXct("2013-12-31", tz="UTC")
 #  aic <- subset(aiCircle, time=list(from=from, to=to))
-#  aip <- subset(aiCircle, time=list(from=from, to=to))
+#  aip <- subset(aiPoly, time=list(from=from, to=to))
 #  # Plotting the subsets together
 #  cp <- merge(aic, aip)
-#  loncp <- cp[['longitude']]
-#  latcp <- cp[['latitude']]
-#  balat <- 27.5
-#  balon <- -77.5
-#  data(coastlineWorldFine, package="ocedata")
-#  plot(coastlineWorldFine, clongitude=balon, clatitude=balat, col="pink", span=400)
-#  points(loncp,latcp, pch=20)
-#  
+#  plot(cp)
 
 ## ---- eval=FALSE--------------------------------------------------------------
 #  library(argoFloats)
@@ -146,22 +139,12 @@ plot(section)
 #  to <- as.POSIXct("2017-12-31", tz="UTC")
 #  aiTime <- subset(air, time=list(from=from, to=to))
 #  #Plot this subset
-#  latbe <- aiTime[['latitude']]
-#  lonbe <- aiTime[['longitude']]
-#  belat <- 37
-#  belon <- -35
-#  data(coastlineWorldFine, package="ocedata")
-#  plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=6000)
-#  points(lonbe,latbe)
+#  plot(aiTime)
 
 ## ---- eval=FALSE--------------------------------------------------------------
 #  ai <- getIndex(file='merge', destdir = '~/data/argo')
 #  sub <- subset(ai, 1:2) # To subset for profiles
 #  profiles <- getProfiles(sub, destdir='~/data/argo')
 #  argos <- readProfiles(profiles, handleFlags = TRUE)
-#  pressure <- argos[['argos']][[1]][['pressure']]
-#  temperature <- argos[['argos']][[1]][['temperature']]
-#  salinity <- argos[['argos']][[1]][['salinity']]
-#  ctd<-as.ctd(salinity,temperature,pressure)
-#  plotTS(ctd, eos="unesco")
+#  plot(argos, which='TS')
 

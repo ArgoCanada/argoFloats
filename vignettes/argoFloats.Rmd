@@ -256,6 +256,7 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 
 
 ```{r, eval=FALSE}
+ai <- getIndex(file='argo', destdir='~/data/argo')
 # Subsetting by circle
 aiCircle <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 aiCircle # To determine it is type 'index'
@@ -292,13 +293,7 @@ from <- as.POSIXct("2017-01-01", tz="UTC")
 to <- as.POSIXct("2017-12-31", tz="UTC")
 aiTime <- subset(air, time=list(from=from, to=to))
 #Plot this subset
-latbe <- aiTime[['latitude']]
-lonbe <- aiTime[['longitude']]
-belat <- 37
-belon <- -35
-data(coastlineWorldFine, package="ocedata")
-plot(coastlineWorldFine, clongitude=belon, clatitude=belat, col="pink", span=6000)
-points(lonbe,latbe)
+plot(aiTime)
 ```
 
 *Exercise 3:* Using the profile in the previous example, plot a TS diagram.
@@ -308,9 +303,5 @@ ai <- getIndex(file='merge', destdir = '~/data/argo')
 sub <- subset(ai, 1:2) # To subset for profiles
 profiles <- getProfiles(sub, destdir='~/data/argo')
 argos <- readProfiles(profiles, handleFlags = TRUE)
-pressure <- argos[['argos']][[1]][['pressure']]
-temperature <- argos[['argos']][[1]][['temperature']]
-salinity <- argos[['argos']][[1]][['salinity']]
-ctd<-as.ctd(salinity,temperature,pressure)
-plotTS(ctd, eos="unesco")
+plot(argos, which='TS')
 ```
