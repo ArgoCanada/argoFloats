@@ -88,11 +88,14 @@ setMethod(f="plot",
                               debug=0,
                               ...)
           {
+              debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
+              argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1)
               if (!inherits(x, "argoFloats"))
                   stop("method is only for objects of class 'argoFloats'")
               if (which == "map") {
-                  longitude <- x[["longitude"]]
-                  latitude <- x[["latitude"]]
+                  argoFloatsDebug(debug, "map plot\n", sep="")
+                  longitude <- x[["longitude", debug=debug]]
+                  latitude <- x[["latitude", debug=debug]]
                   if (is.null(cex))
                       cex <- 1
                   if (is.null(col))
@@ -124,15 +127,16 @@ setMethod(f="plot",
                   }
                   par(mar=omar, mgp=omgp)
               } else if (which == "TS") {
+                  argoFloatsDebug(debug, "TS plot\n", sep="")
                   if ((x[["type"]] != "argos"))
                       stop("In plot() : x must have been created by readProfiles()", call.=FALSE)
                   if (!(eos %in% c("gsw", "unesco")))
                       stop("eos must be \"gsw\" or \"unesco\", not \"", eos, "\"")
-                  ctd <- oce::as.ctd(salinity=x[["salinity"]],
-                                     temperature=x[["temperature"]],
-                                     pressure=x[["pressure"]],
-                                     latitude=x[["latitude"]],
-                                     longitude= x[["longitude"]])
+                  ctd <- oce::as.ctd(salinity=x[["salinity", debug=debug]],
+                                     temperature=x[["temperature", debug=debug]],
+                                     pressure=x[["pressure", debug=debug]],
+                                     latitude=x[["latitude", debug=debug]],
+                                     longitude= x[["longitude", debug=debug]])
                   if (is.null(cex))
                       cex <- 0.5
                   if (is.null(col))
@@ -151,5 +155,6 @@ setMethod(f="plot",
               } else {
                   stop("cannot handle which=\"", which, "\"; try \"map\".")
               }
+              argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1)
           }
 )

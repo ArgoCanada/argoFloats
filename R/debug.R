@@ -18,7 +18,8 @@
 #' text. These codes may not be combined.
 #' @param showTime logical value indicating whether to preface message with
 #' the present time. This can be useful for learning about which operations
-#' are using the most time.
+#' are using the most time, but the default is not to show this, in the
+#' interests of brevity.
 #' @param unindent integer specifying the degree of reverse indentation
 #' to be done, as explained in the \dQuote{Details} section.
 #'
@@ -27,7 +28,7 @@
 #' @importFrom utils flush.console
 #'
 #' @export
-argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=TRUE, unindent=0)
+argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=FALSE, unindent=0)
 {
     debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
     if (debug > 0) {

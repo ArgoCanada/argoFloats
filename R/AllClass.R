@@ -234,6 +234,8 @@ setMethod(f="[[",
           definition=function(x, i, j, ...) {
               if (missing(i))
                   stop("Must name an item to retrieve, e.g. 'x[[\"latitude\"]]'", call.=FALSE)
+              dots <- list(...)
+              debug <- if (!is.null(dots$debug)) dots$debug else 0
               type <- x@metadata$type
               if (length(i) != 1)
                   stop("length of index, 'i', must be one")
@@ -291,16 +293,22 @@ setMethod(f="[[",
               if (i %in% c("salinity", "temperature", "pressure")) {
                   if (type != "argos")
                       stop("[[\"", i, "\"]] only works for objects created by readProfiles()")
-                  return(unlist(lapply(x[["argos"]], function(a) a[[i]])))
+                  res <- unlist(lapply(x[["argos"]], function(a) a[[i]]))
+                  argoFloatsDebug(debug, "[[ for '", i, "' returning ", length(res), " values\n", sep="")
+                  return(res)
               }
               if (i %in% c("longitude", "latitude")) {
-                  if (type == "argos") {
-                      return(unlist(lapply(x[["argos"]], function(a) rep(a[[i]], length(a[["salinity"]])))))
+                  res <- if (type == "argos") {
+                      argoFloatsDebug(debug, "type=\"argos\"\n", sep="")
+                      unlist(lapply(x[["argos"]], function(a) rep(a[[i]], length=length(a[["salinity"]]))))
                   } else if (type == "index") {
-                      return(x@data$index[[i]])
+                      ## argoFloatsDebug(debug, "type=\"index\"\n", sep="")
+                      x@data$index[[i]]
                   } else {
                       stop("[[\"", i, "\"]] only works for objects created by readProfiles()")
                   }
+                  argoFloatsDebug(debug, "[[ for '", i, "' returning ", length(res), " values\n", sep="")
+                  return(res)
               }
               if (i == "profile count") {
                   return(switch(type,
