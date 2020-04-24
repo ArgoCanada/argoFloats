@@ -1,7 +1,7 @@
 Package: argoFloats
 Type: Package
 Title: Tools for Analyzing Collections of Oceanographic Argo Floats
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person(given="Dan", family="Kelley", email="dan.kelley@dal.ca", role=c("aut", "cre"),
         comment=c(ORCID="https://orcid.org/0000-0001-7808-5911")),
@@ -12,11 +12,11 @@ Authors@R: c(
 Maintainer: Dan Kelley <dan.kelley@dal.ca>
 Depends: R (>= 3.5.0)
 Suggests: testthat, ocedata, ncdf4, knitr, rmarkdown
-BugReports: https://github.com/dankelley/argoFloats/issues
+BugReports: https://github.com/ArgoCanada/argoFloats/issues
 Description: The 'argoFloats' package provides support for downloading and analyzing Argo float datasets.
 License: GPL (>= 2)
 Encoding: UTF-8
-URL: https://github.com/dankelley/argoFloats
+URL: https://github.com/ArgoCanada/argoFloats
 LazyData: false
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
