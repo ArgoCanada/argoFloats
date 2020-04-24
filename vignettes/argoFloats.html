@@ -12,7 +12,7 @@
 
 <meta name="author" content="Dan Kelley (https://orcid.org/0000-0001-7808-5911), Jaimie Harbin (https://orcid.org/0000-0003-3774-3732) and Clark Richards (https://orcid.org/0000-0002-7833-206X)" />
 
-<meta name="date" content="2020-04-23" />
+<meta name="date" content="2020-04-24" />
 
 <title>Introduction to argoFloats</title>
 
@@ -303,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Introduction to argoFloats</h1>
 <h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
-<h4 class="date">2020-04-23</h4>
+<h4 class="date">2020-04-24</h4>
 
 
 <div id="TOC">
@@ -519,22 +519,23 @@ Figure 4: Line A03 section plot made by oce package.
 <div id="solution-to-exercises" class="section level1">
 <h1><span class="header-section-number">6</span> Solution to Exercises</h1>
 <p><em>Exercise 1:</em> Produce the same plot as shown above, however, only include data from 2013.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co"># Subsetting by circle</span></a>
-<a class="sourceLine" id="cb12-2" title="2">aiCircle &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dt">circle=</span><span class="kw">list</span>(<span class="dt">longitude=</span><span class="op">-</span><span class="fl">77.5</span>, <span class="dt">latitude=</span><span class="fl">27.5</span>, <span class="dt">radius=</span><span class="dv">50</span>))</a>
-<a class="sourceLine" id="cb12-3" title="3">aiCircle <span class="co"># To determine it is type &#39;index&#39;</span></a>
-<a class="sourceLine" id="cb12-4" title="4"><span class="co"># Subsetting by polygon</span></a>
-<a class="sourceLine" id="cb12-5" title="5">lonPoly &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">76.5</span>, <span class="fl">-76.0</span>, <span class="fl">-75.5</span>)</a>
-<a class="sourceLine" id="cb12-6" title="6">latPoly &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">25.5</span>, <span class="fl">26.5</span>, <span class="fl">25.5</span>)</a>
-<a class="sourceLine" id="cb12-7" title="7">aiPoly &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dt">polygon=</span><span class="kw">list</span>(<span class="dt">longitude=</span>lonPoly, <span class="dt">latitude=</span>latPoly)) </a>
-<a class="sourceLine" id="cb12-8" title="8">aiPoly <span class="co"># To determine it is type &#39;index&#39;</span></a>
-<a class="sourceLine" id="cb12-9" title="9"><span class="co">#Subset by time</span></a>
-<a class="sourceLine" id="cb12-10" title="10">from &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2013-01-01&quot;</span>, <span class="dt">tz=</span><span class="st">&quot;UTC&quot;</span>)</a>
-<a class="sourceLine" id="cb12-11" title="11">to &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2013-12-31&quot;</span>, <span class="dt">tz=</span><span class="st">&quot;UTC&quot;</span>)</a>
-<a class="sourceLine" id="cb12-12" title="12">aic &lt;-<span class="st"> </span><span class="kw">subset</span>(aiCircle, <span class="dt">time=</span><span class="kw">list</span>(<span class="dt">from=</span>from, <span class="dt">to=</span>to))</a>
-<a class="sourceLine" id="cb12-13" title="13">aip &lt;-<span class="st"> </span><span class="kw">subset</span>(aiPoly, <span class="dt">time=</span><span class="kw">list</span>(<span class="dt">from=</span>from, <span class="dt">to=</span>to))</a>
-<a class="sourceLine" id="cb12-14" title="14"><span class="co"># Plotting the subsets together</span></a>
-<a class="sourceLine" id="cb12-15" title="15">cp &lt;-<span class="st"> </span><span class="kw">merge</span>(aic, aip)</a>
-<a class="sourceLine" id="cb12-16" title="16"><span class="kw">plot</span>(cp)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">ai &lt;-<span class="st"> </span><span class="kw">getIndex</span>(<span class="dt">file=</span><span class="st">&#39;argo&#39;</span>, <span class="dt">destdir=</span><span class="st">&#39;~/data/argo&#39;</span>)</a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="co"># Subsetting by circle</span></a>
+<a class="sourceLine" id="cb12-3" title="3">aiCircle &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dt">circle=</span><span class="kw">list</span>(<span class="dt">longitude=</span><span class="op">-</span><span class="fl">77.5</span>, <span class="dt">latitude=</span><span class="fl">27.5</span>, <span class="dt">radius=</span><span class="dv">50</span>))</a>
+<a class="sourceLine" id="cb12-4" title="4">aiCircle <span class="co"># To determine it is type &#39;index&#39;</span></a>
+<a class="sourceLine" id="cb12-5" title="5"><span class="co"># Subsetting by polygon</span></a>
+<a class="sourceLine" id="cb12-6" title="6">lonPoly &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">76.5</span>, <span class="fl">-76.0</span>, <span class="fl">-75.5</span>)</a>
+<a class="sourceLine" id="cb12-7" title="7">latPoly &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">25.5</span>, <span class="fl">26.5</span>, <span class="fl">25.5</span>)</a>
+<a class="sourceLine" id="cb12-8" title="8">aiPoly &lt;-<span class="st"> </span><span class="kw">subset</span>(ai, <span class="dt">polygon=</span><span class="kw">list</span>(<span class="dt">longitude=</span>lonPoly, <span class="dt">latitude=</span>latPoly)) </a>
+<a class="sourceLine" id="cb12-9" title="9">aiPoly <span class="co"># To determine it is type &#39;index&#39;</span></a>
+<a class="sourceLine" id="cb12-10" title="10"><span class="co">#Subset by time</span></a>
+<a class="sourceLine" id="cb12-11" title="11">from &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2013-01-01&quot;</span>, <span class="dt">tz=</span><span class="st">&quot;UTC&quot;</span>)</a>
+<a class="sourceLine" id="cb12-12" title="12">to &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="st">&quot;2013-12-31&quot;</span>, <span class="dt">tz=</span><span class="st">&quot;UTC&quot;</span>)</a>
+<a class="sourceLine" id="cb12-13" title="13">aic &lt;-<span class="st"> </span><span class="kw">subset</span>(aiCircle, <span class="dt">time=</span><span class="kw">list</span>(<span class="dt">from=</span>from, <span class="dt">to=</span>to))</a>
+<a class="sourceLine" id="cb12-14" title="14">aip &lt;-<span class="st"> </span><span class="kw">subset</span>(aiPoly, <span class="dt">time=</span><span class="kw">list</span>(<span class="dt">from=</span>from, <span class="dt">to=</span>to))</a>
+<a class="sourceLine" id="cb12-15" title="15"><span class="co"># Plotting the subsets together</span></a>
+<a class="sourceLine" id="cb12-16" title="16">cp &lt;-<span class="st"> </span><span class="kw">merge</span>(aic, aip)</a>
+<a class="sourceLine" id="cb12-17" title="17"><span class="kw">plot</span>(cp)</a></code></pre></div>
 <p><em>Exercise 2:</em> Create a rectangle subset for this transect and plot the positions for the year 2017.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">library</span>(argoFloats)</a>
 <a class="sourceLine" id="cb13-2" title="2"><span class="kw">library</span>(oce)</a>

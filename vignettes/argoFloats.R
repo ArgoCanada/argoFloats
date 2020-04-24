@@ -106,6 +106,7 @@ plot(section)
 #       xlab='Temperature (C)', ylab='Depth (dbar)')
 
 ## ---- eval=FALSE--------------------------------------------------------------
+#  ai <- getIndex(file='argo', destdir='~/data/argo')
 #  # Subsetting by circle
 #  aiCircle <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 #  aiCircle # To determine it is type 'index'

@@ -256,15 +256,14 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 
 
 ```{r, eval=FALSE}
+library(argoFloats)
 ai <- getIndex(file='argo', destdir='~/data/argo')
 # Subsetting by circle
 aiCircle <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
-aiCircle # To determine it is type 'index'
 # Subsetting by polygon
 lonPoly <- c(-76.5, -76.0, -75.5)
 latPoly <- c(25.5, 26.5, 25.5)
 aiPoly <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly)) 
-aiPoly # To determine it is type 'index'
 #Subset by time
 from <- as.POSIXct("2013-01-01", tz="UTC")
 to <- as.POSIXct("2013-12-31", tz="UTC")
@@ -299,6 +298,7 @@ plot(aiTime)
 *Exercise 3:* Using the profile in the previous example, plot a TS diagram.
 
 ```{r, eval=FALSE}
+library(argoFloats)
 ai <- getIndex(file='merge', destdir = '~/data/argo')
 sub <- subset(ai, 1:2) # To subset for profiles
 profiles <- getProfiles(sub, destdir='~/data/argo')
