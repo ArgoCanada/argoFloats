@@ -10,7 +10,7 @@ analyzing collections of oceanographic Argo float datasets.  Its developers are
 * Jaimie Harbin, Bedford Institute of Oceanography and Dalhousie University
 * Clark Richards, Bedford Institute of Oceanography
 
-Since argoFloats is still in a phase of active development, it is not yet
+Since argoFloats is still in an active phase of development, it is not yet
 available on CRAN.  Still, it is easily installed in R with
 ```R
 library(devtools)
@@ -44,7 +44,7 @@ indexAll <- getIndex(destdir="~/data/argo")
 index <- subset(indexAll,
                 circle=list(longitude=-77.06, latitude=26.54, radius=30))
 profiles  <- getProfiles(index)
-argos <- readProfiles(profiles, handleFlags=TRUE)
+argos <- readProfiles(profiles)
 par(mfrow=c(1, 2))
 plot(index, which="map")
 plot(argos, which="TS")
