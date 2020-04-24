@@ -1,5 +1,4 @@
-#' @param force A logical value that indicates whether to force the download,
-#' even if the pathname constructed from `destdir` and `destfile`
-#' already exists.
+#' @param force a logical value that indicates whether to force a file
+#' download, even if the destination file already exists.
 
 

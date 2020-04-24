@@ -1,9 +1,22 @@
+^.travis.yml$
+^appveyor.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^man-roxygen$
+^man/figures/*R$
 ^docs$
 ^.*~$
 ^.*.nc$
 ^.*.png$
 ^sandbox$
+^.*_index_.*rda$
+^CODE_OF_CONDUCT.md$
+^create_data$
+^exampleTS.R$
+^README.R$
+^doc$
+^Meta$
+^test*.R$
 
+^_pkgdown\.yml$
+^pkgdown$

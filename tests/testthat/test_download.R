@@ -20,21 +20,3 @@ test_that("getIndex() works with bioargo",
           }
 )
 
-
-test_that("subset() works with small circle (should give warning)",
-          {
-              if (canTest) {
-                  bai <- expect_silent(getIndex(file="argo_bio-profile_index.txt.gz", destdir=destdir))
-                  ## Should be none near Winnipeg, Canada
-                  s1 <- expect_warning(subset(bai, circle=list(longitude=-97.2, latitude=49.9, radius=1)), "found no profiles")
-                  ## Should be several near Sable Island
-                  s2 <- expect_silent(subset(bai, circle=list(longitude=-59.915, latitude=44.934, radius=200)))
-              } else {
-                  skip("only certain people can test this code\n")
-              }
-          }
-)
-
-
-## FIXME(dek): more tests here, on getProfiles() and contents of those profiles. Look in ?getProfiles for a starting point.
-
