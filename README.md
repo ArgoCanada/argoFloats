@@ -1,8 +1,8 @@
 # argoFloats
 
-[![TravisCI Build Status](https://travis-ci.org/dankelley/argoFloats.svg?branch=develop)](https://travis-ci.org/dankelley/argoFloats)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dankelley/argoFloats?branch=develop&svg=true)](https://ci.appveyor.com/project/dankelley/argoFloats)
-[![codecov](https://codecov.io/gh/dankelley/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/dankelley/argoFloats)
+[![TravisCI Build Status](https://travis-ci.org/ArgoCanada/argoFloats.svg?branch=develop)](https://travis-ci.org/ArgoCanada/argoFloats)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ArgoCanada/argoFloats?branch=develop&svg=true)](https://ci.appveyor.com/project/ArgoCanada/argoFloats)
+[![codecov](https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/ArgoCanada/argoFloats)
 
 The argoFloats package for the R language provides tools for downloading and
 analyzing collections of oceanographic Argo float datasets.  Its developers are
