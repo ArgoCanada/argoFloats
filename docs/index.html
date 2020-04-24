@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -52,7 +52,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/dankelley/argoFloats/">
+  <a href="https://github.com/ArgoCanada/argoFloats/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -81,10 +81,10 @@
 </ul>
 <p>Since argoFloats is still in a phase of active development, it is not yet available on CRAN. Still, it is easily installed in R with</p>
 <div class="sourceCode"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">devtools</span>)
-<span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">'dankelley/argoFloats'</span>, <span class="kw">ref</span><span class="kw">=</span><span class="st">'develop'</span>)</pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">'ArgoCanada/argoFloats'</span>, <span class="kw">ref</span><span class="kw">=</span><span class="st">'develop'</span>)</pre></div>
 <p>where, of course, the <code>devtools</code> package must be installed first, if it is not already present on the user’s system. It is also necessary to have up-to-date versions of the <code>oce</code> and <code>ocedata</code> packages installed, which is accomplished with</p>
-<div class="sourceCode"><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">'dankelley/oce'</span>, <span class="kw">ref</span><span class="kw">=</span><span class="st">'develop'</span>)
-<span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">'dankelley/ocedata'</span>, <span class="kw">ref</span><span class="kw">=</span><span class="st">'develop'</span>)</pre></div>
+<div class="sourceCode"><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">'ArgoCanada/oce'</span>, <span class="kw">ref</span><span class="kw">=</span><span class="st">'develop'</span>)
+<span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">'ArgoCanada/ocedata'</span>, <span class="kw">ref</span><span class="kw">=</span><span class="st">'develop'</span>)</pre></div>
 <p>Once things are set up as above, it will be possible to use all the features of <code>argoFloats</code>, many of which are illustrated in the documentation for its functions, and in the vignette that is built into the package.</p>
 <p>For example, the following shows how to create a map and a temperature-salinity diagram for several Argo float profiles made near Abaco Island in the Bahamas. The <code><a href="reference/getIndex.html">getIndex()</a></code> call specifies a directory to hold the index of float profiles, and this directory carries through to the <code><a href="reference/getProfiles.html">getProfiles()</a></code> call, which downloads the netcdf files that contain the profile data, and later to the <code><a href="reference/readProfiles.html">readProfiles()</a></code> call, which reads those files. Use <code><a href="reference/getIndex.html">?getIndex</a></code> to learn more about the first function used, <code><a href="reference/subset-argoFloats-method.html">?"subset,argoFloats-method"</a></code> to learn about the second, etc. (Note that <code>subset</code> and <code>plot</code> are generic functions, so the help is accessed with the comma notation.)</p>
 <div class="sourceCode"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">argoFloats</span>)
@@ -105,9 +105,9 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/dankelley/argoFloats/">https://​github.com/​dankelley/​argoFloats/​</a>
+<li>Browse source code at <br><a href="https://github.com/ArgoCanada/argoFloats/">https://​github.com/​ArgoCanada/​argoFloats/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/dankelley/argoFloats/issues">https://​github.com/​dankelley/​argoFloats/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/ArgoCanada/argoFloats/issues">https://​github.com/​ArgoCanada/​argoFloats/​issues</a>
 </li>
 </ul>
 </div>
