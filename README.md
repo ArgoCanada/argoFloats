@@ -1,8 +1,8 @@
 # argoFloats
 
-[![TravisCI Build Status](https://travis-ci.org/dankelley/argoFloats.svg?branch=develop)](https://travis-ci.org/dankelley/argoFloats)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/dankelley/argoFloats?branch=develop&svg=true)](https://ci.appveyor.com/project/dankelley/argoFloats)
-[![codecov](https://codecov.io/gh/dankelley/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/dankelley/argoFloats)
+[![TravisCI Build Status](https://travis-ci.org/argoCanada/argoFloats.svg?branch=develop)](https://travis-ci.org/argoCanada/argoFloats)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/argoCanada/argoFloats?branch=develop&svg=true)](https://ci.appveyor.com/project/argoCanada/argoFloats)
+[![codecov](https://codecov.io/gh/argoCanada/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/argoCanada/argoFloats)
 
 The argoFloats package for the R language provides tools for downloading and
 analyzing collections of oceanographic Argo float datasets.  Its developers are
@@ -14,14 +14,14 @@ Since argoFloats is still in a phase of active development, it is not yet
 available on CRAN.  Still, it is easily installed in R with
 ```R
 library(devtools)
-install_github('dankelley/argoFloats', ref='develop')
+install_github('argoCanada/argoFloats', ref='develop')
 ```
 where, of course, the `devtools` package must be installed first, if it is not
 already present on the user's system.  It is also necessary to have up-to-date
 versions of the `oce` and `ocedata` packages installed, which is accomplished with
 ```R
-install_github('dankelley/oce', ref='develop')
-install_github('dankelley/ocedata', ref='develop')
+install_github('argoCanada/oce', ref='develop')
+install_github('argoCanada/ocedata', ref='develop')
 ```
 
 Once things are set up as above, it will be possible to use all the features of
