@@ -1,5 +1,4 @@
 library(argoFloats)
-library(oce)
 # Get world index
 ai <- getIndex()
 # Get index withing 50km of Bermuda
