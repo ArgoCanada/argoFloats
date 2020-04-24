@@ -18,3 +18,5 @@
 ^Meta$
 ^test*.R$
 
+^_pkgdown\.yml$
+^pkgdown$
