@@ -1,7 +1,7 @@
 # argoFloats
 
 [![TravisCI Build Status](https://travis-ci.org/ArgoCanada/argoFloats.svg?branch=develop)](https://travis-ci.org/ArgoCanada/argoFloats)
-[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/xcsk41gv323m60td?svg=true)](https://ci.appveyor.com/project/dankelley/argofloats-0j0j7)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/xcsk41gv323m60td?svg=true)](https://ci.appveyor.com/project/ArgoCanada/argofloats-0j0j7)
 [![codecov](https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/ArgoCanada/argoFloats)
 
 The argoFloats package for the R language provides tools for downloading and
@@ -26,7 +26,9 @@ install_github('ArgoCanada/ocedata', ref='develop')
 
 Once things are set up as above, it will be possible to use all the features of
 `argoFloats`, many of which are illustrated in the documentation for its
-functions, and in the vignette that is built into the package.
+functions, and in the vignette that is built into the package, both of which
+are displayed on the [user-oriented
+website](https://argocanada.github.io/argoFloats/index.html).
 
 For example, the following shows how to create a map and a temperature-salinity
 diagram for several Argo float profiles made near Abaco Island in the Bahamas.
