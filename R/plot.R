@@ -99,7 +99,7 @@ setMethod(f="plot",
                   if (is.null(cex))
                       cex <- 1
                   if (is.null(col))
-                      col <- rgb(0, 0, 1, 0.5)
+                      col <- "gray62"  # col=8 in R-4.x
                   if (is.null(pch))
                       pch <- 20
                   xlab <- if (is.null(xlab)) "Longitude" else xlab

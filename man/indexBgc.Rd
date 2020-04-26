@@ -19,10 +19,10 @@ tools::resaveRdaFiles('indexBgc.rda')
 }
 \examples{
 library(argoFloats)
-data(indexBgc, package="argoFloats")
-plot(indexBgc, which="map")
-# Tabulate BGC parameters in these files
-table(indexBgc[["parameters"]])
+data(indexBgc)
+plot(indexBgc)
+summary(indexBgc)
+unique(indexBgc[["parameters"]])
 
 }
 \seealso{
