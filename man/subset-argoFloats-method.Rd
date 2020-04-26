@@ -10,9 +10,17 @@
 \item{x}{an \linkS4class{argoFloats} object as created by \code{\link[=getIndex]{getIndex()}}.}
 
 \item{subset}{optional numerical or logical vector that indicates which
-indices of \code{x@data$index} to keep.  See example 1.}
+indices of \code{x@data$index} to keep (example 1).}
 
-\item{...}{a list named \code{circle}, \code{rectangle}, \code{parameter}, \code{polygon} , or \code{time}.
+\item{...}{the first entry here must be either (a)
+a list named \code{circle}, \code{rectangle}, \code{polygon},
+\code{parameter}, \code{time}, \code{institution}, or \code{id}
+(examples 2 through 8)
+or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
+may be followed by second entry named \code{silent}, which is a logical
+value indicating whether to prevent the printing of messages that
+indicate the number (and percentage) of data that are kept
+during the subsetting operation.
 See \dQuote{Details} and \dQuote{Examples}.}
 }
 \value{
@@ -23,6 +31,10 @@ Isolate a subset of an \linkS4class{argoFloats} object of type \code{"index"},
 as created by \code{\link[=getIndex]{getIndex()}}, either by specifying
 indices to keep (using the \code{subset} argument) or by specifying
 a way to determine those indices (using the \code{...} argument).
+Note that only one subset condition may be given in the \code{...}
+argument, but that \code{\link[=merge,argoFloats-method]{merge,argoFloats-method()}} can be used to merge indices
+created by \code{subset}, which effectively creates a logical "or"
+operation.
 }
 \details{
 The possibilities for the \code{...} argument are as follows.
@@ -60,8 +72,9 @@ names the institution.  The permitted values are:
 \code{"KO"} for KORDI, Korea;
 \code{"ME"} for MEDS, Canada; and
 \code{"NM"} for NMDIS, China.
+See example 7.
 \item A list named \code{deep} that holds a logical value indicating weather argo floats
-are deep argo (ie. \code{profiler_type} 849, 862, and 864). See example 8.
+are deep argo (i.e. \code{profiler_type} 849, 862, and 864). See example 8.
 \item A list named \code{ID} that holds a character value specifying a float identifier.
 See example 9.
 }
@@ -116,15 +129,15 @@ index6 <- subset(index, time=list(from=from, to=to))
 # Example 7: subset to the Canadian MEDS data
 index7 <- subset(index, institution="ME")
 
-# Example 8: subset data to only include deep argo
-\dontrun{
-ai <- getIndex(file='merged', destdir = '~/data/argo')
-index8 <- subset(ai, deep=TRUE) }
-
-# Example 9: subset to a specific ID
+# Example 8: subset to a specific ID
 \dontrun{
 ai <- getIndex(file='merged', destdir = '~/data/argo')
 index9 <- subset(ai, ID='1900722') }
+
+# Example 9: subset data to only include deep argo
+\dontrun{
+ai <- getIndex(file='merged', destdir = '~/data/argo')
+index8 <- subset(ai, deep=TRUE) }
 
 }
 \author{
