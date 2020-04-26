@@ -106,12 +106,11 @@ index4 <- subset(index, polygon=list(longitude=lonPoly, latitude=latPoly))
 
 # Show some of these subsets on a map
 plot(index)
-col <- c("#DF536B", "#61D04F", "#2297E6") # col=2:4 in R-4.x
-points(index2[["longitude"]], index2[["latitude"]], col=col[1], pch=20, cex=1.4)
-points(index3[["longitude"]], index3[["latitude"]], col=col[2], pch=20, cex=1.4)
-rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=col[2], lwd=2)
-points(index4[["longitude"]], index4[["latitude"]], col=col[3], pch=20, cex=1.4)
-polygon(lonPoly, latPoly, border=col[3], lwd=2)
+points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
+points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
+rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
+points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
+polygon(lonPoly, latPoly, border=4, lwd=2)
 
 # Example 5: subset argo_merge data containing 'DOXY' parameters
 # Data containing 'DOXY' data
