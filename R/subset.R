@@ -6,6 +6,10 @@
 #' as created by [getIndex()], either by specifying
 #' indices to keep (using the `subset` argument) or by specifying
 #' a way to determine those indices (using the `...` argument).
+#' Note that only one subset condition may be given in the `...`
+#' argument, but that [merge,argoFloats-method()] can be used to merge indices
+#' created by `subset`, which effectively creates a logical "or"
+#' operation.
 #'
 #' The possibilities for the `...` argument are as follows.
 #'
@@ -48,9 +52,10 @@
 #' `"KO"` for KORDI, Korea;
 #' `"ME"` for MEDS, Canada; and
 #' `"NM"` for NMDIS, China.
+#' See example 7.
 #'
 #' 8. A list named `deep` that holds a logical value indicating weather argo floats
-#' are deep argo (ie. `profiler_type` 849, 862, and 864). See example 8.
+#' are deep argo (i.e. `profiler_type` 849, 862, and 864). See example 8.
 #'
 #' 9. A list named `ID` that holds a character value specifying a float identifier.
 #' See example 9.
@@ -62,9 +67,17 @@
 #' @param x an [argoFloats-class] object as created by [getIndex()].
 #'
 #' @param subset optional numerical or logical vector that indicates which
-#' indices of `x@data$index` to keep.  See example 1.
+#' indices of `x@data$index` to keep (example 1).
 #'
-#' @param ... a list named `circle`, `rectangle`, `parameter`, `polygon` , or `time`.
+#' @param ... the first entry here must be either (a)
+#' a list named `circle`, `rectangle`, `polygon`,
+#' `parameter`, `time`, `institution`, or `id`
+#' (examples 2 through 8)
+#' or (b) a logical value named `deep` (example 9).  Optionally, this entry
+#' may be followed by second entry named `silent`, which is a logical
+#' value indicating whether to prevent the printing of messages that
+#' indicate the number (and percentage) of data that are kept
+#' during the subsetting operation.
 #' See \dQuote{Details} and \dQuote{Examples}.
 #'
 #' @return An [argoFloats-class] object.
@@ -92,11 +105,12 @@
 #'
 #' # Show some of these subsets on a map
 #' plot(index)
-#' points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
-#' points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
-#' rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
-#' points(index4[["longitude"]], index4[["latitude"]], col="magenta", pch=20, cex=1.4)
-#' polygon(lonPoly, latPoly, border="magenta", lwd=2)
+#' col <- c("#DF536B", "#61D04F", "#2297E6") # col=2:4 in R-4.x
+#' points(index2[["longitude"]], index2[["latitude"]], col=col[1], pch=20, cex=1.4)
+#' points(index3[["longitude"]], index3[["latitude"]], col=col[2], pch=20, cex=1.4)
+#' rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=col[2], lwd=2)
+#' points(index4[["longitude"]], index4[["latitude"]], col=col[3], pch=20, cex=1.4)
+#' polygon(lonPoly, latPoly, border=col[3], lwd=2)
 #'
 #' # Example 5: subset argo_merge data containing 'DOXY' parameters
 #' # Data containing 'DOXY' data
@@ -115,15 +129,15 @@
 #' # Example 7: subset to the Canadian MEDS data
 #' index7 <- subset(index, institution="ME")
 #'
-#' # Example 8: subset data to only include deep argo
-#' \dontrun{
-#' ai <- getIndex(file='merged', destdir = '~/data/argo')
-#' index8 <- subset(ai, deep=TRUE) }
-#'
-#' # Example 9: subset to a specific ID
+#' # Example 8: subset to a specific ID
 #' \dontrun{
 #' ai <- getIndex(file='merged', destdir = '~/data/argo')
 #' index9 <- subset(ai, ID='1900722') }
+#'
+#' # Example 9: subset data to only include deep argo
+#' \dontrun{
+#' ai <- getIndex(file='merged', destdir = '~/data/argo')
+#' index8 <- subset(ai, deep=TRUE) }
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -136,11 +150,15 @@ setMethod(f="subset",
               ##subsetString <- paste(deparse(substitute(subset)), collapse=" ")
               dots <- list(...)
               dotsNames <- names(dots)
+              silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
                   if (length(dots) == 0)
                       stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID'")
-                  if (length(dots) > 1)
-                      stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
+                  if (length(dots) > 1) {
+                      if (length(dots) > 2 || !("silent" %in% dotsNames))
+                          stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
+                  }
+                  N <- length(x@data$index[[1]]) # used in calculating percentages
                   if (dotsNames[1] == "circle") {
                       circle <- dots[[1]]
                       if (!is.list(dots[1]))
@@ -151,7 +169,8 @@ setMethod(f="subset",
                       keep <- dist < circle$radius
                       keep[is.na(keep)] <- FALSE
                       x@data$index <- x@data$index[keep, ]
-                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                   } else if (dotsNames[1] == "rectangle") {
                       rectangle <- dots[[1]]
                       if (!is.list(dots[1]))
@@ -165,7 +184,8 @@ setMethod(f="subset",
                       keeplat[!ok] <- FALSE
                       keep <- keeplon & keeplat
                       x@data$index <- x@data$index[keep, ]
-                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                   } else if (dotsNames[1]=="parameter") {
                       parameter <- dots[[1]]
                       if (is.list(dots[1]))
@@ -175,7 +195,8 @@ setMethod(f="subset",
                       keep <- unlist(lapply(parametersList, function(pl) nparameters == sum(parameters %in% pl)))
                       if (sum(keep) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
-                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="polygon") {
                       polygon <- dots[[1]]
@@ -205,7 +226,8 @@ setMethod(f="subset",
                       Inside <- sf::st_intersection(Points, Polygon)
                       M <- matrix(Points %in% Inside, ncol=2)
                       keep <- M[,1] & M[,2] & ok
-                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="time") {
                       time <- dots[[1]]
@@ -223,7 +245,8 @@ setMethod(f="subset",
                           stop ("'to' must be greater than 'from'")
                       keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
                       keep[is.na(keep)] <- FALSE
-                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if(dotsNames[1]=="institution") {
                       institution <- dots[[1]]
@@ -233,7 +256,8 @@ setMethod(f="subset",
                           stop("'institution' cannot hold more than one element")
                       keep <- grepl(institution, x@data$index$institution)
                       keep[is.na(keep)] <- FALSE
-                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=='deep') {
                       deep <- dots[[1]]
@@ -244,14 +268,16 @@ setMethod(f="subset",
                       } else {
                           keep <- grep("849|862|864", x@data$index$profiler_type, invert=TRUE)
                       }
-                      message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/length(keep)), "%)")
+                      if (!silent)
+                          message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1] == 'ID') {
                       ID <- dots[[1]]
                       file <- x@data$index$file
                       fileID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}.nc$", "\\1", file)
                       keep <- ID == fileID
-                      message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/length(keep)), "%)")
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', or 'ID'", call.=FALSE)

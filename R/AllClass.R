@@ -69,8 +69,8 @@ NULL
 #'
 #' @examples
 #' library(argoFloats)
-#' data(index, package="argoFloats")
-#' plot(index, which="map")
+#' data(index)
+#' plot(index)
 #'
 #' @name index
 #'
@@ -96,10 +96,10 @@ NULL
 #'
 #' @examples
 #' library(argoFloats)
-#' data(indexBgc, package="argoFloats")
-#' plot(indexBgc, which="map")
-#' # Tabulate BGC parameters in these files
-#' table(indexBgc[["parameters"]])
+#' data(indexBgc)
+#' plot(indexBgc)
+#' summary(indexBgc)
+#' unique(indexBgc[["parameters"]])
 #'
 #' @name indexBgc
 #'
@@ -125,9 +125,10 @@ NULL
 #'
 #' @examples
 #' library(argoFloats)
-#' data(indexMerged, package="argoFloats")
-#' plot(indexMerged, which="map")
-#' table(indexMerged[["parameters"]])
+#' data(indexMerged)
+#' plot(indexMerged)
+#' summary(indexMerged)
+#' unique(indexMerged[["parameters"]])
 #'
 #' @name indexMerged
 #'

@@ -18,8 +18,8 @@ index <- subset(indexAll,
 }
 \examples{
 library(argoFloats)
-data(index, package="argoFloats")
-plot(index, which="map")
+data(index)
+plot(index)
 
 }
 \seealso{

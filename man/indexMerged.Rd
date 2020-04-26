@@ -19,9 +19,10 @@ tools::resaveRdaFiles('indexMerged.rda')
 }
 \examples{
 library(argoFloats)
-data(indexMerged, package="argoFloats")
-plot(indexMerged, which="map")
-table(indexMerged[["parameters"]])
+data(indexMerged)
+plot(indexMerged)
+summary(indexMerged)
+unique(indexMerged[["parameters"]])
 
 }
 \seealso{
