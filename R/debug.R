@@ -23,6 +23,13 @@
 #' @param unindent integer specifying the degree of reverse indentation
 #' to be done, as explained in the \dQuote{Details} section.
 #'
+#' @examples
+#' argoFloatsDebug(1, "plain text\n")
+#' argoFloatsDebug(1, "red text\n", style="red")
+#' argoFloatsDebug(1, "blue text\n", style="blue")
+#' argoFloatsDebug(1, "bold text\n", style="bold")
+#' argoFloatsDebug(1, "italic text with time stamp\n", style="italic", showTime=TRUE)
+#'
 #' @author Dan Kelley
 #'
 #' @importFrom utils flush.console
