@@ -211,7 +211,7 @@ setMethod(f="subset",
                           stop("lengths of polygon$longitude and polygon$latitude must match, but they are ",
                                length(plat), " and ", length(plon))
                       if ((head(plon, 1) != tail(plon, 1)) || head(plat, 1) != tail(plat, 1)) {
-                          warning("In subset,argoFloats-method(): closing the polygon, since its first and last points did not match\n", call.=FALSE)
+                          warning("In subset,argoFloats-method(): First and last points did not match. Closing the polygon to avoid crossing line segments.\n", call.=FALSE)
                           plon <- c(plon, plon[1])
                           plat <- c(plat, plat[1])
                       }
