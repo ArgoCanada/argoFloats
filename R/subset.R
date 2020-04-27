@@ -143,7 +143,7 @@
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
-#' @importFrom sf st_polygon st_multipoint st_intersection
+#' @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
 #' @export
 setMethod(f="subset",
           signature="argoFloats",
