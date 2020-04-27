@@ -50,9 +50,11 @@ giving the western and eastern, and southern and northern
 limits of the selection region. See example 3.
 \item A list named \code{polygon} that has elements named \code{longitude} and \code{latitude}
 that are numeric vectors specifying a polygon within which profiles
-will be retained. If the polygon is not closed (i.e. if the first and
-last points do not coincide) then a warning is issued, and the first
-point is pasted onto the end.  See example 4.
+will be retained. The polygon must not be self-intersecting,
+and an error message will be issued if it is.  If the polygon is not closed
+(i.e. if the first and last points do not coincide) then a warning is issued,
+and the first point is pasted onto the end, to close it.
+See example 4.
 \item A vector or list named \code{parameter} that holds character values that
 specify the names of measured parameters to keep. See example 5.
 \item A list named \code{time} that has elements \code{from} and \code{to} that are POSIXt
