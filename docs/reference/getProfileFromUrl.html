@@ -193,7 +193,7 @@ to see if the output suggests a problem in the call.</p></td>
 <span class='no'>url</span> <span class='kw'>&lt;-</span> <span class='st'>"ftp://ftp.ifremer.fr/ifremer/argo/dac/nmdis/2901633/profiles/R2901633_071.nc"</span>
 <span class='no'>file</span> <span class='kw'>&lt;-</span> <span class='fu'>getProfileFromUrl</span>(<span class='kw'>url</span><span class='kw'>=</span><span class='no'>url</span>, <span class='kw'>destdir</span><span class='kw'>=</span><span class='st'>"~/data/argo"</span>)
 <span class='no'>argo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>read.argo</a></span>(<span class='no'>file</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>argo</span>, <span class='kw'>which</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>5</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>argo</span>, <span class='kw'>which</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>5</span>))
 
 <span class='co'># Example 2: argo profile nearest Sable Island</span>
 <span class='no'>index</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>destdir</span><span class='kw'>=</span><span class='st'>"~/data/argo"</span>)
@@ -204,7 +204,7 @@ to see if the output suggests a problem in the call.</p></td>
 <span class='no'>url</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>index</span><span class='kw'>[[</span><span class='st'>"metadata"</span>]][<span class='st'>"ftpRoot"</span>], <span class='st'>"/"</span>, <span class='no'>index</span><span class='kw'>[[</span><span class='st'>"file"</span>]][<span class='no'>w</span>])
 <span class='no'>fileSable</span> <span class='kw'>&lt;-</span> <span class='fu'>getProfileFromUrl</span>(<span class='kw'>url</span><span class='kw'>=</span><span class='no'>url</span>, <span class='kw'>destdir</span><span class='kw'>=</span><span class='st'>"~/data/argo"</span>)
 <span class='no'>argoSable</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/oce/man/read.oce.html'>read.oce</a></span>(<span class='no'>fileSable</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>argoSable</span>, <span class='kw'>which</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>5</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>argoSable</span>, <span class='kw'>which</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>5</span>))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
