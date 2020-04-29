@@ -27,9 +27,11 @@
 #'
 #' 4. A list named `polygon` that has elements named `longitude` and `latitude`
 #' that are numeric vectors specifying a polygon within which profiles
-#' will be retained. If the polygon is not closed (i.e. if the first and
-#' last points do not coincide) then a warning is issued, and the first
-#' point is pasted onto the end.  See example 4.
+#' will be retained. The polygon must not be self-intersecting,
+#' and an error message will be issued if it is.  If the polygon is not closed
+#' (i.e. if the first and last points do not coincide) then a warning is issued,
+#' and the first point is pasted onto the end, to close it. 
+#' See example 4.
 #'
 #' 5. A vector or list named `parameter` that holds character values that
 #' specify the names of measured parameters to keep. See example 5.
@@ -141,7 +143,7 @@
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
-#' @importFrom sf st_polygon st_multipoint st_intersection
+#' @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
 #' @export
 setMethod(f="subset",
           signature="argoFloats",
@@ -211,11 +213,13 @@ setMethod(f="subset",
                           stop("lengths of polygon$longitude and polygon$latitude must match, but they are ",
                                length(plat), " and ", length(plon))
                       if ((head(plon, 1) != tail(plon, 1)) || head(plat, 1) != tail(plat, 1)) {
-                          warning("In subset,argoFloats-method(): closing the polygon, since its first and last points did not match\n", call.=FALSE)
+                          warning("In subset,argoFloats-method(): Closing the polygon, since the first and last points did not match.\n", call.=FALSE)
                           plon <- c(plon, plon[1])
                           plat <- c(plat, plat[1])
                       }
                       Polygon <- sf::st_polygon(list(outer=cbind(plon, plat)))
+                      if (!sf::st_is_valid(Polygon))
+                          stop("In subset,argoFloats-method(): self-intersecting, or otherwise invalid polygon", call.=FALSE)
                       ## multipoint does not permit NA values, so we set them to zero and remove them later
                       alon <- x[["longitude"]]
                       alat <- x[["latitude"]]

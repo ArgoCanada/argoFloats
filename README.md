@@ -1,7 +1,7 @@
 # argoFloats
 
 [![TravisCI Build Status](https://travis-ci.org/ArgoCanada/argoFloats.svg?branch=develop)](https://travis-ci.org/ArgoCanada/argoFloats)
-[![Build status](https://ci.appveyor.com/api/projects/status/soednt1xah7t5w83/branch/develop?svg=true)](https://ci.appveyor.com/project/dankelley/argofloats/branch/develop)
+[![Build status](https://ci.appveyor.com/api/projects/status/soednt1xah7t5w83/branch/develop?svg=true)](https://ci.appveyor.com/project/dankelley/argoFloats/branch/develop)
 [![codecov](https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/ArgoCanada/argoFloats)
 
 The argoFloats package for the R language provides tools for downloading and
