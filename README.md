@@ -28,7 +28,8 @@ Once things are set up as above, it will be possible to use all the features of
 `argoFloats`, many of which are illustrated in the documentation for its
 functions, and in the vignette that is built into the package, both of which
 are displayed on the [user-oriented
-website](https://argocanada.github.io/argoFloats/index.html).
+website](https://argocanada.github.io/argoFloats/index.html). Note that the
+vignette also lists youtube videos about the package.
 
 For example, the following shows how to create a map and a temperature-salinity
 diagram for several Argo float profiles made near Abaco Island in the Bahamas.

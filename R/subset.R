@@ -30,7 +30,7 @@
 #' will be retained. The polygon must not be self-intersecting,
 #' and an error message will be issued if it is.  If the polygon is not closed
 #' (i.e. if the first and last points do not coincide) then a warning is issued,
-#' and the first point is pasted onto the end, to close it. 
+#' and the first point is pasted onto the end, to close it.
 #' See example 4.
 #'
 #' 5. A vector or list named `parameter` that holds character values that
@@ -218,8 +218,10 @@ setMethod(f="subset",
                           plat <- c(plat, plat[1])
                       }
                       Polygon <- sf::st_polygon(list(outer=cbind(plon, plat)))
-                      if (!sf::st_is_valid(Polygon))
-                          stop("In subset,argoFloats-method(): self-intersecting, or otherwise invalid polygon", call.=FALSE)
+                      if (!is.finite(sf::st_is_valid(Polygon))) {
+                          errorMessage <- sf::st_is_valid(Polygon, reason=TRUE)
+                          stop(paste0("In subset,argoFloats-method(): polygon is invalid, because of ", errorMessage), call.=FALSE)
+                      }
                       ## multipoint does not permit NA values, so we set them to zero and remove them later
                       alon <- x[["longitude"]]
                       alat <- x[["latitude"]]
