@@ -194,7 +194,7 @@ File Name                         | Nickname                | Contents
 `argo_merge-profile_index.txt.gz` | `"merge"` or `"merged"` | Merged `"argo"` and `"bgc"` data
 
 
-See `?getIndex()` for further description about the additional arguments for this command.
+Additionally, the `destdir` argument has a default of `~/data/argo`, where it should be noted that `~` is a short cut for `C:\Users\`. See `?getIndex()` for further description about the additional arguments for this command.
 
 To get the index from the USGODAE server, the following code is used:
 
