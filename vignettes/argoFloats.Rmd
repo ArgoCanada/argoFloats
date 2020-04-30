@@ -48,7 +48,7 @@ argoFloats R 02: TS plot near Bermuda | Jaimie Harbin & Dan Kelley | April 24, 2
 argoFloats R 03: new website | Jaimie Harbin & Dan Kelley | April 30, 2020 | https://youtu.be/lOvCrRDTmTs
 
 
-In addition to the videos, sample code can be found at https://github.com/dankelley/argoFloats/tree/develop/sandbox/videos/02 for each video.
+In addition to the videos, sample code can be found at https://github.com/argoCanada/argoFloats/tree/develop/sandbox/videos/02 for each video.
 
 # Preliminary Setup
 To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = TRUE)` command if you receive a Zero Exit Status Error):

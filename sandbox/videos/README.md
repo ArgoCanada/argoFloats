@@ -9,5 +9,5 @@
     - Sample code https://github.com/argoCanada/argoFloats/tree/develop/sandbox/videos/02
 * **argoFloats R 03: new website** (April 30, 2020)
     - Jaimie Harbin and Dan Kelley
-    - Video https://youtu.be/?
+    - Video https://youtu.be/lOvCrRDTmTs
 
