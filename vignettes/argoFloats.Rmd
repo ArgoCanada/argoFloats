@@ -45,9 +45,9 @@ Video Name                | Creators |Date| URL
 ----------------------------------|-------------------------|--------------|-------
 argoFloats R 01: Introduction |Dan Kelley & Jaimie Harbin| April 9, 2020| https://youtu.be/xeBoFbb66Nk.
 argoFloats R 02: TS plot near Bermuda | Jaimie Harbin & Dan Kelley | April 24, 2020 | https://youtu.be/ZoTrVEMG5Qo
+argoFloats R 03: new websie | Jaimie Harbin & Dan Kelley | April 30, 2020 | https://youtu.be/lOvCrRDTmTs
 
-
-In addition to the videos, sample code can be found at https://github.com/dankelley/argoFloats/tree/develop/sandbox/videos/02 for each video.
+In addition to the videos, sample code can be found at https://github.com/argoCanada/argoFloats/tree/develop/sandbox/videos/02 for each video.
 
 # Preliminary Setup
 To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = TRUE)` command if you receive a Zero Exit Status Error):
@@ -194,7 +194,7 @@ File Name                         | Nickname                | Contents
 `argo_merge-profile_index.txt.gz` | `"merge"` or `"merged"` | Merged `"argo"` and `"bgc"` data
 
 
-See `?getIndex()` for further description about the additional arguments for this command.
+Additionally, the `destdir` argument has a default of `~/data/argo`, where it should be noted that `~` is a short cut for `C:\Users\`. See `?getIndex()` for further description about the additional arguments for this command.
 
 To get the index from the USGODAE server, the following code is used:
 
