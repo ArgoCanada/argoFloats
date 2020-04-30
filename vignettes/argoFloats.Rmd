@@ -45,6 +45,7 @@ Video Name                | Creators |Date| URL
 ----------------------------------|-------------------------|--------------|-------
 argoFloats R 01: Introduction |Dan Kelley & Jaimie Harbin| April 9, 2020| https://youtu.be/xeBoFbb66Nk.
 argoFloats R 02: TS plot near Bermuda | Jaimie Harbin & Dan Kelley | April 24, 2020 | https://youtu.be/ZoTrVEMG5Qo
+argoFloats R 03: new website | Jaimie Harbin & Dan Kelley | April 30, 2020 | https://youtu.be/lOvCrRDTmTs
 
 
 In addition to the videos, sample code can be found at https://github.com/dankelley/argoFloats/tree/develop/sandbox/videos/02 for each video.
