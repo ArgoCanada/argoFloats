@@ -12,8 +12,8 @@ Once downloaded, such datasets can be analysed within \code{argoFloats} or using
 and packages.
 }
 \details{
-The development website is https://github.com/ArgoCanada/argoFloats, and
-https://argocanada.github.io/argoFloats/index.html provides a simpler view
+The development website is \url{https://github.com/ArgoCanada/argoFloats}, and
+\url{https://argocanada.github.io/argoFloats/index.html} provides a simpler view
 that may be more helpful to most users.
 
 The sketch given below illustrates the typical workflow with the package, with
