@@ -422,7 +422,11 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE
         file <- rep("", n)
         argoFloatsDebug(debug, vectorShow(index[["ftpRoot"]]))
         argoFloatsDebug(debug, vectorShow(index[["file"]]))
-        urls <- paste0(index[["ftpRoot"]], "/", index[["file"]])
+        ## see https://github.com/ArgoCanada/argoFloats/issues/82
+        ## FIXME: check to see if we need /dac/ instead of / for both servers;
+        ## FIXME: this only works for the us server
+        ## OLD: urls <- paste0(index[["ftpRoot"]], "/", index[["file"]])
+        urls <- paste0(index@metadata$server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
         for (i in seq_along(urls)) {
             file[i] <- getProfileFromUrl(urls[i], destdir=destdir,
