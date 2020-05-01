@@ -156,7 +156,7 @@ indices of <code>x@data$index</code> to keep (example 1).</p></td>
       <th>...</th>
       <td><p>the first entry here must be either (a)
 a list named <code>circle</code>, <code>rectangle</code>, <code>polygon</code>,
-<code>parameter</code>, <code>time</code>, <code>institution</code>, or <code>id</code>
+<code>parameter</code>, <code>time</code>, <code>institution</code>, <code>id</code>, or <code>ocean</code>
 (examples 2 through 8)
 or (b) a logical value named <code>deep</code> (example 9).  Optionally, this entry
 may be followed by second entry named <code>silent</code>, which is a logical
@@ -213,6 +213,12 @@ See example 7.</p></li>
 are deep argo (i.e. <code>profiler_type</code> 849, 862, and 864). See example 8.</p></li>
 <li><p>A list named <code>ID</code> that holds a character value specifying a float identifier.
 See example 9.</p></li>
+<li><p>A list names <code>ocean</code>, which holds a single character element that names the
+ocean. The permitted values are:
+<code>"A"</code> for Atlantic Ocean Area
+<code>"P"</code> for Pacific Ocean Area
+<code>"I"</code> for Indian Ocean Area
+See example 10.</p></li>
 </ol>
 
 <p>In all cases, the notation is that longitude is positive
@@ -259,7 +265,23 @@ is positive for degrees North and negative for degrees South.</p>
 <span class='co'># Example 9: subset data to only include deep argo</span>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
-<span class='no'>index8</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>ai</span>, <span class='kw'>deep</span><span class='kw'>=</span><span class='fl'>TRUE</span>) }</div></pre>
+<span class='no'>index8</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>ai</span>, <span class='kw'>deep</span><span class='kw'>=</span><span class='fl'>TRUE</span>) }
+
+<span class='co'># Example 10: subset by specific ocean near Ithmus of Panama</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span><span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
+<span class='no'>lonPoly</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>90.27</span>, -<span class='fl'>82.89</span>, -<span class='fl'>74.71</span>, -<span class='fl'>79.11</span>)
+<span class='no'>latPoly</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>7.89</span>, <span class='fl'>3.87</span>, <span class='fl'>12.56</span>, <span class='fl'>16.72</span>)
+<span class='no'>subset10</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>ai</span>, <span class='kw'>polygon</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span><span class='no'>lonPoly</span>, <span class='kw'>latitude</span><span class='kw'>=</span><span class='no'>latPoly</span>))
+<span class='no'>index10A</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>subset10</span>, <span class='kw'>ocean</span><span class='kw'>=</span><span class='st'>"A"</span>)
+<span class='no'>profilesA</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span>(<span class='no'>index10A</span>)
+<span class='no'>argosA</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span>(<span class='no'>profilesA</span>)
+<span class='no'>index10B</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>subset10</span>, <span class='kw'>ocean</span><span class='kw'>=</span><span class='st'>'P'</span>)
+<span class='no'>profilesB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span>(<span class='no'>index10B</span>)
+<span class='no'>argosB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span>(<span class='no'>profilesB</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>argosA</span>, <span class='kw'>which</span><span class='kw'>=</span><span class='st'>'TS'</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>'Atlantic Ocean'</span>, <span class='kw'>cex.main</span><span class='kw'>=</span><span class='fl'>0.7</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>argosB</span>, <span class='kw'>which</span><span class='kw'>=</span><span class='st'>'TS'</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>'Pacific Ocean'</span>, <span class='kw'>cex.main</span><span class='kw'>=</span><span class='fl'>0.7</span>) }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
