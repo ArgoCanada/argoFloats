@@ -84,6 +84,7 @@ ocean. The permitted values are:
 \code{"A"} for Atlantic Ocean Area
 \code{"P"} for Pacific Ocean Area
 \code{"I"} for Indian Ocean Area
+See example 10.
 }
 
 In all cases, the notation is that longitude is positive

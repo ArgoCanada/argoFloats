@@ -210,7 +210,7 @@ ai <- index
 
 ## subset()
 
-As shown by Figure 1, the next step when working with the `argoFloats` package is to use the `subset()` function to focus on a subset of profiles. The `argoFloats` package provides tools to sift through profiles based on ID, time, geography and institution. 
+As shown by Figure 1, the next step when working with the `argoFloats` package is to use the `subset()` function to focus on a subset of profiles. The `argoFloats` package provides tools to sift through profiles based on ID, time, geography, variable, institution, and ocean. 
 
 For geographic subsetting, the user has the ability to subset by `circle`, `rectangle`, or `polygon`. 
 
