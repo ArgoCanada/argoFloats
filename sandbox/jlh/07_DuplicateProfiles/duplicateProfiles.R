@@ -1,6 +1,6 @@
 library(argoFloats)
 ai <- getIndex()
-sub <- subset(ai, 1:100)
-profiles <- getProfiles(sub)
-argos <- readProfiles(profiles)
-argos
+l <- length (ai)
+set.seed(1) # First sample
+s1 <- sample(ai[['index']], 10)
+p1 <- getProfiles(s1)
