@@ -47,7 +47,7 @@ Then these files are downloaded to the destdir directory,
 using filenames inferred from the source filenames. The
 value returned by getProfiles() is suitable for use
 by readProfiles(), and an example of this is given
-in the documentation for the latter function." />
+in the documentation for readProfiles()." />
 
 
 
@@ -134,7 +134,7 @@ Then these files are downloaded to the <code>destdir</code> directory,
 using filenames inferred from the source filenames. The
 value returned by <code>getProfiles()</code> is suitable for use
 by <code><a href='readProfiles.html'>readProfiles()</a></code>, and an example of this is given
-in the documentation for the latter function.</p>
+in the documentation for <code><a href='readProfiles.html'>readProfiles()</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>getProfiles</span>(
@@ -190,6 +190,19 @@ to see if the output suggests a problem in the call.</p></td>
 
     <p>An object of class <a href='argoFloats-class.html'>argoFloats</a> with type=<code>"profiles"</code>, which
 is suitable as the first argument of <code><a href='readProfiles.html'>readProfiles()</a></code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>It should be noted that the constructed server URL follows
+a different pattern on the usgodae an ifremer servers, and
+so if some other server is used, the URL may be wrong, leading
+to an error.  Similarly, if the patterns on these two
+servers change, then <code>getProfiles()</code> will fail. Users who
+encounter such problems are requested to report them
+to the authors; in a pinch, they may try altering the
+conditional block that follows the line</p><pre>## NB. the USGODAE and IFREMER servers are set up differently.
+</pre>
+
+<p>in the source-code file named <code>R/get.R</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Download some Argo data files.</span>
