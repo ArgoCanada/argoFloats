@@ -72,3 +72,11 @@ test_that("silencing subset", {
     data("index")
     indexID <- expect_silent(subset(index, deep=TRUE, silent=TRUE))
 })
+
+test_that("subset by ocean", {
+    data("index")
+    indexOcean <- subset(index, ocean='A')
+    expect_equal(dim(indexOcean[["index"]]), c(953,8))
+    expect_equal(indexOcean[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+    expect_equal(indexOcean[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+})
