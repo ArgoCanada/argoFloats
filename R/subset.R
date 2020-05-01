@@ -62,11 +62,11 @@
 #' 9. A list named `ID` that holds a character value specifying a float identifier.
 #' See example 9.
 #' 
-#' 10. A list names `ocean`, which holds a single character element that names the
+#' 10. A list named `ocean`, which holds a single character element that names the
 #' ocean. The permitted values are:
-#' `"A"` for Atlantic Ocean Area 
-#' `"P"` for Pacific Ocean Area
-#' `"I"` for Indian Ocean Area
+#' `"A"` for Atlantic Ocean Area; 
+#' `"P"` for Pacific Ocean Area;
+#' `"I"` for Indian Ocean Area.
 #' See example 10.
 #' 
 #' In all cases, the notation is that longitude is positive
