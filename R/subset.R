@@ -67,6 +67,7 @@
 #' `"A"` for Atlantic Ocean Area 
 #' `"P"` for Pacific Ocean Area
 #' `"I"` for Indian Ocean Area
+#' See example 10.
 #' 
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
