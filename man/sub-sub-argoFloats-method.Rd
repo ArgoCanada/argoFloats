@@ -28,9 +28,9 @@ value of \code{i} and, in some cases, on the value of \code{j}; see \dQuote{Deta
 \enumerate{
 \item If \code{i=="metadata"} then the \code{metadata} slot of \code{x} is returned.
 \item If \code{i=="data"} then the \code{data} slot of \code{x} is returned.
-\item If \code{i=="ftpRoot"} and the object was created with \code{\link[=getIndex]{getIndex()}},
-then then the value of \code{ftpRoot} in the \code{metadata}
-slot is returned.  (This is used by \code{\link[=getProfiles]{getProfiles()}} to construct
+\item If \code{i=="ftpRoot"} or \code{"server"} and the object was created with \code{\link[=getIndex]{getIndex()}},
+then then the value of that item in the \code{metadata}
+slot is returned.  (Note that \code{"server"} is used by \code{\link[=getProfiles]{getProfiles()}} to construct
 a vector of URLs to download.)
 \item If \code{i=="destdir"} then the \code{destdir} item in the \code{metadata} slot is
 returned. This is used by \code{\link[=getProfiles]{getProfiles()}} to decide where to
@@ -58,7 +58,7 @@ shortcut for \code{"longitude"}.
 \examples{
 data(index)
 # Full remote filename for first two item in index
-paste(index[["ftpRoot"]], index[["profile", 1:2]], sep="/")
+paste0(index[["server"]], "/dac/", index[["profile", 1:2]])
 # File names and geographical locations of first 5 items in index
 index5 <- subset(index, 1:5)
 data.frame(file=gsub(".*/", "", index5[["file"]][1]),
