@@ -49,7 +49,20 @@ Then these files are downloaded to the \code{destdir} directory,
 using filenames inferred from the source filenames. The
 value returned by \code{\link[=getProfiles]{getProfiles()}} is suitable for use
 by \code{\link[=readProfiles]{readProfiles()}}, and an example of this is given
-in the documentation for the latter function.
+in the documentation for \code{\link[=readProfiles]{readProfiles()}}.
+}
+\details{
+It should be noted that the constructed server URL follows
+a different pattern on the usgodae an ifremer servers, and
+so if some other server is used, the URL may be wrong, leading
+to an error.  Similarly, if the patterns on these two
+servers change, then \code{\link[=getProfiles]{getProfiles()}} will fail. Users who
+encounter such problems are requested to report them
+to the authors; in a pinch, they may try altering the
+conditional block that follows the line\preformatted{## NB. the USGODAE and IFREMER servers are set up differently.
+}
+
+in the source-code file named \code{R/get.R}.
 }
 \examples{
 # Download some Argo data files.

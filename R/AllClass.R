@@ -1,4 +1,4 @@
-## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+    # vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 #' A Package for Processing Argo Float Profiles
 #'
@@ -171,9 +171,9 @@ setMethod(f="initialize",
 #'
 #' 2. If `i=="data"` then the `data` slot of `x` is returned.
 #'
-#' 3. If `i=="ftpRoot"` and the object was created with [getIndex()],
-#' then then the value of `ftpRoot` in the `metadata`
-#' slot is returned.  (This is used by [getProfiles()] to construct
+#' 3. If `i=="ftpRoot"` or `"server"` and the object was created with [getIndex()],
+#' then then the value of that item in the `metadata`
+#' slot is returned.  (Note that `"server"` is used by [getProfiles()] to construct
 #' a vector of URLs to download.)
 #'
 #' 4. If `i=="destdir"` then the `destdir` item in the `metadata` slot is
@@ -222,7 +222,7 @@ setMethod(f="initialize",
 #' @examples
 #' data(index)
 #' # Full remote filename for first two item in index
-#' paste(index[["ftpRoot"]], index[["profile", 1:2]], sep="/")
+#' paste0(index[["server"]], "/dac/", index[["profile", 1:2]])
 #' # File names and geographical locations of first 5 items in index
 #' index5 <- subset(index, 1:5)
 #' data.frame(file=gsub(".*/", "", index5[["file"]][1]),
@@ -249,8 +249,8 @@ setMethod(f="[[",
                   return(x@data)
               if (i == "metadata")
                   return(x@metadata)
-              if (i == "ftpRoot" && type == "index")
-                  return(x@metadata$ftpRoot)
+              if (i %in% c("ftpRoot", "server") && type == "index")
+                  return(x@metadata[[i]])
               if (i == "destdir")
                   return(x@metadata$destdir)
               if (i == "type")

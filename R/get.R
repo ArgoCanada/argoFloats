@@ -374,7 +374,21 @@ getIndex <- function(server="auto",
 #' using filenames inferred from the source filenames. The
 #' value returned by [getProfiles()] is suitable for use
 #' by [readProfiles()], and an example of this is given
-#' in the documentation for the latter function.
+#' in the documentation for [readProfiles()].
+#'
+#' It should be noted that the constructed server URL follows
+#' a different pattern on the usgodae an ifremer servers, and
+#' so if some other server is used, the URL may be wrong, leading
+#' to an error.  Similarly, if the patterns on these two
+#' servers change, then [getProfiles()] will fail. Users who
+#' encounter such problems are requested to report them
+#' to the authors; in a pinch, they may try altering the
+#' conditional block that follows the line
+#' ```
+#' ## NB. the USGODAE and IFREMER servers are set up differently.
+#' ```
+#' in the source-code file named `R/get.R`.
+#'
 #'
 #' @param index an [argoFloats-class] object of type `"index"`, as created
 #' by [getIndex()].
@@ -422,11 +436,25 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE
         file <- rep("", n)
         argoFloatsDebug(debug, vectorShow(index[["ftpRoot"]]))
         argoFloatsDebug(debug, vectorShow(index[["file"]]))
-        ## see https://github.com/ArgoCanada/argoFloats/issues/82
-        ## FIXME: check to see if we need /dac/ instead of / for both servers;
-        ## FIXME: this only works for the us server
-        ## OLD: urls <- paste0(index[["ftpRoot"]], "/", index[["file"]])
-        urls <- paste0(index@metadata$server, "/dac/", index[["file"]])
+        ## The Construction of the remote filename is tricky was changed on 2020-04-30. Previously,
+        ## we used "ftpRoot", inferred from the "# FTP" line in the header in the index file.
+        ## However, as discussed at https://github.com/ArgoCanada/argoFloats/issues/82,
+        ## this decision was faulty, in the sense that it sometimes worked and sometimes
+        ## failed, for the *same* index object -- that is, the file structure on the server
+        ## must be changeable.  So, as a test (which will need to be reevaluated over time),
+        ## we switched to using "server" instead of "ftpRoot".  That means that we seek
+        ## the netcdf files from the same source as the index, and *not* from the source listed
+        ## in the "# FTP" line in the header within that index.
+        server <- index[["server"]]
+        ## NB. the USGODAE and IFREMER servers are set up differently.
+        urls <- if (grep("usgodae.org", server, ignore.case=TRUE)) {
+            urls <- paste0(server, "/dac/", index[["file"]])
+        } else if (grep("ifremer.fr", server, ignore.case=TRUE)) {
+            urls <- paste0(server, "/", index[["file"]])
+        } else {
+            urls <- paste0(server, "/", index[["file"]])
+            warning("guessing on URL form (e.g. \"", urls[1], "\"), because server is neither usgodae.org nor ifremer.fr\n", immediate.=TRUE)
+        }
         argoFloatsDebug(debug, oce::vectorShow(urls))
         for (i in seq_along(urls)) {
             file[i] <- getProfileFromUrl(urls[i], destdir=destdir,
