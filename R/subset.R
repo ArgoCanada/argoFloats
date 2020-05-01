@@ -61,7 +61,14 @@
 #'
 #' 9. A list named `ID` that holds a character value specifying a float identifier.
 #' See example 9.
-#'
+#' 
+#' 10. A list names `ocean`, which holds a single character element that names the
+#' ocean. The permitted values are:
+#' `"A"` for Atlantic Ocean Area 
+#' `"P"` for Pacific Ocean Area
+#' `"I"` for Indian Ocean Area
+#' See example 10.
+#' 
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
 #' is positive for degrees North and negative for degrees South.
@@ -73,7 +80,7 @@
 #'
 #' @param ... the first entry here must be either (a)
 #' a list named `circle`, `rectangle`, `polygon`,
-#' `parameter`, `time`, `institution`, or `id`
+#' `parameter`, `time`, `institution`, `id`, or `ocean`
 #' (examples 2 through 8)
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
@@ -139,6 +146,23 @@
 #' \dontrun{
 #' ai <- getIndex(file='merged', destdir = '~/data/argo')
 #' index8 <- subset(ai, deep=TRUE) }
+#' 
+#' # Example 10: subset by specific ocean near Ithmus of Panama
+#' \dontrun{
+#' ai <- getIndex(file='merged', destdir= '~/data/argo')
+#' lonPoly <- c(-90.27, -82.89, -74.71, -79.11)
+#' latPoly <- c(7.89, 3.87, 12.56, 16.72)
+#' subset10 <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
+#' index10A <- subset(subset10, ocean="A")
+#' profilesA <- getProfiles(index10A)
+#' argosA <- readProfiles(profilesA)
+#' index10B <- subset(subset10, ocean='P')
+#' profilesB <- getProfiles(index10B)
+#' argosB <- readProfiles(profilesB)
+#' par(mfrow= c(1,2))
+#' plot(argosA, which='TS', main='Atlantic Ocean', cex.main=0.7)
+#' plot(argosB, which='TS', main='Pacific Ocean', cex.main=0.7) }
+#' 
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -154,7 +178,7 @@ setMethod(f="subset",
               silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID', or 'ocean'")
                   if (length(dots) > 1) {
                       if (length(dots) > 2 || !("silent" %in% dotsNames))
                           stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
@@ -264,7 +288,7 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=='deep') {
+                  } else if (dotsNames[1] == 'deep') {
                       deep <- dots[[1]]
                       if (!as.logical(deep))
                           stop("deep must be a logical vector indicating TRUE or FALSE")
@@ -276,6 +300,7 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
+               
                   } else if (dotsNames[1] == 'ID') {
                       ID <- dots[[1]]
                       file <- x@data$index$file
@@ -284,8 +309,19 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
+                  } else if(dotsNames[1]=="ocean") {
+                      ocean <- dots[[1]]
+                      if(!is.list(dots[1]))
+                          stop("In subset,argoFloats-method() : 'ocean' must be a list")
+                      if (length(ocean) > 1)
+                          stop("'ocean' cannot hold more than one element")
+                      keep <- grepl(ocean, x@data$index$ocean)
+                      keep[is.na(keep)] <- FALSE
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
+                      x@data$index <- x@data$index[keep, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', or 'ID'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', or 'ocean'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)
