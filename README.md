@@ -20,8 +20,8 @@ where, of course, the `devtools` package must be installed first, if it is not
 already present on the user's system.  It is also necessary to have up-to-date
 versions of the `oce` and `ocedata` packages installed, which is accomplished with
 ```R
-install_github('ArgoCanada/oce', ref='develop')
-install_github('ArgoCanada/ocedata', ref='develop')
+install_github('dankelley/oce', ref='develop')
+install_github('dankelley/ocedata', ref='develop')
 ```
 
 Once things are set up as above, it will be possible to use all the features of
