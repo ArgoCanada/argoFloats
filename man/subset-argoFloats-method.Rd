@@ -14,7 +14,7 @@ indices of \code{x@data$index} to keep (example 1).}
 
 \item{...}{the first entry here must be either (a)
 a list named \code{circle}, \code{rectangle}, \code{polygon},
-\code{parameter}, \code{time}, \code{institution}, or \code{id}
+\code{parameter}, \code{time}, \code{institution}, \code{id}, or \code{ocean}
 (examples 2 through 8)
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
@@ -79,6 +79,11 @@ See example 7.
 are deep argo (i.e. \code{profiler_type} 849, 862, and 864). See example 8.
 \item A list named \code{ID} that holds a character value specifying a float identifier.
 See example 9.
+\item A list names \code{ocean}, which holds a single character element that names the
+ocean. The permitted values are:
+\code{"A"} for Atlantic Ocean Area
+\code{"P"} for Pacific Ocean Area
+\code{"I"} for Indian Ocean Area
 }
 
 In all cases, the notation is that longitude is positive
@@ -140,6 +145,23 @@ index9 <- subset(ai, ID='1900722') }
 \dontrun{
 ai <- getIndex(file='merged', destdir = '~/data/argo')
 index8 <- subset(ai, deep=TRUE) }
+
+# Example 10: subset by specific ocean near Ithmus of Panama
+\dontrun{
+ai <- getIndex(file='merged', destdir= '~/data/argo')
+lonPoly <- c(-90.27, -82.89, -74.71, -79.11)
+latPoly <- c(7.89, 3.87, 12.56, 16.72)
+subset10 <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
+index10A <- subset(subset10, ocean="A")
+profilesA <- getProfiles(index10A)
+argosA <- readProfiles(profilesA)
+index10B <- subset(subset10, ocean='P')
+profilesB <- getProfiles(index10B)
+argosB <- readProfiles(profilesB)
+par(mfrow= c(1,2))
+plot(argosA, which='TS', main='Atlantic Ocean', cex.main=0.7)
+plot(argosB, which='TS', main='Pacific Ocean', cex.main=0.7) }
+
 
 }
 \author{
