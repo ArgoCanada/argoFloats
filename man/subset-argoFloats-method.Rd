@@ -79,11 +79,11 @@ See example 7.
 are deep argo (i.e. \code{profiler_type} 849, 862, and 864). See example 8.
 \item A list named \code{ID} that holds a character value specifying a float identifier.
 See example 9.
-\item A list names \code{ocean}, which holds a single character element that names the
+\item A list named \code{ocean}, which holds a single character element that names the
 ocean. The permitted values are:
-\code{"A"} for Atlantic Ocean Area
-\code{"P"} for Pacific Ocean Area
-\code{"I"} for Indian Ocean Area
+\code{"A"} for Atlantic Ocean Area,
+\code{"P"} for Pacific Ocean Area, and
+\code{"I"} for Indian Ocean Area.
 See example 10.
 }
 
