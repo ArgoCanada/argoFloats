@@ -32,9 +32,9 @@ as created by \code{\link[=getIndex]{getIndex()}}, either by specifying
 indices to keep (using the \code{subset} argument) or by specifying
 a way to determine those indices (using the \code{...} argument).
 Note that only one subset condition may be given in the \code{...}
-argument, but that \code{\link[=merge,argoFloats-method]{merge,argoFloats-method()}} can be used to merge indices
-created by \code{subset}, which effectively creates a logical "or"
-operation.
+argument, but that \code{\link[=merge,argoFloats,ANY-method]{merge,argoFloats,ANY-method()}}
+can be used to merge indices  created by \code{subset},
+which effectively creates a logical "or" operation.
 }
 \details{
 The possibilities for the \code{...} argument are as follows.
@@ -79,11 +79,11 @@ See example 7.
 are deep argo (i.e. \code{profiler_type} 849, 862, and 864). See example 8.
 \item A list named \code{ID} that holds a character value specifying a float identifier.
 See example 9.
-\item A list names \code{ocean}, which holds a single character element that names the
+\item A list named \code{ocean}, which holds a single character element that names the
 ocean. The permitted values are:
-\code{"A"} for Atlantic Ocean Area
-\code{"P"} for Pacific Ocean Area
-\code{"I"} for Indian Ocean Area
+\code{"A"} for Atlantic Ocean Area, from 70 W to 20 E,
+\code{"P"} for Pacific Ocean Area, from 145 E to 70 W, and
+\code{"I"} for Indian Ocean Area, from 20 E to 145 E.
 See example 10.
 }
 

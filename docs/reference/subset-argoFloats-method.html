@@ -45,9 +45,9 @@ as created by getIndex(), either by specifying
 indices to keep (using the subset argument) or by specifying
 a way to determine those indices (using the ... argument).
 Note that only one subset condition may be given in the ...
-argument, but that merge,argoFloats-method() can be used to merge indices
-created by subset, which effectively creates a logical &quot;or&quot;
-operation." />
+argument, but that merge,argoFloats,ANY-method()
+can be used to merge indices  created by subset,
+which effectively creates a logical &quot;or&quot; operation." />
 
 
 
@@ -132,9 +132,9 @@ as created by <code><a href='getIndex.html'>getIndex()</a></code>, either by spe
 indices to keep (using the <code>subset</code> argument) or by specifying
 a way to determine those indices (using the <code>...</code> argument).
 Note that only one subset condition may be given in the <code>...</code>
-argument, but that <code><a href='merge-argoFloats-method.html'>merge,argoFloats-method()</a></code> can be used to merge indices
-created by <code>subset</code>, which effectively creates a logical "or"
-operation.</p>
+argument, but that <code><a href='merge-argoFloats-ANY-method.html'>merge,argoFloats,ANY-method()</a></code>
+can be used to merge indices  created by <code>subset</code>,
+which effectively creates a logical "or" operation.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for argoFloats</span>
@@ -213,11 +213,19 @@ See example 7.</p></li>
 are deep argo (i.e. <code>profiler_type</code> 849, 862, and 864). See example 8.</p></li>
 <li><p>A list named <code>ID</code> that holds a character value specifying a float identifier.
 See example 9.</p></li>
+<<<<<<< HEAD
 <li><p>A list names <code>ocean</code>, which holds a single character element that names the
 ocean. The permitted values are:
 <code>"A"</code> for Atlantic Ocean Area
 <code>"P"</code> for Pacific Ocean Area
 <code>"I"</code> for Indian Ocean Area
+=======
+<li><p>A list named <code>ocean</code>, which holds a single character element that names the
+ocean. The permitted values are:
+<code>"A"</code> for Atlantic Ocean Area, from 70 W to 20 E,
+<code>"P"</code> for Pacific Ocean Area, from 145 E to 70 W, and
+<code>"I"</code> for Indian Ocean Area, from 20 E to 145 E.
+>>>>>>> develop
 See example 10.</p></li>
 </ol>
 

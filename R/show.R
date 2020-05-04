@@ -22,21 +22,21 @@ setMethod(f="show",
                       object[['type']],
                       '" with ',
                       dim(object[['index']])[1],
-                      " items",
+                      " items\n",
                       sep="")
               } else if (type == "profiles") {
                   cat('argoFloats object of type "',
                       object[['type']],
                       '" with ',
                       length(object@data$file),
-                      " items",
+                      " items\n",
                       sep="")
               } else if (type == "argos") {
                   cat('argoFloats object of type "',
                       object[['type']],
                       '" with ',
                       length(object@data$argos),
-                      " items",
+                      " items\n",
                       sep="")
               } else stop("Unknown type =", type)
           })
