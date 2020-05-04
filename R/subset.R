@@ -7,9 +7,9 @@
 #' indices to keep (using the `subset` argument) or by specifying
 #' a way to determine those indices (using the `...` argument).
 #' Note that only one subset condition may be given in the `...`
-#' argument, but that [merge,argoFloats-method()] can be used to merge indices
-#' created by `subset`, which effectively creates a logical "or"
-#' operation.
+#' argument, but that [merge,argoFloats,ANY-method()]
+#' can be used to merge indices  created by `subset`,
+#' which effectively creates a logical "or" operation.
 #'
 #' The possibilities for the `...` argument are as follows.
 #'
