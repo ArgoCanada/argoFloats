@@ -64,9 +64,9 @@
 #'
 #' 10. A list named `ocean`, which holds a single character element that names the
 #' ocean. The permitted values are:
-#' `"A"` for Atlantic Ocean Area,
-#' `"P"` for Pacific Ocean Area, and
-#' `"I"` for Indian Ocean Area.
+#' `"A"` for Atlantic Ocean Area, from 70 W to 20 E,
+#' `"P"` for Pacific Ocean Area, from 145 E to 70 W, and
+#' `"I"` for Indian Ocean Area, from 20 E to 145 E.
 #' See example 10.
 #'
 #' In all cases, the notation is that longitude is positive
