@@ -162,9 +162,9 @@ see &#8220;Details&#8221;.</p></td>
 <ol>
 <li><p>If <code>i=="metadata"</code> then the <code>metadata</code> slot of <code>x</code> is returned.</p></li>
 <li><p>If <code>i=="data"</code> then the <code>data</code> slot of <code>x</code> is returned.</p></li>
-<li><p>If <code>i=="ftpRoot"</code> and the object was created with <code><a href='getIndex.html'>getIndex()</a></code>,
-then then the value of <code>ftpRoot</code> in the <code>metadata</code>
-slot is returned.  (This is used by <code><a href='getProfiles.html'>getProfiles()</a></code> to construct
+<li><p>If <code>i=="ftpRoot"</code> or <code>"server"</code> and the object was created with <code><a href='getIndex.html'>getIndex()</a></code>,
+then then the value of that item in the <code>metadata</code>
+slot is returned.  (Note that <code>"server"</code> is used by <code><a href='getProfiles.html'>getProfiles()</a></code> to construct
 a vector of URLs to download.)</p></li>
 <li><p>If <code>i=="destdir"</code> then the <code>destdir</code> item in the <code>metadata</code> slot is
 returned. This is used by <code><a href='getProfiles.html'>getProfiles()</a></code> to decide where to
@@ -193,8 +193,8 @@ shortcut for <code>"longitude"</code>.</p></li>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>index</span>)
 <span class='co'># Full remote filename for first two item in index</span>
-<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>index</span><span class='kw'>[[</span><span class='st'>"ftpRoot"</span>]], <span class='no'>index</span><span class='kw'>[[</span><span class='st'>"profile"</span>, <span class='fl'>1</span>:<span class='fl'>2</span>]], <span class='kw'>sep</span><span class='kw'>=</span><span class='st'>"/"</span>)</div><div class='output co'>#&gt; [1] "ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1901584/profiles/R1901584_124.nc"
-#&gt; [2] "ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1901584/profiles/R1901584_125.nc"</div><div class='input'><span class='co'># File names and geographical locations of first 5 items in index</span>
+<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>index</span><span class='kw'>[[</span><span class='st'>"server"</span>]], <span class='st'>"/dac/"</span>, <span class='no'>index</span><span class='kw'>[[</span><span class='st'>"profile"</span>, <span class='fl'>1</span>:<span class='fl'>2</span>]])</div><div class='output co'>#&gt; [1] "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_124.nc"
+#&gt; [2] "ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1901584/profiles/R1901584_125.nc"  </div><div class='input'><span class='co'># File names and geographical locations of first 5 items in index</span>
 <span class='no'>index5</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='fl'>1</span>:<span class='fl'>5</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span>(<span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"file"</span>]][<span class='fl'>1</span>]),
            <span class='kw'>lon</span><span class='kw'>=</span><span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]],
