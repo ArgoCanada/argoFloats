@@ -1,4 +1,5 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+use_sf_package <- FALSE
 
 #' Subset an argoFloats Object
 #'
@@ -244,25 +245,24 @@ setMethod(f="subset",
                       }
                       alon <- x[["longitude"]]
                       alat <- x[["latitude"]]
-                      ## the sf method produces some stray errors, so we use the sp method
-                      ## instead; see https://github.com/ArgoCanada/argoFloats/issues/86
-                      ##OD ok <- is.finite(alon) & is.finite(alat)
-                      ##OLD Polygon <- sf::st_polygon(list(outer=cbind(plon, plat)))
-                      ##OLD if (!is.finite(sf::st_is_valid(Polygon))) {
-                      ##OLD     errorMessage <- sf::st_is_valid(Polygon, reason=TRUE)
-                      ##OLD     stop(paste0("In subset,argoFloats-method(): polygon is invalid, because of ", errorMessage), call.=FALSE)
-                      ##OLD }
-                      ##OLD ## multipoint does not permit NA values, so we set them to zero and remove them later
-                      ##OLD Points <- sf::st_multipoint(cbind(ifelse(ok, alon, 0),
-                      ##OLD                                   ifelse(ok, alat, 0)))
-                      ##OLD Inside <- sf::st_intersection(Points, Polygon)
-                      ##OLD M <- matrix(Points %in% Inside, ncol=2)
-                      ##OLD danok<<-ok
-                      ##OLD danalon<<-alon
-                      ##OLD danalat<<-alat
-                      ##OLD danM<<-M
-                      ##OLD keep <- M[,1] & M[,2] & ok
-                      keep <- 0 != sp::point.in.polygon(alon, alat, plon, plat)
+                      if (use_sf_package) {
+                          ## the sf method produces some stray errors, so we use the sp method
+                          ## instead; see https://github.com/ArgoCanada/argoFloats/issues/86
+                          ok <- is.finite(alon) & is.finite(alat)
+                          Polygon <- sf::st_polygon(list(outer=cbind(plon, plat)))
+                          if (!is.finite(sf::st_is_valid(Polygon))) {
+                              errorMessage <- sf::st_is_valid(Polygon, reason=TRUE)
+                              stop(paste0("In subset,argoFloats-method(): polygon is invalid, because of ", errorMessage), call.=FALSE)
+                          }
+                          ## multipoint does not permit NA values, so we set them to zero and remove them later
+                          Points <- sf::st_multipoint(cbind(ifelse(ok, alon, 0),
+                                                            ifelse(ok, alat, 0)))
+                          Inside <- sf::st_intersection(Points, Polygon)
+                          M <- matrix(Points %in% Inside, ncol=2)
+                          keep <- M[,1] & M[,2] & ok
+                      } else {
+                          keep <- 0 != sp::point.in.polygon(alon, alat, plon, plat)
+                      }
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
