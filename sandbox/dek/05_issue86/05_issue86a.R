@@ -1,18 +1,17 @@
 library(oce)
 library(ocedata)
 library(argoFloats)
-source("../../../R/subset.R")
 i <- getIndex()
 s <- subset(i, circle=list(longitude=-83, latitude=9, radius=500))
-if (!interactive()) png("03_by_ocean_1.png")
-plot(s, which="map")
-atlantic <- subset(s, ocean="A")
-pacific <- subset(s, ocean="P")
-points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2, cex=0.7*par("cex"))
-points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3, cex=0.7*par("cex"))
-if (!interactive()) dev.off()
 
-if (!interactive()) png("03_by_ocean_2.png")
+if (!interactive()) png("05_issue86a.png")
+#par(mfrow=c(2,1))
+#
+##plot(s, which="map")
+##atlantic <- subset(s, ocean="A")
+##pacific <- subset(s, ocean="P")
+#points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2, cex=0.7*par("cex"))
+#points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3, cex=0.7*par("cex"))
 
 
 axy <- list(x = c(-83.58, -83.83, -83.3, -82.51, -81.65, -80.40, -79.35,
@@ -52,5 +51,12 @@ points <- sf::st_multipoint(cbind(x, y))
 stopifnot(sf::st_is_valid(points))
 sf::st_intersection(points, polygon)
 polygon(polx, poly)
-points(x, y, col='red')
+points(x, y, col='magenta', cex=3, lwd=3)
+mtext("Magenta circles centre on points that will be red with this error", line=2)
+if (!interactive()) dev.off()
+
+## Save data for next step
+x <- s[["longitude"]]
+y <- s[["latitude"]]
+save(x, y, polx, poly, file="test_data.rda")
 
