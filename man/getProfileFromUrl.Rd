@@ -61,13 +61,13 @@ argo <- read.argo(file)
 plot(argo, which=c(1, 4, 6, 5))
 
 # Example 2: argo profile nearest Sable Island
-index <- getIndex(destdir="~/data/argo")
+index <- getIndex()
 lon0 <- -59.9149
 lat0 <- 43.9337
 dist <- geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
 w <- which.min(dist)
 url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
-fileSable <- getProfileFromUrl(url=url, destdir="~/data/argo")
+fileSable <- getProfileFromUrl(url=url)
 argoSable <- read.oce(fileSable)
 plot(argoSable, which=c(1, 4, 6, 5))
 }

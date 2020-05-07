@@ -1,77 +1,5 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-#' Download and Cache a Dataset
-#'
-#' General function for downloading and caching a dataset.
-#'
-#' @template url
-#' @template destdir
-#' @template destfile
-#' @template mode
-#' @template quiet
-#' @template force
-#' @template retries
-#' @template debug
-#'
-#' @return String indicating the full pathname to the downloaded file.
-#' @importFrom utils unzip
-#' @importFrom curl curl_download
-#' @export
-#' @author Dan Kelley
-downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode="wb", quiet=FALSE,
-                                force=FALSE, retries=3, debug=0)
-{
-    if (missing(url))
-        stop("must specify url")
-    if (length(destdir) > 1)
-        stop("destdir must be of length 1")
-    retries <- max(1, as.integer(retries))
-    argoFloatsDebug(debug, "downloadWithRetries(\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    url='", paste(url, collapse="', '"), "',\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    destdir='", destdir, "',\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    destfile='", paste(destfile, collapse="', '"), "',\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    mode='", mode, "'", ", quiet=", quiet, ", force=", force, ",\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    retries=", retries, ") {\n",
-                    style="bold", sep="", unindent=1)
-    n <- length(url)
-    if (length(destfile) != n)
-        stop("length(url)=", n, " must equal length(destfile)=", length(destfile))
-    for (i in 1:n) {
-        destination <- paste0(destdir, "/", destfile[i])
-        if (!force && file.exists(destination)) {
-            argoFloatsDebug(debug, "Skipping \"", destination, "\" because it already exists\n", sep="")
-        } else {
-            success <- FALSE
-            for (trial in seq_len(1 + retries)) {
-                t <- try(curl::curl_download(url=url, destfile=destination, quiet=quiet, mode=mode))
-                if (!inherits(t, "try-error")) {
-                    success <- TRUE
-                    break
-                }
-            }
-            if (!success)
-                stop("failed to download from '", url, "', after ", retries, " retries")
-            if (1 == length(grep(".zip$", destfile[i]))) {
-                destinationClean <- gsub(".zip$", "", destination[i])
-                unzip(destination[i], exdir=destinationClean)
-                destination[i] <- destinationClean
-                argoFloatsDebug(debug, "  Downloaded and unzipped into '", destination[i], "'\n", sep="")
-            } else {
-                argoFloatsDebug(debug, "  Downloaded file stored as '", destination[i], "'\n", sep="")
-            }
-        }
-    }
-    argoFloatsDebug(debug, "} # downloadWithRetries()\n", style="bold", unindent=1)
-    destination
-}
-
-
-
 #' Get Data for an Argo Float Profile
 #'
 #' @param url character value giving the URL for an Argo float a profile.
@@ -97,13 +25,13 @@ downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode=
 #' plot(argo, which=c(1, 4, 6, 5))
 #'
 #' # Example 2: argo profile nearest Sable Island
-#' index <- getIndex(destdir="~/data/argo")
+#' index <- getIndex()
 #' lon0 <- -59.9149
 #' lat0 <- 43.9337
 #' dist <- geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
 #' w <- which.min(dist)
 #' url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
-#' fileSable <- getProfileFromUrl(url=url, destdir="~/data/argo")
+#' fileSable <- getProfileFromUrl(url=url)
 #' argoSable <- read.oce(fileSable)
 #' plot(argoSable, which=c(1, 4, 6, 5))
 #'}
@@ -197,7 +125,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' }
 #'
 #' @template server
-#' @param file character value that indicates the file name on the server, as in
+#' @param filename character value that indicates the file name on the server, as in
 #' the first column of the table given in \dQuote{Details}, or (for some file types)
 #' as in the nickname given in the middle column. Note that the downloaded
 #' file name will be based on the full file name given as this argument, and
@@ -222,7 +150,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' library(oce)
 #' # Example: Temporal and spatial coverage of merged argo/bgcargo measurements.
 #' par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
-#' ai <- getIndex(file="merged", destdir="~/data/argo")
+#' ai <- getIndex(filename="merged")
 #' summary(ai)
 #' hist(ai[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
 #' data(coastlineWorld)
@@ -238,7 +166,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' @importFrom oce processingLogAppend
 #' @export
 getIndex <- function(server="auto",
-                     file="argo",
+                     filename="argo",
                      destdir="~/data/argo",
                      age=7,
                      quiet=FALSE,
@@ -251,7 +179,7 @@ getIndex <- function(server="auto",
         stop('must install.packages("curl") to download Argo data')
     res <- new("argoFloats", type="index")
     res@metadata$destdir <- destdir
-    argoFloatsDebug(debug,  "getIndex(server=\"", server, "\", file=\"", file, "\"", ", destdir=\"", destdir, "\") {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
+    argoFloatsDebug(debug,  "getIndex(server=\"", server, "\", filename=\"", filename, "\"", ", destdir=\"", destdir, "\") {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     if (server == "auto") {
         server <- c("ftp://usgodae.org/pub/outgoing/argo",
                     "ftp://ftp.ifremer.fr/ifremer/argo")
@@ -264,24 +192,25 @@ getIndex <- function(server="auto",
     if (!file.info(destdir)$isdir)
         stop("'", destdir, "' is not a directory")
     ## Handle nicknames
-    if (file == "argo") {
-        file <- "ar_index_global_prof.txt.gz"
-        argoFloatsDebug(debug, "Converted file=\"argo\" to file=\"", file, "\".\n", sep="")
-    } else if (file == "bgcargo" || file == "bgc") {
-        file <- "argo_bio-profile_index.txt.gz"
-        argoFloatsDebug(debug, "Converted file=\"bgcargo\" to file=\"", file, "\".\n", sep="")
-    } else if (file == "merge" || file == "merged") {
-        file <- "argo_merge-profile_index.txt.gz"
-        argoFloatsDebug(debug, "Converted file=\"argo_merge\" to file=\"", file, "\".\n", sep="")
+    if (filename == "argo") {
+        filename <- "ar_index_global_prof.txt.gz"
+        argoFloatsDebug(debug, "Converted filename=\"argo\" to filename=\"", filename, "\".\n", sep="")
+    } else if (filename == "bgcargo" || filename == "bgc") {
+        filename <- "argo_bio-profile_index.txt.gz"
+        argoFloatsDebug(debug, "Converted filename=\"bgcargo\" to filename=\"", filename, "\".\n", sep="")
+    } else if (filename == "merge" || filename == "merged") {
+        filename <- "argo_merge-profile_index.txt.gz"
+        argoFloatsDebug(debug, "Converted filename=\"argo_merge\" to filename=\"", filename, "\".\n", sep="")
     }
-    url <- paste(server, file, sep="/")
-    destfile <- paste(destdir, file, sep="/")
+    ## Note: 'url' is a vector; e.g. using server="auto" creates 2 elements in url
+    url <- paste(server, filename, sep="/")
+    destfile <- paste(destdir, filename, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
     destfileRda <- gsub(".gz$", ".rda", destfile)
     destfileRda <- gsub(".txt$", ".rda", destfile)
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
-    res@metadata$file <- destfileRda
+    res@metadata$filename <- destfileRda
 
     ## See if we have an .rda file that is sufficiently youthful.
     if (file.exists(destfileRda)) {
@@ -295,7 +224,7 @@ getIndex <- function(server="auto",
             load(destfileRda)
             argoFloatsDebug(debug, "Finished loading '", destfileRda, "'.\n", sep="")
             res@metadata$server <- server[1]
-            res@metadata$file <- file
+            res@metadata$filename <- filename
             res@metadata$destdir <- destdir
             res@metadata$destfileRda <- destfileRda
             res@metadata$ftpRoot <- argoFloatsIndex[["ftpRoot"]]
@@ -316,6 +245,7 @@ getIndex <- function(server="auto",
         argoFloatsDebug(debug, "    '", url[1], "'\n", sep="", showTime=FALSE)
         status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE)
         if (!inherits(status, "try-error")) {
+            server <- server[iurl]
             downloadSuccess <- TRUE
             break                      # the download worked
         }
@@ -326,11 +256,12 @@ getIndex <- function(server="auto",
     argoFloatsDebug(debug, "About to read header.\n", sep="")
     first <- readLines(destfileTemp, 100)
     hash <- which(grepl("^#", first))
-    ftpRoot <- gsub("^[^:]*:[ ]*(.*)$", "\\1", first[which(grepl("^# FTP", first))[1]])
+    ## Typically, length(ftpRoot) is 2
+    ftpRoot <- gsub("^[^:]*:[ ]*(.*)$", "\\1", first[which(grepl("^# FTP", first))])
     header <- first[hash]
     lastHash <- tail(hash, 1)
     names <- strsplit(first[1 + lastHash], ",")[[1]]
-    if (grepl("merge", file)) {
+    if (grepl("merge", filename)) {
         names <- c("file", "date", "latitude", "longitude", "ocean",
                    "profiler_type", "institution", "parameters",
                    "param_data_mode", "date_update")
@@ -352,14 +283,14 @@ getIndex <- function(server="auto",
     argoFloatsDebug(debug,  "removing temporary file '", destfileTemp, "'.\n", sep="")
     unlink(destfileTemp)
     res@metadata$server <- server
-    res@metadata$file <- file
+    res@metadata$filename <- filename
     res@metadata$destfileRda <- destfileRda
     res@metadata$server <- argoFloatsIndex$server
     res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
     res@metadata$header <- argoFloatsIndex$header
     res@data$index <- argoFloatsIndex$index
     res@processingLog <- processingLogAppend(res@processingLog,
-                                             paste("getIndex(server='", server, "', file='", file, "', age=", age, ")", sep=""))
+                                             paste("getIndex(server='", server, "', filename='", filename, "', age=", age, ")", sep=""))
     argoFloatsDebug(debug, "} # getIndex()\n", style="bold", unindent=1)
     res
 }
@@ -409,7 +340,7 @@ getIndex <- function(server="auto",
 #' library(argoFloats)
 #' data(index)
 #' index2 <- subset(index, 1:2)
-#' profiles2 <- getProfiles(index2, destdir="~/data/argo")
+#' profiles2 <- getProfiles(index2)
 #' # See ?readProfiles for how to read the files now downloaded.
 #'}
 #'

@@ -32,7 +32,7 @@
 #' data(index)
 #' index2 <- subset(index, 1:2)
 #' if (requireNamespace("ncdf4")) {
-#'     profiles <- getProfiles(index2, destdir="~/data/argo")
+#'     profiles <- getProfiles(index2)
 #'     argos <- readProfiles(profiles, handleFlags=TRUE)
 #'     par(mfrow=c(1, 2))
 #'     library(oce)

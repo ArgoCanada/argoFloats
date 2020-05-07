@@ -70,7 +70,7 @@ in the source-code file named \code{R/get.R}.
 library(argoFloats)
 data(index)
 index2 <- subset(index, 1:2)
-profiles2 <- getProfiles(index2, destdir="~/data/argo")
+profiles2 <- getProfiles(index2)
 # See ?readProfiles for how to read the files now downloaded.
 }
 
