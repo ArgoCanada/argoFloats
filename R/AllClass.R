@@ -168,12 +168,13 @@ setMethod(f="initialize",
 #' value of `i` and, in some cases, on the value of `j`; see \dQuote{Details}.
 #'
 #' There are several possibilities, depending on the object `type`, as
-#' follows.
+#' listed below. Note that these possibilities are checked in the
+#' order listed here.
 #'
 #' 1. For all object types:
 #'     1. If `i` is `"metadata"` then the `metadata` slot of `x` is returned.
 #'     2. Otherwise, if `i` is `"data"` then the `data` slot of `x` is returned.
-#'     3. Otherwise, the following rules apply, depending on `type`.
+#'     3. Otherwise, the following steps are taken, depending on `type`.
 #'
 #' 2. If `type` is `"index"`, i.e. if `x` was created with [getIndex()]
 #' or with [subset,argoFloats-method()] acting on the result of [getIndex()],
@@ -187,7 +188,7 @@ setMethod(f="initialize",
 #'        `"date"`, `"date_update"`, `"file"`, `"institution"`, `"latitude"`,
 #'        `"longitude"`, `"ocean"`, and `"profiler_type"`.
 #'     3. Otherwise, if `i=="index"` then that item from the `data` slot of `x` is returned.
-#'        (For the possible names, see the previous item in this sublist.)
+#'        (For the possible names, see the previous item in this sub-list.)
 #'     4. Otherwise, if `i` is an integer, then the `i`-th row of the `index` item in
 #'        the `data` slot is returned.  This is a good way to learn the
 #'        longitude and latitude of the profile, the file name on the server,
@@ -197,10 +198,11 @@ setMethod(f="initialize",
 #'         1. If `j` is not supplied, the return value is the full contents
 #'            of `file`, i.e. the full names of the files downloaded
 #'            by [getProfiles()].
-#'         2. If `j` is numeric, then the return value is a vector of the
+#'         2. Otherwise, if `j` is numeric, then the return value is a vector of the
 #'            `file` entries, as indexed by `j`.
-#'         3. If `j` is `"count"`, then the number of `file` names is returned.
-##' 3. If `type` is `"profiles"`, i.e. if `x` was created with [getProfiles()], then:
+#'         3. Otherwise, if `j` is `"count"`, then the number of `file` names is returned.
+#'         4. Otherwise, an error is rported.
+#' 3. Otherwise, if `type` is `"profiles"`, i.e. if `x` was created with [getProfiles()], then:
 #'     1. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. The choices are:
 #'        `"type"` and `"destdir"`.
@@ -214,15 +216,15 @@ setMethod(f="initialize",
 #'         2. Otherwise, if `j` is numeric, then the return value is a vector of the
 #'            `file` entries, as indexed by `j`.
 #'         3. Otherwise, if `j` is `"count"`, then the number of `file` names is returned.
-#'         4. Othrwise, an error is reported.
-#' 4. If `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
+#'         4. Otherwise, an error is reported.
+#' 4. Otherwise, if `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
 #'     1. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. There is only choice, `"type"`.
 #'     2. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  There is only one choice: `"argos"`.
 #'     3. Otherwise, if `i` is `"profile"` then the return value depends on the value of `j`.
 #'         There are five sub-cases:
-#'         1. If `j` is not supplied, the return valuesis a list containing
+#'         1. If `j` is not supplied, the return value is a list containing
 #'             all the profiles in `x`, each an `argo` object as created by
 #'             [oce::read.argo()] in the `oce` package.
 #'         2. Otherwise, if `j` is a single integer,  then the return value is a single
@@ -239,24 +241,8 @@ setMethod(f="initialize",
 #'        as the same dimensionality as pressure, as a way to make it
 #'        easier to e.g. use [oce::as.ctd()] to create a CTD object from
 #'        values returned by the present function, passed through [unlist()].
-##        The returned value depends on `j`:
-##        1. If `j` is not given, or if `j` equals `"list"`, then
-##           the result is a vector containing the values of that item,
-##           or `NA` for any profiles/levels in which that item is not found.
-##        2. If `j` is `list`, then the requested item is returned as
-##           a list with one entry per profile, with each of those entries
-##           being a matrix containing the requested value (or `NA`, as in case 1).
-##           The matrix will reflect what was read from the individual argo file.
-##           If `i` is `"longitude"`, `"latitude"`, or anything else contained within
-##           the `metadata` slot of the individual profiles, then it will be repeated
-##           to give it tthere will be
-##           one entry per `argo` and it may have a single column in cases where data were acquired
-##           only during the ascent phase of a profiling cycle, or in multipl
-##           two columns, if there were several raising/lowering events during
-##           the profile (in this instance, more properly called a "cycle").
-##           Note that `longitude` and `latitude` are returned as matrices
-##           that have the same dimensionality as `pressure`.
 #'     5. Otherwise, an error is reported.
+#' 5. Otherwise, an error is reported.
 #'
 #' @param x an [`argoFloats-class`] object.
 #' @param i a character value that specifies the item to be looked up;
@@ -279,7 +265,6 @@ setMethod(f="initialize",
 #'
 #' @export
 #' @docType methods
-## @rdname argoFloats-methods
 #' @aliases [[,argoFloats-method
 setMethod(f="[[",
           signature(x="argoFloats", i="ANY", j="ANY"),
@@ -367,55 +352,6 @@ setMethod(f="[[",
               } else {
                   stop("the object type must be \"index\", \"profiles\", or \"argos\", but it is \"", type, "\"")
               }
-              ## FIXME: move useful things from the below to the above, and then delete the below.
-              ##< if (i == "profile") {
-              ##<     ## if j not given, return full list (either 'file' or 'argos')
-              ##<     if (missing(j)) {
-              ##<         return(switch(type,
-              ##<                       index=length(x@data$index$file),
-              ##<                       profile=length(x@data$file),
-              ##<                       argo=length(x@data$argos)))
-              ##<     }
-              ##<     if (any(j < 1))
-              ##<         stop("index, 'j', must be positive")
-              ##<     n <- switch(type,
-              ##<                 index=length(x@data$index$file),
-              ##<                 profile=length(x@data$file),
-              ##<                 argo=length(x@data$argos))
-              ##<     if (any(j > n))
-              ##<         stop("index, j', cannot exceed ", n)
-              ##<     if (length(j) == 1) {
-              ##<         return(switch(type,
-              ##<                       index=x@data$index$file[j],
-              ##<                       profile=x@data$file[j],
-              ##<                       argos=x@data$argos[[j]],
-              ##<                       stop("unknown object type '", type, "': coding error (please report)")))
-              ##<     }
-              ##<     if (type == "index") {
-              ##<         res <- x@data$index$file[j]
-              ##<     } else if (type == "profile") {
-              ##<         res <- x@data$file[j]
-              ##<     } else if (type == "argo") {
-              ##<         res <- vector("list", length(j))
-              ##<         for (jj in j)
-              ##<             res[jj] <- x@data$argos[jj]
-              ##<     } else {
-              ##<         stop("type='", type, "' is not handled (please report as a bug)")
-              ##<     }
-              ##<     return(res)
-              ##< }
-              ##< if (i == "argos") {
-              ##<     if (type != "argos")
-              ##<         stop("[[\"argos\"]] only works for objects created by readProfiles()")
-              ##<     return(x@data$argos)
-              ##< }
-              ##< if (i %in% c("salinity", "temperature", "pressure")) {
-              ##<     if (type != "argos")
-              ##<         stop("[[\"", i, "\"]] only works for objects created by readProfiles()")
-              ##<     res <- unlist(lapply(x[["argos"]], function(a) a[[i]]))
-              ##<     argoFloatsDebug(debug, "[[ for '", i, "' returning ", length(res), " values\n", sep="")
-              ##<     return(res)
-              ##< }
               if (i %in% c("longitude", "latitude")) {
                   res <- if (type == "argos") {
                       argoFloatsDebug(debug, "type=\"argos\"\n", sep="")
@@ -429,22 +365,6 @@ setMethod(f="[[",
                   argoFloatsDebug(debug, "[[ for '", i, "' returning ", length(res), " values\n", sep="")
                   return(res)
               }
-              ##> if (i == "profile count") {
-              ##>     return(switch(type,
-              ##>                   index=length(x@data$index$file),
-              ##>                   profile=length(x@data$file),
-              ##>                   argo=length(x@data$argos)))
-              ##> }
-              ##> if (i == "index" && type == "index")
-              ##>     return(x@data$index)
-              ##> if (x@metadata$type == "index") {
-              ##>     names <- names(x@data$index)
-              ##>     w <- pmatch(i, names)
-              ##>     if (!is.finite(w))
-              ##>         stop("Unknown item '", i, "'; must be one of: '", paste(names, collapse="', '"), "'", call.=FALSE)
-              ##>     return(x@data$index[[names[w]]])
-              ##> }
-              ## The request made no sense, so return NULL.
               return(NULL)
           })
 
