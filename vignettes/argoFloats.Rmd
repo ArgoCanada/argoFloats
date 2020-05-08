@@ -29,8 +29,8 @@ vignette: >
 -->
 
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```{r, echo=FALSE}
+knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 ```
 **Abstract.** The `argoFloats` package makes it easy to get, read, and analyze core, biogeochemical(bgc), and deep Argo data. Our goal in making this package was to eliminate the gap between the freely available Argo data and the end user.
 
@@ -51,7 +51,7 @@ argoFloats R 04: subset by ocean or polygon | Jaimie Harbin & Dan Kelley | May 7
 In addition to the videos, sample code can be found for some videos, at https://github.com/argoCanada/argoFloats/tree/develop/sandbox/videos.
 
 # Preliminary Setup
-To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = TRUE)` command if you receive a Zero Exit Status Error):
+To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE)` command if you receive a Zero Exit Status Error):
 ```{r eval=FALSE}
 devtools::install_github("ArgoCanada/oce", ref='develop')
 devtools::install_github('ArgoCanada/ocedata', ref='develop')
@@ -200,7 +200,7 @@ Additionally, the `destdir` argument has a default of `~/data/argo`, where it sh
 To get the index from the USGODAE server, the following code is used:
 
 ```{r eval=FALSE}
-ai <- getIndex(file = "argo", destdir = "~/data/argo")
+ai <- getIndex(file="argo", destdir="~/data/argo")
 ```
 ```{r echo=FALSE}
 data(index)
@@ -253,7 +253,7 @@ The command can be useful for analyzing individual profiles, for example:
 ```{r eval=FALSE}
 sub <- subset(ai, 1:2) # To subset for profiles
 profiles <- getProfiles(sub, destdir='~/data/argo')
-argos <- readProfiles(profiles, handleFlags = TRUE)
+argos <- readProfiles(profiles, handleFlags=TRUE)
 pressure <- argos[['argos']][[1]][['pressure']]
 temperature <- argos[['argos']][[1]][['temperature']]
 plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
@@ -269,7 +269,7 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 
 ```{r, eval=FALSE}
 library(argoFloats)
-ai <- getIndex(file='argo', destdir='~/data/argo')
+ai <- getIndex(filename='argo', destdir='~/data/argo')
 # Subsetting by circle
 aiCircle <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 # Subsetting by polygon
@@ -295,7 +295,7 @@ data(section, package='oce')
 lat0 <- median(section[['latitude']])
 lon0 <- median(section[['longitude']])
 # Subset by rectangle
-ai <- getIndex(file='argo', destdir='~/data/argo')
+ai <- getIndex(filename='argo', destdir='~/data/argo')
 latRect <- lat0 + c(-2,2)
 lonRect <- lon0 + c(-30,30)
 air <- subset(ai, rectangle=list(longitude=lonRect, latitude=latRect))
@@ -311,9 +311,9 @@ plot(aiTime)
 
 ```{r, eval=FALSE}
 library(argoFloats)
-ai <- getIndex(file='merge', destdir = '~/data/argo')
+ai <- getIndex(filename='merge', destdir='~/data/argo')
 sub <- subset(ai, 1:2) # To subset for profiles
 profiles <- getProfiles(sub, destdir='~/data/argo')
-argos <- readProfiles(profiles, handleFlags = TRUE)
+argos <- readProfiles(profiles, handleFlags=TRUE)
 plot(argos, which='TS')
 ```
