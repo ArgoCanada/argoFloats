@@ -127,7 +127,7 @@ which effectively creates a logical &quot;or&quot; operation." />
     </div>
 
     <div class="ref-description">
-    <p>Isolate a subset of an <a href='argoFloats-class.html'>argoFloats</a> object of type <code>"index"</code>,
+    <p>Isolate a subset of an <code><a href='argoFloats-class.html'>argoFloats</a></code> object of type <code>"index"</code>,
 as created by <code><a href='getIndex.html'>getIndex()</a></code>, either by specifying
 indices to keep (using the <code>subset</code> argument) or by specifying
 a way to determine those indices (using the <code>...</code> argument).
@@ -145,7 +145,7 @@ which effectively creates a logical "or" operation.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>an <a href='argoFloats-class.html'>argoFloats</a> object as created by <code><a href='getIndex.html'>getIndex()</a></code>.</p></td>
+      <td><p>an <code><a href='argoFloats-class.html'>argoFloats</a></code> object as created by <code><a href='getIndex.html'>getIndex()</a></code>.</p></td>
     </tr>
     <tr>
       <th>subset</th>
@@ -169,7 +169,7 @@ See &#8220;Details&#8221; and &#8220;Examples&#8221;.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An <a href='argoFloats-class.html'>argoFloats</a> object.</p>
+    <p>An <code><a href='argoFloats-class.html'>argoFloats</a></code> object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The possibilities for the <code>...</code> argument are as follows.</p><ol>
@@ -259,17 +259,17 @@ is positive for degrees North and negative for degrees South.</p>
 <span class='no'>index7</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='kw'>institution</span><span class='kw'>=</span><span class='st'>"ME"</span>)</div><div class='output co'>#&gt; <span class='message'>Kept 3 profiles (0.31%)</span></div><div class='input'>
 <span class='co'># Example 8: subset to a specific ID</span>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
+<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>filenam</span><span class='kw'>=</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
 <span class='no'>index9</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>ai</span>, <span class='kw'>ID</span><span class='kw'>=</span><span class='st'>'1900722'</span>) }
 
 <span class='co'># Example 9: subset data to only include deep argo</span>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
+<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='no'>filename</span><span class='kw'>==</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
 <span class='no'>index8</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>ai</span>, <span class='kw'>deep</span><span class='kw'>=</span><span class='fl'>TRUE</span>) }
 
 <span class='co'># Example 10: subset by specific ocean near Ithmus of Panama</span>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span><span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
+<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>filename</span><span class='kw'>=</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span><span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
 <span class='no'>lonPoly</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>90.27</span>, -<span class='fl'>82.89</span>, -<span class='fl'>74.71</span>, -<span class='fl'>79.11</span>)
 <span class='no'>latPoly</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>7.89</span>, <span class='fl'>3.87</span>, <span class='fl'>12.56</span>, <span class='fl'>16.72</span>)
 <span class='no'>subset10</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>ai</span>, <span class='kw'>polygon</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span><span class='no'>lonPoly</span>, <span class='kw'>latitude</span><span class='kw'>=</span><span class='no'>latPoly</span>))

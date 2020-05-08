@@ -120,7 +120,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Show some key facts about an <a href='argoFloats-class.html'>argoFloats</a> object.</p>
+    <p>Show some key facts about an <code><a href='argoFloats-class.html'>argoFloats</a></code> object.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for argoFloats</span>
@@ -131,7 +131,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>an <a href='argoFloats-class.html'>argoFloats</a> object.</p></td>
+      <td><p>an <code><a href='argoFloats-class.html'>argoFloats</a></code> object.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -147,10 +147,12 @@
 #&gt; ------------------
 #&gt; 
 #&gt; * type:        index
-#&gt; * server:      ftp://usgodae.org/pub/outgoing/argoftp://ftp.ifremer.fr/ifremer/argo
+#&gt; * server:      c("ftp://usgodae.org/pub/outgoing/argo",
+#&gt;                  "ftp://ftp.ifremer.fr/ifremer/argo")
 #&gt; * file:        ar_index_global_prof.txt.gz
 #&gt; * url:         ftp://usgodae.org/pub/outgoing/argo/ar_index_global_prof.txt.gz
-#&gt; * ftpRoot:     ftp://ftp.ifremer.fr/ifremer/argo/dac
+#&gt; * ftpRoot:     c("ftp://ftp.ifremer.fr/ifremer/argo/dac",
+#&gt;                  "ftp://usgodae.org/pub/outgoing/argo/dac")
 #&gt; * destfileRda: ~/data/argo/ar_index_global_prof.txt.rda
 #&gt; * header:
 #&gt;     # Title : Profile directory file of the Argo Global Data Assembly Center'
@@ -161,15 +163,15 @@
 #&gt;     # FTP root number 1 : ftp://ftp.ifremer.fr/ifremer/argo/dac'
 #&gt;     # FTP root number 2 : ftp://usgodae.org/pub/outgoing/argo/dac'
 #&gt;     # GDAC node : NRL-MRY'
-#&gt; * index (each holding 953 elements):
-#&gt;     file: aoml/1901584/profiles/R1901584_124.nc, aoml/1901584/profiles/R1901584_125.nc, aoml/1901584/profiles/R1901584_126.nc, ...
-#&gt;     date: 2015-08-03 14:17:32, 2015-08-13 12:28:33, 2015-08-23 12:14:22, ...
-#&gt;     latitude: 27.705, 27.773, 28.064, ...
-#&gt;     longitude: -76.231, -76.024, -76.32, ...
-#&gt;     ocean: A, A, A, ...
-#&gt;     profiler_type: 851, 851, 851, ...
-#&gt;     institution: AO, AO, AO, ...
-#&gt;     date_update: 2019-10-07 21:35:44, 2019-11-28 22:16:37, 2019-11-28 22:16:48, ...
+#&gt; * index (each item holding 953 elements):
+#&gt; name: file
+#&gt; name: date
+#&gt; name: latitude
+#&gt; name: longitude
+#&gt; name: ocean
+#&gt; name: profiler_type
+#&gt; name: institution
+#&gt; name: date_update
 #&gt; * Processing Log
 #&gt;     - 2020-03-14 17:23:26 UTC: `create 'argoFloats' object`</div><div class='input'>
 </div></pre>

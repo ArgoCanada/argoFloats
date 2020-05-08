@@ -21,7 +21,7 @@
 )
 }
 \arguments{
-\item{x}{an \linkS4class{argoFloats} object.}
+\item{x}{an \code{\linkS4class{argoFloats}} object.}
 
 \item{which}{a string that indicates the type of plot; see \dQuote{Details}.}
 

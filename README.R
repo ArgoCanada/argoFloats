@@ -1,4 +1,4 @@
-png("exampleTS.png", width=7, height=3, unit="in", res=120, pointsize=8)
+if (!interactive()) png("exampleTS.png", width=7, height=3, unit="in", res=120, pointsize=8)
 library(argoFloats)
 library(oce)
 indexAll <- getIndex(destdir="~/data/argo")
@@ -9,5 +9,4 @@ argos <- readProfiles(profiles, handleFlags=TRUE)
 par(mfrow=c(1, 2))
 plot(index, which="map")
 plot(argos, which="TS")
-dev.off()
-
+if (!interactive()) dev.off()

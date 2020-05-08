@@ -9,51 +9,110 @@
 \S4method{[[}{argoFloats,ANY,ANY}(x, i, j, ...)
 }
 \arguments{
-\item{x}{an \linkS4class{argoFloats} object.}
+\item{x}{an \code{\linkS4class{argoFloats}} object.}
 
 \item{i}{a character value that specifies the item to be looked up;
 see \dQuote{Details}.}
 
-\item{j}{supplemental index value, ignored unless \code{i} is \code{"profile"} (see \dQuote{Details}).}
+\item{j}{supplemental index value, used for some \code{x} types
+and \code{i} values; see \dQuote{Details}.}
 
 \item{...}{ignored.}
 }
 \description{
-This function provides an easy way to look up values within an \linkS4class{argoFloats}
+This function provides an easy way to look up values within an \code{\linkS4class{argoFloats}}
 object, without the need to know the exact structure of the data. The action
 taken by \code{[[} depends on the \code{type} element in the \code{metadata} slot of
 the object (which is set by the function that created the object), on the
 value of \code{i} and, in some cases, on the value of \code{j}; see \dQuote{Details}.
 }
 \details{
+There are several possibilities, depending on the object \code{type}, as
+follows.
 \enumerate{
-\item If \code{i=="metadata"} then the \code{metadata} slot of \code{x} is returned.
-\item If \code{i=="data"} then the \code{data} slot of \code{x} is returned.
-\item If \code{i=="ftpRoot"} or \code{"server"} and the object was created with \code{\link[=getIndex]{getIndex()}},
-then then the value of that item in the \code{metadata}
-slot is returned.  (Note that \code{"server"} is used by \code{\link[=getProfiles]{getProfiles()}} to construct
-a vector of URLs to download.)
-\item If \code{i=="destdir"} then the \code{destdir} item in the \code{metadata} slot is
-returned. This is used by \code{\link[=getProfiles]{getProfiles()}} to decide where to
-save downloaded files, and later by \code{\link[=readProfiles]{readProfiles()}}, which
-works with the output from \code{\link[=getProfiles]{getProfiles()}}.
-\item If \code{i=="type"} then the \code{type} item in the \code{metadata} slot is
-returned. This is \code{"index"} if the object was created with
-\code{\link[=getIndex]{getIndex()}}, \code{"profiles"} if it was created with \code{\link[=getProfiles]{getProfiles()}},
-and \code{"argos"} if it was created with \code{\link[=readProfiles]{readProfiles()}}.
-\item If \code{i=="profile"} and \code{x} was created with \code{\link[=readProfiles]{readProfiles()}},
-then the return value depends on the value of \code{j}. There are 4
-sub-cases.  (a) If \code{j} is not supplied, the return values is a list containing
+\item For all object types:
+\enumerate{
+\item If \code{i} is \code{"metadata"} then the \code{metadata} slot of \code{x} is returned.
+\item Otherwise, if \code{i} is \code{"data"} then the \code{data} slot of \code{x} is returned.
+\item Otherwise, the following rules apply, depending on \code{type}.
+}
+\item If \code{type} is \code{"index"}, i.e. if \code{x} was created with \code{\link[=getIndex]{getIndex()}}
+or with \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}} acting on the result of \code{\link[=getIndex]{getIndex()}},
+then:
+\enumerate{
+\item If \code{i} is the name of an item in the \code{metadata} slot, then that item
+is returned. The choices are:
+\code{"destdir"}, \code{"destfileRda"}, \code{"filename"}, \code{"ftpRoot"}, \code{"header"},
+\code{"server"}, \code{"type"}, and \code{"url"}.
+\item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
+is returned.  The choices are:
+\code{"date"}, \code{"date_update"}, \code{"file"}, \code{"institution"}, \code{"latitude"},
+\code{"longitude"}, \code{"ocean"}, and \code{"profiler_type"}.
+\item Otherwise, if \code{i=="index"} then that item from the \code{data} slot of \code{x} is returned.
+(For the possible names, see the previous item in this sublist.)
+\item Otherwise, if \code{i} is an integer, then the \code{i}-th row of the \code{index} item in
+the \code{data} slot is returned.  This is a good way to learn the
+longitude and latitude of the profile, the file name on the server,
+etc.
+\item Otherwise, if \code{i} is \code{"profile"} then the return value is developed from the
+\code{index$file} item within the \code{data} slot of \code{x}, in one of three cases:
+\enumerate{
+\item If \code{j} is not supplied, the return value is the full contents
+of \code{file}, i.e. the full names of the files downloaded
+by \code{\link[=getProfiles]{getProfiles()}}.
+\item If \code{j} is numeric, then the return value is a vector of the
+\code{file} entries, as indexed by \code{j}.
+\item If \code{j} is \code{"count"}, then the number of \code{file} names is returned.
+}
+}
+\item If \code{type} is \code{"profiles"}, i.e. if \code{x} was created with \code{\link[=getProfiles]{getProfiles()}}, then:
+\enumerate{
+\item If \code{i} is the name of an item in the \code{metadata} slot, then that item
+is returned. The choices are:
+\code{"type"} and \code{"destdir"}.
+\item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
+is returned.  There is only one choice: \code{"file"}.
+\item Otherwise, if \code{i} is \code{"profile"} then the return value is developed from the
+\code{file} item in the \code{data} slot of \code{x}, in one of four sub-cases:
+\enumerate{
+\item If \code{j} is not supplied, the return value is \code{file},
+i.e. a vector holding the full names of the files downloaded
+by \code{\link[=getProfiles]{getProfiles()}}.
+\item Otherwise, if \code{j} is numeric, then the return value is a vector of the
+\code{file} entries, as indexed by \code{j}.
+\item Otherwise, if \code{j} is \code{"count"}, then the number of \code{file} names is returned.
+\item Othrwise, an error is reported.
+}
+}
+\item If \code{type} is \code{"argos"}, i.e. if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then:
+\enumerate{
+\item If \code{i} is the name of an item in the \code{metadata} slot, then that item
+is returned. There is only choice, \code{"type"}.
+\item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
+is returned.  There is only one choice: \code{"argos"}.
+\item Otherwise, if \code{i} is \code{"profile"} then the return value depends on the value of \code{j}.
+There are five sub-cases:
+\enumerate{
+\item If \code{j} is not supplied, the return valuesis a list containing
 all the profiles in \code{x}, each an \code{argo} object as created by
-\code{\link[oce:read.argo]{oce::read.argo()}} in the \code{oce} package.  (b) If \code{j} is a single integer,
-then the return value is a single \code{argo} object. (c) If \code{j} is a vector
-of integers, then a list of \code{argo} objects is returned. (d) If \code{j} is
-the string \code{"count"}, then the number of profiles is returned.
-\item Otherwise, if \code{x} was created with \code{\link[=getIndex]{getIndex()}},
-\code{i} may be the name of an item in the \code{index} item
-in the \code{data} slot, or a string that is made up of enough characters
-to uniquely identify such an item, e.g. \code{"lon"} may be used as a
-shortcut for \code{"longitude"}.
+\code{\link[oce:read.argo]{oce::read.argo()}} in the \code{oce} package.
+\item Otherwise, if \code{j} is a single integer,  then the return value is a single
+\code{argo} object.
+\item Otherwise, if \code{j} is a vector  of integers, then a list of \code{argo} objects
+is returned.
+\item Otherwise, if \code{j} is \code{"count"}, then the number of profiles is returned.
+\item Otherwise, an error is reported.
+}
+\item Otherwise, if \code{i} is a character value, then it is taken to be
+an item within the \code{metadata} or \code{data} slots of the argo objects
+stored in \code{x}, and the returned value is a list containing that
+information with one (unnamed) item per profile.  Note that
+items from the \code{metadata} are repeated and cast into a matrix
+as the same dimensionality as pressure, as a way to make it
+easier to e.g. use \code{\link[oce:as.ctd]{oce::as.ctd()}} to create a CTD object from
+values returned by the present function, passed through \code{\link[=unlist]{unlist()}}.
+\item Otherwise, an error is reported.
+}
 }
 }
 \examples{

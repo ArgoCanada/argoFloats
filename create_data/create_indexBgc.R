@@ -3,12 +3,15 @@
 ## For the selection of this location, see
 ## https://github.com/dankelley/argoFloats/wiki/Focus-Island
 ##
+## Note that this code is not run, because we want the dataset to be *static*.
+## In fact, we check that it is unchanged, in the test suite.
+##
 ## The download was done on 2020 March 23, and yielded 39 profiles.
 
-library(argoFloats)
-indexAll <- getIndex(file="bgc", destdir="~/data/argo")
-indexBgc <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
-str(indexBgc)
-save(indexBgc, file="indexBgc.rda")
-tools::resaveRdaFiles('indexBgc.rda')
-
+if (FALSE) {
+    library(argoFloats)
+    indexAll <- getIndex(filename="bgc", destdir="~/data/argo")
+    indexBgc <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
+    save(indexBgc, file="indexBgc.rda")
+    tools::resaveRdaFiles('indexBgc.rda')
+}

@@ -8,7 +8,7 @@ readProfiles(profiles, handleFlags = TRUE, debug = 0)
 }
 \arguments{
 \item{profiles}{either a character vector holding the names
-of local files to read, or (better) an \linkS4class{argoFloats} object created
+of local files to read, or (better) an \code{\linkS4class{argoFloats}} object created
 by \code{\link[=getProfiles]{getProfiles()}}.}
 
 \item{handleFlags}{a logical value (with default \code{TRUE}) that
@@ -24,14 +24,14 @@ a small amount of debugging information is printed.  Note that
 the file, and so it will print messages if \code{debug} exceeds 1.}
 }
 \value{
-\link{readProfiles} returns an \linkS4class{argoFloats} object
+\link{readProfiles} returns an \code{\linkS4class{argoFloats}} object
 with \code{type="argos"}, in which the \code{data} slot
 contains a list named \code{argos} that holds objects
 that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 }
 \description{
 This works with either a list of local (netCDF) files,
-or a \linkS4class{argoFloats} object of type \code{"profiles"}, as
+or a \code{\linkS4class{argoFloats}} object of type \code{"profiles"}, as
 created by \code{\link[=getProfiles]{getProfiles()}}.
 }
 \examples{
@@ -41,7 +41,7 @@ library(argoFloats)
 data(index)
 index2 <- subset(index, 1:2)
 if (requireNamespace("ncdf4")) {
-    profiles <- getProfiles(index2, destdir="~/data/argo")
+    profiles <- getProfiles(index2)
     argos <- readProfiles(profiles, handleFlags=TRUE)
     par(mfrow=c(1, 2))
     library(oce)

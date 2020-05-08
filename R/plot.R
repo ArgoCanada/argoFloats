@@ -25,7 +25,7 @@
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
 #' for other arguments that can be provided.
 #'
-#' @param x an [argoFloats-class] object.
+#' @param x an [`argoFloats-class`] object.
 #' @param which a string that indicates the type of plot; see \dQuote{Details}.
 #' @param xlab character value indicating the name for the horizontal axis, or
 #' `NULL`, which indicates that this function should choose an appropriate name
@@ -132,11 +132,16 @@ setMethod(f="plot",
                       stop("In plot() : x must have been created by readProfiles()", call.=FALSE)
                   if (!(eos %in% c("gsw", "unesco")))
                       stop("eos must be \"gsw\" or \"unesco\", not \"", eos, "\"")
-                  ctd <- oce::as.ctd(salinity=x[["salinity", debug=debug]],
-                                     temperature=x[["temperature", debug=debug]],
-                                     pressure=x[["pressure", debug=debug]],
-                                     latitude=x[["latitude", debug=debug]],
-                                     longitude= x[["longitude", debug=debug]])
+                  salinity <- unlist(x[["salinity", debug=debug]])
+                  temperature <- unlist(x[["temperature", debug=debug]])
+                  pressure <- unlist(x[["pressure", debug=debug]])
+                  latitude <- unlist(x[["latitude", debug=debug]])
+                  longitude <- unlist(x[["longitude", debug=debug]])
+                  ctd <- oce::as.ctd(salinity=salinity,
+                                     temperature=temperature,
+                                     pressure=pressure,
+                                     latitude=latitude,
+                                     longitude=longitude)
                   if (is.null(cex))
                       cex <- 0.5
                   if (is.null(col))

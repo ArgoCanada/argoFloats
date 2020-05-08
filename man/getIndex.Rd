@@ -6,7 +6,7 @@
 \usage{
 getIndex(
   server = "auto",
-  file = "argo",
+  filename = "argo",
   destdir = "~/data/argo",
   age = 7,
   quiet = FALSE,
@@ -23,7 +23,7 @@ expanded to
 meaning to try the USGODAE server first, but to switch to the IFREMER
 server if that fails.}
 
-\item{file}{character value that indicates the file name on the server, as in
+\item{filename}{character value that indicates the file name on the server, as in
 the first column of the table given in \dQuote{Details}, or (for some file types)
 as in the nickname given in the middle column. Note that the downloaded
 file name will be based on the full file name given as this argument, and
@@ -54,7 +54,7 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-An object of class \linkS4class{argoFloats} with type=\code{"index"}, which
+An object of class \code{\linkS4class{argoFloats}} with type=\code{"index"}, which
 is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 }
 \description{
@@ -130,7 +130,7 @@ library(argoFloats)
 library(oce)
 # Example: Temporal and spatial coverage of merged argo/bgcargo measurements.
 par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
-ai <- getIndex(file="merged", destdir="~/data/argo")
+ai <- getIndex(filename="merged")
 summary(ai)
 hist(ai[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
 data(coastlineWorld)

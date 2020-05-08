@@ -2,11 +2,11 @@
 
 #' Merge argoFloats Indices
 #'
-#' @param x,y two [argoFloats-class] objects of type `index`, e.g. as created by [getIndex()].
+#' @param x,y two [`argoFloats-class`] objects of type `index`, e.g. as created by [getIndex()].
 #'
 #' @param ... optional additional objects like `x` and `y`.
 #'
-#' @return An [argoFloats-class] object of type `index`.
+#' @return An [`argoFloats-class`] object of type `index`.
 #'
 #' @examples
 #' library(argoFloats)
@@ -42,7 +42,7 @@ setMethod(f="merge",
                   stop("'y' was not created with getIndex().")
               if (destdir != y[["destdir"]])
                   stop("'x' and 'xy' must have the same destdir.  Use same 'destdir' in getIndex() call.")
-              if (ftpRoot != y[["ftpRoot"]])
+              if (!all.equal(ftpRoot, y[["ftpRoot"]]))
                   stop("'x' and 'xy' must have the same ftpRoot. Use same 'server' in getIndex() call.")
               for (i in seq_along(dots)) {
                   message('i=',i)

@@ -10,4 +10,7 @@
 * **argoFloats R 03: new website** (April 30, 2020)
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/lOvCrRDTmTs
+* **argoFloats R 04: subset by ocean or polygon** (May 7, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video https://youtu.be/tcGRB479Udk
 

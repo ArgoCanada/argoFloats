@@ -3,11 +3,11 @@
 #' Read argo profiles from local files
 #'
 #' This works with either a list of local (netCDF) files,
-#' or a [argoFloats-class] object of type `"profiles"`, as
+#' or a [`argoFloats-class`] object of type `"profiles"`, as
 #' created by [getProfiles()].
 #'
 #' @param profiles either a character vector holding the names
-#' of local files to read, or (better) an [argoFloats-class] object created
+#' of local files to read, or (better) an [`argoFloats-class`] object created
 #' by [getProfiles()].
 #' @param handleFlags a logical value (with default `TRUE`) that
 #' indicates whether to call [oce::handleFlags()] on the individual argo
@@ -20,7 +20,7 @@
 #' `debug-1` is passed to [oce::read.argo()], which actually reads
 #' the file, and so it will print messages if `debug` exceeds 1.
 #'
-#' @return [readProfiles] returns an [argoFloats-class] object
+#' @return [readProfiles] returns an [`argoFloats-class`] object
 #' with `type="argos"`, in which the `data` slot
 #' contains a list named `argos` that holds objects
 #' that are created by [oce::read.argo()].
@@ -32,7 +32,7 @@
 #' data(index)
 #' index2 <- subset(index, 1:2)
 #' if (requireNamespace("ncdf4")) {
-#'     profiles <- getProfiles(index2, destdir="~/data/argo")
+#'     profiles <- getProfiles(index2)
 #'     argos <- readProfiles(profiles, handleFlags=TRUE)
 #'     par(mfrow=c(1, 2))
 #'     library(oce)
