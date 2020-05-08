@@ -141,7 +141,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' is to show such indicators.
 #' @template debug
 #'
-#' @return An object of class [argoFloats-class] with type=`"index"`, which
+#' @return An object of class [`argoFloats-class`] with type=`"index"`, which
 #' is suitable as the first argument of [getProfiles()].
 #'
 #' @examples
@@ -278,7 +278,7 @@ getIndex <- function(server="auto",
     index$date <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")
     index$date_update <- as.POSIXct(as.character(index$date_update), format="%Y%m%d%H%M%S",tz="UTC")
     argoFloatsDebug(debug,  "saving cache file '", destfileRda, "'.\n", sep="")
-    argoFloatsIndex <- list(ftpRoot=ftpRoot, server=server, file=file, header=header, index=index)
+    argoFloatsIndex <- list(ftpRoot=ftpRoot, server=server, filename=filename, header=header, index=index)
     save(argoFloatsIndex, file=destfileRda)
     argoFloatsDebug(debug,  "removing temporary file '", destfileTemp, "'.\n", sep="")
     unlink(destfileTemp)
@@ -320,8 +320,13 @@ getIndex <- function(server="auto",
 #' ```
 #' in the source-code file named `R/get.R`.
 #'
+#' If the data file cannot be downloaded after multiple trials, an
+#' error is issued, with a hint that running [getIndex()] again
+#' might help, in case the filename on the server has changed since
+#' the index was last downloaded by [getIndex()].
 #'
-#' @param index an [argoFloats-class] object of type `"index"`, as created
+#'
+#' @param index an [`argoFloats-class`] object of type `"index"`, as created
 #' by [getIndex()].
 #' @param destdir character value naming the directory into which to store the
 #' downloaded Argo files, or `NULL` (the default) to use the value of
@@ -331,7 +336,7 @@ getIndex <- function(server="auto",
 #' @template quiet
 #' @template debug
 #'
-#' @return An object of class [argoFloats-class] with type=`"profiles"`, which
+#' @return An object of class [`argoFloats-class`] with type=`"profiles"`, which
 #' is suitable as the first argument of [readProfiles()].
 #'
 #' @examples

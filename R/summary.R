@@ -2,9 +2,9 @@
 
 #' Summarize an argoFloats Object
 #'
-#' Show some key facts about an [argoFloats-class] object.
+#' Show some key facts about an [`argoFloats-class`] object.
 #'
-#' @param object an [argoFloats-class] object.
+#' @param object an [`argoFloats-class`] object.
 #' @param ... Further arguments passed to or from other methods.
 #'
 #' @examples

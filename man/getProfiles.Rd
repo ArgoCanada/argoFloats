@@ -14,7 +14,7 @@ getProfiles(
 )
 }
 \arguments{
-\item{index}{an \linkS4class{argoFloats} object of type \code{"index"}, as created
+\item{index}{an \code{\linkS4class{argoFloats}} object of type \code{"index"}, as created
 by \code{\link[=getIndex]{getIndex()}}.}
 
 \item{destdir}{character value naming the directory into which to store the
@@ -38,7 +38,7 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-An object of class \linkS4class{argoFloats} with type=\code{"profiles"}, which
+An object of class \code{\linkS4class{argoFloats}} with type=\code{"profiles"}, which
 is suitable as the first argument of \code{\link[=readProfiles]{readProfiles()}}.
 }
 \description{
@@ -63,6 +63,11 @@ conditional block that follows the line\preformatted{## NB. the USGODAE and IFRE
 }
 
 in the source-code file named \code{R/get.R}.
+
+If the data file cannot be downloaded after multiple trials, an
+error is issued, with a hint that running \code{\link[=getIndex]{getIndex()}} again
+might help, in case the filename on the server has changed since
+the index was last downloaded by \code{\link[=getIndex]{getIndex()}}.
 }
 \examples{
 # Download some Argo data files.

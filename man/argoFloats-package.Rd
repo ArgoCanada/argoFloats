@@ -39,11 +39,11 @@ See \code{\link{[[,argoFloats-method}} for details.
 (Note that \verb{[[<-} is \emph{not} specialized, since the
 user is highly discouraged from altering values within \code{argoFloats}
 objects.)
-\item \code{plot()} provides simple ways to plot aspects of \linkS4class{argoFloats} objects.
+\item \code{plot()} provides simple ways to plot aspects of \code{\linkS4class{argoFloats}} objects.
 See \code{\link[=plot,argoFloats-method]{plot,argoFloats-method()}} for details.
-\item \code{summary()} displays key features of \linkS4class{argoFloats} objects.
+\item \code{summary()} displays key features of \code{\linkS4class{argoFloats}} objects.
 See \code{\link[=summary,argoFloats-method]{summary,argoFloats-method()}} for details.
-\item \code{show()} provides a one-line sketch of \linkS4class{argoFloats} objects.
+\item \code{show()} provides a one-line sketch of \code{\linkS4class{argoFloats}} objects.
 See \code{\link[=show,argoFloats-method]{show,argoFloats-method()}} for details.
 }
 

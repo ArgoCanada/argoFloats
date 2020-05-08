@@ -7,12 +7,12 @@
 \S4method{merge}{argoFloats,ANY}(x, y, ...)
 }
 \arguments{
-\item{x, y}{two \linkS4class{argoFloats} objects of type \code{index}, e.g. as created by \code{\link[=getIndex]{getIndex()}}.}
+\item{x, y}{two \code{\linkS4class{argoFloats}} objects of type \code{index}, e.g. as created by \code{\link[=getIndex]{getIndex()}}.}
 
 \item{...}{optional additional objects like \code{x} and \code{y}.}
 }
 \value{
-An \linkS4class{argoFloats} object of type \code{index}.
+An \code{\linkS4class{argoFloats}} object of type \code{index}.
 }
 \description{
 Merge argoFloats Indices

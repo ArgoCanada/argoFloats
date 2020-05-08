@@ -2,11 +2,11 @@
 
 #' Merge argoFloats Indices
 #'
-#' @param x,y two [argoFloats-class] objects of type `index`, e.g. as created by [getIndex()].
+#' @param x,y two [`argoFloats-class`] objects of type `index`, e.g. as created by [getIndex()].
 #'
 #' @param ... optional additional objects like `x` and `y`.
 #'
-#' @return An [argoFloats-class] object of type `index`.
+#' @return An [`argoFloats-class`] object of type `index`.
 #'
 #' @examples
 #' library(argoFloats)

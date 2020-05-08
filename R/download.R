@@ -55,7 +55,7 @@ downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode=
                 }
             }
             if (!success)
-                stop("failed to download from '", url, "', after ", retries, " retries")
+                stop("failed download '", url, "'\n  after ", retries, " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
             if (1 == length(grep(".zip$", destfile[i]))) {
                 destinationClean <- gsub(".zip$", "", destination[i])
                 unzip(destination[i], exdir=destinationClean)

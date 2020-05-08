@@ -54,7 +54,7 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-An object of class \linkS4class{argoFloats} with type=\code{"index"}, which
+An object of class \code{\linkS4class{argoFloats}} with type=\code{"index"}, which
 is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 }
 \description{

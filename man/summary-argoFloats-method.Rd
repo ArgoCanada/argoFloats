@@ -7,12 +7,12 @@
 \S4method{summary}{argoFloats}(object, ...)
 }
 \arguments{
-\item{object}{an \linkS4class{argoFloats} object.}
+\item{object}{an \code{\linkS4class{argoFloats}} object.}
 
 \item{...}{Further arguments passed to or from other methods.}
 }
 \description{
-Show some key facts about an \linkS4class{argoFloats} object.
+Show some key facts about an \code{\linkS4class{argoFloats}} object.
 }
 \examples{
 library(argoFloats)

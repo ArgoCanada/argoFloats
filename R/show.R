@@ -1,6 +1,6 @@
 #' Show information about argoFloats object
 #'
-#' @param object an [argoFloats-class] object.
+#' @param object an [`argoFloats-class`] object.
 #'
 #' @examples
 #' library(argoFloats)

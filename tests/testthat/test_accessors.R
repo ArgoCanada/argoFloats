@@ -12,5 +12,7 @@ test_that("accessors work on 'index' data file", {
           expect_equal(index[["profile", 1]], "aoml/1901584/profiles/R1901584_124.nc")
           expect_equal(index[["profile", 1:2]], c("aoml/1901584/profiles/R1901584_124.nc", "aoml/1901584/profiles/R1901584_125.nc"))
           expect_equal(index[[1]]$file, index[["file"]][1])
+          expect_equal(head(index[["longitude"]],3), c(-76.231, -76.024, -76.320))
+          expect_equal(head(index[["latitude"]],3), c(27.705, 27.773, 28.064))
 })
 

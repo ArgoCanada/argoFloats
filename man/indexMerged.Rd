@@ -11,7 +11,7 @@ Bahamas, as of 2020 March 23, using
 the following code.
 \preformatted{
 library(argoFloats)
-indexAll <- getIndex(file="merged")
+indexAll <- getIndex(filename="merged")
 indexMerged <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
 save(indexMerged, file="indexMerged.rda")
 tools::resaveRdaFiles('indexMerged.rda')

@@ -3,7 +3,7 @@ use_sf_package <- FALSE
 
 #' Subset an argoFloats Object
 #'
-#' Isolate a subset of an [argoFloats-class] object of type `"index"`,
+#' Isolate a subset of an [`argoFloats-class`] object of type `"index"`,
 #' as created by [getIndex()], either by specifying
 #' indices to keep (using the `subset` argument) or by specifying
 #' a way to determine those indices (using the `...` argument).
@@ -74,7 +74,7 @@ use_sf_package <- FALSE
 #' for degrees East and negative for degrees West, and that latitude
 #' is positive for degrees North and negative for degrees South.
 #'
-#' @param x an [argoFloats-class] object as created by [getIndex()].
+#' @param x an [`argoFloats-class`] object as created by [getIndex()].
 #'
 #' @param subset optional numerical or logical vector that indicates which
 #' indices of `x@data$index` to keep (example 1).
@@ -90,7 +90,7 @@ use_sf_package <- FALSE
 #' during the subsetting operation.
 #' See \dQuote{Details} and \dQuote{Examples}.
 #'
-#' @return An [argoFloats-class] object.
+#' @return An [`argoFloats-class`] object.
 #'
 #' @examples
 #' library(argoFloats)
@@ -140,17 +140,17 @@ use_sf_package <- FALSE
 #'
 #' # Example 8: subset to a specific ID
 #' \dontrun{
-#' ai <- getIndex(file='merged', destdir = '~/data/argo')
+#' ai <- getIndex(filenam='merged', destdir = '~/data/argo')
 #' index9 <- subset(ai, ID='1900722') }
 #'
 #' # Example 9: subset data to only include deep argo
 #' \dontrun{
-#' ai <- getIndex(file='merged', destdir = '~/data/argo')
+#' ai <- getIndex(filename=='merged', destdir = '~/data/argo')
 #' index8 <- subset(ai, deep=TRUE) }
-#' 
+#'
 #' # Example 10: subset by specific ocean near Ithmus of Panama
 #' \dontrun{
-#' ai <- getIndex(file='merged', destdir= '~/data/argo')
+#' ai <- getIndex(filename='merged', destdir= '~/data/argo')
 #' lonPoly <- c(-90.27, -82.89, -74.71, -79.11)
 #' latPoly <- c(7.89, 3.87, 12.56, 16.72)
 #' subset10 <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))

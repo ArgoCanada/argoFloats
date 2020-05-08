@@ -7,7 +7,7 @@
 \S4method{subset}{argoFloats}(x, subset = NULL, ...)
 }
 \arguments{
-\item{x}{an \linkS4class{argoFloats} object as created by \code{\link[=getIndex]{getIndex()}}.}
+\item{x}{an \code{\linkS4class{argoFloats}} object as created by \code{\link[=getIndex]{getIndex()}}.}
 
 \item{subset}{optional numerical or logical vector that indicates which
 indices of \code{x@data$index} to keep (example 1).}
@@ -24,10 +24,10 @@ during the subsetting operation.
 See \dQuote{Details} and \dQuote{Examples}.}
 }
 \value{
-An \linkS4class{argoFloats} object.
+An \code{\linkS4class{argoFloats}} object.
 }
 \description{
-Isolate a subset of an \linkS4class{argoFloats} object of type \code{"index"},
+Isolate a subset of an \code{\linkS4class{argoFloats}} object of type \code{"index"},
 as created by \code{\link[=getIndex]{getIndex()}}, either by specifying
 indices to keep (using the \code{subset} argument) or by specifying
 a way to determine those indices (using the \code{...} argument).
@@ -139,17 +139,17 @@ index7 <- subset(index, institution="ME")
 
 # Example 8: subset to a specific ID
 \dontrun{
-ai <- getIndex(file='merged', destdir = '~/data/argo')
+ai <- getIndex(filenam='merged', destdir = '~/data/argo')
 index9 <- subset(ai, ID='1900722') }
 
 # Example 9: subset data to only include deep argo
 \dontrun{
-ai <- getIndex(file='merged', destdir = '~/data/argo')
+ai <- getIndex(filename=='merged', destdir = '~/data/argo')
 index8 <- subset(ai, deep=TRUE) }
 
 # Example 10: subset by specific ocean near Ithmus of Panama
 \dontrun{
-ai <- getIndex(file='merged', destdir= '~/data/argo')
+ai <- getIndex(filename='merged', destdir= '~/data/argo')
 lonPoly <- c(-90.27, -82.89, -74.71, -79.11)
 latPoly <- c(7.89, 3.87, 12.56, 16.72)
 subset10 <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
