@@ -123,7 +123,7 @@ created by getProfiles()." />
 
     <div class="ref-description">
     <p>This works with either a list of local (netCDF) files,
-or a <a href='argoFloats-class.html'>argoFloats</a> object of type <code>"profiles"</code>, as
+or a <code><a href='argoFloats-class.html'>argoFloats</a></code> object of type <code>"profiles"</code>, as
 created by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p>
     </div>
 
@@ -135,7 +135,7 @@ created by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p>
     <tr>
       <th>profiles</th>
       <td><p>either a character vector holding the names
-of local files to read, or (better) an <a href='argoFloats-class.html'>argoFloats</a> object created
+of local files to read, or (better) an <code><a href='argoFloats-class.html'>argoFloats</a></code> object created
 by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p></td>
     </tr>
     <tr>
@@ -158,7 +158,7 @@ the file, and so it will print messages if <code>debug</code> exceeds 1.</p></td
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>readProfiles returns an <a href='argoFloats-class.html'>argoFloats</a> object
+    <p>readProfiles returns an <code><a href='argoFloats-class.html'>argoFloats</a></code> object
 with <code>type="argos"</code>, in which the <code>data</code> slot
 contains a list named <code>argos</code> that holds objects
 that are created by <code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>oce::read.argo()</a></code>.</p>
@@ -170,7 +170,7 @@ that are created by <code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>o
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>index</span>)
 <span class='no'>index2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='fl'>1</span>:<span class='fl'>2</span>)
 <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span>(<span class='st'>"ncdf4"</span>)) {
-    <span class='no'>profiles</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span>(<span class='no'>index2</span>, <span class='kw'>destdir</span><span class='kw'>=</span><span class='st'>"~/data/argo"</span>)
+    <span class='no'>profiles</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span>(<span class='no'>index2</span>)
     <span class='no'>argos</span> <span class='kw'>&lt;-</span> <span class='fu'>readProfiles</span>(<span class='no'>profiles</span>, <span class='kw'>handleFlags</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
     <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
     <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>oce</span>)
