@@ -160,11 +160,12 @@ and <code>i</code> values; see &#8220;Details&#8221;.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>There are several possibilities, depending on the object <code>type</code>, as
-follows.</p><ol>
+listed below. Note that these possibilities are checked in the
+order listed here.</p><ol>
 <li><p>For all object types:</p><ol>
 <li><p>If <code>i</code> is <code>"metadata"</code> then the <code>metadata</code> slot of <code>x</code> is returned.</p></li>
 <li><p>Otherwise, if <code>i</code> is <code>"data"</code> then the <code>data</code> slot of <code>x</code> is returned.</p></li>
-<li><p>Otherwise, the following rules apply, depending on <code>type</code>.</p></li>
+<li><p>Otherwise, the following steps are taken, depending on <code>type</code>.</p></li>
 </ol></li>
 <li><p>If <code>type</code> is <code>"index"</code>, i.e. if <code>x</code> was created with <code><a href='getIndex.html'>getIndex()</a></code>
 or with <code><a href='subset-argoFloats-method.html'>subset,argoFloats-method()</a></code> acting on the result of <code><a href='getIndex.html'>getIndex()</a></code>,
@@ -178,7 +179,7 @@ is returned.  The choices are:
 <code>"date"</code>, <code>"date_update"</code>, <code>"file"</code>, <code>"institution"</code>, <code>"latitude"</code>,
 <code>"longitude"</code>, <code>"ocean"</code>, and <code>"profiler_type"</code>.</p></li>
 <li><p>Otherwise, if <code>i=="index"</code> then that item from the <code>data</code> slot of <code>x</code> is returned.
-(For the possible names, see the previous item in this sublist.)</p></li>
+(For the possible names, see the previous item in this sub-list.)</p></li>
 <li><p>Otherwise, if <code>i</code> is an integer, then the <code>i</code>-th row of the <code>index</code> item in
 the <code>data</code> slot is returned.  This is a good way to learn the
 longitude and latitude of the profile, the file name on the server,
@@ -188,12 +189,13 @@ etc.</p></li>
 <li><p>If <code>j</code> is not supplied, the return value is the full contents
 of <code>file</code>, i.e. the full names of the files downloaded
 by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p></li>
-<li><p>If <code>j</code> is numeric, then the return value is a vector of the
+<li><p>Otherwise, if <code>j</code> is numeric, then the return value is a vector of the
 <code>file</code> entries, as indexed by <code>j</code>.</p></li>
-<li><p>If <code>j</code> is <code>"count"</code>, then the number of <code>file</code> names is returned.</p></li>
+<li><p>Otherwise, if <code>j</code> is <code>"count"</code>, then the number of <code>file</code> names is returned.</p></li>
+<li><p>Otherwise, an error is rported.</p></li>
 </ol></li>
 </ol></li>
-<li><p>If <code>type</code> is <code>"profiles"</code>, i.e. if <code>x</code> was created with <code><a href='getProfiles.html'>getProfiles()</a></code>, then:</p><ol>
+<li><p>Otherwise, if <code>type</code> is <code>"profiles"</code>, i.e. if <code>x</code> was created with <code><a href='getProfiles.html'>getProfiles()</a></code>, then:</p><ol>
 <li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
 is returned. The choices are:
 <code>"type"</code> and <code>"destdir"</code>.</p></li>
@@ -207,17 +209,17 @@ by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p></li>
 <li><p>Otherwise, if <code>j</code> is numeric, then the return value is a vector of the
 <code>file</code> entries, as indexed by <code>j</code>.</p></li>
 <li><p>Otherwise, if <code>j</code> is <code>"count"</code>, then the number of <code>file</code> names is returned.</p></li>
-<li><p>Othrwise, an error is reported.</p></li>
+<li><p>Otherwise, an error is reported.</p></li>
 </ol></li>
 </ol></li>
-<li><p>If <code>type</code> is <code>"argos"</code>, i.e. if <code>x</code> was created with <code><a href='readProfiles.html'>readProfiles()</a></code>, then:</p><ol>
+<li><p>Otherwise, if <code>type</code> is <code>"argos"</code>, i.e. if <code>x</code> was created with <code><a href='readProfiles.html'>readProfiles()</a></code>, then:</p><ol>
 <li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
 is returned. There is only choice, <code>"type"</code>.</p></li>
 <li><p>Otherwise, if <code>i</code> is the name of an item in the <code>data</code> slot, then that item
 is returned.  There is only one choice: <code>"argos"</code>.</p></li>
 <li><p>Otherwise, if <code>i</code> is <code>"profile"</code> then the return value depends on the value of <code>j</code>.
 There are five sub-cases:</p><ol>
-<li><p>If <code>j</code> is not supplied, the return valuesis a list containing
+<li><p>If <code>j</code> is not supplied, the return value is a list containing
 all the profiles in <code>x</code>, each an <code>argo</code> object as created by
 <code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>oce::read.argo()</a></code> in the <code>oce</code> package.</p></li>
 <li><p>Otherwise, if <code>j</code> is a single integer,  then the return value is a single
@@ -237,6 +239,7 @@ easier to e.g. use <code><a href='https://rdrr.io/pkg/oce/man/as.ctd.html'>oce::
 values returned by the present function, passed through <code><a href='https://rdrr.io/r/base/unlist.html'>unlist()</a></code>.</p></li>
 <li><p>Otherwise, an error is reported.</p></li>
 </ol></li>
+<li><p>Otherwise, an error is reported.</p></li>
 </ol>
 
 

@@ -28,13 +28,14 @@ value of \code{i} and, in some cases, on the value of \code{j}; see \dQuote{Deta
 }
 \details{
 There are several possibilities, depending on the object \code{type}, as
-follows.
+listed below. Note that these possibilities are checked in the
+order listed here.
 \enumerate{
 \item For all object types:
 \enumerate{
 \item If \code{i} is \code{"metadata"} then the \code{metadata} slot of \code{x} is returned.
 \item Otherwise, if \code{i} is \code{"data"} then the \code{data} slot of \code{x} is returned.
-\item Otherwise, the following rules apply, depending on \code{type}.
+\item Otherwise, the following steps are taken, depending on \code{type}.
 }
 \item If \code{type} is \code{"index"}, i.e. if \code{x} was created with \code{\link[=getIndex]{getIndex()}}
 or with \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}} acting on the result of \code{\link[=getIndex]{getIndex()}},
@@ -49,7 +50,7 @@ is returned.  The choices are:
 \code{"date"}, \code{"date_update"}, \code{"file"}, \code{"institution"}, \code{"latitude"},
 \code{"longitude"}, \code{"ocean"}, and \code{"profiler_type"}.
 \item Otherwise, if \code{i=="index"} then that item from the \code{data} slot of \code{x} is returned.
-(For the possible names, see the previous item in this sublist.)
+(For the possible names, see the previous item in this sub-list.)
 \item Otherwise, if \code{i} is an integer, then the \code{i}-th row of the \code{index} item in
 the \code{data} slot is returned.  This is a good way to learn the
 longitude and latitude of the profile, the file name on the server,
@@ -60,12 +61,13 @@ etc.
 \item If \code{j} is not supplied, the return value is the full contents
 of \code{file}, i.e. the full names of the files downloaded
 by \code{\link[=getProfiles]{getProfiles()}}.
-\item If \code{j} is numeric, then the return value is a vector of the
+\item Otherwise, if \code{j} is numeric, then the return value is a vector of the
 \code{file} entries, as indexed by \code{j}.
-\item If \code{j} is \code{"count"}, then the number of \code{file} names is returned.
+\item Otherwise, if \code{j} is \code{"count"}, then the number of \code{file} names is returned.
+\item Otherwise, an error is rported.
 }
 }
-\item If \code{type} is \code{"profiles"}, i.e. if \code{x} was created with \code{\link[=getProfiles]{getProfiles()}}, then:
+\item Otherwise, if \code{type} is \code{"profiles"}, i.e. if \code{x} was created with \code{\link[=getProfiles]{getProfiles()}}, then:
 \enumerate{
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
 is returned. The choices are:
@@ -81,10 +83,10 @@ by \code{\link[=getProfiles]{getProfiles()}}.
 \item Otherwise, if \code{j} is numeric, then the return value is a vector of the
 \code{file} entries, as indexed by \code{j}.
 \item Otherwise, if \code{j} is \code{"count"}, then the number of \code{file} names is returned.
-\item Othrwise, an error is reported.
+\item Otherwise, an error is reported.
 }
 }
-\item If \code{type} is \code{"argos"}, i.e. if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then:
+\item Otherwise, if \code{type} is \code{"argos"}, i.e. if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then:
 \enumerate{
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
 is returned. There is only choice, \code{"type"}.
@@ -93,7 +95,7 @@ is returned.  There is only one choice: \code{"argos"}.
 \item Otherwise, if \code{i} is \code{"profile"} then the return value depends on the value of \code{j}.
 There are five sub-cases:
 \enumerate{
-\item If \code{j} is not supplied, the return valuesis a list containing
+\item If \code{j} is not supplied, the return value is a list containing
 all the profiles in \code{x}, each an \code{argo} object as created by
 \code{\link[oce:read.argo]{oce::read.argo()}} in the \code{oce} package.
 \item Otherwise, if \code{j} is a single integer,  then the return value is a single
@@ -113,6 +115,7 @@ easier to e.g. use \code{\link[oce:as.ctd]{oce::as.ctd()}} to create a CTD objec
 values returned by the present function, passed through \code{\link[=unlist]{unlist()}}.
 \item Otherwise, an error is reported.
 }
+\item Otherwise, an error is reported.
 }
 }
 \examples{
