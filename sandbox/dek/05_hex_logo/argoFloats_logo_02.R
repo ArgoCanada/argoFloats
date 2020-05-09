@@ -27,7 +27,7 @@ library(hexSticker)
 
 a <- function()
 {
-    par(mar=c(0,0,0,0), cex=0.45, mgp=c(1.8, 0.7, 0), font=2, lwd=0.8)
+    par(mar=c(0,0,0,0), cex=0.5, mgp=c(1.8, 0.7, 0), font=2, lwd=0.8)
     data("index")
     lon <- index[["longitude"]]
     lat <- index[["latitude"]]
