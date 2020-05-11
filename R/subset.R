@@ -1,5 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
-use_sf_package <- FALSE
+
+##OLD use_sf_package <- TRUE
 
 #' Subset an argoFloats Object
 #'
@@ -8,7 +9,7 @@ use_sf_package <- FALSE
 #' indices to keep (using the `subset` argument) or by specifying
 #' a way to determine those indices (using the `...` argument).
 #' Note that only one subset condition may be given in the `...`
-#' argument, but that [merge,argoFloats,ANY-method()]
+#' argument, but that [merge,argoFloats-method()]
 #' can be used to merge indices  created by `subset`,
 #' which effectively creates a logical "or" operation.
 #'
@@ -109,9 +110,9 @@ use_sf_package <- FALSE
 #' index3 <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
 #'
 #' # Example 4: subset to a polygon to near Abaco Island
-#' lonPoly <- c(-76.5, -76.0, -75.5)
-#' latPoly <- c(25.5, 26.5, 25.5)
-#' index4 <- subset(index, polygon=list(longitude=lonPoly, latitude=latPoly))
+#' poly <- list(longitude=c(-77.492, -78.219, -77.904, -77.213, -76.728, -77.492),
+#'              latitude=c(26.244, 25.247, 24.749, 24.987, 25.421, 26.244))
+#' index4 <- subset(index, polygon=poly)
 #'
 #' # Show some of these subsets on a map
 #' plot(index)
@@ -119,7 +120,7 @@ use_sf_package <- FALSE
 #' points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
 #' rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
 #' points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
-#' polygon(lonPoly, latPoly, border=4, lwd=2)
+#' polygon(poly$longitude, poly$latitude, border=4)
 #'
 #' # Example 5: subset argo_merge data containing 'DOXY' parameters
 #' # Data containing 'DOXY' data
@@ -148,28 +149,11 @@ use_sf_package <- FALSE
 #' ai <- getIndex(filename=='merged', destdir = '~/data/argo')
 #' index8 <- subset(ai, deep=TRUE) }
 #'
-#' # Example 10: subset by specific ocean near Ithmus of Panama
-#' \dontrun{
-#' ai <- getIndex(filename='merged', destdir= '~/data/argo')
-#' lonPoly <- c(-90.27, -82.89, -74.71, -79.11)
-#' latPoly <- c(7.89, 3.87, 12.56, 16.72)
-#' subset10 <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
-#' index10A <- subset(subset10, ocean="A")
-#' profilesA <- getProfiles(index10A)
-#' argosA <- readProfiles(profilesA)
-#' index10B <- subset(subset10, ocean='P')
-#' profilesB <- getProfiles(index10B)
-#' argosB <- readProfiles(profilesB)
-#' par(mfrow= c(1,2))
-#' plot(argosA, which='TS', main='Atlantic Ocean', cex.main=0.7)
-#' plot(argosB, which='TS', main='Pacific Ocean', cex.main=0.7) }
-#' 
-#'
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom oce geodDist
-#' @importFrom sp point.in.polygon
-## @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
+## @importFrom sp point.in.polygon
+#' @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
 #' @export
 setMethod(f="subset",
           signature="argoFloats",
@@ -245,27 +229,44 @@ setMethod(f="subset",
                       }
                       alon <- x[["longitude"]]
                       alat <- x[["latitude"]]
-                      if (use_sf_package) {
-                          ## the sf method produces some stray errors, so we use the sp method
-                          ## instead; see https://github.com/ArgoCanada/argoFloats/issues/86
-                          ok <- is.finite(alon) & is.finite(alat)
-                          Polygon <- sf::st_polygon(list(outer=cbind(plon, plat)))
-                          if (!is.finite(sf::st_is_valid(Polygon))) {
-                              errorMessage <- sf::st_is_valid(Polygon, reason=TRUE)
-                              stop(paste0("In subset,argoFloats-method(): polygon is invalid, because of ", errorMessage), call.=FALSE)
-                          }
-                          ## multipoint does not permit NA values, so we set them to zero and remove them later
-                          Points <- sf::st_multipoint(cbind(ifelse(ok, alon, 0),
-                                                            ifelse(ok, alat, 0)))
-                          Inside <- sf::st_intersection(Points, Polygon)
-                          M <- matrix(Points %in% Inside, ncol=2)
-                          keep <- M[,1] & M[,2] & ok
-                      } else {
-                          keep <- 0 != sp::point.in.polygon(alon, alat, plon, plat)
+                      ##OLD if (use_sf_package) {
+                      ## We need the *index* of points to keep, and not just a lon-lat subset of
+                      ## points.  It is not too difficult to get the index with the 'sp'
+                      ## package, but the only solution I could come up with using the 'sf'
+                      ## package is to tack 1,2,3,etc onto the lon-lat points as a third
+                      ## dimension, so that after we select for the points inside, we can skim
+                      ## that third dimension and that gives us the 'keep' that we need. There
+                      ## may be a more straightforward way, but my (admittedly shallow) reading
+                      ## of the 'sf' function list did not uncover anything promising, and my
+                      ## tests show that this scheme works.
+
+                      ## see https://github.com/ArgoCanada/argoFloats/issues/86
+                      ok <- is.finite(alon) & is.finite(alat)
+                      Polygon <- sf::st_polygon(list(outer=cbind(plon, plat, rep(0, length(plon)))))
+                      ## DOES NOT WORK (REQUIRES OTHER SOFTWARE??): Polygon <- sf::st_make_valid(Polygon)
+                      if (!is.finite(sf::st_is_valid(Polygon))) {
+                          errorMessage <- sf::st_is_valid(Polygon, reason=TRUE)
+                          stop(paste0("In subset,argoFloats-method(): polygon is invalid, because of ", errorMessage), call.=FALSE)
                       }
+                      ## multipoint does not permit NA values, so we set them to zero and remove them later
+                      Points <- sf::st_multipoint(cbind(ifelse(ok, alon, 0),
+                                                        ifelse(ok, alat, 0),
+                                                        seq_along(alon)))
+                      if (!sf::st_is_valid(Points)) {
+                          errorMessage <- sf::st_is_valid(Points, reason=TRUE)
+                          stop(paste0("In subset,argoFloats-method(): 'Points' is invalid, because of ", errorMessage), call.=FALSE)
+                      }
+                      Intersection <- sf::st_intersection(Points, Polygon)
+                      keep <- Intersection[,3]
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
+                          message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/N), "%) using sf method")
                       x@data$index <- x@data$index[keep, ]
+                      ##OLD } else {
+                      ##OLD     keep <- 0 != sp::point.in.polygon(alon, alat, plon, plat)
+                      ##OLD     if (!silent)
+                      ##OLD         message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%) using sp method")
+                      ##OLD     x@data$index <- x@data$index[keep, ]
+                      ##OLD }
                   } else if (dotsNames[1]=="time") {
                       time <- dots[[1]]
                       if(!is.list(dots[1]))
