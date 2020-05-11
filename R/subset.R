@@ -259,7 +259,7 @@ setMethod(f="subset",
                       Intersection <- sf::st_intersection(Points, Polygon)
                       keep <- Intersection[,3]
                       if (!silent)
-                          message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/N), "%) using sf method")
+                          message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                       ##OLD } else {
                       ##OLD     keep <- 0 != sp::point.in.polygon(alon, alat, plon, plat)
