@@ -4,7 +4,6 @@ library(hexSticker)
 
 data(coastlineWorldFine, package="ocedata")
 topo <- read.topo("topo_81W_72W_22N_31N_1min_gmt.nc")
-imagep(topo)
 
 dark <- "#4a4326"
 bright <- "#DBA748" # https://www.rapidtables.com/web/color/color-scheme.html
