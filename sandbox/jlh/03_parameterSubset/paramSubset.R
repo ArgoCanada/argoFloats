@@ -6,7 +6,7 @@ library(oce)
 #Download Index
 getIndex(
     server = "ftp://usgodae.org/pub/outgoing/argo",
-    file = "argo_merged-profile_index.txt.gz",
+    filename = "argo_merged-profile_index.txt.gz",
     destdir = "~/data/argo",
     age = 6,
     quiet = FALSE,
@@ -14,7 +14,7 @@ getIndex(
 )
 
 if (!exists("ai"))
-    ai <- getIndex(file='argo_merged-profile_index.txt.gz', destdir="~/data/argo",debug=3, age=0)
+    ai <- getIndex(filename='argo_merged-profile_index.txt.gz', destdir="~/data/argo",debug=3, age=0)
 
 
 load("~/data/argo/argo_bio-profile_index.txt") 
@@ -32,7 +32,7 @@ sum(look)/ length(look) # This indicates there is a lot of oxygen (94%).
 # Now it's time to add this to subset method. 
 
 # Creating an example for the paramter subset. 
-ai <- getIndex(file='merge', destdir='~/data/argo')
+ai <- getIndex(filename='merge', destdir='~/data/argo')
 head(ai@data$index$parameters,3) # To focus on parameters
 aiDoxy<- grepl("([ ]DOXY)|(^DOXY)", ai@data$index$parameters)
 sum(aiDoxy)/length(aiDoxy)

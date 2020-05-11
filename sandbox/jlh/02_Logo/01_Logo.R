@@ -59,14 +59,14 @@ for (radius in seq(100, 1000, 100)) {
 ## Creating second panel map
 getIndex(
     server = "ftp://usgodae.org/pub/outgoing/argo",
-    file = "ar_index_global_prof.txt.gz",
+    filename = "ar_index_global_prof.txt.gz",
     destdir = "~/data/argo",
     age = 6,
     quiet = FALSE,
     debug = 3
 )
 if (!exists("ai"))
-    ai <- getIndex(file='ar_index_global_prof.txt.gz', destdir="~/data/argo",debug=3)
+    ai <- getIndex(filename='ar_index_global_prof.txt.gz', destdir="~/data/argo",debug=3)
 
 i2 <- subset(ai, circle=list(longitude=-77.3504, latitude=25.0443, radius=180))
 bahamProfiles <- getProfiles(i2, retries=3)
