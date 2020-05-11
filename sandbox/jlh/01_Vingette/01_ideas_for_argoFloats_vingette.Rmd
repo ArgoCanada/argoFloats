@@ -39,7 +39,7 @@ To download data index from an argo server, the following code is used:
 ```{r, results="hide"}
 getIndex(
     server = "ftp://usgodae.org/pub/outgoing/argo",
-    file = "ar_index_global_prof.txt.gz",
+    filename = "ar_index_global_prof.txt.gz",
     destdir = "~/data/argo",
     age = 6,
     quiet = FALSE,
@@ -47,7 +47,7 @@ getIndex(
 )
 
 if (!exists("ai"))
-    ai <- getIndex(file='ar_index_global_prof.txt.gz', destdir="~/data/argo",debug=3)
+    ai <- getIndex(filename='ar_index_global_prof.txt.gz', destdir="~/data/argo",debug=3)
 ```
 
 The ```getIndex()``` function provides an index of available argo float profiles with an ```argoFloat``` object type. Once the index is downloaded, a number of functions within the ```argoFloats``` package exists to easily analyze the data. 
@@ -176,7 +176,7 @@ As previously mentioned, the authors of the `argoFloats` package intend to expan
 ``` 
 getIndex(
     server = "ftp://usgodae.org/pub/outgoing/argo",
-    file = "argo_bio-profile_index.txt",
+    filename = "argo_bio-profile_index.txt",
     destdir = "~/data/argo",
     age = 6,
     quiet = FALSE,
@@ -184,7 +184,7 @@ getIndex(
 )
 
 if (!exists("bai"))
-    bai <- getIndex(file='argo_bio-profile_index.txt', destdir="~/data/argo",debug=3)
+    bai <- getIndex(filename='argo_bio-profile_index.txt', destdir="~/data/argo",debug=3)
 
 hist(bai@data$index$date, breaks="year", main="", xlab="Time")
 ```

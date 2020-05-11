@@ -32,7 +32,7 @@ as created by \code{\link[=getIndex]{getIndex()}}, either by specifying
 indices to keep (using the \code{subset} argument) or by specifying
 a way to determine those indices (using the \code{...} argument).
 Note that only one subset condition may be given in the \code{...}
-argument, but that \code{\link[=merge,argoFloats,ANY-method]{merge,argoFloats,ANY-method()}}
+argument, but that \code{\link[=merge,argoFloats-method]{merge,argoFloats-method()}}
 can be used to merge indices  created by \code{subset},
 which effectively creates a logical "or" operation.
 }
@@ -108,9 +108,9 @@ latRect <- c(26.5, 27.5)
 index3 <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
 
 # Example 4: subset to a polygon to near Abaco Island
-lonPoly <- c(-76.5, -76.0, -75.5)
-latPoly <- c(25.5, 26.5, 25.5)
-index4 <- subset(index, polygon=list(longitude=lonPoly, latitude=latPoly))
+poly <- list(longitude=c(-77.492, -78.219, -77.904, -77.213, -76.728, -77.492),
+             latitude=c(26.244, 25.247, 24.749, 24.987, 25.421, 26.244))
+index4 <- subset(index, polygon=poly)
 
 # Show some of these subsets on a map
 plot(index)
@@ -118,7 +118,7 @@ points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
 points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
 rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
 points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
-polygon(lonPoly, latPoly, border=4, lwd=2)
+polygon(poly$longitude, poly$latitude, border=4)
 
 # Example 5: subset argo_merge data containing 'DOXY' parameters
 # Data containing 'DOXY' data
@@ -146,23 +146,6 @@ index9 <- subset(ai, ID='1900722') }
 \dontrun{
 ai <- getIndex(filename=='merged', destdir = '~/data/argo')
 index8 <- subset(ai, deep=TRUE) }
-
-# Example 10: subset by specific ocean near Ithmus of Panama
-\dontrun{
-ai <- getIndex(filename='merged', destdir= '~/data/argo')
-lonPoly <- c(-90.27, -82.89, -74.71, -79.11)
-latPoly <- c(7.89, 3.87, 12.56, 16.72)
-subset10 <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
-index10A <- subset(subset10, ocean="A")
-profilesA <- getProfiles(index10A)
-argosA <- readProfiles(profilesA)
-index10B <- subset(subset10, ocean='P')
-profilesB <- getProfiles(index10B)
-argosB <- readProfiles(profilesB)
-par(mfrow= c(1,2))
-plot(argosA, which='TS', main='Atlantic Ocean', cex.main=0.7)
-plot(argosB, which='TS', main='Pacific Ocean', cex.main=0.7) }
-
 
 }
 \author{

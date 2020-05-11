@@ -1,6 +1,6 @@
 ## This was not what we ended up using, but it is good to know how to grab different numbers
 library(argoFloats)
-ai <- getIndex(file='merged', destdir = '~/data/argo')
+ai <- getIndex(filename='merged', destdir = '~/data/argo')
 data('index')
 index[['index']]
 names(index[['index']])

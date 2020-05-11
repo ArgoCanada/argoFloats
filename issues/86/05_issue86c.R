@@ -10,7 +10,6 @@ polygon(polx, poly, border="red")
 Polygon <- sf::st_polygon(list(outer=cbind(polx, poly, rep(0, length(polx)))))
 
 stopifnot(sf::st_is_valid(Polygon))
-##Points <- sf::st_multipoint(cbind(x, y))
 Points <- sf::st_multipoint(cbind(x, y, seq_along(x)))
 stopifnot(sf::st_is_valid(Points))
 Intersection <- sf::st_intersection(Points, Polygon)

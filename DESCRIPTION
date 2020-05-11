@@ -22,5 +22,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 BuildVignettes: true
 VignetteBuilder: knitr
-Imports: curl, methods, oce, sp
+Imports: curl, methods, oce, sf
 

@@ -1,5 +1,5 @@
 #Subsetting for float ID
-ai <- getIndex(file='merge', destdir='~/data/argo')
+ai <- getIndex(filename='merge', destdir='~/data/argo')
 names(ai@data$index)
 a <- ai@data$index$file[1] # To determine format of file name
 gg <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*([0-9]*_[0-9]{3}).nc", "\\1", a)
