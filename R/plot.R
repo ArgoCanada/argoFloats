@@ -38,10 +38,12 @@
 #' value that depends on the value of `which`.
 #' @param pch number indicating the type of plot symbol, or `NULL`, to get an
 #' value that depends on the value of `which`.
-#' @param mar either a four-element vector giving the `par("mar")` values to
-#' be used for the plot, or `NULL`, which means that this function will determine
-#' the margin based on the plot type.
-#' @param mgp similar to `mar`, but for `par("mgp")`.
+#' @param mar either a four-element vector giving the margins to be used for
+#' the plot (see [par()] for details), or `NULL`, which means to use
+#' [par]`("mar")`.
+#' @param mgp either a three-element vector giving the geometry for
+#' axis labels (see [par()] for details), or `NULL`, which means to use
+#' [par]`("mgp")`.
 #' @param eos character value indicating the equation of state to use
 #' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
 #' see [oce::plotTS()].
@@ -109,7 +111,7 @@ setMethod(f="plot",
                       mgp <- c(2, 0.7, 0)
                   omar <- par("mar")
                   if (is.null(mar))
-                      mar <- c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
+                      mar <- par("mar") #c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
                   par(mar=mar, mgp=mgp)
                   plot(longitude, latitude, asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
                        xlab=xlab, ylab=ylab,
@@ -153,7 +155,7 @@ setMethod(f="plot",
                       mgp <- c(2, 0.7, 0)
                   omar <- par("mar")
                   if (is.null(mar))
-                      mar <- c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
+                      mar <- par("mar") # c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
                   par(mar=mar, mgp=mgp)
                   oce::plotTS(ctd, cex=cex, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
                   par(mar=omar, mgp=omgp)

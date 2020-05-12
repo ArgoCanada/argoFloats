@@ -40,11 +40,13 @@ value that depends on the value of \code{which}.}
 \item{pch}{number indicating the type of plot symbol, or \code{NULL}, to get an
 value that depends on the value of \code{which}.}
 
-\item{mar}{either a four-element vector giving the \code{par("mar")} values to
-be used for the plot, or \code{NULL}, which means that this function will determine
-the margin based on the plot type.}
+\item{mar}{either a four-element vector giving the margins to be used for
+the plot (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
+\link{par}\code{("mar")}.}
 
-\item{mgp}{similar to \code{mar}, but for \code{par("mgp")}.}
+\item{mgp}{either a three-element vector giving the geometry for
+axis labels (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
+\link{par}\code{("mgp")}.}
 
 \item{eos}{character value indicating the equation of state to use
 if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
