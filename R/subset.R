@@ -338,7 +338,7 @@ setMethod(f="subset",
                       if (!silent) {
                           if (is.logical(subset)) # this simplifies the percentage count for the method
                               subset <- which(subset)
-                          message("Kept ", length(subset), " profiles (", sprintf("%.2g", 100.0*length(subset)/length(x@data$index)), "%)")
+                          message("Kept ", length(subset), " profiles (", sprintf("%.2g", 100.0*length(subset)/dim(x@data$index)[1]), "%)")
                       }
                       x@data$index <- x@data$index[subset, ]
                   } else {
