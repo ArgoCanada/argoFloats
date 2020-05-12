@@ -124,7 +124,16 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' `argo_merge-profile_index.txt.gz` \tab `"merge"` or `"merged"` \tab Merged `"argo"` and `"bgc"` data.\cr
 #' }
 #'
-#' @template server
+#' @param server character value, or vector of character values, giving
+#' the base name(s) of server(s) holding argo profile files.  These servers
+#' are tried sequentially until one of them works.  The default
+#' value of `server` is `"auto"`, which is automatically
+#' expanded to
+#' `c("ftp://usgodae.org/pub/outgoing/argo", "ftp://ftp.ifremer.fr/ifremer/argo")`,
+#' meaning to try the USGODAE server first, but to switch to the IFREMER
+#' server if that fails. Unless `server` is `auto`, the first 5 characters of
+#' `server` must be `"ftp://"`, as a way to catch errors.
+#'
 #' @param filename character value that indicates the file name on the server, as in
 #' the first column of the table given in \dQuote{Details}, or (for some file types)
 #' as in the nickname given in the middle column. Note that the downloaded
@@ -175,17 +184,19 @@ getIndex <- function(server="auto",
     ## Sample file
     ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
     ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
-    if (!requireNamespace("curl", quietly=TRUE))
-        stop('must install.packages("curl") to download Argo data')
     res <- new("argoFloats", type="index")
     res@metadata$destdir <- destdir
     argoFloatsDebug(debug,  "getIndex(server=\"", server, "\", filename=\"", filename, "\"", ", destdir=\"", destdir, "\") {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
-    if (server == "auto") {
+    if (length(server) == 1 && server == "auto") {
         server <- c("ftp://usgodae.org/pub/outgoing/argo",
                     "ftp://ftp.ifremer.fr/ifremer/argo")
         argoFloatsDebug(debug, 'server "auto" expanded to c("',
-                        paste(server, collapse='", "'), '")\n', sep="")
+                        paste(server, collapse='", "'), "')\n", sep="")
     }
+    if (!all(grepl("^ftp://", server)))
+        stop("server must be 'auto', or a vector of strings starting with \"ftp://\", but it is ",
+             if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
+             else paste0("\"", server, "\""), "\n", sep="")
     ## Ensure that we can save the file
     if (!file.exists(destdir))
         stop("First, create a directory named '", destdir, "'")
