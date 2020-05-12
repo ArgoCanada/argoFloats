@@ -309,7 +309,6 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
-               
                   } else if (dotsNames[1] == 'ID') {
                       ID <- dots[[1]]
                       file <- x@data$index$file
@@ -327,7 +326,7 @@ setMethod(f="subset",
                       keep <- grepl(ocean, x@data$index$ocean)
                       keep[is.na(keep)] <- FALSE
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', or 'ocean'", call.=FALSE)
@@ -336,6 +335,11 @@ setMethod(f="subset",
                   if (length(dotsNames) != 0)
                       stop("in subset,argoFloats-method() : cannot give both 'subset' and '...' arguments", call.=FALSE)
                   if (x@metadata$type == "index") {
+                      if (!silent) {
+                          if (is.logical(subset)) # this simplifies the percentage count for the method
+                              subset <- which(subset)
+                          message("Kept ", length(subset), " profiles (", sprintf("%.2g", 100.0*length(subset)/length(x@data$index)), "%)")
+                      }
                       x@data$index <- x@data$index[subset, ]
                   } else {
                       stop("In subset,argoFloats-method() : method not coded except for type=\"index\"", call.=FALSE)

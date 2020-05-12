@@ -18,7 +18,8 @@ test_that("getProfiles()",
           {
               if (canDownload(destdir)) {
                   data(index)
-                  p <- expect_silent(getProfiles(subset(index, 1:3)))
+                  s <- expect_message(subset(index, 1:3), "Kept 3 profiles \\(38%\\)")
+                  p <- expect_silent(getProfiles(s))
                   expect_equal(p[["profile", 1]], "~/data/argo/R1901584_124.nc")
                   expect_equal(p[["profile"]], c("~/data/argo/R1901584_124.nc", "~/data/argo/R1901584_125.nc",
                                                  "~/data/argo/R1901584_126.nc"))
@@ -34,7 +35,7 @@ test_that("readProfiles()",
           {
               if (canDownload(destdir)) {
                   data(index)
-                  p <- expect_silent(getProfiles(subset(index, 1:2), destdir=destdir))
+                  p <- expect_message(getProfiles(subset(index, 1:2)), "Kept 2 profiles \\(25%\\)")
                   a <- expect_silent(readProfiles(p))
                   expect_equal(2, length(a[["profile"]]))
                   expect_true(is.list(a[["profile"]]))
