@@ -21,7 +21,8 @@ value of \code{server} is \code{"auto"}, which is automatically
 expanded to
 \code{c("ftp://usgodae.org/pub/outgoing/argo", "ftp://ftp.ifremer.fr/ifremer/argo")},
 meaning to try the USGODAE server first, but to switch to the IFREMER
-server if that fails.}
+server if that fails. Unless \code{server} is \code{auto}, the first 5 characters of
+\code{server} must be \code{"ftp://"}, as a way to catch errors.}
 
 \item{filename}{character value that indicates the file name on the server, as in
 the first column of the table given in \dQuote{Details}, or (for some file types)

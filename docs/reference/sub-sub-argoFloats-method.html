@@ -124,7 +124,7 @@ value of i and, in some cases, on the value of j; see &amp;#8220;Details&amp;#82
     </div>
 
     <div class="ref-description">
-    <p>This function provides an easy way to look up values within an <a href='argoFloats-class.html'>argoFloats</a>
+    <p>This function provides an easy way to look up values within an <code><a href='argoFloats-class.html'>argoFloats</a></code>
 object, without the need to know the exact structure of the data. The action
 taken by <code>[[</code> depends on the <code>type</code> element in the <code>metadata</code> slot of
 the object (which is set by the function that created the object), on the
@@ -139,7 +139,7 @@ value of <code>i</code> and, in some cases, on the value of <code>j</code>; see 
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>an <a href='argoFloats-class.html'>argoFloats</a> object.</p></td>
+      <td><p>an <code><a href='argoFloats-class.html'>argoFloats</a></code> object.</p></td>
     </tr>
     <tr>
       <th>i</th>
@@ -148,7 +148,8 @@ see &#8220;Details&#8221;.</p></td>
     </tr>
     <tr>
       <th>j</th>
-      <td><p>supplemental index value, ignored unless <code>i</code> is <code>"profile"</code> (see &#8220;Details&#8221;).</p></td>
+      <td><p>supplemental index value, used for some <code>x</code> types
+and <code>i</code> values; see &#8220;Details&#8221;.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -158,35 +159,87 @@ see &#8220;Details&#8221;.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    
-<ol>
-<li><p>If <code>i=="metadata"</code> then the <code>metadata</code> slot of <code>x</code> is returned.</p></li>
-<li><p>If <code>i=="data"</code> then the <code>data</code> slot of <code>x</code> is returned.</p></li>
-<li><p>If <code>i=="ftpRoot"</code> or <code>"server"</code> and the object was created with <code><a href='getIndex.html'>getIndex()</a></code>,
-then then the value of that item in the <code>metadata</code>
-slot is returned.  (Note that <code>"server"</code> is used by <code><a href='getProfiles.html'>getProfiles()</a></code> to construct
-a vector of URLs to download.)</p></li>
-<li><p>If <code>i=="destdir"</code> then the <code>destdir</code> item in the <code>metadata</code> slot is
-returned. This is used by <code><a href='getProfiles.html'>getProfiles()</a></code> to decide where to
-save downloaded files, and later by <code><a href='readProfiles.html'>readProfiles()</a></code>, which
-works with the output from <code><a href='getProfiles.html'>getProfiles()</a></code>.</p></li>
-<li><p>If <code>i=="type"</code> then the <code>type</code> item in the <code>metadata</code> slot is
-returned. This is <code>"index"</code> if the object was created with
-<code><a href='getIndex.html'>getIndex()</a></code>, <code>"profiles"</code> if it was created with <code><a href='getProfiles.html'>getProfiles()</a></code>,
-and <code>"argos"</code> if it was created with <code><a href='readProfiles.html'>readProfiles()</a></code>.</p></li>
-<li><p>If <code>i=="profile"</code> and <code>x</code> was created with <code><a href='readProfiles.html'>readProfiles()</a></code>,
-then the return value depends on the value of <code>j</code>. There are 4
-sub-cases.  (a) If <code>j</code> is not supplied, the return values is a list containing
+    <p>There are several possibilities, depending on the object <code>type</code>, as
+listed below. Note that these possibilities are checked in the
+order listed here.</p><ol>
+<li><p>For all object types:</p><ol>
+<li><p>If <code>i</code> is <code>"metadata"</code> then the <code>metadata</code> slot of <code>x</code> is returned.</p></li>
+<li><p>Otherwise, if <code>i</code> is <code>"data"</code> then the <code>data</code> slot of <code>x</code> is returned.</p></li>
+<li><p>Otherwise, the following steps are taken, depending on <code>type</code>.</p></li>
+</ol></li>
+<li><p>If <code>type</code> is <code>"index"</code>, i.e. if <code>x</code> was created with <code><a href='getIndex.html'>getIndex()</a></code>
+or with <code><a href='subset-argoFloats-method.html'>subset,argoFloats-method()</a></code> acting on the result of <code><a href='getIndex.html'>getIndex()</a></code>,
+then:</p><ol>
+<li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
+is returned. The choices are:
+<code>"destdir"</code>, <code>"destfileRda"</code>, <code>"filename"</code>, <code>"ftpRoot"</code>, <code>"header"</code>,
+<code>"server"</code>, <code>"type"</code>, and <code>"url"</code>.</p></li>
+<li><p>Otherwise, if <code>i</code> is the name of an item in the <code>data</code> slot, then that item
+is returned.  The choices are:
+<code>"date"</code>, <code>"date_update"</code>, <code>"file"</code>, <code>"institution"</code>, <code>"latitude"</code>,
+<code>"longitude"</code>, <code>"ocean"</code>, and <code>"profiler_type"</code>.</p></li>
+<li><p>Otherwise, if <code>i=="index"</code> then that item from the <code>data</code> slot of <code>x</code> is returned.
+(For the possible names, see the previous item in this sub-list.)</p></li>
+<li><p>Otherwise, if <code>i</code> is an integer, then the <code>i</code>-th row of the <code>index</code> item in
+the <code>data</code> slot is returned.  This is a good way to learn the
+longitude and latitude of the profile, the file name on the server,
+etc.</p></li>
+<li><p>Otherwise, if <code>i</code> is <code>"profile"</code> then the return value is developed from the
+<code>index$file</code> item within the <code>data</code> slot of <code>x</code>, in one of three cases:</p><ol>
+<li><p>If <code>j</code> is not supplied, the return value is the full contents
+of <code>file</code>, i.e. the full names of the files downloaded
+by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p></li>
+<li><p>Otherwise, if <code>j</code> is numeric, then the return value is a vector of the
+<code>file</code> entries, as indexed by <code>j</code>.</p></li>
+<li><p>Otherwise, if <code>j</code> is <code>"count"</code>, then the number of <code>file</code> names is returned.</p></li>
+<li><p>Otherwise, an error is rported.</p></li>
+</ol></li>
+</ol></li>
+<li><p>Otherwise, if <code>type</code> is <code>"profiles"</code>, i.e. if <code>x</code> was created with <code><a href='getProfiles.html'>getProfiles()</a></code>, then:</p><ol>
+<li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
+is returned. The choices are:
+<code>"type"</code> and <code>"destdir"</code>.</p></li>
+<li><p>Otherwise, if <code>i</code> is the name of an item in the <code>data</code> slot, then that item
+is returned.  There is only one choice: <code>"file"</code>.</p></li>
+<li><p>Otherwise, if <code>i</code> is <code>"profile"</code> then the return value is developed from the
+<code>file</code> item in the <code>data</code> slot of <code>x</code>, in one of four sub-cases:</p><ol>
+<li><p>If <code>j</code> is not supplied, the return value is <code>file</code>,
+i.e. a vector holding the full names of the files downloaded
+by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p></li>
+<li><p>Otherwise, if <code>j</code> is numeric, then the return value is a vector of the
+<code>file</code> entries, as indexed by <code>j</code>.</p></li>
+<li><p>Otherwise, if <code>j</code> is <code>"count"</code>, then the number of <code>file</code> names is returned.</p></li>
+<li><p>Otherwise, an error is reported.</p></li>
+</ol></li>
+</ol></li>
+<li><p>Otherwise, if <code>type</code> is <code>"argos"</code>, i.e. if <code>x</code> was created with <code><a href='readProfiles.html'>readProfiles()</a></code>, then:</p><ol>
+<li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
+is returned. There is only choice, <code>"type"</code>.</p></li>
+<li><p>Otherwise, if <code>i</code> is the name of an item in the <code>data</code> slot, then that item
+is returned.  There is only one choice: <code>"argos"</code>.</p></li>
+<li><p>Otherwise, if <code>i</code> is <code>"profile"</code> then the return value depends on the value of <code>j</code>.
+There are five sub-cases:</p><ol>
+<li><p>If <code>j</code> is not supplied, the return value is a list containing
 all the profiles in <code>x</code>, each an <code>argo</code> object as created by
-<code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>oce::read.argo()</a></code> in the <code>oce</code> package.  (b) If <code>j</code> is a single integer,
-then the return value is a single <code>argo</code> object. (c) If <code>j</code> is a vector
-of integers, then a list of <code>argo</code> objects is returned. (d) If <code>j</code> is
-the string <code>"count"</code>, then the number of profiles is returned.</p></li>
-<li><p>Otherwise, if <code>x</code> was created with <code><a href='getIndex.html'>getIndex()</a></code>,
-<code>i</code> may be the name of an item in the <code>index</code> item
-in the <code>data</code> slot, or a string that is made up of enough characters
-to uniquely identify such an item, e.g. <code>"lon"</code> may be used as a
-shortcut for <code>"longitude"</code>.</p></li>
+<code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>oce::read.argo()</a></code> in the <code>oce</code> package.</p></li>
+<li><p>Otherwise, if <code>j</code> is a single integer,  then the return value is a single
+<code>argo</code> object.</p></li>
+<li><p>Otherwise, if <code>j</code> is a vector  of integers, then a list of <code>argo</code> objects
+is returned.</p></li>
+<li><p>Otherwise, if <code>j</code> is <code>"count"</code>, then the number of profiles is returned.</p></li>
+<li><p>Otherwise, an error is reported.</p></li>
+</ol></li>
+<li><p>Otherwise, if <code>i</code> is a character value, then it is taken to be
+an item within the <code>metadata</code> or <code>data</code> slots of the argo objects
+stored in <code>x</code>, and the returned value is a list containing that
+information with one (unnamed) item per profile.  Note that
+items from the <code>metadata</code> are repeated and cast into a matrix
+as the same dimensionality as pressure, as a way to make it
+easier to e.g. use <code><a href='https://rdrr.io/pkg/oce/man/as.ctd.html'>oce::as.ctd()</a></code> to create a CTD object from
+values returned by the present function, passed through <code><a href='https://rdrr.io/r/base/unlist.html'>unlist()</a></code>.</p></li>
+<li><p>Otherwise, an error is reported.</p></li>
+</ol></li>
+<li><p>Otherwise, an error is reported.</p></li>
 </ol>
 
 
@@ -195,8 +248,7 @@ shortcut for <code>"longitude"</code>.</p></li>
 <span class='co'># Full remote filename for first two item in index</span>
 <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>index</span><span class='kw'>[[</span><span class='st'>"server"</span>]], <span class='st'>"/dac/"</span>, <span class='no'>index</span><span class='kw'>[[</span><span class='st'>"profile"</span>, <span class='fl'>1</span>:<span class='fl'>2</span>]])</div><div class='output co'>#&gt; [1] "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_124.nc"
 #&gt; [2] "ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1901584/profiles/R1901584_125.nc"  </div><div class='input'><span class='co'># File names and geographical locations of first 5 items in index</span>
-<span class='no'>index5</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='fl'>1</span>:<span class='fl'>5</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span>(<span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"file"</span>]][<span class='fl'>1</span>]),
+<span class='no'>index5</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='fl'>1</span>:<span class='fl'>5</span>)</div><div class='output co'>#&gt; <span class='message'>Kept 5 profiles (62%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span>(<span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"file"</span>]][<span class='fl'>1</span>]),
            <span class='kw'>lon</span><span class='kw'>=</span><span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]],
            <span class='kw'>lat</span><span class='kw'>=</span><span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]])</div><div class='output co'>#&gt;              file     lon    lat
 #&gt; 1 R1901584_124.nc -76.231 27.705
