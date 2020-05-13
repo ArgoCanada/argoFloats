@@ -13,5 +13,5 @@
 * **argoFloats R 04: subset by ocean or polygon** (May 7, 2020)
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/tcGRB479Udk
-* **argoFloats R 05: TS diagram, colour-coded by oxygen (May 13, 2020)
+* **argoFloats R 05: TS diagram, colour-coded by oxygen** (May 13, 2020)
     - Jaimie Harbin and Dan Kelley
