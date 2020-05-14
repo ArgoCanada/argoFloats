@@ -36,7 +36,9 @@
 #' See example 4.
 #'
 #' 5. A vector or list named `parameter` that holds character values that
-#' specify the names of measured parameters to keep. See example 5.
+#' specify the names of measured parameters to keep. See section 3.3 of the
+#' Argo User's Manual, V3.2 (Carval et al. 2015) for a list of parameters.
+#' See example 5.
 #'
 #' 6. A list named `time` that has elements `from` and `to` that are POSIXt
 #' times that were created with eg. [POSIXct()], with `tz="UTC"` to match
