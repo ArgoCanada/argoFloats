@@ -182,13 +182,15 @@ value that depends on the value of <code>which</code>.</p></td>
     </tr>
     <tr>
       <th>mar</th>
-      <td><p>either a four-element vector giving the <code><a href='https://rdrr.io/r/graphics/par.html'>par("mar")</a></code> values to
-be used for the plot, or <code>NULL</code>, which means that this function will determine
-the margin based on the plot type.</p></td>
+      <td><p>either a four-element vector giving the margins to be used for
+the plot (see <code><a href='https://rdrr.io/r/graphics/par.html'>par()</a></code> for details), or <code>NULL</code>, which means to use
+<a href='https://rdrr.io/r/graphics/par.html'>par</a><code>("mar")</code>.</p></td>
     </tr>
     <tr>
       <th>mgp</th>
-      <td><p>similar to <code>mar</code>, but for <code><a href='https://rdrr.io/r/graphics/par.html'>par("mgp")</a></code>.</p></td>
+      <td><p>either a three-element vector giving the geometry for
+axis labels (see <code><a href='https://rdrr.io/r/graphics/par.html'>par()</a></code> for details), or <code>NULL</code>, which means to use
+<a href='https://rdrr.io/r/graphics/par.html'>par</a><code>("mgp")</code>.</p></td>
     </tr>
     <tr>
       <th>eos</th>
@@ -238,7 +240,7 @@ for other arguments that can be provided.</p></li>
 <span class='no'>lat</span> <span class='kw'>&lt;-</span> <span class='no'>index</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]]
 <span class='no'>dist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/oce/man/geodDist.html'>geodDist</a></span>(<span class='no'>lon</span>, <span class='no'>lat</span>, -<span class='fl'>77.06</span>, <span class='fl'>26.54</span>)
 <span class='no'>o</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span>(<span class='no'>dist</span>)
-<span class='no'>index10</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='no'>o</span>[<span class='fl'>1</span>:<span class='fl'>10</span>])</div><div class='output co'>#&gt; <span class='message'>Kept 10 profiles (1.2e+02%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span>(<span class='no'>index10</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]], <span class='no'>index10</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]], <span class='kw'>col</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='img'><img src='plot-argoFloats-method-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>index10</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='no'>o</span>[<span class='fl'>1</span>:<span class='fl'>10</span>])</div><div class='output co'>#&gt; <span class='message'>Kept 10 profiles (1%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span>(<span class='no'>index10</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]], <span class='no'>index10</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]], <span class='kw'>col</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='img'><img src='plot-argoFloats-method-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Example 2: TS of first 10 profiles in the index</span>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='no'>profiles10</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span>(<span class='no'>index10</span>, <span class='kw'>destdir</span><span class='kw'>=</span><span class='st'>"~/data/argo"</span>)
