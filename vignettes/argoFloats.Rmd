@@ -47,7 +47,7 @@ argoFloats R 01: Introduction                       | Dan Kelley & Jaimie Harbin
 argoFloats R 02: TS plot near Bermuda               | Jaimie Harbin & Dan Kelley | April 24, 2020 | https://youtu.be/ZoTrVEMG5Qo
 argoFloats R 03: new website                        | Jaimie Harbin & Dan Kelley | April 30, 2020 | https://youtu.be/lOvCrRDTmTs
 argoFloats R 04: subset by ocean or polygon         | Jaimie Harbin & Dan Kelley | May 7, 2020    | https://youtu.be/tcGRB479Udk
-argoFloats R 05: TS diagram, colour-coded by oxygen | Jaimie Harbin & Dan Kelley | May 14, 2020   | TBA
+argoFloats R 05: TS diagram, colour-coded by oxygen | Jaimie Harbin & Dan Kelley | May 14, 2020   | https://youtu.be/Y_SxjcOnW04
 
 In addition to the videos, sample code can be found for some videos, at https://github.com/ArgoCanada/argoFloats/tree/develop/videos
 
