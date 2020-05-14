@@ -2,7 +2,7 @@
 
 * **argoFloats R 01: Introduction** (April 9, 2020)
     - Dan Kelley and Jaimie Harbin
-    - Video https://youtu.be/xeBoFbb66Nk.
+    - Video https://youtu.be/xeBoFbb66Nk
 * **argoFloats R 02: TS plot near Bermuda** (April 24, 2020)
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/ZoTrVEMG5Qo
