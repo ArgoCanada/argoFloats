@@ -41,14 +41,15 @@ The `argoFloats` package provides tools for downloading and processing Argo prof
 # Youtube Videos
 Before moving on, it should be noted that a number of youtube videos exist to work through exercises in real time, as shown below.
 
-Video Name                                  | Creators                   | Date           | URL
---------------------------------------------|----------------------------|----------------|-------
-argoFloats R 01: Introduction               | Dan Kelley & Jaimie Harbin | April 9, 2020  | https://youtu.be/xeBoFbb66Nk
-argoFloats R 02: TS plot near Bermuda       | Jaimie Harbin & Dan Kelley | April 24, 2020 | https://youtu.be/ZoTrVEMG5Qo
-argoFloats R 03: new website                | Jaimie Harbin & Dan Kelley | April 30, 2020 | https://youtu.be/lOvCrRDTmTs
-argoFloats R 04: subset by ocean or polygon | Jaimie Harbin & Dan Kelley | May 7, 2020    | https://youtu.be/tcGRB479Udk
+Video Name                                          | Creators                   | Date           | URL
+----------------------------------------------------|----------------------------|----------------|-----------------------------
+argoFloats R 01: Introduction                       | Dan Kelley & Jaimie Harbin | April 9, 2020  | https://youtu.be/xeBoFbb66Nk
+argoFloats R 02: TS plot near Bermuda               | Jaimie Harbin & Dan Kelley | April 24, 2020 | https://youtu.be/ZoTrVEMG5Qo
+argoFloats R 03: new website                        | Jaimie Harbin & Dan Kelley | April 30, 2020 | https://youtu.be/lOvCrRDTmTs
+argoFloats R 04: subset by ocean or polygon         | Jaimie Harbin & Dan Kelley | May 7, 2020    | https://youtu.be/tcGRB479Udk
+argoFloats R 05: TS diagram, colour-coded by oxygen | Jaimie Harbin & Dan Kelley | May 14, 2020   | https://youtu.be/Y_SxjcOnW04
 
-In addition to the videos, sample code can be found for some videos, at https://github.com/argoCanada/argoFloats/tree/develop/sandbox/videos.
+In addition to the videos, sample code can be found for some videos, at https://github.com/ArgoCanada/argoFloats/tree/develop/videos
 
 # Preliminary Setup
 To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE)` command if you receive a Zero Exit Status Error):
