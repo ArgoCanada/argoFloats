@@ -9,7 +9,7 @@ filename <- paste0("zoom_name_", gsub(" ", "_", name), ".png")
 text <- gsub(" ", "\n", name)
 
 
-if (!interactive()) png(filename, width=200, height=200, pointsize=40)
+if (!interactive()) png(filename, width=200, height=200, pointsize=48)
 par(fg=fg, bg=bg)
 par(mar=rep(0,4))
 plot(0:1, 0:1, xlab="", ylab="", type="n", axes=FALSE)
