@@ -16,5 +16,5 @@
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/04/video04_subset_by_ocean.R and https://github.com/ArgoCanada/argoFloats/blob/develop/videos/04/video04_subset_by_polygon.R
 * **argoFloats R 05: TS diagram, colour-coded by oxygen** (May 14, 2020)
     - Jaimie Harbin and Dan Kelley
-    - Video
+    - Video https://youtu.be/Y_SxjcOnW04
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/05/video05_TS_by_oxygen.R
