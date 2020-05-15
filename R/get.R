@@ -113,15 +113,16 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' seem to be equivalent to the `.gz` versions, so [getIndex()] is
 #' designed to work with them.)
 #' \tabular{lll}{
-#' *File Name*                       \tab *Nickname*              \tab *Contents*\cr
-#' `ar_greylist.txt`                 \tab -                       \tab Suspious or malfunctioning float sensors.\cr
-#' `ar_index_global_meta.txt.gz`     \tab -                       \tab Metadata files of the argo GDAC ftp site.\cr
-#' `ar_index_global_prof.txt.gz`     \tab `"argo"`                \tab Argo data.\cr
-#' `ar_index_global_tech.txt.gz`     \tab -                       \tab All technical files of the argo GDAC ftp site.\cr
-#' `ar_index_global_traj.txt.gz`     \tab -                       \tab All trajectory files of the argo GDAC ftp site.\cr
-#' `argo_bio-profile_index.txt.gz`   \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T).\cr
-#' `argo_bio-traj_index.txt.gz`      \tab -                       \tab Bio-trajectory files of the argo GDAC ftp site.\cr
-#' `argo_merge-profile_index.txt.gz` \tab `"merge"` or `"merged"` \tab Merged `"argo"` and `"bgc"` data.\cr
+#' *File Name*                           \tab *Nickname*              \tab *Contents*\cr
+#' `ar_greylist.txt`                     \tab -                       \tab Suspious or malfunctioning float sensors.\cr
+#' `ar_index_global_meta.txt.gz`         \tab -                       \tab Metadata files of the argo GDAC ftp site.\cr
+#' `ar_index_global_prof.txt.gz`         \tab `"argo"`                \tab Argo data.\cr
+#' `ar_index_global_tech.txt.gz`         \tab -                       \tab All technical files of the argo GDAC ftp site.\cr
+#' `ar_index_global_traj.txt.gz`         \tab -                       \tab All trajectory files of the argo GDAC ftp site.\cr
+#' `argo_bio-profile_index.txt.gz`       \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T).\cr
+#' `argo_bio-traj_index.txt.gz`          \tab -                       \tab Bio-trajectory files of the argo GDAC ftp site.\cr
+#' `argo_merge-profile_index.txt.gz`     \tab `"merge"` or `"merged"` \tab Merged `"argo"` and `"bgc"` data.\cr
+#' `argo_synthetic-profile_index.txt.gz` \tab `"synthetic"`           \tab Synthetic data, successor to `"merge"`.\cr
 #' }
 #'
 #' @param server character value, or vector of character values, giving
@@ -203,16 +204,18 @@ getIndex <- function(server="auto",
     if (!file.info(destdir)$isdir)
         stop("'", destdir, "' is not a directory")
     ## Handle nicknames
+    filenameOrig <- filename
     if (filename == "argo") {
         filename <- "ar_index_global_prof.txt.gz"
-        argoFloatsDebug(debug, "Converted filename=\"argo\" to filename=\"", filename, "\".\n", sep="")
     } else if (filename == "bgcargo" || filename == "bgc") {
         filename <- "argo_bio-profile_index.txt.gz"
-        argoFloatsDebug(debug, "Converted filename=\"bgcargo\" to filename=\"", filename, "\".\n", sep="")
     } else if (filename == "merge" || filename == "merged") {
         filename <- "argo_merge-profile_index.txt.gz"
-        argoFloatsDebug(debug, "Converted filename=\"argo_merge\" to filename=\"", filename, "\".\n", sep="")
+    } else if (filename == "synthetic") {
+        filename <- "argo_synthetic-profile_index.txt.gz"
     }
+    if (filename != filenameOrig)
+        argoFloatsDebug(debug, "Converted filename=\"", filenameOrig, "\" to filename=\"", filename, "\".\n", sep="")
     ## Note: 'url' is a vector; e.g. using server="auto" creates 2 elements in url
     url <- paste(server, filename, sep="/")
     destfile <- paste(destdir, filename, sep="/")
@@ -393,8 +396,12 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE
         ## the netcdf files from the same source as the index, and *not* from the source listed
         ## in the "# FTP" line in the header within that index.
         server <- index[["server"]]
-        ## NB. the USGODAE and IFREMER servers are set up differently.
-        urls <- if (grepl("usgodae.org", server, ignore.case=TRUE)) {
+        ## I *thought* the USGODAE and IFREMER servers were once set up differently, with only usgodae having "dac" in the path
+        ## name.  That is why the next block was written.  However, as of May 15, 2020, it seems they are set up in the same
+        ## way, so the ifremer case was rewritten to match the usgodae case.  Still, I am keeping this if block, in case I am in
+        ## error.  Note also that we have a place another server type, and it defaults to no "dac" ... but since I have never
+        ## seen a third type, I imagine that part has never been exectuted.
+        if (grepl("usgodae.org", server, ignore.case=TRUE)) {
             urls <- paste0(server, "/dac/", index[["file"]])
         } else if (grepl("ifremer.fr", server, ignore.case=TRUE)) {
             urls <- paste0(server, "/dac/", index[["file"]])
