@@ -184,16 +184,17 @@ is returned.  The choices are:
 the <code>data</code> slot is returned.  This is a good way to learn the
 longitude and latitude of the profile, the file name on the server,
 etc.</p></li>
-<li><p>Otherwise, if <code>i</code> is <code>"profile"</code> then the return value is developed from the
+<li><p>Otherwise, if <code>i</code> is <code>"ID"</code> then the return value is developed from the
 <code>index$file</code> item within the <code>data</code> slot of <code>x</code>, in one of three cases:</p><ol>
-<li><p>If <code>j</code> is not supplied, the return value is the full contents
-of <code>file</code>, i.e. the full names of the files downloaded
-by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p></li>
-<li><p>Otherwise, if <code>j</code> is numeric, then the return value is a vector of the
-<code>file</code> entries, as indexed by <code>j</code>.</p></li>
-<li><p>Otherwise, if <code>j</code> is <code>"count"</code>, then the number of <code>file</code> names is returned.</p></li>
-<li><p>Otherwise, an error is rported.</p></li>
+<li><p>If <code>j</code> is not supplied, the return value is a vector holding the
+identifiers (character codes for numbers) for all the data files
+referred to in the index.</p></li>
+<li><p>Otherwise, if <code>j</code> is numeric, then the return value is a subset of
+the ID codes, as indexed by <code>j</code>.</p></li>
+<li><p>Otherwise, an error is reported.</p></li>
 </ol></li>
+<li><p>If <code>i</code> is <code>"length"</code>, the number of remote files pointed to by the index
+is returned.</p></li>
 </ol></li>
 <li><p>Otherwise, if <code>type</code> is <code>"profiles"</code>, i.e. if <code>x</code> was created with <code><a href='getProfiles.html'>getProfiles()</a></code>, then:</p><ol>
 <li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
@@ -208,9 +209,10 @@ i.e. a vector holding the full names of the files downloaded
 by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p></li>
 <li><p>Otherwise, if <code>j</code> is numeric, then the return value is a vector of the
 <code>file</code> entries, as indexed by <code>j</code>.</p></li>
-<li><p>Otherwise, if <code>j</code> is <code>"count"</code>, then the number of <code>file</code> names is returned.</p></li>
 <li><p>Otherwise, an error is reported.</p></li>
 </ol></li>
+<li><p>If <code>i</code> is <code>"length"</code>, the number of local file names that were downloaded
+by <code><a href='getProfiles.html'>getProfiles()</a></code> is returned.</p></li>
 </ol></li>
 <li><p>Otherwise, if <code>type</code> is <code>"argos"</code>, i.e. if <code>x</code> was created with <code><a href='readProfiles.html'>readProfiles()</a></code>, then:</p><ol>
 <li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
@@ -218,7 +220,7 @@ is returned. There is only choice, <code>"type"</code>.</p></li>
 <li><p>Otherwise, if <code>i</code> is the name of an item in the <code>data</code> slot, then that item
 is returned.  There is only one choice: <code>"argos"</code>.</p></li>
 <li><p>Otherwise, if <code>i</code> is <code>"profile"</code> then the return value depends on the value of <code>j</code>.
-There are five sub-cases:</p><ol>
+There are four sub-cases:</p><ol>
 <li><p>If <code>j</code> is not supplied, the return value is a list containing
 all the profiles in <code>x</code>, each an <code>argo</code> object as created by
 <code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>oce::read.argo()</a></code> in the <code>oce</code> package.</p></li>
@@ -226,9 +228,9 @@ all the profiles in <code>x</code>, each an <code>argo</code> object as created 
 <code>argo</code> object.</p></li>
 <li><p>Otherwise, if <code>j</code> is a vector  of integers, then a list of <code>argo</code> objects
 is returned.</p></li>
-<li><p>Otherwise, if <code>j</code> is <code>"count"</code>, then the number of profiles is returned.</p></li>
 <li><p>Otherwise, an error is reported.</p></li>
 </ol></li>
+<li><p>If <code>i</code> is <code>"length"</code>, the number of oce-type argo objects in <code>x</code> is returned.</p></li>
 <li><p>Otherwise, if <code>i</code> is a character value, then it is taken to be
 an item within the <code>metadata</code> or <code>data</code> slots of the argo objects
 stored in <code>x</code>, and the returned value is a list containing that
@@ -246,8 +248,8 @@ values returned by the present function, passed through <code><a href='https://r
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>index</span>)
 <span class='co'># Full remote filename for first two item in index</span>
-<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>index</span><span class='kw'>[[</span><span class='st'>"server"</span>]], <span class='st'>"/dac/"</span>, <span class='no'>index</span><span class='kw'>[[</span><span class='st'>"profile"</span>, <span class='fl'>1</span>:<span class='fl'>2</span>]])</div><div class='output co'>#&gt; [1] "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_124.nc"
-#&gt; [2] "ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1901584/profiles/R1901584_125.nc"  </div><div class='input'><span class='co'># File names and geographical locations of first 5 items in index</span>
+<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>index</span><span class='kw'>[[</span><span class='st'>"server"</span>]], <span class='st'>"/dac/"</span>, <span class='no'>index</span><span class='kw'>[[</span><span class='st'>"profile"</span>, <span class='fl'>1</span>:<span class='fl'>2</span>]])</div><div class='output co'>#&gt; <span class='message'>FIXME: handle profile here</span></div><div class='output co'>#&gt; [1] "ftp://usgodae.org/pub/outgoing/argo/dac/124"
+#&gt; [2] "ftp://usgodae.org/pub/outgoing/argo/dac/125"</div><div class='input'><span class='co'># File names and geographical locations of first 5 items in index</span>
 <span class='no'>index5</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='fl'>1</span>:<span class='fl'>5</span>)</div><div class='output co'>#&gt; <span class='message'>Kept 5 profiles (0.52%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span>(<span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"file"</span>]][<span class='fl'>1</span>]),
            <span class='kw'>lon</span><span class='kw'>=</span><span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]],
            <span class='kw'>lat</span><span class='kw'>=</span><span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]])</div><div class='output co'>#&gt;              file     lon    lat
