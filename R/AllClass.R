@@ -298,6 +298,11 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i == "profile") {
                       if (missing(j)) {
                           return(x@data$index$file)
+                  } else if (length(i) == 1 && i == "ID") {
+                      if (missing(j)) {
+                              file <- x@data$index$file
+                              ID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}.nc$", "\\1", file)
+                              return(x@data$index[ID, ])
                       } else if (length(j) == 1 && j[1] == "count") {
                           return(length(x@data$index$file))
                       } else if (is.numeric(j)) {
@@ -372,4 +377,4 @@ setMethod(f="[[",
                   return(res)
               }
               return(NULL)
-          })
+          }})
