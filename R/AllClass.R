@@ -199,15 +199,16 @@ setMethod(f="initialize",
 #'        the `data` slot is returned.  This is a good way to learn the
 #'        longitude and latitude of the profile, the file name on the server,
 #'        etc.
-#'     4. Otherwise, if `i` is `"profile"` then the return value is developed from the
+#'     4. Otherwise, if `i` is `"ID"` then the return value is developed from the
 #'        `index$file` item within the `data` slot of `x`, in one of three cases:
-#'         1. If `j` is not supplied, the return value is the full contents
-#'            of `file`, i.e. the full names of the files downloaded
-#'            by [getProfiles()].
-#'         2. Otherwise, if `j` is numeric, then the return value is a vector of the
-#'            `file` entries, as indexed by `j`.
-#'         3. Otherwise, if `j` is `"count"`, then the number of `file` names is returned.
-#'         4. Otherwise, an error is rported.
+#'         1. If `j` is not supplied, the return value is a vector holding the
+#'            identifiers (character codes for numbers) for all the data files
+#'            referred to in the index.
+#'         2. Otherwise, if `j` is numeric, then the return value is a subset of
+#'            the ID codes, as indexed by `j`.
+#'         3. Otherwise, an error is reported.
+#'     5. If `i` is `"length"`, the number of remote files pointed to by the index
+#'        is returned.
 #' 3. Otherwise, if `type` is `"profiles"`, i.e. if `x` was created with [getProfiles()], then:
 #'     1. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. The choices are:
@@ -221,15 +222,16 @@ setMethod(f="initialize",
 #'            by [getProfiles()].
 #'         2. Otherwise, if `j` is numeric, then the return value is a vector of the
 #'            `file` entries, as indexed by `j`.
-#'         3. Otherwise, if `j` is `"count"`, then the number of `file` names is returned.
-#'         4. Otherwise, an error is reported.
+#'         3. Otherwise, an error is reported.
+#'     4. If `i` is `"length"`, the number of local file names that were downloaded
+#'        by [getProfiles()] is returned.
 #' 4. Otherwise, if `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
 #'     1. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. There is only choice, `"type"`.
 #'     2. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  There is only one choice: `"argos"`.
 #'     3. Otherwise, if `i` is `"profile"` then the return value depends on the value of `j`.
-#'         There are five sub-cases:
+#'         There are four sub-cases:
 #'         1. If `j` is not supplied, the return value is a list containing
 #'             all the profiles in `x`, each an `argo` object as created by
 #'             [oce::read.argo()] in the `oce` package.
@@ -237,9 +239,9 @@ setMethod(f="initialize",
 #'            `argo` object.
 #'         3. Otherwise, if `j` is a vector  of integers, then a list of `argo` objects
 #'            is returned.
-#'         4. Otherwise, if `j` is `"count"`, then the number of profiles is returned.
-#'         5. Otherwise, an error is reported.
-#'     4. Otherwise, if `i` is a character value, then it is taken to be
+#'         4. Otherwise, an error is reported.
+#'     4. If `i` is `"length"`, the number of oce-type argo objects in `x` is returned.
+#'     5. Otherwise, if `i` is a character value, then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
 #'        information with one (unnamed) item per profile.  Note that
@@ -247,7 +249,7 @@ setMethod(f="initialize",
 #'        as the same dimensionality as pressure, as a way to make it
 #'        easier to e.g. use [oce::as.ctd()] to create a CTD object from
 #'        values returned by the present function, passed through [unlist()].
-#'     5. Otherwise, an error is reported.
+#'     6. Otherwise, an error is reported.
 #' 5. Otherwise, an error is reported.
 #'
 #' @param x an [`argoFloats-class`] object.
@@ -294,17 +296,16 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data$index)) {
-                      return(x@data$index[[i]])
+                      return(if (missing(j)) x@data$index[[i]] else x@data$index[[i]][j])
                   } else if (length(i) == 1 && i == "profile") {
-                      if (missing(j)) {
-                          return(x@data$index$file)
-                      } else if (length(j) == 1 && j[1] == "count") {
-                          return(length(x@data$index$file))
-                      } else if (is.numeric(j)) {
-                          return(x@data$index$file[j])
-                      } else {
-                          stop("cannot interpret i=", paste(i, collapse=","), " and j=", paste(j, collapse=", "), " for an object of type=\"", type, "\"")
-                      }
+                      message("FIXME: handle profile here")
+                      profile <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3}).nc$", "\\1", x@data$index$file)
+                      return(if (missing(j)) profile else profile[j])
+                  } else if (length(i) == 1 && i == "ID") {
+                      ID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}.nc$", "\\1", x@data$index$file)
+                      return(if (missing(j)) ID else ID[j])
+                  } else if (length(i) == 1 && i == "length") {
+                      return(length(x@data$index$file))
                   } else {
                       stop("cannot interpret i=", paste(i, collapse=","), " for an object of type=\"index\"")
                   }
@@ -312,17 +313,16 @@ setMethod(f="[[",
                   if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
-                      return(x@data[[i]])
-                  } else if (length(i) == 1 && i == "profile") {
+                      ## i is always 'file'
                       if (missing(j)) {
                           return(x@data$file)
-                      } else if (length(j) == 1 && j[1] == "count") {
-                          return(length(x@data$file))
                       } else if (is.numeric(j)) {
                           return(x@data$file[j])
                       } else {
-                          stop("cannot interpret i=", paste(i, collapse=","), " and j=", paste(j, collapse=", "), " for an object of type=\"", type, "\"")
+                          stop("if j is given, it must be numeric")
                       }
+                  } else if (length(i) == 1 && i == "length") {
+                      return(length(x@data$file))
                   } else {
                       stop("cannot interpret i=", paste(i, collapse=","), " for an object of type=\"", type, "\"")
                   }
@@ -334,26 +334,26 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i == "profile") {
                       if (missing(j)) {
                           return(x@data$argos)
-                      } else if (length(j) == 1 && j[1] == "count") {
-                          return(length(x@data$argos))
                       } else if (is.numeric(j)) {
                           return(x@data$argos[[j]])
                       } else {
                           stop("cannot interpret i=", paste(i, collapse=","), " and j=", paste(j, collapse=", "), " for an object of type=\"", type, "\"")
                       }
-                   } else {
-                       return(lapply(x[["argos"]], function(a)
-                                     {
-                                         dimp <- dim(a[["pressure"]]) # should always have pressure
-                                         np <- prod(dimp)
-                                         res <- a[[i]]
-                                         ## Ensure res has same dimensionality as pressure
-                                         if (is.null(res))
-                                             res <- rep(NA, np)
-                                         else if (length(res) < np)
-                                             res <- matrix(rep(res, np), nrow=dimp[1], ncol=dimp[2])
-                                         res
-                                     }))
+                  } else if (length(i) == 1 && i == "length") {
+                      return(length(x@data$argos))
+                  } else {
+                      return(lapply(x[["argos"]], function(a)
+                                    {
+                                        dimp <- dim(a[["pressure"]]) # should always have pressure
+                                        np <- prod(dimp)
+                                        res <- a[[i]]
+                                        ## Ensure res has same dimensionality as pressure
+                                        if (is.null(res))
+                                            res <- rep(NA, np)
+                                        else if (length(res) < np)
+                                            res <- matrix(rep(res, np), nrow=dimp[1], ncol=dimp[2])
+                                        res
+                                    }))
                   }
               } else {
                   stop("the object type must be \"index\", \"profiles\", or \"argos\", but it is \"", type, "\"")
