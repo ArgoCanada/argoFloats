@@ -394,10 +394,10 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE
         ## in the "# FTP" line in the header within that index.
         server <- index[["server"]]
         ## NB. the USGODAE and IFREMER servers are set up differently.
-        urls <- if (grep("usgodae.org", server, ignore.case=TRUE)) {
+        urls <- if (grepl("usgodae.org", server, ignore.case=TRUE)) {
             urls <- paste0(server, "/dac/", index[["file"]])
-        } else if (grep("ifremer.fr", server, ignore.case=TRUE)) {
-            urls <- paste0(server, "/", index[["file"]])
+        } else if (grepl("ifremer.fr", server, ignore.case=TRUE)) {
+            urls <- paste0(server, "/dac/", index[["file"]])
         } else {
             urls <- paste0(server, "/", index[["file"]])
             warning("guessing on URL form (e.g. \"", urls[1], "\"), because server is neither usgodae.org nor ifremer.fr\n", immediate.=TRUE)
