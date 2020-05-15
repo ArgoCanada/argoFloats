@@ -190,7 +190,9 @@ and an error message will be issued if it is.  If the polygon is not closed
 and the first point is pasted onto the end, to close it.
 See example 4.</p></li>
 <li><p>A vector or list named <code>parameter</code> that holds character values that
-specify the names of measured parameters to keep. See example 5.</p></li>
+specify the names of measured parameters to keep. See section 3.3 of the
+Argo User's Manual, V3.2 (Carval et al. 2015) for a list of parameters.
+See example 5.</p></li>
 <li><p>A list named <code>time</code> that has elements <code>from</code> and <code>to</code> that are POSIXt
 times that were created with eg. <code><a href='https://rdrr.io/r/base/DateTimeClasses.html'>POSIXct()</a></code>, with <code>tz="UTC"</code> to match
 the timezone used in Argo data. Profiles within that time frame will
