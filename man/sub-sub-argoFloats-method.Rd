@@ -54,17 +54,18 @@ is returned.  The choices are:
 the \code{data} slot is returned.  This is a good way to learn the
 longitude and latitude of the profile, the file name on the server,
 etc.
-\item Otherwise, if \code{i} is \code{"profile"} then the return value is developed from the
+\item Otherwise, if \code{i} is \code{"ID"} then the return value is developed from the
 \code{index$file} item within the \code{data} slot of \code{x}, in one of three cases:
 \enumerate{
-\item If \code{j} is not supplied, the return value is the full contents
-of \code{file}, i.e. the full names of the files downloaded
-by \code{\link[=getProfiles]{getProfiles()}}.
-\item Otherwise, if \code{j} is numeric, then the return value is a vector of the
-\code{file} entries, as indexed by \code{j}.
-\item Otherwise, if \code{j} is \code{"count"}, then the number of \code{file} names is returned.
-\item Otherwise, an error is rported.
+\item If \code{j} is not supplied, the return value is a vector holding the
+identifiers (character codes for numbers) for all the data files
+referred to in the index.
+\item Otherwise, if \code{j} is numeric, then the return value is a subset of
+the ID codes, as indexed by \code{j}.
+\item Otherwise, an error is reported.
 }
+\item If \code{i} is \code{"length"}, the number of remote files pointed to by the index
+is returned.
 }
 \item Otherwise, if \code{type} is \code{"profiles"}, i.e. if \code{x} was created with \code{\link[=getProfiles]{getProfiles()}}, then:
 \enumerate{
@@ -81,9 +82,10 @@ i.e. a vector holding the full names of the files downloaded
 by \code{\link[=getProfiles]{getProfiles()}}.
 \item Otherwise, if \code{j} is numeric, then the return value is a vector of the
 \code{file} entries, as indexed by \code{j}.
-\item Otherwise, if \code{j} is \code{"count"}, then the number of \code{file} names is returned.
 \item Otherwise, an error is reported.
 }
+\item If \code{i} is \code{"length"}, the number of local file names that were downloaded
+by \code{\link[=getProfiles]{getProfiles()}} is returned.
 }
 \item Otherwise, if \code{type} is \code{"argos"}, i.e. if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then:
 \enumerate{
@@ -92,7 +94,7 @@ is returned. There is only choice, \code{"type"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
 is returned.  There is only one choice: \code{"argos"}.
 \item Otherwise, if \code{i} is \code{"profile"} then the return value depends on the value of \code{j}.
-There are five sub-cases:
+There are four sub-cases:
 \enumerate{
 \item If \code{j} is not supplied, the return value is a list containing
 all the profiles in \code{x}, each an \code{argo} object as created by
@@ -101,9 +103,9 @@ all the profiles in \code{x}, each an \code{argo} object as created by
 \code{argo} object.
 \item Otherwise, if \code{j} is a vector  of integers, then a list of \code{argo} objects
 is returned.
-\item Otherwise, if \code{j} is \code{"count"}, then the number of profiles is returned.
 \item Otherwise, an error is reported.
 }
+\item If \code{i} is \code{"length"}, the number of oce-type argo objects in \code{x} is returned.
 \item Otherwise, if \code{i} is a character value, then it is taken to be
 an item within the \code{metadata} or \code{data} slots of the argo objects
 stored in \code{x}, and the returned value is a list containing that
