@@ -20,11 +20,11 @@ test_that("getProfiles()",
                   data(index)
                   s <- expect_message(subset(index, 1:3), "Kept 3 profiles \\(0.31%\\)")
                   p <- expect_silent(getProfiles(s))
-                  expect_equal(p[["profile", 1]], "~/data/argo/R1901584_124.nc")
-                  expect_equal(p[["profile"]], c("~/data/argo/R1901584_124.nc", "~/data/argo/R1901584_125.nc",
-                                                 "~/data/argo/R1901584_126.nc"))
-                  expect_equal(p[["profile", 1:2]], c("~/data/argo/R1901584_124.nc", "~/data/argo/R1901584_125.nc"))
-                  expect_equal(p[["profile", "count"]], 3)
+                  expect_equal(p[["file", 1]], "~/data/argo/R1901584_124.nc")
+                  expect_equal(p[["file"]], c("~/data/argo/R1901584_124.nc", "~/data/argo/R1901584_125.nc",
+                                              "~/data/argo/R1901584_126.nc"))
+                  expect_equal(p[["file", 1:2]], c("~/data/argo/R1901584_124.nc", "~/data/argo/R1901584_125.nc"))
+                  expect_equal(p[["length"]], 3)
               } else {
                   skip("only certain people can test getProfiles(), because it involves downloading\n")
               }
