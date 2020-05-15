@@ -66,10 +66,9 @@ NULL
 #' the following code.
 #'\preformatted{
 #  library(argoFloats)
-#' library(oce)
 #' indexAll <- getIndex()
 #' index <- subset(indexAll,
-#'     circle=list(longitude=-77.06,latitude=26.54,radius=200))
+#'     circle=list(longitude=-77.06, latitude=26.54, radius=200))
 #'}
 #'
 #' @examples
@@ -94,9 +93,8 @@ NULL
 #'\preformatted{
 #' library(argoFloats)
 #' indexAll <- getIndex(filename="bgc")
-#' indexBgc <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#' save(indexBgc, file="indexBgc.rda")
-#' tools::resaveRdaFiles('indexBgc.rda')
+#' indexBgc <- subset(indexAll,
+#'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'}
 #'
 #' @examples
@@ -123,9 +121,8 @@ NULL
 #'\preformatted{
 #' library(argoFloats)
 #' indexAll <- getIndex(filename="merged")
-#' indexMerged <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#' save(indexMerged, file="indexMerged.rda")
-#' tools::resaveRdaFiles('indexMerged.rda')
+#' indexMerged <- subset(indexAll,
+#'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'}
 #'
 #' @section Historical note:
@@ -142,6 +139,39 @@ NULL
 #' unique(indexMerged[["parameters"]])
 #'
 #' @name indexMerged
+#'
+#' @docType data
+#'
+#' @family datasets provided with argoFloats
+NULL
+
+#' A sample index of synthetic (i.e. combined) argo and biogeochemical-argo profiles
+#'
+#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' that were within a 300km radius of Marsh Harbour, Abaco Island,
+#' Bahamas, as of 2020 May 15, using
+#' the following code.
+#'\preformatted{
+#' library(argoFloats)
+#' indexAll <- getIndex(filename="synthetic")
+#' indexSynthetic <- subset(indexAll,
+#'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
+#'}
+#'
+#' @section Historical note:
+#' This "synthetic" type of index is a replacement for the older "merged" index.  See
+#' \url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
+#' for more on the data file format, reasons for the change, and timetable for transition
+#' from "merged".
+#'
+#' @examples
+#' library(argoFloats)
+#' data(indexSynthetic)
+#' plot(indexSynthetic)
+#' summary(indexSynthetic)
+#' unique(indexSynthetic[["parameters"]])
+#'
+#' @name indexSynthetic
 #'
 #' @docType data
 #'

@@ -252,6 +252,7 @@ getIndex <- function(server="auto",
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
     downloadSuccess <- FALSE
+    failedDownloads <- 0
     for (iurl in seq_along(url)) {
         argoFloatsDebug(debug, "About to download temporary index file\n", sep="")
         argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
@@ -259,11 +260,14 @@ getIndex <- function(server="auto",
         argoFloatsDebug(debug, "    '", url[1], "'\n", sep="", showTime=FALSE)
         status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE)
         if (!inherits(status, "try-error")) {
+            if (failedDownloads > 0)
+                message('Successfully downloadd from server "', server[iurl], '".\n')
             server <- server[iurl]
             downloadSuccess <- TRUE
             break                      # the download worked
         }
-        warning('Cannot download from server "', server, '".\n', immediate.=TRUE)
+        message('Cannot download from server "', server[iurl], '".\n')
+        failedDownloads <- failedDownloads + 1 
     }
     if (!downloadSuccess)
         stop("Could not download the file from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
