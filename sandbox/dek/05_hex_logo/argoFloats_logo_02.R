@@ -43,7 +43,6 @@ a <- function()
     axis(1, at=seq(-79, -75, 2), label=paste0(seq(79,75,-2),"W"), lwd=lwd)
     axis(2, at=seq(25, 28, 1), label=FALSE, lwd=lwd)
     axis(2, at=seq(25, 28, 2), label=paste0(seq(25, 28, 2),"N"), lwd=lwd)
-    usr <- par("usr")
     points(lon, lat, bg=floats, col=floats, pch=21, cex=0.2)
     box(lwd=lwd)
     polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]],

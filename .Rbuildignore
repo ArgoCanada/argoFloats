@@ -1,3 +1,4 @@
+^.git$
 ^issues$
 ^.travis.yml$
 ^appveyor.yml$

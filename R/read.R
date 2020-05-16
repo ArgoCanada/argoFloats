@@ -31,21 +31,20 @@
 #' library(argoFloats)
 #' data(index)
 #' index2 <- subset(index, 1:2)
-#' if (requireNamespace("ncdf4")) {
-#'     profiles <- getProfiles(index2)
-#'     argos <- readProfiles(profiles, handleFlags=TRUE)
-#'     par(mfrow=c(1, 2))
-#'     library(oce)
-#'     for (i in 1:2) {
-#'       A <- argos[["profile", i]]
-#'       filename <- gsub(".*/", "", A[["filename"]])
-#'       plotTS(A, eos="unesco")
-#'       mtext(filename, line=0.7, cex=par("cex"))
-#'     }
+#' profiles <- getProfiles(index2)
+#' argos <- readProfiles(profiles, handleFlags=TRUE)
+#' par(mfrow=c(1, 2))
+#' library(oce)
+#' for (i in 1:2) {
+#'   A <- argos[["profile", i]]
+#'   filename <- gsub(".*/", "", A[["filename"]])
+#'   plotTS(A, eos="unesco")
+#'   mtext(filename, line=0.7, cex=par("cex"))
 #' }
 #'}
 #'
 #' @importFrom oce handleFlags read.argo
+#' @importFrom ncdf4 nc_version
 #'
 #' @export
 #'
@@ -56,8 +55,13 @@ readProfiles <- function(profiles, handleFlags=TRUE, debug=0)
     debug <- max(0, debug)
     res <- NULL
     argoFloatsDebug(debug, "readProfiles() {\n", style="bold", sep="", unindent=1)
-    ##if (!requireNamespace("ncdf4"))
-    ##    stop("please install.package(\"ncdf4\") so that readProfiles() can read argo files")
+    ## show the ncdf4 version.  Frankly, this is just to prevent errors in R CMD check.  The problem
+    ## has to do with oce::read.argo() doing a require(ncdf4), which causes an error message in
+    ## checking argoFloats.  But if we put argoFloats in the "Depends" field of the argoFloats
+    ## DESCRIPTION file, we get an error because ArgoFloats is not using it.
+    ncversion <- nc_version()
+    argoFloatsDebug(debug, "ncdf4 version: ", ncversion, "\n")
+
     res <- new("argoFloats", type="argos")
     if (is.character(profiles)) {
         argoFloatsDebug(debug, "case 1: vector of character strings\n")
@@ -69,7 +73,7 @@ readProfiles <- function(profiles, handleFlags=TRUE, debug=0)
             fileNames <- gsub(".*/(.*).nc", "\\1.nc", profiles@data$file)
             fullFileNames <- paste0(profiles@metadata$destdir, "/", fileNames)
             argoFloatsDebug(debug, "about to read", length(fullFileNames), "netcdf files...\n")
-            res@data$argos <- lapply(fullFileNames, read.argo, debug=debug-1)
+            res@data$argos <- lapply(fullFileNames, oce::read.argo, debug=debug-1)
             argoFloatsDebug(debug, "... finished reading", length(fullFileNames), "netcdf files.\n")
         } else {
             stop("'profiles' must be a character vector or an object created by getProfiles()")

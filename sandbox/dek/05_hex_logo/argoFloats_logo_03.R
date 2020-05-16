@@ -38,8 +38,6 @@ a <- function()
          type="n",
          cex=0.3, axes=FALSE)
     z <- topo[["z"]]
-    #z[z > 0] <- NA
-    cm <- colormap(z, name="gmt_gebco")
     n <- 256
     imagep(topo[["longitude"]], topo[["latitude"]], topo[["z"]],
            col=rev(cmocean("deep")(n)),

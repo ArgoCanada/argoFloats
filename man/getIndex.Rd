@@ -14,15 +14,18 @@ getIndex(
 )
 }
 \arguments{
-\item{server}{character value, or vector of character values, giving
-the base name(s) of server(s) holding argo profile files.  These servers
-are tried sequentially until one of them works.  The default
-value of \code{server} is \code{"auto"}, which is automatically
-expanded to
-\code{c("ftp://usgodae.org/pub/outgoing/argo", "ftp://ftp.ifremer.fr/ifremer/argo")},
-meaning to try the USGODAE server first, but to switch to the IFREMER
-server if that fails. Unless \code{server} is \code{auto}, the first 5 characters of
-\code{server} must be \code{"ftp://"}, as a way to catch errors.}
+\item{server}{character value, or vector of character values, indicating
+the name of servers that supply argo data.  If more than
+one value is given, then these are tried sequentially until one
+is found to supply the index file named in the \code{filename} argument.
+As of May 2020, the two servers known to work are
+\code{"ftp://usgodae.org/pub/outgoing/argo"} and
+\code{"ftp://ftp.ifremer.fr/ifremer/argo"}.  These may be referred
+to with nicknames \code{"usgodae"} and \code{"ifremer"}.  As a further
+convenience, a third nickname (and the default for this argument)
+is also available: \code{"auto"} is expanded to \code{c("usgodae","ifremer")}.
+Note that if a nickname is not used, the character value(s) in \code{server}
+must start with \code{"ftp://"}.}
 
 \item{filename}{character value that indicates the file name on the server, as in
 the first column of the table given in \dQuote{Details}, or (for some file types)
@@ -80,7 +83,7 @@ function, holds a list named \code{index} that holds following elements:
 \item \code{ftpRoot}, the FTP root stored in the header of the source \code{file}
 (see next paragraph).
 \item \code{server}, the argument provided here.
-\item \code{file}, the argument provided here.
+\item \code{filename}, the argument provided here.
 \item \code{header}, the preliminary lines in the source file that start
 with the \verb{#} character.
 \item \code{data}, a data frame containing the items in the source file.
@@ -90,56 +93,49 @@ the header is malformed (as of February 2020) and so the names
 are set based on the authors' inspection of a downloaded file.
 }
 
-Note that \code{paste0(argoIndex$ftpRoot, argoIndex$data$file)} will
-form a vector of URLs pointing to argo netcdf files that can be
-downloaded with any system tool for downloading files, but it
-is more practical to use \code{\link[=getProfileFromUrl]{getProfileFromUrl()}}, which also checks
-to see if the data has already been constructed for a given URL.
-Even better, one should use \code{\link[=getProfiles]{getProfiles()}}, which computes
-a set of relevant URLs based on the contents of the index, and
-places the results in the \code{destfile} directory that was supplied
-to \code{\link[=getIndex]{getIndex()}}, and stored in the index.
-
 Some expertise is required in deciding on the value for the
 \code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of February 2020, the
 FTP site \verb{ftp://usgodae.org/pub/outgoing/argo} contains multiple
 files that appear to be indices.  These are listed as the left-hand
-column in the following table. The middle column is a "nickname"
-for the file (and can be provided as the \code{file} argument to the
-\code{\link[=getIndex]{getIndex()}} function).  The right-hand column is a brief
+column in the following table. The middle column lists nicknames
+for the some files, which can be provided as the \code{file} argument,
+as alternatives to the full names.
+The right-hand column is a brief
 description of the file contents, inferred by examination
-of the file.  (Note that there some files on the server
+of the file.  Note that there some files on the server
 have names similar to those given below, but ending in \code{.txt} instead
 of \code{.txt.gz}, but these files take longer to download and
 seem to be equivalent to the \code{.gz} versions, so \code{\link[=getIndex]{getIndex()}} is
-designed to work with them.)
+designed to work with them.  Also, note that, as of April 2020,
+the usgodaee server does not supply \code{"synthetic"} files, but
+the ifremer server does.
 \tabular{lll}{
 \emph{File Name}                           \tab \emph{Nickname}              \tab \emph{Contents}\cr
-\code{ar_greylist.txt}                     \tab -                       \tab Suspious or malfunctioning float sensors.\cr
-\code{ar_index_global_meta.txt.gz}         \tab -                       \tab Metadata files of the argo GDAC ftp site.\cr
-\code{ar_index_global_prof.txt.gz}         \tab \code{"argo"}                \tab Argo data.\cr
-\code{ar_index_global_tech.txt.gz}         \tab -                       \tab All technical files of the argo GDAC ftp site.\cr
-\code{ar_index_global_traj.txt.gz}         \tab -                       \tab All trajectory files of the argo GDAC ftp site.\cr
-\code{argo_bio-profile_index.txt.gz}       \tab \code{"bgc"} or \code{"bgcargo"}  \tab Biogeochemical Argo data (without S or T).\cr
-\code{argo_bio-traj_index.txt.gz}          \tab -                       \tab Bio-trajectory files of the argo GDAC ftp site.\cr
-\code{argo_merge-profile_index.txt.gz}     \tab \code{"merge"} or \code{"merged"} \tab Merged \code{"argo"} and \code{"bgc"} data.\cr
-\code{argo_synthetic-profile_index.txt.gz} \tab \code{"synthetic"}           \tab Synthetic data, successor to \code{"merge"}.\cr
+\code{ar_greylist.txt}                     \tab -                       \tab Suspicious/malfunctioning floats\cr
+\code{ar_index_global_meta.txt.gz}         \tab -                       \tab Metadata files\cr
+\code{ar_index_global_prof.txt.gz}         \tab \code{"argo"}                \tab Argo data\cr
+\code{ar_index_global_tech.txt.gz}         \tab -                       \tab Technical files\cr
+\code{ar_index_global_traj.txt.gz}         \tab -                       \tab Trajectory files\cr
+\code{argo_bio-profile_index.txt.gz}       \tab \code{"bgc"} or \code{"bgcargo"}  \tab Biogeochemical Argo data (without S or T)\cr
+\code{argo_bio-traj_index.txt.gz}          \tab -                       \tab Bio-trajectory files\cr
+\code{argo_merge-profile_index.txt.gz}     \tab \code{"merge"} or \code{"merged"} \tab Merged \code{"argo"} and \code{"bgc"} data\cr
+\code{argo_synthetic-profile_index.txt.gz} \tab \code{"synthetic"}           \tab Synthetic data, successor to \code{"merge"}\cr
 }
+
+The next step after using \code{\link[=getIndex]{getIndex()}} is usually to
+use \code{\link[=getProfiles]{getProfiles()}}, which downloads or checks for local
+copies of the per-profile data files that are listed in an
+index, and this is typically followed by a call to
+\code{\link[=readProfiles]{readProfiles()}}, which reads the local files, yielding
+an object that can be plotted or analysed in other ways.
 }
 \examples{
 \dontrun{
+# Download an index of merged argo/bgc-argo floats, and plot temporal coverage.
 library(argoFloats)
-library(oce)
-# Example: Temporal and spatial coverage of merged argo/bgcargo measurements.
-par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
-ai <- getIndex(filename="merged")
-summary(ai)
-hist(ai[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
-data(coastlineWorld)
-par(mar=rep(0.5, 4))
-mapPlot(coastlineWorld, col="gray")
-mapPoints(ai[["longitude"]], ai[["latitude"]], pch=".", col="blue")
-}
+i <- getIndex(filename="merged")
+summary(i)
+hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)}
 
 }
 \author{
