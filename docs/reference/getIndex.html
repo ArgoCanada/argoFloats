@@ -74,7 +74,7 @@ by downloading information from a data repository or by reusing an index
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -141,15 +141,18 @@ by downloading information from a data repository or by reusing an index
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>server</th>
-      <td><p>character value, or vector of character values, giving
-the base name(s) of server(s) holding argo profile files.  These servers
-are tried sequentially until one of them works.  The default
-value of <code>server</code> is <code>"auto"</code>, which is automatically
-expanded to
-<code><a href='https://rdrr.io/r/base/c.html'>c("ftp://usgodae.org/pub/outgoing/argo", "ftp://ftp.ifremer.fr/ifremer/argo")</a></code>,
-meaning to try the USGODAE server first, but to switch to the IFREMER
-server if that fails. Unless <code>server</code> is <code>auto</code>, the first 5 characters of
-<code>server</code> must be <code>"ftp://"</code>, as a way to catch errors.</p></td>
+      <td><p>character value, or vector of character values, indicating
+the name of servers that supply argo data.  If more than
+one value is given, then these are tried sequentially until one
+is found to supply the index file named in the <code>filename</code> argument.
+As of May 2020, the two servers known to work are
+<code>"ftp://usgodae.org/pub/outgoing/argo"</code> and
+<code>"ftp://ftp.ifremer.fr/ifremer/argo"</code>.  These may be referred
+to with nicknames <code>"usgodae"</code> and <code>"ifremer"</code>.  As a further
+convenience, a third nickname (and the default for this argument)
+is also available: <code>"auto"</code> is expanded to <code><a href='https://rdrr.io/r/base/c.html'>c("usgodae","ifremer")</a></code>.
+Note that if a nickname is not used, the character value(s) in <code>server</code>
+must start with <code>"ftp://"</code>.</p></td>
     </tr>
     <tr>
       <th>filename</th>
@@ -213,7 +216,7 @@ function, holds a list named <code>index</code> that holds following elements:</
 <li><p><code>ftpRoot</code>, the FTP root stored in the header of the source <code>file</code>
 (see next paragraph).</p></li>
 <li><p><code>server</code>, the argument provided here.</p></li>
-<li><p><code>file</code>, the argument provided here.</p></li>
+<li><p><code>filename</code>, the argument provided here.</p></li>
 <li><p><code>header</code>, the preliminary lines in the source file that start
 with the <code>#</code> character.</p></li>
 <li><p><code>data</code>, a data frame containing the items in the source file.
@@ -223,56 +226,49 @@ the header is malformed (as of February 2020) and so the names
 are set based on the authors' inspection of a downloaded file.</p></li>
 </ul>
 
-<p>Note that <code><a href='https://rdrr.io/r/base/paste.html'>paste0(argoIndex$ftpRoot, argoIndex$data$file)</a></code> will
-form a vector of URLs pointing to argo netcdf files that can be
-downloaded with any system tool for downloading files, but it
-is more practical to use <code><a href='getProfileFromUrl.html'>getProfileFromUrl()</a></code>, which also checks
-to see if the data has already been constructed for a given URL.
-Even better, one should use <code><a href='getProfiles.html'>getProfiles()</a></code>, which computes
-a set of relevant URLs based on the contents of the index, and
-places the results in the <code>destfile</code> directory that was supplied
-to <code>getIndex()</code>, and stored in the index.</p>
 <p>Some expertise is required in deciding on the value for the
 <code>file</code> argument to <code>getIndex()</code>.  As of February 2020, the
 FTP site <code>ftp://usgodae.org/pub/outgoing/argo</code> contains multiple
 files that appear to be indices.  These are listed as the left-hand
-column in the following table. The middle column is a "nickname"
-for the file (and can be provided as the <code>file</code> argument to the
-<code>getIndex()</code> function).  The right-hand column is a brief
+column in the following table. The middle column lists nicknames
+for the some files, which can be provided as the <code>file</code> argument,
+as alternatives to the full names.
+The right-hand column is a brief
 description of the file contents, inferred by examination
-of the file.  (Note that there some files on the server
+of the file.  Note that there some files on the server
 have names similar to those given below, but ending in <code>.txt</code> instead
 of <code>.txt.gz</code>, but these files take longer to download and
 seem to be equivalent to the <code>.gz</code> versions, so <code>getIndex()</code> is
-designed to work with them.)</p><table class='table'>
+designed to work with them.  Also, note that, as of April 2020,
+the usgodaee server does not supply <code>"synthetic"</code> files, but
+the ifremer server does.</p><table class='table'>
 <tr><td><em>File Name</em></td><td><em>Nickname</em></td><td><em>Contents</em></td></tr>
-<tr><td><code>ar_greylist.txt</code></td><td>-</td><td>Suspious or malfunctioning float sensors.</td></tr>
-<tr><td><code>ar_index_global_meta.txt.gz</code></td><td>-</td><td>Metadata files of the argo GDAC ftp site.</td></tr>
-<tr><td><code>ar_index_global_prof.txt.gz</code></td><td><code>"argo"</code></td><td>Argo data.</td></tr>
-<tr><td><code>ar_index_global_tech.txt.gz</code></td><td>-</td><td>All technical files of the argo GDAC ftp site.</td></tr>
-<tr><td><code>ar_index_global_traj.txt.gz</code></td><td>-</td><td>All trajectory files of the argo GDAC ftp site.</td></tr>
-<tr><td><code>argo_bio-profile_index.txt.gz</code></td><td><code>"bgc"</code> or <code>"bgcargo"</code></td><td>Biogeochemical Argo data (without S or T).</td></tr>
-<tr><td><code>argo_bio-traj_index.txt.gz</code></td><td>-</td><td>Bio-trajectory files of the argo GDAC ftp site.</td></tr>
-<tr><td><code>argo_merge-profile_index.txt.gz</code></td><td><code>"merge"</code> or <code>"merged"</code></td><td>Merged <code>"argo"</code> and <code>"bgc"</code> data.</td></tr>
-<tr><td><code>argo_synthetic-profile_index.txt.gz</code></td><td><code>"synthetic"</code></td><td>Synthetic data, successor to <code>"merge"</code>.</td></tr>
+<tr><td><code>ar_greylist.txt</code></td><td>-</td><td>Suspicious/malfunctioning floats</td></tr>
+<tr><td><code>ar_index_global_meta.txt.gz</code></td><td>-</td><td>Metadata files</td></tr>
+<tr><td><code>ar_index_global_prof.txt.gz</code></td><td><code>"argo"</code></td><td>Argo data</td></tr>
+<tr><td><code>ar_index_global_tech.txt.gz</code></td><td>-</td><td>Technical files</td></tr>
+<tr><td><code>ar_index_global_traj.txt.gz</code></td><td>-</td><td>Trajectory files</td></tr>
+<tr><td><code>argo_bio-profile_index.txt.gz</code></td><td><code>"bgc"</code> or <code>"bgcargo"</code></td><td>Biogeochemical Argo data (without S or T)</td></tr>
+<tr><td><code>argo_bio-traj_index.txt.gz</code></td><td>-</td><td>Bio-trajectory files</td></tr>
+<tr><td><code>argo_merge-profile_index.txt.gz</code></td><td><code>"merge"</code> or <code>"merged"</code></td><td>Merged <code>"argo"</code> and <code>"bgc"</code> data</td></tr>
+<tr><td><code>argo_synthetic-profile_index.txt.gz</code></td><td><code>"synthetic"</code></td><td>Synthetic data, successor to <code>"merge"</code></td></tr>
 </table>
 
 
+<p>The next step after using <code>getIndex()</code> is usually to
+use <code><a href='getProfiles.html'>getProfiles()</a></code>, which downloads or checks for local
+copies of the per-profile data files that are listed in an
+index, and this is typically followed by a call to
+<code><a href='readProfiles.html'>readProfiles()</a></code>, which reads the local files, yielding
+an object that can be plotted or analysed in other ways.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'># Download an index of merged argo/bgc-argo floats, and plot temporal coverage.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>oce</span>)
-<span class='co'># Example: Temporal and spatial coverage of merged argo/bgcargo measurements.</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>1</span>), <span class='kw'>mar</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>1</span>, <span class='fl'>1</span>))
-<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'>getIndex</span>(<span class='kw'>filename</span><span class='kw'>=</span><span class='st'>"merged"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>ai</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>ai</span><span class='kw'>[[</span><span class='st'>"date"</span>]], <span class='kw'>breaks</span><span class='kw'>=</span><span class='st'>"years"</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>""</span>, <span class='kw'>xlab</span><span class='kw'>=</span><span class='st'>"Time"</span>, <span class='kw'>freq</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>coastlineWorld</span>)
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mar</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>0.5</span>, <span class='fl'>4</span>))
-<span class='fu'><a href='https://rdrr.io/pkg/oce/man/mapPlot.html'>mapPlot</a></span>(<span class='no'>coastlineWorld</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='st'>"gray"</span>)
-<span class='fu'><a href='https://rdrr.io/pkg/oce/man/mapPoints.html'>mapPoints</a></span>(<span class='no'>ai</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]], <span class='no'>ai</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]], <span class='kw'>pch</span><span class='kw'>=</span><span class='st'>"."</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='st'>"blue"</span>)
-}</div></pre>
+<span class='no'>i</span> <span class='kw'>&lt;-</span> <span class='fu'>getIndex</span>(<span class='kw'>filename</span><span class='kw'>=</span><span class='st'>"merged"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>i</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>i</span><span class='kw'>[[</span><span class='st'>"date"</span>]], <span class='kw'>breaks</span><span class='kw'>=</span><span class='st'>"years"</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>""</span>, <span class='kw'>xlab</span><span class='kw'>=</span><span class='st'>"Time"</span>, <span class='kw'>freq</span><span class='kw'>=</span><span class='fl'>TRUE</span>)}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

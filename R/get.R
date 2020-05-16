@@ -80,7 +80,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' * `ftpRoot`, the FTP root stored in the header of the source `file`
 #'    (see next paragraph).
 #' * `server`, the argument provided here.
-#' * `file`, the argument provided here.
+#' * `filename`, the argument provided here.
 #' * `header`, the preliminary lines in the source file that start
 #'    with the `#` character.
 #' * `data`, a data frame containing the items in the source file.
@@ -89,51 +89,54 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #'    the header is malformed (as of February 2020) and so the names
 #'    are set based on the authors' inspection of a downloaded file.
 #'
-#' Note that `paste0(argoIndex$ftpRoot, argoIndex$data$file)` will
-#' form a vector of URLs pointing to argo netcdf files that can be
-#' downloaded with any system tool for downloading files, but it
-#' is more practical to use [getProfileFromUrl()], which also checks
-#' to see if the data has already been constructed for a given URL.
-#' Even better, one should use [getProfiles()], which computes
-#' a set of relevant URLs based on the contents of the index, and
-#' places the results in the `destfile` directory that was supplied
-#' to [getIndex()], and stored in the index.
-#'
 #' Some expertise is required in deciding on the value for the
 #' `file` argument to [getIndex()].  As of February 2020, the
 #' FTP site `ftp://usgodae.org/pub/outgoing/argo` contains multiple
 #' files that appear to be indices.  These are listed as the left-hand
-#' column in the following table. The middle column is a "nickname"
-#' for the file (and can be provided as the `file` argument to the
-#' [getIndex()] function).  The right-hand column is a brief
+#' column in the following table. The middle column lists nicknames
+#' for the some files, which can be provided as the `file` argument,
+#' as alternatives to the full names.
+#' The right-hand column is a brief
 #' description of the file contents, inferred by examination
-#' of the file.  (Note that there some files on the server
+#' of the file.  Note that there some files on the server
 #' have names similar to those given below, but ending in `.txt` instead
 #' of `.txt.gz`, but these files take longer to download and
 #' seem to be equivalent to the `.gz` versions, so [getIndex()] is
-#' designed to work with them.)
+#' designed to work with them.  Also, note that, as of April 2020,
+#' the usgodaee server does not supply `"synthetic"` files, but
+#' the ifremer server does.
 #' \tabular{lll}{
 #' *File Name*                           \tab *Nickname*              \tab *Contents*\cr
-#' `ar_greylist.txt`                     \tab -                       \tab Suspious or malfunctioning float sensors.\cr
-#' `ar_index_global_meta.txt.gz`         \tab -                       \tab Metadata files of the argo GDAC ftp site.\cr
-#' `ar_index_global_prof.txt.gz`         \tab `"argo"`                \tab Argo data.\cr
-#' `ar_index_global_tech.txt.gz`         \tab -                       \tab All technical files of the argo GDAC ftp site.\cr
-#' `ar_index_global_traj.txt.gz`         \tab -                       \tab All trajectory files of the argo GDAC ftp site.\cr
-#' `argo_bio-profile_index.txt.gz`       \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T).\cr
-#' `argo_bio-traj_index.txt.gz`          \tab -                       \tab Bio-trajectory files of the argo GDAC ftp site.\cr
-#' `argo_merge-profile_index.txt.gz`     \tab `"merge"` or `"merged"` \tab Merged `"argo"` and `"bgc"` data.\cr
-#' `argo_synthetic-profile_index.txt.gz` \tab `"synthetic"`           \tab Synthetic data, successor to `"merge"`.\cr
+#' `ar_greylist.txt`                     \tab -                       \tab Suspicious/malfunctioning floats\cr
+#' `ar_index_global_meta.txt.gz`         \tab -                       \tab Metadata files\cr
+#' `ar_index_global_prof.txt.gz`         \tab `"argo"`                \tab Argo data\cr
+#' `ar_index_global_tech.txt.gz`         \tab -                       \tab Technical files\cr
+#' `ar_index_global_traj.txt.gz`         \tab -                       \tab Trajectory files\cr
+#' `argo_bio-profile_index.txt.gz`       \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T)\cr
+#' `argo_bio-traj_index.txt.gz`          \tab -                       \tab Bio-trajectory files\cr
+#' `argo_merge-profile_index.txt.gz`     \tab `"merge"` or `"merged"` \tab Merged `"argo"` and `"bgc"` data\cr
+#' `argo_synthetic-profile_index.txt.gz` \tab `"synthetic"`           \tab Synthetic data, successor to `"merge"`\cr
 #' }
 #'
-#' @param server character value, or vector of character values, giving
-#' the base name(s) of server(s) holding argo profile files.  These servers
-#' are tried sequentially until one of them works.  The default
-#' value of `server` is `"auto"`, which is automatically
-#' expanded to
-#' `c("ftp://usgodae.org/pub/outgoing/argo", "ftp://ftp.ifremer.fr/ifremer/argo")`,
-#' meaning to try the USGODAE server first, but to switch to the IFREMER
-#' server if that fails. Unless `server` is `auto`, the first 5 characters of
-#' `server` must be `"ftp://"`, as a way to catch errors.
+#' The next step after using [getIndex()] is usually to
+#' use [getProfiles()], which downloads or checks for local
+#' copies of the per-profile data files that are listed in an
+#' index, and this is typically followed by a call to
+#' [readProfiles()], which reads the local files, yielding
+#' an object that can be plotted or analysed in other ways.
+#'
+#' @param server character value, or vector of character values, indicating
+#' the name of servers that supply argo data.  If more than
+#' one value is given, then these are tried sequentially until one
+#' is found to supply the index file named in the `filename` argument.
+#' As of May 2020, the two servers known to work are
+#' `"ftp://usgodae.org/pub/outgoing/argo"` and
+#' `"ftp://ftp.ifremer.fr/ifremer/argo"`.  These may be referred
+#' to with nicknames `"usgodae"` and `"ifremer"`.  As a further
+#' convenience, a third nickname (and the default for this argument)
+#' is also available: `"auto"` is expanded to `c("usgodae","ifremer")`.
+#' Note that if a nickname is not used, the character value(s) in `server`
+#' must start with `"ftp://"`.
 #'
 #' @param filename character value that indicates the file name on the server, as in
 #' the first column of the table given in \dQuote{Details}, or (for some file types)
@@ -156,18 +159,11 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #'
 #' @examples
 #'\dontrun{
+#' # Download an index of merged argo/bgc-argo floats, and plot temporal coverage.
 #' library(argoFloats)
-#' library(oce)
-#' # Example: Temporal and spatial coverage of merged argo/bgcargo measurements.
-#' par(mfrow=c(2, 1), mar=c(3, 3, 1, 1))
-#' ai <- getIndex(filename="merged")
-#' summary(ai)
-#' hist(ai[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
-#' data(coastlineWorld)
-#' par(mar=rep(0.5, 4))
-#' mapPlot(coastlineWorld, col="gray")
-#' mapPoints(ai[["longitude"]], ai[["latitude"]], pch=".", col="blue")
-#'}
+#' i <- getIndex(filename="merged")
+#' summary(i)
+#' hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)}
 #'
 #' @author Dan Kelley
 #'
@@ -188,11 +184,20 @@ getIndex <- function(server="auto",
     res <- new("argoFloats", type="index")
     res@metadata$destdir <- destdir
     argoFloatsDebug(debug,  "getIndex(server=\"", server, "\", filename=\"", filename, "\"", ", destdir=\"", destdir, "\") {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
+    serverOrig <- server
     if (length(server) == 1 && server == "auto") {
-        server <- c("ftp://usgodae.org/pub/outgoing/argo",
-                    "ftp://ftp.ifremer.fr/ifremer/argo")
+        server <- c("usgodae", "ifremer")
         argoFloatsDebug(debug, 'server "auto" expanded to c("',
                         paste(server, collapse='", "'), "')\n", sep="")
+    }
+    for (iserver in seq_along(server)) {
+        if (server[iserver] == "usgodae") {
+            server[iserver] <- "ftp://usgodae.org/pub/outgoing/argo"
+            argoFloatsDebug(debug, 'server "usgodae" expanded to "', server[iserver], "'\n")
+        } else if (server[iserver] == "ifremer") {
+            server[iserver] <- "ftp://ftp.ifremer.fr/ifremer/argo"
+            argoFloatsDebug(debug, 'server "ifremer" expanded to "', server[iserver], "'\n")
+        }
     }
     if (!all(grepl("^ftp://", server)))
         stop("server must be 'auto', or a vector of strings starting with \"ftp://\", but it is ",
@@ -252,6 +257,7 @@ getIndex <- function(server="auto",
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
     downloadSuccess <- FALSE
+    failedDownloads <- 0
     for (iurl in seq_along(url)) {
         argoFloatsDebug(debug, "About to download temporary index file\n", sep="")
         argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
@@ -259,11 +265,14 @@ getIndex <- function(server="auto",
         argoFloatsDebug(debug, "    '", url[1], "'\n", sep="", showTime=FALSE)
         status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE)
         if (!inherits(status, "try-error")) {
+            if (failedDownloads > 0)
+                message('Successfully downloadd from server "', server[iurl], '".\n')
             server <- server[iurl]
             downloadSuccess <- TRUE
             break                      # the download worked
         }
-        warning('Cannot download from server "', server, '".\n', immediate.=TRUE)
+        message('Cannot download from server "', server[iurl], '".\n')
+        failedDownloads <- failedDownloads + 1 
     }
     if (!downloadSuccess)
         stop("Could not download the file from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
@@ -303,8 +312,11 @@ getIndex <- function(server="auto",
     res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
     res@metadata$header <- argoFloatsIndex$header
     res@data$index <- argoFloatsIndex$index
-    res@processingLog <- processingLogAppend(res@processingLog,
-                                             paste("getIndex(server='", server, "', filename='", filename, "', age=", age, ")", sep=""))
+    res@processingLog <- oce::processingLogAppend(res@processingLog,
+                                                  paste("getIndex(server=",
+                                                        if (length(serverOrig) == 1) paste("\"", serverOrig, "\", ", sep="")
+                                                        else paste("c(\"", paste(serverOrig, collapse="\", \""), "\"), ", sep=""),
+                                                        "filename=\'", filename, "\", age=", age, ")", sep=""))
     argoFloatsDebug(debug, "} # getIndex()\n", style="bold", unindent=1)
     res
 }

@@ -40,17 +40,15 @@ created by \code{\link[=getProfiles]{getProfiles()}}.
 library(argoFloats)
 data(index)
 index2 <- subset(index, 1:2)
-if (requireNamespace("ncdf4")) {
-    profiles <- getProfiles(index2)
-    argos <- readProfiles(profiles, handleFlags=TRUE)
-    par(mfrow=c(1, 2))
-    library(oce)
-    for (i in 1:2) {
-      A <- argos[["profile", i]]
-      filename <- gsub(".*/", "", A[["filename"]])
-      plotTS(A, eos="unesco")
-      mtext(filename, line=0.7, cex=par("cex"))
-    }
+profiles <- getProfiles(index2)
+argos <- readProfiles(profiles, handleFlags=TRUE)
+par(mfrow=c(1, 2))
+library(oce)
+for (i in 1:2) {
+  A <- argos[["profile", i]]
+  filename <- gsub(".*/", "", A[["filename"]])
+  plotTS(A, eos="unesco")
+  mtext(filename, line=0.7, cex=par("cex"))
 }
 }
 

@@ -12,9 +12,8 @@ the following code.
 \preformatted{
 library(argoFloats)
 indexAll <- getIndex(filename="bgc")
-indexBgc <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
-save(indexBgc, file="indexBgc.rda")
-tools::resaveRdaFiles('indexBgc.rda')
+indexBgc <- subset(indexAll,
+    circle=list(longitude=-77.06, latitude=26.54, radius=300))
 }
 }
 \examples{
@@ -28,6 +27,7 @@ unique(indexBgc[["parameters"]])
 \seealso{
 Other datasets provided with argoFloats: 
 \code{\link{indexMerged}},
+\code{\link{indexSynthetic}},
 \code{\link{index}}
 }
 \concept{datasets provided with argoFloats}

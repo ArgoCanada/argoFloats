@@ -41,24 +41,28 @@ setMethod(f="summary",
                   if (length(object@metadata$header)) {
                       cat("* header:\n", sep="")
                       for (h in object@metadata$header)
-                          cat("    ", h, "'\n", sep="")
+                          cat("    ", h, "\n", sep="")
                   } else {
                       cat("* header: (none)\n", sep="")
                   }
                   ndata <- length(object@data$index$file)
                   if (ndata > 0) {
-                      cat("* index (each item holding ", ndata, if (ndata>1) " elements):\n" else " element):\n", sep="")
-                      for (name in names(object@data$index)) {
-                          cat(oce::vectorShow(name))
-                          ## cat("    ", name, ": ",
-                          ##     paste(head(object@data$index[[name]], 3), collapse=", "),
-                          ##     if (ndata > 1) ", ...\n" else "\n", sep="")
-                      }
+                      colnames <- names(object@data$index)
+                      cat("* index with ", ndata,
+                          if (ndata>1) " rows " else " row ",
+                          "and column names: \"",
+                          paste(head(colnames, -1), collapse="\", \""),
+                          " and \"", tail(colnames, 1), "\"", "\n", sep="")
                   } else {
                       cat("* index: (none)\n", sep="")
                   }
+                  cat("* hint: use getProfiles() to download these files from the repository\n")
               } else if (object@metadata$type == "profiles") {
-                  cat("* FIXME: add special info for 'profiles' type\n")
+                  cat(oce::vectorShow(object@data$file, "* files"))
+                  cat("* hint: use readProfiles() on this to read these files\n")
+              } else if (object@metadata$type == "argos") {
+                  cat("* contains", length(object@data$argos), "objects\n")
+                  cat("* hint: access these objects with e.g. x[[\"argos\"]]\n")
               }
               oce::processingLogShow(object)
               invisible()
