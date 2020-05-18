@@ -1,6 +1,5 @@
 library(argoFloats)
 library(oce)
-debug <- FALSE # use to find first and last points
 data(index)
 ID <- index[["ID"]]
 profile <- index[["profile"]]
@@ -17,8 +16,8 @@ t <- index0[["date"]][o]
 dist <- 1000 * geodDist(lon, lat, alongPath=TRUE)
 speed <- diff(dist) / diff(as.numeric(t))
 speed <- c(speed[1], speed)
-## plot(t, speed, type='o')
 
+if (!interactive()) png("07_trajectory_speed.png", unit="in", width=7, height=7, pointsize=11, res=150)
 par(mar=c(3,3,1,1))
 cm <- colormap(speed, col=oceColorsViridis)
 drawPalette(colormap=cm, zlab="Speed [m/s]")
@@ -29,10 +28,5 @@ sub <- seq(0, length(lon), by=10)
 text(lon[sub], lat[sub], profile[sub], cex=2/3, pos=1)
 mtext(paste("Float", ID0), adj=0)
 mtext(paste(format(range(t), "%b %Y"), collapse= " to "), adj=1)
-
-if (debug) {
-    n <- length(lon)
-    text(lon[1], lat[1], "Start")
-    text(lon[n], lat[n], "End")
-}
+if (!interactive()) dev.off()
 

@@ -9,8 +9,9 @@ This is created by subsetting a global index to the 1788 Argo profiles
 that were within a 200km radius of Marsh Harbour, Abaco Island,
 Bahamas, as of 2020 March 14, using
 the following code.
-\preformatted{
-indexAll <- getIndex()
+}
+\details{
+\preformatted{indexAll <- getIndex()
 index <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=200))
 }
