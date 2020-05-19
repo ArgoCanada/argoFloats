@@ -125,6 +125,12 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' [readProfiles()], which reads the local files, yielding
 #' an object that can be plotted or analysed in other ways.
 #'
+#' @param filename character value that indicates the file name on the server, as in
+#' the first column of the table given in \dQuote{Details}, or (for some file types)
+#' as in the nickname given in the middle column. Note that the downloaded
+#' file name will be based on the full file name given as this argument, and
+#' that nicknames are expanded to the full filenames before saving.
+#'
 #' @param server character value, or vector of character values, indicating
 #' the name of servers that supply argo data.  If more than
 #' one value is given, then these are tried sequentially until one
@@ -138,18 +144,15 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' Note that if a nickname is not used, the character value(s) in `server`
 #' must start with `"ftp://"`.
 #'
-#' @param filename character value that indicates the file name on the server, as in
-#' the first column of the table given in \dQuote{Details}, or (for some file types)
-#' as in the nickname given in the middle column. Note that the downloaded
-#' file name will be based on the full file name given as this argument, and
-#' that nicknames are expanded to the full filenames before saving.
 #' @template destdir
+#'
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
 #' default, `age=7`, limits downloads to once per week, as a way
 #' to avoid slowing down a workflow with a download that might take
 #' a sizable fraction of an hour. Set `age=0` to force a download,
 #' regardless of the file age.
+#'
 #' @param quiet silence some progress indicators.  The default
 #' is to show such indicators.
 #' @template debug
@@ -161,7 +164,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #'\dontrun{
 #' # Download an index of merged argo/bgc-argo floats, and plot temporal coverage.
 #' library(argoFloats)
-#' i <- getIndex(filename="merged")
+#' i <- getIndex("merged")
 #' summary(i)
 #' hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)}
 #'
@@ -171,8 +174,8 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' @importFrom curl curl_download
 #' @importFrom oce processingLogAppend
 #' @export
-getIndex <- function(server="auto",
-                     filename="argo",
+getIndex <- function(filename="argo",
+                     server="auto",
                      destdir="~/data/argo",
                      age=7,
                      quiet=FALSE,

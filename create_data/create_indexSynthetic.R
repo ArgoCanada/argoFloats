@@ -14,7 +14,7 @@
 
 if (FALSE) {
     library(argoFloats)
-    indexAll <- getIndex(filename="synthetic", destdir="~/data/argo")
+    indexAll <- getIndex("synthetic")
     indexSynthetic <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
     save(indexSynthetic, file="indexSynthetic.rda")
     tools::resaveRdaFiles('indexSynthetic.rda')

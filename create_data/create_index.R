@@ -9,7 +9,7 @@ if (FALSE) {
     ## https://github.com/dankelley/argoFloats/wiki/Focus-Island
     ##
     library(argoFloats)
-    indexAll <- getIndex(destdir="~/data/argo")
+    indexAll <- getIndex("~/data/argo")
     index <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=200))
     save(index, filename="index.rda")
     tools::resaveRdaFiles('index.rda')

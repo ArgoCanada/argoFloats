@@ -93,7 +93,7 @@ NULL
 #' the following code.
 #'\preformatted{
 #' library(argoFloats)
-#' indexAll <- getIndex(filename="bgc")
+#' indexAll <- getIndex("bgc")
 #' indexBgc <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'}
@@ -121,7 +121,7 @@ NULL
 #' the following code.
 #'\preformatted{
 #' library(argoFloats)
-#' indexAll <- getIndex(filename="merged")
+#' indexAll <- getIndex("merged")
 #' indexMerged <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'}
@@ -154,7 +154,7 @@ NULL
 #' the following code.
 #'\preformatted{
 #' library(argoFloats)
-#' indexAll <- getIndex(filename="synthetic")
+#' indexAll <- getIndex("synthetic")
 #' indexSynthetic <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'}
@@ -329,12 +329,11 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@data$index)) {
                       return(if (missing(j)) x@data$index[[i]] else x@data$index[[i]][j])
                   } else if (length(i) == 1 && i == "profile") {
-                      message("FIXME: handle profile here")
                       profile <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3}).nc$", "\\1", x@data$index$file)
-                      return(if (missing(j)) profile else profile[j])
+                      return(as.vector(if (missing(j)) profile else profile[j]))
                   } else if (length(i) == 1 && i == "ID") {
                       ID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}.nc$", "\\1", x@data$index$file)
-                      return(if (missing(j)) ID else ID[j])
+                      return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$index$file))
                   } else {

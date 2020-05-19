@@ -128,8 +128,8 @@ by downloading information from a data repository or by reusing an index
     </div>
 
     <pre class="usage"><span class='fu'>getIndex</span>(
-  <span class='kw'>server</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
   <span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>"argo"</span>,
+  <span class='kw'>server</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
   <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='st'>"~/data/argo"</span>,
   <span class='kw'>age</span> <span class='kw'>=</span> <span class='fl'>7</span>,
   <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -139,6 +139,14 @@ by downloading information from a data repository or by reusing an index
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>filename</th>
+      <td><p>character value that indicates the file name on the server, as in
+the first column of the table given in &#8220;Details&#8221;, or (for some file types)
+as in the nickname given in the middle column. Note that the downloaded
+file name will be based on the full file name given as this argument, and
+that nicknames are expanded to the full filenames before saving.</p></td>
+    </tr>
     <tr>
       <th>server</th>
       <td><p>character value, or vector of character values, indicating
@@ -153,14 +161,6 @@ convenience, a third nickname (and the default for this argument)
 is also available: <code>"auto"</code> is expanded to <code><a href='https://rdrr.io/r/base/c.html'>c("usgodae","ifremer")</a></code>.
 Note that if a nickname is not used, the character value(s) in <code>server</code>
 must start with <code>"ftp://"</code>.</p></td>
-    </tr>
-    <tr>
-      <th>filename</th>
-      <td><p>character value that indicates the file name on the server, as in
-the first column of the table given in &#8220;Details&#8221;, or (for some file types)
-as in the nickname given in the middle column. Note that the downloaded
-file name will be based on the full file name given as this argument, and
-that nicknames are expanded to the full filenames before saving.</p></td>
     </tr>
     <tr>
       <th>destdir</th>
@@ -266,7 +266,7 @@ an object that can be plotted or analysed in other ways.</p>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># Download an index of merged argo/bgc-argo floats, and plot temporal coverage.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
-<span class='no'>i</span> <span class='kw'>&lt;-</span> <span class='fu'>getIndex</span>(<span class='kw'>filename</span><span class='kw'>=</span><span class='st'>"merged"</span>)
+<span class='no'>i</span> <span class='kw'>&lt;-</span> <span class='fu'>getIndex</span>(<span class='st'>"merged"</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>i</span>)
 <span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>i</span><span class='kw'>[[</span><span class='st'>"date"</span>]], <span class='kw'>breaks</span><span class='kw'>=</span><span class='st'>"years"</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>""</span>, <span class='kw'>xlab</span><span class='kw'>=</span><span class='st'>"Time"</span>, <span class='kw'>freq</span><span class='kw'>=</span><span class='fl'>TRUE</span>)}</div></pre>
   </div>

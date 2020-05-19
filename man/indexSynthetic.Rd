@@ -11,7 +11,7 @@ Bahamas, as of 2020 May 15, using
 the following code.
 \preformatted{
 library(argoFloats)
-indexAll <- getIndex(filename="synthetic")
+indexAll <- getIndex("synthetic")
 indexSynthetic <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 }
