@@ -93,7 +93,7 @@ NULL
 #' the following code.
 #'\preformatted{
 #' library(argoFloats)
-#' indexAll <- getIndex(filename="bgc")
+#' indexAll <- getIndex("bgc")
 #' indexBgc <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'}
@@ -121,7 +121,7 @@ NULL
 #' the following code.
 #'\preformatted{
 #' library(argoFloats)
-#' indexAll <- getIndex(filename="merged")
+#' indexAll <- getIndex("merged")
 #' indexMerged <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'}
@@ -154,7 +154,7 @@ NULL
 #' the following code.
 #'\preformatted{
 #' library(argoFloats)
-#' indexAll <- getIndex(filename="synthetic")
+#' indexAll <- getIndex("synthetic")
 #' indexSynthetic <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'}

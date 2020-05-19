@@ -5,8 +5,8 @@
 \title{Get an Index of Available Argo Float Profiles}
 \usage{
 getIndex(
-  server = "auto",
   filename = "argo",
+  server = "auto",
   destdir = "~/data/argo",
   age = 7,
   quiet = FALSE,
@@ -14,6 +14,12 @@ getIndex(
 )
 }
 \arguments{
+\item{filename}{character value that indicates the file name on the server, as in
+the first column of the table given in \dQuote{Details}, or (for some file types)
+as in the nickname given in the middle column. Note that the downloaded
+file name will be based on the full file name given as this argument, and
+that nicknames are expanded to the full filenames before saving.}
+
 \item{server}{character value, or vector of character values, indicating
 the name of servers that supply argo data.  If more than
 one value is given, then these are tried sequentially until one
@@ -26,12 +32,6 @@ convenience, a third nickname (and the default for this argument)
 is also available: \code{"auto"} is expanded to \code{c("usgodae","ifremer")}.
 Note that if a nickname is not used, the character value(s) in \code{server}
 must start with \code{"ftp://"}.}
-
-\item{filename}{character value that indicates the file name on the server, as in
-the first column of the table given in \dQuote{Details}, or (for some file types)
-as in the nickname given in the middle column. Note that the downloaded
-file name will be based on the full file name given as this argument, and
-that nicknames are expanded to the full filenames before saving.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value of \code{"."} means to store the
@@ -133,7 +133,7 @@ an object that can be plotted or analysed in other ways.
 \dontrun{
 # Download an index of merged argo/bgc-argo floats, and plot temporal coverage.
 library(argoFloats)
-i <- getIndex(filename="merged")
+i <- getIndex("merged")
 summary(i)
 hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)}
 

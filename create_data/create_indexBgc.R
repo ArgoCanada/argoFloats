@@ -10,7 +10,7 @@
 
 if (FALSE) {
     library(argoFloats)
-    indexAll <- getIndex(filename="bgc", destdir="~/data/argo")
+    indexAll <- getIndex("bgc")
     indexBgc <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
     save(indexBgc, file="indexBgc.rda")
     tools::resaveRdaFiles('indexBgc.rda')
