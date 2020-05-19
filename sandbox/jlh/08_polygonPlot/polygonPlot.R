@@ -2,7 +2,7 @@ par(mfrow=c(1,2))
 library(argoFloats)
 ai <- getIndex()
 s <- subset(ai, circle=list(longitude=-83, latitude=9, radius=150))
-plot(s, which='map') # To get a visual
+plot(s, which='map', legend(c('Atlantic', 'Pacific'), col=c('red', 'blue'))) # To get a visual
 pax <- c(-83.31811, -81.46290, -81.46290, -82.33111, -83.10792, -83.40950)
 pay <- c(10.365979, 10.365979,  8.876569,  9.048076,  9.698001, 10.384033)
 # Now select your points on the map in the Atlantic
