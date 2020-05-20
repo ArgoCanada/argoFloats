@@ -45,6 +45,8 @@
 #' 4. `show()` provides a one-line sketch of [`argoFloats-class`] objects.
 #' See [show,argoFloats-method()] for details.
 #'
+#' 5. `merge()` combines multiple index objects into a new index object.
+#'
 #' It should be noted that the profile elements within `argoFloats` objects are stored as
 #' in the form of `argo` objects as defined by the `oce` package.
 #' This means that `argoFloats` users can rely on
@@ -60,125 +62,101 @@ NULL
 
 #' A sample index of profiles
 #'
-#' This is created by subsetting a global index to the 1788 Argo profiles
+#' This was created by subsetting a global index to the 1788 Argo profiles
 #' that were within a 200km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 March 14, using
-#' the following code.
-#'
+#' Bahamas, as of 2020 March 14, using the following code.
 #' ```
 #  library(argoFloats)
 #' indexAll <- getIndex()
 #' index <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=200))
 #' ```
-#'
 #' @examples
 #' library(argoFloats)
 #' data(index)
 #' plot(index)
-#'
 #' @name index
-#'
 #' @docType data
-#'
 #' @family datasets provided with argoFloats
 NULL
 
 
 #' A sample index of biogeochemical-argo profiles
 #'
-#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 March 23, using
-#' the following code.
-#'\preformatted{
+#' Bahamas, as of 2020 March 23, using the following code.
+#'```
 #' library(argoFloats)
 #' indexAll <- getIndex("bgc")
 #' indexBgc <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#'}
-#'
+#'```
 #' @examples
 #' library(argoFloats)
 #' data(indexBgc)
 #' plot(indexBgc)
 #' summary(indexBgc)
 #' unique(indexBgc[["parameters"]])
-#'
 #' @name indexBgc
-#'
 #' @docType data
-#'
 #' @family datasets provided with argoFloats
 NULL
 
 
 #' A sample index of merged argo and biogeochemical-argo profiles
 #'
-#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 March 23, using
-#' the following code.
-#'\preformatted{
+#' Bahamas, as of 2020 March 23, using the following code.
+#'```
 #' library(argoFloats)
 #' indexAll <- getIndex("merged")
 #' indexMerged <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#'}
-#'
+#'```
 #' @section Historical note:
 #' This "merged" file from the usgodae server is likely to be removed, when
 #' that server changes to the "synthetic" file format that the ifremer server
 #' uses (as of May, 2020 and perhaps months previously, since the changeover
 #' data was supposed to be Dec, 2019).
-#'
 #' @examples
 #' library(argoFloats)
 #' data(indexMerged)
 #' plot(indexMerged)
 #' summary(indexMerged)
 #' unique(indexMerged[["parameters"]])
-#'
 #' @name indexMerged
-#'
 #' @docType data
-#'
 #' @family datasets provided with argoFloats
 NULL
 
 #' A sample index of synthetic (i.e. combined) argo and biogeochemical-argo profiles
 #'
-#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 May 15, using
-#' the following code.
-#'\preformatted{
+#' Bahamas, as of 2020 May 15, using the following code.
+#'```
 #' library(argoFloats)
 #' indexAll <- getIndex("synthetic")
 #' indexSynthetic <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#'}
-#'
+#'```
 #' @section Historical note:
 #' This "synthetic" type of index is a replacement for the older "merged" index.  See
 #' \url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
 #' for more on the data file format, reasons for the change, and timetable for transition
 #' from "merged".
-#'
 #' @examples
 #' library(argoFloats)
 #' data(indexSynthetic)
 #' plot(indexSynthetic)
 #' summary(indexSynthetic)
 #' unique(indexSynthetic[["parameters"]])
-#'
 #' @name indexSynthetic
-#'
 #' @docType data
-#'
 #' @family datasets provided with argoFloats
 NULL
-
 
 
 #'

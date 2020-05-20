@@ -5,12 +5,9 @@
 \alias{indexBgc}
 \title{A sample index of biogeochemical-argo profiles}
 \description{
-This is created by subsetting a global index to the 39 BGC Argo profiles
+This was created by subsetting a global index to the 39 BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 March 23, using
-the following code.
-\preformatted{
-library(argoFloats)
+Bahamas, as of 2020 March 23, using the following code.\preformatted{library(argoFloats)
 indexAll <- getIndex("bgc")
 indexBgc <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
@@ -22,7 +19,6 @@ data(indexBgc)
 plot(indexBgc)
 summary(indexBgc)
 unique(indexBgc[["parameters"]])
-
 }
 \seealso{
 Other datasets provided with argoFloats: 

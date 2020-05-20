@@ -40,11 +40,9 @@
 
 
 <meta property="og:title" content="A sample index of synthetic (i.e. combined) argo and biogeochemical-argo profiles — indexSynthetic" />
-<meta property="og:description" content="This is created by subsetting a global index to the 39 BGC Argo profiles
+<meta property="og:description" content="This was created by subsetting a global index to the 39 BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 May 15, using
-the following code.
-library(argoFloats)
+Bahamas, as of 2020 May 15, using the following code.library(argoFloats)
 indexAll &amp;lt;- getIndex(&quot;synthetic&quot;)
 indexSynthetic &amp;lt;- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
@@ -128,11 +126,9 @@ indexSynthetic &amp;lt;- subset(indexAll,
     </div>
 
     <div class="ref-description">
-    <p>This is created by subsetting a global index to the 39 BGC Argo profiles
+    <p>This was created by subsetting a global index to the 39 BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 May 15, using
-the following code.</p><pre>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
+Bahamas, as of 2020 May 15, using the following code.</p><pre><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
 <span class='no'>indexAll</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='st'>"synthetic"</span>)
 <span class='no'>indexSynthetic</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>indexAll</span>,
     <span class='kw'>circle</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span>-<span class='fl'>77.06</span>, <span class='kw'>latitude</span><span class='kw'>=</span><span class='fl'>26.54</span>, <span class='kw'>radius</span><span class='kw'>=</span><span class='fl'>300</span>))</pre>
@@ -184,8 +180,7 @@ from "merged".</p>
 #&gt; 
 #&gt;     - 2020-05-15 18:48:51 UTC: `create 'argoFloats' object`
 #&gt;     - 2020-05-15 18:49:05 UTC: `getIndex(server='ftp://ftp.ifremer.fr/ifremer/argo', filename='argo_synthetic-profile_index.txt.gz', age=7)`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>indexSynthetic</span><span class='kw'>[[</span><span class='st'>"parameters"</span>]])</div><div class='output co'>#&gt; [1] "PRES TEMP PSAL DOXY"                                                                                     
-#&gt; [2] "PRES TEMP PSAL DOWN_IRRADIANCE380 DOWN_IRRADIANCE412 DOWN_IRRADIANCE490 DOWNWELLING_PAR CHLA BBP700 CDOM"</div><div class='input'>
-</div></pre>
+#&gt; [2] "PRES TEMP PSAL DOWN_IRRADIANCE380 DOWN_IRRADIANCE412 DOWN_IRRADIANCE490 DOWNWELLING_PAR CHLA BBP700 CDOM"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

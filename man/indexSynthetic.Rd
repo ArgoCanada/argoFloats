@@ -5,12 +5,9 @@
 \alias{indexSynthetic}
 \title{A sample index of synthetic (i.e. combined) argo and biogeochemical-argo profiles}
 \description{
-This is created by subsetting a global index to the 39 BGC Argo profiles
+This was created by subsetting a global index to the 39 BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 May 15, using
-the following code.
-\preformatted{
-library(argoFloats)
+Bahamas, as of 2020 May 15, using the following code.\preformatted{library(argoFloats)
 indexAll <- getIndex("synthetic")
 indexSynthetic <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
@@ -30,7 +27,6 @@ data(indexSynthetic)
 plot(indexSynthetic)
 summary(indexSynthetic)
 unique(indexSynthetic[["parameters"]])
-
 }
 \seealso{
 Other datasets provided with argoFloats: 

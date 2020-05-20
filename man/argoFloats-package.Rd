@@ -45,6 +45,7 @@ See \code{\link[=plot,argoFloats-method]{plot,argoFloats-method()}} for details.
 See \code{\link[=summary,argoFloats-method]{summary,argoFloats-method()}} for details.
 \item \code{show()} provides a one-line sketch of \code{\linkS4class{argoFloats}} objects.
 See \code{\link[=show,argoFloats-method]{show,argoFloats-method()}} for details.
+\item \code{merge()} combines multiple index objects into a new index object.
 }
 
 It should be noted that the profile elements within \code{argoFloats} objects are stored as
