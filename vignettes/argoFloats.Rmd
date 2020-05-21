@@ -149,7 +149,7 @@ The following subsections use built-in data.
 The specialized `plot()` command within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:
 
 ```{r, fig.cap="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas."}
-plot(index)                            # also, try using bathymetry=TRUE
+plot(index, bathymetry=FALSE)          # also, try using bathymetry=TRUE
 ```
 
 ## Extracting Data
@@ -225,7 +225,7 @@ latPoly <- c(25.5, 26.5, 25.5)
 aiPoly <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
 # Plotting the subsets together
 CP <- merge(aiCircle, aiPoly)
-plot(CP)                               # also, try using bathymetry=TRUE
+plot(CP, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
 
 *Exercise 1:* Produce the same plot as shown above, however, only include data from 2013.
@@ -283,7 +283,7 @@ aic <- subset(aiCircle, time=list(from=from, to=to))
 aip <- subset(aiPoly, time=list(from=from, to=to))
 # Plotting the subsets together
 cp <- merge(aic, aip)
-plot(cp, bathymetry=FALSE) # remove second argument to get bottom depth
+plot(cp, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
 
 *Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2017.
@@ -304,7 +304,7 @@ from <- as.POSIXct("2017-01-01", tz="UTC")
 to <- as.POSIXct("2017-12-31", tz="UTC")
 aiTime <- subset(air, time=list(from=from, to=to))
 #Plot this subset
-plot(aiTime)
+plot(aiTime, bathymetry=FALSE)         # also, try using bathymetry=TRUE
 ```
 
 *Exercise 3:* Using the profile in the previous example, plot a TS diagram.

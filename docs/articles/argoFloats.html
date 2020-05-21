@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Introduction to argoFloats</h1>
                         <h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 class="date">2020-05-20</h4>
+            <h4 class="date">2020-05-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/master/vignettes/argoFloats.Rmd"><code>vignettes/argoFloats.Rmd</code></a></small>
       <div class="hidden name"><code>argoFloats.Rmd</code></div>
@@ -191,7 +191,7 @@ Figure 1: Work flow of the argoFloats package.
 <h2 class="hasAnchor">
 <a href="#plotting" class="anchor"></a>Plotting</h2>
 <p>The specialized <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code> command within the <code>argoFloats</code> package provides simple ways to plot aspects of <code>argoFloats-class</code> objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">index</span>)                            <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">index</span>, <span class="kw">bathymetry</span><span class="kw">=</span><span class="fl">FALSE</span>)          <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
 <div class="figure">
 <img src="argoFloats_files/figure-html/unnamed-chunk-6-1.png" alt="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas." width="700"><p class="caption">
 Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
@@ -309,7 +309,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 <span class="no">aiPoly</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">ai</span>, <span class="kw">polygon</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">longitude</span><span class="kw">=</span><span class="no">lonPoly</span>, <span class="kw">latitude</span><span class="kw">=</span><span class="no">latPoly</span>))
 <span class="co"># Plotting the subsets together</span>
 <span class="no">CP</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span>(<span class="no">aiCircle</span>, <span class="no">aiPoly</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">CP</span>)                               <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">CP</span>, <span class="kw">bathymetry</span><span class="kw">=</span><span class="fl">FALSE</span>)             <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
 <div class="figure">
 <img src="argoFloats_files/figure-html/unnamed-chunk-10-1.png" alt="Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas" width="700"><p class="caption">
 Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas
@@ -365,7 +365,7 @@ Figure 4: Line A03 section plot made by oce package.
 <span class="no">aip</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">aiPoly</span>, <span class="kw">time</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">from</span><span class="kw">=</span><span class="no">from</span>, <span class="kw">to</span><span class="kw">=</span><span class="no">to</span>))
 <span class="co"># Plotting the subsets together</span>
 <span class="no">cp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span>(<span class="no">aic</span>, <span class="no">aip</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">cp</span>, <span class="kw">bathymetry</span><span class="kw">=</span><span class="fl">FALSE</span>) <span class="co"># remove second argument to get bottom depth</span></pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">cp</span>, <span class="kw">bathymetry</span><span class="kw">=</span><span class="fl">FALSE</span>)             <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
 <p><em>Exercise 2:</em> Create a rectangle subset for this transect and plot the positions for the year 2017.</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">argoFloats</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">oce</span>)
@@ -382,7 +382,7 @@ Figure 4: Line A03 section plot made by oce package.
 <span class="no">to</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span>(<span class="st">"2017-12-31"</span>, <span class="kw">tz</span><span class="kw">=</span><span class="st">"UTC"</span>)
 <span class="no">aiTime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">air</span>, <span class="kw">time</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">from</span><span class="kw">=</span><span class="no">from</span>, <span class="kw">to</span><span class="kw">=</span><span class="no">to</span>))
 <span class="co">#Plot this subset</span>
-<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">aiTime</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">aiTime</span>, <span class="kw">bathymetry</span><span class="kw">=</span><span class="fl">FALSE</span>)         <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
 <p><em>Exercise 3:</em> Using the profile in the previous example, plot a TS diagram.</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">argoFloats</span>)
 <span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="st">"merge"</span>)

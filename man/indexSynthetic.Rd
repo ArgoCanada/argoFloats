@@ -24,7 +24,7 @@ from "merged".
 \examples{
 library(argoFloats)
 data(indexSynthetic)
-plot(indexSynthetic)
+plot(indexSynthetic, bathymetry=FALSE)
 summary(indexSynthetic)
 unique(indexSynthetic[["parameters"]])
 }

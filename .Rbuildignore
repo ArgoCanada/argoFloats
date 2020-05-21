@@ -22,4 +22,5 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 ^videos$
+^marmap.*\.csv$
 

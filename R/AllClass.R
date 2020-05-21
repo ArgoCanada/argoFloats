@@ -74,7 +74,7 @@ NULL
 #' @examples
 #' library(argoFloats)
 #' data(index)
-#' plot(index)
+#' plot(index, bathymetry=FALSE)
 #' @name index
 #' @docType data
 #' @family datasets provided with argoFloats
@@ -95,7 +95,7 @@ NULL
 #' @examples
 #' library(argoFloats)
 #' data(indexBgc)
-#' plot(indexBgc)
+#' plot(indexBgc, bathymetry=FALSE)
 #' summary(indexBgc)
 #' unique(indexBgc[["parameters"]])
 #' @name indexBgc
@@ -123,7 +123,7 @@ NULL
 #' @examples
 #' library(argoFloats)
 #' data(indexMerged)
-#' plot(indexMerged)
+#' plot(indexMerged, bathymetry=FALSE)
 #' summary(indexMerged)
 #' unique(indexMerged[["parameters"]])
 #' @name indexMerged
@@ -150,7 +150,7 @@ NULL
 #' @examples
 #' library(argoFloats)
 #' data(indexSynthetic)
-#' plot(indexSynthetic)
+#' plot(indexSynthetic, bathymetry=FALSE)
 #' summary(indexSynthetic)
 #' unique(indexSynthetic[["parameters"]])
 #' @name indexSynthetic

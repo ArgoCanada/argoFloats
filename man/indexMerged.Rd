@@ -24,7 +24,7 @@ data was supposed to be Dec, 2019).
 \examples{
 library(argoFloats)
 data(indexMerged)
-plot(indexMerged)
+plot(indexMerged, bathymetry=FALSE)
 summary(indexMerged)
 unique(indexMerged[["parameters"]])
 }

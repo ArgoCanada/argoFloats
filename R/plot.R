@@ -18,6 +18,24 @@
 #' a coastline (which will be visible only if the plot region
 #' is large enough); otherwise, if the `oce` package is available, then its
 #' `coastlineWorld` dataset is used.
+#' The `bathymetry` argument controls whether (and how) to draw a map underlay
+#' that shows water depth. There are three possible values for `bathymetry`:
+#'     1. `FALSE`, meaning not to draw bathymetry;
+#'     2. `TRUE` (the default), meaning to draw bathymetry using
+#'        data downloaded with [marmap::getNOAA.bathy()], as in Example 4;
+#'     3. A list with items controlling both the bathymetry data and its
+#'        representation in the plot, as in Example 6.  Those items are:
+#'        a. `source`, a mandatory value that either the string `"auto"` (the default) to use
+#'           [marmap::getNOAA.bathy()] to download the data, or a value
+#'           returned by a previous call to that function;
+#'        b. `keep`, an optional logical value (with `TRUE` as the default) that is passed to
+#'           [marmap::getNOAA.bathy()] to indicate whether to keep a local file of bathymetry,
+#'           as a way to avoid intermittent problems with the NOAA server;
+#'        c. `colormap`, an optional value that is either the string `"auto"` (the default)
+#'           for a form of GEBCO colors, or a value computed with [oce::colormap()]
+#'           applied to the bathymetry data; and
+#'        d. `palette`, an optional logical value (with `TRUE` as the default)
+#'           indicating whether to draw a depth-color palette to the right of the plot.
 #'
 #' * For `which="TS"`,  an overall TS plot is created.  This
 #' only works if `x` is an object that was created by  [getProfiles()].
@@ -29,21 +47,8 @@
 #'
 #' @param which a string that indicates the type of plot; see \dQuote{Details}.
 #'
-#' @param bathymetry one of three possibilities for an image underlay showing bathymetry
-#' (i.e. ocean depth), using a colour scheme set up by the `colormap` argument:
-#' (1) `FALSE` (the default), indicating not to draw the bathymetry;
-#' (2) `TRUE`, causing `plot()` to call [marmap::getNOAA.bathy()]
-#' to create a `bathy` object to be drawn, as in Example 4;
-#' or
-#' (3) a `bathy` object resulting from a previous call to [marmap::getNOAA.bathy()].
-#' Option 3 offers robustness against temporary failures to connect with the NOAA
-#' server, but it requires a conversion from elevation to depth, as 
-#' illustrated in Example 5.
-#'
-#' @param colormap either `NULL` (the default), indicating that `plot()` should
-#' construct a colormap using [oce::colormap()] based on the depth range
-#' associated with the `bathymetry` argument, or an object created by
-#' [oce::colormap()], as illustrated in Example 5.
+#' @param bathymetry an argument used only if `which="map"`, to control
+#' whether (and how) to indicate water depth; see `\dQuote{Details}.
 #'
 #' @param xlab character value indicating the name for the horizontal axis, or
 #' `NULL`, which indicates that this function should choose an appropriate name
@@ -85,23 +90,23 @@
 #' becomes visible.
 #'
 #' @examples
-#' # Example 1: map profiles in index, highlighting a neighborhood of 10
+#' # Example 1: map profiles in index, highlighting a neighborhood of 30
 #' library(argoFloats)
 #' library(oce)
 #' data(index)
-#' plot(index) # also, try using bathymetry=FALSE
+#' plot(index, bathymetry=FALSE)
 #' lon <- index[["longitude"]]
 #' lat <- index[["latitude"]]
 #' dist <- geodDist(lon, lat, -77.06, 26.54)
 #' o <- order(dist)
-#' index10 <- subset(index, o[1:10])
-#' points(index10[["longitude"]], index10[["latitude"]], col=2)
+#' index30 <- subset(index, o[1:30])
+#' points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
 #'
 #' # Example 3: TS of first 10 profiles
 #' # (Slow, so not run by default.)
 #'\dontrun{
-#' profiles20 <- getProfiles(index20, destdir="~/data/argo")
-#' argos20 <- readProfiles(profiles20)
+#' profiles10 <- getProfiles(index10, destdir="~/data/argo")
+#' argos10 <- readProfiles(profiles10)
 #' plot(argos10, which="TS")}
 #'
 #' # Example 4: map with bathymetry
@@ -110,20 +115,17 @@
 #' par(mar=c(3, 3, 1, 1))
 #' plot(index, bathymetry=TRUE)}
 #'
-#' # Example 5: map with user-downloaded bathymetry
+#' # Example 5: map with fine-grained bathymetry control
 #' # (Slow, so not run by default.)
 #'\dontrun{
 #' par(mar=c(3, 3, 1, 1))
-#' # Download a bathymetry that spans a wider range than the data, at
-#' # 1-minute (approximately 2km) resolution. Consider using save()
-#' # to save 'bathy' to an .rda file, and load() to reload it.
-#' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 1)
-#' # Adjust colormap to show water depth, not elevation above sea level.
+#' # Note that colormap shows water depth, not elevation above sea level
+#' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 1, keep=TRUE)
 #' cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
-#' plot(index, bathymetry=bathy, colormap=cm)}
+#' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
 #'
 #' @importFrom grDevices gray rgb
-#' @importFrom graphics par points polygon
+#' @importFrom graphics par plot.window points polygon
 #' @importFrom utils data
 #' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco plotTS
 #' @importFrom marmap getNOAA.bathy
@@ -134,8 +136,7 @@ setMethod(f="plot",
           signature=signature("argoFloats"),
           definition=function(x,
                               which="map",
-                              bathymetry=FALSE,
-                              colormap=NULL,
+                              bathymetry=TRUE,
                               xlab=NULL, ylab=NULL,
                               cex=NULL, col=NULL, pch=NULL, bg=NULL,
                               mar=NULL, mgp=NULL,
@@ -146,7 +147,7 @@ setMethod(f="plot",
               debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
               argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1)
               if (!inherits(x, "argoFloats"))
-                  stop("method is only for objects of class 'argoFloats'")
+                  stop("In plot() : method is only for objects of class 'argoFloats'", call.=FALSE)
               omgp <- par("mgp")
               if (is.null(mgp))
                   mgp <- c(2, 0.7, 0)
@@ -155,59 +156,108 @@ setMethod(f="plot",
                   mar <- par("mar") #c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
               par(mar=mar, mgp=mgp)
               if (which == "map") {
+                  argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
-                  drawBathymetry <- inherits(bathymetry, "bathy") || (is.logical(bathymetry) && bathymetry)
-                  argoFloatsDebug(debug, "drawBathymetry calculated to be", drawBathymetry, "\n")
-                  if (drawBathymetry) {
-                      if (is.logical(bathymetry)) {
-                          ## We must download. We use a slightly larger area, which
-                          ## may prevent white-space around the image, and we set
-                          ## a resolution that depends on the latitude range.
-                          Dlat <- diff(range(latitude, na.rm=TRUE)) / 2
-                          Dlon <- diff(range(longitude, na.rm=TRUE)) / 2
-                          resolution <- ifelse(Dlat < 5, 1, ifelse(Dlat < 20, 4, 60))
-                          argoFloatsDebug(debug, "downloading bathymetry with resolution=", resolution, "\n")
-                          bathymetry <- marmap::getNOAA.bathy(min(longitude, na.rm=TRUE)-Dlon,
-                                                              max(longitude, na.rm=TRUE)+Dlon,
-                                                              min(latitude, na.rm=TRUE)-Dlat,
-                                                              max(latitude, na.rm=TRUE)+Dlat,
-                                                              resolution)
-                      }
-                      if (is.null(bathymetry)) {
-                          warning("could not download bathymetry from NOAA server\n")
-                          drawBathymetry <- FALSE
-                      } else {
-                          if (!inherits(bathymetry, "bathy"))
-                              stop("'bathymetry' must be an object created by marmap::getNOAA.bathy()")
-                          if (is.null(colormap)) {
-                              argoFloatsDebug(debug, "using a default colormap\n")
-                              colormap <- oce::colormap(zlim=c(0, -min(bathymetry)),
-                                                        col=function(...) rev(oceColorsGebco(...)))
-                          }
-                          argoFloatsDebug(debug, "drawing bathymetry palette\n")
-                          drawPalette(colormap=colormap)
-                      }
-                  }
-                  argoFloatsDebug(debug, "map plot\n", sep="")
-                  if (is.null(cex))
-                      cex <- 1
-                  if (is.null(col))
-                      col <- "white"
-                  if (is.null(pch))
-                      pch <- 21
-                  if (is.null(bg))
-                      bg <- "red"
+
+                  ## Draw empty plot box, with axes, to set par("usr") for later use with bathymetry.
                   xlab <- if (is.null(xlab)) "Longitude" else xlab
                   ylab <- if (is.null(ylab)) "Latitude" else ylab
+
+                  ## Decode bathymetry
+                  if (is.logical(bathymetry)) {
+                      drawBathymetry <- bathymetry
+                      bathymetry <- list(source="auto", keep=TRUE, colormap="auto", palette=TRUE)
+                  } else if (is.list(bathymetry)) {
+                      drawBathymetry <- TRUE
+                      if (!("source" %in% names(bathymetry)))
+                          stop("In plot() : 'bathymetry' is a list, it must contain 'source', at least", call.=FALSE)
+                      if (is.null(bathymetry$keep))
+                          bathymetry$keep <- TRUE
+                      if (is.null(bathymetry$colormap))
+                          bathymetry$colormap <- "auto"
+                      if (is.null(bathymetry$palette))
+                          bathymetry$palette <- TRUE
+                  } else {
+                      stop("In plot() : 'bathymetry' must be logical, an object created by marmap::getNOAA.bathy(), or a list", call.=FALSE)
+                  }
+                  argoFloatsDebug(debug, "bathymetry follows\n")
+                  if (debug)
+                      print(bathymetry)
+                  if (drawBathymetry)
+                      requireNamespace("marmap")
+                  if (!is.logical(bathymetry$keep))
+                      stop("In plot() : 'bathymetry$keep' must be a logical value", call.=FALSE)
+                  if (!is.logical(bathymetry$palette))
+                      stop("In plot() : 'bathymetry$palette' must be a logical value", call.=FALSE)
+                  argoFloatsDebug(debug, "drawBathymetry calculated to be", drawBathymetry, "\n")
+
+                  if (drawBathymetry) {
+                      argoFloatsDebug(debug, "handling bathymetry\n", sep="")
+                      ## Handle bathymetry file downloading (or the use of a supplied value)
+                      bathy <- NULL
+                      if (is.character(bathymetry$source) && bathymetry$source == "auto") {
+                          argoFloatsDebug(debug, "downloading bathymetry\n", sep="")
+                          ## Do plot calculations so we will know usr, needed to determine
+                          ## range of longitude and latitude for downloading.
+                          plot.window(range(longitude), range(latitude),
+                                      asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                                      xlab=xlab, ylab=ylab)
+                          usr <- par("usr")
+                          Dlat <- diff(usr[1:2]) / 10
+                          Dlon <- diff(usr[3:4]) / 10
+                          resolution <- ifelse(Dlat < 5, 1, ifelse(Dlat < 20, 4, 60))
+                          argoFloatsDebug(debug, "usr=c(", paste(usr,collapse=", "), ")\n")
+                          argoFloatsDebug(debug, "Dlat=", Dlat, "\n")
+                          argoFloatsDebug(debug, "Dlon=", Dlon, "\n")
+                          argoFloatsDebug(debug, "resolution=", resolution, "\n")
+                          ## Round to 4 digits to prevent crazy filenames for no good reason
+                          bathy <- try(marmap::getNOAA.bathy(round(usr[1]-Dlon, 2),
+                                                             round(usr[2]+Dlon, 2),
+                                                             round(usr[3]-Dlat, 2),
+                                                             round(usr[4]+Dlat, 2),
+                                                             resolution=resolution,
+                                                             keep=bathymetry$keep),
+                                       silent=FALSE)
+                          if (inherits(bathymetry, "try-error")) {
+                              warning("could not download bathymetry from NOAA server\n")
+                          }
+                      } else if (inherits(bathymetry$source, "bathy")) {
+                          argoFloatsDebug(debug, "using supplied bathymetry$source\n", sep="")
+                          bathy <- bathymetry$source
+                      } else {
+                          stop("cannot determine bathymetry data source")
+                      }
+                      ## Handle colormap
+                      if (bathymetry$colormap == "auto") {
+                          argoFloatsDebug(debug, "using a default colormap\n")
+                          bathymetry$colormap <- oce::colormap(zlim=c(0, -min(bathy)),
+                                                               col=function(...)
+                                                                   rev(oce::oceColorsGebco(...)))
+                      } else {
+                          argoFloatsDebug(debug, "using supplid bathymetry$colormap\n")
+                      }
+                      ## Handle optional drawing of palett
+                      if (bathymetry$palette) {
+                          argoFloatsDebug(debug, "drawing a bathymetry palette\n")
+                          oce::drawPalette(colormap=bathymetry$colormap)
+                      } else {
+                          argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed\n")
+                      }
+                  }
                   plot(range(longitude), range(latitude),
                        asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
                        xlab=xlab, ylab=ylab, type="n")
                   if (drawBathymetry)
-                      imagep(as.numeric(rownames(bathymetry)),
-                             as.numeric(colnames(bathymetry)),
-                             -bathymetry, colormap=colormap, add=TRUE)
-                  points(longitude, latitude, cex=cex, col=col, pch=pch, bg=bg, ...)
+                      oce::imagep(as.numeric(rownames(bathy)),
+                                  as.numeric(colnames(bathy)),
+                                  -bathy, colormap=bathymetry$colormap, add=TRUE)
+                  points(longitude, latitude,
+                         cex=if (is.null(cex)) 1 else cex,
+                         col=if (is.null(col)) "white" else col,
+                         pch=if (is.null(pch)) 21 else pch,
+                         bg=if (is.null(bg)) "red" else bg,
+                         ...)
                   if (requireNamespace("ocedata", quietly=TRUE)) {
                       data("coastlineWorldFine", package="ocedata", envir=environment())
                       coastlineWorldFine <- get("coastlineWorldFine")

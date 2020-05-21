@@ -8,8 +8,7 @@
 \S4method{plot}{argoFloats,ANY}(
   x,
   which = "map",
-  bathymetry = FALSE,
-  colormap = NULL,
+  bathymetry = TRUE,
   xlab = NULL,
   ylab = NULL,
   cex = NULL,
@@ -28,21 +27,8 @@
 
 \item{which}{a string that indicates the type of plot; see \dQuote{Details}.}
 
-\item{bathymetry}{one of three possibilities for an image underlay showing bathymetry
-(i.e. ocean depth), using a colour scheme set up by the \code{colormap} argument:
-(1) \code{FALSE} (the default), indicating not to draw the bathymetry;
-(2) \code{TRUE}, causing \code{plot()} to call \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}
-to create a \code{bathy} object to be drawn, as in Example 4;
-or
-(3) a \code{bathy} object resulting from a previous call to \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}.
-Option 3 offers robustness against temporary failures to connect with the NOAA
-server, but it requires a conversion from elevation to depth, as
-illustrated in Example 5.}
-
-\item{colormap}{either \code{NULL} (the default), indicating that \code{plot()} should
-construct a colormap using \code{\link[oce:colormap]{oce::colormap()}} based on the depth range
-associated with the \code{bathymetry} argument, or an object created by
-\code{\link[oce:colormap]{oce::colormap()}}, as illustrated in Example 5.}
+\item{bathymetry}{an argument used only if \code{which="map"}, to control
+whether (and how) to indicate water depth; see `\dQuote{Details}.}
 
 \item{xlab}{character value indicating the name for the horizontal axis, or
 \code{NULL}, which indicates that this function should choose an appropriate name
@@ -101,6 +87,26 @@ is available, then its \code{coastlineWorldFine} dataset is used to draw
 a coastline (which will be visible only if the plot region
 is large enough); otherwise, if the \code{oce} package is available, then its
 \code{coastlineWorld} dataset is used.
+The \code{bathymetry} argument controls whether (and how) to draw a map underlay
+that shows water depth. There are three possible values for \code{bathymetry}:
+\enumerate{
+\item \code{FALSE}, meaning not to draw bathymetry;
+\item \code{TRUE} (the default), meaning to draw bathymetry using
+data downloaded with \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}, as in Example 4;
+\item A list with items controlling both the bathymetry data and its
+representation in the plot, as in Example 6.  Those items are:
+a. \code{source}, a mandatory value that either the string \code{"auto"} (the default) to use
+\code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to download the data, or a value
+returned by a previous call to that function;
+b. \code{keep}, an optional logical value (with \code{TRUE} as the default) that is passed to
+\code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to indicate whether to keep a local file of bathymetry,
+as a way to avoid intermittent problems with the NOAA server;
+c. \code{colormap}, an optional value that is either the string \code{"auto"} (the default)
+for a form of GEBCO colors, or a value computed with \code{\link[oce:colormap]{oce::colormap()}}
+applied to the bathymetry data; and
+d. \code{palette}, an optional logical value (with \code{TRUE} as the default)
+indicating whether to draw a depth-color palette to the right of the plot.
+}
 \item For \code{which="TS"},  an overall TS plot is created.  This
 only works if \code{x} is an object that was created by  \code{\link[=getProfiles]{getProfiles()}}.
 The scales for the plot can be altered by putting \code{Slim} and \code{Tlim}
@@ -109,23 +115,23 @@ for other arguments that can be provided.
 }
 }
 \examples{
-# Example 1: map profiles in index, highlighting a neighborhood of 10
+# Example 1: map profiles in index, highlighting a neighborhood of 30
 library(argoFloats)
 library(oce)
 data(index)
-plot(index) # also, try using bathymetry=FALSE
+plot(index, bathymetry=FALSE)
 lon <- index[["longitude"]]
 lat <- index[["latitude"]]
 dist <- geodDist(lon, lat, -77.06, 26.54)
 o <- order(dist)
-index10 <- subset(index, o[1:10])
-points(index10[["longitude"]], index10[["latitude"]], col=2)
+index30 <- subset(index, o[1:30])
+points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
 
 # Example 3: TS of first 10 profiles
 # (Slow, so not run by default.)
 \dontrun{
-profiles20 <- getProfiles(index20, destdir="~/data/argo")
-argos20 <- readProfiles(profiles20)
+profiles10 <- getProfiles(index10, destdir="~/data/argo")
+argos10 <- readProfiles(profiles10)
 plot(argos10, which="TS")}
 
 # Example 4: map with bathymetry
@@ -134,17 +140,14 @@ plot(argos10, which="TS")}
 par(mar=c(3, 3, 1, 1))
 plot(index, bathymetry=TRUE)}
 
-# Example 5: map with user-downloaded bathymetry
+# Example 5: map with fine-grained bathymetry control
 # (Slow, so not run by default.)
 \dontrun{
 par(mar=c(3, 3, 1, 1))
-# Download a bathymetry that spans a wider range than the data, at
-# 1-minute (approximately 2km) resolution. Consider using save()
-# to save 'bathy' to an .rda file, and load() to reload it.
-bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 1)
-# Adjust colormap to show water depth, not elevation above sea level.
+# Note that colormap shows water depth, not elevation above sea level
+bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 1, keep=TRUE)
 cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
-plot(index, bathymetry=bathy, colormap=cm)}
+plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
 
 }
 \author{

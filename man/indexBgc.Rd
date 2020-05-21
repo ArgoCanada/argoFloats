@@ -16,7 +16,7 @@ indexBgc <- subset(indexAll,
 \examples{
 library(argoFloats)
 data(indexBgc)
-plot(indexBgc)
+plot(indexBgc, bathymetry=FALSE)
 summary(indexBgc)
 unique(indexBgc[["parameters"]])
 }

@@ -15,7 +15,7 @@ index <- subset(indexAll,
 \examples{
 library(argoFloats)
 data(index)
-plot(index)
+plot(index, bathymetry=FALSE)
 }
 \seealso{
 Other datasets provided with argoFloats: 
