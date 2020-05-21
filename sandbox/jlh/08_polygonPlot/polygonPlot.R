@@ -1,5 +1,6 @@
 par(mfrow=c(1,2))
 library(argoFloats)
+library(oce)
 ai <- getIndex()
 s <- subset(ai, circle=list(longitude=-83, latitude=9, radius=150))
 plot(s, which='map', legend("topright", c("Atlantic","Pacific"), col=c("red","blue"), pch=c(20,20))) # To get a visual
