@@ -1,6 +1,7 @@
 library(argoFloats)
 bai <- getIndex(filename='merge')
 s <- subset(bai, circle=list(longitude=-83, latitude=9, radius=800))
+if (!interactive()) png("100a.png")
 plot(s, which='map') # To get a visual
 pax <- c(-92.56199, -87.32731, -83.66646, -79.35555, -88.28529, -92.76727, -92.76727, -92.73306)
 pay <- c(15.204447, 12.422940,  9.071727,  5.653489,  5.720514,  5.653489, 10.546261, 15.439032)
@@ -11,3 +12,5 @@ argos <- readProfiles(profiles)
 pressure <- unlist(argos[["pressure"]])
 oxygen <- unlist(argos[["oxygen"]])
 summary(oxygen)
+mtext(paste("Have ", length(oxygen), "oxygen values, of which", sum(is.na(oxygen)), " are NA"))
+if (!interactive()) dev.off()
