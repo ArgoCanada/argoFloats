@@ -24,7 +24,7 @@
 #'     2. `TRUE` (the default), meaning to draw bathymetry using
 #'        data downloaded with [marmap::getNOAA.bathy()], as in Example 4;
 #'     3. A list with items controlling both the bathymetry data and its
-#'        representation in the plot, as in Example 6.  Those items are:
+#'        representation in the plot, as in Example 5.  Those items are:
 #'        a. `source`, a mandatory value that either the string `"auto"` (the default) to use
 #'           [marmap::getNOAA.bathy()] to download the data, or a value
 #'           returned by a previous call to that function;
@@ -120,7 +120,7 @@
 #'\dontrun{
 #' par(mar=c(3, 3, 1, 1))
 #' # Note that colormap shows water depth, not elevation above sea level
-#' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 1, keep=TRUE)
+#' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
 #' cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
 #' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
 #'
@@ -229,7 +229,7 @@ setMethod(f="plot",
                           stop("cannot determine bathymetry data source")
                       }
                       ## Handle colormap
-                      if (bathymetry$colormap == "auto") {
+                      if (is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
                           argoFloatsDebug(debug, "using a default colormap\n")
                           bathymetry$colormap <- oce::colormap(zlim=c(0, -min(bathy)),
                                                                col=function(...)

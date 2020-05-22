@@ -94,7 +94,7 @@ that shows water depth. There are three possible values for \code{bathymetry}:
 \item \code{TRUE} (the default), meaning to draw bathymetry using
 data downloaded with \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}, as in Example 4;
 \item A list with items controlling both the bathymetry data and its
-representation in the plot, as in Example 6.  Those items are:
+representation in the plot, as in Example 5.  Those items are:
 a. \code{source}, a mandatory value that either the string \code{"auto"} (the default) to use
 \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to download the data, or a value
 returned by a previous call to that function;
@@ -145,7 +145,7 @@ plot(index, bathymetry=TRUE)}
 \dontrun{
 par(mar=c(3, 3, 1, 1))
 # Note that colormap shows water depth, not elevation above sea level
-bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 1, keep=TRUE)
+bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
 cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
 plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
 
