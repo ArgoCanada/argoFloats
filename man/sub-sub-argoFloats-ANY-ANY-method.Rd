@@ -41,6 +41,12 @@ order listed here.
 or with \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}} acting on the result of \code{\link[=getIndex]{getIndex()}},
 then:
 \enumerate{
+\item If \code{i} is numeric and \code{j} is unspecified, then \code{i} is taken to
+be an index that identifies the row(s) of the data frame that
+was constructed by \code{\link[=getIndex]{getIndex()}} based on the remote index file
+downloaded from the Argo server.  This has elements \code{file} for
+the remote file name, \code{date} for the date of the entry, \code{latitude}
+and \code{longitude} for the float position, etc.
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
 is returned. The choices are:
 \code{"destdir"}, \code{"destfileRda"}, \code{"filename"}, \code{"ftpRoot"}, \code{"header"},
@@ -70,6 +76,8 @@ is returned.
 }
 \item Otherwise, if \code{type} is \code{"profiles"}, i.e. if \code{x} was created with \code{\link[=getProfiles]{getProfiles()}}, then:
 \enumerate{
+\item If \code{i} is numeric and \code{j} is unspecified, then return the local file name(s)
+that are identified by using \code{i} as an index.
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
 is returned. The choices are:
 \code{"type"} and \code{"destdir"}.
@@ -90,6 +98,9 @@ by \code{\link[=getProfiles]{getProfiles()}} is returned.
 }
 \item Otherwise, if \code{type} is \code{"argos"}, i.e. if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then:
 \enumerate{
+\item If \code{i} is numeric and \code{j} is unspecified, then return the argo objects identified
+by using \code{i} as an index.  Thus, e.g. \code{x[[i]]} is equivalent to
+\code{x[["profile", i]]}.
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
 is returned. There is only choice, \code{"type"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item

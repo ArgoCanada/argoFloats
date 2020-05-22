@@ -14,3 +14,4 @@ oxygen <- unlist(argos[["oxygen"]])
 summary(oxygen)
 mtext(paste("Have ", length(oxygen), "oxygen values, of which", sum(is.na(oxygen)), " are NA"))
 if (!interactive()) dev.off()
+

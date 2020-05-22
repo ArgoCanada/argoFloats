@@ -7,6 +7,19 @@ context("built-in datasets")
 data(index)
 
 test_that("accessors work on 'index' data file", {
+          expect_equal(index[[1]], 
+                       structure(list(file="aoml/1901584/profiles/R1901584_124.nc", 
+                                      date=structure(1438611452,
+                                                     class=c("POSIXct", "POSIXt"),
+                                                     tzone="UTC"),
+                                      latitude=27.705,
+                                      longitude=-76.231, 
+                                      ocean="A",
+                                      profiler_type=851L,
+                                      institution="AO",
+                                      date_update=structure(1570484144, class=c("POSIXct", "POSIXt"), tzone="UTC")),
+                                 row.names=110587L,
+                                 class="data.frame"))
           expect_equal(index[["file", 1]], "aoml/1901584/profiles/R1901584_124.nc")
           expect_equal(index[["file", 1:2]], c("aoml/1901584/profiles/R1901584_124.nc", "aoml/1901584/profiles/R1901584_125.nc"))
           expect_equal(index[[1]]$file, index[["file"]][1])
