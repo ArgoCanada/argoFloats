@@ -4,7 +4,7 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(profiles, handleFlags = TRUE, debug = 0)
+readProfiles(profiles, handleFlags = TRUE, silent = FALSE, debug = 0)
 }
 \arguments{
 \item{profiles}{either a character vector holding the names
@@ -16,6 +16,10 @@ indicates whether to call \code{\link[oce:handleFlags]{oce::handleFlags()}} on t
 files that are to be read. This cleans up some common errors
 that are identified in the quality-control analysis that is usually
 done before data are place on the argo servers.}
+
+\item{silent}{logical value (with \code{FALSE} as the default value),
+indicating whether to silence messages and warnings. The value of
+\code{silent} is ignored if \code{debug} is \code{TRUE}.}
 
 \item{debug}{an integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,
@@ -39,17 +43,18 @@ created by \code{\link[=getProfiles]{getProfiles()}}.
 \dontrun{
 library(argoFloats)
 data(index)
-index2 <- subset(index, 1:2)
-profiles <- getProfiles(index2)
-argos <- readProfiles(profiles, handleFlags=TRUE)
+index1 <- subset(index, 1)
+profiles <- getProfiles(index1)
+argosWithNA<- readProfiles(profiles, handleFlags=TRUE)
+argosWithoutNA <- readProfiles(profiles, handleFlags=FALSE)
 par(mfrow=c(1, 2))
-library(oce)
-for (i in 1:2) {
-  A <- argos[["profile", i]]
-  filename <- gsub(".*/", "", A[["filename"]])
-  plotTS(A, eos="unesco")
-  mtext(filename, line=0.7, cex=par("cex"))
-}
+file <- gsub(".*/", "",  profiles[[1]])
+aWithNA <- argosWithNA[[1]]
+plotTS(aWithNA, eos="unesco", type="o")
+mtext(paste(file, "\n handling flags"), cex=0.7*par("cex"))
+aWithoutNA <- argosWithoutNA[[1]]
+plotTS(aWithoutNA, eos="unesco", type="o")
+mtext(paste(file, "\n ignoring flags"), cex=0.7*par("cex"))
 }
 
 }
