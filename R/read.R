@@ -86,6 +86,29 @@ readProfiles <- function(profiles, handleFlags=TRUE, debug=0)
             res@data$argos[[i]] <- oce::handleFlags(res@data$argos[[i]])
         }
     }
+    ## tabulate flags (ignore "Adjusted" items)
+    flagNamesAll <- unique(sort(sapply(res@data$argos, function(a) names(a@metadata$flags))))
+    flagNames <- flagNamesAll[!grepl("Adjusted$", flagNamesAll)]
+    for (flagName in flagNames) {
+        percentBad <- sapply(res@data$argos,
+                             function(x) {
+                                 if (flagName %in% names(x@metadata$flags)) {
+                                     100 * sum(x@metadata$flags[[flagName]]==4) / length(x@metadata$flags[[flagName]])
+                                 } else {
+                                     NA
+                                 }
+                             })
+        badCases <- percentBad > 50
+        if (any(badCases, na.rm=TRUE)) {
+            warning("Of ", length(badCases), " profiles read, ",
+                    sum(badCases, na.rm=TRUE),
+                    if (sum(badCases, na.rm=TRUE) > 1) " have " else " has ",
+                    ">50% of ", flagName, " values with QC flag of 4, signalling bad data.",
+                    if (handleFlags) "\n    These data are set to NA, because the handleFlags argument is TRUE" else "\n    These data are retained, because the handleFlags argument is FALSE",
+                    "\n    The indices of the bad profiles are as follows.",
+                    "\n    ", paste(which(badCases), collapse=" "))
+        }
+    }
     argoFloatsDebug(debug, "} # readProfiles\n", style="bold", sep="", unindent=1)
     res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     res
