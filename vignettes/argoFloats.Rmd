@@ -262,7 +262,7 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 
 *Exercise 3:* Using the profile in the previous example, plot a TS diagram.
 
-# Solution to Exercises
+# Solutions to Exercises
 
 *Exercise 1:* Produce the same plot as shown above, however, only include data from 2013.
 
