@@ -204,9 +204,10 @@ setMethod(f="plot",
                                       asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
                                       xlab=xlab, ylab=ylab)
                           usr <- par("usr")
+                          latitudeSpan <- diff(usr[1:2])
                           Dlat <- diff(usr[1:2]) / 10
                           Dlon <- diff(usr[3:4]) / 10
-                          resolution <- ifelse(Dlat < 5, 1, ifelse(Dlat < 20, 4, 60))
+                          resolution <- ifelse(latitudeSpan < 5, 1, ifelse(latitudeSpan < 20, 4, 60))
                           argoFloatsDebug(debug, "usr=c(", paste(usr,collapse=", "), ")\n")
                           argoFloatsDebug(debug, "Dlat=", Dlat, "\n")
                           argoFloatsDebug(debug, "Dlon=", Dlon, "\n")
@@ -219,6 +220,7 @@ setMethod(f="plot",
                                                              resolution=resolution,
                                                              keep=bathymetry$keep),
                                        silent=FALSE)
+                          argoFloatsDebug(debug, "grid size", paste(dim(bathy), collapse="x"), "\n")
                           if (inherits(bathymetry, "try-error")) {
                               warning("could not download bathymetry from NOAA server\n")
                           }
