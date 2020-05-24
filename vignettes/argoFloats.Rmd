@@ -22,7 +22,7 @@ vignette: >
 2. Do not bother trying to build vignettes in RStudio. Instead,
    in a unix shell, type the following:
        R CMD build --compact-vignettes="qpdf" argoFloats
-       R CMD install argoFloats_0.1.1.tar.gz
+       R CMD install argoFloats_0.1.2.tar.gz
    where the version number may need adjustment in the second command.
 3. To see the results, type the following in an R console:
       browseVignettes("argoFloats")
