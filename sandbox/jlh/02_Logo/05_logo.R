@@ -1,8 +1,7 @@
 library(oce)
 library(argoFloats)
-install.packages('hexSticker')
 library(hexSticker)
-library(cmocean)
+library(cmocean) # for depth colours
 
 data(coastlineWorldFine, package="ocedata")
 topo <- read.topo("topo_81W_72W_22N_31N_1min_gmt.nc")
@@ -38,9 +37,6 @@ a <- function()
          ylab="",#expression("Latitude ["*degree*"N]"),
          type="n",
          cex=0.3, axes=FALSE)
-    z <- topo[["z"]]
-    #z[z > 0] <- NA
-    cm <- colormap(z, name="gmt_gebco")
     n <- 256
     imagep(topo[["longitude"]], topo[["latitude"]], topo[["z"]],
            col=rev(cmocean("deep")(n)),
@@ -56,7 +52,7 @@ a <- function()
     polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]],
             lwd=0.5, col="tan", xpd=FALSE)
     par(xpd=NA)
-    mtext("R", col=fg, cex=1.8, font=2, side=3, line=3)
+    #mtext("R", col=fg, cex=1.8, font=2, side=3, line=3)
 }
 
 sticker(~a(), package="argoFloats",
@@ -65,6 +61,6 @@ sticker(~a(), package="argoFloats",
         s_width=0.99,
         s_height=0.99,
         h_fill=bg,
-        h_color=border,
+        h_color=fg,
         p_color=fg,
         filename="argoFloats_logo_03.png")
