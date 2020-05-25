@@ -4,7 +4,11 @@
 #'
 #' This works with either a list of local (netCDF) files,
 #' or a [`argoFloats-class`] object of type `"profiles"`, as
-#' created by [getProfiles()].
+#' created by [getProfiles()].  By default, warnings are issued about any
+#' profiles in which 50 percent or more of the measurements are flagged
+#' with a quality-control code of 4 (which designates bad data),
+#' and these values are set to `NA`; use the `silent` and `handleFlags`
+#' arguments to control this behaviour.
 #'
 #' @param profiles either a character vector holding the names
 #' of local files to read, or (better) an [`argoFloats-class`] object created

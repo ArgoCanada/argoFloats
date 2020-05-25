@@ -36,7 +36,11 @@ that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 \description{
 This works with either a list of local (netCDF) files,
 or a \code{\linkS4class{argoFloats}} object of type \code{"profiles"}, as
-created by \code{\link[=getProfiles]{getProfiles()}}.
+created by \code{\link[=getProfiles]{getProfiles()}}.  By default, warnings are issued about any
+profiles in which 50 percent or more of the measurements are flagged
+with a quality-control code of 4 (which designates bad data),
+and these values are set to \code{NA}; use the \code{silent} and \code{handleFlags}
+arguments to control this behaviour.
 }
 \examples{
 # Download and plot some profiles.
