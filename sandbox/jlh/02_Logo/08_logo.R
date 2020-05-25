@@ -42,11 +42,11 @@ a <- function()
            col=rev(cmocean("deep")(n)),
            breaks=seq(0, -6000, length.out=1+n),
            zlim=c(-5000, 0),
-           add=TRUE)
-    axis(1, at=seq(-79, -75, 1), label=FALSE, lwd=lwd)
-    axis(1, at=seq(-79, -75, 2), label=paste0(seq(79,75,-2),"W"), lwd=lwd)
-    axis(2, at=seq(25, 28, 1), label=FALSE, lwd=lwd)
-    axis(2, at=seq(25, 28, 2), label=paste0(seq(25, 28, 2),"N"), lwd=lwd)
+           add=TRUE, axes=FALSE)
+    #axis(1, at=seq(-79, -75, 1), label=FALSE, lwd=lwd)
+    #axis(1, at=seq(-79, -75, 2), label=paste0(seq(79,75,-2),"W"), lwd=lwd)
+    #axis(2, at=seq(25, 28, 1), label=FALSE, lwd=lwd)
+    #axis(2, at=seq(25, 28, 2), label=paste0(seq(25, 28, 2),"N"), lwd=lwd)
     points(lon, lat, col=floats, pch=20, cex=0.4)
     box(lwd=lwd)
     polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]],
@@ -60,8 +60,7 @@ sticker(~a(), package="argoFloats",
         s_y=0.71,
         s_width=0.99,
         s_height=0.99,
-        h_fill='white',
+        h_fill=bg,
         h_color=fg,
         p_color=fg,
         filename="argoFloats_logo_03.png")
-
