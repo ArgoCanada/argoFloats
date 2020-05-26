@@ -1,5 +1,7 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
+geographical <- TRUE
+
 #' Plot an argoFloats object
 #'
 #' The action depends on the `type` of the object, and
@@ -148,6 +150,8 @@ setMethod(f="plot",
               argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1)
               if (!inherits(x, "argoFloats"))
                   stop("In plot() : method is only for objects of class 'argoFloats'", call.=FALSE)
+              if (length(which) != 1)
+                  stop("'which' must contain only one item")
               omgp <- par("mgp")
               if (is.null(mgp))
                   mgp <- c(2, 0.7, 0)
@@ -161,8 +165,13 @@ setMethod(f="plot",
                   latitude <- x[["latitude", debug=debug]]
 
                   ## Draw empty plot box, with axes, to set par("usr") for later use with bathymetry.
-                  xlab <- if (is.null(xlab)) "Longitude" else xlab
-                  ylab <- if (is.null(ylab)) "Latitude" else ylab
+                  if (geographical) {
+                      xlab <- if (is.null(xlab)) "" else xlab
+                      ylab <- if (is.null(ylab)) "" else ylab
+                  } else {
+                      xlab <- if (is.null(xlab)) "Longitude" else xlab
+                      ylab <- if (is.null(ylab)) "Latitude" else ylab
+                  }
 
                   ## Decode bathymetry
                   if (is.logical(bathymetry)) {
@@ -247,9 +256,24 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed\n")
                       }
                   }
-                  plot(range(longitude), range(latitude),
-                       asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
-                       xlab=xlab, ylab=ylab, type="n")
+                  if (geographical) {
+                      plot(range(longitude), range(latitude),
+                           asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                           xlab=xlab, ylab=ylab, type="n", axes=FALSE)
+                      xaxp <- par("xaxp")
+                      xat <- seq(xaxp[1], xaxp[2], length.out=xaxp[3]+1)
+                      xlabel <- paste(abs(xat), ifelse(xat < 0, "W", "E"), sep="")
+                      axis(1, at=xat, label=xlabel)
+                      yaxp <- par("yaxp")
+                      yat <- seq(yaxp[1], yaxp[2], length.out=yaxp[3]+1)
+                      ylabel <- paste(abs(yat), ifelse(yat < 0, "S", "N"), sep="")
+                      axis(2, at=yat, label=ylabel)
+                      box()
+                  } else {
+                      plot(range(longitude), range(latitude),
+                           asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                           xlab=xlab, ylab=ylab, type="n")
+                  }
                   if (drawBathymetry)
                       oce::imagep(as.numeric(rownames(bathy)),
                                   as.numeric(colnames(bathy)),
