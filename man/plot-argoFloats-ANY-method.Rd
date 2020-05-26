@@ -9,6 +9,8 @@
   x,
   which = "map",
   bathymetry = TRUE,
+  xlim = NULL,
+  ylim = NULL,
   xlab = NULL,
   ylab = NULL,
   cex = NULL,
@@ -29,6 +31,9 @@
 
 \item{bathymetry}{an argument used only if \code{which="map"}, to control
 whether (and how) to indicate water depth; see `\dQuote{Details}.}
+
+\item{xlim, ylim}{limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and other conventional
+plotting functions.}
 
 \item{xlab}{character value indicating the name for the horizontal axis, or
 \code{NULL}, which indicates that this function should choose an appropriate name
@@ -65,9 +70,7 @@ see \code{\link[oce:plotTS]{oce::plotTS()}}.}
 \item{debug}{an integer specifying the level of debugging.}
 
 \item{\dots}{extra arguments passed to the plot calls that are made
-to within this function. A common use for \code{which="map"} cases is
-to set \code{xlim} and \code{ylim} to get enlarge the plot region, so a coastline
-becomes visible.}
+to within this function.}
 }
 \description{
 The action depends on the \code{type} of the object, and

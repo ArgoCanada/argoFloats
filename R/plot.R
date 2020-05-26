@@ -52,6 +52,9 @@ geographical <- TRUE
 #' @param bathymetry an argument used only if `which="map"`, to control
 #' whether (and how) to indicate water depth; see `\dQuote{Details}.
 #'
+#' @param xlim,ylim limits of plot axes, as for [plot.default()] and other conventional
+#' plotting functions.
+#'
 #' @param xlab character value indicating the name for the horizontal axis, or
 #' `NULL`, which indicates that this function should choose an appropriate name
 #' depending on the value of `which`. Note that `xlab` is not obeyed if
@@ -87,9 +90,7 @@ geographical <- TRUE
 #' @param debug an integer specifying the level of debugging.
 #'
 #' @param \dots extra arguments passed to the plot calls that are made
-#' to within this function. A common use for `which="map"` cases is
-#' to set `xlim` and `ylim` to get enlarge the plot region, so a coastline
-#' becomes visible.
+#' to within this function.
 #'
 #' @examples
 #' # Example 1: map profiles in index, highlighting a neighborhood of 30
@@ -126,7 +127,7 @@ geographical <- TRUE
 #' cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
 #' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
 #'
-#' @importFrom grDevices gray rgb
+#' @importFrom grDevices extendrange gray rgb
 #' @importFrom graphics axis box par plot.window points polygon
 #' @importFrom utils data
 #' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco plotTS
@@ -139,6 +140,7 @@ setMethod(f="plot",
           definition=function(x,
                               which="map",
                               bathymetry=TRUE,
+                              xlim=NULL, ylim=NULL,
                               xlab=NULL, ylab=NULL,
                               cex=NULL, col=NULL, pch=NULL, bg=NULL,
                               mar=NULL, mgp=NULL,
@@ -190,16 +192,13 @@ setMethod(f="plot",
                   } else {
                       stop("In plot() : 'bathymetry' must be logical, an object created by marmap::getNOAA.bathy(), or a list", call.=FALSE)
                   }
-                  argoFloatsDebug(debug, "bathymetry follows\n")
-                  if (debug)
-                      print(bathymetry)
                   if (drawBathymetry)
                       requireNamespace("marmap")
                   if (!is.logical(bathymetry$keep))
                       stop("In plot() : 'bathymetry$keep' must be a logical value", call.=FALSE)
                   if (!is.logical(bathymetry$palette))
                       stop("In plot() : 'bathymetry$palette' must be a logical value", call.=FALSE)
-                  argoFloatsDebug(debug, "drawBathymetry calculated to be", drawBathymetry, "\n")
+                  argoFloatsDebug(debug, "drawBathymetry calculated to be", drawBathymetry, "\n", sep="")
 
                   if (drawBathymetry) {
                       argoFloatsDebug(debug, "handling bathymetry\n", sep="")
@@ -209,7 +208,9 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "downloading bathymetry\n", sep="")
                           ## Do plot calculations so we will know usr, needed to determine
                           ## range of longitude and latitude for downloading.
-                          plot.window(range(longitude), range(latitude),
+                          plot.window(extendrange(longitude), extendrange(latitude),
+                                      xlim=xlim, ylim=ylim,
+                                      xaxs="i", yaxs="i",
                                       asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
                                       xlab=xlab, ylab=ylab)
                           usr <- par("usr")
@@ -257,9 +258,15 @@ setMethod(f="plot",
                       }
                   }
                   if (geographical) {
-                      plot(range(longitude), range(latitude),
+                      argoFloatsDebug(debug, "about to start plot, with xlim=",
+                                      "c(", paste(xlim, collapse=","), ") and ylim=",
+                                      "c(", paste(ylim, collapse=","), ")\n", sep="")
+                      plot(extendrange(longitude), extendrange(latitude),
+                           xlim=xlim, ylim=ylim,
+                           xaxs="i", yaxs="i",
                            asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
                            xlab=xlab, ylab=ylab, type="n", axes=FALSE)
+                      argoFloatsDebug(debug, "after plot(), usr=c(", paste(par("usr"), collapse=", "), ")\n", sep="")
                       xaxp <- par("xaxp")
                       xat <- seq(xaxp[1], xaxp[2], length.out=xaxp[3]+1)
                       xlabel <- paste(abs(xat), ifelse(xat < 0, "W", ifelse(xat > 0, "E", "")), sep="")
@@ -270,7 +277,9 @@ setMethod(f="plot",
                       axis(2, at=yat, labels=ylabel)
                       box()
                   } else {
-                      plot(range(longitude), range(latitude),
+                      plot(extendrange(longitude), extendrange(latitude),
+                           xlim=xlim, ylim=ylim,
+                           xaxs="i", yaxs="i",
                            asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
                            xlab=xlab, ylab=ylab, type="n")
                   }
@@ -328,7 +337,7 @@ setMethod(f="plot",
                   oce::plotTS(ctd, cex=cex, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
                   par(mar=omar, mgp=omgp)
               } else {
-                  stop("cannot handle which=\"", which, "\"; try \"map\".")
+                  stop("cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'")
               }
               argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1)
           }
