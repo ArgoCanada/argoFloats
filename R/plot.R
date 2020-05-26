@@ -127,7 +127,7 @@ geographical <- TRUE
 #' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
 #'
 #' @importFrom grDevices gray rgb
-#' @importFrom graphics par plot.window points polygon
+#' @importFrom graphics axis box par plot.window points polygon
 #' @importFrom utils data
 #' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco plotTS
 #' @importFrom marmap getNOAA.bathy
@@ -262,12 +262,12 @@ setMethod(f="plot",
                            xlab=xlab, ylab=ylab, type="n", axes=FALSE)
                       xaxp <- par("xaxp")
                       xat <- seq(xaxp[1], xaxp[2], length.out=xaxp[3]+1)
-                      xlabel <- paste(abs(xat), ifelse(xat < 0, "W", "E"), sep="")
-                      axis(1, at=xat, label=xlabel)
+                      xlabel <- paste(abs(xat), ifelse(xat < 0, "W", ifelse(xat > 0, "E", "")), sep="")
+                      axis(1, at=xat, labels=xlabel)
                       yaxp <- par("yaxp")
                       yat <- seq(yaxp[1], yaxp[2], length.out=yaxp[3]+1)
-                      ylabel <- paste(abs(yat), ifelse(yat < 0, "S", "N"), sep="")
-                      axis(2, at=yat, label=ylabel)
+                      ylabel <- paste(abs(yat), ifelse(yat < 0, "S", ifelse(xat > 0, "N", "")), sep="")
+                      axis(2, at=yat, labels=ylabel)
                       box()
                   } else {
                       plot(range(longitude), range(latitude),
