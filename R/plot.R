@@ -273,7 +273,7 @@ setMethod(f="plot",
                       axis(1, at=xat, labels=xlabel)
                       yaxp <- par("yaxp")
                       yat <- seq(yaxp[1], yaxp[2], length.out=yaxp[3]+1)
-                      ylabel <- paste(abs(yat), ifelse(yat < 0, "S", ifelse(xat > 0, "N", "")), sep="")
+                      ylabel <- paste(abs(yat), ifelse(yat < 0, "S", ifelse(yat > 0, "N", "")), sep="")
                       axis(2, at=yat, labels=ylabel)
                       box()
                   } else {
