@@ -18,3 +18,5 @@
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/Y_SxjcOnW04
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/05/video05_TS_by_oxygen.R
+* **argoFloats R 06: trajectory plot, colour coded by time** (May 28, 2020)
+    - Jaimie Harbin and Dan Kelley
