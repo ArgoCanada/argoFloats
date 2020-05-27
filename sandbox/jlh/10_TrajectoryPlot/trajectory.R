@@ -1,6 +1,6 @@
 library(argoFloats)
 library(oce)
-library(cmocean)
+#library(cmocean)
 data(index)
 ID <- index[["ID"]]
 profile <- index[["profile"]]
@@ -14,15 +14,17 @@ lat <- index0[["latitude"]][o]
 profile <- index0[["profile"]][o]
 t <- index0[["date"]][o]
 
-if (!interactive()) png("10_trajectory_time.png", unit="in", width=7, height=3.5, pointsize=11, res=150)
-par(mar=c(3,3,1,1))
+if (!interactive()) png("10_trajectory_time.png", unit="in", width=7, height=3.2, pointsize=11, res=150)
 par(mfrow=c(1,2))
-plot(index, span=300)
+bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
+par(mar=c(3,3,1,1))
+plot(index, bathymetry=list(source=bathy, debug=1))
+usr <- par('usr')
 #cm <- colormap(t, col=cmocean("jet"))
 cm <- colormap(t, col=oceColorsJet)
+par(mar=c(3,3,1,1))
 drawPalette(colormap=cm, tformat="%Y-%m", pos=4)
-bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
-plot(index0, bathymetry=list(source= bathy, palette=FALSE), span=300)
+plot(index0, xlim=usr[1:2], ylim=usr[3:4], bathymetry=list(source= bathy, palette=FALSE), debug=1)
 points(lon, lat, pch=21, cex=1, col="darkgrey", bg=cm$zcol, lwd=1.5)
 points(-77.06,26.54, pch="*", cex=1.8, col='black')
 lines(lon, lat)
