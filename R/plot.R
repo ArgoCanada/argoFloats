@@ -208,11 +208,18 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "downloading bathymetry\n", sep="")
                           ## Do plot calculations so we will know usr, needed to determine
                           ## range of longitude and latitude for downloading.
-                          plot.window(extendrange(longitude), extendrange(latitude),
-                                      xlim=xlim, ylim=ylim,
-                                      xaxs="i", yaxs="i",
-                                      asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
-                                      xlab=xlab, ylab=ylab)
+                          if (!is.null(xlim) && !is.null(ylim)) {
+                              plot.window(extendrange(longitude), extendrange(latitude),
+                                          xlim=xlim, ylim=ylim,
+                                          xaxs="i", yaxs="i",
+                                          asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                                          xlab=xlab, ylab=ylab)
+                          } else {
+                              plot.window(extendrange(longitude), extendrange(latitude),
+                                          xaxs="i", yaxs="i",
+                                          asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                                          xlab=xlab, ylab=ylab)
+                          }
                           usr <- par("usr")
                           latitudeSpan <- diff(usr[1:2])
                           Dlat <- diff(usr[1:2]) / 10
@@ -261,11 +268,18 @@ setMethod(f="plot",
                       argoFloatsDebug(debug, "about to start plot, with xlim=",
                                       "c(", paste(xlim, collapse=","), ") and ylim=",
                                       "c(", paste(ylim, collapse=","), ")\n", sep="")
-                      plot(extendrange(longitude), extendrange(latitude),
-                           xlim=xlim, ylim=ylim,
-                           xaxs="i", yaxs="i",
-                           asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
-                           xlab=xlab, ylab=ylab, type="n", axes=FALSE)
+                      if (!is.null(xlim) && !is.null(ylim)) {
+                          plot(extendrange(longitude), extendrange(latitude),
+                               xlim=xlim, ylim=ylim,
+                               xaxs="i", yaxs="i",
+                               asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                               xlab=xlab, ylab=ylab, type="n", axes=FALSE)
+                      } else {
+                          plot(extendrange(longitude), extendrange(latitude),
+                               xaxs="i", yaxs="i",
+                               asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                               xlab=xlab, ylab=ylab, type="n", axes=FALSE)
+                       }
                       argoFloatsDebug(debug, "after plot(), usr=c(", paste(par("usr"), collapse=", "), ")\n", sep="")
                       xaxp <- par("xaxp")
                       xat <- seq(xaxp[1], xaxp[2], length.out=xaxp[3]+1)
@@ -277,11 +291,18 @@ setMethod(f="plot",
                       axis(2, at=yat, labels=ylabel)
                       box()
                   } else {
-                      plot(extendrange(longitude), extendrange(latitude),
-                           xlim=xlim, ylim=ylim,
-                           xaxs="i", yaxs="i",
-                           asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
-                           xlab=xlab, ylab=ylab, type="n")
+                      if (!is.null(xlim) && !is.null(ylim)) {
+                          plot(extendrange(longitude), extendrange(latitude),
+                               xlim=xlim, ylim=ylim,
+                               xaxs="i", yaxs="i",
+                               asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                               xlab=xlab, ylab=ylab, type="n")
+                      } else {
+                          plot(extendrange(longitude), extendrange(latitude),
+                               xaxs="i", yaxs="i",
+                               asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                               xlab=xlab, ylab=ylab, type="n")
+                       }
                   }
                   if (drawBathymetry)
                       oce::imagep(as.numeric(rownames(bathy)),
