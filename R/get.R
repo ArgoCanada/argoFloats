@@ -269,16 +269,16 @@ getIndex <- function(filename="argo",
         status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE)
         if (!inherits(status, "try-error")) {
             if (failedDownloads > 0)
-                message('Successfully downloadd from server "', server[iurl], '".\n')
+                message('Successfully downloaded index file from server "', server[iurl], '".\n')
             server <- server[iurl]
             downloadSuccess <- TRUE
             break                      # the download worked
         }
         message('Cannot download from server "', server[iurl], '".\n')
-        failedDownloads <- failedDownloads + 1 
+        failedDownloads <- failedDownloads + 1
     }
     if (!downloadSuccess)
-        stop("Could not download the file from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
+        stop("Could not download the indx file from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
     argoFloatsDebug(debug, "About to read header.\n", sep="")
     first <- readLines(destfileTemp, 100)
     hash <- which(grepl("^#", first))
