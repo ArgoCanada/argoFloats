@@ -198,46 +198,73 @@ setMethod(f="plot",
                       stop("In plot() : 'bathymetry$keep' must be a logical value", call.=FALSE)
                   if (!is.logical(bathymetry$palette))
                       stop("In plot() : 'bathymetry$palette' must be a logical value", call.=FALSE)
-                  argoFloatsDebug(debug, "drawBathymetry calculated to be", drawBathymetry, "\n", sep="")
-
+                  argoFloatsDebug(debug, "drawBathymetry calculated to be ", drawBathymetry, "\n", sep="")
+                  asp <- 1 / cos(pi/180*mean(range(latitude, na.rm=TRUE)))
+                  argoFloatsDebug(debug, "asp=", asp, "\n", sep="")
                   if (drawBathymetry) {
                       argoFloatsDebug(debug, "handling bathymetry\n", sep="")
                       ## Handle bathymetry file downloading (or the use of a supplied value)
                       bathy <- NULL
                       if (is.character(bathymetry$source) && bathymetry$source == "auto") {
-                          argoFloatsDebug(debug, "downloading bathymetry\n", sep="")
+                          argoFloatsDebug(debug, "must either download bathymetry or use existing file\n", sep="")
+                          argoFloatsDebug(debug, "  before using plot.window(), mar=c(", paste(round(mar, 4), collapse=", "), ")\n", sep="")
                           ## Do plot calculations so we will know usr, needed to determine
-                          ## range of longitude and latitude for downloading.
+                          ## range of longitude and latitude for downloading. Note that we
+                          ## need to set mar temporarily, to match what will later be used
+                          ## for the actual plot.
+                          ## > A<-par("mar")
+                          ## > drawPalette()
+                          ## > B<-par("mar")
+                          ## > A-B
+                          ## [1] -8.881784e-16  0.000000e+00  0.000000e+00 -2.750000e+00
+                          if (bathymetry$palette) {
+                              tmpmar <- par("mar")
+                              par(mar=tmpmar + c(0, 0, 0, 2.75))
+                              argoFloatsDebug(debug, "  changed to c(", paste(par("mar"), collapse=", "), ") to allow for the palette\n", sep="")
+                          }
                           if (!is.null(xlim) && !is.null(ylim)) {
+                              argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
+                                              "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
+                                              "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
+                                              "    xlim=c(", paste(ylim, collapse=","), ")\n",
+                                              "    ylim=c(", paste(ylim, collapse=","), ")\n",
+                                              "    asp=", asp, "\n", sep="")
                               plot.window(extendrange(longitude), extendrange(latitude),
                                           xlim=xlim, ylim=ylim,
                                           xaxs="i", yaxs="i",
-                                          asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                                          asp=asp,
                                           xlab=xlab, ylab=ylab)
                           } else {
+                              argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
+                                              "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
+                                              "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
+                                              "    asp=", asp, "\n", sep="")
                               plot.window(extendrange(longitude), extendrange(latitude),
                                           xaxs="i", yaxs="i",
-                                          asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                                          asp=asp,
                                           xlab=xlab, ylab=ylab)
                           }
+                          if (bathymetry$palette) {
+                              par(mar=tmpmar)
+                          }
                           usr <- par("usr")
-                          latitudeSpan <- diff(usr[1:2])
-                          Dlat <- diff(usr[1:2]) / 10
-                          Dlon <- diff(usr[3:4]) / 10
+                          argoFloatsDebug(debug, "  after using plot.window(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
+                          latitudeSpan <- usr[4] - usr[3]
+                          Dlon <- (usr[2] - usr[1]) / 10
+                          Dlat <- (usr[4] - usr[3]) / 10
                           resolution <- ifelse(latitudeSpan < 5, 1, ifelse(latitudeSpan < 20, 4, 60))
-                          argoFloatsDebug(debug, "usr=c(", paste(usr,collapse=", "), ")\n")
-                          argoFloatsDebug(debug, "Dlat=", Dlat, "\n")
-                          argoFloatsDebug(debug, "Dlon=", Dlon, "\n")
-                          argoFloatsDebug(debug, "resolution=", resolution, "\n")
+                          argoFloatsDebug(debug, "  Dlat=", round(Dlat, 4), "\n", sep="")
+                          argoFloatsDebug(debug, "  Dlon=", round(Dlon, 4), "\n", sep="")
+                          argoFloatsDebug(debug, "  resolution=", resolution, "\n", sep="")
                           ## Round to 4 digits to prevent crazy filenames for no good reason
-                          bathy <- try(marmap::getNOAA.bathy(round(usr[1]-Dlon, 2),
-                                                             round(usr[2]+Dlon, 2),
-                                                             round(usr[3]-Dlat, 2),
-                                                             round(usr[4]+Dlat, 2),
+                          bathy <- try(marmap::getNOAA.bathy(round(usr[1]-Dlon, 3),
+                                                             round(usr[2]+Dlon, 3),
+                                                             round(usr[3]-Dlat, 3),
+                                                             round(usr[4]+Dlat, 3),
                                                              resolution=resolution,
                                                              keep=bathymetry$keep),
                                        silent=FALSE)
-                          argoFloatsDebug(debug, "grid size", paste(dim(bathy), collapse="x"), "\n")
+                          argoFloatsDebug(debug, "  grid size", paste(dim(bathy), collapse="x"), "\n")
                           if (inherits(bathymetry, "try-error")) {
                               warning("could not download bathymetry from NOAA server\n")
                           }
@@ -265,22 +292,32 @@ setMethod(f="plot",
                       }
                   }
                   if (geographical) {
-                      argoFloatsDebug(debug, "about to start plot, with xlim=",
+                      argoFloatsDebug(debug, "about to use plot(), with xlim=",
                                       "c(", paste(xlim, collapse=","), ") and ylim=",
                                       "c(", paste(ylim, collapse=","), ")\n", sep="")
                       if (!is.null(xlim) && !is.null(ylim)) {
+                          argoFloatsDebug(debug, "about to plot, with\n",
+                                          "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
+                                          "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
+                                          "    xlim=c(", paste(ylim, collapse=","), ")\n",
+                                          "    ylim=c(", paste(ylim, collapse=","), ")\n",
+                                          "    asp=", asp, "\n", sep="")
                           plot(extendrange(longitude), extendrange(latitude),
                                xlim=xlim, ylim=ylim,
                                xaxs="i", yaxs="i",
-                               asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                               asp=asp,
                                xlab=xlab, ylab=ylab, type="n", axes=FALSE)
                       } else {
+                          argoFloatsDebug(debug, "about to plot, with\n",
+                                          "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
+                                          "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
+                                          "    asp=", asp, "\n", sep="")
                           plot(extendrange(longitude), extendrange(latitude),
                                xaxs="i", yaxs="i",
-                               asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                               asp=asp,
                                xlab=xlab, ylab=ylab, type="n", axes=FALSE)
                        }
-                      argoFloatsDebug(debug, "after plot(), usr=c(", paste(par("usr"), collapse=", "), ")\n", sep="")
+                      argoFloatsDebug(debug, "after plot(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
                       xaxp <- par("xaxp")
                       xat <- seq(xaxp[1], xaxp[2], length.out=xaxp[3]+1)
                       xlabel <- paste(abs(xat), ifelse(xat < 0, "W", ifelse(xat > 0, "E", "")), sep="")
@@ -295,12 +332,12 @@ setMethod(f="plot",
                           plot(extendrange(longitude), extendrange(latitude),
                                xlim=xlim, ylim=ylim,
                                xaxs="i", yaxs="i",
-                               asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                               asp=asp,
                                xlab=xlab, ylab=ylab, type="n")
                       } else {
                           plot(extendrange(longitude), extendrange(latitude),
                                xaxs="i", yaxs="i",
-                               asp=1/cos(pi/180*mean(range(latitude, na.rm=TRUE))),
+                               asp=asp,
                                xlab=xlab, ylab=ylab, type="n")
                        }
                   }
