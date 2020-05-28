@@ -14,7 +14,7 @@ profile <- index0[["profile"]][o]
 t <- index0[["date"]][o]
 if (!interactive()) png("video06.png", unit="in", width=3.5, height=3.2, pointsize=11, res=150)
 cm <- colormap(t, col=oceColorsJet)
-par(mar=c(3,3,1,1))
+par(mar=c(2,2,1,1))
 drawPalette(colormap=cm, tformat="%Y-%m", pos=4)
 plot(index0, bathymetry=FALSE)
 points(lon, lat, pch=21, cex=1, bg=cm$zcol, col="darkgrey", lwd=0.5)
