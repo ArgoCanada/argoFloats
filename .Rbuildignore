@@ -22,4 +22,8 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 ^videos$
+^marmap_coord.*\.csv$
+^cran-comments\.md$
+^NEWS\.md$
+^exampleTS\.png$
 

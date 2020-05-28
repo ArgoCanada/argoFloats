@@ -22,7 +22,7 @@ vignette: >
 2. Do not bother trying to build vignettes in RStudio. Instead,
    in a unix shell, type the following:
        R CMD build --compact-vignettes="qpdf" argoFloats
-       R CMD install argoFloats_0.1.1.tar.gz
+       R CMD install argoFloats_0.1.2.tar.gz
    where the version number may need adjustment in the second command.
 3. To see the results, type the following in an R console:
       browseVignettes("argoFloats")
@@ -41,13 +41,14 @@ The `argoFloats` package provides tools for downloading and processing Argo prof
 # Youtube Videos
 Before moving on, it should be noted that a number of youtube videos exist to work through exercises in real time, as shown below.
 
-Video Name                                          | Creators                   | Date           | URL
-----------------------------------------------------|----------------------------|----------------|-----------------------------
-argoFloats R 01: Introduction                       | Dan Kelley & Jaimie Harbin | April 9, 2020  | https://youtu.be/xeBoFbb66Nk
-argoFloats R 02: TS plot near Bermuda               | Jaimie Harbin & Dan Kelley | April 24, 2020 | https://youtu.be/ZoTrVEMG5Qo
-argoFloats R 03: new website                        | Jaimie Harbin & Dan Kelley | April 30, 2020 | https://youtu.be/lOvCrRDTmTs
-argoFloats R 04: subset by ocean or polygon         | Jaimie Harbin & Dan Kelley | May 7, 2020    | https://youtu.be/tcGRB479Udk
-argoFloats R 05: TS diagram, colour-coded by oxygen | Jaimie Harbin & Dan Kelley | May 14, 2020   | https://youtu.be/Y_SxjcOnW04
+Video Name                                             | Creators                   | Date           | URL
+-------------------------------------------------------|----------------------------|----------------|-----------------------------
+argoFloats R 01: Introduction                          | Dan Kelley & Jaimie Harbin | April 9, 2020  | https://youtu.be/xeBoFbb66Nk
+argoFloats R 02: TS plot near Bermuda                  | Jaimie Harbin & Dan Kelley | April 24, 2020 | https://youtu.be/ZoTrVEMG5Qo
+argoFloats R 03: new website                           | Jaimie Harbin & Dan Kelley | April 30, 2020 | https://youtu.be/lOvCrRDTmTs
+argoFloats R 04: subset by ocean or polygon            | Jaimie Harbin & Dan Kelley | May 7, 2020    | https://youtu.be/tcGRB479Udk
+argoFloats R 05: TS diagram, colour-coded by oxygen    | Jaimie Harbin & Dan Kelley | May 14, 2020   | https://youtu.be/Y_SxjcOnW04
+argoFloats R 06: trajectory plot, colour coded by time | Jaimie Harbin & Dan Kelley | May 28, 2020   | https://youtu.be/7BB3UuwjUqo
 
 In addition to the videos, sample code can be found for some videos, at https://github.com/ArgoCanada/argoFloats/tree/develop/videos
 
@@ -148,8 +149,8 @@ The following subsections use built-in data.
 ## Plotting
 The specialized `plot()` command within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:
 
-```{r, fig.cap="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas"}
-plot(index)
+```{r, fig.cap="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas."}
+plot(index, bathymetry=FALSE)          # also, try using bathymetry=TRUE
 ```
 
 ## Extracting Data
@@ -161,10 +162,8 @@ Additionally, the `summary()` command displays key features of `argoFloats-class
 
 ## Printing
 Lastly, the `show()` command provides a one-line sketch of `argoFloats-class` objects. This gets used by the `print()` function. For example if the user types in:
-
-```
+```{r, eval=FALSE}
 index
-
 ```
 The following output occurs:
 
@@ -202,7 +201,7 @@ Additionally, the `destdir` argument has a default of `~/data/argo`, where it sh
 To get the index from the USGODAE server, the following code is used:
 
 ```{r eval=FALSE}
-ai <- getIndex(filename="argo", destdir="~/data/argo")
+ai <- getIndex("argo")
 ```
 ```{r echo=FALSE}
 data(index)
@@ -227,7 +226,7 @@ latPoly <- c(25.5, 26.5, 25.5)
 aiPoly <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
 # Plotting the subsets together
 CP <- merge(aiCircle, aiPoly)
-plot(CP)
+plot(CP, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
 
 *Exercise 1:* Produce the same plot as shown above, however, only include data from 2013.
@@ -254,7 +253,7 @@ The command can be useful for analyzing individual profiles, for example:
 
 ```{r eval=FALSE}
 sub <- subset(ai, 1:2) # To subset for profiles
-profiles <- getProfiles(sub, destdir='~/data/argo')
+profiles <- getProfiles(sub)
 argos <- readProfiles(profiles, handleFlags=TRUE)
 pressure <- argos[['argos']][[1]][['pressure']]
 temperature <- argos[['argos']][[1]][['temperature']]
@@ -264,14 +263,14 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 
 *Exercise 3:* Using the profile in the previous example, plot a TS diagram.
 
-# Solution to Exercises
+# Solutions to Exercises
 
 *Exercise 1:* Produce the same plot as shown above, however, only include data from 2013.
 
 
 ```{r, eval=FALSE}
 library(argoFloats)
-ai <- getIndex(filename='argo', destdir='~/data/argo')
+ai <- getIndex("argo")
 # Subsetting by circle
 aiCircle <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 # Subsetting by polygon
@@ -285,7 +284,7 @@ aic <- subset(aiCircle, time=list(from=from, to=to))
 aip <- subset(aiPoly, time=list(from=from, to=to))
 # Plotting the subsets together
 cp <- merge(aic, aip)
-plot(cp)
+plot(cp, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
 
 *Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2017.
@@ -297,7 +296,7 @@ data(section, package='oce')
 lat0 <- median(section[['latitude']])
 lon0 <- median(section[['longitude']])
 # Subset by rectangle
-ai <- getIndex(filename='argo', destdir='~/data/argo')
+ai <- getIndex("argo")
 latRect <- lat0 + c(-2,2)
 lonRect <- lon0 + c(-30,30)
 air <- subset(ai, rectangle=list(longitude=lonRect, latitude=latRect))
@@ -306,16 +305,16 @@ from <- as.POSIXct("2017-01-01", tz="UTC")
 to <- as.POSIXct("2017-12-31", tz="UTC")
 aiTime <- subset(air, time=list(from=from, to=to))
 #Plot this subset
-plot(aiTime)
+plot(aiTime, bathymetry=FALSE)         # also, try using bathymetry=TRUE
 ```
 
 *Exercise 3:* Using the profile in the previous example, plot a TS diagram.
 
 ```{r, eval=FALSE}
 library(argoFloats)
-ai <- getIndex(filename='merge', destdir='~/data/argo')
+ai <- getIndex("merge")
 sub <- subset(ai, 1:2) # To subset for profiles
-profiles <- getProfiles(sub, destdir='~/data/argo')
+profiles <- getProfiles(sub)
 argos <- readProfiles(profiles, handleFlags=TRUE)
 plot(argos, which='TS')
 ```

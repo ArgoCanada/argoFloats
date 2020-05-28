@@ -42,7 +42,11 @@
 <meta property="og:title" content="Read argo profiles from local files — readProfiles" />
 <meta property="og:description" content="This works with either a list of local (netCDF) files,
 or a argoFloats object of type &quot;profiles&quot;, as
-created by getProfiles()." />
+created by getProfiles().  By default, warnings are issued about any
+profiles in which 50 percent or more of the measurements are flagged
+with a quality-control code of 4 (which designates bad data),
+and these values are set to NA; use the silent and handleFlags
+arguments to control this behaviour." />
 
 
 
@@ -124,10 +128,14 @@ created by getProfiles()." />
     <div class="ref-description">
     <p>This works with either a list of local (netCDF) files,
 or a <code><a href='argoFloats-class.html'>argoFloats</a></code> object of type <code>"profiles"</code>, as
-created by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p>
+created by <code><a href='getProfiles.html'>getProfiles()</a></code>.  By default, warnings are issued about any
+profiles in which 50 percent or more of the measurements are flagged
+with a quality-control code of 4 (which designates bad data),
+and these values are set to <code>NA</code>; use the <code>silent</code> and <code>handleFlags</code>
+arguments to control this behaviour.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>readProfiles</span>(<span class='no'>profiles</span>, <span class='kw'>handleFlags</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
+    <pre class="usage"><span class='fu'>readProfiles</span>(<span class='no'>profiles</span>, <span class='kw'>handleFlags</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>silent</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -145,6 +153,12 @@ indicates whether to call <code><a href='https://rdrr.io/pkg/oce/man/handleFlags
 files that are to be read. This cleans up some common errors
 that are identified in the quality-control analysis that is usually
 done before data are place on the argo servers.</p></td>
+    </tr>
+    <tr>
+      <th>silent</th>
+      <td><p>logical value (with <code>FALSE</code> as the default value),
+indicating whether to silence messages and warnings. The value of
+<code>silent</code> is ignored if <code>debug</code> is <code>TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>debug</th>
@@ -168,17 +182,18 @@ that are created by <code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>o
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>index</span>)
-<span class='no'>index2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='fl'>1</span>:<span class='fl'>2</span>)
-<span class='no'>profiles</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span>(<span class='no'>index2</span>)
-<span class='no'>argos</span> <span class='kw'>&lt;-</span> <span class='fu'>readProfiles</span>(<span class='no'>profiles</span>, <span class='kw'>handleFlags</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='no'>index1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='fl'>1</span>)
+<span class='no'>profiles</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span>(<span class='no'>index1</span>)
+<span class='no'>argosWithNA</span><span class='kw'>&lt;-</span> <span class='fu'>readProfiles</span>(<span class='no'>profiles</span>, <span class='kw'>handleFlags</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='no'>argosWithoutNA</span> <span class='kw'>&lt;-</span> <span class='fu'>readProfiles</span>(<span class='no'>profiles</span>, <span class='kw'>handleFlags</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>oce</span>)
-<span class='kw'>for</span> (<span class='no'>i</span> <span class='kw'>in</span> <span class='fl'>1</span>:<span class='fl'>2</span>) {
-  <span class='no'>A</span> <span class='kw'>&lt;-</span> <span class='no'>argos</span><span class='kw'>[[</span><span class='st'>"profile"</span>, <span class='no'>i</span>]]
-  <span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span>(<span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='no'>A</span><span class='kw'>[[</span><span class='st'>"filename"</span>]])
-  <span class='fu'><a href='https://rdrr.io/pkg/oce/man/plotTS.html'>plotTS</a></span>(<span class='no'>A</span>, <span class='kw'>eos</span><span class='kw'>=</span><span class='st'>"unesco"</span>)
-  <span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span>(<span class='no'>filename</span>, <span class='kw'>line</span><span class='kw'>=</span><span class='fl'>0.7</span>, <span class='kw'>cex</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='st'>"cex"</span>))
-}
+<span class='no'>file</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span>(<span class='st'>".*/"</span>, <span class='st'>""</span>,  <span class='no'>profiles</span><span class='kw'>[[</span><span class='fl'>1</span>]])
+<span class='no'>aWithNA</span> <span class='kw'>&lt;-</span> <span class='no'>argosWithNA</span><span class='kw'>[[</span><span class='fl'>1</span>]]
+<span class='fu'>plotTS</span>(<span class='no'>aWithNA</span>, <span class='kw'>eos</span><span class='kw'>=</span><span class='st'>"unesco"</span>, <span class='kw'>type</span><span class='kw'>=</span><span class='st'>"o"</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>file</span>, <span class='st'>"\n handling flags"</span>), <span class='kw'>cex</span><span class='kw'>=</span><span class='fl'>0.7</span>*<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='st'>"cex"</span>))
+<span class='no'>aWithoutNA</span> <span class='kw'>&lt;-</span> <span class='no'>argosWithoutNA</span><span class='kw'>[[</span><span class='fl'>1</span>]]
+<span class='fu'>plotTS</span>(<span class='no'>aWithoutNA</span>, <span class='kw'>eos</span><span class='kw'>=</span><span class='st'>"unesco"</span>, <span class='kw'>type</span><span class='kw'>=</span><span class='st'>"o"</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>file</span>, <span class='st'>"\n ignoring flags"</span>), <span class='kw'>cex</span><span class='kw'>=</span><span class='fl'>0.7</span>*<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='st'>"cex"</span>))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

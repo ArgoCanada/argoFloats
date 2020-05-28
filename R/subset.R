@@ -117,7 +117,7 @@
 #' index4 <- subset(index, polygon=poly)
 #'
 #' # Show some of these subsets on a map
-#' plot(index)
+#' plot(index, bathymetry=FALSE)
 #' points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
 #' points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
 #' rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
@@ -183,7 +183,7 @@ setMethod(f="subset",
                       keep[is.na(keep)] <- FALSE
                       x@data$index <- x@data$index[keep, ]
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                   } else if (dotsNames[1] == "rectangle") {
                       rectangle <- dots[[1]]
                       if (!is.list(dots[1]))
@@ -198,7 +198,7 @@ setMethod(f="subset",
                       keep <- keeplon & keeplat
                       x@data$index <- x@data$index[keep, ]
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                   } else if (dotsNames[1]=="parameter") {
                       parameter <- dots[[1]]
                       if (is.list(dots[1]))
@@ -209,7 +209,7 @@ setMethod(f="subset",
                       if (sum(keep) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given parameter", call.=FALSE)
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="polygon") {
                       polygon <- dots[[1]]
@@ -261,12 +261,12 @@ setMethod(f="subset",
                       Intersection <- sf::st_intersection(Points, Polygon)
                       keep <- Intersection[,3]
                       if (!silent)
-                          message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/N), "%)")
+                          message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                       ##OLD } else {
                       ##OLD     keep <- 0 != sp::point.in.polygon(alon, alat, plon, plat)
                       ##OLD     if (!silent)
-                      ##OLD         message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%) using sp method")
+                      ##OLD         message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%) using sp method")
                       ##OLD     x@data$index <- x@data$index[keep, ]
                       ##OLD }
                   } else if (dotsNames[1]=="time") {
@@ -286,7 +286,7 @@ setMethod(f="subset",
                       keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
                       keep[is.na(keep)] <- FALSE
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if(dotsNames[1]=="institution") {
                       institution <- dots[[1]]
@@ -297,7 +297,7 @@ setMethod(f="subset",
                       keep <- grepl(institution, x@data$index$institution)
                       keep[is.na(keep)] <- FALSE
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1] == 'deep') {
                       deep <- dots[[1]]
@@ -309,7 +309,7 @@ setMethod(f="subset",
                           keep <- grep("849|862|864", x@data$index$profiler_type, invert=TRUE)
                       }
                       if (!silent)
-                          message("Kept ", length(keep), " profiles (", sprintf("%.2g", 100*length(keep)/N), "%)")
+                          message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1] == 'ID') {
                       ID <- dots[[1]]
@@ -317,7 +317,7 @@ setMethod(f="subset",
                       fileID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}.nc$", "\\1", file)
                       keep <- ID == fileID
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100*sum(keep)/N), "%)")
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if(dotsNames[1]=="ocean") {
                       ocean <- dots[[1]]
@@ -328,7 +328,7 @@ setMethod(f="subset",
                       keep <- grepl(ocean, x@data$index$ocean)
                       keep[is.na(keep)] <- FALSE
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.2g", 100.0*sum(keep)/N), "%)")
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', or 'ocean'", call.=FALSE)
@@ -340,7 +340,7 @@ setMethod(f="subset",
                       if (!silent) {
                           if (is.logical(subset)) # this simplifies the percentage count for the method
                               subset <- which(subset)
-                          message("Kept ", length(subset), " profiles (", sprintf("%.2g", 100.0*length(subset)/dim(x@data$index)[1]), "%)")
+                          message("Kept ", length(subset), " profiles (", sprintf("%.3g", 100.0*length(subset)/dim(x@data$index)[1]), "%)")
                       }
                       x@data$index <- x@data$index[subset, ]
                   } else {

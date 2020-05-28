@@ -115,7 +115,7 @@ poly <- list(longitude=c(-77.492, -78.219, -77.904, -77.213, -76.728, -77.492),
 index4 <- subset(index, polygon=poly)
 
 # Show some of these subsets on a map
-plot(index)
+plot(index, bathymetry=FALSE)
 points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
 points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
 rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)

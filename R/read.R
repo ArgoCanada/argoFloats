@@ -4,7 +4,11 @@
 #'
 #' This works with either a list of local (netCDF) files,
 #' or a [`argoFloats-class`] object of type `"profiles"`, as
-#' created by [getProfiles()].
+#' created by [getProfiles()].  By default, warnings are issued about any
+#' profiles in which 50 percent or more of the measurements are flagged
+#' with a quality-control code of 4 (which designates bad data),
+#' and these values are set to `NA`; use the `silent` and `handleFlags`
+#' arguments to control this behaviour.
 #'
 #' @param profiles either a character vector holding the names
 #' of local files to read, or (better) an [`argoFloats-class`] object created
@@ -14,6 +18,7 @@
 #' files that are to be read. This cleans up some common errors
 #' that are identified in the quality-control analysis that is usually
 #' done before data are place on the argo servers.
+#' @template silent
 #' @param debug an integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
 #' a small amount of debugging information is printed.  Note that
@@ -30,17 +35,18 @@
 #'\dontrun{
 #' library(argoFloats)
 #' data(index)
-#' index2 <- subset(index, 1:2)
-#' profiles <- getProfiles(index2)
-#' argos <- readProfiles(profiles, handleFlags=TRUE)
+#' index1 <- subset(index, 1)
+#' profiles <- getProfiles(index1)
+#' argosWithNA<- readProfiles(profiles, handleFlags=TRUE)
+#' argosWithoutNA <- readProfiles(profiles, handleFlags=FALSE)
 #' par(mfrow=c(1, 2))
-#' library(oce)
-#' for (i in 1:2) {
-#'   A <- argos[["profile", i]]
-#'   filename <- gsub(".*/", "", A[["filename"]])
-#'   plotTS(A, eos="unesco")
-#'   mtext(filename, line=0.7, cex=par("cex"))
-#' }
+#' file <- gsub(".*/", "",  profiles[[1]])
+#' aWithNA <- argosWithNA[[1]]
+#' plotTS(aWithNA, eos="unesco", type="o")
+#' mtext(paste(file, "\n handling flags"), cex=0.7*par("cex"))
+#' aWithoutNA <- argosWithoutNA[[1]]
+#' plotTS(aWithoutNA, eos="unesco", type="o")
+#' mtext(paste(file, "\n ignoring flags"), cex=0.7*par("cex"))
 #'}
 #'
 #' @importFrom oce handleFlags read.argo
@@ -49,7 +55,7 @@
 #' @export
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, handleFlags=TRUE, debug=0)
+readProfiles <- function(profiles, handleFlags=TRUE, silent=FALSE, debug=0)
 {
     debug <- floor(0.5 + debug)
     debug <- max(0, debug)
@@ -84,6 +90,31 @@ readProfiles <- function(profiles, handleFlags=TRUE, debug=0)
     if (handleFlags) {
         for (i in seq_along(res@data$argos)) {
             res@data$argos[[i]] <- oce::handleFlags(res@data$argos[[i]])
+        }
+    }
+    ## tabulate flags (ignore "Adjusted" items)
+    if (!silent || debug) {
+        flagNamesAll <- unique(sort(sapply(res@data$argos, function(a) names(a@metadata$flags))))
+        flagNames <- flagNamesAll[!grepl("Adjusted$", flagNamesAll)]
+        for (flagName in flagNames) {
+            percentBad <- sapply(res@data$argos,
+                                 function(x) {
+                                     if (flagName %in% names(x@metadata$flags)) {
+                                         100 * sum(x@metadata$flags[[flagName]]==4) / length(x@metadata$flags[[flagName]])
+                                     } else {
+                                         NA
+                                     }
+                                 })
+            badCases <- percentBad > 50
+            if (any(badCases, na.rm=TRUE)) {
+                warning("Of ", length(badCases), " profiles read, ",
+                        sum(badCases, na.rm=TRUE),
+                        if (sum(badCases, na.rm=TRUE) > 1) " have " else " has ",
+                        ">50% of ", flagName, " values with QC flag of 4, signalling bad data.",
+                        if (handleFlags) "\n    These data are set to NA, because the handleFlags argument is TRUE" else "\n    These data are retained, because the handleFlags argument is FALSE",
+                        "\n    The indices of the bad profiles are as follows.",
+                        "\n    ", paste(which(badCases), collapse=" "))
+            }
         }
     }
     argoFloatsDebug(debug, "} # readProfiles\n", style="bold", sep="", unindent=1)

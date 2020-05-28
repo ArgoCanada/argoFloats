@@ -4,12 +4,13 @@
 .Rhistory
 .Rproj.user
 .*.swp
-Rplot.*png
 .Rapp.history
 .DS_Store
 *.out
-Rplot*.png
+*.png
 .RData
 doc
 Meta
 test*.R
+marmap*.csv
+

@@ -7,6 +7,6 @@ context("plot")
 
 test_that("plot", {
           data("index")
-          expect_silent(plot(index, which="map"))
+          expect_silent(plot(index, which="map", bathymetry=FALSE))
 })
 

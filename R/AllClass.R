@@ -45,6 +45,8 @@
 #' 4. `show()` provides a one-line sketch of [`argoFloats-class`] objects.
 #' See [show,argoFloats-method()] for details.
 #'
+#' 5. `merge()` combines multiple index objects into a new index object.
+#'
 #' It should be noted that the profile elements within `argoFloats` objects are stored as
 #' in the form of `argo` objects as defined by the `oce` package.
 #' This means that `argoFloats` users can rely on
@@ -60,125 +62,101 @@ NULL
 
 #' A sample index of profiles
 #'
-#' This is created by subsetting a global index to the 1788 Argo profiles
+#' This was created by subsetting a global index to the 1788 Argo profiles
 #' that were within a 200km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 March 14, using
-#' the following code.
-#'
+#' Bahamas, as of 2020 March 14, using the following code.
 #' ```
 #  library(argoFloats)
 #' indexAll <- getIndex()
 #' index <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=200))
 #' ```
-#'
 #' @examples
 #' library(argoFloats)
 #' data(index)
-#' plot(index)
-#'
+#' plot(index, bathymetry=FALSE)
 #' @name index
-#'
 #' @docType data
-#'
 #' @family datasets provided with argoFloats
 NULL
 
 
 #' A sample index of biogeochemical-argo profiles
 #'
-#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 March 23, using
-#' the following code.
-#'\preformatted{
+#' Bahamas, as of 2020 March 23, using the following code.
+#'```
 #' library(argoFloats)
 #' indexAll <- getIndex("bgc")
 #' indexBgc <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#'}
-#'
+#'```
 #' @examples
 #' library(argoFloats)
 #' data(indexBgc)
-#' plot(indexBgc)
+#' plot(indexBgc, bathymetry=FALSE)
 #' summary(indexBgc)
 #' unique(indexBgc[["parameters"]])
-#'
 #' @name indexBgc
-#'
 #' @docType data
-#'
 #' @family datasets provided with argoFloats
 NULL
 
 
 #' A sample index of merged argo and biogeochemical-argo profiles
 #'
-#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 March 23, using
-#' the following code.
-#'\preformatted{
+#' Bahamas, as of 2020 March 23, using the following code.
+#'```
 #' library(argoFloats)
 #' indexAll <- getIndex("merged")
 #' indexMerged <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#'}
-#'
+#'```
 #' @section Historical note:
 #' This "merged" file from the usgodae server is likely to be removed, when
 #' that server changes to the "synthetic" file format that the ifremer server
 #' uses (as of May, 2020 and perhaps months previously, since the changeover
 #' data was supposed to be Dec, 2019).
-#'
 #' @examples
 #' library(argoFloats)
 #' data(indexMerged)
-#' plot(indexMerged)
+#' plot(indexMerged, bathymetry=FALSE)
 #' summary(indexMerged)
 #' unique(indexMerged[["parameters"]])
-#'
 #' @name indexMerged
-#'
 #' @docType data
-#'
 #' @family datasets provided with argoFloats
 NULL
 
 #' A sample index of synthetic (i.e. combined) argo and biogeochemical-argo profiles
 #'
-#' This is created by subsetting a global index to the 39 BGC Argo profiles
+#' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 May 15, using
-#' the following code.
-#'\preformatted{
+#' Bahamas, as of 2020 May 15, using the following code.
+#'```
 #' library(argoFloats)
 #' indexAll <- getIndex("synthetic")
 #' indexSynthetic <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#'}
-#'
+#'```
 #' @section Historical note:
 #' This "synthetic" type of index is a replacement for the older "merged" index.  See
 #' \url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
 #' for more on the data file format, reasons for the change, and timetable for transition
 #' from "merged".
-#'
 #' @examples
 #' library(argoFloats)
 #' data(indexSynthetic)
-#' plot(indexSynthetic)
+#' plot(indexSynthetic, bathymetry=FALSE)
 #' summary(indexSynthetic)
 #' unique(indexSynthetic[["parameters"]])
-#'
 #' @name indexSynthetic
-#'
 #' @docType data
-#'
 #' @family datasets provided with argoFloats
 NULL
-
 
 
 #'
@@ -216,21 +194,27 @@ setMethod(f="initialize",
 #' 2. If `type` is `"index"`, i.e. if `x` was created with [getIndex()]
 #' or with [subset,argoFloats-method()] acting on the result of [getIndex()],
 #' then:
-#'     1. If `i` is the name of an item in the `metadata` slot, then that item
+#'     1. If `i` is numeric and `j` is unspecified, then `i` is taken to
+#'        be an index that identifies the row(s) of the data frame that
+#'        was constructed by [getIndex()] based on the remote index file
+#'        downloaded from the Argo server.  This has elements `file` for
+#'        the remote file name, `date` for the date of the entry, `latitude`
+#'        and `longitude` for the float position, etc.
+#'     3. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. The choices are:
 #'        `"destdir"`, `"destfileRda"`, `"filename"`, `"ftpRoot"`, `"header"`,
 #'        `"server"`, `"type"`, and `"url"`.
-#'     2. Otherwise, if `i` is the name of an item in the `data` slot, then that item
+#'     4. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  The choices are:
 #'        `"date"`, `"date_update"`, `"file"`, `"institution"`, `"latitude"`,
 #'        `"longitude"`, `"ocean"`, and `"profiler_type"`.
-#'     3. Otherwise, if `i=="index"` then that item from the `data` slot of `x` is returned.
+#'     5. Otherwise, if `i=="index"` then that item from the `data` slot of `x` is returned.
 #'        (For the possible names, see the previous item in this sub-list.)
-#'     4. Otherwise, if `i` is an integer, then the `i`-th row of the `index` item in
+#'     6. Otherwise, if `i` is an integer, then the `i`-th row of the `index` item in
 #'        the `data` slot is returned.  This is a good way to learn the
 #'        longitude and latitude of the profile, the file name on the server,
 #'        etc.
-#'     4. Otherwise, if `i` is `"ID"` then the return value is developed from the
+#'     7. Otherwise, if `i` is `"ID"` then the return value is developed from the
 #'        `index$file` item within the `data` slot of `x`, in one of three cases:
 #'         1. If `j` is not supplied, the return value is a vector holding the
 #'            identifiers (character codes for numbers) for all the data files
@@ -238,15 +222,17 @@ setMethod(f="initialize",
 #'         2. Otherwise, if `j` is numeric, then the return value is a subset of
 #'            the ID codes, as indexed by `j`.
 #'         3. Otherwise, an error is reported.
-#'     5. If `i` is `"length"`, the number of remote files pointed to by the index
+#'     8. If `i` is `"length"`, the number of remote files pointed to by the index
 #'        is returned.
 #' 3. Otherwise, if `type` is `"profiles"`, i.e. if `x` was created with [getProfiles()], then:
-#'     1. If `i` is the name of an item in the `metadata` slot, then that item
+#'     1. If `i` is numeric and `j` is unspecified, then return the local file name(s)
+#'        that are identified by using `i` as an index.
+#'     2. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. The choices are:
 #'        `"type"` and `"destdir"`.
-#'     2. Otherwise, if `i` is the name of an item in the `data` slot, then that item
+#'     3. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  There is only one choice: `"file"`.
-#'     3. Otherwise, if `i` is `"profile"` then the return value is developed from the
+#'     4. Otherwise, if `i` is `"profile"` then the return value is developed from the
 #'        `file` item in the `data` slot of `x`, in one of four sub-cases:
 #'         1. If `j` is not supplied, the return value is `file`,
 #'            i.e. a vector holding the full names of the files downloaded
@@ -254,14 +240,17 @@ setMethod(f="initialize",
 #'         2. Otherwise, if `j` is numeric, then the return value is a vector of the
 #'            `file` entries, as indexed by `j`.
 #'         3. Otherwise, an error is reported.
-#'     4. If `i` is `"length"`, the number of local file names that were downloaded
+#'     5. If `i` is `"length"`, the number of local file names that were downloaded
 #'        by [getProfiles()] is returned.
 #' 4. Otherwise, if `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
-#'     1. If `i` is the name of an item in the `metadata` slot, then that item
+#'     1. If `i` is numeric and `j` is unspecified, then return the argo objects identified
+#'        by using `i` as an index.  Thus, e.g. `x[[i]]` is equivalent to
+#'        `x[["profile", i]]`.
+#'     2. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. There is only choice, `"type"`.
-#'     2. Otherwise, if `i` is the name of an item in the `data` slot, then that item
+#'     3. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  There is only one choice: `"argos"`.
-#'     3. Otherwise, if `i` is `"profile"` then the return value depends on the value of `j`.
+#'     4. Otherwise, if `i` is `"profile"` then the return value depends on the value of `j`.
 #'         There are four sub-cases:
 #'         1. If `j` is not supplied, the return value is a list containing
 #'             all the profiles in `x`, each an `argo` object as created by
@@ -271,8 +260,8 @@ setMethod(f="initialize",
 #'         3. Otherwise, if `j` is a vector  of integers, then a list of `argo` objects
 #'            is returned.
 #'         4. Otherwise, an error is reported.
-#'     4. If `i` is `"length"`, the number of oce-type argo objects in `x` is returned.
-#'     5. Otherwise, if `i` is a character value, then it is taken to be
+#'     5. If `i` is `"length"`, the number of oce-type argo objects in `x` is returned.
+#'     6. Otherwise, if `i` is a character value, then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
 #'        information with one (unnamed) item per profile.  Note that
@@ -280,7 +269,7 @@ setMethod(f="initialize",
 #'        as the same dimensionality as pressure, as a way to make it
 #'        easier to e.g. use [oce::as.ctd()] to create a CTD object from
 #'        values returned by the present function, passed through [unlist()].
-#'     6. Otherwise, an error is reported.
+#'     7. Otherwise, an error is reported.
 #' 5. Otherwise, an error is reported.
 #'
 #' @param x an [`argoFloats-class`] object.
@@ -340,7 +329,9 @@ setMethod(f="[[",
                       stop("cannot interpret i=", paste(i, collapse=","), " for an object of type=\"index\"")
                   }
               } else if (type == "profiles") { # made by getProfiles()
-                  if (length(i) == 1 && i %in% names(x@metadata)) {
+                  if (is.numeric(i) && missing(j)) {
+                      return(x@data$file[[i]])
+                  } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
                       ## i is always 'file'
@@ -357,7 +348,9 @@ setMethod(f="[[",
                       stop("cannot interpret i=", paste(i, collapse=","), " for an object of type=\"", type, "\"")
                   }
               } else if (type == "argos") { # made by readProfiles()
-                  if (length(i) == 1 && i %in% names(x@metadata)) {
+                  if (is.numeric(i) && missing(j)) {
+                      return(x@data$argos[[i]])
+                  } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
                       return(x@data[[i]])

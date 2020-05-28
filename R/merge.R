@@ -21,11 +21,13 @@
 #' R <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
 #'
 #' RC <- merge(C, R)
-#' plot(RC)
+#'\dontrun{
+#' plot(RC, bathymetry=FALSE)}
 #'
 #' @author Dan Kelley
 #'
 #' @export
+#' @aliases merge,argoFloats-method
 setMethod(f="merge",
           signature="argoFloats",
           definition=function(x, y, ...) {

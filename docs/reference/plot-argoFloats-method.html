@@ -131,6 +131,8 @@ see &#8220;Details&#8221;.</p>
 <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(
   <span class='no'>x</span>,
   <span class='kw'>which</span> <span class='kw'>=</span> <span class='st'>"map"</span>,
+  <span class='kw'>topography</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>colormap</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>cex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -153,6 +155,20 @@ see &#8220;Details&#8221;.</p>
     <tr>
       <th>which</th>
       <td><p>a string that indicates the type of plot; see &#8220;Details&#8221;.</p></td>
+    </tr>
+    <tr>
+      <th>topography</th>
+      <td><p>either <code>NULL</code> (the default), meaning not to draw topography,
+or a <code>topo</code> object created with <code><a href='https://rdrr.io/pkg/marmap/man/getNOAA.bathy.html'>marmap::getNOAA.bathy()</a></code>.
+This isused to draw an image of topography, with <code><a href='https://rdrr.io/pkg/oce/man/drawPalette.html'>oce::drawPalette()</a></code>
+drawing a colour-bar to the right of the plot.
+The colour scheme is set by the <code>colormap</code> argument.</p></td>
+    </tr>
+    <tr>
+      <th>colormap</th>
+      <td><p>either <code>NULL</code>, meaning to use a default colour scheme for topography,
+or an object created by <code><a href='https://rdrr.io/pkg/oce/man/colormap.html'>oce::colormap()</a></code>.  The value of <code>colormap</code> is ignored unless
+<code>topography</code> is non-<code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>xlab</th>
@@ -241,11 +257,20 @@ for other arguments that can be provided.</p></li>
 <span class='no'>dist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/oce/man/geodDist.html'>geodDist</a></span>(<span class='no'>lon</span>, <span class='no'>lat</span>, -<span class='fl'>77.06</span>, <span class='fl'>26.54</span>)
 <span class='no'>o</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span>(<span class='no'>dist</span>)
 <span class='no'>index10</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='no'>o</span>[<span class='fl'>1</span>:<span class='fl'>10</span>])</div><div class='output co'>#&gt; <span class='message'>Kept 10 profiles (1%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span>(<span class='no'>index10</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]], <span class='no'>index10</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]], <span class='kw'>col</span><span class='kw'>=</span><span class='fl'>2</span>)</div><div class='img'><img src='plot-argoFloats-method-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'># Example 2: TS of first 10 profiles in the index</span>
+<span class='co'># Example 3: TS of first 10 profiles in the index</span>
+<span class='co'># (Not run, because it involves downloading data.)</span>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='no'>profiles10</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span>(<span class='no'>index10</span>, <span class='kw'>destdir</span><span class='kw'>=</span><span class='st'>"~/data/argo"</span>)
 <span class='no'>argos10</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span>(<span class='no'>profiles10</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>argos10</span>, <span class='kw'>which</span><span class='kw'>=</span><span class='st'>"TS"</span>)}</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>argos10</span>, <span class='kw'>which</span><span class='kw'>=</span><span class='st'>"TS"</span>)}
+
+<span class='co'># Example 4: map with topography (slow, so not run by default)</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>marmap</span>)
+<span class='no'>topo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/marmap/man/getNOAA.bathy.html'>getNOAA.bathy</a></span>(-<span class='fl'>80</span>, -<span class='fl'>70</span>, <span class='fl'>23</span>, <span class='fl'>30</span>, <span class='kw'>resolution</span><span class='kw'>=</span><span class='fl'>1</span>)
+<span class='no'>cm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/oce/man/colormap.html'>colormap</a></span>(<span class='kw'>zlim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>4000</span>, <span class='fl'>0</span>), <span class='kw'>col</span><span class='kw'>=</span><span class='no'>oceColorsGebco</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mar</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>1</span>, <span class='fl'>1</span>))
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>index</span>, <span class='kw'>topography</span><span class='kw'>=</span><span class='no'>topo</span>, <span class='kw'>colormap</span><span class='kw'>=</span><span class='no'>cm</span>)}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

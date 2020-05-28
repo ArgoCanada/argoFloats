@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Introduction to argoFloats</h1>
                         <h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 class="date">2020-05-19</h4>
+            <h4 class="date">2020-05-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/master/vignettes/argoFloats.Rmd"><code>vignettes/argoFloats.Rmd</code></a></small>
       <div class="hidden name"><code>argoFloats.Rmd</code></div>
@@ -90,7 +90,7 @@
 2. Do not bother trying to build vignettes in RStudio. Instead,
    in a unix shell, type the following:
        R CMD build --compact-vignettes="qpdf" argoFloats
-       R CMD install argoFloats_0.1.1.tar.gz
+       R CMD install argoFloats_0.1.2.tar.gz
    where the version number may need adjustment in the second command.
 3. To see the results, type the following in an R console:
       browseVignettes("argoFloats")
@@ -107,10 +107,10 @@
 <p>Before moving on, it should be noted that a number of youtube videos exist to work through exercises in real time, as shown below.</p>
 <table class="table">
 <colgroup>
-<col width="41%">
-<col width="22%">
+<col width="42%">
+<col width="21%">
 <col width="12%">
-<col width="23%">
+<col width="22%">
 </colgroup>
 <thead><tr class="header">
 <th>Video Name</th>
@@ -148,6 +148,12 @@
 <td>Jaimie Harbin &amp; Dan Kelley</td>
 <td>May 14, 2020</td>
 <td><a href="https://youtu.be/Y_SxjcOnW04" class="uri">https://youtu.be/Y_SxjcOnW04</a></td>
+</tr>
+<tr class="even">
+<td>argoFloats R 06: trajectory plot, colour coded by time</td>
+<td>Jaimie Harbin &amp; Dan Kelley</td>
+<td>May 28, 2020</td>
+<td><a href="https://youtu.be/7BB3UuwjUqo" class="uri">https://youtu.be/7BB3UuwjUqo</a></td>
 </tr>
 </tbody>
 </table>
@@ -191,10 +197,10 @@ Figure 1: Work flow of the argoFloats package.
 <h2 class="hasAnchor">
 <a href="#plotting" class="anchor"></a>Plotting</h2>
 <p>The specialized <code><a href="https://rdrr.io/r/base/plot.html">plot()</a></code> command within the <code>argoFloats</code> package provides simple ways to plot aspects of <code>argoFloats-class</code> objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">index</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">index</span>, <span class="kw">bathymetry</span><span class="kw">=</span><span class="fl">FALSE</span>)          <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
 <div class="figure">
-<img src="argoFloats_files/figure-html/unnamed-chunk-6-1.png" alt="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas" width="700"><p class="caption">
-Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas
+<img src="argoFloats_files/figure-html/unnamed-chunk-6-1.png" alt="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas." width="700"><p class="caption">
+Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 </p>
 </div>
 </div>
@@ -212,8 +218,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas
 <h2 class="hasAnchor">
 <a href="#printing" class="anchor"></a>Printing</h2>
 <p>Lastly, the <code>show()</code> command provides a one-line sketch of <code>argoFloats-class</code> objects. This gets used by the <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> function. For example if the user types in:</p>
-<pre><code>index
-</code></pre>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">index</span></pre></body></html></div>
 <p>The following output occurs:</p>
 <pre><code>argoFloats object of type "index" with 953 items</code></pre>
 <p><strong>Hint:</strong> This command can be particularly useful when doing the <code><a href="https://rdrr.io/r/base/merge.html">merge()</a></code> command, which will be explained in greater detail further down.</p>
@@ -294,7 +299,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas
 </table>
 <p>Additionally, the <code>destdir</code> argument has a default of <code>~/data/argo</code>, where it should be noted that <code>~</code> is a short cut for <code>C:\Users\</code>. See <code>?getIndex()</code> for further description about the additional arguments for this command.</p>
 <p>To get the index from the USGODAE server, the following code is used:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="kw">filename</span><span class="kw">=</span><span class="st">"argo"</span>, <span class="kw">destdir</span><span class="kw">=</span><span class="st">"~/data/argo"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="st">"argo"</span>)</pre></body></html></div>
 </div>
 <div id="subset" class="section level2">
 <h2 class="hasAnchor">
@@ -310,9 +315,9 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas
 <span class="no">aiPoly</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">ai</span>, <span class="kw">polygon</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">longitude</span><span class="kw">=</span><span class="no">lonPoly</span>, <span class="kw">latitude</span><span class="kw">=</span><span class="no">latPoly</span>))
 <span class="co"># Plotting the subsets together</span>
 <span class="no">CP</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span>(<span class="no">aiCircle</span>, <span class="no">aiPoly</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">CP</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">CP</span>, <span class="kw">bathymetry</span><span class="kw">=</span><span class="fl">FALSE</span>)             <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
 <div class="figure">
-<img src="argoFloats_files/figure-html/unnamed-chunk-9-1.png" alt="Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas" width="700"><p class="caption">
+<img src="argoFloats_files/figure-html/unnamed-chunk-10-1.png" alt="Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas" width="700"><p class="caption">
 Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas
 </p>
 </div>
@@ -321,7 +326,7 @@ Figure 3: 50 km radius and polygon subset of argo floats found off the coast of 
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">section</span>, <span class="kw">package</span><span class="kw">=</span><span class="st">'oce'</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">section</span>)</pre></body></html></div>
 <div class="figure" style="text-align: center">
-<img src="argoFloats_files/figure-html/unnamed-chunk-10-1.png" alt="Figure 4: Line A03 section plot made by oce package." width="672"><p class="caption">
+<img src="argoFloats_files/figure-html/unnamed-chunk-11-1.png" alt="Figure 4: Line A03 section plot made by oce package." width="672"><p class="caption">
 Figure 4: Line A03 section plot made by oce package.
 </p>
 </div>
@@ -338,7 +343,7 @@ Figure 4: Line A03 section plot made by oce package.
 <p>The <code><a href="../reference/readProfiles.html">readProfiles()</a></code> command works with either a list of local netCDF files, or a <code>argoFloats</code> object type <code>profiles</code>, as created by <code><a href="../reference/getProfiles.html">getProfiles()</a></code>.</p>
 <p>The command can be useful for analyzing individual profiles, for example:</p>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">sub</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">ai</span>, <span class="fl">1</span>:<span class="fl">2</span>) <span class="co"># To subset for profiles</span>
-<span class="no">profiles</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span>(<span class="no">sub</span>, <span class="kw">destdir</span><span class="kw">=</span><span class="st">'~/data/argo'</span>)
+<span class="no">profiles</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span>(<span class="no">sub</span>)
 <span class="no">argos</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span>(<span class="no">profiles</span>, <span class="kw">handleFlags</span><span class="kw">=</span><span class="fl">TRUE</span>)
 <span class="no">pressure</span> <span class="kw">&lt;-</span> <span class="no">argos</span><span class="kw">[[</span><span class="st">'argos'</span>]]<span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="st">'pressure'</span>]]
 <span class="no">temperature</span> <span class="kw">&lt;-</span> <span class="no">argos</span><span class="kw">[[</span><span class="st">'argos'</span>]]<span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="st">'temperature'</span>]]
@@ -347,12 +352,12 @@ Figure 4: Line A03 section plot made by oce package.
 <p><em>Exercise 3:</em> Using the profile in the previous example, plot a TS diagram.</p>
 </div>
 </div>
-<div id="solution-to-exercises" class="section level1">
+<div id="solutions-to-exercises" class="section level1">
 <h1 class="hasAnchor">
-<a href="#solution-to-exercises" class="anchor"></a>Solution to Exercises</h1>
+<a href="#solutions-to-exercises" class="anchor"></a>Solutions to Exercises</h1>
 <p><em>Exercise 1:</em> Produce the same plot as shown above, however, only include data from 2013.</p>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">argoFloats</span>)
-<span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="kw">filename</span><span class="kw">=</span><span class="st">'argo'</span>, <span class="kw">destdir</span><span class="kw">=</span><span class="st">'~/data/argo'</span>)
+<span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="st">"argo"</span>)
 <span class="co"># Subsetting by circle</span>
 <span class="no">aiCircle</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">ai</span>, <span class="kw">circle</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">longitude</span><span class="kw">=</span>-<span class="fl">77.5</span>, <span class="kw">latitude</span><span class="kw">=</span><span class="fl">27.5</span>, <span class="kw">radius</span><span class="kw">=</span><span class="fl">50</span>))
 <span class="co"># Subsetting by polygon</span>
@@ -366,7 +371,7 @@ Figure 4: Line A03 section plot made by oce package.
 <span class="no">aip</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">aiPoly</span>, <span class="kw">time</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">from</span><span class="kw">=</span><span class="no">from</span>, <span class="kw">to</span><span class="kw">=</span><span class="no">to</span>))
 <span class="co"># Plotting the subsets together</span>
 <span class="no">cp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span>(<span class="no">aic</span>, <span class="no">aip</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">cp</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">cp</span>, <span class="kw">bathymetry</span><span class="kw">=</span><span class="fl">FALSE</span>)             <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
 <p><em>Exercise 2:</em> Create a rectangle subset for this transect and plot the positions for the year 2017.</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">argoFloats</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">oce</span>)
@@ -374,7 +379,7 @@ Figure 4: Line A03 section plot made by oce package.
 <span class="no">lat0</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span>(<span class="no">section</span><span class="kw">[[</span><span class="st">'latitude'</span>]])
 <span class="no">lon0</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span>(<span class="no">section</span><span class="kw">[[</span><span class="st">'longitude'</span>]])
 <span class="co"># Subset by rectangle</span>
-<span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="kw">filename</span><span class="kw">=</span><span class="st">'argo'</span>, <span class="kw">destdir</span><span class="kw">=</span><span class="st">'~/data/argo'</span>)
+<span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="st">"argo"</span>)
 <span class="no">latRect</span> <span class="kw">&lt;-</span> <span class="no">lat0</span> + <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">2</span>,<span class="fl">2</span>)
 <span class="no">lonRect</span> <span class="kw">&lt;-</span> <span class="no">lon0</span> + <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">30</span>,<span class="fl">30</span>)
 <span class="no">air</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">ai</span>, <span class="kw">rectangle</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">longitude</span><span class="kw">=</span><span class="no">lonRect</span>, <span class="kw">latitude</span><span class="kw">=</span><span class="no">latRect</span>))
@@ -383,12 +388,12 @@ Figure 4: Line A03 section plot made by oce package.
 <span class="no">to</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span>(<span class="st">"2017-12-31"</span>, <span class="kw">tz</span><span class="kw">=</span><span class="st">"UTC"</span>)
 <span class="no">aiTime</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">air</span>, <span class="kw">time</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">from</span><span class="kw">=</span><span class="no">from</span>, <span class="kw">to</span><span class="kw">=</span><span class="no">to</span>))
 <span class="co">#Plot this subset</span>
-<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">aiTime</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">aiTime</span>, <span class="kw">bathymetry</span><span class="kw">=</span><span class="fl">FALSE</span>)         <span class="co"># also, try using bathymetry=TRUE</span></pre></body></html></div>
 <p><em>Exercise 3:</em> Using the profile in the previous example, plot a TS diagram.</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">argoFloats</span>)
-<span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="kw">filename</span><span class="kw">=</span><span class="st">'merge'</span>, <span class="kw">destdir</span><span class="kw">=</span><span class="st">'~/data/argo'</span>)
+<span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="st">"merge"</span>)
 <span class="no">sub</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">ai</span>, <span class="fl">1</span>:<span class="fl">2</span>) <span class="co"># To subset for profiles</span>
-<span class="no">profiles</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span>(<span class="no">sub</span>, <span class="kw">destdir</span><span class="kw">=</span><span class="st">'~/data/argo'</span>)
+<span class="no">profiles</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span>(<span class="no">sub</span>)
 <span class="no">argos</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span>(<span class="no">profiles</span>, <span class="kw">handleFlags</span><span class="kw">=</span><span class="fl">TRUE</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">argos</span>, <span class="kw">which</span><span class="kw">=</span><span class="st">'TS'</span>)</pre></body></html></div>
 </div>
