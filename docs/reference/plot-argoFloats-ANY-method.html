@@ -132,6 +132,8 @@ see &#8220;Details&#8221;.</p>
   <span class='no'>x</span>,
   <span class='kw'>which</span> <span class='kw'>=</span> <span class='st'>"map"</span>,
   <span class='kw'>bathymetry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>cex</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -160,6 +162,11 @@ see &#8220;Details&#8221;.</p>
       <th>bathymetry</th>
       <td><p>an argument used only if <code>which="map"</code>, to control
 whether (and how) to indicate water depth; see `&#8220;Details&#8221;.</p></td>
+    </tr>
+    <tr>
+      <th>xlim, ylim</th>
+      <td><p>limits of plot axes, as for <code><a href='https://rdrr.io/r/graphics/plot.default.html'>plot.default()</a></code> and other conventional
+plotting functions.</p></td>
     </tr>
     <tr>
       <th>xlab</th>
@@ -218,9 +225,7 @@ see <code><a href='https://rdrr.io/pkg/oce/man/plotTS.html'>oce::plotTS()</a></c
     <tr>
       <th>...</th>
       <td><p>extra arguments passed to the plot calls that are made
-to within this function. A common use for <code>which="map"</code> cases is
-to set <code>xlim</code> and <code>ylim</code> to get enlarge the plot region, so a coastline
-becomes visible.</p></td>
+to within this function.</p></td>
     </tr>
     </table>
 
@@ -243,7 +248,7 @@ that shows water depth. There are three possible values for <code>bathymetry</co
 <li><p><code>TRUE</code> (the default), meaning to draw bathymetry using
 data downloaded with <code><a href='https://rdrr.io/pkg/marmap/man/getNOAA.bathy.html'>marmap::getNOAA.bathy()</a></code>, as in Example 4;</p></li>
 <li><p>A list with items controlling both the bathymetry data and its
-representation in the plot, as in Example 6.  Those items are:
+representation in the plot, as in Example 5.  Those items are:
 a. <code>source</code>, a mandatory value that either the string <code>"auto"</code> (the default) to use
 <code><a href='https://rdrr.io/pkg/marmap/man/getNOAA.bathy.html'>marmap::getNOAA.bathy()</a></code> to download the data, or a value
 returned by a previous call to that function;
@@ -272,7 +277,7 @@ for other arguments that can be provided.</p></li>
 <span class='no'>lat</span> <span class='kw'>&lt;-</span> <span class='no'>index</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]]
 <span class='no'>dist</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/oce/man/geodDist.html'>geodDist</a></span>(<span class='no'>lon</span>, <span class='no'>lat</span>, -<span class='fl'>77.06</span>, <span class='fl'>26.54</span>)
 <span class='no'>o</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span>(<span class='no'>dist</span>)
-<span class='no'>index30</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='no'>o</span>[<span class='fl'>1</span>:<span class='fl'>30</span>])</div><div class='output co'>#&gt; <span class='message'>Kept 30 profiles (3.1%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span>(<span class='no'>index30</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]], <span class='no'>index30</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]], <span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>20</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='st'>"blue"</span>)</div><div class='img'><img src='plot-argoFloats-ANY-method-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>index30</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='no'>o</span>[<span class='fl'>1</span>:<span class='fl'>30</span>])</div><div class='output co'>#&gt; <span class='message'>Kept 30 profiles (3.15%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span>(<span class='no'>index30</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]], <span class='no'>index30</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]], <span class='kw'>pch</span><span class='kw'>=</span><span class='fl'>20</span>, <span class='kw'>col</span><span class='kw'>=</span><span class='st'>"blue"</span>)</div><div class='img'><img src='plot-argoFloats-ANY-method-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Example 3: TS of first 10 profiles</span>
 <span class='co'># (Slow, so not run by default.)</span>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
@@ -291,7 +296,7 @@ for other arguments that can be provided.</p></li>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mar</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>1</span>, <span class='fl'>1</span>))
 <span class='co'># Note that colormap shows water depth, not elevation above sea level</span>
-<span class='no'>bathy</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>marmap</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/marmap/man/getNOAA.bathy.html'>getNOAA.bathy</a></span>(-<span class='fl'>82</span>, -<span class='fl'>71</span>, <span class='fl'>23</span>, <span class='fl'>30</span>, <span class='fl'>1</span>, <span class='kw'>keep</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='no'>bathy</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>marmap</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/marmap/man/getNOAA.bathy.html'>getNOAA.bathy</a></span>(-<span class='fl'>82</span>, -<span class='fl'>71</span>, <span class='fl'>23</span>, <span class='fl'>30</span>, <span class='fl'>2</span>, <span class='kw'>keep</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
 <span class='no'>cm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/oce/man/colormap.html'>colormap</a></span>(<span class='kw'>zlim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, -<span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span>(<span class='no'>bathy</span>)), <span class='kw'>col</span><span class='kw'>=</span><span class='kw'>function</span>(<span class='no'>...</span>) <span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/oce/man/oceColorsGebco.html'>oceColorsGebco</a></span>(<span class='no'>...</span>)))
 <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>index</span>, <span class='kw'>bathymetry</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>source</span><span class='kw'>=</span><span class='no'>bathy</span>, <span class='kw'>keep</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>colormap</span><span class='kw'>=</span><span class='no'>cm</span>, <span class='kw'>palette</span><span class='kw'>=</span><span class='fl'>TRUE</span>))}</div></pre>
   </div>
