@@ -1,4 +1,2 @@
-This video demonstrates how to use the argoFloats R package
-to plot a trajectory plot coloured coded by time, using
-measurements made by Argo floats near Bahamas.
+This video demonstrates how to use the argoFloats R package to plot a trajectory plot coloured-coded by time, using measurements made by Argo floats near the Bahamas.
 
