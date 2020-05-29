@@ -72,6 +72,10 @@
 #' `"P"` for Pacific Ocean Area, from 145 E to 70 W, and
 #' `"I"` for Indian Ocean Area, from 20 E to 145 E.
 #' See example 10.
+#' 
+#' 11. A character named `mode`, which permits `realtime` or `delayed` to distinguish
+#' between the Argo modes
+#' See example 11. 
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -84,7 +88,7 @@
 #'
 #' @param ... the first entry here must be either (a)
 #' a list named `circle`, `rectangle`, `polygon`,
-#' `parameter`, `time`, `institution`, `id`, or `ocean`
+#' `parameter`, `time`, `institution`, `id`,`ocean`, or `mode`
 #' (examples 2 through 8)
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
@@ -150,6 +154,29 @@
 #' \dontrun{
 #' ai <- getIndex(filename=='merged', destdir = '~/data/argo')
 #' index8 <- subset(ai, deep=TRUE) }
+#' 
+#' # Example 10: subset data by ocean
+#' \dontrun{
+#' ai <- getIndex()
+#' index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
+#' plot(index10, which='map') # To get a visual
+#' atlantic <- subset(index10, ocean='A') # Subsetting for Atlantic Ocean
+#' pacific <- subset(index10, ocean='P')
+#' points(atlantic[['longitude']], atlantic[['latitude']], pch=20, col=2)
+#' points(pacific[['longitude']], pacific[['latitude']], pch=20, col=3) }
+#' 
+#' # Example 11: subset by delayed time
+#' \dontrun{
+#' data('index')
+#' index11 <- subset(index, mode='delayed')
+#' profiles <- getProfiles(index11)
+#' argos <- readProfiles(profiles)
+#' oxygen <- argos[['oxygen']]
+#' pressure <- argos[['pressure']]
+#' plot(oxygen, pressure, ylim=rev(range(pressure)), na.rm=TRUE)
+#' 
+#' 
+#' }
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -166,7 +193,7 @@ setMethod(f="subset",
               silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID', or 'ocean'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID', 'ocean', or 'mode'")
                   if (length(dots) > 1) {
                       if (length(dots) > 2 || !("silent" %in% dotsNames))
                           stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
@@ -330,9 +357,18 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
+                  } else if(dotsNames[1]=="mode") {
+                      mode <- dots[[1]]
+                      if(!is.charcter(dots[1]))
+                          stop("In subset,argoFloats-method() : 'mode' must be character containing 'realtime' or 'delayed'")
+                      realtime <- grep("^[a-z]*/[0-9]*/profiles/.{0,1}R.*$", x[["file"]])
+                      delayed <- grep("^[a-z]*/[0-9]*/profiles/.{0,1}D.*$", x[["file"]])
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
+                      x@data$index <- x@data$index[realtime, ]
+                      x@data$index <- x@data$index[delayed, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', or 'ocean'", call.=FALSE)
-                  }
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', 'ocean', or 'mode'", call.=FALSE)
               } else {
                   if (length(dotsNames) != 0)
                       stop("in subset,argoFloats-method() : cannot give both 'subset' and '...' arguments", call.=FALSE)
@@ -348,7 +384,7 @@ setMethod(f="subset",
                   }
               }
               x
-          }
+              }
 )
 
 
