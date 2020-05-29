@@ -173,9 +173,7 @@
 #' argos <- readProfiles(profiles)
 #' oxygen <- argos[['oxygen']]
 #' pressure <- argos[['pressure']]
-#' plot(oxygen, pressure, ylim=rev(range(pressure)), na.rm=TRUE)
-#' 
-#' 
+#' plot(oxygen, pressure, ylim=rev(range(pressure)), na.rm=TRUE, type='o')
 #' }
 #'
 #' @author Dan Kelley and Jaimie Harbin
