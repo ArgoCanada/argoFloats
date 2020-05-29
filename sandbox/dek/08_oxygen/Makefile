@@ -1,5 +1,5 @@
 all: $(patsubst %.R,%.out,$(wildcard *.R))
 %.out: %.R
-	R --no-save < $< &> $@
+	Rscript $< &> $@
 clean:
 	-rm *.out *.png *.pdf *~
