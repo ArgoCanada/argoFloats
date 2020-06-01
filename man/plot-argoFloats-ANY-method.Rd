@@ -105,8 +105,8 @@ b. \code{keep}, an optional logical value (with \code{TRUE} as the default) that
 \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to indicate whether to keep a local file of bathymetry,
 as a way to avoid intermittent problems with the NOAA server;
 c. \code{colormap}, an optional value that is either the string \code{"auto"} (the default)
-for a form of GEBCO colors, or a value computed with \code{\link[oce:colormap]{oce::colormap()}}
-applied to the bathymetry data; and
+for a form of GEBCO colors computed with \code{\link[oce:oceColorsGebco]{oce::oceColorsGebco()}}, or a value
+computed with \code{\link[oce:colormap]{oce::colormap()}} applied to the bathymetry data; and
 d. \code{palette}, an optional logical value (with \code{TRUE} as the default)
 indicating whether to draw a depth-color palette to the right of the plot.
 }

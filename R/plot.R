@@ -34,8 +34,8 @@ geographical <- TRUE
 #'           [marmap::getNOAA.bathy()] to indicate whether to keep a local file of bathymetry,
 #'           as a way to avoid intermittent problems with the NOAA server;
 #'        c. `colormap`, an optional value that is either the string `"auto"` (the default)
-#'           for a form of GEBCO colors, or a value computed with [oce::colormap()]
-#'           applied to the bathymetry data; and
+#'           for a form of GEBCO colors computed with [oce::oceColorsGebco()], or a value
+#'           computed with [oce::colormap()] applied to the bathymetry data; and
 #'        d. `palette`, an optional logical value (with `TRUE` as the default)
 #'           indicating whether to draw a depth-color palette to the right of the plot.
 #'
@@ -256,7 +256,6 @@ setMethod(f="plot",
                           ##                      ifelse(latitudeSpan < 20, 2,
                           ##                             ifelse(latitudeSpan < 90, 8, 60)))
                           resolution <- as.integer(round(1 + 60 * latitudeSpan / 400))
-                          message("resolution=", resolution)
                           argoFloatsDebug(debug, "  Dlat=", round(Dlat, 4), "\n", sep="")
                           argoFloatsDebug(debug, "  Dlon=", round(Dlon, 4), "\n", sep="")
                           argoFloatsDebug(debug, "  resolution=", resolution, "\n", sep="")
@@ -355,16 +354,40 @@ setMethod(f="plot",
                          pch=if (is.null(pch)) 21 else pch,
                          bg=if (is.null(bg)) "red" else bg,
                          ...)
-                  if (requireNamespace("ocedata", quietly=TRUE)) {
-                      data("coastlineWorldFine", package="ocedata", envir=environment())
-                      coastlineWorldFine <- get("coastlineWorldFine")
-                      polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]],
-                              col="tan")
-                  } else if (requireNamespace("oce", quietly=TRUE)) {
+                  ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
+                  ## on just the distance spanned in the north-south direction.
+
+                  ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
+                  if (ocedataIsInstalled) {
+                      usr <- par("usr")
+                      l <- geodDist(usr[1], usr[3], usr[1], usr[4]) # length [km] on left margin
+                      r <- geodDist(usr[2], usr[3], usr[2], usr[4]) # length [km] on right margin
+                      b <- geodDist(usr[1], usr[1], usr[2], usr[1]) # length [km] on bottom margin
+                      t <- geodDist(usr[1], usr[4], usr[2], usr[4]) # length [km] on top margin
+                      mapSpan <- max(l, r, b, t) # largest length [km]
+                      C <- 2 * 3.14 * 6.4e3 # circumferance of earth [km]
+                      argoFloatsDebug(debug, "mapSpan=", mapSpan, ", C=", C, "\n")
+                      if (mapSpan < 500) {
+                          argoFloatsDebug(debug, "using coastlineWorldFine from ocedata package\n")
+                          data("coastlineWorldFine", package="ocedata", envir=environment())
+                          coastlineWorldFine <- get("coastlineWorldFine")
+                          polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]], col="tan")
+                      } else if (mapSpan < C / 4) {
+                          argoFloatsDebug(debug, "using coastlineWorldMedium from ocedata package\n")
+                          data("coastlineWorldMedium", package="ocedata", envir=environment())
+                          coastlineWorldMedium <- get("coastlineWorldMedium")
+                          polygon(coastlineWorldMedium[["longitude"]], coastlineWorldMedium[["latitude"]], col="tan")
+                      } else {
+                          argoFloatsDebug(debug, "using coastlineWorld from oce package, since the span is large\n")
+                          data("coastlineWorldg", package="ocedata", envir=environment())
+                          coastlineWorldg <- get("coastlineWorldMedium")
+                          polygon(coastlineWorldg[["longitude"]], coastlineWorldMedium[["latitude"]], col="tan")
+                      }
+                  } else {
+                      argoFloatsDebug(debug, "using coastlineWorld from oce package, since the ocedata package is not installedi\n")
                       data("coastlineWorld", package="ocedata", envir=environment())
                       coastlineWorld <- get("coastlineWorld")
-                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]],
-                              col="tan")
+                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="tan")
                   }
                   par(mar=omar, mgp=omgp)
               } else if (which == "TS") {
