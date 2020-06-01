@@ -366,7 +366,7 @@ setMethod(f="plot",
               } else if (which == "TS") {
                   argoFloatsDebug(debug, "TS plot\n", sep="")
                   if ((x[["type"]] != "argos"))
-                      stop("In plot() : x must have been created by readProfiles()", call.=FALSE)
+                      stop("In plot,argoFloats-method(): : x must have been created by readProfiles()", call.=FALSE)
                   if (!(eos %in% c("gsw", "unesco")))
                       stop("eos must be \"gsw\" or \"unesco\", not \"", eos, "\"")
                   salinity <- unlist(x[["salinity", debug=debug]])
@@ -394,8 +394,16 @@ setMethod(f="plot",
                   par(mar=mar, mgp=mgp)
                   oce::plotTS(ctd, cex=cex, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
                   par(mar=omar, mgp=omgp)
+              } else if (which == "diagnostic") {
+                  if (x[['type']] != 'argos')
+                      stop("In plot,argoFloats-method(): The type of x must be 'argos'")
+                  dots <- list(...)
+                  variable <- dots$variable
+                  knownVariables <- names(x[[1]]@metadata$flags)
+                  if (!(variable %in% knownVariables))
+                      stop("Variable '", variable, "' not found. Try one of: ", paste(knownVariables, collapse=', '))
               } else {
-                  stop("cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'")
+                  stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'")
               }
               argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1)
           }
