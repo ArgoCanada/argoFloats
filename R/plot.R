@@ -250,9 +250,13 @@ setMethod(f="plot",
                           usr <- par("usr")
                           argoFloatsDebug(debug, "  after using plot.window(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
                           latitudeSpan <- usr[4] - usr[3]
-                          Dlon <- (usr[2] - usr[1]) / 10
-                          Dlat <- (usr[4] - usr[3]) / 10
-                          resolution <- ifelse(latitudeSpan < 5, 1, ifelse(latitudeSpan < 20, 4, 60))
+                          Dlon <- (usr[2] - usr[1]) / 20
+                          Dlat <- (usr[4] - usr[3]) / 20
+                          ## resolution <- ifelse(latitudeSpan < 5, 1,
+                          ##                      ifelse(latitudeSpan < 20, 2,
+                          ##                             ifelse(latitudeSpan < 90, 8, 60)))
+                          resolution <- as.integer(round(1 + 60 * latitudeSpan / 400))
+                          message("resolution=", resolution)
                           argoFloatsDebug(debug, "  Dlat=", round(Dlat, 4), "\n", sep="")
                           argoFloatsDebug(debug, "  Dlon=", round(Dlon, 4), "\n", sep="")
                           argoFloatsDebug(debug, "  resolution=", resolution, "\n", sep="")
@@ -265,9 +269,9 @@ setMethod(f="plot",
                                                              keep=bathymetry$keep),
                                        silent=FALSE)
                           argoFloatsDebug(debug, "  grid size", paste(dim(bathy), collapse="x"), "\n")
-                          if (inherits(bathymetry, "try-error")) {
+                          if (inherits(bathymetry, "try-error"))
                               warning("could not download bathymetry from NOAA server\n")
-                          }
+                          argoFloatsDebug(debug, "  bathy span=", min(bathy, na.rm=TRUE), " to ", max(bathy, na.rm=TRUE), "\n", sep="")
                       } else if (inherits(bathymetry$source, "bathy")) {
                           argoFloatsDebug(debug, "using supplied bathymetry$source\n", sep="")
                           bathy <- bathymetry$source
@@ -276,7 +280,7 @@ setMethod(f="plot",
                       }
                       ## Handle colormap
                       if (is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
-                          argoFloatsDebug(debug, "using a default colormap\n")
+                          argoFloatsDebug(debug, "setting a default colormap for 0m to ", -min(bathy), "m depth\n")
                           bathymetry$colormap <- oce::colormap(zlim=c(0, -min(bathy)),
                                                                col=function(...)
                                                                    rev(oce::oceColorsGebco(...)))
