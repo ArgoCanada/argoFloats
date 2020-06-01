@@ -14,7 +14,7 @@ indices of \code{x@data$index} to keep (example 1).}
 
 \item{...}{the first entry here must be either (a)
 a list named \code{circle}, \code{rectangle}, \code{polygon},
-\code{parameter}, \code{time}, \code{institution}, \code{id}, or \code{ocean}
+\code{parameter}, \code{time}, \code{institution}, \code{id},\code{ocean}, or \code{mode}
 (examples 2 through 8)
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
@@ -87,6 +87,9 @@ ocean. The permitted values are:
 \code{"P"} for Pacific Ocean Area, from 145 E to 70 W, and
 \code{"I"} for Indian Ocean Area, from 20 E to 145 E.
 See example 10.
+\item A character named \code{mode}, which permits \code{realtime} or \code{delayed} to distinguish
+between the Argo modes
+See example 11.
 }
 
 In all cases, the notation is that longitude is positive
@@ -148,6 +151,27 @@ index9 <- subset(ai, ID='1900722') }
 \dontrun{
 ai <- getIndex(filename=='merged', destdir = '~/data/argo')
 index8 <- subset(ai, deep=TRUE) }
+
+# Example 10: subset data by ocean
+\dontrun{
+ai <- getIndex()
+index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
+plot(index10, which='map') # To get a visual
+atlantic <- subset(index10, ocean='A') # Subsetting for Atlantic Ocean
+pacific <- subset(index10, ocean='P')
+points(atlantic[['longitude']], atlantic[['latitude']], pch=20, col=2)
+points(pacific[['longitude']], pacific[['latitude']], pch=20, col=3) }
+
+# Example 11: subset by delayed time
+\dontrun{
+data('index')
+index11 <- subset(index, mode='delayed')
+profiles <- getProfiles(index11)
+argos <- readProfiles(profiles)
+oxygen <- argos[['oxygen']]
+pressure <- argos[['pressure']]
+plot(oxygen, pressure, ylim=rev(range(pressure)), na.rm=TRUE, type='o')
+}
 
 }
 \author{
