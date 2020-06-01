@@ -72,10 +72,10 @@
 #' `"P"` for Pacific Ocean Area, from 145 E to 70 W, and
 #' `"I"` for Indian Ocean Area, from 20 E to 145 E.
 #' See example 10.
-#' 
+#'
 #' 11. A character named `mode`, which permits `realtime` or `delayed` to distinguish
 #' between the Argo modes
-#' See example 11. 
+#' See example 11.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -154,7 +154,7 @@
 #' \dontrun{
 #' ai <- getIndex(filename=='merged', destdir = '~/data/argo')
 #' index8 <- subset(ai, deep=TRUE) }
-#' 
+#'
 #' # Example 10: subset data by ocean
 #' \dontrun{
 #' ai <- getIndex()
@@ -164,7 +164,7 @@
 #' pacific <- subset(index10, ocean='P')
 #' points(atlantic[['longitude']], atlantic[['latitude']], pch=20, col=2)
 #' points(pacific[['longitude']], pacific[['latitude']], pch=20, col=3) }
-#' 
+#'
 #' # Example 11: subset by delayed time
 #' \dontrun{
 #' data('index')
@@ -266,7 +266,7 @@ setMethod(f="subset",
                       ## may be a more straightforward way, but my (admittedly shallow) reading
                       ## of the 'sf' function list did not uncover anything promising, and my
                       ## tests show that this scheme works.
-
+                      
                       ## see https://github.com/ArgoCanada/argoFloats/issues/86
                       ok <- is.finite(alon) & is.finite(alat)
                       Polygon <- sf::st_polygon(list(outer=cbind(plon, plat, rep(0, length(plon)))))
@@ -355,18 +355,23 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
-                  } else if(dotsNames[1]=="mode") {
+                  } else if (dotsNames[1]=="mode") {
                       mode <- dots[[1]]
-                      if(!is.charcter(dots[1]))
-                          stop("In subset,argoFloats-method() : 'mode' must be character containing 'realtime' or 'delayed'")
-                      realtime <- grep("^[a-z]*/[0-9]*/profiles/.{0,1}R.*$", x[["file"]])
-                      delayed <- grep("^[a-z]*/[0-9]*/profiles/.{0,1}D.*$", x[["file"]])
+                      if (!is.character(mode))
+                          stop("In subset,argoFloats-method() : 'mode' must be character value")
+                      if (mode == 'delayed') {
+                          keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}D.*$", x[["file"]])
+                      } else if (mode == 'realtime') {
+                          keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}R.*$", x[["file"]])
+                      } else {
+                          stop("In subset,argoFloats-method() : 'mode' must be either 'realtime' or 'delayed', not '", mode, "'")
+                      }
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
-                      x@data$index <- x@data$index[realtime, ]
-                      x@data$index <- x@data$index[delayed, ]
+                      x@data$index <- x@data$index[keep, ]
                   } else {
                       stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', 'ocean', or 'mode'", call.=FALSE)
+                  }
               } else {
                   if (length(dotsNames) != 0)
                       stop("in subset,argoFloats-method() : cannot give both 'subset' and '...' arguments", call.=FALSE)
@@ -382,7 +387,7 @@ setMethod(f="subset",
                   }
               }
               x
-              }
+          }
 )
 
 
