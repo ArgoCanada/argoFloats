@@ -19,7 +19,7 @@ drawPalette(colormap=cm, tformat="%Y-%m", pos=3)
 plot(index0, bathymetry=TRUE)
 points(lon, lat, pch=21, cex=1, bg=cm$zcol, col="black", lwd=1.2)
 lines(lon, lat)
-sub <- seq(0, length(lon), by=10)
+sub <- seq(1, length(lon), by=10)
 text(lon[sub], lat[sub], profile[sub], cex=2/3, pos=1)
 mtext(paste("Float", ID0), adj=0)
 
