@@ -24,5 +24,5 @@
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/06/video06_trajectory_by_time.R
 * **argoFloats R 07: maps with bathymetry** (June 4, 2020)
     - Jaimie Harbin and Dan Kelley
-    - Video TBA
+    - Video https://youtu.be/Lc32MTMCbbI
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/07/video07_map_with_bathymetry.R

@@ -1,5 +1,5 @@
-This video demonstrates how to show bathymetry on a map plot, focussing on a float that circles within the subpolar gyre of the North Atlantic ocean.
+This video demonstrates how to show bathymetry on a map plot, focusing on a float that circles within the subpolar gyre of the North Atlantic ocean.
 
-Tags: R language, argo float, bathymetry, North Atlantic, oceanography
+R language,oceanography,Dalhousie University,Argo float,computing,data processing,bathymetry,gyre
 
 
