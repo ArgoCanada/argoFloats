@@ -65,12 +65,15 @@ readProfiles <- function(profiles, handleFlags=TRUE, silent=FALSE, debug=0)
     ## has to do with oce::read.argo() doing a require(ncdf4), which causes an error message in
     ## checking argoFloats.  But if we put argoFloats in the "Depends" field of the argoFloats
     ## DESCRIPTION file, we get an error because ArgoFloats is not using it.
-    ncversion <- nc_version()
+    ncversion <- ncdf4::nc_version()
     argoFloatsDebug(debug, "ncdf4 version: ", ncversion, "\n")
 
     res <- new("argoFloats", type="argos")
     if (is.character(profiles)) {
         argoFloatsDebug(debug, "case 1: vector of character strings\n")
+        fileExists <- sapply(profiles, file.exists)
+        if (any(!fileExists))
+            stop("cannot find the following files: \"", paste(profiles[!fileExists], collapse="\", \""), "\"")
         res@data$argos <- lapply(profiles, read.argo, debug=debug-1)
     } else if (inherits(profiles, "argoFloats")) {
         type <- profiles[["type"]]
@@ -94,7 +97,7 @@ readProfiles <- function(profiles, handleFlags=TRUE, silent=FALSE, debug=0)
     }
     ## tabulate flags (ignore "Adjusted" items)
     if (!silent || debug) {
-        flagNamesAll <- unique(sort(sapply(res@data$argos, function(a) names(a@metadata$flags))))
+        flagNamesAll <- unique(sort(unlist(lapply(res@data$argos, function(a) names(a@metadata$flags)))))
         flagNames <- flagNamesAll[!grepl("Adjusted$", flagNamesAll)]
         for (flagName in flagNames) {
             percentBad <- sapply(res@data$argos,

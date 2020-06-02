@@ -22,3 +22,7 @@
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/7BB3UuwjUqo
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/06/video06_trajectory_by_time.R
+* **argoFloats R 07: maps with bathymetry** (June 4, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video TBA
+    - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/07/video07_map_with_bathymetry.R

@@ -256,8 +256,8 @@ b. <code>keep</code>, an optional logical value (with <code>TRUE</code> as the d
 <code><a href='https://rdrr.io/pkg/marmap/man/getNOAA.bathy.html'>marmap::getNOAA.bathy()</a></code> to indicate whether to keep a local file of bathymetry,
 as a way to avoid intermittent problems with the NOAA server;
 c. <code>colormap</code>, an optional value that is either the string <code>"auto"</code> (the default)
-for a form of GEBCO colors, or a value computed with <code><a href='https://rdrr.io/pkg/oce/man/colormap.html'>oce::colormap()</a></code>
-applied to the bathymetry data; and
+for a form of GEBCO colors computed with <code><a href='https://rdrr.io/pkg/oce/man/oceColorsGebco.html'>oce::oceColorsGebco()</a></code>, or a value
+computed with <code><a href='https://rdrr.io/pkg/oce/man/colormap.html'>oce::colormap()</a></code> applied to the bathymetry data; and
 d. <code>palette</code>, an optional logical value (with <code>TRUE</code> as the default)
 indicating whether to draw a depth-color palette to the right of the plot.</p></li>
 </ol></li>
@@ -310,7 +310,7 @@ for other arguments that can be provided.</p></li>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Dan Kelley.</p>
+  <p>Developed by Dan Kelley, Jaimie Harbin.</p>
 </div>
 
 <div class="pkgdown">

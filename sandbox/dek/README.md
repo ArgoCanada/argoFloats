@@ -10,4 +10,5 @@ directories here.
 * `05_hex_logo` hex log ideas
 * `06_name_icon` name badge for virtual meetings
 * `07_trajectory` draw trajectory of an individual float
+* `08_oxygen` what explains oxygen flags?
 

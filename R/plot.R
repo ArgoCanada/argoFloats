@@ -34,8 +34,8 @@ geographical <- TRUE
 #'           [marmap::getNOAA.bathy()] to indicate whether to keep a local file of bathymetry,
 #'           as a way to avoid intermittent problems with the NOAA server;
 #'        c. `colormap`, an optional value that is either the string `"auto"` (the default)
-#'           for a form of GEBCO colors, or a value computed with [oce::colormap()]
-#'           applied to the bathymetry data; and
+#'           for a form of GEBCO colors computed with [oce::oceColorsGebco()], or a value
+#'           computed with [oce::colormap()] applied to the bathymetry data; and
 #'        d. `palette`, an optional logical value (with `TRUE` as the default)
 #'           indicating whether to draw a depth-color palette to the right of the plot.
 #'
@@ -250,9 +250,12 @@ setMethod(f="plot",
                           usr <- par("usr")
                           argoFloatsDebug(debug, "  after using plot.window(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
                           latitudeSpan <- usr[4] - usr[3]
-                          Dlon <- (usr[2] - usr[1]) / 10
-                          Dlat <- (usr[4] - usr[3]) / 10
-                          resolution <- ifelse(latitudeSpan < 5, 1, ifelse(latitudeSpan < 20, 4, 60))
+                          Dlon <- (usr[2] - usr[1]) / 20
+                          Dlat <- (usr[4] - usr[3]) / 20
+                          ## resolution <- ifelse(latitudeSpan < 5, 1,
+                          ##                      ifelse(latitudeSpan < 20, 2,
+                          ##                             ifelse(latitudeSpan < 90, 8, 60)))
+                          resolution <- as.integer(round(1 + 60 * latitudeSpan / 400))
                           argoFloatsDebug(debug, "  Dlat=", round(Dlat, 4), "\n", sep="")
                           argoFloatsDebug(debug, "  Dlon=", round(Dlon, 4), "\n", sep="")
                           argoFloatsDebug(debug, "  resolution=", resolution, "\n", sep="")
@@ -265,9 +268,9 @@ setMethod(f="plot",
                                                              keep=bathymetry$keep),
                                        silent=FALSE)
                           argoFloatsDebug(debug, "  grid size", paste(dim(bathy), collapse="x"), "\n")
-                          if (inherits(bathymetry, "try-error")) {
+                          if (inherits(bathymetry, "try-error"))
                               warning("could not download bathymetry from NOAA server\n")
-                          }
+                          argoFloatsDebug(debug, "  bathy span=", min(bathy, na.rm=TRUE), " to ", max(bathy, na.rm=TRUE), "\n", sep="")
                       } else if (inherits(bathymetry$source, "bathy")) {
                           argoFloatsDebug(debug, "using supplied bathymetry$source\n", sep="")
                           bathy <- bathymetry$source
@@ -276,7 +279,7 @@ setMethod(f="plot",
                       }
                       ## Handle colormap
                       if (is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
-                          argoFloatsDebug(debug, "using a default colormap\n")
+                          argoFloatsDebug(debug, "setting a default colormap for 0m to ", -min(bathy), "m depth\n")
                           bathymetry$colormap <- oce::colormap(zlim=c(0, -min(bathy)),
                                                                col=function(...)
                                                                    rev(oce::oceColorsGebco(...)))
@@ -351,22 +354,46 @@ setMethod(f="plot",
                          pch=if (is.null(pch)) 21 else pch,
                          bg=if (is.null(bg)) "red" else bg,
                          ...)
-                  if (requireNamespace("ocedata", quietly=TRUE)) {
-                      data("coastlineWorldFine", package="ocedata", envir=environment())
-                      coastlineWorldFine <- get("coastlineWorldFine")
-                      polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]],
-                              col="tan")
-                  } else if (requireNamespace("oce", quietly=TRUE)) {
+                  ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
+                  ## on just the distance spanned in the north-south direction.
+
+                  ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
+                  if (ocedataIsInstalled) {
+                      usr <- par("usr")
+                      l <- geodDist(usr[1], usr[3], usr[1], usr[4]) # length [km] on left margin
+                      r <- geodDist(usr[2], usr[3], usr[2], usr[4]) # length [km] on right margin
+                      b <- geodDist(usr[1], usr[1], usr[2], usr[1]) # length [km] on bottom margin
+                      t <- geodDist(usr[1], usr[4], usr[2], usr[4]) # length [km] on top margin
+                      mapSpan <- max(l, r, b, t) # largest length [km]
+                      C <- 2 * 3.14 * 6.4e3 # circumferance of earth [km]
+                      argoFloatsDebug(debug, "mapSpan=", mapSpan, ", C=", C, "\n")
+                      if (mapSpan < 500) {
+                          argoFloatsDebug(debug, "using coastlineWorldFine from ocedata package\n")
+                          data("coastlineWorldFine", package="ocedata", envir=environment())
+                          coastlineWorldFine <- get("coastlineWorldFine")
+                          polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]], col="tan")
+                      } else if (mapSpan < C / 4) {
+                          argoFloatsDebug(debug, "using coastlineWorldMedium from ocedata package\n")
+                          data("coastlineWorldMedium", package="ocedata", envir=environment())
+                          coastlineWorldMedium <- get("coastlineWorldMedium")
+                          polygon(coastlineWorldMedium[["longitude"]], coastlineWorldMedium[["latitude"]], col="tan")
+                      } else {
+                          argoFloatsDebug(debug, "using coastlineWorld from oce package, since the span is large\n")
+                          data("coastlineWorldg", package="ocedata", envir=environment())
+                          coastlineWorldg <- get("coastlineWorldMedium")
+                          polygon(coastlineWorldg[["longitude"]], coastlineWorldMedium[["latitude"]], col="tan")
+                      }
+                  } else {
+                      argoFloatsDebug(debug, "using coastlineWorld from oce package, since the ocedata package is not installedi\n")
                       data("coastlineWorld", package="ocedata", envir=environment())
                       coastlineWorld <- get("coastlineWorld")
-                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]],
-                              col="tan")
+                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="tan")
                   }
                   par(mar=omar, mgp=omgp)
               } else if (which == "TS") {
                   argoFloatsDebug(debug, "TS plot\n", sep="")
                   if ((x[["type"]] != "argos"))
-                      stop("In plot() : x must have been created by readProfiles()", call.=FALSE)
+                      stop("In plot,argoFloats-method(): : x must have been created by readProfiles()", call.=FALSE)
                   if (!(eos %in% c("gsw", "unesco")))
                       stop("eos must be \"gsw\" or \"unesco\", not \"", eos, "\"")
                   salinity <- unlist(x[["salinity", debug=debug]])
@@ -394,8 +421,16 @@ setMethod(f="plot",
                   par(mar=mar, mgp=mgp)
                   oce::plotTS(ctd, cex=cex, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
                   par(mar=omar, mgp=omgp)
+              } else if (which == "diagnostic") {
+                  if (x[['type']] != 'argos')
+                      stop("In plot,argoFloats-method(): The type of x must be 'argos'")
+                  dots <- list(...)
+                  variable <- dots$variable
+                  knownVariables <- names(x[[1]]@metadata$flags)
+                  if (!(variable %in% knownVariables))
+                      stop("Variable '", variable, "' not found. Try one of: ", paste(knownVariables, collapse=', '))
               } else {
-                  stop("cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'")
+                  stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'")
               }
               argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1)
           }

@@ -1,28 +1,34 @@
 library(argoFloats)
 library(oce)
-item <- c("oxygen", "temperature", "salinity","pressure")
-q <- function(x) 
-    100 * (1 - sum(4 == x[['paste0(item),Flag']]) / length(x[['paste0(item)']]))
-Mean <- function(x) 
-    mean(x[['item']])
-Min <- function(x)
-    min(x[['item']])
-Max <- function(x)
-    max(x[['item']])
+qf <- function(x) {
+    100 * (1 - sum(4 == x[[paste0(variable, 'Flag')]]) / length(x[[paste0(variable, 'Flag')]]))
+}
+meanf <- function(x) {
+    mean(x[[variable, na.rm=TRUE]])
+}
 if (!exists("bai")) {
     bai <- getIndex(file='bgc')
     F5901462 <- subset(bai, ID='5901462') # Follow 5901462 float
-    # Fraction of bad oxygen
     profiles <- getProfiles(F5901462)
     argos <- readProfiles(profiles, handleFlags=FALSE) 
 }
 time <- oce::numberAsPOSIXct(unlist(lapply(argos[['profile']], function(x) x[['time']])))
-q <- unlist(lapply(argos[['profile']], q))
-mean <- unlist(lapply(argos[['profile']], Mean))
-min <- unlist(lapply(argos[['profile']], Min))
-max <- unlist(lapply(argos[['profile']], Max))
-par(mfrow=c(4,1))
-oce.plot.ts(time,q, ylab="Oxygen Quality")
-oce.plot.ts(time,mean, ylab="Oxygen Mean")
-oce.plot.ts(time,min, ylab="Oxygen Minimum")
-oce.plot.ts(time,max, ylab="Oxygen Maximum")
+variables <- c('oxygen', 'salinity', 'temperature')
+for (variable in variables) {
+    q <- unlist(lapply(argos[['profile']], qf))
+    m <- unlist(lapply(argos[['profile']], meanf))
+    par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
+    if (any(is.finite(q))) {
+        oce.plot.ts(time,q, ylab=paste(variable, "% Good"), drawTimeRange = FALSE)
+        abline(h=50, col='red', lty='dashed')
+        oce.plot.ts(time, m, ylab=paste(variable, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
+        points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
+    } else {
+        plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
+        box()
+        text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
+        plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
+        box()
+        text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
+    }
+}
