@@ -1,13 +1,17 @@
 library(argoFloats)
 library(oce)
 if (!exists("ai")) {
-    ai <- getIndex() 
-    index0 <- subset(ai, ID='6900388')}
-if (!interactive()) png("video07.png", unit="in", width=3.5, height=3.2, pointsize=11, res=150)
+    ai <- getIndex()
+    index0 <- subset(ai, ID='6900388')
+}
+
 lon <- index0[["longitude"]]
 lat <- index0[["latitude"]]
 profile <- index0[['profile']]
 t <- index0[["date"]]
+
+if (!interactive()) png("video07.png", unit="in", width=7, height=7, pointsize=11, res=150)
+
 par(mar=c(3,3,1,1))
 cm <- colormap(t, col=oceColorsJet)
 drawPalette(colormap=cm, tformat="%Y-%m", pos=3)
