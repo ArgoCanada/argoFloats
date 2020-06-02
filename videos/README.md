@@ -26,4 +26,3 @@
     - Jaimie Harbin and Dan Kelley
     - Video TBA
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/07/video07_map_with_bathymetry.R
-    -
