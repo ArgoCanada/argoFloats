@@ -71,6 +71,9 @@ readProfiles <- function(profiles, handleFlags=TRUE, silent=FALSE, debug=0)
     res <- new("argoFloats", type="argos")
     if (is.character(profiles)) {
         argoFloatsDebug(debug, "case 1: vector of character strings\n")
+        fileExists <- sapply(profiles, file.exists)
+        if (any(!fileExists))
+            stop("cannot find the following files: \"", paste(profiles[!fileExists], collapse="\", \""), "\"")
         res@data$argos <- lapply(profiles, read.argo, debug=debug-1)
     } else if (inherits(profiles, "argoFloats")) {
         type <- profiles[["type"]]
