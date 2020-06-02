@@ -12,7 +12,6 @@ t <- index0[["date"]]
 
 if (!interactive()) png("video07.png", unit="in", width=7, height=7, pointsize=11, res=150)
 
-par(mar=c(3,3,1,1))
 cm <- colormap(t, col=oceColorsJet)
 drawPalette(colormap=cm, tformat="%Y-%m", pos=3)
 plot(index0, bathymetry=TRUE)
