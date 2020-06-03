@@ -117,7 +117,8 @@ all the profiles in \code{x}, each an \code{argo} object as created by
 is returned.
 \item Otherwise, an error is reported.
 }
-\item If \code{i} is \code{"length"}, the number of oce-type argo objects in \code{x} is returned.
+\item Otherwise, if \code{i} is \code{"length"}, the number of oce-type argo objects in \code{x} is returned.
+\item Otherwise, if \code{i} is \code{"ID"}, a vector of the IDs of the profiles is returned.
 \item Otherwise, if \code{i} is a character value, then it is taken to be
 an item within the \code{metadata} or \code{data} slots of the argo objects
 stored in \code{x}, and the returned value is a list containing that

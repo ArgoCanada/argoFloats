@@ -44,6 +44,11 @@ geographical <- TRUE
 #' The scales for the plot can be altered by putting `Slim` and `Tlim`
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
 #' for other arguments that can be provided.
+#' 
+#' * For `which='diagnostic'`, a plot of variable quality and variable mean
+#' are plotted. This only works if `x` is an object that was created by
+#' [getProfiles()]. The user must also provide the `variable` name of
+#' interest. 
 #'
 #' @param x an [`argoFloats-class`] object.
 #'
@@ -165,7 +170,7 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
-
+                  
                   ## Draw empty plot box, with axes, to set par("usr") for later use with bathymetry.
                   if (geographical) {
                       xlab <- if (is.null(xlab)) "" else xlab
@@ -174,7 +179,7 @@ setMethod(f="plot",
                       xlab <- if (is.null(xlab)) "Longitude" else xlab
                       ylab <- if (is.null(ylab)) "Latitude" else ylab
                   }
-
+                  
                   ## Decode bathymetry
                   if (is.logical(bathymetry)) {
                       drawBathymetry <- bathymetry
@@ -319,7 +324,7 @@ setMethod(f="plot",
                                xaxs="i", yaxs="i",
                                asp=asp,
                                xlab=xlab, ylab=ylab, type="n", axes=FALSE)
-                       }
+                      }
                       argoFloatsDebug(debug, "after plot(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
                       xaxp <- par("xaxp")
                       xat <- seq(xaxp[1], xaxp[2], length.out=xaxp[3]+1)
@@ -342,7 +347,7 @@ setMethod(f="plot",
                                xaxs="i", yaxs="i",
                                asp=asp,
                                xlab=xlab, ylab=ylab, type="n")
-                       }
+                      }
                   }
                   if (drawBathymetry)
                       oce::imagep(as.numeric(rownames(bathy)),
@@ -356,7 +361,7 @@ setMethod(f="plot",
                          ...)
                   ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
                   ## on just the distance spanned in the north-south direction.
-
+                  
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
                   if (ocedataIsInstalled) {
                       usr <- par("usr")
@@ -423,14 +428,43 @@ setMethod(f="plot",
                   par(mar=omar, mgp=omgp)
               } else if (which == "diagnostic") {
                   if (x[['type']] != 'argos')
-                      stop("In plot,argoFloats-method(): The type of x must be 'argos'")
+                      stop("In plot,argoFloats-method(): The type of x must be 'argos'", call.=FALSE)
+                  IDs <- x[['ID']]
+                  nID <- length(unique(IDs))
+                  if (nID != 1)
+                      stop("In plot,argoFloats-method(): It is only possible to plot a diagnostic of a single ID", call.=FALSE)
                   dots <- list(...)
-                  variable <- dots$variable
                   knownVariables <- names(x[[1]]@metadata$flags)
+                  variable <- dots$variable
+                  if (is.null(variable))
+                      stop("In plot,argoFloats-method(): Please provide a variable, one of ", paste(knownVariables, collapse=', '), call.=FALSE)
                   if (!(variable %in% knownVariables))
-                      stop("Variable '", variable, "' not found. Try one of: ", paste(knownVariables, collapse=', '))
+                      stop("In plot,argoFloats-method(): Variable '", variable, "' not found. Try one of: ", paste(knownVariables, collapse=', '), call.=FALSE)
+                  qf <- function(x)
+                      100 * (1 - sum(4 == x[[paste0(variable, 'Flag')]]) / length(x[[paste0(variable, 'Flag')]]))
+                  meanf <- function(x) 
+                      mean(x[[variable, na.rm=TRUE]])
+                  time <- oce::numberAsPOSIXct(unlist(lapply(x[['profile']], function(x) x[['time']])))
+                  for (variable in variable) {
+                      q <- unlist(lapply(x[['profile']], qf))
+                      m <- unlist(lapply(x[['profile']], meanf))
+                      par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
+                      if (any(is.finite(q))) {
+                          oce.plot.ts(time,q, ylab=paste(variable, "% Good"), drawTimeRange = FALSE)
+                          abline(h=50, col='red', lty='dashed')
+                          oce.plot.ts(time, m, ylab=paste(variable, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
+                          points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
+                      } else {
+                          plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
+                          box()
+                          text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
+                          plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
+                          box()
+                          text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
+                      }
+                  }
               } else {
-                  stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'")
+                  stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'", call.=FALSE)
               }
               argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1)
           }
