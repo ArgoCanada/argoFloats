@@ -115,6 +115,10 @@ only works if \code{x} is an object that was created by  \code{\link[=getProfile
 The scales for the plot can be altered by putting \code{Slim} and \code{Tlim}
 arguments in the \code{...} list; see the documentation for \code{\link[oce:plotTS]{oce::plotTS()}}
 for other arguments that can be provided.
+\item For \code{which='diagnostic'}, a plot of variable quality and variable mean
+are plotted. This only works if \code{x} is an object that was created by
+\code{\link[=getProfiles]{getProfiles()}}. The user must also provide the \code{variable} name of
+interest.
 }
 }
 \examples{
