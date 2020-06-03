@@ -76,6 +76,10 @@
 #' 11. A character named `mode`, which permits `realtime` or `delayed` to distinguish
 #' between the Argo modes
 #' See example 11.
+#' 
+#' 12. A character named `profile`, returning indices to keep for a specific profile
+#' number. 
+#' See example 12.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -179,7 +183,8 @@
 #' # Example 12: subset by profile
 #' \dontrun{
 #' data(index)
-#' index12 <- subset(index, profile='001')
+#' index12 <- subset(index, profile='124')
+#' cat("File names with profile number 124:", paste(index12[["file"]]), "\n")
 #' }
 #'
 #' @author Dan Kelley and Jaimie Harbin
@@ -375,11 +380,15 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1] == 'profile') {
+                  } else if (dotsNames[1]=="profile") {
                       profile <- dots[[1]]
-                      dotsNames <- names(dots)
-                      silent <- "silent" %in% dotsNames && dots$silent
-                      keep <- x[['profile']]
+                      if (is.list(dots[1]))
+                          profile <- unlist(profile)
+                      nprofile <- length(profile)
+                      profileList <- lapply(x[["profile"]], function(p) strsplit(p, " ")[[1]])
+                      keep <- unlist(lapply(profileList, function(pl) nprofile == sum(profile %in% pl)))
+                      if (sum(keep) < 1)
+                          warning("In subset,argoFloats-method(..., parameter) : found no profiles with given profile", call.=FALSE)
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
