@@ -87,11 +87,10 @@ ocean. The permitted values are:
 \code{"P"} for Pacific Ocean Area, from 145 E to 70 W, and
 \code{"I"} for Indian Ocean Area, from 20 E to 145 E.
 See example 10.
-\item A character named \code{mode}, which permits \code{realtime} or \code{delayed} to distinguish
-between the Argo modes
+\item A character value named \code{mode}, equal to either \code{realtime} or \code{delayed},
+that selects whether to retain real-time data or delayed data.
 See example 11.
-\item A character named \code{profile}, which holds a character value specifying the profile
-number.
+\item An integer value named \code{profile} that specifies which profiles are to be retained.
 See example 12.
 }
 
@@ -179,7 +178,8 @@ plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)), ylab='Pressure (db
 # Example 12: subset by profile
 \dontrun{
 data(index)
-index12 <- subset(index, profile='001')
+index12 <- subset(index, profile='124')
+cat("File names with profile number 124:", paste(index12[["file"]]), "\n")
 }
 
 }

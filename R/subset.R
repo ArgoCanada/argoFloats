@@ -73,12 +73,11 @@
 #' `"I"` for Indian Ocean Area, from 20 E to 145 E.
 #' See example 10.
 #'
-#' 11. A character named `mode`, which permits `realtime` or `delayed` to distinguish
-#' between the Argo modes
+#' 11. A character value named `mode`, equal to either `realtime` or `delayed`,
+#' that selects whether to retain real-time data or delayed data.
 #' See example 11.
-#' 
-#' 12. A character named `profile`, returning indices to keep for a specific profile
-#' number. 
+#'
+#' 12. An integer value named `profile` that specifies which profiles are to be retained.
 #' See example 12.
 #'
 #' In all cases, the notation is that longitude is positive
