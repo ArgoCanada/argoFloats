@@ -108,13 +108,17 @@ readProfiles <- function(profiles, handleFlags=TRUE, silent=FALSE, debug=0)
                                          NA
                                      }
                                  })
-            badCases <- percentBad > 50
+            badCases <- percentBad > 10
             if (any(badCases, na.rm=TRUE)) {
                 warning("Of ", length(badCases), " profiles read, ",
                         sum(badCases, na.rm=TRUE),
                         if (sum(badCases, na.rm=TRUE) > 1) " have " else " has ",
-                        ">50% of ", flagName, " values with QC flag of 4, signalling bad data.",
-                        if (handleFlags) "\n    These data are set to NA, because the handleFlags argument is TRUE" else "\n    These data are retained, because the handleFlags argument is FALSE",
+                        ">10% of ", flagName, " values with QC flag of 4, signalling bad data.",
+                        if (handleFlags) {
+                            "\n    These data are set to NA, because the handleFlags argument is TRUE"
+                        } else {
+                            "\n    These data are retained, because the handleFlags argument is FALSE"
+                        },
                         "\n    The indices of the bad profiles are as follows.",
                         "\n    ", paste(which(badCases), collapse=" "))
             }
