@@ -88,7 +88,7 @@
 #'
 #' @param ... the first entry here must be either (a)
 #' a list named `circle`, `rectangle`, `polygon`,
-#' `parameter`, `time`, `institution`, `id`,`ocean`, or `mode`
+#' `parameter`, `time`, `institution`, `id`,`ocean`,`mode`, or `profile`.
 #' (examples 2 through 8)
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
@@ -167,13 +167,19 @@
 #'
 #' # Example 11: subset by delayed time
 #' \dontrun{
-#' data('index')
+#' data(indexBgc)
 #' index11 <- subset(index, mode='delayed')
 #' profiles <- getProfiles(index11)
 #' argos <- readProfiles(profiles)
-#' oxygen <- argos[['oxygen']]
-#' pressure <- argos[['pressure']]
-#' plot(oxygen, pressure, ylim=rev(range(pressure)), na.rm=TRUE, type='o')
+#' oxygen <- unlist(argos[['oxygen']])
+#' pressure <- unlist(argos[['pressure']])
+#' plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)), ylab='Pressure (dbar)', xlab="Oxygen (umol/kg)")
+#' }
+#' 
+#' # Example 12: subset by profile
+#' \dontrun{
+#' data(index)
+#' index12 <- subset(index, profile='001')
 #' }
 #'
 #' @author Dan Kelley and Jaimie Harbin
@@ -191,7 +197,7 @@ setMethod(f="subset",
               silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID', 'ocean', or 'mode'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID', 'ocean', 'mode', or 'profile'")
                   if (length(dots) > 1) {
                       if (length(dots) > 2 || !("silent" %in% dotsNames))
                           stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
@@ -369,8 +375,16 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
+                  } else if (dotsNames[1] == 'profile') {
+                      profile <- dots[[1]]
+                      dotsNames <- names(dots)
+                      silent <- "silent" %in% dotsNames && dots$silent
+                      keep <- x[['profile']]
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                      x@data$index <- x@data$index[keep, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', 'ocean', or 'mode'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', 'ocean', 'mode', or 'profile'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)
