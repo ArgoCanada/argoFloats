@@ -133,9 +133,9 @@ geographical <- TRUE
 #' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
 #'
 #' @importFrom grDevices extendrange gray rgb
-#' @importFrom graphics axis box par plot.window points polygon
+#' @importFrom graphics abline axis box par plot.window points polygon text
 #' @importFrom utils data
-#' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco plotTS
+#' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
 #' @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method
@@ -442,7 +442,7 @@ setMethod(f="plot",
                       stop("In plot,argoFloats-method(): Variable '", variable, "' not found. Try one of: ", paste(knownVariables, collapse=', '), call.=FALSE)
                   qf <- function(x)
                       100 * (1 - sum(4 == x[[paste0(variable, 'Flag')]]) / length(x[[paste0(variable, 'Flag')]]))
-                  meanf <- function(x) 
+                  meanf <- function(x)
                       mean(x[[variable, na.rm=TRUE]])
                   time <- oce::numberAsPOSIXct(unlist(lapply(x[['profile']], function(x) x[['time']])))
                   for (variable in variable) {

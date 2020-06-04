@@ -4,19 +4,16 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(profiles, handleFlags = TRUE, silent = FALSE, debug = 0)
+readProfiles(profiles, handleFlags, silent = FALSE, debug = 0)
 }
 \arguments{
 \item{profiles}{either a character vector holding the names
 of local files to read, or (better) an \code{\linkS4class{argoFloats}} object created
 by \code{\link[=getProfiles]{getProfiles()}}.}
 
-\item{handleFlags}{a logical value (with default \code{FALSE}) that
-indicates whether to call \code{\link[oce:handleFlags]{oce::handleFlags()}} on the individual argo
-files that are to be read. This function cleans up some common errors
-that are identified in the quality-control analysis that is usually
-done before data are place on the argo servers, but it is turned off
-by default, because the flags quite often seem to be overly cautious.}
+\item{handleFlags}{an optional logical value that is set to \code{FALSE}
+if not provided (with a message being indicated to that effect).
+See \dQuote{Details}.}
 
 \item{silent}{logical value (with \code{FALSE} as the default value),
 indicating whether to silence messages and warnings. The value of
@@ -43,6 +40,22 @@ with a quality-control code of 4 (which designates bad data),
 and these values are set to \code{NA}; use the \code{silent} and \code{handleFlags}
 arguments to control this behaviour.
 }
+\details{
+If \code{handleFlags} is \code{TRUE}, then the \code{\link[oce:handleFlags]{oce::handleFlags()}} function
+from the \CRANpkg{oce} package is called on each individual argo object
+that is read by \code{\link[oce:read.argo]{oce::read.argo()}} in that package.  The action
+of \code{\link[oce:handleFlags]{oce::handleFlags()}} is see whether any data are flagged
+with the quality-control code that is not equal to 1, and to set
+the corresponding data to \code{NA}.  In the \code{oce} terminology,
+the flag meanings are:
+\code{not_assessed}=0, \code{passed_all_tests}=1, \code{probably_good}=2, \code{probably_bad}=3,
+\code{bad}=4, \code{changed}=5, \code{averaged}=7, \code{interpolated}=8, \code{missing}=9, and so
+the restriction to only values equal to 1 means that multiple categories
+of potentially useable data are discarded, and for that reason,
+\code{handleFlags} is set to \code{FALSE} unless the user provides a value in
+the call to \code{readProfiles()}.  See Wong et al. (2020) for a discussion
+of flags in argo data.
+}
 \examples{
 # Download and plot some profiles.
 \dontrun{
@@ -62,6 +75,12 @@ plotTS(aWithoutNA, eos="unesco", type="o")
 mtext(paste(file, "\n ignoring flags"), cex=0.7*par("cex"))
 }
 
+}
+\references{
+Wong, Annie, Robert Keeley, Thierry Carval, and Argo Data Management Team.
+“Argo Quality Control Manual for CTD and Trajectory Data,” January 1, 2020.
+\url{https://archimer.ifremer.fr/doc/00228/33951}.
+\url{http://dx.doi.org/10.13155/33951}.
 }
 \author{
 Dan Kelley
