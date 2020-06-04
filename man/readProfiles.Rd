@@ -11,11 +11,12 @@ readProfiles(profiles, handleFlags = TRUE, silent = FALSE, debug = 0)
 of local files to read, or (better) an \code{\linkS4class{argoFloats}} object created
 by \code{\link[=getProfiles]{getProfiles()}}.}
 
-\item{handleFlags}{a logical value (with default \code{TRUE}) that
+\item{handleFlags}{a logical value (with default \code{FALSE}) that
 indicates whether to call \code{\link[oce:handleFlags]{oce::handleFlags()}} on the individual argo
-files that are to be read. This cleans up some common errors
+files that are to be read. This function cleans up some common errors
 that are identified in the quality-control analysis that is usually
-done before data are place on the argo servers.}
+done before data are place on the argo servers, but it is turned off
+by default, because the flags quite often seem to be overly cautious.}
 
 \item{silent}{logical value (with \code{FALSE} as the default value),
 indicating whether to silence messages and warnings. The value of
@@ -49,7 +50,7 @@ library(argoFloats)
 data(index)
 index1 <- subset(index, 1)
 profiles <- getProfiles(index1)
-argosWithNA<- readProfiles(profiles, handleFlags=TRUE)
+argosWithNA<- readProfiles(profiles, handleFlags=FALSE)
 argosWithoutNA <- readProfiles(profiles, handleFlags=FALSE)
 par(mfrow=c(1, 2))
 file <- gsub(".*/", "",  profiles[[1]])

@@ -13,11 +13,12 @@
 #' @param profiles either a character vector holding the names
 #' of local files to read, or (better) an [`argoFloats-class`] object created
 #' by [getProfiles()].
-#' @param handleFlags a logical value (with default `TRUE`) that
+#' @param handleFlags a logical value (with default `FALSE`) that
 #' indicates whether to call [oce::handleFlags()] on the individual argo
-#' files that are to be read. This cleans up some common errors
+#' files that are to be read. This function cleans up some common errors
 #' that are identified in the quality-control analysis that is usually
-#' done before data are place on the argo servers.
+#' done before data are place on the argo servers, but it is turned off
+#' by default, because the flags quite often seem to be overly cautious.
 #' @template silent
 #' @param debug an integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
@@ -37,7 +38,7 @@
 #' data(index)
 #' index1 <- subset(index, 1)
 #' profiles <- getProfiles(index1)
-#' argosWithNA<- readProfiles(profiles, handleFlags=TRUE)
+#' argosWithNA<- readProfiles(profiles, handleFlags=FALSE)
 #' argosWithoutNA <- readProfiles(profiles, handleFlags=FALSE)
 #' par(mfrow=c(1, 2))
 #' file <- gsub(".*/", "",  profiles[[1]])
