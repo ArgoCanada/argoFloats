@@ -1,8 +1,8 @@
 library(argoFloats)
-ais <- getIndex(filename = 'synthetic')
+ais <- getIndex(filename = 'synthetic', age=0)
 sub <- subset(ais, mode='delayed')
-lonRect <- c(-77, -75)
-latRect <- c(25, 28)
+lonRect <- c(54, 70)
+latRect <- c(21,23)
 s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
@@ -15,17 +15,11 @@ for (i in seq_len(n)) {
     cat(files[i], "\n")
     cat(rep("-", length.out=30), "\n", sep="")
     oxygenFlags <- as.vector(argo[["oxygenFlag"]])
-    print(table(oxygenFlags)) # For table(oxygenFlags[1], there is 115 values 1)
+    print(table(oxygenFlags))
     salinityFlags <- as.vector(argo[["salinityFlag"]])
     print(table(salinityFlags))
     temperatureFlags <- as.vector(argo[["temperatureFlag"]])
     print(table(temperatureFlags))
 }
-
-
-
-stop()
-oxygenFlags <- argos[[1]]@metadata$flags$oxygen
-temperatureFlags <- argos[[1]]@metadata$flags$temperature
-salinityFlags <- argos[[1]]@metadata$flags$salinity
+# ~/data/argo/SD2902123_151.nc 
 
