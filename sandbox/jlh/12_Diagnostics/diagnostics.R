@@ -32,3 +32,6 @@ for (variable in variables) {
         text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
     }
 }
+
+# qf <- function(x)
+#100 * (1 - (sum(4 == x[[paste0(variable, 'Flag')]]) +  sum(3 == x[[paste0(variable, 'Flag')]])/ length(x[[paste0(variable, 'Flag')]]))
