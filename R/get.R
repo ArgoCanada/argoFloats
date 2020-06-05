@@ -264,7 +264,7 @@ getIndex <- function(filename="argo",
         argoFloatsDebug(debug, "About to download temporary index file\n", sep="")
         argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
         argoFloatsDebug(debug, "from\n", sep="", showTime=FALSE)
-        argoFloatsDebug(debug, "    '", url[1], "'\n", sep="", showTime=FALSE)
+        argoFloatsDebug(debug, "    '", url[iurl], "'\n", sep="", showTime=FALSE)
         capture.output({
             status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE)
         })
@@ -282,7 +282,7 @@ getIndex <- function(filename="argo",
         failedDownloads <- failedDownloads + 1
     }
     if (!downloadSuccess)
-        stop("Could not download the indx file from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
+        stop("Could not download the index file from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
     argoFloatsDebug(debug, "About to read header.\n", sep="")
     first <- readLines(destfileTemp, 100)
     hash <- which(grepl("^#", first))
@@ -315,7 +315,6 @@ getIndex <- function(filename="argo",
     res@metadata$server <- server
     res@metadata$filename <- filename
     res@metadata$destfileRda <- destfileRda
-    res@metadata$server <- argoFloatsIndex$server
     res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
     res@metadata$header <- argoFloatsIndex$header
     res@data$index <- argoFloatsIndex$index
