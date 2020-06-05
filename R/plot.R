@@ -45,9 +45,9 @@ geographical <- TRUE
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
 #' for other arguments that can be provided.
 #' 
-#' * For `which='diagnostic'`, a plot of variable quality and variable mean
+#' * For `which='diagnostic'`, a plot of parameter quality and parameter mean
 #' are plotted. This only works if `x` is an object that was created by
-#' [getProfiles()]. The user must also provide the `variable` name of
+#' [getProfiles()]. The user must also provide the `parameter` name of
 #' interest. 
 #'
 #' @param x an [`argoFloats-class`] object.
@@ -434,36 +434,36 @@ setMethod(f="plot",
                   if (nID != 1)
                       stop("In plot,argoFloats-method(): It is only possible to plot a diagnostic of a single ID", call.=FALSE)
                   dots <- list(...)
-                  knownVariables <- names(x[[1]]@metadata$flags)
-                  variable <- dots$variable
-                  if (is.null(variable))
-                      stop("In plot,argoFloats-method(): Please provide a variable, one of ", paste(knownVariables, collapse=', '), call.=FALSE)
-                  if (!(variable %in% knownVariables))
-                      stop("In plot,argoFloats-method(): Variable '", variable, "' not found. Try one of: ", paste(knownVariables, collapse=', '), call.=FALSE)
+                  knownParameters <- names(x[[1]]@metadata$flags)
+                  parameter <- dots$parameter
+                  if (is.null(parameter))
+                      stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
+                  if (!(parameter %in% knownParameters))
+                      stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: ", paste(knownParameters, collapse=', '), call.=FALSE)
                   qf <- function(x) {
                       # qf returns 100 if data are all 'good' = 1 or 'probably good' = 2
-                      flag <- x[[paste0(variable, 'Flag')]]
+                      flag <- x[[paste0(parameter, 'Flag')]]
                       100 * sum(1 == flag | 2 == flag, na.rm=TRUE) / length(flag)
                   }
                   meanf <- function(x)
-                      mean(x[[variable, na.rm=TRUE]])
+                      mean(x[[parameter, na.rm=TRUE]])
                   time <- oce::numberAsPOSIXct(unlist(lapply(x[['profile']], function(x) x[['time']])))
-                  for (variable in variable) {
+                  for (parameter in parameter) {
                       q <- unlist(lapply(x[['profile']], qf))
                       m <- unlist(lapply(x[['profile']], meanf))
                       par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
                       if (any(is.finite(q))) {
-                          oce.plot.ts(time,q, ylab=paste(variable, "% Good"), drawTimeRange = FALSE)
+                          oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE)
                           abline(h=50, col='red', lty='dashed')
-                          oce.plot.ts(time, m, ylab=paste(variable, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
+                          oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
                           points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
                       } else {
                           plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
                           box()
-                          text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
+                          text(0, 0.5, paste(' No', parameter, 'flags available'), pos=4)
                           plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
                           box()
-                          text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
+                          text(0, 0.5, paste(' No', parameter, 'flags available'), pos=4)
                       }
                   }
               } else {

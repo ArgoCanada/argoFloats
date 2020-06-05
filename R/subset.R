@@ -176,7 +176,8 @@
 #' argos <- readProfiles(profiles)
 #' oxygen <- unlist(argos[['oxygen']])
 #' pressure <- unlist(argos[['pressure']])
-#' plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)), ylab='Pressure (dbar)', xlab="Oxygen (umol/kg)")
+#' plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
+#' ylab='Pressure (dbar)', xlab="Oxygen (umol/kg)")
 #' }
 #' 
 #' # Example 12: subset by profile
