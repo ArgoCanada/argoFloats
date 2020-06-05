@@ -34,4 +34,4 @@ for (variable in variables) {
 }
 
 # qf <- function(x)
-#100 * (1 - (sum(4 == x[[paste0(variable, 'Flag')]]) +  sum(3 == x[[paste0(variable, 'Flag')]])/ length(x[[paste0(variable, 'Flag')]]))
+#100 * (1 - (sum(!1 == x[[paste0(variable, 'Flag')]]) +  sum(!2 == x[[paste0(variable, 'Flag')]])/ length(x[[paste0(variable, 'Flag')]]))

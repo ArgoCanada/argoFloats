@@ -440,8 +440,11 @@ setMethod(f="plot",
                       stop("In plot,argoFloats-method(): Please provide a variable, one of ", paste(knownVariables, collapse=', '), call.=FALSE)
                   if (!(variable %in% knownVariables))
                       stop("In plot,argoFloats-method(): Variable '", variable, "' not found. Try one of: ", paste(knownVariables, collapse=', '), call.=FALSE)
-                  qf <- function(x)
-                      100 * (1 - sum(4 == x[[paste0(variable, 'Flag')]]) / length(x[[paste0(variable, 'Flag')]]))
+                  qf <- function(x) {
+                      # qf returns 100 if data are all 'good' = 1 or 'probably good' = 2
+                      flag <- x[[paste0(variable, 'Flag')]]
+                      100 * sum(1 == flag | 2 == flag, na.rm=TRUE) / length(flag)
+                  }
                   meanf <- function(x)
                       mean(x[[variable, na.rm=TRUE]])
                   time <- oce::numberAsPOSIXct(unlist(lapply(x[['profile']], function(x) x[['time']])))

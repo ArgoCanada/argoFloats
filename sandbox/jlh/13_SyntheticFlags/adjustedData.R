@@ -1,20 +1,35 @@
+# Demo for Tanya Maurer
+# install.packages('devtools')
+# install.packages('oce')
+# library(oce)
+# devtools::install_github("ArgoCanada/argoFloats", ref='develop')
 library(argoFloats)
-if (!exists("bai")) {
-    bai <- getIndex('synthetic', age=0)
-    lonRect <- c(54, 70)
-    latRect <- c(21,23)
-    s <- subset(bai, rectangle=list(longitude=lonRect, latitude=latRect))
-    profiles <- getProfiles(s)
-    argos <- readProfiles(profiles)
-}
+# The following line  may take 1-2 minutes for the first time, and then is
+# good for a week
+bai <- getIndex('synthetic')
+# Subsetting near the Arabian Sea
+lonRect <- c(54, 70)
+latRect <- c(21, 23)
+s <- subset(bai, rectangle=list(longitude=lonRect, latitude=latRect))
+profiles <- getProfiles(s)
+argos <- readProfiles(profiles)
 a <- argos[[1]]
+ID0 <- argos[['ID']][[1]]
 oxygenAdjusted <- a[['oxygenAdjusted']]
 pressureAdjusted <- a[['pressureAdjusted']]
-oxygenBad <- a[['oxygen']]
-pressureBad <- a[['pressure']]
-if (!interactive()) png("11_adjusted_data.png", unit="in", width=7, height=3.2, pointsize=11, res=150)
-par(mar=c(3,3,1,1))
-plot(oxygenAdjusted, pressureAdjusted, ylim=rev(range(pressureAdjusted, na.rm=TRUE)), xlab="Oxygen (umol/kg)", ylab="Pressure (dbar)")
-points(oxygenBad, pressureBad, col='red')
-legend("bottomright", c("Oxygen Adjusted", "Oxygen Bad"), col=c('black','red'), pch=c(1,1))
-if (!interactive()) dev.off()
+oxygenUnadjusted <- a[['oxygen']]
+pressureUnadjusted <- a[['pressure']]
+par(mar=c(3,3,2,1), mfrow=c(1,2), mgp=c(2,0.7,0))
+plot(oxygenAdjusted, pressureAdjusted,
+     ylim=rev(range(pressureAdjusted, na.rm=TRUE)),
+     xlab="Oxygen (umol/kg)", ylab="Pressure (dbar)")
+grid()
+points(oxygenUnadjusted, pressureUnadjusted, col='red')
+legend("bottomright",
+       c("Oxygen Adjusted", "Oxygen Unadjusted"),
+       col=c('black','red'), cex=0.75, pch=c(1,1), bg='white')
+mtext(paste("Float", ID0), adj=0)
+plot(oxygenAdjusted-oxygenUnadjusted, pressureAdjusted,
+     ylim=rev(range(pressureAdjusted, na.rm=TRUE)),
+     xlab="Oxygen Diff (umol/kg)", ylab="Pressure (dbar)")
+grid()
