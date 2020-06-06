@@ -179,7 +179,7 @@
 #' plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 #' ylab='Pressure (dbar)', xlab="Oxygen (umol/kg)")
 #' }
-#' 
+#'
 #' # Example 12: subset by profile
 #' \dontrun{
 #' data(index)
@@ -277,8 +277,8 @@ setMethod(f="subset",
                       ## may be a more straightforward way, but my (admittedly shallow) reading
                       ## of the 'sf' function list did not uncover anything promising, and my
                       ## tests show that this scheme works.
-                      
-                      ## see https://github.com/ArgoCanada/argoFloats/issues/86
+                      ##
+                      ## See https://github.com/ArgoCanada/argoFloats/issues/86
                       ok <- is.finite(alon) & is.finite(alat)
                       Polygon <- sf::st_polygon(list(outer=cbind(plon, plat, rep(0, length(plon)))))
                       ## DOES NOT WORK (REQUIRES OTHER SOFTWARE??): Polygon <- sf::st_make_valid(Polygon)

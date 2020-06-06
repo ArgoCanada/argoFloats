@@ -44,7 +44,7 @@
 #' that are created by [oce::read.argo()].
 #'
 #' @references
-#' 
+#'
 #' Wong, Annie, Robert Keeley, Thierry Carval, and Argo Data Management Team.
 #' “Argo Quality Control Manual for CTD and Trajectory Data,” January 1, 2020.
 #' \url{https://archimer.ifremer.fr/doc/00228/33951}.

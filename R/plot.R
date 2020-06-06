@@ -44,11 +44,11 @@ geographical <- TRUE
 #' The scales for the plot can be altered by putting `Slim` and `Tlim`
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
 #' for other arguments that can be provided.
-#' 
+#'
 #' * For `which='diagnostic'`, a plot of parameter quality and parameter mean
 #' are plotted. This only works if `x` is an object that was created by
 #' [getProfiles()]. The user must also provide the `parameter` name of
-#' interest. 
+#' interest.
 #'
 #' @param x an [`argoFloats-class`] object.
 #'
@@ -170,7 +170,7 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
-                  
+
                   ## Draw empty plot box, with axes, to set par("usr") for later use with bathymetry.
                   if (geographical) {
                       xlab <- if (is.null(xlab)) "" else xlab
@@ -179,7 +179,7 @@ setMethod(f="plot",
                       xlab <- if (is.null(xlab)) "Longitude" else xlab
                       ylab <- if (is.null(ylab)) "Latitude" else ylab
                   }
-                  
+
                   ## Decode bathymetry
                   if (is.logical(bathymetry)) {
                       drawBathymetry <- bathymetry
@@ -361,7 +361,7 @@ setMethod(f="plot",
                          ...)
                   ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
                   ## on just the distance spanned in the north-south direction.
-                  
+
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
                   if (ocedataIsInstalled) {
                       usr <- par("usr")
