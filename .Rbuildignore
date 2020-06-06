@@ -27,3 +27,4 @@
 ^NEWS\.md$
 ^exampleTS\.png$
 ^logo$
+^\.travis\.yml$
