@@ -45,6 +45,11 @@ geographical <- TRUE
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
 #' for other arguments that can be provided.
 #'
+#' * For `which='diagnostic'`, a plot of parameter quality and parameter mean
+#' are plotted. This only works if `x` is an object that was created by
+#' [getProfiles()]. The user must also provide the `parameter` name of
+#' interest.
+#'
 #' @param x an [`argoFloats-class`] object.
 #'
 #' @param which a string that indicates the type of plot; see \dQuote{Details}.
@@ -128,9 +133,9 @@ geographical <- TRUE
 #' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
 #'
 #' @importFrom grDevices extendrange gray rgb
-#' @importFrom graphics axis box par plot.window points polygon
+#' @importFrom graphics abline axis box par plot.window points polygon text
 #' @importFrom utils data
-#' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco plotTS
+#' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
 #' @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method
@@ -319,7 +324,7 @@ setMethod(f="plot",
                                xaxs="i", yaxs="i",
                                asp=asp,
                                xlab=xlab, ylab=ylab, type="n", axes=FALSE)
-                       }
+                      }
                       argoFloatsDebug(debug, "after plot(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
                       xaxp <- par("xaxp")
                       xat <- seq(xaxp[1], xaxp[2], length.out=xaxp[3]+1)
@@ -342,7 +347,7 @@ setMethod(f="plot",
                                xaxs="i", yaxs="i",
                                asp=asp,
                                xlab=xlab, ylab=ylab, type="n")
-                       }
+                      }
                   }
                   if (drawBathymetry)
                       oce::imagep(as.numeric(rownames(bathy)),
@@ -423,14 +428,46 @@ setMethod(f="plot",
                   par(mar=omar, mgp=omgp)
               } else if (which == "diagnostic") {
                   if (x[['type']] != 'argos')
-                      stop("In plot,argoFloats-method(): The type of x must be 'argos'")
+                      stop("In plot,argoFloats-method(): The type of x must be 'argos'", call.=FALSE)
+                  IDs <- x[['ID']]
+                  nID <- length(unique(IDs))
+                  if (nID != 1)
+                      stop("In plot,argoFloats-method(): It is only possible to plot a diagnostic of a single ID", call.=FALSE)
                   dots <- list(...)
-                  variable <- dots$variable
-                  knownVariables <- names(x[[1]]@metadata$flags)
-                  if (!(variable %in% knownVariables))
-                      stop("Variable '", variable, "' not found. Try one of: ", paste(knownVariables, collapse=', '))
+                  knownParameters <- names(x[[1]]@metadata$flags)
+                  parameter <- dots$parameter
+                  if (is.null(parameter))
+                      stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
+                  if (!(parameter %in% knownParameters))
+                      stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: ", paste(knownParameters, collapse=', '), call.=FALSE)
+                  qf <- function(x) {
+                      # qf returns 100 if data are all 'good' = 1 or 'probably good' = 2
+                      flag <- x[[paste0(parameter, 'Flag')]]
+                      100 * sum(1 == flag | 2 == flag, na.rm=TRUE) / length(flag)
+                  }
+                  meanf <- function(x)
+                      mean(x[[parameter, na.rm=TRUE]])
+                  time <- oce::numberAsPOSIXct(unlist(lapply(x[['profile']], function(x) x[['time']])))
+                  for (parameter in parameter) {
+                      q <- unlist(lapply(x[['profile']], qf))
+                      m <- unlist(lapply(x[['profile']], meanf))
+                      par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
+                      if (any(is.finite(q))) {
+                          oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE)
+                          abline(h=50, col='red', lty='dashed')
+                          oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
+                          points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
+                      } else {
+                          plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
+                          box()
+                          text(0, 0.5, paste(' No', parameter, 'flags available'), pos=4)
+                          plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
+                          box()
+                          text(0, 0.5, paste(' No', parameter, 'flags available'), pos=4)
+                      }
+                  }
               } else {
-                  stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'")
+                  stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'", call.=FALSE)
               }
               argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1)
           }

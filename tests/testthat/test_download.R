@@ -36,7 +36,7 @@ test_that("readProfiles()",
               if (canDownload(destdir)) {
                   data(index)
                   p <- expect_message(getProfiles(subset(index, 1:4)), "Kept 4 profiles \\(0.42%\\)")
-                  a <- expect_warning(readProfiles(p), "Of 4 profiles read, 1 has")
+                  a <- expect_warning(readProfiles(p), "Of 4 profiles read, 3 have")
                   expect_equal(4, length(a[["profile"]]))
                   expect_true(is.list(a[["profile"]]))
                   expect_true(inherits(a[["profile",1]], "oce"))

@@ -14,7 +14,7 @@ indices of \code{x@data$index} to keep (example 1).}
 
 \item{...}{the first entry here must be either (a)
 a list named \code{circle}, \code{rectangle}, \code{polygon},
-\code{parameter}, \code{time}, \code{institution}, \code{id},\code{ocean}, or \code{mode}
+\code{parameter}, \code{time}, \code{institution}, \code{id},\code{ocean},\code{mode}, or \code{profile}.
 (examples 2 through 8)
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
@@ -87,9 +87,11 @@ ocean. The permitted values are:
 \code{"P"} for Pacific Ocean Area, from 145 E to 70 W, and
 \code{"I"} for Indian Ocean Area, from 20 E to 145 E.
 See example 10.
-\item A character named \code{mode}, which permits \code{realtime} or \code{delayed} to distinguish
-between the Argo modes
+\item A character value named \code{mode}, equal to either \code{realtime} or \code{delayed},
+that selects whether to retain real-time data or delayed data.
 See example 11.
+\item An integer value named \code{profile} that specifies which profiles are to be retained.
+See example 12.
 }
 
 In all cases, the notation is that longitude is positive
@@ -164,13 +166,21 @@ points(pacific[['longitude']], pacific[['latitude']], pch=20, col=3) }
 
 # Example 11: subset by delayed time
 \dontrun{
-data('index')
+data(indexBgc)
 index11 <- subset(index, mode='delayed')
 profiles <- getProfiles(index11)
 argos <- readProfiles(profiles)
-oxygen <- argos[['oxygen']]
-pressure <- argos[['pressure']]
-plot(oxygen, pressure, ylim=rev(range(pressure)), na.rm=TRUE, type='o')
+oxygen <- unlist(argos[['oxygen']])
+pressure <- unlist(argos[['pressure']])
+plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
+ylab='Pressure (dbar)', xlab="Oxygen (umol/kg)")
+}
+
+# Example 12: subset by profile
+\dontrun{
+data(index)
+index12 <- subset(index, profile='124')
+cat("File names with profile number 124:", paste(index12[["file"]]), "\n")
 }
 
 }

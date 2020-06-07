@@ -10,14 +10,27 @@
 #' and these values are set to `NA`; use the `silent` and `handleFlags`
 #' arguments to control this behaviour.
 #'
+#' If `handleFlags` is `TRUE`, then the [oce::handleFlags()] function
+#' from the \CRANpkg{oce} package is called on each individual argo object
+#' that is read by [oce::read.argo()] in that package.  The action
+#' of [oce::handleFlags()] is see whether any data are flagged
+#' with the quality-control code that is not equal to 1, and to set
+#' the corresponding data to `NA`.  In the `oce` terminology,
+#' the flag meanings are:
+#' `not_assessed`=0, `passed_all_tests`=1, `probably_good`=2, `probably_bad`=3,
+#' `bad`=4, `changed`=5, `averaged`=7, `interpolated`=8, `missing`=9, and so
+#' the restriction to only values equal to 1 means that multiple categories
+#' of potentially useable data are discarded, and for that reason,
+#' `handleFlags` is set to `FALSE` unless the user provides a value in
+#' the call to `readProfiles()`.  See Wong et al. (2020) for a discussion
+#' of flags in argo data.
+#'
 #' @param profiles either a character vector holding the names
 #' of local files to read, or (better) an [`argoFloats-class`] object created
 #' by [getProfiles()].
-#' @param handleFlags a logical value (with default `TRUE`) that
-#' indicates whether to call [oce::handleFlags()] on the individual argo
-#' files that are to be read. This cleans up some common errors
-#' that are identified in the quality-control analysis that is usually
-#' done before data are place on the argo servers.
+#' @param handleFlags an optional logical value that is set to `FALSE`
+#' if not provided (with a message being indicated to that effect).
+#' See \dQuote{Details}.
 #' @template silent
 #' @param debug an integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
@@ -30,6 +43,13 @@
 #' contains a list named `argos` that holds objects
 #' that are created by [oce::read.argo()].
 #'
+#' @references
+#'
+#' Wong, Annie, Robert Keeley, Thierry Carval, and Argo Data Management Team.
+#' “Argo Quality Control Manual for CTD and Trajectory Data,” January 1, 2020.
+#' \url{https://archimer.ifremer.fr/doc/00228/33951}.
+#' \url{http://dx.doi.org/10.13155/33951}.
+#'
 #' @examples
 #' # Download and plot some profiles.
 #'\dontrun{
@@ -37,7 +57,7 @@
 #' data(index)
 #' index1 <- subset(index, 1)
 #' profiles <- getProfiles(index1)
-#' argosWithNA<- readProfiles(profiles, handleFlags=TRUE)
+#' argosWithNA<- readProfiles(profiles, handleFlags=FALSE)
 #' argosWithoutNA <- readProfiles(profiles, handleFlags=FALSE)
 #' par(mfrow=c(1, 2))
 #' file <- gsub(".*/", "",  profiles[[1]])
@@ -55,12 +75,16 @@
 #' @export
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, handleFlags=TRUE, silent=FALSE, debug=0)
+readProfiles <- function(profiles, handleFlags, silent=FALSE, debug=0)
 {
     debug <- floor(0.5 + debug)
     debug <- max(0, debug)
     res <- NULL
     argoFloatsDebug(debug, "readProfiles() {\n", style="bold", sep="", unindent=1)
+    if (missing(handleFlags)) {
+        handleFlags <- FALSE
+        message("readProfiles() is setting handleFlags=FALSE, so all data (not just those flagged as 'good') are retained")
+    }
     ## show the ncdf4 version.  Frankly, this is just to prevent errors in R CMD check.  The problem
     ## has to do with oce::read.argo() doing a require(ncdf4), which causes an error message in
     ## checking argoFloats.  But if we put argoFloats in the "Depends" field of the argoFloats
@@ -108,13 +132,17 @@ readProfiles <- function(profiles, handleFlags=TRUE, silent=FALSE, debug=0)
                                          NA
                                      }
                                  })
-            badCases <- percentBad > 50
+            badCases <- percentBad > 10
             if (any(badCases, na.rm=TRUE)) {
                 warning("Of ", length(badCases), " profiles read, ",
                         sum(badCases, na.rm=TRUE),
                         if (sum(badCases, na.rm=TRUE) > 1) " have " else " has ",
-                        ">50% of ", flagName, " values with QC flag of 4, signalling bad data.",
-                        if (handleFlags) "\n    These data are set to NA, because the handleFlags argument is TRUE" else "\n    These data are retained, because the handleFlags argument is FALSE",
+                        ">10% of ", flagName, " values with QC flag of 4, signalling bad data.",
+                        if (handleFlags) {
+                            "\n    These data are set to NA, because the handleFlags argument is TRUE"
+                        } else {
+                            "\n    These data are retained, because the handleFlags argument is FALSE"
+                        },
                         "\n    The indices of the bad profiles are as follows.",
                         "\n    ", paste(which(badCases), collapse=" "))
             }

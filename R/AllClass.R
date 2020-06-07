@@ -260,8 +260,9 @@ setMethod(f="initialize",
 #'         3. Otherwise, if `j` is a vector  of integers, then a list of `argo` objects
 #'            is returned.
 #'         4. Otherwise, an error is reported.
-#'     5. If `i` is `"length"`, the number of oce-type argo objects in `x` is returned.
-#'     6. Otherwise, if `i` is a character value, then it is taken to be
+#'     5. Otherwise, if `i` is `"length"`, the number of oce-type argo objects in `x` is returned.
+#'     6. Otherwise, if `i` is `"ID"`, a vector of the IDs of the profiles is returned.
+#'     7. Otherwise, if `i` is a character value, then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
 #'        information with one (unnamed) item per profile.  Note that
@@ -269,7 +270,7 @@ setMethod(f="initialize",
 #'        as the same dimensionality as pressure, as a way to make it
 #'        easier to e.g. use [oce::as.ctd()] to create a CTD object from
 #'        values returned by the present function, passed through [unlist()].
-#'     7. Otherwise, an error is reported.
+#'     8. Otherwise, an error is reported.
 #' 5. Otherwise, an error is reported.
 #'
 #' @param x an [`argoFloats-class`] object.
@@ -364,6 +365,8 @@ setMethod(f="[[",
                       }
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$argos))
+                  } else if (length(i) == 1 && i == "ID") {
+                      return(unlist(lapply(x@data$argos, function(a) a[['id']])))
                   } else {
                       return(lapply(x[["argos"]], function(a)
                                     {

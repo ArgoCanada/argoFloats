@@ -26,4 +26,5 @@
 ^cran-comments\.md$
 ^NEWS\.md$
 ^exampleTS\.png$
-
+^logo$
+^\.travis\.yml$

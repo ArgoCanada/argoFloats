@@ -14,9 +14,12 @@
 #' @template debug
 #'
 #' @return String indicating the full pathname to the downloaded file.
-#' @importFrom utils unzip
+#'
 #' @importFrom curl curl_download
+#' @importFrom utils capture.output unzip
+#'
 #' @export
+#'
 #' @author Dan Kelley
 downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode="wb", quiet=FALSE,
                                 force=FALSE, retries=3, debug=0)
@@ -48,8 +51,13 @@ downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode=
         } else {
             success <- FALSE
             for (trial in seq_len(1 + retries)) {
-                t <- try(curl::curl_download(url=url, destfile=destination, quiet=quiet, mode=mode))
-                if (!inherits(t, "try-error")) {
+                capture.output({
+                    t <- try(curl::curl_download(url=url, destfile=destination, quiet=quiet, mode=mode))
+                })
+                if (inherits(t, "try-error")) {
+                    argoFloatsDebug(debug, "failed download from \"", url, "\" ", if (trial < (1+retries)) "(will try again)\n" else "(final attempt)\n", sep="")
+                } else {
+                    argoFloatsDebug(debug, "successful download from \"", url, "\"\n", sep="")
                     success <- TRUE
                     break
                 }

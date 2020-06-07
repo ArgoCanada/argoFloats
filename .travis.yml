@@ -1,34 +1,21 @@
-language: r
-sudo: required
-dist: trusty
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
-before_install:
-  - sudo add-apt-repository ppa:ubuntugis/ppa --yes
-  - sudo apt-get --yes --force-yes update -qq
-  - sudo apt-get install --yes libudunits2-dev libproj-dev libgeos-dev libgdal-dev
-
-warnings_are_errors: true
-
-after_success: travis_wait 30 Rscript -e 'library(covr); codecov(type="all")'
+language: R
+cache: packages
 
 addons:
     apt:
         packages:
             - libgdal-dev
-            - libproj-dev
+            - libudunits2-dev
             - libnetcdf-dev
             - netcdf-bin
 
 r_packages:
-    - devtools
-    - rgdal
-    - rgeos
+    - marmap
     - ncdf4
-    - covr
+    - oce
+    - ocedata
+    - rgdal
     - sf
-
-env:
-    global:
-        - _R_CHECK_FORCE_SUGGESTS_=False
-        - _R_CHECK_CRAN_INCOMING=False
 
