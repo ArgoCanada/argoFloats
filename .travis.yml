@@ -11,9 +11,10 @@ addons:
             - netcdf-bin
 
 r_packages:
+    - marmap
     - ncdf4
     - oce
     - ocedata
-    - raster
-    - sp
+    - rgdal
+    - sf
 
