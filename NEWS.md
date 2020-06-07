@@ -2,7 +2,7 @@
 
 ## argoFloats 0.1.3
 
-* can handle 'synthetic' data (successor to 'merged' data)
+* can handle "synthetic" data (successor to "merged" data)
 
 ## argoFloats 0.1.2
 
