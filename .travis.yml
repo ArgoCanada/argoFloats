@@ -2,6 +2,13 @@
 
 language: R
 cache: packages
+
+addons:
+    apt:
+        packages:
+            - libnetcdf-dev
+            - netcdf-bin
+
 r_packages:
     - ncdf4
     - oce
