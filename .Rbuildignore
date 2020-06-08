@@ -8,7 +8,6 @@
 ^man/figures/*R$
 ^docs$
 ^.*~$
-^.*.nc$
 ^.*.png$
 ^sandbox$
 ^.*_index_.*rda$
@@ -28,3 +27,5 @@
 ^exampleTS\.png$
 ^logo$
 ^\.travis\.yml$
+^topo_.*\.nc$
+
