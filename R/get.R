@@ -265,24 +265,23 @@ getIndex <- function(filename="argo",
         argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
         argoFloatsDebug(debug, "from\n", sep="", showTime=FALSE)
         argoFloatsDebug(debug, "    '", url[iurl], "'\n", sep="", showTime=FALSE)
-        capture.output({
-            status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE)
-        })
+        capture.output(status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE),
+                       type="message")
         if (!inherits(status, "try-error")) {
             if (failedDownloads > 0)
-                message('Successfully downloaded index file from server "', server[iurl], '".\n')
+                message("Downloaded index from ", server[iurl])
             server <- server[iurl]
             downloadSuccess <- TRUE
             break                      # the download worked
         }
         if (iurl == length(url))
-            message('Cannot download the index file from the server "', server[iurl], '"\n')
+            message("Can't download index from ", server[iurl])
         else
-            message('Cannot download the index file from server "', server[iurl], '", so moving to the next possible server\n')
+            message("Can't download index from ", server[iurl], ", so moving to next server")
         failedDownloads <- failedDownloads + 1
     }
     if (!downloadSuccess)
-        stop("Could not download the index file from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
+        stop("Couldn't download index from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
     argoFloatsDebug(debug, "About to read header.\n", sep="")
     first <- readLines(destfileTemp, 100)
     hash <- which(grepl("^#", first))

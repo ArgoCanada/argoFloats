@@ -1,3 +1,9 @@
+---
+title: "flags"
+output: html_document
+---
+
+```{r, message=FALSE, error=FALSE}
 library(argoFloats)
 library(oce)
 qf <- function(x) {
@@ -7,8 +13,8 @@ meanf <- function(x) {
     mean(x[[variable, na.rm=TRUE]])
 }
 if (!exists("bai")) {
-    bai <- getIndex(file='bgc')
-    F5901462 <- subset(bai, ID='5901462') # Follow 5901462 float
+    ai <- getIndex(file='synthetic')
+    s <- subset(ai, ID='5901462') # Follow 5901462 float
     profiles <- getProfiles(F5901462)
     argos <- readProfiles(profiles, handleFlags=FALSE) 
 }
@@ -32,3 +38,4 @@ for (variable in variables) {
         text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
     }
 }
+```
