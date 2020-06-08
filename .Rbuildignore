@@ -28,4 +28,8 @@
 ^logo$
 ^\.travis\.yml$
 ^topo_.*\.nc$
+^R/.*\.nc$
+^tests/.*\.nc$
+^tests/.*/.*\.nc$
+^vignettes/.*\.nc$
 
