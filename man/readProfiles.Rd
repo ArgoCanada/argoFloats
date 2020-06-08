@@ -4,7 +4,14 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(profiles, handleFlags, silent = FALSE, debug = 0)
+readProfiles(
+  profiles,
+  handleFlags,
+  adjusted = TRUE,
+  FUN,
+  silent = FALSE,
+  debug = 0
+)
 }
 \arguments{
 \item{profiles}{either a character vector holding the names
@@ -14,6 +21,16 @@ by \code{\link[=getProfiles]{getProfiles()}}.}
 \item{handleFlags}{an optional logical value that is set to \code{FALSE}
 if not provided (with a message being indicated to that effect).
 See \dQuote{Details}.}
+
+\item{adjusted}{a logical value (\code{TRUE} by default) that indicates
+whether to focus on the "adjusted" versions of data and quality-control
+flags, renaming the other versions with names ending in \code{Unadjusted}.
+See \dQuote{Details}.}
+
+\item{FUN}{a function that reads the netcdf files in which the argo
+profiles are stored.  If \code{FUN} not provided, then it defaults
+to \code{\link[oce:read.argo]{oce::read.argo()}}.  Only experts should consider anything
+other than this default, or a wrapper to it.}
 
 \item{silent}{logical value (with \code{FALSE} as the default value),
 indicating whether to silence messages and warnings. The value of
@@ -35,7 +52,7 @@ that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 This works with either a list of local (netCDF) files,
 or a \code{\linkS4class{argoFloats}} object of type \code{"profiles"}, as
 created by \code{\link[=getProfiles]{getProfiles()}}.  By default, warnings are issued about any
-profiles in which 50 percent or more of the measurements are flagged
+profiles in which 10 percent or more of the measurements are flagged
 with a quality-control code of 4 (which designates bad data),
 and these values are set to \code{NA}; use the \code{silent} and \code{handleFlags}
 arguments to control this behaviour.
@@ -55,6 +72,19 @@ of potentially useable data are discarded, and for that reason,
 \code{handleFlags} is set to \code{FALSE} unless the user provides a value in
 the call to \code{readProfiles()}.  See Wong et al. (2020) for a discussion
 of flags in argo data.
+
+If \code{adjusted} is \code{TRUE}, then the data elements are renamed after
+reading, so that e.g. the data named \code{TEMP_ADJUSTED} and
+\code{TEMP_ADJUSTED_ERROR} in the source netcdf file would be
+stored with names \code{temperature} and \code{temperatureAdjusted},
+with \code{TEMP} being stored as \code{temperatureUnadjusted}.  This
+applies to all variables, not just temperature.  The quality-control
+flags are similarly named. Note that the original names are left
+intact, so that with\preformatted{a <- readProfiles(..., adjusted=TRUE)
+}
+
+the values of \code{a[["temperature"]]} and \code{a[["TEMP_ADJUSTED"]]}
+will be identical.
 }
 \examples{
 # Download and plot some profiles.
