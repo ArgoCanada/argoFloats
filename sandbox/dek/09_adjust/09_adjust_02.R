@@ -17,8 +17,14 @@ for (argo in a[["profile"]]) {
     cat("    mean temperatureUnadjusted: ", mean(argo[["temperatureUnadjusted"]], na.rm=TRUE), "\n")
 }
 table(testOfHypothesis)
+cat("\n\nHypothesis failed on cases: ", paste(which(!testOfHypothesis), collapse=" "), "\n")
+
 bad <- which(!testOfHypothesis)
-cat("Hypothesis failed on cases: ", paste(which(!testOfHypothesis), collapse=" "), "\n")
-cat("First failed test is case #", bad, ", which has following summary:\n", sep="")
+good <- which(testOfHypothesis)
+
+cat("\n\nFirst failed test is case #", bad[1], ", which has following summary:\n", sep="")
 summary(a[[bad[1]]])
+
+cat("\n\nFirst good test is case #", good[1], ", which has following summary:\n", sep="")
+summary(a[[good[1]]])
 
