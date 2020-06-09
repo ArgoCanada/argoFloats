@@ -6,8 +6,9 @@
 \alias{SR2902204_131.nc}
 \title{Sample argo file (synthetic realtime data)}
 \description{
-This is profile 131 for float 2902204.  As its filename indicates,
-this is in the "synthetic" data stream of "realtime" data.
+This is profile 131 for float 2902204, downloaded on June 8,
+2020.  As its filename indicates, this is in the "synthetic"
+data stream of "realtime" data.
 }
 \examples{
 library(argoFloats)
