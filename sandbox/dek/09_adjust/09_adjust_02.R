@@ -13,11 +13,14 @@ for (i in seq_len(a[["length"]])) {
     allNA <- all(!is.finite(argo[["temperature"]]))
     hypothesis <- if (isRealtime) allNA else TRUE
     testOfHypothesis <- c(testOfHypothesis, hypothesis)
-    cat(sprintf("%2d %s hypothesis=%s, dataMode=%s\n",
+    cat(sprintf("%2d %s isRealtime=%s allNA=%s hypothesis=%s dataMode=%s (== isRealtime: %s)\n",
                 i,
                 gsub(".*/data/argo/", "", argo[["filename"]]),
+                isRealtime,
+                allNA,
                 hypothesis,
-                paste(argo[["dataMode"]], collapse=",")))
+                paste(argo[["dataMode"]], collapse=","),
+                isRealtime == (argo[["dataMode"]][1]=="A")))
     cat(sprintf("   T: %6.3f unadjusted: %6.3f\n",
                 mean(argo[["temperature"]], na.rm=TRUE),
                 mean(argo[["temperatureUnadjusted"]], na.rm=TRUE)))
