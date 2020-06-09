@@ -156,6 +156,11 @@ bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
 cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
 plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
 
+# Example 6: TS plot for a particular argo
+library(argoFloats)
+a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+plot(a[[1]], which="TS")
+
 }
 \author{
 Dan Kelley
