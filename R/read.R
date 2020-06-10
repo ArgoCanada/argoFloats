@@ -2,8 +2,9 @@
 
 # utility file, not exported (since it may go into 'oce', where it belongs)
 
-argoUseAdjusted <- function(argo)
+argoUseAdjusted <- function(argo, debug=0)
 {
+    argoFloatsDebug(debug, "argoUseAdjusted() {\n", style="bold", sep="", unindent=1)
     res <- argo
     namesData <- names(argo@data)
     namesDataNew <- namesData
@@ -27,9 +28,9 @@ argoUseAdjusted <- function(argo)
         if (length(w))
             tmp[i] <- convert[[w]]
     }
-    message("data ORIG:  ", paste(names(argo@data), collapse=" "))
+    argoFloatsDebug(debug, "data ORIG:  ", paste(names(argo@data), collapse=" "), "\n")
     names(res@data) <- tmp
-    message("data AFTER: ", paste(names(res@data), collapse=" "))
+    argoFloatsDebug(debug, "data AFTER: ", paste(names(res@data), collapse=" "), "\n")
     ## Rename metadata$flags
     namesFlags <- names(argo@metadata$flags)
     tmp <- namesFlags
@@ -38,9 +39,9 @@ argoUseAdjusted <- function(argo)
         if (length(w))
             tmp[i] <- convert[[w]]
     }
-    message("flags ORIG:  ", paste(names(argo@metadata$flags), collapse=" "))
+    argoFloatsDebug(debug, "flags ORIG:  ", paste(names(argo@metadata$flags), collapse=" "), "\n")
     names(res@metadata$flags) <- tmp
-    message("flags AFTER: ", paste(names(res@metadata$flags), collapse=" "))
+    argoFloatsDebug(debug, "flags AFTER: ", paste(names(res@metadata$flags), collapse=" "), "\n")
     ## Rename metadata$units
     namesUnits <- names(argo@metadata$units)
     tmp <- namesUnits
@@ -49,9 +50,9 @@ argoUseAdjusted <- function(argo)
         if (length(w))
             tmp[i] <- convert[[w]]
     }
-    message("units ORIG:  ", paste(names(argo@metadata$units), collapse=" "))
+    argoFloatsDebug(debug, "units ORIG:  ", paste(names(argo@metadata$units), collapse=" "), "\n")
     names(res@metadata$units) <- tmp
-    message("units AFTER: ", paste(names(res@metadata$units), collapse=" "))
+    argoFloatsDebug(debug, "units AFTER: ", paste(names(res@metadata$units), collapse=" "), "\n")
     ## Rename metadata$dataNamesOriginal
     namesUnits <- names(argo@metadata$dataNamesOriginal)
     tmp <- namesUnits
@@ -60,10 +61,11 @@ argoUseAdjusted <- function(argo)
         if (length(w))
             tmp[i] <- convert[[w]]
     }
-    message("dataNamesOriginal ORIG:  ", paste(names(argo@metadata$dataNamesOriginal), collapse=" "))
+    argoFloatsDebug(debug, "dataNamesOriginal ORIG:  ", paste(names(argo@metadata$dataNamesOriginal), collapse=" "), "\n")
     names(res@metadata$dataNamesOriginal) <- tmp
-    message("dataNamesOriginal AFTER: ", paste(names(res@metadata$dataNamesOriginal), collapse=" "))
-    res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+    argoFloatsDebug(debug, "dataNamesOriginal AFTER: ", paste(names(res@metadata$dataNamesOriginal), collapse=" "), "\n")
+    res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""), "\n")
+    argoFloatsDebug(debug, "} # argoUseAdjusted()\n", style="bold", sep="", unindent=1)
     res
 }
 
@@ -211,7 +213,7 @@ readProfiles <- function(profiles, handleFlags, adjusted=TRUE, FUN, silent=FALSE
                 n <- length(res@data$argos)
                 for (i in seq_len(n)) {
                     message("profile ", i)
-                    res@data$argos[[i]] <- argoUseAdjusted(res@data$argos[[i]])
+                    res@data$argos[[i]] <- argoUseAdjusted(res@data$argos[[i]], debug=debug-1)
                 }
             }
         } else {
