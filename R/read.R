@@ -69,7 +69,7 @@
 #' mtext(paste(file, "\n ignoring flags"), cex=0.7*par("cex"))
 #'}
 #'
-#' @importFrom oce handleFlags read.argo
+#' @importFrom oce handleFlags initializeFlagSchemeInternal read.argo
 #' @importFrom ncdf4 nc_version
 #'
 #' @export
@@ -98,16 +98,58 @@ readProfiles <- function(profiles, handleFlags, silent=FALSE, debug=0)
         fileExists <- sapply(profiles, file.exists)
         if (any(!fileExists))
             stop("cannot find the following files: \"", paste(profiles[!fileExists], collapse="\", \""), "\"")
+        argoFloatsDebug(debug, "reading", length(profiles), "netcdf files...\n")
         res@data$argos <- lapply(profiles, read.argo, debug=debug-1)
+        argoFloatsDebug(debug, "... finished reading netcdf files.\n")
+        ##. NOTE: oce will not permit over-riding the built-in scheme
+        ##. argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles...\n")
+        ##. res@data$argos <- lapply(res@data$argos,
+        ##.                          function(x)
+        ##.                          {
+        ##.                              x@metadata$flagScheme <- NULL
+        ##.                              oce::initializeFlagSchemeInternal(x,
+        ##.                                                                name="argo",
+        ##.                                                                mapping=list(not_assessed=0, passed_all_tests=1,
+        ##.                                                                             probably_good=2, probably_bad=3,
+        ##.                                                                             bad=4, changed=5,
+        ##.                                                                             not_used_6=6, not_used_7=7,
+        ##.                                                                             estimated=8, missing=9),
+        ##.                                                                default=c(0, 3, 4, 9))
+        ##.                          })
+        ##. argoFloatsDebug(debug, "... finished initializing flag-mapping scheme.\n")
     } else if (inherits(profiles, "argoFloats")) {
         type <- profiles[["type"]]
         if (type == "profiles") {
             argoFloatsDebug(debug, "case 3: object created by getProfiles()\n")
             fileNames <- gsub(".*/(.*).nc", "\\1.nc", profiles@data$file)
             fullFileNames <- paste0(profiles@metadata$destdir, "/", fileNames)
-            argoFloatsDebug(debug, "about to read", length(fullFileNames), "netcdf files...\n")
+            argoFloatsDebug(debug, "reading", length(fullFileNames), "netcdf files...\n")
             res@data$argos <- lapply(fullFileNames, oce::read.argo, debug=debug-1)
-            argoFloatsDebug(debug, "... finished reading", length(fullFileNames), "netcdf files.\n")
+            argoFloatsDebug(debug, "... finished reading netcdf files.\n")
+            ##. NOTE: oce will not permit over-riding the built-in scheme
+            ##. ## Override the oce flag default, which had been c(1,3:9) until at 2020 June 10, at
+            ##. ## which point Jaimie Harbin pointed out that it was wrong.  Note that the next
+            ##. ## assignment will not be necessary with oce after the June 10, 2020 update to
+            ##. ## oce, but we still do it here, because we not want argoFloats users to be forced
+            ##. ## to update oce, which requires having a C++ compiler, etc. See
+            ##. ##     * https://github.com/dankelley/oce/issues/1704 
+            ##. ##     * https://github.com/ArgoCanada/argoFloats/issues/133
+            ##. ## for more disucssion.
+            ##. argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles...\n")
+            ##. res@data$argos <- lapply(res@data$argos,
+            ##.                          function(x)
+            ##.                          {
+            ##.                              x@metadata$flagScheme <- NULL
+            ##.                              oce::initializeFlagSchemeInternal(x,
+            ##.                                                                name="argo",
+            ##.                                                                mapping=list(not_assessed=0, passed_all_tests=1,
+            ##.                                                                             probably_good=2, probably_bad=3,
+            ##.                                                                             bad=4, changed=5,
+            ##.                                                                             not_used_6=6, not_used_7=7,
+            ##.                                                                             estimated=8, missing=9),
+            ##.                                                                default=c(0, 3, 4, 9))
+            ##.                          })
+            ##. argoFloatsDebug(debug, "... finished initializing flag-mapping scheme.\n")
         } else {
             stop("'profiles' must be a character vector or an object created by getProfiles()")
         }
