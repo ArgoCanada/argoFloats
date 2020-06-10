@@ -1,11 +1,83 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
+# utility file, not exported (since it may go into 'oce', where it belongs)
+
+argoUseAdjusted <- function(argo, debug=0)
+{
+    argoFloatsDebug(debug, "argoUseAdjusted() {\n", style="bold", sep="", unindent=1)
+    res <- argo
+    namesData <- names(argo@data)
+    namesDataNew <- namesData
+    basenames <- subset(namesData, !grepl("Adjusted", namesData))
+    convert <- list()
+    for (basename in basenames) {
+        w <- grep(basename, namesData)
+        related <- namesData[w]
+        if (length(related) > 1) {
+            for (r in related) {
+                convert[r] <- if (grepl("Adjusted", r)) gsub("Adjusted", "", r) else paste0(basename, "Unadjusted")
+            }
+        }
+    }
+    namesConvert <- names(convert)
+    ## Rename data
+    namesData <- names(argo@data)
+    tmp <- namesData
+    for (i in seq_along(tmp)) {
+        w <- which(namesData[i] == namesConvert)
+        if (length(w))
+            tmp[i] <- convert[[w]]
+    }
+    argoFloatsDebug(debug, "data ORIG:  ", paste(names(argo@data), collapse=" "), "\n")
+    names(res@data) <- tmp
+    argoFloatsDebug(debug, "data AFTER: ", paste(names(res@data), collapse=" "), "\n")
+    ## Rename metadata$flags
+    namesFlags <- names(argo@metadata$flags)
+    tmp <- namesFlags
+    for (i in seq_along(tmp)) {
+        w <- which(namesFlags[i] == namesConvert)
+        if (length(w))
+            tmp[i] <- convert[[w]]
+    }
+    argoFloatsDebug(debug, "flags ORIG:  ", paste(names(argo@metadata$flags), collapse=" "), "\n")
+    names(res@metadata$flags) <- tmp
+    argoFloatsDebug(debug, "flags AFTER: ", paste(names(res@metadata$flags), collapse=" "), "\n")
+    ## Rename metadata$units
+    namesUnits <- names(argo@metadata$units)
+    tmp <- namesUnits
+    for (i in seq_along(tmp)) {
+        w <- which(namesUnits[i] == namesConvert)
+        if (length(w))
+            tmp[i] <- convert[[w]]
+    }
+    argoFloatsDebug(debug, "units ORIG:  ", paste(names(argo@metadata$units), collapse=" "), "\n")
+    names(res@metadata$units) <- tmp
+    argoFloatsDebug(debug, "units AFTER: ", paste(names(res@metadata$units), collapse=" "), "\n")
+    ## Rename metadata$dataNamesOriginal
+    namesUnits <- names(argo@metadata$dataNamesOriginal)
+    tmp <- namesUnits
+    for (i in seq_along(tmp)) {
+        w <- which(namesUnits[i] == namesConvert)
+        if (length(w))
+            tmp[i] <- convert[[w]]
+    }
+    argoFloatsDebug(debug, "dataNamesOriginal ORIG:  ", paste(names(argo@metadata$dataNamesOriginal), collapse=" "), "\n")
+    names(res@metadata$dataNamesOriginal) <- tmp
+    argoFloatsDebug(debug, "dataNamesOriginal AFTER: ", paste(names(res@metadata$dataNamesOriginal), collapse=" "), "\n")
+    res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+    argoFloatsDebug(debug, "} # argoUseAdjusted()\n", style="bold", sep="", unindent=1)
+    res
+}
+
+
+
+
 #' Read argo profiles from local files
 #'
 #' This works with either a list of local (netCDF) files,
 #' or a [`argoFloats-class`] object of type `"profiles"`, as
 #' created by [getProfiles()].  By default, warnings are issued about any
-#' profiles in which 50 percent or more of the measurements are flagged
+#' profiles in which 10 percent or more of the measurements are flagged
 #' with a quality-control code of 4 (which designates bad data),
 #' and these values are set to `NA`; use the `silent` and `handleFlags`
 #' arguments to control this behaviour.
@@ -25,6 +97,20 @@
 #' the call to `readProfiles()`.  See Wong et al. (2020) for a discussion
 #' of flags in argo data.
 #'
+#' If `adjusted` is `TRUE`, then the data elements are renamed after
+#' reading, so that e.g. the data named `TEMP_ADJUSTED` and
+#' `TEMP_ADJUSTED_ERROR` in the source netcdf file would be
+#' stored with names `temperature` and `temperatureAdjusted`,
+#' with `TEMP` being stored as `temperatureUnadjusted`.  This
+#' applies to all variables, not just temperature.  The quality-control
+#' flags are similarly named. Note that the original names are left
+#' intact, so that with
+#'```
+#' a <- readProfiles(..., adjusted=TRUE)
+#'```
+#' the values of `a[["temperature"]]` and `a[["TEMP_ADJUSTED"]]`
+#' will be identical.
+#'
 #' @param profiles either a character vector holding the names
 #' of local files to read, or (better) an [`argoFloats-class`] object created
 #' by [getProfiles()].
@@ -32,6 +118,14 @@
 #' if not provided (with a message being indicated to that effect).
 #' See \dQuote{Details}.
 #' @template silent
+#' @param adjusted a logical value (`TRUE` by default) that indicates
+#' whether to focus on the "adjusted" versions of data and quality-control
+#' flags, renaming the other versions with names ending in `Unadjusted`.
+#' See \dQuote{Details}.
+#' @param FUN a function that reads the netcdf files in which the argo
+#' profiles are stored.  If `FUN` not provided, then it defaults
+#' to [oce::read.argo()].  Only experts should consider anything
+#' other than this default, or a wrapper to it.
 #' @param debug an integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
 #' a small amount of debugging information is printed.  Note that
@@ -75,7 +169,7 @@
 #' @export
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, handleFlags, silent=FALSE, debug=0)
+readProfiles <- function(profiles, handleFlags, adjusted=TRUE, FUN, silent=FALSE, debug=0)
 {
     debug <- floor(0.5 + debug)
     debug <- max(0, debug)
@@ -84,6 +178,12 @@ readProfiles <- function(profiles, handleFlags, silent=FALSE, debug=0)
     if (missing(handleFlags)) {
         handleFlags <- FALSE
         message("readProfiles() is setting handleFlags=FALSE, so all data (not just those flagged as 'good') are retained")
+    }
+    if (missing(FUN)) {
+        FUN <- oce::read.argo
+    } else {
+        if (!is.function(FUN))
+            stop("FUN must be a function, e.g. read.argo")
     }
     ## show the ncdf4 version.  Frankly, this is just to prevent errors in R CMD check.  The problem
     ## has to do with oce::read.argo() doing a require(ncdf4), which causes an error message in
@@ -99,9 +199,9 @@ readProfiles <- function(profiles, handleFlags, silent=FALSE, debug=0)
         if (any(!fileExists))
             stop("cannot find the following files: \"", paste(profiles[!fileExists], collapse="\", \""), "\"")
         argoFloatsDebug(debug, "reading", length(profiles), "netcdf files...\n")
-        res@data$argos <- lapply(profiles, read.argo, debug=debug-1)
+        res@data$argos <- lapply(profiles, FUN, debug=debug-1)
         argoFloatsDebug(debug, "... finished reading netcdf files.\n")
-        ##. NOTE: oce will not permit over-riding the built-in scheme
+        ##. NOTE: oce will not permit over-riding the built-in scheme; retaining commented-out code for a while, though
         ##. argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles...\n")
         ##. res@data$argos <- lapply(res@data$argos,
         ##.                          function(x)
@@ -123,18 +223,19 @@ readProfiles <- function(profiles, handleFlags, silent=FALSE, debug=0)
             argoFloatsDebug(debug, "case 3: object created by getProfiles()\n")
             fileNames <- gsub(".*/(.*).nc", "\\1.nc", profiles@data$file)
             fullFileNames <- paste0(profiles@metadata$destdir, "/", fileNames)
-            argoFloatsDebug(debug, "reading", length(fullFileNames), "netcdf files...\n")
+            argoFloatsDebug(debug, "reading", length(fullFileNames), "netcdf files ...\n")
             res@data$argos <- lapply(fullFileNames, oce::read.argo, debug=debug-1)
             argoFloatsDebug(debug, "... finished reading netcdf files.\n")
-            ##. NOTE: oce will not permit over-riding the built-in scheme
-            ##. ## Override the oce flag default, which had been c(1,3:9) until at 2020 June 10, at
-            ##. ## which point Jaimie Harbin pointed out that it was wrong.  Note that the next
-            ##. ## assignment will not be necessary with oce after the June 10, 2020 update to
-            ##. ## oce, but we still do it here, because we not want argoFloats users to be forced
-            ##. ## to update oce, which requires having a C++ compiler, etc. See
-            ##. ##     * https://github.com/dankelley/oce/issues/1704 
-            ##. ##     * https://github.com/ArgoCanada/argoFloats/issues/133
-            ##. ## for more disucssion.
+            if (adjusted) {
+                argoFloatsDebug(debug, "applying the 'adjusted' argument ...\n")
+                n <- length(res@data$argos)
+                for (i in seq_len(n)) {
+                    argoFloatsDebug(debug, paste("profile ", i), "\n")
+                    res@data$argos[[i]] <- argoUseAdjusted(res@data$argos[[i]], debug=debug)
+                }
+            }
+            argoFloatsDebug(debug, "... finished applying the 'adjusted' argument.\n")
+            ##. NOTE: oce will not permit over-riding the built-in scheme; retaining commented-out code for a while, though
             ##. argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles...\n")
             ##. res@data$argos <- lapply(res@data$argos,
             ##.                          function(x)
@@ -191,7 +292,10 @@ readProfiles <- function(profiles, handleFlags, silent=FALSE, debug=0)
         }
     }
     argoFloatsDebug(debug, "} # readProfiles\n", style="bold", sep="", unindent=1)
-    res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+    res@processingLog <- processingLogAppend(res@processingLog,
+                                             paste0("readProfiles(..., handleFlags=",
+                                                    handleFlags, ", adjusted=",
+                                                    adjusted, ", ...)"))
     res
 }
 
