@@ -64,7 +64,7 @@ argoUseAdjusted <- function(argo, debug=0)
     argoFloatsDebug(debug, "dataNamesOriginal ORIG:  ", paste(names(argo@metadata$dataNamesOriginal), collapse=" "), "\n")
     names(res@metadata$dataNamesOriginal) <- tmp
     argoFloatsDebug(debug, "dataNamesOriginal AFTER: ", paste(names(res@metadata$dataNamesOriginal), collapse=" "), "\n")
-    res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""), "\n")
+    res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     argoFloatsDebug(debug, "} # argoUseAdjusted()\n", style="bold", sep="", unindent=1)
     res
 }
@@ -212,8 +212,8 @@ readProfiles <- function(profiles, handleFlags, adjusted=TRUE, FUN, silent=FALSE
                 argoFloatsDebug(debug, "... finished reading", length(fullFileNames), "netcdf files.\n")
                 n <- length(res@data$argos)
                 for (i in seq_len(n)) {
-                    message("profile ", i)
-                    res@data$argos[[i]] <- argoUseAdjusted(res@data$argos[[i]], debug=debug-1)
+                    argoFloatsDebug(debug, paste("profile ", i), "\n")
+                    res@data$argos[[i]] <- argoUseAdjusted(res@data$argos[[i]], debug=debug)
                 }
             }
         } else {
@@ -257,7 +257,10 @@ readProfiles <- function(profiles, handleFlags, adjusted=TRUE, FUN, silent=FALSE
         }
     }
     argoFloatsDebug(debug, "} # readProfiles\n", style="bold", sep="", unindent=1)
-    res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+    res@processingLog <- processingLogAppend(res@processingLog,
+                                             paste0("readProfiles(..., handleFlags=",
+                                                    handleFlags, ", adjusted=",
+                                                    adjusted, ", ...)"))
     res
 }
 
