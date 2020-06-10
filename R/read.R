@@ -69,7 +69,7 @@
 #' mtext(paste(file, "\n ignoring flags"), cex=0.7*par("cex"))
 #'}
 #'
-#' @importFrom oce handleFlags initializeFlagSchemeInternal read.argo
+#' @importFrom oce handleFlags read.argo
 #' @importFrom ncdf4 nc_version
 #'
 #' @export
