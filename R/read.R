@@ -118,7 +118,7 @@ argoUseAdjusted <- function(argo, debug=0)
 #' if not provided (with a message being indicated to that effect).
 #' See \dQuote{Details}.
 #' @template silent
-#' @param adjusted a logical value (`TRUE` by default) that indicates
+#' @param adjusted a logical value (`FALSE` by default) that indicates
 #' whether to focus on the "adjusted" versions of data and quality-control
 #' flags, renaming the other versions with names ending in `Unadjusted`.
 #' See \dQuote{Details}.
@@ -169,7 +169,7 @@ argoUseAdjusted <- function(argo, debug=0)
 #' @export
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, handleFlags, adjusted=TRUE, FUN, silent=FALSE, debug=0)
+readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALSE, debug=0)
 {
     debug <- floor(0.5 + debug)
     debug <- max(0, debug)
@@ -198,25 +198,32 @@ readProfiles <- function(profiles, handleFlags, adjusted=TRUE, FUN, silent=FALSE
         fileExists <- sapply(profiles, file.exists)
         if (any(!fileExists))
             stop("cannot find the following files: \"", paste(profiles[!fileExists], collapse="\", \""), "\"")
-        argoFloatsDebug(debug, "reading", length(profiles), "netcdf files...\n")
+        argoFloatsDebug(debug, "reading", length(profiles), "netcdf files.\n")
         res@data$argos <- lapply(profiles, FUN, debug=debug-1)
-        argoFloatsDebug(debug, "... finished reading netcdf files.\n")
-        ##. NOTE: oce will not permit over-riding the built-in scheme; retaining commented-out code for a while, though
-        ##. argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles...\n")
-        ##. res@data$argos <- lapply(res@data$argos,
-        ##.                          function(x)
-        ##.                          {
-        ##.                              x@metadata$flagScheme <- NULL
-        ##.                              oce::initializeFlagSchemeInternal(x,
-        ##.                                                                name="argo",
-        ##.                                                                mapping=list(not_assessed=0, passed_all_tests=1,
-        ##.                                                                             probably_good=2, probably_bad=3,
-        ##.                                                                             bad=4, changed=5,
-        ##.                                                                             not_used_6=6, not_used_7=7,
-        ##.                                                                             estimated=8, missing=9),
-        ##.                                                                default=c(0, 3, 4, 9))
-        ##.                          })
-        ##. argoFloatsDebug(debug, "... finished initializing flag-mapping scheme.\n")
+        n <- length(res@data$argos)
+        argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles (over-rides oce defaults).\n")
+        for (i in seq_len(n)) {
+            res@data$argos[[i]]@metadata$flagScheme <- list(name="argo",
+                                                            mapping=list(not_assessed=0,
+                                                                         passed_all_tests=1,
+                                                                         probably_good=2,
+                                                                         probably_bad=3,
+                                                                         bad=4,
+                                                                         changed=5,
+                                                                         not_used_6=6,
+                                                                         not_used_7=7,
+                                                                         estimated=8,
+                                                                         missing=9),
+                                                            default=c(0, 3, 4, 9))
+            res@data$argos[[i]]@processingLog <- processingLogAppend(res@data$argos[[i]]@processingLog,
+                                                                     "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
+        }
+        if (adjusted) {
+            argoFloatsDebug(debug, "applying the 'adjusted' argument.\n")
+            for (i in seq_len(n)) {
+                res@data$argos[[i]] <- argoUseAdjusted(res@data$argos[[i]], debug=debug)
+            }
+        }
     } else if (inherits(profiles, "argoFloats")) {
         type <- profiles[["type"]]
         if (type == "profiles") {
@@ -225,32 +232,30 @@ readProfiles <- function(profiles, handleFlags, adjusted=TRUE, FUN, silent=FALSE
             fullFileNames <- paste0(profiles@metadata$destdir, "/", fileNames)
             argoFloatsDebug(debug, "reading", length(fullFileNames), "netcdf files ...\n")
             res@data$argos <- lapply(fullFileNames, oce::read.argo, debug=debug-1)
-            argoFloatsDebug(debug, "... finished reading netcdf files.\n")
+            n <- length(res@data$argos)
+            argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles (over-rides oce defaults).\n")
+            for (i in seq_len(n)) {
+                res@data$argos[[i]]@metadata$flagScheme <- list(name="argo",
+                                                                mapping=list(not_assessed=0,
+                                                                             passed_all_tests=1,
+                                                                             probably_good=2,
+                                                                             probably_bad=3,
+                                                                             bad=4,
+                                                                             changed=5,
+                                                                             not_used_6=6,
+                                                                             not_used_7=7,
+                                                                             estimated=8,
+                                                                             missing=9),
+                                                                default=c(0, 3, 4, 9))
+                res@data$argos[[i]]@processingLog <- processingLogAppend(res@data$argos[[i]]@processingLog,
+                                                                         "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
+             }
             if (adjusted) {
-                argoFloatsDebug(debug, "applying the 'adjusted' argument ...\n")
-                n <- length(res@data$argos)
+                argoFloatsDebug(debug, "applying the 'adjusted' argument.\n")
                 for (i in seq_len(n)) {
-                    argoFloatsDebug(debug, paste("profile ", i), "\n")
                     res@data$argos[[i]] <- argoUseAdjusted(res@data$argos[[i]], debug=debug)
                 }
             }
-            argoFloatsDebug(debug, "... finished applying the 'adjusted' argument.\n")
-            ##. NOTE: oce will not permit over-riding the built-in scheme; retaining commented-out code for a while, though
-            ##. argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles...\n")
-            ##. res@data$argos <- lapply(res@data$argos,
-            ##.                          function(x)
-            ##.                          {
-            ##.                              x@metadata$flagScheme <- NULL
-            ##.                              oce::initializeFlagSchemeInternal(x,
-            ##.                                                                name="argo",
-            ##.                                                                mapping=list(not_assessed=0, passed_all_tests=1,
-            ##.                                                                             probably_good=2, probably_bad=3,
-            ##.                                                                             bad=4, changed=5,
-            ##.                                                                             not_used_6=6, not_used_7=7,
-            ##.                                                                             estimated=8, missing=9),
-            ##.                                                                default=c(0, 3, 4, 9))
-            ##.                          })
-            ##. argoFloatsDebug(debug, "... finished initializing flag-mapping scheme.\n")
         } else {
             stop("'profiles' must be a character vector or an object created by getProfiles()")
         }

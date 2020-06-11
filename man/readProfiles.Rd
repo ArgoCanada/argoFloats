@@ -7,7 +7,7 @@
 readProfiles(
   profiles,
   handleFlags,
-  adjusted = TRUE,
+  adjusted = FALSE,
   FUN,
   silent = FALSE,
   debug = 0
@@ -22,7 +22,7 @@ by \code{\link[=getProfiles]{getProfiles()}}.}
 if not provided (with a message being indicated to that effect).
 See \dQuote{Details}.}
 
-\item{adjusted}{a logical value (\code{TRUE} by default) that indicates
+\item{adjusted}{a logical value (\code{FALSE} by default) that indicates
 whether to focus on the "adjusted" versions of data and quality-control
 flags, renaming the other versions with names ending in \code{Unadjusted}.
 See \dQuote{Details}.}
