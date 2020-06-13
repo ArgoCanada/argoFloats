@@ -122,11 +122,14 @@ is returned.
 \item Otherwise, if \code{i} is a character value, then it is taken to be
 an item within the \code{metadata} or \code{data} slots of the argo objects
 stored in \code{x}, and the returned value is a list containing that
-information with one (unnamed) item per profile.  Note that
-items from the \code{metadata} are repeated and cast into a matrix
-as the same dimensionality as pressure, as a way to make it
-easier to e.g. use \code{\link[oce:as.ctd]{oce::as.ctd()}} to create a CTD object from
-values returned by the present function, passed through \code{\link[=unlist]{unlist()}}.
+information with one (unnamed) item per profile.  If \code{j} is provided
+and equal to \code{"byLevel"}, then the items from the \code{metadata} are
+repeated (if necessary) and formed into matrix or vector of the same
+shape as the \code{"pressure"} field; this can be convenient for computations
+involving items that only occur once per profile, such as \code{"longitude"},
+but it should not be used for items that are not level-specific, such
+as the various \code{"HISTORY_*"} elements, which apply to a dataset, not to
+a level.
 \item Otherwise, an error is reported.
 }
 \item Otherwise, an error is reported.

@@ -65,7 +65,7 @@ geographical <- TRUE
 #' depending on the value of `which`. Note that `xlab` is not obeyed if
 #' `which="TS"`, because altering that label can be confusing to the user.
 #'
-#' @param ylab as `xlab`, but for th vertical axis.
+#' @param ylab as `xlab`, but for the vertical axis.
 #'
 #' @param cex character expansion factor for plot symbols, or `NULL`, to get an
 #' value that depends on the value of `which`.

@@ -40,7 +40,7 @@ plotting functions.}
 depending on the value of \code{which}. Note that \code{xlab} is not obeyed if
 \code{which="TS"}, because altering that label can be confusing to the user.}
 
-\item{ylab}{as \code{xlab}, but for th vertical axis.}
+\item{ylab}{as \code{xlab}, but for the vertical axis.}
 
 \item{cex}{character expansion factor for plot symbols, or \code{NULL}, to get an
 value that depends on the value of \code{which}.}
