@@ -11,7 +11,7 @@ Authors@R: c(
         comment=c(ORCID="https://orcid.org/0000-0002-7833-206X")))
 Maintainer: Dan Kelley <dan.kelley@dal.ca>
 Depends: R (>= 3.5.0)
-Suggests: testthat, ocedata, knitr, rmarkdown
+Suggests: knitr, marmap (>= 1.0.4), ocedata, rmarkdown, testthat
 BugReports: https://github.com/ArgoCanada/argoFloats/issues
 Description: The 'argoFloats' package provides support for downloading and analyzing Argo float datasets.
 License: GPL (>= 2)

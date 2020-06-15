@@ -141,7 +141,7 @@ geographical <- TRUE
 #' @importFrom graphics abline axis box par plot.window points polygon text
 #' @importFrom utils data
 #' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
-#' @importFrom marmap getNOAA.bathy
+## @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method
 #' @author Dan Kelley
@@ -202,8 +202,6 @@ setMethod(f="plot",
                   } else {
                       stop("In plot() : 'bathymetry' must be logical, an object created by marmap::getNOAA.bathy(), or a list", call.=FALSE)
                   }
-                  if (drawBathymetry)
-                      requireNamespace("marmap")
                   if (!is.logical(bathymetry$keep))
                       stop("In plot() : 'bathymetry$keep' must be a logical value", call.=FALSE)
                   if (!is.logical(bathymetry$palette))
@@ -213,6 +211,8 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "asp=", asp, "\n", sep="")
                   if (drawBathymetry) {
                       argoFloatsDebug(debug, "handling bathymetry\n", sep="")
+                      if (!requireNamespace("marmap", quietly=TRUE))
+                          stop("must install.packages(\"marmap\") to plot with bathymetry")
                       ## Handle bathymetry file downloading (or the use of a supplied value)
                       bathy <- NULL
                       if (is.character(bathymetry$source) && bathymetry$source == "auto") {
