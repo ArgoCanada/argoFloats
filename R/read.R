@@ -9,7 +9,6 @@ argoUseAdjusted <- function(argo, debug=0)
     argoFloatsDebug(debug, "argoUseAdjusted() {\n", style="bold", sep="", unindent=1)
     res <- argo
     namesData <- names(argo@data)
-    namesDataNew <- namesData
     basenames <- subset(namesData, !grepl("Adjusted", namesData))
     convert <- list()
     for (basename in basenames) {
@@ -166,7 +165,7 @@ argoUseAdjusted <- function(argo, debug=0)
 #'}
 #'
 ## @importFrom oce handleFlags read.argo
-#' @importFrom ncdf4 nc_version
+## @importFrom ncdf4 nc_version
 #'
 #' @export
 #'
@@ -175,6 +174,8 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
 {
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for readProfiles() to work")
+    if (!requireNamespace("ncdf4", quietly=TRUE))
+        stop("must install.packages(\"ncdf4\") for readProfiles() to work")
     debug <- floor(0.5 + debug)
     debug <- max(0, debug)
     res <- NULL
@@ -191,8 +192,7 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
     }
     ## show the ncdf4 version.  Frankly, this is just to prevent errors in R CMD check.  The problem
     ## has to do with oce::read.argo() doing a require(ncdf4), which causes an error message in
-    ## checking argoFloats.  But if we put argoFloats in the "Depends" field of the argoFloats
-    ## DESCRIPTION file, we get an error because ArgoFloats is not using it.
+    ## checking argoFloats.
     ncversion <- ncdf4::nc_version()
     argoFloatsDebug(debug, "ncdf4 version: ", ncversion, "\n")
 

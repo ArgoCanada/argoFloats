@@ -21,6 +21,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 BuildVignettes: true
 VignetteBuilder: knitr
-Imports: methods, ncdf4
-Suggests: curl, sf, knitr, oce, marmap (>= 1.0.4), ocedata, rmarkdown, testthat
+Imports: methods
+Suggests: curl, sf, knitr, oce, marmap (>= 1.0.4), ncdf4, ocedata, rmarkdown, testthat
 
