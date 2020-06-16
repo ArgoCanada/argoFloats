@@ -1,8 +1,11 @@
 library(argoFloats)
 data('index')
-s <- subset(index,953)
+s <- subset(index,100)
 gp <- getProfiles(s)
 rp <- readProfiles(gp)
+rp1 <- rp[[1]]
+rp1[['HISTORY_QCTEST']]
+rp1[['HISTORY_ACTION']]
 
 qf <- function(a) {
     if(!inherits(a, 'argos'))
@@ -17,3 +20,5 @@ qf <- function(a) {
         cat("Tests failed:", paste(which(1 == tail(rev(BB('QCF$')),-1)), collapse=' '))
     }
 }
+
+qf('rp1')
