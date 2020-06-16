@@ -191,7 +191,7 @@
 #'
 ## @importFrom oce geodDist
 ## @importFrom sp point.in.polygon
-#' @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
+## @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
 #' @export
 setMethod(f="subset",
           signature="argoFloats",
@@ -250,6 +250,9 @@ setMethod(f="subset",
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="polygon") {
+                      if (!requireNamespace("sf", quietly=TRUE))
+                          stop("must install.packages(\"sf\") for subset() by polygon to work")
+
                       polygon <- dots[[1]]
                       if(!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'polygon' must be a list")
