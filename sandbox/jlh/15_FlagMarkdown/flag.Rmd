@@ -20,18 +20,23 @@ Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
 As described by the Argo user’s manual V3.3 [1], data that are given a flag value of 1, 2, 5, or 8 are considered 'good' data. If data are given a flag value of 9 (or missing value) they are not used, and flags 3, 5, 6, and 7 are considered 'bad' data. 
 
 ## Diagnostic Plot
-Our `argoFloats` package takes flags into consideration and created a diagnostic plot. The diagnostic plot is a plot of parameter quality and paramter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. 
+Our `argoFloats` package uses the flags of profiles to determine "good" and "bad" data. We then created a plot type to demonstrate the quality of data, the `diagnostic` plot. The diagnostic plot is a plot of parameter quality and parameter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. 
 
 An example of how to get the diagnostic plot is as follows:
 
 ```{r, message=FALSE, warning=FALSE}
 library(argoFloats)
-data('indexSynthetic')
-profiles <- getProfiles(indexSynthetic)
-a <- readProfiles(profiles)
-plot(a[[1]], which='diagnostic', parameter='oxygen')
+ais <- getIndex(filename = 'synthetic', age=0)
+sub <- subset(ais, ID='2902123')
+lonRect <- c(56, 66)
+latRect <- c(11,12)
+s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
+profiles <- getProfiles(s)
+argos <- readProfiles(profiles)
+plot(argos, which='diagnostic', parameter='temperature')
 ```
 
+*Exercise One:* Use the previous code to determine the diagnostics of 
 ## <PARAM>ADJUSTED
 
 # References
