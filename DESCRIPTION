@@ -10,7 +10,6 @@ Authors@R: c(
     person(given="Clark", family="Richards", email="clark.richards@dfo-mpo.gc.ca", role=c("ctb"),
         comment=c(ORCID="https://orcid.org/0000-0002-7833-206X")))
 Maintainer: Dan Kelley <dan.kelley@dal.ca>
-Depends: R (>= 3.5.0)
 BugReports: https://github.com/ArgoCanada/argoFloats/issues
 Description: The 'argoFloats' package provides support for downloading and analyzing Argo float datasets.
 License: GPL (>= 2)
@@ -21,6 +20,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 BuildVignettes: true
 VignetteBuilder: knitr
+Depends: R (>= 3.5.0)
 Imports: methods
 Suggests: curl, sf, knitr, oce, marmap (>= 1.0.4), ncdf4, ocedata, rmarkdown, testthat
 
