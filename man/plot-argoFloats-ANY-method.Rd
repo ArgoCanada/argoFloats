@@ -161,6 +161,19 @@ library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 plot(a[[1]], which="TS")
 
+# Example 7: Temperature diagnostic plot for an ID in Arabian Sea
+\dontrun{
+library(argoFloats)
+ais <- getIndex(filename = 'synthetic', age=0)
+sub <- subset(ais, ID='2902123')
+lonRect <- c(56, 66)
+latRect <- c(11,12)
+s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
+profiles <- getProfiles(s)
+argos <- readProfiles(profiles)
+plot(argos, which='diagnostic', parameter='temperature')
+}
+
 }
 \author{
 Dan Kelley
