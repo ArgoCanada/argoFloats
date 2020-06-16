@@ -100,47 +100,50 @@ geographical <- TRUE
 #' @examples
 #' # Example 1: map profiles in index, highlighting a neighborhood of 30
 #' library(argoFloats)
-#' library(oce)
-#' data(index)
-#' plot(index, bathymetry=FALSE)
-#' lon <- index[["longitude"]]
-#' lat <- index[["latitude"]]
-#' dist <- geodDist(lon, lat, -77.06, 26.54)
-#' o <- order(dist)
-#' index30 <- subset(index, o[1:30])
-#' points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
-#'
-#' # Example 3: TS of first 10 profiles
-#' # (Slow, so not run by default.)
+#' if (requireNamespace("oce")) {
+#'     data(index)
+#'     plot(index, bathymetry=FALSE)
+#'     lon <- index[["longitude"]]
+#'     lat <- index[["latitude"]]
+#'     dist <- oce::geodDist(lon, lat, -77.06, 26.54)
+#'     o <- order(dist)
+#'     index30 <- subset(index, o[1:30])
+#'     points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
+#'     # Example 3: TS of first 10 profiles
+#'     # (Slow, so not run by default.)
 #'\dontrun{
-#' profiles10 <- getProfiles(index10, destdir="~/data/argo")
-#' argos10 <- readProfiles(profiles10)
-#' plot(argos10, which="TS")}
+#'     profiles10 <- getProfiles(index10, destdir="~/data/argo")
+#'     argos10 <- readProfiles(profiles10)
+#'     plot(argos10, which="TS")
+#'}
 #'
-#' # Example 4: map with bathymetry
-#' # (Slow, so not run by default.)
+#'     # Example 4: map with bathymetry
+#'     # (Slow, so not run by default.)
 #'\dontrun{
-#' par(mar=c(3, 3, 1, 1))
-#' plot(index, bathymetry=TRUE)}
+#'     par(mar=c(3, 3, 1, 1))
+#'     plot(index, bathymetry=TRUE)
+#'}
 #'
-#' # Example 5: map with fine-grained bathymetry control
-#' # (Slow, so not run by default.)
+#'     # Example 5: map with fine-grained bathymetry control
+#'     # (Slow, so not run by default.)
 #'\dontrun{
-#' par(mar=c(3, 3, 1, 1))
-#' # Note that colormap shows water depth, not elevation above sea level
-#' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
-#' cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
-#' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
+#'     par(mar=c(3, 3, 1, 1))
+#'     # Note that colormap shows water depth, not elevation above sea level
+#'     bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
+#'     cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
+#'     plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
+#'}
 #'
-#' # Example 6: TS plot for a particular argo
-#' library(argoFloats)
-#' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-#' plot(a[[1]], which="TS")
+#'     # Example 6: TS plot for a particular argo
+#'     library(argoFloats)
+#'     a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+#'     plot(a[[1]], which="TS")
+#'}
 #'
 #' @importFrom grDevices extendrange gray rgb
 #' @importFrom graphics abline axis box par plot.window points polygon text
 #' @importFrom utils data
-#' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
+## @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
 ## @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method
@@ -158,6 +161,8 @@ setMethod(f="plot",
                               debug=0,
                               ...)
           {
+              if (!requireNamespace("oce", quietly=TRUE))
+                  stop("must install.packages(\"oce\") for plot() to work")
               debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
               argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1)
               if (!inherits(x, "argoFloats"))
@@ -370,10 +375,10 @@ setMethod(f="plot",
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
                   if (ocedataIsInstalled) {
                       usr <- par("usr")
-                      l <- geodDist(usr[1], usr[3], usr[1], usr[4]) # length [km] on left margin
-                      r <- geodDist(usr[2], usr[3], usr[2], usr[4]) # length [km] on right margin
-                      b <- geodDist(usr[1], usr[1], usr[2], usr[1]) # length [km] on bottom margin
-                      t <- geodDist(usr[1], usr[4], usr[2], usr[4]) # length [km] on top margin
+                      l <- oce::geodDist(usr[1], usr[3], usr[1], usr[4]) # length [km] on left margin
+                      r <- oce::geodDist(usr[2], usr[3], usr[2], usr[4]) # length [km] on right margin
+                      b <- oce::geodDist(usr[1], usr[1], usr[2], usr[1]) # length [km] on bottom margin
+                      t <- oce::geodDist(usr[1], usr[4], usr[2], usr[4]) # length [km] on top margin
                       mapSpan <- max(l, r, b, t) # largest length [km]
                       C <- 2 * 3.14 * 6.4e3 # circumferance of earth [km]
                       argoFloatsDebug(debug, "mapSpan=", mapSpan, ", C=", C, "\n")
@@ -458,9 +463,9 @@ setMethod(f="plot",
                       m <- unlist(lapply(x[['profile']], meanf))
                       par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
                       if (any(is.finite(q))) {
-                          oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE)
+                          oce::oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE)
                           abline(h=50, col='red', lty='dashed')
-                          oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
+                          oce::oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
                           points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
                       } else {
                           plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)

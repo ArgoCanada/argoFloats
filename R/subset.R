@@ -189,7 +189,7 @@
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
-#' @importFrom oce geodDist
+## @importFrom oce geodDist
 ## @importFrom sp point.in.polygon
 #' @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
 #' @export
@@ -214,7 +214,9 @@ setMethod(f="subset",
                           stop("In subset,argoFloats-method() : 'circle' must be a list containing 'longitude', 'latitude' and 'radius'.")
                       if (3 != sum(c("longitude", "latitude", "radius") %in% sort(names(circle))))
                           stop("In subset,argoFloats-method() : 'circle' must be a list containing 'longitude', 'latitude' and 'radius'")
-                      dist <- geodDist(x[["longitude"]], x[["latitude"]], circle$longitude, circle$latitude)
+                      if (!requireNamespace("oce", quietly=TRUE))
+                          stop("must install.packages(\"oce\") to subset by circle")
+                      dist <- oce::geodDist(x[["longitude"]], x[["latitude"]], circle$longitude, circle$latitude)
                       keep <- dist < circle$radius
                       keep[is.na(keep)] <- FALSE
                       x@data$index <- x@data$index[keep, ]

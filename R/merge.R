@@ -31,6 +31,8 @@
 setMethod(f="merge",
           signature="argoFloats",
           definition=function(x, y, ...) {
+              if (!requireNamespace("oce", quietly=TRUE))
+                  stop("must install.packages(\"oce\") for merge() to work")
               dots <- list(...)
               if (!inherits(x, "argoFloats"))
                   stop("'x' must be an argoFloats object")
@@ -63,7 +65,7 @@ setMethod(f="merge",
               for (i in seq_along(dots)) {
                   res@data$index <- rbind(x@data$index, dots[[i]]@data$index)
               }
-              res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+              res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
               res
           }
 )
