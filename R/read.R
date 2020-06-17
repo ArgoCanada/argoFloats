@@ -4,10 +4,11 @@
 
 argoUseAdjusted <- function(argo, debug=0)
 {
+    if (!requireNamespace("oce", quietly=TRUE))
+        stop("must install.packages(\"oce\") for argoUseAdjusted() to work")
     argoFloatsDebug(debug, "argoUseAdjusted() {\n", style="bold", sep="", unindent=1)
     res <- argo
     namesData <- names(argo@data)
-    namesDataNew <- namesData
     basenames <- subset(namesData, !grepl("Adjusted", namesData))
     convert <- list()
     for (basename in basenames) {
@@ -64,7 +65,7 @@ argoUseAdjusted <- function(argo, debug=0)
     argoFloatsDebug(debug, "dataNamesOriginal ORIG:  ", paste(names(argo@metadata$dataNamesOriginal), collapse=" "), "\n")
     names(res@metadata$dataNamesOriginal) <- tmp
     argoFloatsDebug(debug, "dataNamesOriginal AFTER: ", paste(names(res@metadata$dataNamesOriginal), collapse=" "), "\n")
-    res@processingLog <- processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+    res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     argoFloatsDebug(debug, "} # argoUseAdjusted()\n", style="bold", sep="", unindent=1)
     res
 }
@@ -163,14 +164,18 @@ argoUseAdjusted <- function(argo, debug=0)
 #' mtext(paste(file, "\n ignoring flags"), cex=0.7*par("cex"))
 #'}
 #'
-#' @importFrom oce handleFlags read.argo
-#' @importFrom ncdf4 nc_version
+## @importFrom oce handleFlags read.argo
+## @importFrom ncdf4 nc_version
 #'
 #' @export
 #'
 #' @author Dan Kelley
 readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALSE, debug=0)
 {
+    if (!requireNamespace("oce", quietly=TRUE))
+        stop("must install.packages(\"oce\") for readProfiles() to work")
+    if (!requireNamespace("ncdf4", quietly=TRUE))
+        stop("must install.packages(\"ncdf4\") for readProfiles() to work")
     debug <- floor(0.5 + debug)
     debug <- max(0, debug)
     res <- NULL
@@ -187,8 +192,7 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
     }
     ## show the ncdf4 version.  Frankly, this is just to prevent errors in R CMD check.  The problem
     ## has to do with oce::read.argo() doing a require(ncdf4), which causes an error message in
-    ## checking argoFloats.  But if we put argoFloats in the "Depends" field of the argoFloats
-    ## DESCRIPTION file, we get an error because ArgoFloats is not using it.
+    ## checking argoFloats.
     ncversion <- ncdf4::nc_version()
     argoFloatsDebug(debug, "ncdf4 version: ", ncversion, "\n")
 
@@ -215,7 +219,7 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
                                                                          estimated=8,
                                                                          missing=9),
                                                             default=c(0, 3, 4, 9))
-            res@data$argos[[i]]@processingLog <- processingLogAppend(res@data$argos[[i]]@processingLog,
+            res@data$argos[[i]]@processingLog <- oce::processingLogAppend(res@data$argos[[i]]@processingLog,
                                                                      "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
         }
         if (adjusted) {
@@ -247,8 +251,8 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
                                                                              estimated=8,
                                                                              missing=9),
                                                                 default=c(0, 3, 4, 9))
-                res@data$argos[[i]]@processingLog <- processingLogAppend(res@data$argos[[i]]@processingLog,
-                                                                         "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
+                res@data$argos[[i]]@processingLog <- oce::processingLogAppend(res@data$argos[[i]]@processingLog,
+                                                                              "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
              }
             if (adjusted) {
                 argoFloatsDebug(debug, "applying the 'adjusted' argument.\n")
@@ -297,10 +301,10 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
         }
     }
     argoFloatsDebug(debug, "} # readProfiles\n", style="bold", sep="", unindent=1)
-    res@processingLog <- processingLogAppend(res@processingLog,
-                                             paste0("readProfiles(..., handleFlags=",
-                                                    handleFlags, ", adjusted=",
-                                                    adjusted, ", ...)"))
+    res@processingLog <- oce::processingLogAppend(res@processingLog,
+                                                  paste0("readProfiles(..., handleFlags=",
+                                                         handleFlags, ", adjusted=",
+                                                         adjusted, ", ...)"))
     res
 }
 

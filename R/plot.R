@@ -100,12 +100,11 @@ geographical <- TRUE
 #' @examples
 #' # Example 1: map profiles in index, highlighting a neighborhood of 30
 #' library(argoFloats)
-#' library(oce)
 #' data(index)
 #' plot(index, bathymetry=FALSE)
 #' lon <- index[["longitude"]]
 #' lat <- index[["latitude"]]
-#' dist <- geodDist(lon, lat, -77.06, 26.54)
+#' dist <- oce::geodDist(lon, lat, -77.06, 26.54)
 #' o <- order(dist)
 #' index30 <- subset(index, o[1:30])
 #' points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
@@ -136,7 +135,7 @@ geographical <- TRUE
 #' library(argoFloats)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' plot(a[[1]], which="TS")
-#' 
+#'
 #' # Example 7: Temperature diagnostic plot for an ID in Arabian Sea
 #' \dontrun{
 #' library(argoFloats)
@@ -147,14 +146,13 @@ geographical <- TRUE
 #' s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 #' profiles <- getProfiles(s)
 #' argos <- readProfiles(profiles)
-#' plot(argos, which='diagnostic', parameter='temperature')
-#'}
+#' plot(argos, which='diagnostic', parameter='temperature')}
 #'
 #' @importFrom grDevices extendrange gray rgb
 #' @importFrom graphics abline axis box par plot.window points polygon text
 #' @importFrom utils data
-#' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
-#' @importFrom marmap getNOAA.bathy
+## @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
+## @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method
 #' @author Dan Kelley
@@ -171,6 +169,8 @@ setMethod(f="plot",
                               debug=0,
                               ...)
           {
+              if (!requireNamespace("oce", quietly=TRUE))
+                  stop("must install.packages(\"oce\") for plot() to work")
               debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
               argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1)
               if (!inherits(x, "argoFloats"))
@@ -215,8 +215,6 @@ setMethod(f="plot",
                   } else {
                       stop("In plot() : 'bathymetry' must be logical, an object created by marmap::getNOAA.bathy(), or a list", call.=FALSE)
                   }
-                  if (drawBathymetry)
-                      requireNamespace("marmap")
                   if (!is.logical(bathymetry$keep))
                       stop("In plot() : 'bathymetry$keep' must be a logical value", call.=FALSE)
                   if (!is.logical(bathymetry$palette))
@@ -226,6 +224,8 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "asp=", asp, "\n", sep="")
                   if (drawBathymetry) {
                       argoFloatsDebug(debug, "handling bathymetry\n", sep="")
+                      if (!requireNamespace("marmap", quietly=TRUE))
+                          stop("must install.packages(\"marmap\") to plot with bathymetry")
                       ## Handle bathymetry file downloading (or the use of a supplied value)
                       bathy <- NULL
                       if (is.character(bathymetry$source) && bathymetry$source == "auto") {
@@ -383,10 +383,10 @@ setMethod(f="plot",
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
                   if (ocedataIsInstalled) {
                       usr <- par("usr")
-                      l <- geodDist(usr[1], usr[3], usr[1], usr[4]) # length [km] on left margin
-                      r <- geodDist(usr[2], usr[3], usr[2], usr[4]) # length [km] on right margin
-                      b <- geodDist(usr[1], usr[1], usr[2], usr[1]) # length [km] on bottom margin
-                      t <- geodDist(usr[1], usr[4], usr[2], usr[4]) # length [km] on top margin
+                      l <- oce::geodDist(usr[1], usr[3], usr[1], usr[4]) # length [km] on left margin
+                      r <- oce::geodDist(usr[2], usr[3], usr[2], usr[4]) # length [km] on right margin
+                      b <- oce::geodDist(usr[1], usr[1], usr[2], usr[1]) # length [km] on bottom margin
+                      t <- oce::geodDist(usr[1], usr[4], usr[2], usr[4]) # length [km] on top margin
                       mapSpan <- max(l, r, b, t) # largest length [km]
                       C <- 2 * 3.14 * 6.4e3 # circumferance of earth [km]
                       argoFloatsDebug(debug, "mapSpan=", mapSpan, ", C=", C, "\n")
@@ -474,9 +474,9 @@ setMethod(f="plot",
                       m <- unlist(lapply(x[['profile']], meanf))
                       par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
                       if (any(is.finite(q))) {
-                          oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE)
+                          oce::oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE)
                           abline(h=50, col='red', lty='dashed')
-                          oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
+                          oce::oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
                           points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
                       } else {
                           plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
