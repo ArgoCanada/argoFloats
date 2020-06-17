@@ -1,7 +1,7 @@
 library(argoFloats)
 ai <- getIndex()
 s <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
-plot(s, which='map') # To get a visual
+plot(s, which='map', bathymetry=FALSE) # To get a visual
 pa <- locator(type='l')
 # Now select your points on the map in the Atlantic
 a <- subset(s, polygon=list(longitude=pa$x, latitude=pa$y))
