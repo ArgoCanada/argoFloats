@@ -1,41 +1,46 @@
 ---
-title: "flags"
-output: html_document
+title: "Introduction to argoFloats Flags"
+author: "Dan Kelley (https://orcid.org/0000-0001-7808-5911) and Jaimie Harbin (https://orcid.org/0000-0003-3774-3732)"
+date: "`r Sys.Date()`"
 ---
 
-```{r, message=FALSE, error=FALSE}
+**Abstract**
+
+# Introduction to Flags
+Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the data found at the Data Assembly Centers are as accurate as possible. More specifically, testing in done in three levels:
+
+1: Real time that complete checks on all measurements and assigned a quality flag within a 24-48 hour timeframe
+2. Delayed mode
+3. Regional scientific analyses of all float data with other available data. The procedures for regional analyses are still to be determined.
+
+*Hypothesis* : Our hypothesis is that real-time data have all NAs for <PARAM>ADJUSTED, and we should therefore only use the <PARAM>ADJUSTED for delayed mode data.
+
+# argoFloats and Flags
+
+As described by the Argo user’s manual V3.3 [1], data that are given a flag value of 1, 2, 5, or 8 are considered 'good' data. If data are given a flag value of 9 (or missing value) they are not used, and flags 3, 5, 6, and 7 are considered 'bad' data. 
+
+## Diagnostic Plot
+Our `argoFloats` package uses the flags of profiles to determine "good" and "bad" data. We then created a plot type to demonstrate the quality of data, the `diagnostic` plot. The diagnostic plot is a plot of parameter quality and parameter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. 
+
+An example of how to get the diagnostic plot is as follows:
+
+```{r, message=FALSE, warning=FALSE}
 library(argoFloats)
-library(oce)
-qf <- function(x) {
-    100 * (1 - sum(4 == x[[paste0(variable, 'Flag')]]) / length(x[[paste0(variable, 'Flag')]]))
-}
-meanf <- function(x) {
-    mean(x[[variable, na.rm=TRUE]])
-}
-if (!exists("bai")) {
-    ai <- getIndex(file='synthetic')
-    s <- subset(ai, ID='5901462') # Follow 5901462 float
-    profiles <- getProfiles(F5901462)
-    argos <- readProfiles(profiles, handleFlags=FALSE) 
-}
-time <- oce::numberAsPOSIXct(unlist(lapply(argos[['profile']], function(x) x[['time']])))
-variables <- c('oxygen', 'salinity', 'temperature')
-for (variable in variables) {
-    q <- unlist(lapply(argos[['profile']], qf))
-    m <- unlist(lapply(argos[['profile']], meanf))
-    par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
-    if (any(is.finite(q))) {
-        oce.plot.ts(time,q, ylab=paste(variable, "% Good"), drawTimeRange = FALSE)
-        abline(h=50, col='red', lty='dashed')
-        oce.plot.ts(time, m, ylab=paste(variable, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
-        points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
-    } else {
-        plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
-        box()
-        text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
-        plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
-        box()
-        text(0, 0.5, paste(' No', variable, 'flags available'), pos=4)
-    }
-}
+ais <- getIndex(filename = 'synthetic', age=0)
+sub <- subset(ais, ID='2902123')
+lonRect <- c(56, 66)
+latRect <- c(11,12)
+s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
+profiles <- getProfiles(s)
+argos <- readProfiles(profiles)
+plot(argos, which='diagnostic', parameter='temperature')
 ```
+
+*Exercise One:* Use the previous code to determine the diagnostics of 
+## <PARAM>ADJUSTED
+
+## qc function 
+The qc function in the `argoFloats` package tells the user which tests were performed on a particular profile as well as which tests were failed during QC testing. This information is found from the `HISTORY_QCTEST` parameter, however, it can be confusing to users as it is found in hexadecimal format. 
+
+# References
+[1] Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch, Claudia Schmid, Roger Goldsmith et al. "Argo User's Manual, Version 3.2. December 29th 2015.[SUPERSEDED]." (2015).

@@ -123,45 +123,53 @@ interest.
 \examples{
 # Example 1: map profiles in index, highlighting a neighborhood of 30
 library(argoFloats)
-if (requireNamespace("oce")) {
-    data(index)
-    plot(index, bathymetry=FALSE)
-    lon <- index[["longitude"]]
-    lat <- index[["latitude"]]
-    dist <- oce::geodDist(lon, lat, -77.06, 26.54)
-    o <- order(dist)
-    index30 <- subset(index, o[1:30])
-    points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
-    # Example 3: TS of first 10 profiles
-    # (Slow, so not run by default.)
-\dontrun{
-    profiles10 <- getProfiles(index10, destdir="~/data/argo")
-    argos10 <- readProfiles(profiles10)
-    plot(argos10, which="TS")
-}
+data(index)
+plot(index, bathymetry=FALSE)
+lon <- index[["longitude"]]
+lat <- index[["latitude"]]
+dist <- oce::geodDist(lon, lat, -77.06, 26.54)
+o <- order(dist)
+index30 <- subset(index, o[1:30])
+points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
 
-    # Example 4: map with bathymetry
-    # (Slow, so not run by default.)
+# Example 3: TS of first 10 profiles
+# (Slow, so not run by default.)
 \dontrun{
-    par(mar=c(3, 3, 1, 1))
-    plot(index, bathymetry=TRUE)
-}
+profiles10 <- getProfiles(index10, destdir="~/data/argo")
+argos10 <- readProfiles(profiles10)
+plot(argos10, which="TS")}
 
-    # Example 5: map with fine-grained bathymetry control
-    # (Slow, so not run by default.)
+# Example 4: map with bathymetry
+# (Slow, so not run by default.)
 \dontrun{
-    par(mar=c(3, 3, 1, 1))
-    # Note that colormap shows water depth, not elevation above sea level
-    bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
-    cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
-    plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
-}
+par(mar=c(3, 3, 1, 1))
+plot(index, bathymetry=TRUE)}
 
-    # Example 6: TS plot for a particular argo
-    library(argoFloats)
-    a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-    plot(a[[1]], which="TS")
-}
+# Example 5: map with fine-grained bathymetry control
+# (Slow, so not run by default.)
+\dontrun{
+par(mar=c(3, 3, 1, 1))
+# Note that colormap shows water depth, not elevation above sea level
+bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
+cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
+plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
+
+# Example 6: TS plot for a particular argo
+library(argoFloats)
+a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+plot(a[[1]], which="TS")
+
+# Example 7: Temperature diagnostic plot for an ID in Arabian Sea
+\dontrun{
+library(argoFloats)
+ais <- getIndex(filename = 'synthetic', age=0)
+sub <- subset(ais, ID='2902123')
+lonRect <- c(56, 66)
+latRect <- c(11,12)
+s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
+profiles <- getProfiles(s)
+argos <- readProfiles(profiles)
+plot(argos, which='diagnostic', parameter='temperature')}
 
 }
 \author{
