@@ -22,5 +22,5 @@ BuildVignettes: true
 VignetteBuilder: knitr
 Depends: R (>= 3.5.0)
 Imports: methods
-Suggests: curl, sf, knitr, oce, marmap (>= 1.0.4), ncdf4, ocedata, rmarkdown, testthat
+Suggests: curl, sf, knitr, marmap (>= 1.0.4), ncdf4, oce, ocedata, rmarkdown, testthat
 
