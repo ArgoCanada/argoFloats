@@ -422,8 +422,11 @@ setMethod(f="plot",
                   salinity <- unlist(x[["salinity", debug=debug]])
                   temperature <- unlist(x[["temperature", debug=debug]])
                   pressure <- unlist(x[["pressure", debug=debug]])
-                  latitude <- unlist(x[["latitude", debug=debug]])
-                  longitude <- unlist(x[["longitude", debug=debug]])
+                  ## Use byLevel to repeat the latitude and longitude values across
+                  ## the depths in each profile, so that the resultant vector
+                  ## will match the salinity, temperature and pressure vectors.
+                  latitude <- unlist(x[["latitude", "byLevel", debug=debug]])
+                  longitude <- unlist(x[["longitude", "byLevel", debug=debug]])
                   ctd <- oce::as.ctd(salinity=salinity,
                                      temperature=temperature,
                                      pressure=pressure,
