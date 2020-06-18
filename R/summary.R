@@ -67,6 +67,6 @@ setMethod(f="summary",
                   cat("* hint: access these objects with e.g. x[[\"argos\"]]\n")
               }
               oce::processingLogShow(object)
-              invisible()
+              invisible(NULL)
           })
 
