@@ -7,7 +7,7 @@ output: html_document
 
 Hi Argo community! I want to introduce you to a newly developed R package, argoFloats. This package was created by myself, Dan Kelley, and Jaimie Harbin to provide tools for downloading and analyzing collections of oceanographic Argo float datasets.
 
-**Insert argoFloats logo**
+**Insert argoFloats logo found at https://github.com/ArgoCanada/argoFloats/blob/develop/logo/logo.R**
 
 
 # Tweet Two
@@ -75,7 +75,7 @@ To get familiar with argoFloats, check out the user website, https://argocanada.
 Users can easily sift through data based on geographical region, parameter, time, institution, deep Argo, ID, ocean, mode, and profile. A series of real-time examples exists at our Youtube channel https://www.youtube.com/channel/UCmVBNwRRGx5sRa1skvfOrvA.
 
 # Tweet Five
-For example, the following code produces a TS plot near Bermuda:
+For example, the following code demonstrates how to use the easy-to-follow work flor to produces a TS plot near Bermuda:
 
 ```{r, message=FALSE, warning=FALSE}
 library(argoFloats)
@@ -94,7 +94,7 @@ plot(a, which='TS')
 ```
 
 # Tweet Six
-The following link provides code for subsetting by ocean and polygon near the Isthmus of Panama:
+The following link provides code for subsetting by ocean near the Isthmus of Panama. Note it is a subset by ocean "Area", which is why we incorporated the subset by polygon function.
 https://github.com/ArgoCanada/argoFloats/tree/develop/videos/04
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE}
@@ -108,25 +108,13 @@ points(atlantic[['longitude']], atlantic[['latitude']], pch=20, col=2)
 points(pacific[['longitude']], pacific[['latitude']], pch=20, col=3)
 ```
 
-```{r, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE}
-library(argoFloats)
-ai <- getIndex()
-s <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
-plot(s, which='map', bathymetry=FALSE) # To get a visual
-pax <- c(-83.92029, -84.29865, -84.73106, -83.86623, -82.73114, -81.32580, -79.43398,-77.59622, -78.29889,-79.86640,-82.19063)
-pay <- c(13.715453, 12.701096, 10.832545, 9.924962, 9.070767, 8.536896, 9.177542, 10.779157, 13.234968, 13.662066, 13.822227)
-# Now select your points on the map in the Atlantic
-a <- subset(s, polygon=list(longitude=pax, latitude=pay))
-points(a[['longitude']], a[['latitude']], col=2)
-ppx <- c(-86.13641, -85.05537, -83.70408, -82.19063, -80.51502, -78.78536, -78.56915, -79.32588,-81.16364, -82.46089, -86.24451, -88.51469, -89.05521, -88.35254, -86.62288)
-ppy <- c(11.846901, 10.565609,  9.658026,  8.643670,  8.430121,  7.842862,  6.935280,  5.547213, 4.586244,  4.105759,  4.586244,  6.348021,  9.070767, 11.206255, 12.273999)
-# Now select your points on the map in the Pacific
-p <- subset(s, polygon=list(longitude=ppx, latitude=ppy))
-points(p[['longitude']], p[['latitude']], col=3)
-```
+# Tweet 07
+Code found at https://github.com/ArgoCanada/argoFloats/blob/develop/sandbox/jlh/08_polygonPlot/polygonPlot.R demonstrates how to use our subset by polygon and TS plot function to create a T-S diagram comparing the Atlantic and Pacific Ocean near the Isthmus of Panama.
+
+`**INSERT PHOTO from https://github.com/ArgoCanada/argoFloats/blob/develop/sandbox/jlh/08_polygonPlot/polygonPlot.R**
 
 # Tweet 07
-The code found at https://github.com/ArgoCanada/argoFloats/blob/develop/videos/05/video05_TS_by_oxygen.R demonstrates how to use the argoFloats package to TS diagram, colour-coded by oxygen.
+The code found at https://github.com/ArgoCanada/argoFloats/blob/develop/videos/05/video05_TS_by_oxygen.R demonstrates how to use the argoFloats package to create a TS diagram, colour-coded by oxygen.
 
 ```{r, message=FALSE, warning=FALSE, error=FALSE, echo=FALSE}
 library(oce)
