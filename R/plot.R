@@ -45,67 +45,74 @@ geographical <- TRUE
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
 #' for other arguments that can be provided.
 #'
-#' * For `which='diagnostic'`, a plot of parameter quality and parameter mean
-#' are plotted. This only works if `x` is an object that was created by
-#' [getProfiles()]. The user must also provide the `parameter` name of
-#' interest.
+#' * For `which=\"diagnostic\"`, two time-series panels are shown, with
+#' time being that recorded in the individual profile in the dataset.
+#' An additional argument named `variable` must be givn, to name the
+#' quantity of interest.  The function only works if `x` is an
+#' [`argoFloats-class`] object creatd with [readProfiles()].
+#' The top panel shows the percent of data flagged with codes
+#' 1 (meaning good data), 2 (probably good), 5 (changed)
+#' or 8 (estimated).  Thus, low values on the top panel reveal
+#' profiles that are questionable. The bottom panel shows the mean value
+#' of the parameter in question.  See Example 7.
 #'
-#' @param x an [`argoFloats-class`] object.
+#' @param x An [`argoFloats-class`] object.
 #'
-#' @param which a string that indicates the type of plot; see \dQuote{Details}.
+#' @param which A string that indicates the type of plot; see \dQuote{Details}.
 #'
-#' @param bathymetry an argument used only if `which="map"`, to control
+#' @param bathymetry An argument used only if `which="map"`, to control
 #' whether (and how) to indicate water depth; see `\dQuote{Details}.
 #'
-#' @param xlim,ylim limits of plot axes, as for [plot.default()] and other conventional
+#' @param xlim,ylim Limits of plot axes, as for [plot.default()] and other conventional
 #' plotting functions.
 #'
-#' @param xlab character value indicating the name for the horizontal axis, or
+#' @param xlab A character value indicating the name for the horizontal axis, or
 #' `NULL`, which indicates that this function should choose an appropriate name
 #' depending on the value of `which`. Note that `xlab` is not obeyed if
 #' `which="TS"`, because altering that label can be confusing to the user.
 #'
-#' @param ylab as `xlab`, but for the vertical axis.
+#' @param ylab As `xlab`, but for the vertical axis.
 #'
-#' @param cex character expansion factor for plot symbols, or `NULL`, to get an
+#' @param cex A character expansion factor for plot symbols, or `NULL`, to get an
 #' value that depends on the value of `which`.
 #'
-#' @param col colour to be used for plot symbols, or `NULL`, to get an
-#' value that depends on the value of `which`.
+#' @param col The colour to be used for plot symbols, or `NULL`, to get an value
+#' that depends on the value of `which`.
+#' (See [par()] for more on specifying `pch`.)
 #'
-#' @param bg colour to be used for plot symbol interior, for `pch`
+#' @param bg The colour to be used for plot symbol interior, for `pch`
 #' values that distinguish between the interior of the symbol and the
 #' border, e.g. for `pch=21`.
 #'
-#' @param pch number indicating the type of plot symbol, or `NULL`, to get an
-#' value that depends on the value of `which`.
+#' @param pch An integer or code indicating the type of plot symbol, or `NULL`,
+#' to get a value that depends on the value of `which`.
+#' (See [par()] for more on specifying `pch`.)
 #'
-#' @param mar either a four-element vector giving the margins to be used for
+#' @param mar Either a four-element vector giving the margins to be used for
 #' the plot (see [par()] for details), or `NULL`, which means to use
 #' [par]`("mar")`.
 #'
-#' @param mgp either a three-element vector giving the geometry for
+#' @param mgp Either a three-element vector giving the geometry for
 #' axis labels (see [par()] for details), or `NULL`, which means to use
 #' [par]`("mgp")`.
 #'
-#' @param eos character value indicating the equation of state to use
+#' @param eos A character value indicating the equation of state to use
 #' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
 #' see [oce::plotTS()].
 #'
-#' @param debug an integer specifying the level of debugging.
+#' @param debug An integer specifying the level of debugging.
 #'
-#' @param \dots extra arguments passed to the plot calls that are made
-#' to within this function.
+#' @param \dots Extra arguments passed to the plot calls that are made
+#' within this function.
 #'
 #' @examples
 #' # Example 1: map profiles in index, highlighting a neighborhood of 30
 #' library(argoFloats)
-#' library(oce)
 #' data(index)
 #' plot(index, bathymetry=FALSE)
 #' lon <- index[["longitude"]]
 #' lat <- index[["latitude"]]
-#' dist <- geodDist(lon, lat, -77.06, 26.54)
+#' dist <- oce::geodDist(lon, lat, -77.06, 26.54)
 #' o <- order(dist)
 #' index30 <- subset(index, o[1:30])
 #' points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
@@ -137,11 +144,23 @@ geographical <- TRUE
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' plot(a[[1]], which="TS")
 #'
+#' # Example 7: Temperature diagnostic plot for an ID in Arabian Sea
+#' \dontrun{
+#' library(argoFloats)
+#' ais <- getIndex(filename='synthetic', age=0)
+#' sub <- subset(ais, ID='2902123')
+#' lonRect <- c(56, 66)
+#' latRect <- c(11,12)
+#' s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
+#' profiles <- getProfiles(s)
+#' argos <- readProfiles(profiles)
+#' plot(argos, which='diagnostic', parameter='temperature')}
+#'
 #' @importFrom grDevices extendrange gray rgb
 #' @importFrom graphics abline axis box par plot.window points polygon text
 #' @importFrom utils data
-#' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
-#' @importFrom marmap getNOAA.bathy
+## @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
+## @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method
 #' @author Dan Kelley
@@ -158,6 +177,8 @@ setMethod(f="plot",
                               debug=0,
                               ...)
           {
+              if (!requireNamespace("oce", quietly=TRUE))
+                  stop("must install.packages(\"oce\") for plot() to work")
               debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
               argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1)
               if (!inherits(x, "argoFloats"))
@@ -175,7 +196,7 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
-
+                  
                   ## Draw empty plot box, with axes, to set par("usr") for later use with bathymetry.
                   if (geographical) {
                       xlab <- if (is.null(xlab)) "" else xlab
@@ -184,7 +205,7 @@ setMethod(f="plot",
                       xlab <- if (is.null(xlab)) "Longitude" else xlab
                       ylab <- if (is.null(ylab)) "Latitude" else ylab
                   }
-
+                  
                   ## Decode bathymetry
                   if (is.logical(bathymetry)) {
                       drawBathymetry <- bathymetry
@@ -202,8 +223,6 @@ setMethod(f="plot",
                   } else {
                       stop("In plot() : 'bathymetry' must be logical, an object created by marmap::getNOAA.bathy(), or a list", call.=FALSE)
                   }
-                  if (drawBathymetry)
-                      requireNamespace("marmap")
                   if (!is.logical(bathymetry$keep))
                       stop("In plot() : 'bathymetry$keep' must be a logical value", call.=FALSE)
                   if (!is.logical(bathymetry$palette))
@@ -213,6 +232,8 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "asp=", asp, "\n", sep="")
                   if (drawBathymetry) {
                       argoFloatsDebug(debug, "handling bathymetry\n", sep="")
+                      if (!requireNamespace("marmap", quietly=TRUE))
+                          stop("must install.packages(\"marmap\") to plot with bathymetry")
                       ## Handle bathymetry file downloading (or the use of a supplied value)
                       bathy <- NULL
                       if (is.character(bathymetry$source) && bathymetry$source == "auto") {
@@ -366,14 +387,14 @@ setMethod(f="plot",
                          ...)
                   ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
                   ## on just the distance spanned in the north-south direction.
-
+                  
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
                   if (ocedataIsInstalled) {
                       usr <- par("usr")
-                      l <- geodDist(usr[1], usr[3], usr[1], usr[4]) # length [km] on left margin
-                      r <- geodDist(usr[2], usr[3], usr[2], usr[4]) # length [km] on right margin
-                      b <- geodDist(usr[1], usr[1], usr[2], usr[1]) # length [km] on bottom margin
-                      t <- geodDist(usr[1], usr[4], usr[2], usr[4]) # length [km] on top margin
+                      l <- oce::geodDist(usr[1], usr[3], usr[1], usr[4]) # length [km] on left margin
+                      r <- oce::geodDist(usr[2], usr[3], usr[2], usr[4]) # length [km] on right margin
+                      b <- oce::geodDist(usr[1], usr[1], usr[2], usr[1]) # length [km] on bottom margin
+                      t <- oce::geodDist(usr[1], usr[4], usr[2], usr[4]) # length [km] on top margin
                       mapSpan <- max(l, r, b, t) # largest length [km]
                       C <- 2 * 3.14 * 6.4e3 # circumferance of earth [km]
                       argoFloatsDebug(debug, "mapSpan=", mapSpan, ", C=", C, "\n")
@@ -409,8 +430,11 @@ setMethod(f="plot",
                   salinity <- unlist(x[["salinity", debug=debug]])
                   temperature <- unlist(x[["temperature", debug=debug]])
                   pressure <- unlist(x[["pressure", debug=debug]])
-                  latitude <- unlist(x[["latitude", debug=debug]])
-                  longitude <- unlist(x[["longitude", debug=debug]])
+                  ## Use byLevel to repeat the latitude and longitude values across
+                  ## the depths in each profile, so that the resultant vector
+                  ## will match the salinity, temperature and pressure vectors.
+                  latitude <- unlist(x[["latitude", "byLevel", debug=debug]])
+                  longitude <- unlist(x[["longitude", "byLevel", debug=debug]])
                   ctd <- oce::as.ctd(salinity=salinity,
                                      temperature=temperature,
                                      pressure=pressure,
@@ -448,19 +472,19 @@ setMethod(f="plot",
                   qf <- function(x) {
                       # qf returns 100 if data are all 'good' = 1 or 'probably good' = 2
                       flag <- x[[paste0(parameter, 'Flag')]]
-                      100 * sum(1 == flag | 2 == flag, na.rm=TRUE) / length(flag)
+                      100 * sum(1 == flag | 2 == flag | 5 == flag | 8 == flag, na.rm=TRUE) / length(flag)
                   }
                   meanf <- function(x)
-                      mean(x[[parameter, na.rm=TRUE]])
+                      mean(x[[parameter]], na.rm=TRUE)
                   time <- oce::numberAsPOSIXct(unlist(lapply(x[['profile']], function(x) x[['time']])))
                   for (parameter in parameter) {
                       q <- unlist(lapply(x[['profile']], qf))
                       m <- unlist(lapply(x[['profile']], meanf))
                       par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
                       if (any(is.finite(q))) {
-                          oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE)
+                          oce::oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE)
                           abline(h=50, col='red', lty='dashed')
-                          oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
+                          oce::oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
                           points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
                       } else {
                           plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)

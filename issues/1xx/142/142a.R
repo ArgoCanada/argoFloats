@@ -13,3 +13,4 @@ par(mfrow=c(1, 2))
 plot(a, which="map")
 plot(a, which='TS')
 if (!interactive()) dev.off()
+

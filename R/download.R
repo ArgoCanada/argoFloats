@@ -15,7 +15,7 @@
 #'
 #' @return String indicating the full pathname to the downloaded file.
 #'
-#' @importFrom curl curl_download
+## @importFrom curl curl_download
 #' @importFrom utils capture.output unzip
 #'
 #' @export
@@ -24,6 +24,8 @@
 downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode="wb", quiet=FALSE,
                                 force=FALSE, retries=3, debug=0)
 {
+    if (!requireNamespace("curl", quietly=TRUE))
+        stop("must install.packages(\"curl\") for downloadWithRetries() to work")
     if (missing(url))
         stop("must specify url")
     if (length(destdir) > 1)

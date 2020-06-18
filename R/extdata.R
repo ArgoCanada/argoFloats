@@ -24,7 +24,7 @@ NULL
 #' This is profile 048 for float 4900785, downloaded on June 12,
 #' 2020.  As its filename indicates, it holds "realtime" data.
 #'
-#' @name D4900785_048.nc 
+#' @name D4900785_048.nc
 #'
 #' @docType data
 #'

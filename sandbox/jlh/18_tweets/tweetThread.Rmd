@@ -1,0 +1,164 @@
+---
+title: "Tweet Thread"
+output: html_document
+---
+
+# Tweet One
+
+Hi Argo community! I want to introduce you to a newly developed R package, argoFloats. This package was created by myself, Dan Kelley, and Jaimie Harbin to provide tools for downloading and analyzing collections of oceanographic Argo float datasets.
+
+**Insert argoFloats logo found at https://github.com/ArgoCanada/argoFloats/blob/develop/logo/logo.R**
+
+
+# Tweet Two
+argoFloats has an easy-to-follow work flow, to allow the users to effectively access, download, and read Argo data.
+
+```{r workflow, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.8, fig.width=5, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
+colText <- "darkblue"
+colCode <- "black"
+library(graphics)
+textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New Roman", col="black", tweakx=0)
+{
+    w <- graphics::strwidth(text)
+    h <- graphics::strheight(text)
+    if (center)
+        x <- x - w/2
+    text(x+tweakx, y, text, cex=cex, pos=pos, family=family, col=col)
+    rect(x+tweakx, y-h, x+tweakx+1.1*w, y+h, border=col)
+    invisible(list(w=w, h=h))
+}
+omar <- par("mar")
+par(mar=c(0,1,0,0))
+plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
+x0 <- 0.25
+y0 <- 0.9
+dy <- 0.2
+wh <- textInBox(x0, y0, "Get index from server", col=colText)
+h <- wh$h * 1.2
+xarrow <- x0 + 0.01 # not sure why we need to move it
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+y0 <- y0 - dy
+textInBox(x0, y0, "Focus on a subset of profiles", col=colText)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+y0 <- y0 - dy
+textInBox(x0, y0, "Get profile data files from server", col=colText)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+y0 <- y0 - dy
+textInBox(x0, y0, "Read profile data files", col=colText)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
+y0 <- y0 - dy
+textInBox(x0, y0, "Process the data", col=colText)
+x0 <- 0.8
+y0 <- 0.9
+wh <- textInBox(x0, y0, "getIndex() ", family="sans", col=colCode)
+h <- wh$h * 1.2
+xarrow <- x0 + 0.01 # not sure why we need to move it
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+y0 <- y0 - dy
+textInBox(x0, y0, "subset() ", family="sans", col=colCode)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+y0 <- y0 - dy
+textInBox(x0, y0, "getProfiles() ", family="sans", col=colCode)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+y0 <- y0 - dy
+textInBox(x0, y0, "readProfiles() ", family="sans", col=colCode)
+arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
+y0 <- y0 - dy
+textInBox(x0, y0, ". . .   ", family="sans", col=colCode, tweakx=0.005)
+par(mar=omar)
+```
+
+# Tweet Three
+To get familiar with argoFloats, check out the user website, https://argocanada.github.io/argoFloats/index.html, or developer website https://github.com/ArgoCanada/argoFloats for more advanced R users.
+
+# Tweet Four
+Users can easily sift through data based on geographical region, parameter, time, institution, deep Argo, ID, ocean, mode, and profile. A series of real-time examples exists at our Youtube channel https://www.youtube.com/channel/UCmVBNwRRGx5sRa1skvfOrvA.
+
+# Tweet Five
+For example, the following code demonstrates how to use the easy-to-follow work flor to produces a TS plot near Bermuda:
+
+```{r, message=FALSE, warning=FALSE}
+library(argoFloats)
+# Get world index
+data(index)
+# Get index withing 50km of Bermuda
+ais <- subset(index, 1:10)
+# Get profile data files for this near-Bermuda index
+pr <- getProfiles(ais)
+# Read those data files
+a <- readProfiles(pr, handleFlags=TRUE)
+# Plot a map to the left, and a TS diagram to the right
+par(mfrow=c(1, 2))
+plot(a, which="map")
+plot(a, which='TS')
+```
+
+# Tweet Six
+The following link provides code for subsetting by ocean near the Isthmus of Panama. Note it is a subset by ocean "Area", which is why we incorporated the subset by polygon function.
+https://github.com/ArgoCanada/argoFloats/tree/develop/videos/04
+
+```{r, warning=FALSE, error=FALSE, message=FALSE}
+library(argoFloats)
+ai <- getIndex()
+s <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
+plot(s, which='map') # To get a visual
+atlantic <- subset(s, ocean='A') # Subsetting for Atlantic Ocean
+pacific <- subset(s, ocean='P')
+points(atlantic[['longitude']], atlantic[['latitude']], pch=20, col=2)
+points(pacific[['longitude']], pacific[['latitude']], pch=20, col=3)
+```
+
+# Tweet 07
+Code found at https://github.com/ArgoCanada/argoFloats/blob/develop/sandbox/jlh/08_polygonPlot/polygonPlot.R demonstrates how to use our subset by polygon and TS plot function to create a T-S diagram comparing the Atlantic and Pacific Ocean near the Isthmus of Panama.
+
+`**INSERT PHOTO from https://github.com/ArgoCanada/argoFloats/blob/develop/sandbox/jlh/08_polygonPlot/polygonPlot.R**
+
+# Tweet 07
+The code found at https://github.com/ArgoCanada/argoFloats/blob/develop/videos/05/video05_TS_by_oxygen.R demonstrates how to use the argoFloats package to create a TS diagram, colour-coded by oxygen.
+
+```{r, message=FALSE, warning=FALSE, error=FALSE, echo=FALSE}
+library(oce)
+library(argoFloats)
+
+# Acquire merged argo index, subset by circle, and then subset by oxygen
+ai <- getIndex(filename='merge')
+subc <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=300))
+subo <- subset(subc, parameter='DOXY')
+
+# Download argo files, read them, and thn extract O2
+profiles <- getProfiles(subo)
+argos <- readProfiles(profiles)
+O2 <- unlist(argos[["oxygen"]]) # note that [[ returns a list
+
+# Plot colour palette, and then the TS plot
+cm <- colormap(O2)
+drawPalette(colormap=cm, zlab="Oxygen", pos=3)
+plot(argos, which="TS", col=cm$zcol)
+```
+
+# Tweet 08
+Bathymetry has recently been added to the argoFloats package. If you visit https://github.com/ArgoCanada/argoFloats/blob/develop/videos/07/video07_map_with_bathymetry.R you can find code to create a trajectory plot, colour coded by time, with bathymetry.
+
+```{r, message=FALSE, warning=FALSE, error=FALSE, echo=FALSE}
+library(argoFloats)
+library(oce)
+ID0 <- '6900388'
+if (!exists("index0"))
+    index0 <- subset(getIndex(), ID=ID0)
+
+lon <- index0[["longitude"]]
+lat <- index0[["latitude"]]
+profile <- index0[['profile']]
+t <- index0[["date"]]
+
+par(mar=c(2,2,1,1))
+
+cm <- colormap(t, col=oceColorsJet)
+drawPalette(colormap=cm, tformat="%Y-%m", pos=3)
+plot(index0, bathymetry=TRUE)
+points(lon, lat, pch=21, cex=1, bg=cm$zcol, col="black", lwd=1.2)
+lines(lon, lat)
+sub <- seq(1, length(lon), by=10)
+text(lon[sub], lat[sub], profile[sub], cex=2/3, pos=1)
+mtext(paste("Float", ID0), adj=0)
+```

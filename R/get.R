@@ -28,12 +28,14 @@
 #' index <- getIndex()
 #' lon0 <- -59.9149
 #' lat0 <- 43.9337
-#' dist <- geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
-#' w <- which.min(dist)
-#' url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
-#' fileSable <- getProfileFromUrl(url=url)
-#' argoSable <- read.oce(fileSable)
-#' plot(argoSable, which=c(1, 4, 6, 5))
+#' if (requireNamespace("oce")) {
+#'     dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
+#'     w <- which.min(dist)
+#'     url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
+#'     fileSable <- getProfileFromUrl(url=url)
+#'     argoSable <- read.oce(fileSable)
+#'     plot(argoSable, which=c(1, 4, 6, 5))
+#' }
 #'}
 #'
 #' @export
@@ -170,8 +172,8 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' @author Dan Kelley
 #'
 #' @importFrom utils read.csv tail
-#' @importFrom curl curl_download
-#' @importFrom oce processingLogAppend
+## @importFrom curl curl_download
+## @importFrom oce processingLogAppend
 #' @export
 getIndex <- function(filename="argo",
                      server="auto",
@@ -180,6 +182,10 @@ getIndex <- function(filename="argo",
                      quiet=FALSE,
                      debug=0)
 {
+    if (!requireNamespace("oce", quietly=TRUE))
+        stop("must install.packages(\"oce\"), for getIndex() to work")
+    if (!requireNamespace("curl", quietly=TRUE))
+        stop("must install.packages(\"curl\") for getIndex() to work")
     ## Sample file
     ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
     ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
@@ -265,8 +271,12 @@ getIndex <- function(filename="argo",
         argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
         argoFloatsDebug(debug, "from\n", sep="", showTime=FALSE)
         argoFloatsDebug(debug, "    '", url[iurl], "'\n", sep="", showTime=FALSE)
-        capture.output(status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE),
-                       type="message")
+        status <- capture.output(try(curl::curl_download(url=url[iurl],
+                                                         destfile=destfileTemp,
+                                                         quiet=quiet,
+                                                         mode="wb"),
+                                     silent=!TRUE),
+                                 type="message")
         if (!inherits(status, "try-error")) {
             if (failedDownloads > 0)
                 message("Downloaded index from ", server[iurl])
@@ -382,11 +392,13 @@ getIndex <- function(filename="argo",
 #'
 #' @author Dan Kelley
 #'
-#' @importFrom oce processingLogAppend vectorShow
+## @importFrom oce processingLogAppend vectorShow
 #'
 #' @export
 getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE, debug=0)
 {
+    if (!requireNamespace("oce", quietly=TRUE))
+        stop("must install.packages(\"oce\") for getProfiles() to work")
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
         stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
@@ -401,8 +413,8 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE
         file <- NULL
     } else {
         file <- rep("", n)
-        argoFloatsDebug(debug, vectorShow(index[["ftpRoot"]]))
-        argoFloatsDebug(debug, vectorShow(index[["file"]]))
+        argoFloatsDebug(debug, oce::vectorShow(index[["ftpRoot"]]))
+        argoFloatsDebug(debug, oce::vectorShow(index[["file"]]))
         ## The Construction of the remote filename is tricky was changed on 2020-04-30. Previously,
         ## we used "ftpRoot", inferred from the "# FTP" line in the header in the index file.
         ## However, as discussed at https://github.com/ArgoCanada/argoFloats/issues/82,
@@ -434,7 +446,7 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE
     }
     res@metadata$destdir <- destdir
     res@data$file <- file
-    res@processingLog <- processingLogAppend(res@processingLog, "getProfiles(index, ...)")
+    res@processingLog <- oce::processingLogAppend(res@processingLog, "getProfiles(index, ...)")
     argoFloatsDebug(debug,  "} # getProfiles()\n", style="bold", showTime=FALSE, unindent=1)
     res
 }
