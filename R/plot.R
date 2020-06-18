@@ -464,7 +464,7 @@ setMethod(f="plot",
                   qf <- function(x) {
                       # qf returns 100 if data are all 'good' = 1 or 'probably good' = 2
                       flag <- x[[paste0(parameter, 'Flag')]]
-                      100 * sum(1 == flag | 2 == flag, na.rm=TRUE) / length(flag)
+                      100 * sum(1 == flag | 2 == flag | 5 == flag | 8 == flag, na.rm=TRUE) / length(flag)
                   }
                   meanf <- function(x)
                       mean(x[[parameter]], na.rm=TRUE)
