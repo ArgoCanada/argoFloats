@@ -4,23 +4,12 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(
-  profiles,
-  handleFlags,
-  adjusted = FALSE,
-  FUN,
-  silent = FALSE,
-  debug = 0
-)
+readProfiles(profiles, adjusted = FALSE, FUN, silent = FALSE, debug = 0)
 }
 \arguments{
 \item{profiles}{either a character vector holding the names
 of local files to read, or (better) an \code{\linkS4class{argoFloats}} object created
 by \code{\link[=getProfiles]{getProfiles()}}.}
-
-\item{handleFlags}{an optional logical value that is set to \code{FALSE}
-if not provided (with a message being indicated to that effect).
-See \dQuote{Details}.}
 
 \item{adjusted}{a logical value (\code{FALSE} by default) that indicates
 whether to focus on the "adjusted" versions of data and quality-control
@@ -31,10 +20,6 @@ See \dQuote{Details}.}
 profiles are stored.  If \code{FUN} not provided, then it defaults
 to \code{\link[oce:read.argo]{oce::read.argo()}}.  Only experts should consider anything
 other than this default, or a wrapper to it.}
-
-\item{silent}{logical value (with \code{FALSE} as the default value),
-indicating whether to silence messages and warnings. The value of
-\code{silent} is ignored if \code{debug} is \code{TRUE}.}
 
 \item{debug}{an integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,
@@ -51,36 +36,35 @@ that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 \description{
 This works with either a list of local (netCDF) files,
 or a \code{\linkS4class{argoFloats}} object of type \code{"profiles"}, as
-created by \code{\link[=getProfiles]{getProfiles()}}.  By default, warnings are issued about any
-profiles in which 10 percent or more of the measurements are flagged
-with a quality-control code of 4 (which designates bad data),
-and these values are set to \code{NA}; use the \code{silent} and \code{handleFlags}
-arguments to control this behaviour.
+created by \code{\link[=getProfiles]{getProfiles()}}.
+During the reading, argo profile objects are created with \code{\link[oce:read.argo]{oce::read.argo()}},
+after which quality-control flags are inserted into the objects for later use
+by \code{\link[=applyQC]{applyQC()}}, the documentation of which explains the meanings of the flags.
 }
 \details{
-During the reading, argo profile objects are created with \code{\link[oce:read.argo]{oce::read.argo()}},
-after which flags are inserted into the objects or later used by \code{\link[=applyQC]{applyQC()}},
-for which see the meanings of the flags.
+By default, warnings are issued about any
+profiles in which 10 percent or more of the measurements are flagged
+with a quality-control code of 0, 3, 4, 6, 7, or 9 (see the
+\code{\link[=applyQC]{applyQC()}} documentation for the meanings of these codes).
 }
 \examples{
-# Download and plot some profiles.
+# Read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
 \dontrun{
 library(argoFloats)
 data(index)
 index1 <- subset(index, 1)
 profiles <- getProfiles(index1)
-argosWithNA<- readProfiles(profiles, handleFlags=FALSE)
-argosWithoutNA <- readProfiles(profiles, handleFlags=FALSE)
+raw <- readProfiles(profiles)
+clean <- applyQC(profiles)
 par(mfrow=c(1, 2))
 file <- gsub(".*/", "",  profiles[[1]])
 aWithNA <- argosWithNA[[1]]
-plotTS(aWithNA, eos="unesco", type="o")
-mtext(paste(file, "\n handling flags"), cex=0.7*par("cex"))
+plotTS(raw[[1]], eos="unesco", type="o")
+mtext(file, cex=0.7*par("cex"))
 aWithoutNA <- argosWithoutNA[[1]]
-plotTS(aWithoutNA, eos="unesco", type="o")
-mtext(paste(file, "\n ignoring flags"), cex=0.7*par("cex"))
+plotTS(clean[[1]], eos="unesco", type="o")
+mtext(paste(file, "\n (after applying QC)"), cex=0.7*par("cex"))
 }
-
 
 }
 \author{

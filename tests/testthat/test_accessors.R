@@ -39,7 +39,8 @@ test_that("access float profile number", {
 })
 
 test_that("access within profiles", {
-          a <- expect_message(readProfiles(system.file("extdata", "D4900785_048.nc", package="argoFloats")), "is setting handleFlags=FALSE")
+          filename <- system.file("extdata", "D4900785_048.nc", package="argoFloats")
+          a <- expect_silent(readProfiles(filename))
           expect_error(a[["longitude", "wrong"]], "requires that j be \"byLevel\", not \"wrong\"")
           longitude <- expect_silent(a[["longitude"]])
           expect_true(is.list(longitude))
@@ -52,7 +53,7 @@ test_that("access within profiles", {
 test_that("HISTORY_QCTEST length and (trimmed) contents for issue 136", {
           ## https://github.com/ArgoCanada/argoFloats/issues/136
           filename <- system.file("extdata", "D4900785_048.nc", package="argoFloats")
-          a <- expect_message(readProfiles(filename), "is setting handleFlags=FALSE")
+          a <- expect_silent(readProfiles(filename))
           a1 <- a[[1]]
           expect_equal(6, length(a1[["HISTORY_QCTEST"]]))
           nc <- ncdf4::nc_open(filename)

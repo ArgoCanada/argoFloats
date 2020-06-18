@@ -45,57 +45,65 @@ geographical <- TRUE
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
 #' for other arguments that can be provided.
 #'
-#' * For `which='diagnostic'`, a plot of parameter quality and parameter mean
-#' are plotted. This only works if `x` is an object that was created by
-#' [getProfiles()]. The user must also provide the `parameter` name of
-#' interest.
+#' * For `which=\"diagnostic\"`, two time-series panels are shown, with
+#' time being that recorded in the individual profile in the dataset.
+#' An additional argument named `variable` must be givn, to name the
+#' quantity of interest.  The function only works if `x` is an
+#' [argoFloats-class] object creatd with [readProfiles()].
+#' The top panel shows the percent of data flagged with codes
+#' 1 (meaning good data), 2 (probably good), 5 (changed)
+#' or 8 (estimated).  Thus, low values on the top panel reveal
+#' profiles that are questionable. The bottom panel shows the mean value
+#' of the parameter in question.  See Example 7.
 #'
-#' @param x an [`argoFloats-class`] object.
+#' @param x An [`argoFloats-class`] object.
 #'
-#' @param which a string that indicates the type of plot; see \dQuote{Details}.
+#' @param which A string that indicates the type of plot; see \dQuote{Details}.
 #'
-#' @param bathymetry an argument used only if `which="map"`, to control
+#' @param bathymetry An argument used only if `which="map"`, to control
 #' whether (and how) to indicate water depth; see `\dQuote{Details}.
 #'
-#' @param xlim,ylim limits of plot axes, as for [plot.default()] and other conventional
+#' @param xlim,ylim Limits of plot axes, as for [plot.default()] and other conventional
 #' plotting functions.
 #'
-#' @param xlab character value indicating the name for the horizontal axis, or
+#' @param xlab A character value indicating the name for the horizontal axis, or
 #' `NULL`, which indicates that this function should choose an appropriate name
 #' depending on the value of `which`. Note that `xlab` is not obeyed if
 #' `which="TS"`, because altering that label can be confusing to the user.
 #'
-#' @param ylab as `xlab`, but for the vertical axis.
+#' @param ylab As `xlab`, but for the vertical axis.
 #'
-#' @param cex character expansion factor for plot symbols, or `NULL`, to get an
+#' @param cex A character expansion factor for plot symbols, or `NULL`, to get an
 #' value that depends on the value of `which`.
 #'
-#' @param col colour to be used for plot symbols, or `NULL`, to get an
-#' value that depends on the value of `which`.
+#' @param col The colour to be used for plot symbols, or `NULL`, to get an value
+#' that depends on the value of `which`.
+#' (See [par()] for more on specifying `pch`.)
 #'
-#' @param bg colour to be used for plot symbol interior, for `pch`
+#' @param bg The colour to be used for plot symbol interior, for `pch`
 #' values that distinguish between the interior of the symbol and the
 #' border, e.g. for `pch=21`.
 #'
-#' @param pch number indicating the type of plot symbol, or `NULL`, to get an
-#' value that depends on the value of `which`.
+#' @param pch An integer or code indicating the type of plot symbol, or `NULL`,
+#' to get a value that depends on the value of `which`.
+#' (See [par()] for more on specifying `pch`.)
 #'
-#' @param mar either a four-element vector giving the margins to be used for
+#' @param mar Either a four-element vector giving the margins to be used for
 #' the plot (see [par()] for details), or `NULL`, which means to use
 #' [par]`("mar")`.
 #'
-#' @param mgp either a three-element vector giving the geometry for
+#' @param mgp Either a three-element vector giving the geometry for
 #' axis labels (see [par()] for details), or `NULL`, which means to use
 #' [par]`("mgp")`.
 #'
-#' @param eos character value indicating the equation of state to use
+#' @param eos A character value indicating the equation of state to use
 #' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
 #' see [oce::plotTS()].
 #'
-#' @param debug an integer specifying the level of debugging.
+#' @param debug An integer specifying the level of debugging.
 #'
-#' @param \dots extra arguments passed to the plot calls that are made
-#' to within this function.
+#' @param \dots Extra arguments passed to the plot calls that are made
+#' within this function.
 #'
 #' @examples
 #' # Example 1: map profiles in index, highlighting a neighborhood of 30
@@ -139,7 +147,7 @@ geographical <- TRUE
 #' # Example 7: Temperature diagnostic plot for an ID in Arabian Sea
 #' \dontrun{
 #' library(argoFloats)
-#' ais <- getIndex(filename = 'synthetic', age=0)
+#' ais <- getIndex(filename='synthetic', age=0)
 #' sub <- subset(ais, ID='2902123')
 #' lonRect <- c(56, 66)
 #' latRect <- c(11,12)
