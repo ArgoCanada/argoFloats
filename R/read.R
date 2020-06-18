@@ -77,15 +77,15 @@ argoUseAdjusted <- function(argo, debug=0)
 #'
 #' This works with either a list of local (netCDF) files,
 #' or a [`argoFloats-class`] object of type `"profiles"`, as
-#' created by [getProfiles()].  By default, warnings are issued about any
-#' profiles in which 10 percent or more of the measurements are flagged
-#' with a quality-control code of 4 (which designates bad data),
-#' and these values are set to `NA`; use the `silent` and `handleFlags`
-#' arguments to control this behaviour.
-#'
+#' created by [getProfiles()].  
 #' During the reading, argo profile objects are created with [oce::read.argo()],
-#' after which flags are inserted into the objects or later used by [applyQC()],
-#' for which see the meanings of the flags.
+#' after which quality-control flags are inserted into the objects for later use
+#' by [applyQC()], the documentation of which explains the meanings of the flags.
+#'
+#' By default, warnings are issued about any
+#' profiles in which 10 percent or more of the measurements are flagged
+#' with a quality-control code of 0, 3, 4, 6, 7, or 9 (see the
+#' [applyQC()] documentation for the meanings of these codes).
 #'
 # If `adjusted` is `TRUE`, then the data elements are renamed after
 # reading, so that e.g. the data named `TEMP_ADJUSTED` and
@@ -101,22 +101,20 @@ argoUseAdjusted <- function(argo, debug=0)
 # the values of `a[["temperature"]]` and `a[["TEMP_ADJUSTED"]]`
 # will be identical.
 #'
-#' @param profiles either a character vector holding the names
+#' @param profiles Either a character vector holding the names
 #' of local files to read, or (better) an [`argoFloats-class`] object created
 #' by [getProfiles()].
-#' @param handleFlags an optional logical value that is set to `FALSE`
-#' if not provided (with a message being indicated to that effect).
-#' See \dQuote{Details}.
-#' @template silent
-#' @param adjusted a logical value (`FALSE` by default) that indicates
+#' @param adjusted A logical value (`FALSE` by default) that indicates
 #' whether to focus on the "adjusted" versions of data and quality-control
 #' flags, renaming the other versions with names ending in `Unadjusted`.
 #' See \dQuote{Details}.
-#' @param FUN a function that reads the netcdf files in which the argo
+#' @param FUN A function that reads the netcdf files in which the argo
 #' profiles are stored.  If `FUN` not provided, then it defaults
 #' to [oce::read.argo()].  Only experts should consider anything
 #' other than this default, or a wrapper to it.
-#' @param debug an integer specifying the level of debugging. If
+#' @param silent A logical value (`FALSE` by default) indicating whether
+#' work silently, without displaying information about the progress.
+#' @param debug An integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
 #' a small amount of debugging information is printed.  Note that
 #' `debug-1` is passed to [oce::read.argo()], which actually reads
@@ -128,31 +126,28 @@ argoUseAdjusted <- function(argo, debug=0)
 #' that are created by [oce::read.argo()].
 #'
 #' @examples
-#' # Download and plot some profiles.
+#' # Read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
 #'\dontrun{
 #' library(argoFloats)
 #' data(index)
 #' index1 <- subset(index, 1)
 #' profiles <- getProfiles(index1)
-#' argosWithNA<- readProfiles(profiles, handleFlags=FALSE)
-#' argosWithoutNA <- readProfiles(profiles, handleFlags=FALSE)
+#' raw <- readProfiles(profiles)
+#' clean <- applyQC(profiles)
 #' par(mfrow=c(1, 2))
 #' file <- gsub(".*/", "",  profiles[[1]])
 #' aWithNA <- argosWithNA[[1]]
-#' plotTS(aWithNA, eos="unesco", type="o")
-#' mtext(paste(file, "\n handling flags"), cex=0.7*par("cex"))
+#' plotTS(raw[[1]], eos="unesco", type="o")
+#' mtext(file, cex=0.7*par("cex"))
 #' aWithoutNA <- argosWithoutNA[[1]]
-#' plotTS(aWithoutNA, eos="unesco", type="o")
-#' mtext(paste(file, "\n ignoring flags"), cex=0.7*par("cex"))
+#' plotTS(clean[[1]], eos="unesco", type="o")
+#' mtext(paste(file, "\n (after applying QC)"), cex=0.7*par("cex"))
 #'}
-#'
-## @importFrom oce handleFlags read.argo
-## @importFrom ncdf4 nc_version
 #'
 #' @export
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALSE, debug=0)
+readProfiles <- function(profiles, adjusted=FALSE, FUN, silent=FALSE, debug=0)
 {
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for readProfiles() to work")
@@ -162,10 +157,6 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
     debug <- max(0, debug)
     res <- NULL
     argoFloatsDebug(debug, "readProfiles() {\n", style="bold", sep="", unindent=1)
-    if (missing(handleFlags)) {
-        handleFlags <- FALSE
-        message("readProfiles() is setting handleFlags=FALSE, so all data (not just those flagged as 'good') are retained")
-    }
     if (missing(FUN)) {
         FUN <- oce::read.argo
     } else {
@@ -248,11 +239,6 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
     } else {
         stop("'profiles' must be a character vector or an object created by getProfiles().")
     }
-    if (handleFlags) {
-        for (i in seq_along(res@data$argos)) {
-            res@data$argos[[i]] <- oce::handleFlags(res@data$argos[[i]])
-        }
-    }
     ## tabulate flags (ignore "Adjusted" items)
     if (!silent || debug) {
         flagNamesAll <- unique(sort(unlist(lapply(res@data$argos, function(a) names(a@metadata$flags)))))
@@ -261,7 +247,8 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
             percentBad <- sapply(res@data$argos,
                                  function(x) {
                                      if (flagName %in% names(x@metadata$flags)) {
-                                         100 * sum(x@metadata$flags[[flagName]]==4) / length(x@metadata$flags[[flagName]])
+                                         nbad <- sum(x@metadata$flags[[flagName]] %in% c(0, 3, 4, 6, 7, 9))
+                                         100 * nbad / length(x@metadata$flags[[flagName]])
                                      } else {
                                          NA
                                      }
@@ -272,21 +259,13 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
                         sum(badCases, na.rm=TRUE),
                         if (sum(badCases, na.rm=TRUE) > 1) " have " else " has ",
                         ">10% of ", flagName, " values with QC flag of 4, signalling bad data.",
-                        if (handleFlags) {
-                            "\n    These data are set to NA, because the handleFlags argument is TRUE"
-                        } else {
-                            "\n    These data are retained, because the handleFlags argument is FALSE"
-                        },
                         "\n    The indices of the bad profiles are as follows.",
                         "\n    ", paste(which(badCases), collapse=" "))
             }
         }
     }
     argoFloatsDebug(debug, "} # readProfiles\n", style="bold", sep="", unindent=1)
-    res@processingLog <- oce::processingLogAppend(res@processingLog,
-                                                  paste0("readProfiles(..., handleFlags=",
-                                                         handleFlags, ", adjusted=",
-                                                         adjusted, ", ...)"))
+    res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     res
 }
 

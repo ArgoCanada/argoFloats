@@ -24,52 +24,54 @@
 )
 }
 \arguments{
-\item{x}{an \code{\linkS4class{argoFloats}} object.}
+\item{x}{An \code{\linkS4class{argoFloats}} object.}
 
-\item{which}{a string that indicates the type of plot; see \dQuote{Details}.}
+\item{which}{A string that indicates the type of plot; see \dQuote{Details}.}
 
-\item{bathymetry}{an argument used only if \code{which="map"}, to control
+\item{bathymetry}{An argument used only if \code{which="map"}, to control
 whether (and how) to indicate water depth; see `\dQuote{Details}.}
 
-\item{xlim, ylim}{limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and other conventional
+\item{xlim, ylim}{Limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and other conventional
 plotting functions.}
 
-\item{xlab}{character value indicating the name for the horizontal axis, or
+\item{xlab}{A character value indicating the name for the horizontal axis, or
 \code{NULL}, which indicates that this function should choose an appropriate name
 depending on the value of \code{which}. Note that \code{xlab} is not obeyed if
 \code{which="TS"}, because altering that label can be confusing to the user.}
 
-\item{ylab}{as \code{xlab}, but for the vertical axis.}
+\item{ylab}{As \code{xlab}, but for the vertical axis.}
 
-\item{cex}{character expansion factor for plot symbols, or \code{NULL}, to get an
+\item{cex}{A character expansion factor for plot symbols, or \code{NULL}, to get an
 value that depends on the value of \code{which}.}
 
-\item{col}{colour to be used for plot symbols, or \code{NULL}, to get an
-value that depends on the value of \code{which}.}
+\item{col}{The colour to be used for plot symbols, or \code{NULL}, to get an value
+that depends on the value of \code{which}.
+(See \code{\link[=par]{par()}} for more on specifying \code{pch}.)}
 
-\item{pch}{number indicating the type of plot symbol, or \code{NULL}, to get an
-value that depends on the value of \code{which}.}
+\item{pch}{An integer or code indicating the type of plot symbol, or \code{NULL},
+to get a value that depends on the value of \code{which}.
+(See \code{\link[=par]{par()}} for more on specifying \code{pch}.)}
 
-\item{bg}{colour to be used for plot symbol interior, for \code{pch}
+\item{bg}{The colour to be used for plot symbol interior, for \code{pch}
 values that distinguish between the interior of the symbol and the
 border, e.g. for \code{pch=21}.}
 
-\item{mar}{either a four-element vector giving the margins to be used for
+\item{mar}{Either a four-element vector giving the margins to be used for
 the plot (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
 \link{par}\code{("mar")}.}
 
-\item{mgp}{either a three-element vector giving the geometry for
+\item{mgp}{Either a three-element vector giving the geometry for
 axis labels (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
 \link{par}\code{("mgp")}.}
 
-\item{eos}{character value indicating the equation of state to use
+\item{eos}{A character value indicating the equation of state to use
 if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
 see \code{\link[oce:plotTS]{oce::plotTS()}}.}
 
-\item{debug}{an integer specifying the level of debugging.}
+\item{debug}{An integer specifying the level of debugging.}
 
-\item{\dots}{extra arguments passed to the plot calls that are made
-to within this function.}
+\item{\dots}{Extra arguments passed to the plot calls that are made
+within this function.}
 }
 \description{
 The action depends on the \code{type} of the object, and
@@ -114,10 +116,16 @@ only works if \code{x} is an object that was created by  \code{\link[=getProfile
 The scales for the plot can be altered by putting \code{Slim} and \code{Tlim}
 arguments in the \code{...} list; see the documentation for \code{\link[oce:plotTS]{oce::plotTS()}}
 for other arguments that can be provided.
-\item For \code{which='diagnostic'}, a plot of parameter quality and parameter mean
-are plotted. This only works if \code{x} is an object that was created by
-\code{\link[=getProfiles]{getProfiles()}}. The user must also provide the \code{parameter} name of
-interest.
+\item For \verb{which=\\"diagnostic\\"}, two time-series panels are shown, with
+time being that recorded in the individual profile in the dataset.
+An additional argument named \code{variable} must be givn, to name the
+quantity of interest.  The function only works if \code{x} is an
+\code{\linkS4class{argoFloats}} object creatd with \code{\link[=readProfiles]{readProfiles()}}.
+The top panel shows the percent of data flagged with codes
+1 (meaning good data), 2 (probably good), 5 (changed)
+or 8 (estimated).  Thus, low values on the top panel reveal
+profiles that are questionable. The bottom panel shows the mean value
+of the parameter in question.  See Example 7.
 }
 }
 \examples{
@@ -162,7 +170,7 @@ plot(a[[1]], which="TS")
 # Example 7: Temperature diagnostic plot for an ID in Arabian Sea
 \dontrun{
 library(argoFloats)
-ais <- getIndex(filename = 'synthetic', age=0)
+ais <- getIndex(filename='synthetic', age=0)
 sub <- subset(ais, ID='2902123')
 lonRect <- c(56, 66)
 latRect <- c(11,12)
