@@ -19,14 +19,16 @@
 #'
 #' @param flags A vector of integers that are the quality-control flag
 #' values for data that are to be set to `NA` in the returned result.
-#' The default, `NULL`, means to use the flags set up by [readProfiles()].
-#' That means to regard as suspicious any data entries that are flagged
+#' The default, `NULL`, means to use the flags set up by [readProfiles()]
+#' which, unless specified otherwise in the call to that function, are
+#' set up to regard as suspicious any data entries that are flagged
 #' with QC codes of 0 (for data that have not yet been assessed),
 #' 3 (for "probably bad" data),
 #' 4 (for "bad" data),
 #' 6 (an unused flag),
 #' 7 (an unused flag), or
-#' 9 (for "missing" data).
+#' 9 (for "missing" data).  See Section 3.2.2 of Carval et al. (2019) for
+#' more information on these QC code values.
 #'
 #' @param actions The actions to perform. The default, `NULL`, means to
 #' use the actions set up by [readProfiles()], which, by default.
