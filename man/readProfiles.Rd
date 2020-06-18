@@ -4,17 +4,12 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(profiles, adjusted = FALSE, FUN, silent = FALSE, debug = 0)
+readProfiles(profiles, FUN, silent = FALSE, debug = 0)
 }
 \arguments{
 \item{profiles}{Either a character vector holding the names
 of local files to read, or (better) an \code{\linkS4class{argoFloats}} object created
 by \code{\link[=getProfiles]{getProfiles()}}.}
-
-\item{adjusted}{A logical value (\code{FALSE} by default) that indicates
-whether to focus on the "adjusted" versions of data and quality-control
-flags, renaming the other versions with names ending in \code{Unadjusted}.
-See \dQuote{Details}.}
 
 \item{FUN}{A function that reads the netcdf files in which the argo
 profiles are stored.  If \code{FUN} not provided, then it defaults
