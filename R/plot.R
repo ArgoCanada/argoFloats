@@ -188,7 +188,7 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
-
+                  
                   ## Draw empty plot box, with axes, to set par("usr") for later use with bathymetry.
                   if (geographical) {
                       xlab <- if (is.null(xlab)) "" else xlab
@@ -197,7 +197,7 @@ setMethod(f="plot",
                       xlab <- if (is.null(xlab)) "Longitude" else xlab
                       ylab <- if (is.null(ylab)) "Latitude" else ylab
                   }
-
+                  
                   ## Decode bathymetry
                   if (is.logical(bathymetry)) {
                       drawBathymetry <- bathymetry
@@ -379,7 +379,7 @@ setMethod(f="plot",
                          ...)
                   ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
                   ## on just the distance spanned in the north-south direction.
-
+                  
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
                   if (ocedataIsInstalled) {
                       usr <- par("usr")
@@ -467,7 +467,7 @@ setMethod(f="plot",
                       100 * sum(1 == flag | 2 == flag, na.rm=TRUE) / length(flag)
                   }
                   meanf <- function(x)
-                      mean(x[[parameter, na.rm=TRUE]])
+                      mean(x[[parameter]], na.rm=TRUE)
                   time <- oce::numberAsPOSIXct(unlist(lapply(x[['profile']], function(x) x[['time']])))
                   for (parameter in parameter) {
                       q <- unlist(lapply(x[['profile']], qf))

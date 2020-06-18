@@ -10,7 +10,7 @@
 #' is illustrated in the \dQuote{Examples} section.
 #'
 #' The work is done by using [oce::handleFlags,argo-method()]
-#' on each of the profiles storedwithin the object. In most cases, only
+#' on each of the profiles stored within the object. In most cases, only
 #' the object needs to be specified, for the default actions coincide with
 #' common conventions for flags in argo data.
 #'
@@ -23,7 +23,9 @@
 #' That means to regard as suspicious any data entries that are flagged
 #' with QC codes of 0 (for data that have not yet been assessed),
 #' 3 (for "probably bad" data),
-#' 4 (for "bad" data), or
+#' 4 (for "bad" data),
+#' 6 (an unused flag),
+#' 7 (an unused flag), or
 #' 9 (for "missing" data).
 #'
 #' @param actions The actions to perform. The default, `NULL`, means to
@@ -41,17 +43,22 @@
 #' data(index)
 #' i <- subset(index, 1:5) # first 5 profiles
 #' raw <- readProfiles(getProfiles(i))
-#' clean <- useFlags(raw)
+#' clean <- applyQC(raw)
 #' par(mfrow=c(1, 2))
 #' plot(raw, which="TS")
 #' plot(clean, which="TS")
 #'
+#' @references
+#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+#' \url{https://doi.org/10.13155/29825}.
+#'
 #' @export
 #' @author Dan Kelley
-useFlags <- function(x, flags=NULL, actions=NULL, debug=0)
+applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 {
     if (!requireNamespace("oce", quietly=TRUE))
-        stop("must install.packages(\"oce\") for useFlags() to work")
+        stop("must install.packages(\"oce\") for applyQC() to work")
     if ("argos" != x[["type"]])
         stop("can only handle flags in an object of type \"argos\", as created with readProfiles()")
     res <- x

@@ -58,33 +58,9 @@ and these values are set to \code{NA}; use the \code{silent} and \code{handleFla
 arguments to control this behaviour.
 }
 \details{
-If \code{handleFlags} is \code{TRUE}, then the \code{\link[oce:handleFlags]{oce::handleFlags()}} function
-from the \CRANpkg{oce} package is called on each individual argo object
-that is read by \code{\link[oce:read.argo]{oce::read.argo()}} in that package.  The action
-of \code{\link[oce:handleFlags]{oce::handleFlags()}} is see whether any data are flagged
-with the quality-control code that is not equal to 1, and to set
-the corresponding data to \code{NA}.  In the \code{oce} terminology,
-the flag meanings are:
-\code{not_assessed}=0, \code{passed_all_tests}=1, \code{probably_good}=2, \code{probably_bad}=3,
-\code{bad}=4, \code{changed}=5, \code{averaged}=7, \code{interpolated}=8, \code{missing}=9, and so
-the restriction to only values equal to 1 means that multiple categories
-of potentially useable data are discarded, and for that reason,
-\code{handleFlags} is set to \code{FALSE} unless the user provides a value in
-the call to \code{readProfiles()}.  See Wong et al. (2020) for a discussion
-of flags in argo data.
-
-If \code{adjusted} is \code{TRUE}, then the data elements are renamed after
-reading, so that e.g. the data named \code{TEMP_ADJUSTED} and
-\code{TEMP_ADJUSTED_ERROR} in the source netcdf file would be
-stored with names \code{temperature} and \code{temperatureAdjusted},
-with \code{TEMP} being stored as \code{temperatureUnadjusted}.  This
-applies to all variables, not just temperature.  The quality-control
-flags are similarly named. Note that the original names are left
-intact, so that with\preformatted{a <- readProfiles(..., adjusted=TRUE)
-}
-
-the values of \code{a[["temperature"]]} and \code{a[["TEMP_ADJUSTED"]]}
-will be identical.
+During the reading, argo profile objects are created with \code{\link[oce:read.argo]{oce::read.argo()}},
+after which flags are inserted into the objects or later used by \code{\link[=applyQC]{applyQC()}},
+for which see the meanings of the flags.
 }
 \examples{
 # Download and plot some profiles.
@@ -106,12 +82,6 @@ mtext(paste(file, "\n ignoring flags"), cex=0.7*par("cex"))
 }
 
 
-}
-\references{
-Wong, Annie, Robert Keeley, Thierry Carval, and Argo Data Management Team.
-“Argo Quality Control Manual for CTD and Trajectory Data,” January 1, 2020.
-\url{https://archimer.ifremer.fr/doc/00228/33951}.
-\url{http://dx.doi.org/10.13155/33951}.
 }
 \author{
 Dan Kelley

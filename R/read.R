@@ -83,34 +83,23 @@ argoUseAdjusted <- function(argo, debug=0)
 #' and these values are set to `NA`; use the `silent` and `handleFlags`
 #' arguments to control this behaviour.
 #'
-#' If `handleFlags` is `TRUE`, then the [oce::handleFlags()] function
-#' from the \CRANpkg{oce} package is called on each individual argo object
-#' that is read by [oce::read.argo()] in that package.  The action
-#' of [oce::handleFlags()] is see whether any data are flagged
-#' with the quality-control code that is not equal to 1, and to set
-#' the corresponding data to `NA`.  In the `oce` terminology,
-#' the flag meanings are:
-#' `not_assessed`=0, `passed_all_tests`=1, `probably_good`=2, `probably_bad`=3,
-#' `bad`=4, `changed`=5, `averaged`=7, `interpolated`=8, `missing`=9, and so
-#' the restriction to only values equal to 1 means that multiple categories
-#' of potentially useable data are discarded, and for that reason,
-#' `handleFlags` is set to `FALSE` unless the user provides a value in
-#' the call to `readProfiles()`.  See Wong et al. (2020) for a discussion
-#' of flags in argo data.
+#' During the reading, argo profile objects are created with [oce::read.argo()],
+#' after which flags are inserted into the objects or later used by [applyQC()],
+#' for which see the meanings of the flags.
 #'
-#' If `adjusted` is `TRUE`, then the data elements are renamed after
-#' reading, so that e.g. the data named `TEMP_ADJUSTED` and
-#' `TEMP_ADJUSTED_ERROR` in the source netcdf file would be
-#' stored with names `temperature` and `temperatureAdjusted`,
-#' with `TEMP` being stored as `temperatureUnadjusted`.  This
-#' applies to all variables, not just temperature.  The quality-control
-#' flags are similarly named. Note that the original names are left
-#' intact, so that with
-#'```
-#' a <- readProfiles(..., adjusted=TRUE)
-#'```
-#' the values of `a[["temperature"]]` and `a[["TEMP_ADJUSTED"]]`
-#' will be identical.
+# If `adjusted` is `TRUE`, then the data elements are renamed after
+# reading, so that e.g. the data named `TEMP_ADJUSTED` and
+# `TEMP_ADJUSTED_ERROR` in the source netcdf file would be
+# stored with names `temperature` and `temperatureAdjusted`,
+# with `TEMP` being stored as `temperatureUnadjusted`.  This
+# applies to all variables, not just temperature.  The quality-control
+# flags are similarly named. Note that the original names are left
+# intact, so that with
+#```
+# a <- readProfiles(..., adjusted=TRUE)
+#```
+# the values of `a[["temperature"]]` and `a[["TEMP_ADJUSTED"]]`
+# will be identical.
 #'
 #' @param profiles either a character vector holding the names
 #' of local files to read, or (better) an [`argoFloats-class`] object created
@@ -137,13 +126,6 @@ argoUseAdjusted <- function(argo, debug=0)
 #' with `type="argos"`, in which the `data` slot
 #' contains a list named `argos` that holds objects
 #' that are created by [oce::read.argo()].
-#'
-#' @references
-#'
-#' Wong, Annie, Robert Keeley, Thierry Carval, and Argo Data Management Team.
-#' “Argo Quality Control Manual for CTD and Trajectory Data,” January 1, 2020.
-#' \url{https://archimer.ifremer.fr/doc/00228/33951}.
-#' \url{http://dx.doi.org/10.13155/33951}.
 #'
 #' @examples
 #' # Download and plot some profiles.
@@ -218,7 +200,7 @@ readProfiles <- function(profiles, handleFlags, adjusted=FALSE, FUN, silent=FALS
                                                                          not_used_7=7,
                                                                          estimated=8,
                                                                          missing=9),
-                                                            default=c(0, 3, 4, 9))
+                                                            default=c(0, 3, 4, 6, 7, 9))
             res@data$argos[[i]]@processingLog <- oce::processingLogAppend(res@data$argos[[i]]@processingLog,
                                                                      "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
         }
