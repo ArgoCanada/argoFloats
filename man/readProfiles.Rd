@@ -7,21 +7,24 @@
 readProfiles(profiles, adjusted = FALSE, FUN, silent = FALSE, debug = 0)
 }
 \arguments{
-\item{profiles}{either a character vector holding the names
+\item{profiles}{Either a character vector holding the names
 of local files to read, or (better) an \code{\linkS4class{argoFloats}} object created
 by \code{\link[=getProfiles]{getProfiles()}}.}
 
-\item{adjusted}{a logical value (\code{FALSE} by default) that indicates
+\item{adjusted}{A logical value (\code{FALSE} by default) that indicates
 whether to focus on the "adjusted" versions of data and quality-control
 flags, renaming the other versions with names ending in \code{Unadjusted}.
 See \dQuote{Details}.}
 
-\item{FUN}{a function that reads the netcdf files in which the argo
+\item{FUN}{A function that reads the netcdf files in which the argo
 profiles are stored.  If \code{FUN} not provided, then it defaults
 to \code{\link[oce:read.argo]{oce::read.argo()}}.  Only experts should consider anything
 other than this default, or a wrapper to it.}
 
-\item{debug}{an integer specifying the level of debugging. If
+\item{silent}{A logical value (\code{FALSE} by default) indicating whether
+work silently, without displaying information about the progress.}
+
+\item{debug}{An integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,
 a small amount of debugging information is printed.  Note that
 \code{debug-1} is passed to \code{\link[oce:read.argo]{oce::read.argo()}}, which actually reads

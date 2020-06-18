@@ -120,7 +120,7 @@ for other arguments that can be provided.
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{variable} must be givn, to name the
 quantity of interest.  The function only works if \code{x} is an
-\linkS4class{argoFloats} object creatd with \code{\link[=readProfiles]{readProfiles()}}.
+\code{\linkS4class{argoFloats}} object creatd with \code{\link[=readProfiles]{readProfiles()}}.
 The top panel shows the percent of data flagged with codes
 1 (meaning good data), 2 (probably good), 5 (changed)
 or 8 (estimated).  Thus, low values on the top panel reveal

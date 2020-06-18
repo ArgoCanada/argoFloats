@@ -101,18 +101,20 @@ argoUseAdjusted <- function(argo, debug=0)
 # the values of `a[["temperature"]]` and `a[["TEMP_ADJUSTED"]]`
 # will be identical.
 #'
-#' @param profiles either a character vector holding the names
+#' @param profiles Either a character vector holding the names
 #' of local files to read, or (better) an [`argoFloats-class`] object created
 #' by [getProfiles()].
-#' @param adjusted a logical value (`FALSE` by default) that indicates
+#' @param adjusted A logical value (`FALSE` by default) that indicates
 #' whether to focus on the "adjusted" versions of data and quality-control
 #' flags, renaming the other versions with names ending in `Unadjusted`.
 #' See \dQuote{Details}.
-#' @param FUN a function that reads the netcdf files in which the argo
+#' @param FUN A function that reads the netcdf files in which the argo
 #' profiles are stored.  If `FUN` not provided, then it defaults
 #' to [oce::read.argo()].  Only experts should consider anything
 #' other than this default, or a wrapper to it.
-#' @param debug an integer specifying the level of debugging. If
+#' @param silent A logical value (`FALSE` by default) indicating whether
+#' work silently, without displaying information about the progress.
+#' @param debug An integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
 #' a small amount of debugging information is printed.  Note that
 #' `debug-1` is passed to [oce::read.argo()], which actually reads

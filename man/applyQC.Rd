@@ -7,7 +7,7 @@
 applyQC(x, flags = NULL, actions = NULL, debug = 0)
 }
 \arguments{
-\item{x}{An \linkS4class{argoFloats} object of type \code{"argos"}, as created by
+\item{x}{An \code{\linkS4class{argoFloats}} object of type \code{"argos"}, as created by
 \code{\link[=readProfiles]{readProfiles()}}.}
 
 \item{flags}{A vector of integers that are the quality-control flag
@@ -34,7 +34,7 @@ A copy of \code{x} but with each of the objects within its
 \code{data} slot having been passed through \code{\link[oce:handleFlags,argo-method]{oce::handleFlags,argo-method()}}.
 }
 \description{
-This function examines the quality-control (QC) flags within an \linkS4class{argoFloats}
+This function examines the quality-control (QC) flags within an \code{\linkS4class{argoFloats}}
 object that was created by \code{\link[=readProfiles]{readProfiles()}}.  By default, it replaces all suspicious
 data with \code{NA} values, so they will not appear in plots or be considered in calculations.
 This is an important early step in processing, because suspicious argo floats commonly

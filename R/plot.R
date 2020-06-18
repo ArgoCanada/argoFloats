@@ -49,7 +49,7 @@ geographical <- TRUE
 #' time being that recorded in the individual profile in the dataset.
 #' An additional argument named `variable` must be givn, to name the
 #' quantity of interest.  The function only works if `x` is an
-#' [argoFloats-class] object creatd with [readProfiles()].
+#' [`argoFloats-class`] object creatd with [readProfiles()].
 #' The top panel shows the percent of data flagged with codes
 #' 1 (meaning good data), 2 (probably good), 5 (changed)
 #' or 8 (estimated).  Thus, low values on the top panel reveal
