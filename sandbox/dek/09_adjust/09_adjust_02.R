@@ -4,7 +4,7 @@ set.seed(1) # First sample
 n <- 50
 s <- subset(index, sample(seq_along(index[['longitude']]), n))
 p <- getProfiles(s)
-a <- readProfiles(p, adjusted=TRUE)
+a <- useAdjusted(readProfiles(p))
 cat("Demonstration: adjusted data are not always good!\n")
 testOfHypothesis <- NULL
 for (i in seq_len(a[["length"]])) {
