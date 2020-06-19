@@ -17,7 +17,7 @@ Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
 
 # argoFloats and Flags
 
-As described by the Argo user’s manual V3.3 [1], data that are given a flag value of 1, 2, 5, or 8 are considered 'good' data. If data are given a flag value of 9 (or missing value) they are not used, and flags 3, 5, 6, and 7 are considered 'bad' data. 
+As described by the Argo user’s manual V3.3 [1], data that are given a flag value of 1, 2, 5, or 8 are considered 'good' data. If data are given a flag value of 9 (or missing value) they are not used, and flags 3, 5, 6, and 7 are considered 'bad' data.
 
 ## Diagnostic Plot
 Our `argoFloats` package uses the flags of profiles to determine "good" and "bad" data. We then created a plot type to demonstrate the quality of data, the `diagnostic` plot. The diagnostic plot is a plot of parameter quality and parameter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. 
@@ -36,11 +36,8 @@ argos <- readProfiles(profiles)
 plot(argos, which='diagnostic', parameter='temperature')
 ```
 
-*Exercise One:* Use the previous code to determine the diagnostics of 
+*Exercise One:* Use the previous code to determine the diagnostics of
 ## <PARAM>ADJUSTED
-
-## qc function 
-The qc function in the `argoFloats` package tells the user which tests were performed on a particular profile as well as which tests were failed during QC testing. This information is found from the `HISTORY_QCTEST` parameter, however, it can be confusing to users as it is found in hexadecimal format. 
 
 # References
 [1] Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch, Claudia Schmid, Roger Goldsmith et al. "Argo User's Manual, Version 3.2. December 29th 2015.[SUPERSEDED]." (2015).
