@@ -2,7 +2,7 @@ library(argoFloats)
 data(index)
 s <- subset(index, 1:50)
 p <- getProfiles(s)
-a <- readProfiles(p, adjusted=TRUE)
+a <- useAdjusted(readProfiles(p))
 cat("Demonstration: adjusted data are not always good!\n")
 testOfHypothesis <- NULL
 for (argo in a[["profile"]]) {
