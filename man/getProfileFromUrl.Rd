@@ -36,8 +36,8 @@ download, even if the destination file already exists.}
 if the first attempt fails.}
 
 \item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download silently.  Since some downloads
-can be slow, the default value is \code{quiet=FALSE}.}
+that indicates whether to download without showing a progress
+bar. (Problems will still be reported, though.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions

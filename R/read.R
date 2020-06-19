@@ -1,8 +1,5 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-
-
-
 #' Read argo profiles from local files
 #'
 #' This works with either a list of local (netCDF) files,
@@ -113,8 +110,17 @@ readProfiles <- function(profiles, FUN, silent=FALSE, debug=0)
     } else if (inherits(profiles, "argoFloats")) {
         type <- profiles[["type"]]
         if (type == "profiles") {
-            argoFloatsDebug(debug, "case 3: object created by getProfiles()\n")
-            fileNames <- gsub(".*/(.*).nc", "\\1.nc", profiles@data$file)
+            argoFloatsDebug(debug, "case 2: object created by getProfiles()\n")
+            mustSkip <- is.na(profiles@data$file)
+            if (sum(mustSkip)) {
+                if (sum(mustSkip) == 1) {
+                    message("skipping a profile with NA file name, at index ", which(mustSkip))
+                } else {
+                    message("skipping ", sum(mustSkip), " profiles with NA file names, at indices: ",
+                            paste(which(mustSkip), collapse=" "))
+                }
+            }
+            fileNames <- gsub(".*/(.*).nc", "\\1.nc", profiles@data$file[!mustSkip])
             fullFileNames <- paste0(profiles@metadata$destdir, "/", fileNames)
             argoFloatsDebug(debug, "reading", length(fullFileNames), "netcdf files ...\n")
             res@data$argos <- lapply(fullFileNames, oce::read.argo, debug=debug-1)

@@ -55,7 +55,7 @@ downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode=
             success <- FALSE
             for (trial in seq_len(1 + retries)) {
                 capture.output({
-                    t <- try(curl::curl_download(url=url, destfile=destination, quiet=quiet, mode=mode))
+                    t <- try(curl::curl_download(url=url, destfile=destination, quiet=quiet, mode=mode), silent=TRUE)
                 })
                 if (inherits(t, "try-error")) {
                     argoFloatsDebug(debug, "failed download from \"", url, "\" ", if (trial < (1+retries)) "(will try again)\n" else "(final attempt)\n", sep="")

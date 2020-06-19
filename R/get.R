@@ -58,7 +58,6 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
     }
     res <- downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode="wb", quiet=quiet,
                                force=force, retries=retries, debug=debug-1)
-    DAN<<-res
     argoFloatsDebug(debug,  "} # getProfileFromUrl()", sep="", "\n", style="bold", unindent=1)
     if (is.na(res)) res else paste0(destdir, "/", destfile)
 }
@@ -160,6 +159,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #'
 #' @param quiet silence some progress indicators.  The default
 #' is to show such indicators.
+#'
 #' @template debug
 #'
 #' @return An object of class [`argoFloats-class`] with type=`"index"`, which
@@ -365,21 +365,28 @@ getIndex <- function(filename="argo",
 #' ```
 #' in the source-code file named `R/get.R`.
 #'
-#' If the data file cannot be downloaded after multiple trials, an
-#' error is issued, with a hint that running [getIndex()] again
-#' might help, in case the filename on the server has changed since
-#' the index was last downloaded by [getIndex()].
-#'
+#' If the data file cannot be downloaded after multiple trials, then
+#' the behaviour depends on the value of the `skip` argument.  If that is
+#' `TRUE` (the default) then a `NA` value is inserted in the corresponding
+#' spot in the return value, but if it is `FALSE`, then an error is reported.
+#' Note that [readProfiles()] skips over any such `NA` entries,
+#' while reporting their positions within `index`.
 #'
 #' @param index an [`argoFloats-class`] object of type `"index"`, as created
 #' by [getIndex()].
+#'
 #' @param destdir character value naming the directory into which to store the
 #' downloaded Argo files, or `NULL` (the default) to use the value of
 #' `destdir` that was provided in the [getIndex()] call that created `index`.
+#'
 #' @template force
+#'
 #' @template retries
+#'
 #' @template skip
+#'
 #' @template quiet
+#'
 #' @template debug
 #'
 #' @return An object of class [`argoFloats-class`] with type=`"profiles"`, which
@@ -400,7 +407,7 @@ getIndex <- function(filename="argo",
 ## @importFrom oce processingLogAppend vectorShow
 #'
 #' @export
-getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, skip=TRUE, quiet=FALSE, debug=0)
+getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, skip=TRUE, quiet=TRUE, debug=0)
 {
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for getProfiles() to work")
@@ -444,18 +451,13 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, skip=TRUE, 
             warning("guessing on URL form (e.g. \"", urls[1], "\"), because server is neither usgodae.org nor ifremer.fr\n", immediate.=TRUE)
         }
         argoFloatsDebug(debug, oce::vectorShow(urls))
-        i <- 1
-        for (url in urls) {
-            name <- getProfileFromUrl(url, destdir=destdir,
+        file <- vector("character", length(urls))
+        for (i in seq_along(urls)) {
+            name <- getProfileFromUrl(urls[i], destdir=destdir,
                                       force=force, retries=retries, quiet=quiet, debug=debug)
-            if (!is.null(name)) {
-                file[i] <- name
-                i <- i + 1
-            } else {
-                if (!skip) {
-                    stop("cannot download file '", url, "', which is a failure, since skip=FALSE")
-                }
-            }
+            if (is.na(name) && !skip)
+                stop("cannot download file '", urls[i], "', which is considered a failure, since skip=FALSE")
+            file[i] <- name
         }
     }
     res@metadata$destdir <- destdir

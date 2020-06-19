@@ -42,12 +42,24 @@ test_that("readProfiles()",
           }
 )
 
-test_that("getProfile() handling of out-of-date URL",
+test_that("getProfile() handling of as single out-of-date URL",
           {
               skip_on_cran()
               data(index)
               s <- subset(index, 778)  # aoml/4901622/profiles/R4901622_167.nc
-              p <- expect_error(getProfiles(s, skip=FALSE))
+              p <- expect_error(getProfiles(s, skip=FALSE), "cannot download file")
+              p <- expect_silent(getProfiles(s, skip=TRUE))
+              p <- expect_silent(getProfiles(s)) # default is skip=TRUE
+          }
+)
+
+test_that("readProfile() handling of an out-of-date URL surrounded by valid URLs",
+          {
+              skip_on_cran()
+              data(index)
+              s <- subset(index, 778 + seq(-1, 1))  # middle is aoml/4901622/profiles/R4901622_167.nc
+              p <- expect_silent(getProfiles(s)) # default is skip=TRUE
+              a <- readProfiles(p)
           }
 )
 

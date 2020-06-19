@@ -42,8 +42,8 @@ it makes sense to use this default in all instances.  See the
 documentation for \code{\link[curl:curl_download]{curl::curl_download()}}.}
 
 \item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download silently.  Since some downloads
-can be slow, the default value is \code{quiet=FALSE}.}
+that indicates whether to download without showing a progress
+bar. (Problems will still be reported, though.)}
 
 \item{force}{a logical value that indicates whether to force a file
 download, even if the destination file already exists.}

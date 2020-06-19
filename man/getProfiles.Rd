@@ -10,7 +10,7 @@ getProfiles(
   force = FALSE,
   retries = 3,
   skip = TRUE,
-  quiet = FALSE,
+  quiet = TRUE,
   debug = 0
 )
 }
@@ -35,8 +35,8 @@ without stopping when it tries to download netcdf files that are no
 longer available.}
 
 \item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download silently.  Since some downloads
-can be slow, the default value is \code{quiet=FALSE}.}
+that indicates whether to download without showing a progress
+bar. (Problems will still be reported, though.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
@@ -71,10 +71,12 @@ conditional block that follows the line\preformatted{## NB. the USGODAE and IFRE
 
 in the source-code file named \code{R/get.R}.
 
-If the data file cannot be downloaded after multiple trials, an
-error is issued, with a hint that running \code{\link[=getIndex]{getIndex()}} again
-might help, in case the filename on the server has changed since
-the index was last downloaded by \code{\link[=getIndex]{getIndex()}}.
+If the data file cannot be downloaded after multiple trials, then
+the behaviour depends on the value of the \code{skip} argument.  If that is
+\code{TRUE} (the default) then a \code{NA} value is inserted in the corresponding
+spot in the return value, but if it is \code{FALSE}, then an error is reported.
+Note that \code{\link[=readProfiles]{readProfiles()}} skips over any such \code{NA} entries,
+while reporting their positions within \code{index}.
 }
 \examples{
 # Download some Argo data files.

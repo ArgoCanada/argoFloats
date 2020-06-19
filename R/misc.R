@@ -53,8 +53,10 @@ useAdjustedProfile <- function(argo, debug=0)
             }
         }
     }
-    cat("next is convert:\n")
-    print(convert)
+    if (debug > 0) {
+        cat("next is convert:\n")
+        print(convert)
+    }
     namesConvert <- names(convert)
     ## Rename data
     namesData <- names(argo@data)
