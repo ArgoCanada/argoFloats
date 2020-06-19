@@ -71,6 +71,9 @@ NULL
 #' index <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=200))
 #' ```
+#'
+#' @template server_caveat
+#'
 #' @examples
 #' library(argoFloats)
 #' data(index)
@@ -92,6 +95,9 @@ NULL
 #' indexBgc <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'```
+#'
+#' @template server_caveat
+#'
 #' @examples
 #' library(argoFloats)
 #' data(indexBgc)
@@ -115,6 +121,9 @@ NULL
 #' indexMerged <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'```
+#'
+#' @template server_caveat
+#'
 #' @section Historical note:
 #' This "merged" file from the usgodae server is likely to be removed, when
 #' that server changes to the "synthetic" file format that the ifremer server
@@ -142,11 +151,13 @@ NULL
 #' indexSynthetic <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'```
-#' @section Historical note:
 #' This "synthetic" type of index is a replacement for the older "merged" index.  See
 #' \url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
 #' for more on the data file format, reasons for the change, and timetable for transition
 #' from "merged".
+#'
+#' @template server_caveat
+#'
 #' @examples
 #' library(argoFloats)
 #' data(indexSynthetic)
