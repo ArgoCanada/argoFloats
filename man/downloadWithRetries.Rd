@@ -58,7 +58,8 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-String indicating the full pathname to the downloaded file.
+A character value indicating the full pathname to the downloaded file,
+or \code{NA}, if there was a problem with the download.
 }
 \description{
 General function for downloading and caching a dataset.

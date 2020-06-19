@@ -13,7 +13,8 @@
 #' @template retries
 #' @template debug
 #'
-#' @return String indicating the full pathname to the downloaded file.
+#' @return A character value indicating the full pathname to the downloaded file,
+#' or `NA`, if there was a problem with the download.
 #'
 ## @importFrom curl curl_download
 #' @importFrom utils capture.output unzip
@@ -64,8 +65,11 @@ downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode=
                     break
                 }
             }
-            if (!success)
-                stop("failed download '", url, "'\n  after ", retries, " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
+            if (!success) {
+                if (!quiet)
+                    message("failed download '", url, "'\n  after ", retries, " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
+                return(NA)
+            }
             if (1 == length(grep(".zip$", destfile[i]))) {
                 destinationClean <- gsub(".zip$", "", destination[i])
                 unzip(destination[i], exdir=destinationClean)

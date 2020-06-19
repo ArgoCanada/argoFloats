@@ -8,7 +8,7 @@ getIndex(
   filename = "argo",
   server = "auto",
   destdir = "~/data/argo",
-  age = 7,
+  age = 1,
   quiet = FALSE,
   debug = 0
 )
@@ -43,10 +43,10 @@ File clutter is reduced by creating a top-level directory called
 
 \item{age}{numeric value indicating how old a downloaded file
 must be (in days), for it to be considered out-of-date.  The
-default, \code{age=7}, limits downloads to once per week, as a way
+default, \code{age=1}, limits downloads to once per day, as a way
 to avoid slowing down a workflow with a download that might take
-a sizable fraction of an hour. Set \code{age=0} to force a download,
-regardless of the file age.}
+a minute or so. Note that setting \code{age=0} will force a new
+download, regardless of the age of the local file.}
 
 \item{quiet}{silence some progress indicators.  The default
 is to show such indicators.}

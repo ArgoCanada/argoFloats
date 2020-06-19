@@ -9,6 +9,7 @@ getProfiles(
   destdir = NULL,
   force = FALSE,
   retries = 3,
+  skip = TRUE,
   quiet = FALSE,
   debug = 0
 )
@@ -26,6 +27,12 @@ download, even if the destination file already exists.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
+
+\item{skip}{A logical value indicating whether to skip over netcdf
+files that cannot be downloaded from the server.  This is \code{TRUE} by
+default, to allow \code{\link[=getProfiles]{getProfiles()}} to handle out-of-date indices
+without stopping when it tries to download netcdf files that are no
+longer available.}
 
 \item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
 that indicates whether to download silently.  Since some downloads

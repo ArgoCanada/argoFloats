@@ -45,6 +45,9 @@ will print debugging information.  If a function call fails, the
 first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
+\value{
+A character value, if the file could be downloaded, or \code{NULL} otherwise.
+}
 \description{
 Get Data for an Argo Float Profile
 }

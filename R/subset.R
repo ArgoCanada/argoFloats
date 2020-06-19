@@ -285,6 +285,8 @@ setMethod(f="subset",
                       ##
                       ## See https://github.com/ArgoCanada/argoFloats/issues/86
                       ok <- is.finite(alon) & is.finite(alat)
+                      if (!requireNamespace("sf", quietly=TRUE))
+                          stop("must install sf package for subset(...,polygon,...) to this to work")
                       Polygon <- sf::st_polygon(list(outer=cbind(plon, plat, rep(0, length(plon)))))
                       ## DOES NOT WORK (REQUIRES OTHER SOFTWARE??): Polygon <- sf::st_make_valid(Polygon)
                       if (!is.finite(sf::st_is_valid(Polygon))) {

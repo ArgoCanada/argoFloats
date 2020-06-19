@@ -42,3 +42,13 @@ test_that("readProfiles()",
           }
 )
 
+test_that("getProfile() handling of out-of-date URL",
+          {
+              skip_on_cran()
+              data(index)
+              s <- subset(index, 778)  # aoml/4901622/profiles/R4901622_167.nc
+              p <- expect_error(getProfiles(s, skip=FALSE))
+          }
+)
+
+

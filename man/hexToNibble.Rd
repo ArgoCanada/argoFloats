@@ -26,5 +26,5 @@ hexToNibble('e')
 
 }
 \author{
-Jaimie Harbina and Dan Kelley
+Jaimie Harbin and Dan Kelley
 }

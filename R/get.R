@@ -12,6 +12,7 @@
 #' @template quiet
 #' @template debug
 #'
+#' @return A character value, if the file could be downloaded, or `NULL` otherwise.
 #' @examples
 #'\dontrun{
 #' # These examples assume that the ~/data/argo directory exists.
@@ -46,17 +47,20 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 {
     argoFloatsDebug(debug,  "getProfileFromUrl(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
                     if (missing(destfile)) "(missing)" else destfile, "\", ...) {", sep="", "\n", style="bold", unindent=1)
-    ## If the ID starts with ftp://, thn we just download the file directly, ignoring server
+    if (length(url) != 1)
+        stop("url must be of length 1, not of length ", length(url))
+    ## If the ID starts with ftp://, then we just download the file directly, ignoring server
     if (!grepl("^ftp://", url))
         stop("the url must start with \"ftp://\" -- contact authors if you need this limitation to be lifted")
     if (is.null(destfile)) {
         destfile <- gsub(".*/(.*).nc", "\\1.nc", url)
         argoFloatsDebug(debug,  "inferred destfile=\"", destfile, "\" from url.\n", sep="")
     }
-    downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode="wb", quiet=quiet,
-                        force=force, retries=retries, debug=debug-1)
+    res <- downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode="wb", quiet=quiet,
+                               force=force, retries=retries, debug=debug-1)
+    DAN<<-res
     argoFloatsDebug(debug,  "} # getProfileFromUrl()", sep="", "\n", style="bold", unindent=1)
-    paste0(destdir, "/", destfile)
+    if (is.na(res)) res else paste0(destdir, "/", destfile)
 }
 
 
@@ -149,10 +153,10 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #'
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
-#' default, `age=7`, limits downloads to once per week, as a way
+#' default, `age=1`, limits downloads to once per day, as a way
 #' to avoid slowing down a workflow with a download that might take
-#' a sizable fraction of an hour. Set `age=0` to force a download,
-#' regardless of the file age.
+#' a minute or so. Note that setting `age=0` will force a new
+#' download, regardless of the age of the local file.
 #'
 #' @param quiet silence some progress indicators.  The default
 #' is to show such indicators.
@@ -178,7 +182,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 getIndex <- function(filename="argo",
                      server="auto",
                      destdir="~/data/argo",
-                     age=7,
+                     age=1,
                      quiet=FALSE,
                      debug=0)
 {
@@ -374,6 +378,7 @@ getIndex <- function(filename="argo",
 #' `destdir` that was provided in the [getIndex()] call that created `index`.
 #' @template force
 #' @template retries
+#' @template skip
 #' @template quiet
 #' @template debug
 #'
@@ -395,7 +400,7 @@ getIndex <- function(filename="argo",
 ## @importFrom oce processingLogAppend vectorShow
 #'
 #' @export
-getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE, debug=0)
+getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, skip=TRUE, quiet=FALSE, debug=0)
 {
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for getProfiles() to work")
@@ -439,9 +444,18 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE
             warning("guessing on URL form (e.g. \"", urls[1], "\"), because server is neither usgodae.org nor ifremer.fr\n", immediate.=TRUE)
         }
         argoFloatsDebug(debug, oce::vectorShow(urls))
-        for (i in seq_along(urls)) {
-            file[i] <- getProfileFromUrl(urls[i], destdir=destdir,
-                                         force=force, retries=retries, quiet=quiet, debug=debug)
+        i <- 1
+        for (url in urls) {
+            name <- getProfileFromUrl(url, destdir=destdir,
+                                      force=force, retries=retries, quiet=quiet, debug=debug)
+            if (!is.null(name)) {
+                file[i] <- name
+                i <- i + 1
+            } else {
+                if (!skip) {
+                    stop("cannot download file '", url, "', which is a failure, since skip=FALSE")
+                }
+            }
         }
     }
     res@metadata$destdir <- destdir
