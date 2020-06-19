@@ -13,12 +13,14 @@ hexToNibble(x)
 an integer vector
 }
 \description{
-This function converts hex digits to 4 integers indicating bits, in 'math' order. Its
-intended to be used to look at the hex digits of \code{HISTORY_QCTEST} from an argos object
-that was created by \code{\link[=readProfiles]{readProfiles()}}. It then converts these hex digits to bits to
-be used in the \code{\link[=showQCTests]{showQCTests()}} function.
+This function converts hex digits to 4 integers indicating bits, in 'math' order. It's
+intended to be used to look at the hex digits of \code{HISTORY_QCTEST} of an \code{\linkS4class{argoFloats}}
+object that was created by \code{\link[=readProfiles]{readProfiles()}}. It then converts these hex digits to bits to
+be used within the \code{\link[=showQCTests]{showQCTests()}} function.
 }
 \examples{
-hexToNibble('2') # 0 0 1 0
-hexToNibble('e') # 1 1 1 0
+\dontrun{
+hexToNibble('2')
+hexToNibble('e')
+}
 }

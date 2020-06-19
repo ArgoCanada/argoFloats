@@ -1,15 +1,17 @@
 #' Convert a hex digit to 4 integers indicating the bits, in 'math' order.
 #' 
-#' This function converts hex digits to 4 integers indicating bits, in 'math' order. Its
-#' intended to be used to look at the hex digits of `HISTORY_QCTEST` from an argos object
-#' that was created by [readProfiles()]. It then converts these hex digits to bits to
-#' be used in the [showQCTests()] function.
+#' This function converts hex digits to 4 integers indicating bits, in 'math' order. It's
+#' intended to be used to look at the hex digits of `HISTORY_QCTEST` of an [`argoFloats-class`]
+#' object that was created by [readProfiles()]. It then converts these hex digits to bits to
+#' be used within the [showQCTests()] function.
 #' 
 #' @param x a character value corresponding to a hex digit (i.e. 0 through 9, or A through F)
 #' @return an integer vector
 #' @examples
-#' hexToNibble('2') # 0 0 1 0
-#' hexToNibble('e') # 1 1 1 0
+#' \dontrun{
+#' hexToNibble('2')
+#' hexToNibble('e')
+#' }
 hexToNibble <- function(x)
 {
     ## Prepend 0x0 to the character and make it raw, so we can use rawToBits; take

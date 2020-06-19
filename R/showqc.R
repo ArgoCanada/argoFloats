@@ -1,11 +1,12 @@
 #' Show which QC tests were performed and failed on an argos class
 #' 
-#' This function uses integer value from [hexToNibble()] to indicate which
-#' QC tests were performed and/or failed on an argos class object created by
-#' [readProfiles()]
-#' 
-#' @param x a single float of argos class
-#' @return The associated QC test numbers performed and failed.
+#' This function uses integer value from [hexToNibble()] internally to
+#' convert hex digits of `HISTORY_QCTEST` of a single [`argoFloats-class`]
+#' object that was created by [readProfiles()] to indicate which QC tests
+#' were performed and/or failed.
+#'
+#' @param a a single float of [`argoFloats-class`]
+#' @return The associated quality-control (QC) test numbers performed and failed.
 #' @examples
 #' \dontrun{
 #' library(argoFloats)

@@ -7,15 +7,16 @@
 showQCTests(a)
 }
 \arguments{
-\item{x}{a single float of argos class}
+\item{a}{a single float of \code{\linkS4class{argoFloats}}}
 }
 \value{
-The associated QC test numbers performed and failed.
+The associated quality-control (QC) test numbers performed and failed.
 }
 \description{
-This function uses integer value from \code{\link[=hexToNibble]{hexToNibble()}} to indicate which
-QC tests were performed and/or failed on an argos class object created by
-\code{\link[=readProfiles]{readProfiles()}}
+This function uses integer value from \code{\link[=hexToNibble]{hexToNibble()}} internally to
+convert hex digits of \code{HISTORY_QCTEST} of a single \code{\linkS4class{argoFloats}}
+object that was created by \code{\link[=readProfiles]{readProfiles()}} to indicate which QC tests
+were performed and/or failed.
 }
 \examples{
 \dontrun{
