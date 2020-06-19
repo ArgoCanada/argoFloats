@@ -123,7 +123,7 @@ useAdjustedProfile <- function(argo, debug=0)
 #' hexToNibble('e')
 #' }
 #' 
-#' @author Jaimie Harbina and Dan Kelley
+#' @author Jaimie Harbin and Dan Kelley
 hexToNibble <- function(x)
 {
     ## Prepend 0x0 to the character and make it raw, so we can use rawToBits; take
