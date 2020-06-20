@@ -40,6 +40,7 @@
 #' `data` slot having been passed through [oce::handleFlags,argo-method()].
 #'
 #' @examples
+#' \dontrun{
 #' library(argoFloats)
 #' # Contrast TS diagrams for raw and flag-handled data
 #' data(index)
@@ -48,7 +49,7 @@
 #' clean <- applyQC(raw)
 #' par(mfrow=c(1, 2))
 #' plot(raw, which="TS")
-#' plot(clean, which="TS")
+#' plot(clean, which="TS")}
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,

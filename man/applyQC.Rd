@@ -48,6 +48,7 @@ the object needs to be specified, for the default actions coincide with
 common conventions for flags in argo data.
 }
 \examples{
+\dontrun{
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(index)
@@ -56,7 +57,7 @@ raw <- readProfiles(getProfiles(i))
 clean <- applyQC(raw)
 par(mfrow=c(1, 2))
 plot(raw, which="TS")
-plot(clean, which="TS")
+plot(clean, which="TS")}
 
 }
 \references{
