@@ -39,3 +39,25 @@ NULL
 #' @family raw datasets
 NULL
 
+
+#' Sample argo file (delayed synthetic bgc data)
+#'
+#' This is profile 001 for float SD5903586, downloaded on June 20,
+#' 2020.  As its filename indicates, it holds "synthetic" data
+#' in "realtime" mode.
+#'
+#' @name SD5903586_001.nc
+#'
+#' @docType data
+#'
+#' @encoding UTF-8
+#'
+#' @examples
+#' library(argoFloats)
+#' a <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+#' summary(a)
+#' summary(a[[1]])
+#'
+#' @family raw datasets
+NULL
+

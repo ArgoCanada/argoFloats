@@ -33,3 +33,12 @@ if (FALSE) {
     system(paste("cp", file, "../inst/extdata")) # official location
 }
 
+if (TRUE) { # 2020 June 20
+    ## a bcg-argo file with adjusted oxygen differing from original oxygen
+    i <- getIndex('synthetic')
+    s <- subset(subset(i, ID='5903586'), 1)
+    p <- getProfiles(s)
+    system(paste("cp", p[["file"]], "."))
+    system(paste("cp", p[["file"]], "../inst/extdata")) # official location
+}
+
