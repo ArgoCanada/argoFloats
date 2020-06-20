@@ -6,60 +6,65 @@ destdir <- "~/data/argo" # QUESTION: could we use a tmpdir and still be within C
 
 test_that("getIndex()",
           {
-              skip_on_cran()
-              i <- expect_silent(getIndex(filename="argo_bio-profile_index.txt.gz", destdir=destdir))
+              if (canDownload()) {
+                  i <- expect_silent(getIndex(filename="argo_bio-profile_index.txt.gz", destdir=destdir))
+              }
           }
 )
 
 test_that("getProfiles()",
           {
-              skip_on_cran()
-              data(index)
-              s <- expect_message(subset(index, 1:3), "Kept 3 profiles \\(0.315%\\)")
-              p <- expect_silent(getProfiles(s))
-              expect_equal(p[["file", 1]], "~/data/argo/R1901584_124.nc")
-              expect_equal(p[["file"]], c("~/data/argo/R1901584_124.nc", "~/data/argo/R1901584_125.nc",
-                                          "~/data/argo/R1901584_126.nc"))
-              expect_equal(p[["file", 1:2]], c("~/data/argo/R1901584_124.nc", "~/data/argo/R1901584_125.nc"))
-              expect_equal(p[["length"]], 3)
+              if (canDownload()) {
+                  data(index)
+                  s <- expect_message(subset(index, 1:3), "Kept 3 profiles \\(0.315%\\)")
+                  p <- expect_silent(getProfiles(s))
+                  expect_equal(p[["file", 1]], "~/data/argo/R1901584_124.nc")
+                  expect_equal(p[["file"]], c("~/data/argo/R1901584_124.nc", "~/data/argo/R1901584_125.nc",
+                                              "~/data/argo/R1901584_126.nc"))
+                  expect_equal(p[["file", 1:2]], c("~/data/argo/R1901584_124.nc", "~/data/argo/R1901584_125.nc"))
+                  expect_equal(p[["length"]], 3)
+              }
           }
 )
 
 test_that("readProfiles()",
           {
-              skip_on_cran()
-              data(index)
-              p <- expect_message(getProfiles(subset(index, 1:4)), "Kept 4 profiles \\(0.42%\\)")
-              a <- expect_warning(readProfiles(p), "Of 4 profiles read, 4 have")
-              expect_equal(4, length(a[["profile"]]))
-              expect_true(is.list(a[["profile"]]))
-              expect_true(inherits(a[["profile",1]], "oce"))
-              expect_true(inherits(a[["profile",1]], "argo"))
-              expect_equal(a[["profile",1]][["longitude"]], -76.231)
-              expect_equal(a[["profile",1]][["longitude"]], index[["longitude"]][1])
-              expect_equal(a[["profile",1]][["latitude"]], 27.705)
-              expect_equal(a[["profile",1]][["latitude"]], index[["latitude"]][1])
+              if (canDownload()) {
+                  data(index)
+                  p <- expect_message(getProfiles(subset(index, 1:4)), "Kept 4 profiles \\(0.42%\\)")
+                  a <- expect_warning(readProfiles(p), "Of 4 profiles read, 4 have")
+                  expect_equal(4, length(a[["profile"]]))
+                  expect_true(is.list(a[["profile"]]))
+                  expect_true(inherits(a[["profile",1]], "oce"))
+                  expect_true(inherits(a[["profile",1]], "argo"))
+                  expect_equal(a[["profile",1]][["longitude"]], -76.231)
+                  expect_equal(a[["profile",1]][["longitude"]], index[["longitude"]][1])
+                  expect_equal(a[["profile",1]][["latitude"]], 27.705)
+                  expect_equal(a[["profile",1]][["latitude"]], index[["latitude"]][1])
+              }
           }
 )
 
 test_that("getProfile() handling of as single out-of-date URL",
           {
-              skip_on_cran()
-              data(index)
-              s <- subset(index, 778)  # aoml/4901622/profiles/R4901622_167.nc
-              p <- expect_error(getProfiles(s, skip=FALSE), "cannot download file")
-              p <- expect_silent(getProfiles(s, skip=TRUE))
-              p <- expect_silent(getProfiles(s)) # default is skip=TRUE
+              if (canDownload()) {
+                  data(index)
+                  s <- subset(index, 778)  # aoml/4901622/profiles/R4901622_167.nc
+                  p <- expect_error(getProfiles(s, skip=FALSE), "cannot download file")
+                  p <- expect_silent(getProfiles(s, skip=TRUE))
+                  p <- expect_silent(getProfiles(s)) # default is skip=TRUE
+              }
           }
 )
 
 test_that("readProfile() handling of an out-of-date URL surrounded by valid URLs",
           {
-              skip_on_cran()
-              data(index)
-              s <- subset(index, 778 + seq(-1, 1))  # middle is aoml/4901622/profiles/R4901622_167.nc
-              p <- expect_silent(getProfiles(s)) # default is skip=TRUE
-              a <- readProfiles(p)
+              if (canDownload()) {
+                  data(index)
+                  s <- subset(index, 778 + seq(-1, 1))  # middle is aoml/4901622/profiles/R4901622_167.nc
+                  p <- expect_silent(getProfiles(s)) # default is skip=TRUE
+                  a <- readProfiles(p)
+              }
           }
 )
 
