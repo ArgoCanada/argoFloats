@@ -4,17 +4,39 @@
 #'
 #' Variables with original names indicating in the string `_ADJUSTED` are
 #' assigned nicknams names ending in `Adjusted` by [readProfiles()], so that
-#' e.g. `TEMP_ADJUSTED` gets the nickname `temperatureAdjusted`, while
-#' `TEMP` gets the nickname `temperature`.  [useAdjusted()] switches
-#' these, renaming the adjusted values, so that e.g. `TEMP_ADJUSTED`
-#' gets nickname `temperature` and `TEMP` gets nickname `temperatureUnajusted`.
-#' This is carried out not just for data, and also for corresponding units and
-#' quality-control flags.
+#' e.g. `DOXY_ADJUSTED` gets the nickname `oxygenAdjusted`, while
+#' `DOXY` gets the nickname `oxygen`. `useAdjusted` switches
+#' these, renaming the adjusted values, so that e.g. `DOXY_ADJUSTED`
+#' gets nickname `oxygen` and `DOXY` gets nickname `oxygenUnajusted`.
+#' This is carried out for all data families, and also for the
+#' corresponding units and quality-control flags.  See \dQuote{Examples}
+#' for an example using the [SD5903586_001.nc] sample dataset.
+#'
+#' @section Caution regarding realtime and delayed modes:
+#'
+#' A study of a large set of realtime-mode and delayed-mode datasets
+#' suggests that the `_ADJUSTED` fields of the former consist only of `NA`
+#' values, so that `useAdjusted` should only be used on delayed-mode
+#' datasets. Users are cautioned that `useAdjusted` may
+#' changed during the summer of 2020, to detect the mode and perhaps
+#' refuse to exchange the data, if doing so would prevent wiping
+#' out unadjusted data by replacing them with `NA` values.
 #'
 #' @param argo An [`argoFloats-class`] object, as read by [readProfiles()].
 #'
 #' @param debug An integer that, if positive, indicates that some debugging information
 #' should be printed.
+#'
+#' @examples
+#' library(argoFloats)
+#' # Plot raw and adjusted oxygen for a sample dataset
+#' raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+#' adj <- useAdjusted(raw)
+#' par(mfrow=c(1, 2))
+#' oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="oxygen")
+#' mtext("Raw data", side=3, line=-1, col=2)
+#' oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
+#' mtext("Adjusted data", side=3, line=-1, col=2)
 #'
 #' @export
 #'
@@ -45,11 +67,17 @@ useAdjustedProfile <- function(argo, debug=0)
     for (basename in basenames) {
         w <- grep(basename, namesData)
         related <- namesData[w]
-        message("basename '", basename, "'")
+        argoFloatsDebug(debug, "basename '", basename, "'\n", sep="")
         if (length(related) > 1) {
-            message("   relatives: '", paste(related, collapse="' '"), "'")
+            argoFloatsDebug(debug, "   relatives: '", paste(related, collapse="' '"), "'\n")
             for (r in related) {
-                convert[r] <- if (grepl("Adjusted", r)) gsub("Adjusted", "", r) else paste0(basename, "Unadjusted")
+                if (grepl("Adjusted$", r)) {
+                    convert[r] <- gsub("Adjusted", "", r)
+                } else if (grepl("AdjustedError", r)) {
+                    convert[r] <- r
+                } else {
+                    convert[r] <- paste0(basename, "Unadjusted")
+                }
             }
         }
     }

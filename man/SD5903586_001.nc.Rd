@@ -8,13 +8,19 @@
 \description{
 This is profile 001 for float SD5903586, downloaded on June 20,
 2020.  As its filename indicates, it holds "synthetic" data
-in "realtime" mode.
+in "delayed" mode. The oxygen values are adjusted by 16\%, as
+is shown here, and in the documentation for \code{\link[=useAdjusted]{useAdjusted()}}.
 }
 \examples{
 library(argoFloats)
 a <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
-summary(a)
-summary(a[[1]])
+a1 <- a[[1]]
+# Illustrate oxygen adjustment
+p <- a1[["pressure"]]
+O <- a1[["oxygen"]]
+Oa  <- a1[["oxygenAdjusted"]]
+Percent <- 100 * (Oa - O) / O
+hist(Percent, main="Oxygen adjustment")
 
 }
 \seealso{

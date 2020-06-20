@@ -15,12 +15,37 @@ should be printed.}
 \description{
 Variables with original names indicating in the string \verb{_ADJUSTED} are
 assigned nicknams names ending in \code{Adjusted} by \code{\link[=readProfiles]{readProfiles()}}, so that
-e.g. \code{TEMP_ADJUSTED} gets the nickname \code{temperatureAdjusted}, while
-\code{TEMP} gets the nickname \code{temperature}.  \code{\link[=useAdjusted]{useAdjusted()}} switches
-these, renaming the adjusted values, so that e.g. \code{TEMP_ADJUSTED}
-gets nickname \code{temperature} and \code{TEMP} gets nickname \code{temperatureUnajusted}.
-This is carried out not just for data, and also for corresponding units and
-quality-control flags.
+e.g. \code{DOXY_ADJUSTED} gets the nickname \code{oxygenAdjusted}, while
+\code{DOXY} gets the nickname \code{oxygen}. \code{useAdjusted} switches
+these, renaming the adjusted values, so that e.g. \code{DOXY_ADJUSTED}
+gets nickname \code{oxygen} and \code{DOXY} gets nickname \code{oxygenUnajusted}.
+This is carried out for all data families, and also for the
+corresponding units and quality-control flags.  See \dQuote{Examples}
+for an example using the \link{SD5903586_001.nc} sample dataset.
+}
+\section{Caution regarding realtime and delayed modes}{
+
+
+A study of a large set of realtime-mode and delayed-mode datasets
+suggests that the \verb{_ADJUSTED} fields of the former consist only of \code{NA}
+values, so that \code{useAdjusted} should only be used on delayed-mode
+datasets. Users are cautioned that \code{useAdjusted} may
+changed during the summer of 2020, to detect the mode and perhaps
+refuse to exchange the data, if doing so would prevent wiping
+out unadjusted data by replacing them with \code{NA} values.
+}
+
+\examples{
+library(argoFloats)
+# Plot raw and adjusted oxygen for a sample dataset
+raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+adj <- useAdjusted(raw)
+par(mfrow=c(1, 2))
+oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="oxygen")
+mtext("Raw data", side=3, line=-1, col=2)
+oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
+mtext("Adjusted data", side=3, line=-1, col=2)
+
 }
 \author{
 Dan Kelley
