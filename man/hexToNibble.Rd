@@ -2,15 +2,15 @@
 % Please edit documentation in R/misc.R
 \name{hexToNibble}
 \alias{hexToNibble}
-\title{Convert a hex digit to 4 integers indicating the bits, in 'math' order.}
+\title{Convert a hex digit to integer vector of length 4}
 \usage{
 hexToNibble(x)
 }
 \arguments{
-\item{x}{a character value corresponding to a hex digit (i.e. 0 through 9, or A through F)}
+\item{x}{A character value corresponding to a hex digit (i.e. 0 through 9, or A through F).}
 }
 \value{
-an integer vector
+An integer vector.
 }
 \description{
 This function converts hex digits to 4 integers indicating bits, in 'math' order. It's
@@ -19,10 +19,8 @@ object that was created by \code{\link[=readProfiles]{readProfiles()}}. It then 
 be used within the \code{\link[=showQCTests]{showQCTests()}} function.
 }
 \examples{
-\dontrun{
 hexToNibble('2')
 hexToNibble('e')
-}
 
 }
 \author{
