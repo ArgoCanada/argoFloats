@@ -55,15 +55,13 @@ argo files will be stored locally.)
 6. `plot` is used to create a map plot.  The image shows water depth in metres,
    determined through a call to the `getNOAA.bathy` function in the `marmap`
 package. For context, a star is drawn to indicate the centre of he focus
-region.
-
-7. A label is drawn above the map, showing the number of profiles.  This
-   illustrates the use of `[[`, a generic R function that is used in argoFloats
-to access data and metadata elements in argoFloats objects, as well as things
-that can be computed from these elements, such as seawater density, etc.  Use
+region.  A label is drawn above the map, showing the number of profiles.  This
+illustrates the use of `[[`, a generic R function that is used in argoFloats to
+access data and metadata elements in argoFloats objects, as well as things that
+can be computed from these elements, such as seawater density, etc.  Use
 `?"[[,argoFloats-method"` to see the details of how `[[` works.
 
-8. `plot` is used again, to make a temperature-salinity diagram.
+7. `plot` is used again, to make a temperature-salinity diagram.
 
 With this in mind, readers ought to find it easy to read the following code.  A
 reasonable next step would be to try altering the code, perhaps to explore
@@ -72,26 +70,24 @@ another region or to see whether the QC step is actually necessary.
 ```R
 library(argoFloats)
 library(oce)
-## Get worldwide float-profile index, saving to ~/data/argo by default.
+## 1. Get worldwide float-profile index, saving to ~/data/argo by default.
 indexAll <- getIndex()
-## Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
+## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))
-## Get netcdf files for these profiles, saving to ~/data/argo by default.
+## 3. Get netcdf files for these profiles, saving to ~/data/argo by default.
 profiles  <- getProfiles(index)
-## Read the netcdf files.
+## 4. Read the netcdf files.
 argos <- readProfiles(profiles)
-## Examine QC flags, and set questionable data to NA.
+## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)
-## Set up a two-panel plot.
-par(mfrow=c(1, 2))
-## Tighten margins (optional).
-par(mar=c(3.5, 3.5, 2.0, 2.0))
-## Plot a map with bathymetry, indicating number of profiles.
+par(mfrow=c(1, 2))                     # want two-panel plot
+par(mar=c(3.5, 3.5, 2.0, 2.0))         # tighten margins
+## 6. Plot a map with bathymetry, indicating number of profiles.
 plot(index, which="map")
 points(-77.06, 26.54, pch="*", cex=3) # show centre of focus
 mtext(paste(argosClean[["length"]], "profiles"))
-## Plot a TS diagram
+## 7. Plot a TS diagram
 plot(argosClean, which="TS")
 ```
 ![Sample TS plot.](exampleTS.png)
