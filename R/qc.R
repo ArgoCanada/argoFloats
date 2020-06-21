@@ -78,7 +78,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' object that was created by [readProfiles()] to indicate which QC tests
 #' were performed and/or failed.
 #'
-#' @param a a single float of [`argoFloats-class`]
+#' @param x A single float of [`argoFloats-class`].
 #' 
 #' @return The associated quality-control (QC) test numbers performed and failed.
 #' 
@@ -94,7 +94,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #'   }
 #'
 #' @author Jaimie Harbin and Dan Kelley
-showQCTests <- function(a)
+showQCTests <- function(x)
 {
     if (!inherits(a, 'argo'))
         stop("can only display Quality Control tests for oce objects of 'argo' class")
