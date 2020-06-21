@@ -60,7 +60,8 @@ region.
 7. A label is drawn above the map, showing the number of profiles.  This
    illustrates the use of `[[`, a generic R function that is used in argoFloats
 to access data and metadata elements in argoFloats objects, as well as things
-that can be computed from these elements, such as seawater density, etc.
+that can be computed from these elements, such as seawater density, etc.  Use
+`?"[[,argoFloats-method"` to see the details of how `[[` works.
 
 8. `plot` is used again, to make a temperature-salinity diagram.
 
