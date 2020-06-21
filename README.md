@@ -52,7 +52,10 @@ argo files will be stored locally.)
 5. `applyQC` is used to set questionable data to `NA`.  This uses
    quality-control (QC) flags that are present in the argo data.
 
-6. `plot` is used to create a map plot.
+6. `plot` is used to create a map plot.  The image shows water depth in metres,
+   determined through a call to the `getNOAA.bathy` function in the `marmap`
+package.
+
 
 7. A label is drawn above the map, showing the number of profiles.  This
    illustrates the use of `[[`, a generic R function that is used in argoFloats
