@@ -62,8 +62,8 @@ that can be computed from these elements, such as seawater density, etc.
 8. `plot` is used again, to make a temperature-salinity diagram.
 
 With this in mind, readers ought to find it easy to read the following code.  A
-reasonable next step would be to try altering the code, e.g. to explore another
-region, or determine whether the QC step is necessary.
+reasonable next step would be to try altering the code, perhaps to explore
+another region or to see whether the QC step is actually necessary.
 
 ```R
 library(argoFloats)
