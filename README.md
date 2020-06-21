@@ -54,8 +54,8 @@ argo files will be stored locally.)
 
 6. `plot` is used to create a map plot.  The image shows water depth in metres,
    determined through a call to the `getNOAA.bathy` function in the `marmap`
-package.
-
+package. For context, a star is drawn to indicate the centre of he focus
+region.
 
 7. A label is drawn above the map, showing the number of profiles.  This
    illustrates the use of `[[`, a generic R function that is used in argoFloats
@@ -88,6 +88,7 @@ par(mfrow=c(1, 2))
 par(mar=c(3.5, 3.5, 2.0, 2.0))
 ## Plot a map with bathymetry, indicating number of profiles.
 plot(index, which="map")
+points(-77.06, 26.54, pch="*", cex=3) # show centre of focus
 mtext(paste(argosClean[["length"]], "profiles"))
 ## Plot a TS diagram
 plot(argosClean, which="TS")
