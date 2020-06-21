@@ -114,8 +114,8 @@ showQCTests <- function(a)
     failChars <- strsplit(fail, "")[[1]]
     perfIndices <- which(1 == unlist(lapply(perfChars, function(hex) hexToNibble(hex))))
     failIndices <- which(1 == unlist(lapply(failChars, function(hex) hexToNibble(hex))))
-    cat("Tests performed:", paste(perfIndices, collapse=" "), "\n")
-    cat("Tests failed:   ", paste(failIndices, collapse=" "), "\n")
+    cat("Tests performed: ", paste(perfIndices, collapse=" "), "\n", sep="")
+    cat("Tests failed:    ", paste(failIndices, collapse=" "), "\n", sep="")
     invisible()
 }
 

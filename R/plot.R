@@ -251,7 +251,7 @@ setMethod(f="plot",
                           if (bathymetry$palette) {
                               tmpmar <- par("mar")
                               par(mar=tmpmar + c(0, 0, 0, 2.75))
-                              argoFloatsDebug(debug, "  changed to c(", paste(par("mar"), collapse=", "), ") to allow for the palette\n", sep="")
+                              argoFloatsDebug(debug, "  temporarily set par(mar=c(", paste(par("mar"), collapse=", "), ")) to allow for the palette\n", sep="")
                           }
                           if (!is.null(xlim) && !is.null(ylim)) {
                               argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
@@ -315,12 +315,19 @@ setMethod(f="plot",
                                                                col=function(...)
                                                                    rev(oce::oceColorsGebco(...)))
                       } else {
-                          argoFloatsDebug(debug, "using supplid bathymetry$colormap\n")
+                          argoFloatsDebug(debug, "using supplied bathymetry$colormap\n")
                       }
-                      ## Handle optional drawing of palett
+                      ## Handle optional drawing of the palette. Note space for one line of text is removed
+                      ## from the LHS of the palette and added to the RHS.  This is because we know that
+                      ## there is no axis to the left of the palette, so we do not need space for one.
+                      ## We recover the stolen space by putting it back at the RHS, where it can be
+                      ## useful, especially if a map plot has another plot to its right.
                       if (bathymetry$palette) {
                           argoFloatsDebug(debug, "drawing a bathymetry palette\n")
-                          oce::drawPalette(colormap=bathymetry$colormap)
+                          ## Increase space to right of axis, decreasing equally to the left.
+                          textHeight <- par("cin")[2]
+                          mai <- c(0, -textHeight, 0, textHeight)
+                          oce::drawPalette(colormap=bathymetry$colormap, mai=mai)
                       } else {
                           argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed\n")
                       }

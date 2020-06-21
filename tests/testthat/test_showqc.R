@@ -16,3 +16,4 @@ test_that("showing QC tests", {
               expect_output(showQCTests(argos[[1]]), "^Tests performed: 2 4 5 6 7 8 15 16 17 18 19\n[ ]*Tests failed:    2[ ]*$")
           }
 })
+
