@@ -4,10 +4,10 @@
 \alias{showQCTests}
 \title{Show which QC tests were performed and failed on an argos class}
 \usage{
-showQCTests(a)
+showQCTests(x)
 }
 \arguments{
-\item{a}{a single float of \code{\linkS4class{argoFloats}}}
+\item{x}{A single float of \code{\linkS4class{argoFloats}}.}
 }
 \value{
 The associated quality-control (QC) test numbers performed and failed.
