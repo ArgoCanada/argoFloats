@@ -31,22 +31,40 @@ are displayed on the [user-oriented
 website](https://argocanada.github.io/argoFloats/index.html). Note that the
 vignette also lists youtube videos about the package.
 
-For example, the following shows how to create a map and a temperature-salinity
-diagram for several Argo float profiles made near Abaco Island in the Bahamas.
-First, the `getIndex` function is used to download a worldwide index of float
-profiles.  (Use `?getIndex` to learn more about this function, and note in
+As a practical example, the code block given below shows how to create a map
+and a temperature-salinity diagram for Argo float profiles near Abaco Island in
+the Bahamas. The key steps, many of which are common to most analyses using the
+package, are as follows.
+
+1. The `getIndex` function is used to download a worldwide index of float
+   profiles.  (Use `?getIndex` to learn more about this function, and note in
 particular the `destdir` argument, which determines where the index and other
-argo files will be stored locally.) Next, the `subset` function is used to
-narrow the region of interest; yielding (as of mid-June 2020) 39 profiles.  The
-`getProfiles` function is then used to download the relevant netcdf files that
-contain the profile data. Then, `readProfiles` is used to read those files.
-Many profiles contain quality-control flags to indicate bad or questionable
-data, and the `applyQC` is used to set such data to `NA`.  Finally, a map plot
-is drawn, with a label indicating the number of profiles shown; the latter
-illustrates the use of `[[`, a generic R function that is used to access data
-and metadata elements in argoFloats objects.  Finally, a temperature-salinity
-plot is shown.  As an exercise, the reader might find it informative to repeat
-the procedure, without the QC step.
+argo files will be stored locally.)
+
+2. The `subset` function is used to narrow the region of interest, yielding 39
+   profiles as of mid-June, 2020.
+
+3. `getProfiles` is used to download the netcdf files that contain the profile
+   measurements.
+
+4. `readProfiles` is used to read those files.
+
+5. `applyQC` is used to set questionable data to `NA`.  This uses
+   quality-control (QC) flags that are present in the argo data.
+
+6. `plot` is used to create a map plot.
+
+7. A label is drawn above the map, showing the number of profiles.  This
+   illustrates the use of `[[`, a generic R function that is used in argoFloats
+to access data and metadata elements in argoFloats objects, as well as things
+that can be computed from these elements, such as seawater density, etc.
+
+8. `plot` is used again, to make a temperature-salinity diagram.
+
+With this in mind, readers ought to find it easy to read the following code.  A
+reasonable next step would be to try altering the code, e.g. to explore another
+region, or determine whether the QC step is necessary.
+
 ```R
 library(argoFloats)
 library(oce)
