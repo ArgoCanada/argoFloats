@@ -16,7 +16,7 @@ par(mfrow=c(1, 2))                     # want two-panel plot
 par(mar=c(3.5, 3.5, 2.0, 2.0))         # tighten margins
 ## 6. Plot a map with bathymetry, indicating number of profiles.
 plot(index, which="map")
-points(-77.06, 26.54, pch="*", cex=3) # show centre of focus
+points(-77.06, 26.54, pch="*", cex=3)  # show centre of focus
 mtext(paste(argosClean[["length"]], "profiles"))
 ## 7. Plot a TS diagram
 plot(argosClean, which="TS")
