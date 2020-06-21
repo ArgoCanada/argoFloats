@@ -137,20 +137,21 @@ useAdjustedProfile <- function(argo, debug=0)
 
 
 #' Convert a hex digit to integer vector of length 4
-#' 
+#'
 #' This function converts hex digits to 4 integers indicating bits, in 'math' order. It's
 #' intended to be used to look at the hex digits of `HISTORY_QCTEST` of an [`argoFloats-class`]
 #' object that was created by [readProfiles()]. It then converts these hex digits to bits to
 #' be used within the [showQCTests()] function.
-#' 
+#'
 #' @param x A character value corresponding to a hex digit (i.e. 0 through 9, or A through F).
-#' 
+#'
 #' @return An integer vector.
-#' 
+#'
 #' @examples
+#' library(argoFloats)
 #' hexToNibble('2')
 #' hexToNibble('e')
-#' 
+#'
 #' @author Jaimie Harbin and Dan Kelley
 hexToNibble <- function(x)
 {

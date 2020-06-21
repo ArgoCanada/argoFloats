@@ -19,6 +19,7 @@ object that was created by \code{\link[=readProfiles]{readProfiles()}}. It then 
 be used within the \code{\link[=showQCTests]{showQCTests()}} function.
 }
 \examples{
+library(argoFloats)
 hexToNibble('2')
 hexToNibble('e')
 
