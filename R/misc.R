@@ -152,6 +152,8 @@ useAdjustedProfile <- function(argo, debug=0)
 #' hexToNibble('2')
 #' hexToNibble('e')
 #'
+#' @export
+#'
 #' @author Jaimie Harbin and Dan Kelley
 hexToNibble <- function(x)
 {
