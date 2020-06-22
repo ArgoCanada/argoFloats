@@ -1,26 +1,36 @@
 library(argoFloats)
 options(warn=1)
 data(indexSynthetic)
-n <- 100
+n <- 500
 s <- subset(index, 1:n)
 p <- getProfiles(s)
 a <- readProfiles(p)
-filename <- sapply(a[["profile"]], function(x) gsub("^.*/argo/", "", x[["filename"]][1]))
-isRealtime <- grepl("^[SM]{0,1}R", filename)
-dataMode <- sapply(a[["profile"]], function(x) x[["dataMode"]][1])
-allNAoxygen <- sapply(a[["profile"]], function(x) all(is.na(x[["oxygenAdjusted"]])))
-allNApressure <- sapply(a[["profile"]], function(x) all(is.na(x[["pressureAdjusted"]])))
-allNAsalinity <- sapply(a[["profile"]], function(x) all(is.na(x[["salinityAdjusted"]])))
-allNAtemperature <- sapply(a[["profile"]], function(x) all(is.na(x[["temperatureAdjusted"]])))
-df <- data.frame(filename=filename, isRealtime=isRealtime, dataMode=dataMode,
-                 allNAp=allNApressure,
-                 allNAS=allNAsalinity,
-                 allNAT=allNAtemperature,
-                 allNAO=allNAoxygen)
-cat("Q: is pressureAdjusted is NA for all depths in all profiles?", if (all(df$allNApressure)) "YES" else "NO", "\n")
-cat("Q: is salinityAdjusted is NA for all depths in all profiles?", if (all(df$allNAsalinity)) "YES" else "NO", "\n")
-cat("Q: is temperatureAdjusted is NA for all depths in all profiles?", if (all(df$allNAtemperature)) "YES" else "NO", "\n")
-cat("Q: is oxygenAdjusted is NA for all depths in all profiles?", if (all(df$allNA)) "YES" else "NO", "\n")
-options(width=200)
-print(df)
 
+cat("\n\n\n")
+cat("+--------------------------------------------------+\n")
+cat("| 1. Discover names of things in first netcdf file |\n")
+cat("+--------------------------------------------------+\n")
+cat("\n\n\n")
+f <- a[[1]][["filename"]]
+library(ncdf4)
+n <- nc_open(f)
+print(n)
+nc_close(n)
+
+cat("\n\n\n")
+cat("+-----------------------------+\n")
+cat("| 2. Table of some properties |\n")
+cat("+-----------------------------+\n")
+cat("\n\n\n")
+
+filename <- sapply(a[["profile"]], function(x) gsub("^.*/argo/", "", x[["filename"]][1]))
+df <- data.frame(filename=filename,
+                 isRealtime=grepl("^[SM]{0,1}R", filename),
+                 dataMode=sapply(a[["profile"]], function(x) x[["dataMode"]][1]),
+                 allNAp=sapply(a[["profile"]], function(x) all(is.na(x[["pressureAdjusted"]]))),
+                 allNAS=sapply(a[["profile"]], function(x) all(is.na(x[["salinityAdjusted"]]))),
+                 allNAT=sapply(a[["profile"]], function(x) all(is.na(x[["temperatureAdjusted"]]))),
+                 allNAO=sapply(a[["profile"]], function(x) all(is.na(x[["oxygenAdjusted"]]))),
+                 havePDM=unlist(lapply(a[["profile"]], function(x) !is.null(x[["PARAMETER_DATA_MODE"]]))))
+options(width=150)
+print(df)
