@@ -18,7 +18,7 @@ assigned nicknams names ending in \code{Adjusted} by \code{\link[=readProfiles]{
 e.g. \code{DOXY_ADJUSTED} gets the nickname \code{oxygenAdjusted}, while
 \code{DOXY} gets the nickname \code{oxygen}. \code{useAdjusted} switches
 these, renaming the adjusted values, so that e.g. \code{DOXY_ADJUSTED}
-gets nickname \code{oxygen} and \code{DOXY} gets nickname \code{oxygenUnajusted}.
+gets nickname \code{oxygen} and \code{DOXY} gets nickname \code{oxygenUnadjusted}.
 This is carried out for all data families, and also for the
 corresponding units and quality-control flags.  See \dQuote{Examples}
 for an example using the \link{SD5903586_001.nc} sample dataset.

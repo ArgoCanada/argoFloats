@@ -7,7 +7,7 @@
 #' e.g. `DOXY_ADJUSTED` gets the nickname `oxygenAdjusted`, while
 #' `DOXY` gets the nickname `oxygen`. `useAdjusted` switches
 #' these, renaming the adjusted values, so that e.g. `DOXY_ADJUSTED`
-#' gets nickname `oxygen` and `DOXY` gets nickname `oxygenUnajusted`.
+#' gets nickname `oxygen` and `DOXY` gets nickname `oxygenUnadjusted`.
 #' This is carried out for all data families, and also for the
 #' corresponding units and quality-control flags.  See \dQuote{Examples}
 #' for an example using the [SD5903586_001.nc] sample dataset.

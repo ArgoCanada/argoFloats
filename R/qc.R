@@ -93,6 +93,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' showQCTests(argos[[1]])
 #'   }
 #'
+#' @export
 #' @author Jaimie Harbin and Dan Kelley
 showQCTests <- function(x)
 {
