@@ -87,40 +87,6 @@ plot(argos, which='diagnostic', parameter='oxygen')
 The `showQCTests()` is a newly added function. It's purpose is to use integer values from the [hexToNibble()] function to internally convert hex digits. In this contenxt, the hex digits come from `HISTORY_QCTEST` of a single argoFloats object that was created by [readProfiles()]. The `showQCTests()` is then used to indicate which QC tests were performed and/or failed.
 
 An example of the `showQCTests()` used on a float near the Arabian Sea is as follows:
-```{r, message=FALSE, error=FALSE, warning=FALSE, echo=FALSE}
-hexToNibble <- function(x)
-{
-    ## Prepend 0x0 to the character and make it raw, so we can use rawToBits; take
-    ## only the rightmost 4 bits since they correspond to our character.
-    raw <- as.raw(paste0('0x0', x))
-    rawRHS <- tail(rev(rawToBits(as.raw(paste0('0x0', x)))), 4)
-    ifelse(rawRHS == "01", 1, 0)
-}
-showQCTests <- function(x)
-{
-    if (!inherits(x, 'argo'))
-        stop("can only display Quality Control tests for oce objects of 'argo' class")
-    ## Only attempt a display if the object holds HISTORY_ACTION and HISTORY_TESTS
-    action <- x[['HISTORY_ACTION']]
-    if (is.null(action))
-        return(invisible())
-    tests <- x[['HISTORY_QCTEST']]
-    if (is.null(tests))
-        return(invisible())
-    ## Match strings within 'action' to find the tests that were performed
-    perf <- tests[1, which(action == "QCP$")]
-    ## Match strings within 'action' to find the tests that failed
-    fail <- tests[1, which(action == "QCF$")]
-    ## Break strings into characters
-    perfChars <- strsplit(perf, "")[[1]]
-    failChars <- strsplit(fail, "")[[1]]
-    perfIndices <- which(1 == unlist(lapply(perfChars, function(hex) hexToNibble(hex))))
-    failIndices <- which(1 == unlist(lapply(failChars, function(hex) hexToNibble(hex))))
-    cat("Tests performed: ", paste(perfIndices, collapse=" "), "\n", sep="")
-    cat("Tests failed:    ", paste(failIndices, collapse=" "), "\n", sep="")
-    invisible()
-}
-```
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE}
 library(argoFloats)

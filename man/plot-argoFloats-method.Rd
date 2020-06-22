@@ -116,7 +116,7 @@ only works if \code{x} is an object that was created by  \code{\link[=getProfile
 The scales for the plot can be altered by putting \code{Slim} and \code{Tlim}
 arguments in the \code{...} list; see the documentation for \code{\link[oce:plotTS]{oce::plotTS()}}
 for other arguments that can be provided.
-\item For \verb{which=\\"diagnostic\\"}, two time-series panels are shown, with
+\item For \verb{which=\\"qc\\"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{variable} must be givn, to name the
 quantity of interest.  The function only works if \code{x} is an
@@ -167,7 +167,7 @@ library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 plot(a[[1]], which="TS")
 
-# Example 7: Temperature diagnostic plot for an ID in Arabian Sea
+# Example 7: Temperature qc plot for an ID in Arabian Sea
 \dontrun{
 library(argoFloats)
 ais <- getIndex(filename='synthetic', age=0)
@@ -177,7 +177,7 @@ latRect <- c(11,12)
 s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
-plot(argos, which='diagnostic', parameter='temperature')}
+plot(argos, which='qc', parameter='temperature')}
 
 }
 \author{
