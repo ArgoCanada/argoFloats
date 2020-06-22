@@ -2,7 +2,6 @@
 title: "Introduction to argoFloats Quality Control"
 author: "Dan Kelley (https://orcid.org/0000-0001-7808-5911) and Jaimie Harbin (https://orcid.org/0000-0003-3774-3732)"
 date: "`r Sys.Date()`"
-toc: yes
 ---
 
 **Abstract**
@@ -16,7 +15,7 @@ Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
 
 *Hypothesis* : Our hypothesis is that real-time data have all NAs for <PARAM>ADJUSTED, and we should therefore only use the <PARAM>ADJUSTED for delayed mode data.
 
-# argoFloats and Flags
+# Flags
 As described by the Argo user’s manual V3.3 [1], data that are given a flag value of 1, 2, 5, or 8 are considered 'good' data. If data are given a flag value of 9 (or missing value) they are not used, and flags 3, 5, 6, and 7 are considered 'bad' data.
 
 `argoFloats` has taken this idea, and has incorporated a 3 step process when considering the quality control of Argo data. The three step process encourages users to always analyze the data they are considering. The three step process is as follows:
@@ -52,7 +51,7 @@ y0 <- y0 - dy
 textInBox(x0, y0, "Do I agree with the quality control?", col=colText)
 x0 <- 0.8
 y0 <- 0.9
-wh <- textInBox(x0, y0, "plot(which='diagnostics') ", family="sans", col=colCode)
+wh <- textInBox(x0, y0, "plot(which='qcs') ", family="sans", col=colCode)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
@@ -64,10 +63,10 @@ textInBox(x0, y0, "applyQC() ", family="sans", col=colCode)
 par(mar=omar)
 ```
 
-## Diagnostic Plot
-Our `argoFloats` package uses the flags of profiles to determine "good" and "bad" data. We then created a plot type to demonstrate the quality of data, the `diagnostic` plot. The diagnostic plot is a plot of parameter quality and parameter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. If the user is uncertain about what parameter exists within a certain float, `argoFloats` will prompt the user with the appropriate parameters. 
+## qc Plot
+Our `argoFloats` package uses the flags of profiles to determine "good" and "bad" data. We then created a plot type to demonstrate the quality of data, the `qc` plot. The qc plot is a plot of parameter quality and parameter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. If the user is uncertain about what parameter exists within a certain float, `argoFloats` will prompt the user with the appropriate parameters. 
 
-An example of how to get the diagnostic plot for oxygen, or "DOXY" is as follows:
+An example of how to get the qc plot for oxygen, or "DOXY" is as follows:
 
 ```{r, message=FALSE, warning=FALSE, error=FALSE}
 library(argoFloats)
@@ -78,10 +77,10 @@ latRect <- c(11,12)
 s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
-plot(argos, which='diagnostic', parameter='oxygen')
+plot(argos, which='qc', parameter='oxygen')
 ```
 
-*Exercise One:* Use the previous code to determine the diagnostics of temperature for float number 4900845. Explain the results.
+*Exercise One:* Use the previous code to determine the qc of temperature for float number 4900845. Explain the results.
 
 ## showQCTests()
 The `showQCTests()` is a newly added function. It's purpose is to use integer values from the [hexToNibble()] function to internally convert hex digits. In this contenxt, the hex digits come from `HISTORY_QCTEST` of a single argoFloats object that was created by [readProfiles()]. The `showQCTests()` is then used to indicate which QC tests were performed and/or failed.
@@ -116,15 +115,36 @@ plot(raw, which="TS")
 plot(clean, which="TS")
 ```
 
+# Adjusted Data
+FIXME:: ADD CLARIFICATION FROM ARGO MANUAL ABOUT ADJUSTED DATA
+
+## useAdjusted()
+
+Variables with original names indicating in the string <PARAM>_ADJUSTED are assigned nicknames names ending in Adjusted by readProfiles(), so that e.g. DOXY_ADJUSTED gets the nickname oxygenAdjusted, while DOXY gets the nickname oxygen. `useAdjusted()` switches these, renaming the adjusted values, so that e.g. DOXY_ADJUSTED gets nickname oxygen and DOXY gets nickname oxygenUnadjusted. This is carried out for all data families, and also for the corresponding units and quality-control flags.
+
+An example of the significance of adjusted vs unadjusted can be shown below:
+
+```{r, warning=FALSE, error=FALSE, message=FALSE}
+library(argoFloats)
+# Plot raw and adjusted oxygen for a sample dataset
+raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+adj <- useAdjusted(raw)
+par(mfrow=c(1, 2))
+oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="oxygen")
+mtext("Raw data", side=3, line=-1, col=2)
+oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
+mtext("Adjusted data", side=3, line=-1, col=2)
+```
+
 # Answers
-*Exercise One:* Use the previous code to determine the diagnostics of temperature for float number 4900845. Explain the results.
+*Exercise One:* Use the previous code to determine the quality control of temperature for float number 4900845. Explain the results.
 ```
 library(argoFloats)
 ais <- getIndex(filename = 'synthetic', age=0)
 sub <- subset(ais, ID='4900845')
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
-plot(argos, which='diagnostic', parameter='temperature')
+plot(argos, which='qc', parameter='temperature')
 ```
 
 The results show 100% of the temperature data are considered 'good' data. This is a result of all of the files being 'delayed' mode indicating the argo profiles have undergone scrutinized testing.
