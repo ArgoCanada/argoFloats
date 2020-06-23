@@ -45,7 +45,7 @@ geographical <- TRUE
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
 #' for other arguments that can be provided.
 #'
-#' * For `which=\"qc\"`, two time-series panels are shown, with
+#' * For `which=\"QC\"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
 #' An additional argument named `variable` must be givn, to name the
 #' quantity of interest.  The function only works if `x` is an
@@ -144,7 +144,7 @@ geographical <- TRUE
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' plot(a[[1]], which="TS")
 #'
-#' # Example 7: Temperature qc plot for an ID in Arabian Sea
+#' # Example 7: Temperature QC plot for an ID in Arabian Sea
 #' \dontrun{
 #' library(argoFloats)
 #' ais <- getIndex(filename='synthetic', age=0)
@@ -154,7 +154,7 @@ geographical <- TRUE
 #' s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 #' profiles <- getProfiles(s)
 #' argos <- readProfiles(profiles)
-#' plot(argos, which='qc', parameter='temperature')}
+#' plot(argos, which='QC', parameter='temperature')}
 #'
 #' @importFrom grDevices extendrange gray rgb
 #' @importFrom graphics abline axis box par plot.window points polygon text
@@ -462,13 +462,13 @@ setMethod(f="plot",
                   par(mar=mar, mgp=mgp)
                   oce::plotTS(ctd, cex=cex, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
                   par(mar=omar, mgp=omgp)
-              } else if (which == "qc") {
+              } else if (which == "QC") {
                   if (x[['type']] != 'argos')
                       stop("In plot,argoFloats-method(): The type of x must be 'argos'", call.=FALSE)
                   IDs <- x[['ID']]
                   nID <- length(unique(IDs))
                   if (nID != 1)
-                      stop("In plot,argoFloats-method(): It is only possible to plot a qc of a single ID", call.=FALSE)
+                      stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single ID", call.=FALSE)
                   dots <- list(...)
                   knownParameters <- names(x[[1]]@metadata$flags)
                   parameter <- dots$parameter

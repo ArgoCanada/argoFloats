@@ -51,7 +51,7 @@ y0 <- y0 - dy
 textInBox(x0, y0, "Do I agree with the quality control?", col=colText)
 x0 <- 0.8
 y0 <- 0.9
-wh <- textInBox(x0, y0, "plot(which='qcs') ", family="sans", col=colCode)
+wh <- textInBox(x0, y0, "plot(which='QC') ", family="sans", col=colCode)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
@@ -63,10 +63,10 @@ textInBox(x0, y0, "applyQC() ", family="sans", col=colCode)
 par(mar=omar)
 ```
 
-## qc Plot
-Our `argoFloats` package uses the flags of profiles to determine "good" and "bad" data. We then created a plot type to demonstrate the quality of data, the `qc` plot. The qc plot is a plot of parameter quality and parameter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. If the user is uncertain about what parameter exists within a certain float, `argoFloats` will prompt the user with the appropriate parameters. 
+## QC Plot
+Our `argoFloats` package uses the flags of profiles to determine "good" and "bad" data. We then created a plot type to demonstrate the quality of data, the `QC` plot. The QC plot is a plot of parameter quality and parameter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. If the user is uncertain about what parameter exists within a certain float, `argoFloats` will prompt the user with the appropriate parameters. 
 
-An example of how to get the qc plot for oxygen, or "DOXY" is as follows:
+An example of how to get the QC plot for oxygen, or "DOXY" is as follows:
 
 ```{r, message=FALSE, warning=FALSE, error=FALSE}
 library(argoFloats)
@@ -77,10 +77,10 @@ latRect <- c(11,12)
 s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
-plot(argos, which='qc', parameter='oxygen')
+plot(argos, which='QC', parameter='oxygen')
 ```
 
-*Exercise One:* Use the previous code to determine the qc of temperature for float number 4900845. Explain the results.
+*Exercise One:* Use the previous code to determine the QC of temperature for float number 4900845. Explain the results.
 
 ## showQCTests()
 The `showQCTests()` is a newly added function. It's purpose is to use integer values from the [hexToNibble()] function to internally convert hex digits. In this contenxt, the hex digits come from `HISTORY_QCTEST` of a single argoFloats object that was created by [readProfiles()]. The `showQCTests()` is then used to indicate which QC tests were performed and/or failed.
@@ -144,7 +144,7 @@ ais <- getIndex(filename = 'synthetic', age=0)
 sub <- subset(ais, ID='4900845')
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
-plot(argos, which='qc', parameter='temperature')
+plot(argos, which='QC', parameter='temperature')
 ```
 
 The results show 100% of the temperature data are considered 'good' data. This is a result of all of the files being 'delayed' mode indicating the argo profiles have undergone scrutinized testing.
