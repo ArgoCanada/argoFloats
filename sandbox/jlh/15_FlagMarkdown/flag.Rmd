@@ -13,8 +13,6 @@ Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
 2. Delayed mode
 3. Regional scientific analyses of all float data with other available data. The procedures for regional analyses are still to be determined.
 
-*Hypothesis* : Our hypothesis is that real-time data have all NAs for <PARAM>ADJUSTED, and we should therefore only use the <PARAM>ADJUSTED for delayed mode data.
-
 # Flags
 As described by the Argo user’s manual V3.3 [1], data that are given a flag value of 1, 2, 5, or 8 are considered 'good' data. If data are given a flag value of 9 (or missing value) they are not used, and flags 3, 5, 6, and 7 are considered 'bad' data.
 
@@ -63,29 +61,27 @@ textInBox(x0, y0, "applyQC() ", family="sans", col=colCode)
 par(mar=omar)
 ```
 
-## QC Plot
+## Step One: QC Plot
 Our `argoFloats` package uses the flags of profiles to determine "good" and "bad" data. We then created a plot type to demonstrate the quality of data, the `QC` plot. The QC plot is a plot of parameter quality and parameter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. If the user is uncertain about what parameter exists within a certain float, `argoFloats` will prompt the user with the appropriate parameters. 
 
-An example of how to get the QC plot for oxygen, or "DOXY" is as follows:
+An example of how to get the QC plot for temperature, or "TEMP" for the float ID = 1901584 is as follows:
 
-```{r, message=FALSE, warning=FALSE, error=FALSE}
+THIS IS A TRIAL
+```{r, warning=FALSE, error=FALSE, message=FALSE}
 library(argoFloats)
-ais <- getIndex(filename = 'synthetic', age=0)
-sub <- subset(ais, ID='2902123')
-lonRect <- c(56, 66)
-latRect <- c(11,12)
-s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
-profiles <- getProfiles(s)
+data("index")
+subset <- subset(index, ID='1901584')
+profiles <- getProfiles(subset)
 argos <- readProfiles(profiles)
-plot(argos, which='QC', parameter='oxygen')
+plot(argos, which='QC', parameter='temperature')
 ```
 
 *Exercise One:* Use the previous code to determine the QC of temperature for float number 4900845. Explain the results.
 
-## showQCTests()
+## Step Two: showQCTests()
 The `showQCTests()` is a newly added function. It's purpose is to use integer values from the [hexToNibble()] function to internally convert hex digits. In this contenxt, the hex digits come from `HISTORY_QCTEST` of a single argoFloats object that was created by [readProfiles()]. The `showQCTests()` is then used to indicate which QC tests were performed and/or failed.
 
-An example of the `showQCTests()` used on a float near the Arabian Sea is as follows:
+Using the same example as shown in `plot(which='QC')`, we can also determine which QC tests were performed on each profile. This is completed by `showQCTests()` in the following code:
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE}
 library(argoFloats)
@@ -101,13 +97,15 @@ showQCTests(argos[[1]])
 
 ## applyQC()
 
-The `applyQC()` function examines quality-control (QC) within an argoFloats obect that was reated by `readProfiles(). By default, it replaced all suspecious data with NA values, so they will not apepar in plots or be considered in calculations. This is an important early step in processing, because suspicious Argo floats commonly report data that are suspicious based on statistical and physical measures as illustrated below in the example:
+The `applyQC()` function examines quality-control (QC) within an argoFloats obect that was reated by `readProfiles(). By default, it replaced all suspecious data with NA values, so they will not appear in plots or be considered in calculations. This is an important early step in processing, because suspicious Argo floats commonly report data that are suspicious based on statistical and physical measures.
+
+Using the same example as shown in `plot(which='QC')` and `showQCTests()`, the user also has the ability to use `applyQC()` as shown below:
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE}
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(index)
-i <- subset(index, 1:5) # first 5 profiles
+i <- subset(index, ID='1901584')
 raw <- readProfiles(getProfiles(i))
 clean <- applyQC(raw)
 par(mfrow=c(1, 2))
