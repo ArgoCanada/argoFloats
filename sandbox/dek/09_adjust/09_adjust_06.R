@@ -37,3 +37,10 @@ for (i in seq_len(a[["length"]])) {
     summary(a[[i]])
     cat("\n", rep("~", 50), "\n\n")
 }
+
+i<-6
+A<-a[[i]]
+f <- "temperature"
+f <- "salinity"
+data.frame(T=A[[f]],Ta=A[[paste0(f,"Adjusted")]],Tf=A[[paste0(f,"Flag")]])
+

@@ -12,7 +12,54 @@
 #' corresponding units and quality-control flags.  See \dQuote{Examples}
 #' for an example using the [SD5903586_001.nc] sample dataset.
 #'
-#' @section Caution regarding realtime and delayed modes:
+#' The adjustment process is complicated, and, since it was developed by
+#' a combination of file inspection, a study of documentation, and discussions
+#' with argo analysts, it is somewhat ad-hoc and may be changed later.
+#' For this reason, users are advised strongly to examine their data files
+#' closely, before blindly calling `useAdjusted`. The procedure is as follows.
+#'
+#' There are two cases, depending on whether an item named `PARAMETER_DATA_MODE`
+#' is present in the metadata stored in the netcdf file.
+#' 
+#' 1. **Case 1.** If the `PARAMETER_DATA_MODE` field is present, then the
+#'    data columns are mapped to the parameter columns, and the following actions
+#'    are undertaken.
+#' 
+#'     * If `PARAMETER_DATA_MODE` is `"A"` (meaning "Adjusted") then use the
+#'       `<PARAM>_ADJUSTED` values, *unless* those values are all `NA`, in which case the
+#'       raw values are used instead. This is to account for the convention described in
+#'       Section 2.6.5 of Carval et al. (2019).
+#' 
+#'     * If `PARAMETER_DATA_MODE` is `"D"` (meaning "Delayed"), then proceed as for
+#'       the `"A"` case.
+#'     
+#'     * If `PARAMETER_DATA_MODE` is `"R"` (meaning "Realtime") then use the raw
+#'       values, even if the file contains data with `<PARAM>_ADJUSTED` (e.g.
+#'     `"TEMP_ADJUSTED"`, which is the name used in netcdf files for the adjusted
+#'     temperature) in their names.
+#' 
+#' 2. **Case 2.** If no `PARAMETER_DATA_MODE` field is present, but `DATA_MODE`
+#'    is present, then the latter is used.  This does not apply to individual columns,
+#'    so the action depends on the data within the columns.  
+#' 
+#'     * If `DATA_MODE` is `"A"` (meaning "Adjusted") then each data type is
+#'     considered in turn, and if the `<PARAM>_ADJUSTED` values are *all* `NA`
+#'     then the raw data are used, but if any of the `<PARAM>_ADJUSTED` values
+#'     are not `NA`, then *all* the `<PARAM>_ADJUSTED` data are used.
+#'     
+#'     * If `DATA_MODE` is `"D"` (meaning "Delayed") then proceed as for
+#'       the `"A"` case.
+#'     
+#'     * If `DATA_MODE` is `"R"` then then use the raw values, even if the file
+#'       contains data with `<PARAM>_ADJUSTED` in their names.
+#'
+#' 3. **Case 3.** If neither `DATA_MODE` nor `PARAMETER_DATA_MODE` is present
+#'    in the metadata (a situation the developers have not encountered, but
+#'    which is included for completeness) then if `<PARAM>_ADJUSTED` fields
+#'    are present, then they are handled as in the first and second items in
+#'    Case 2 above.
+#'
+#' @section Developer notes (may be removed at any time):
 #'
 #' A study of a large set of realtime-mode and delayed-mode datasets
 #' suggests that the `_ADJUSTED` fields of the former consist only of `NA`
@@ -38,9 +85,14 @@
 #' oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
 #' mtext("Adjusted data", side=3, line=-1, col=2)
 #'
+#' @references
+#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+#' \url{https://doi.org/10.13155/29825}.
+#'
 #' @export
 #'
-#' @author Dan Kelley
+#' @author Dan Kelley and Jaimie Harbin
 useAdjusted <- function(argo, debug=0)
 {
     if (!inherits(argo, "argoFloats"))

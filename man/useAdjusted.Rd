@@ -23,7 +23,52 @@ This is carried out for all data families, and also for the
 corresponding units and quality-control flags.  See \dQuote{Examples}
 for an example using the \link{SD5903586_001.nc} sample dataset.
 }
-\section{Caution regarding realtime and delayed modes}{
+\details{
+The adjustment process is complicated, and, since it was developed by
+a combination of file inspection, a study of documentation, and discussions
+with argo analysts, it is somewhat ad-hoc and may be changed later.
+For this reason, users are advised strongly to examine their data files
+closely, before blindly calling \code{useAdjusted}. The procedure is as follows.
+
+There are two cases, depending on whether an item named \code{PARAMETER_DATA_MODE}
+is present in the metadata stored in the netcdf file.
+\enumerate{
+\item \strong{Case 1.} If the \code{PARAMETER_DATA_MODE} field is present, then the
+data columns are mapped to the parameter columns, and the following actions
+are undertaken.
+\itemize{
+\item If \code{PARAMETER_DATA_MODE} is \code{"A"} (meaning "Adjusted") then use the
+\verb{<PARAM>_ADJUSTED} values, \emph{unless} those values are all \code{NA}, in which case the
+raw values are used instead. This is to account for the convention described in
+Section 2.6.5 of Carval et al. (2019).
+\item If \code{PARAMETER_DATA_MODE} is \code{"D"} (meaning "Delayed"), then proceed as for
+the \code{"A"} case.
+\item If \code{PARAMETER_DATA_MODE} is \code{"R"} (meaning "Realtime") then use the raw
+values, even if the file contains data with \verb{<PARAM>_ADJUSTED} (e.g.
+\code{"TEMP_ADJUSTED"}, which is the name used in netcdf files for the adjusted
+temperature) in their names.
+}
+\item \strong{Case 2.} If no \code{PARAMETER_DATA_MODE} field is present, but \code{DATA_MODE}
+is present, then the latter is used.  This does not apply to individual columns,
+so the action depends on the data within the columns.
+\itemize{
+\item If \code{DATA_MODE} is \code{"A"} (meaning "Adjusted") then each data type is
+considered in turn, and if the \verb{<PARAM>_ADJUSTED} values are \emph{all} \code{NA}
+then the raw data are used, but if any of the \verb{<PARAM>_ADJUSTED} values
+are not \code{NA}, then \emph{all} the \verb{<PARAM>_ADJUSTED} data are used.
+\item If \code{DATA_MODE} is \code{"D"} (meaning "Delayed") then proceed as for
+the \code{"A"} case.
+\item If \code{DATA_MODE} is \code{"R"} then then use the raw values, even if the file
+contains data with \verb{<PARAM>_ADJUSTED} in their names.
+}
+\item \strong{Case 3.} If neither \code{DATA_MODE} nor \code{PARAMETER_DATA_MODE} is present
+in the metadata (a situation the developers have not encountered, but
+which is included for completeness) then if \verb{<PARAM>_ADJUSTED} fields
+are present, then they are handled as in the first and second items in
+Case 2 above.
+}
+}
+\section{Developer notes (may be removed at any time)}{
 
 
 A study of a large set of realtime-mode and delayed-mode datasets
@@ -47,6 +92,11 @@ oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
 mtext("Adjusted data", side=3, line=-1, col=2)
 
 }
+\references{
+Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+\url{https://doi.org/10.13155/29825}.
+}
 \author{
-Dan Kelley
+Dan Kelley and Jaimie Harbin
 }
