@@ -158,7 +158,7 @@ plot(clean, which="TS")
 
 # Adjusted Data
 
-## useAdjusted()
+### useAdjusted()
 In addition to flags flagging bad data based on tests, `argoFloats` package has
 also incorporated the idea of `<PARAM>_ADJUSTED` vs `<PARAM>_UNADJUSTED` which
 considers "bad" data that has been adjusted [2].
