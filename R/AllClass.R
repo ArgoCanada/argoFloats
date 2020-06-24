@@ -349,11 +349,10 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
-                      ## i is always 'file'
                       if (missing(j)) {
-                          return(x@data$file)
+                          return(x@data[[i]])
                       } else if (is.numeric(j)) {
-                          return(x@data$file[j])
+                          return(x@data[[i]][j])
                       } else {
                           stop("if j is given, it must be numeric")
                       }

@@ -1,7 +1,7 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 library(argoFloats)
 source("can_download.R")
-context("processing of QC flags")
+context("quality-control flags")
 
 test_that("applyQC with default 'flag' and 'action' arguments",
           {
@@ -19,8 +19,6 @@ test_that("applyQC with default 'flag' and 'action' arguments",
               }
           }
 )
-
-context("showing which QC tests were performed and failed")
 
 test_that("showing QC tests", {
     if (canDownload()) {

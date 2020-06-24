@@ -45,8 +45,12 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-An object of class \code{\linkS4class{argoFloats}} with type=\code{"profiles"}, which
-is suitable as the first argument of \code{\link[=readProfiles]{readProfiles()}}.
+An object of class \code{\linkS4class{argoFloats}} with type=\code{"profiles"}, the
+\code{data} slot of which contains two items: \code{url},
+which holds the URLs from which the netcdf
+files were downloaded, and \code{file}, which
+holds the path names of the downloaded files; the latter
+is used by \code{\link[=readProfiles]{readProfiles()}}.
 }
 \description{
 This takes an index constructed with \code{\link[=getIndex]{getIndex()}}, possibly
@@ -55,8 +59,7 @@ a list of files to download from the server named in the index.
 Then these files are downloaded to the \code{destdir} directory,
 using filenames inferred from the source filenames. The
 value returned by \code{\link[=getProfiles]{getProfiles()}} is suitable for use
-by \code{\link[=readProfiles]{readProfiles()}}, and an example of this is given
-in the documentation for \code{\link[=readProfiles]{readProfiles()}}.
+by \code{\link[=readProfiles]{readProfiles()}}.
 }
 \details{
 It should be noted that the constructed server URL follows
@@ -65,13 +68,9 @@ so if some other server is used, the URL may be wrong, leading
 to an error.  Similarly, if the patterns on these two
 servers change, then \code{\link[=getProfiles]{getProfiles()}} will fail. Users who
 encounter such problems are requested to report them
-to the authors; in a pinch, they may try altering the
-conditional block that follows the line\preformatted{## NB. the USGODAE and IFREMER servers are set up differently.
-}
+to the authors.
 
-in the source-code file named \code{R/get.R}.
-
-If the data file cannot be downloaded after multiple trials, then
+If a particular data file cannot be downloaded after multiple trials, then
 the behaviour depends on the value of the \code{skip} argument.  If that is
 \code{TRUE} (the default) then a \code{NA} value is inserted in the corresponding
 spot in the return value, but if it is \code{FALSE}, then an error is reported.

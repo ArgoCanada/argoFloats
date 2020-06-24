@@ -2,6 +2,8 @@ all:
 	echo "This Makefile is disabled, to avoid altering existing datasets. Experts know what to do..."
 clean:
 	-rm *~ *.rda *.out
+profiles:
+	Rscript create_profiles.R > create_profiles.out
 index: force
 	Rscript create_index.R > create_index.out
 indexBgc: force

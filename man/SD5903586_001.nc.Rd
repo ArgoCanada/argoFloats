@@ -6,8 +6,10 @@
 \alias{SD5903586_001.nc}
 \title{Sample argo file (delayed synthetic bgc data)}
 \description{
-This is profile 001 for float SD5903586, downloaded on June 20,
-2020.  As its filename indicates, it holds "synthetic" data
+This is the netcf file for profile 001 of argo float SD5903586, downloaded
+\url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc}
+on 2020 June 24.
+As its filename indicates, it holds "synthetic" data
 in "delayed" mode. The oxygen values are adjusted by 16\%, as
 is shown here, and in the documentation for \code{\link[=useAdjusted]{useAdjusted()}}.
 }

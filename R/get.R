@@ -65,9 +65,11 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 
 #' Get an Index of Available Argo Float Profiles
 #'
-#' This function gets an index of available Argo float profiles, either
-#' by downloading information from a data repository or by reusing an index
-#' (stored as an `.rda` file) that was prepared by a recent call to the function.
+#' This function gets an index of available Argo float profiles, typically
+#' for later use as the first argument to [getProfiles()]. The work is done
+#' either by downloading information from a data repository or by reusing an existing
+#' index (packaged within an `.rda` file) that was prepared by a recent call to the
+#' This choice is made behind the scenes, controlled by the `age` argument.
 #'
 #' The first step is to construct a URL for downloading, based on the
 #' `url` and `file` arguments. That URL will be a string ending in `.gz`,
@@ -83,7 +85,9 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' function, holds a list named `index` that holds following elements:
 #' * `ftpRoot`, the FTP root stored in the header of the source `file`
 #'    (see next paragraph).
-#' * `server`, the argument provided here.
+#' * `server`, the URL at which the index was found, and from
+#'    which [getProfiles()] can construct URLs from which to
+#'    download the netcdf files for individual float profils.
 #' * `filename`, the argument provided here.
 #' * `header`, the preliminary lines in the source file that start
 #'    with the `#` character.
@@ -94,21 +98,24 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #'    are set based on the authors' inspection of a downloaded file.
 #'
 #' Some expertise is required in deciding on the value for the
-#' `file` argument to [getIndex()].  As of February 2020, the
-#' FTP site `ftp://usgodae.org/pub/outgoing/argo` contains multiple
-#' files that appear to be indices.  These are listed as the left-hand
-#' column in the following table. The middle column lists nicknames
-#' for the some files, which can be provided as the `file` argument,
+#' `file` argument to [getIndex()].  As of June 2020, the
+#' FTP sites
+#' \url{ftp://usgodae.org/pub/outgoing/argo}
+#' and
+#' \url{ftp://ftp.ifremer.fr/ifremer/argo}
+#' contain multiple index files, as listed in the left-hand column of the
+#' following table. The middle column lists nicknames
+#' for some of the files.  These can be provided as the `file` argument,
 #' as alternatives to the full names.
-#' The right-hand column is a brief
-#' description of the file contents, inferred by examination
-#' of the file.  Note that there some files on the server
-#' have names similar to those given below, but ending in `.txt` instead
-#' of `.txt.gz`, but these files take longer to download and
-#' seem to be equivalent to the `.gz` versions, so [getIndex()] is
-#' designed to work with them.  Also, note that, as of April 2020,
-#' the usgodaee server does not supply `"synthetic"` files, but
-#' the ifremer server does.
+#' The right-hand column describes the file contents.
+#' Note that the servers also provide files with names similar to those
+#' given in the table, but ending in `.txt`.  These are uncompressed
+#' equivalents of the `.gz` files that offer no advantage and take
+#' longer to download, so [getIndex()] is not designed to work with them.
+#' Finally, note that, as of June 2020,
+#' the usgodae server does not supply `"synthetic"` files, but
+#' the ifremer server does; this is typically not a concern to users,
+#' because `getIndex` searches both servers for index files.
 #' \tabular{lll}{
 #' *File Name*                           \tab *Nickname*              \tab *Contents*\cr
 #' `ar_greylist.txt`                     \tab -                       \tab Suspicious/malfunctioning floats\cr
@@ -241,7 +248,7 @@ getIndex <- function(filename="argo",
     destfileRda <- gsub(".txt$", ".rda", destfile)
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
-    res@metadata$filename <- destfileRda
+    #res@metadata$filename <- destfileRda
 
     ## See if we have an .rda file that is sufficiently youthful.
     if (file.exists(destfileRda)) {
@@ -255,7 +262,7 @@ getIndex <- function(filename="argo",
             load(destfileRda)
             argoFloatsDebug(debug, "Finished loading '", destfileRda, "'.\n", sep="")
             res@metadata$server <- server[1]
-            res@metadata$filename <- filename
+            #res@metadata$filename <- filename
             res@metadata$destdir <- destdir
             res@metadata$destfileRda <- destfileRda
             res@metadata$ftpRoot <- argoFloatsIndex[["ftpRoot"]]
@@ -268,8 +275,8 @@ getIndex <- function(filename="argo",
     ## We need to download data. We do that to a temporary file, because we will be saving
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
-    downloadSuccess <- FALSE
     failedDownloads <- 0
+    iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
     for (iurl in seq_along(url)) {
         argoFloatsDebug(debug, "About to download temporary index file\n", sep="")
         argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
@@ -288,8 +295,7 @@ getIndex <- function(filename="argo",
         if (!inherits(status, "try-error")) {
             if (failedDownloads > 0)
                 message("Downloaded index from ", server[iurl])
-            server <- server[iurl]
-            downloadSuccess <- TRUE
+            iurlSuccess <- iurl
             break                      # the download worked
         }
         if (iurl == length(url))
@@ -298,13 +304,13 @@ getIndex <- function(filename="argo",
             message("Can't download index from ", server[iurl], ", so moving to next server")
         failedDownloads <- failedDownloads + 1
     }
-    if (!downloadSuccess)
-        stop("Couldn't download index from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
+    if (0 == iurlSuccess)
+        stop("Could not download index from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
     argoFloatsDebug(debug, "About to read header.\n", sep="")
     first <- readLines(destfileTemp, 100)
-    hash <- which(grepl("^#", first))
     ## Typically, length(ftpRoot) is 2
     ftpRoot <- gsub("^[^:]*:[ ]*(.*)$", "\\1", first[which(grepl("^# FTP", first))])
+    hash <- which(grepl("^#", first))
     header <- first[hash]
     lastHash <- tail(hash, 1)
     names <- strsplit(first[1 + lastHash], ",")[[1]]
@@ -325,12 +331,13 @@ getIndex <- function(filename="argo",
     index$date <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")
     index$date_update <- as.POSIXct(as.character(index$date_update), format="%Y%m%d%H%M%S",tz="UTC")
     argoFloatsDebug(debug,  "saving cache file '", destfileRda, "'.\n", sep="")
-    argoFloatsIndex <- list(ftpRoot=ftpRoot, server=server, filename=filename, header=header, index=index)
+    argoFloatsIndex <- list(server=server[iurlSuccess], header=header, index=index)
     save(argoFloatsIndex, file=destfileRda)
     argoFloatsDebug(debug,  "removing temporary file '", destfileTemp, "'.\n", sep="")
     unlink(destfileTemp)
-    res@metadata$server <- server
-    res@metadata$filename <- filename
+    res@metadata$server <- server[iurlSuccess]
+    res@metadata$url <- url[iurlSuccess]
+    #res@metadata$filename <- filename[iurlSuccess]
     res@metadata$destfileRda <- destfileRda
     res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
     res@metadata$header <- argoFloatsIndex$header
@@ -353,8 +360,7 @@ getIndex <- function(filename="argo",
 #' Then these files are downloaded to the `destdir` directory,
 #' using filenames inferred from the source filenames. The
 #' value returned by [getProfiles()] is suitable for use
-#' by [readProfiles()], and an example of this is given
-#' in the documentation for [readProfiles()].
+#' by [readProfiles()].
 #'
 #' It should be noted that the constructed server URL follows
 #' a different pattern on the usgodae an ifremer servers, and
@@ -362,14 +368,9 @@ getIndex <- function(filename="argo",
 #' to an error.  Similarly, if the patterns on these two
 #' servers change, then [getProfiles()] will fail. Users who
 #' encounter such problems are requested to report them
-#' to the authors; in a pinch, they may try altering the
-#' conditional block that follows the line
-#' ```
-#' ## NB. the USGODAE and IFREMER servers are set up differently.
-#' ```
-#' in the source-code file named `R/get.R`.
+#' to the authors.
 #'
-#' If the data file cannot be downloaded after multiple trials, then
+#' If a particular data file cannot be downloaded after multiple trials, then
 #' the behaviour depends on the value of the `skip` argument.  If that is
 #' `TRUE` (the default) then a `NA` value is inserted in the corresponding
 #' spot in the return value, but if it is `FALSE`, then an error is reported.
@@ -393,8 +394,12 @@ getIndex <- function(filename="argo",
 #'
 #' @template debug
 #'
-#' @return An object of class [`argoFloats-class`] with type=`"profiles"`, which
-#' is suitable as the first argument of [readProfiles()].
+#' @return An object of class [`argoFloats-class`] with type=`"profiles"`, the
+#' `data` slot of which contains two items: `url`,
+#' which holds the URLs from which the netcdf
+#' files were downloaded, and `file`, which
+#' holds the path names of the downloaded files; the latter
+#' is used by [readProfiles()].
 #'
 #' @examples
 #' # Download some Argo data files.
@@ -465,6 +470,7 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, skip=TRUE, 
         }
     }
     res@metadata$destdir <- destdir
+    res@data$url <- urls
     res@data$file <- file
     res@processingLog <- oce::processingLogAppend(res@processingLog, "getProfiles(index, ...)")
     argoFloatsDebug(debug,  "} # getProfiles()\n", style="bold", showTime=FALSE, unindent=1)

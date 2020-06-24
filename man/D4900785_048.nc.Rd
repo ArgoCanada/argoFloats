@@ -6,8 +6,10 @@
 \alias{D4900785_048.nc}
 \title{Sample argo file (delayed data)}
 \description{
-This is profile 048 for float 4900785, downloaded on June 12,
-2020.  As its filename indicates, it holds "realtime" data.
+This is netcdf file for profile 048 of argo float 4900785, downloaded from
+\url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/4900785/profiles/D4900785_048.nc}
+on 2020 June 24.
+As its filename indicates, it holds "realtime" data.
 }
 \examples{
 library(argoFloats)

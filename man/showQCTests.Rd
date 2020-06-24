@@ -26,8 +26,7 @@ subset <- subset(index, 1)
 profiles <- getProfiles(subset)
 argos <- readProfiles(profiles)
 argos1 <- argos[[1]]
-showQCTests(argos[[1]])
-  }
+showQCTests(argos[[1]])}
 
 }
 \author{

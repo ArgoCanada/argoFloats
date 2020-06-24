@@ -6,9 +6,10 @@
 \alias{SR2902204_131.nc}
 \title{Sample argo file (synthetic realtime data)}
 \description{
-This is profile 131 for float 2902204, downloaded on June 8,
-2020.  As its filename indicates, this is in the "synthetic"
-data stream of "realtime" data.
+This is the netcdf file for profile 131 of argo float 2902204, downloaded from
+\url{ftp://ftp.ifremer.fr/ifremer/argo/dac/incois/2902204/profiles/SR2902204_131.nc}
+on 2020 June 24.
+As its filename indicates, it holds the "synthetic" version of "realtime" data.
 }
 \examples{
 library(argoFloats)

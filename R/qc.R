@@ -72,16 +72,16 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 
 
 #' Show which QC tests were performed and failed on an argos class
-#' 
+#'
 #' This function uses integer value from [hexToNibble()] internally to
 #' convert hex digits of `HISTORY_QCTEST` of a single [`argoFloats-class`]
 #' object that was created by [readProfiles()] to indicate which QC tests
 #' were performed and/or failed.
 #'
 #' @param x A single float of [`argoFloats-class`].
-#' 
+#'
 #' @return The associated quality-control (QC) test numbers performed and failed.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' library(argoFloats)
@@ -90,8 +90,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' profiles <- getProfiles(subset)
 #' argos <- readProfiles(profiles)
 #' argos1 <- argos[[1]]
-#' showQCTests(argos[[1]])
-#'   }
+#' showQCTests(argos[[1]])}
 #'
 #' @export
 #' @author Jaimie Harbin and Dan Kelley
@@ -100,10 +99,20 @@ showQCTests <- function(x)
     if (!inherits(x, 'argo'))
         stop("can only display Quality Control tests for oce objects of 'argo' class")
     ## Only attempt a display if the object holds HISTORY_ACTION and HISTORY_TESTS
-    action <- x[['HISTORY_ACTION']]
-    if (is.null(action))
+    ## Permit both SNAKE_CASE and camelCase names; oce switched to the latter 2020 Jun 24.
+    mnames <- names(x@metadata)
+    if ("HISTORY_ACTION" %in% mnames)
+        action <- x[['HISTORY_ACTION']]
+    else if ("historyAction" %in% mnames)
+        action <- x[['historyAction']]
+    else
         return(invisible())
-    tests <- x[['HISTORY_QCTEST']]
+    if ("HISTORY_QCTEST" %in% mnames)
+        tests <- x[['HISTORY_QCTEST']]
+    else if ("historyAction" %in% mnames)
+        tests <- x[['historyQCTest']]
+    else
+        return(invisible())
     if (is.null(tests))
         return(invisible())
     ## Match strings within 'action' to find the tests that were performed

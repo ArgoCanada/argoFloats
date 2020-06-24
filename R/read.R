@@ -73,7 +73,7 @@ readProfiles <- function(profiles, FUN, silent=FALSE, debug=0)
         FUN <- oce::read.argo
     } else {
         if (!is.function(FUN))
-            stop("FUN must be a function, e.g. read.argo")
+            stop("FUN must be a function, e.g. oce::read.argo")
     }
     ## show the ncdf4 version.  Frankly, this is just to prevent errors in R CMD check.  The problem
     ## has to do with oce::read.argo() doing a require(ncdf4), which causes an error message in
