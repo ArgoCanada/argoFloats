@@ -8,17 +8,27 @@ date: "`r Sys.Date()`"
 
 # Introduction to Flags
 
-Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the data found at the Data Assembly Centers are as accurate as possible. More specifically, testing is done in three levels:
+Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
+data found at the Data Assembly Centers are as accurate as possible. More
+specifically, testing is done in three levels [2]:
 
-1: Real time that complete checks on all measurements and assigned a quality flag within a 24-48 hour timeframe
+1: Real time that complete checks on all measurements and assigned a quality
+flag within a 24-48 hour timeframe
 2. Delayed mode
-3. Regional scientific analyses of all float data with other available data. The procedures for regional analyses are still to be determined.
+3. Regional scientific analyses of all float data with other available data. The
+procedures for regional analyses are still to be determined.
 
 # Flags
 
-As described by the Argo user’s manual [1], data that are given a flag value of 1, 2, 5, or 8 are considered 'good' data. If data are given a flag value of 9 (or missing value) they are not used, and flags 3, 5, 6, and 7 are considered 'bad' data.
+As described by the Argo user’s manual [2], data that are given a flag value of
+1, 2, 5, or 8 are considered 'good' data. If data are given a flag value of 9
+(or missing value) they are not used, and flags 3, 5, 6, and 7 are considered
+'bad' data.
 
-`argoFloats` has taken this idea, and has incorporated a 3 step process when considering the quality control of Argo data. The three step process encourages users to always analyze the data they are considering. The three step process is as follows:
+`argoFloats` has taken this idea, and has incorporated a 3 step process when
+considering the quality control of Argo flags. The three step process encourages
+users to always analyze the data they are considering. The three step process is
+as follows:
 
 ```{r qualityControlProcess, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.8, fig.width=5, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
 colText <- "darkblue"
@@ -63,13 +73,21 @@ textInBox(x0, y0, "applyQC() ", family="sans", col=colCode)
 par(mar=omar)
 ```
 
-This vignette will walk the users through the three step process using the float ID = 1901584 near the Bahamas.
+This vignette will walk the users through the three step process using the float
+ID = 1901584 near the Bahamas.
 
 ## Step One: QC Plot
 
-Our `argoFloats` package uses the flags of profiles to determine "good" and "bad" data. We then created a plot type to demonstrate the quality of data, the `QC` plot. The QC plot is a plot of parameter quality and parameter mean. This only works if `x` is an object that was created by `getProfiles()`. The user must also provide the `parameter` of interest. If the user is uncertain about what parameter exists within a certain float, `argoFloats` will prompt the user with the appropriate parameters. 
+Our `argoFloats` package uses the flags of profiles to determine "good" and
+"bad" data. We then created a plot type to demonstrate the quality of data, the
+`QC` plot. The QC plot is a plot of parameter quality and parameter mean. This
+only works if `x` is an object that was created by `getProfiles()`. The user
+must also provide the `parameter` of interest. If the user is uncertain about
+what parameter exists within a certain float, `argoFloats` will prompt the user
+with the appropriate parameters.
 
-An example of how to get the QC plot for temperature, or "TEMP" for the float ID = 1901584 is as follows:
+An example of how to get the QC plot for temperature, or "TEMP" for the float ID
+= 1901584 is as follows:
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE}
 library(argoFloats)
@@ -80,12 +98,19 @@ argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')
 ```
 
-*Exercise One:* Use the previous code to determine the QC of temperature for float number 4900845 in synthetic data.EXPLAIN YOUR RESULTS
+*Exercise One:* Use the previous code to determine the QC of temperature for
+float number 4900845 in synthetic data.EXPLAIN YOUR RESULTS
 
 ## Step Two: showQCTests()
-The `showQCTests()` is a newly added function. It's purpose is to use integer values from the [hexToNibble()] function to internally convert hex digits. In this contenxt, the hex digits come from `HISTORY_QCTEST` of a single argoFloats object that was created by [readProfiles()]. The `showQCTests()` is then used to indicate which QC tests were performed and/or failed.
+The `showQCTests()` is a newly added function. It's purpose is to use integer
+values from the [hexToNibble()] function to internally convert hex digits. In
+this contenxt, the hex digits come from `HISTORY_QCTEST` of a single argoFloats
+object that was created by [readProfiles()]. The `showQCTests()` is then used to
+indicate which QC tests were performed and/or failed.
 
-Using the same example as shown in `plot(which='QC')`, we can also determine which QC tests were performed on each profile. This is completed by `showQCTests()` in the following code:
+Using the same example as shown in `plot(which='QC')`, we can also determine
+which QC tests were performed on each profile. This is completed by
+`showQCTests()` in the following code:
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE}
 library(argoFloats)
@@ -97,15 +122,24 @@ argos1 <- argos[[1]]
 showQCTests(argos[[1]])
 ```
 
-In section 3.11 Reference table 11: QC test binary IDs of the Argo User's Manual [1], we see that test two is the "Imposible data test".
+In section 3.11 Reference table 11: QC test binary IDs of the Argo User's Manual
+[2], we see that test two is the "Imposible data test".
 
-*Exercise Two*: Use the first float from ID 4900845 in exercise one,to determine which tests were performed and/or failed during quality control testing. EXPLAIN YOUR RESULTS.
+*Exercise Two*: Use the first float from ID 4900845 in exercise one,to determine
+which tests were performed and/or failed during quality control testing. EXPLAIN
+YOUR RESULTS.
 
 ## applyQC()
 
-The `applyQC()` function examines quality-control (QC) within an argoFloats obect that was reated by `readProfiles(). By default, it replaced all suspecious data with NA values, so they will not appear in plots or be considered in calculations. This is an important early step in processing, because suspicious Argo floats commonly report data that are suspicious based on statistical and physical measures.
+The `applyQC()` function examines quality-control (QC) within an argoFloats
+obect that was reated by `readProfiles(). By default, it replaced all suspecious
+data with NA values, so they will not appear in plots or be considered in
+calculations. This is an important early step in processing, because suspicious
+Argo floats commonly report data that are suspicious based on statistical and
+physical measures.
 
-Using the same example as shown in `plot(which='QC')` and `showQCTests()`, the user also has the ability to use `applyQC()` as shown below:
+Using the same example as shown in `plot(which='QC')` and `showQCTests()`, the
+user also has the ability to use `applyQC()` as shown below:
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE}
 library(argoFloats)
@@ -119,32 +153,49 @@ plot(raw, which="TS")
 plot(clean, which="TS")
 ```
 
-*Exercise Three* : Use the following code to look at the `<PARAM>_ADJUSTED vs '<PARAM>`. EXPLAIN YOUR RESULTS.
+*Exercise Three* : Use the following code to look at the `<PARAM>_ADJUSTED` vs
+`<PARAM>`. EXPLAIN YOUR RESULTS.
 
 # Adjusted Data
-FIXME:: ADD CLARIFICATION FROM ARGO MANUAL ABOUT ADJUSTED DATA
 
 ## useAdjusted()
+In addition to flags flagging bad data based on tests, `argoFloats` package has
+also incorporated the idea of `<PARAM>_ADJUSTED` vs `<PARAM>_UNADJUSTED` which
+considers "bad" data that has been adjusted [2].
 
-Variables with original names indicating in the string <PARAM>_ADJUSTED are assigned nicknames names ending in Adjusted by readProfiles(), so that e.g. DOXY_ADJUSTED gets the nickname oxygenAdjusted, while DOXY gets the nickname oxygen. `useAdjusted()` switches these, renaming the adjusted values, so that e.g. DOXY_ADJUSTED gets nickname oxygen and DOXY gets nickname oxygenUnadjusted. This is carried out for all data families, and also for the corresponding units and quality-control flags.
+Variables with original names indicating in the string `<PARAM>_ADJUSTED` are
+assigned nicknames names ending in Adjusted by `readProfiles()`, so that e.g.
+`DOXY_ADJUSTED` gets the nickname `oxygenAdjusted`, while `DOXY` gets the
+nickname `oxygen`. `useAdjusted()` switches these, renaming the adjusted values,
+so that e.g. `DOXY_ADJUSTED` gets nickname `oxygen` and `DOXY` gets nickname
+`oxygenUnadjusted`. This is carried out for all data families, and also for the
+corresponding units and quality-control flags. See `?useAdjusted` to understand
+when `argoFloats` chooses to use adjusted data.
 
-An example of the significance of adjusted vs unadjusted can be shown below:
+An example of the significance of adjusted vs unadjusted can be shown below
+using the ID from the previous flag examples:
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE}
 library(argoFloats)
-# Plot raw and adjusted oxygen for a sample dataset
-raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+data("index")
+subset <- subset(index, ID='1901584')
+profiles <- getProfiles(subset)
+raw <- readProfiles(profiles)
 adj <- useAdjusted(raw)
 par(mfrow=c(1, 2))
-oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="oxygen")
+oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="temperature")
 mtext("Raw data", side=3, line=-1, col=2)
-oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
+oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="temperature")
 mtext("Adjusted data", side=3, line=-1, col=2)
 ```
 
+*Example Four* Use `useAdjusted()` on the float ID=5903586, profile=50 to
+determine the % difference between `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
+
 # Answers
 
-*Exercise One:* Use the previous code to determine the QC of temperature for float number 4900845 in synthetic data. EXPLAIN YOUR RESULTS.
+*Exercise One:* Use the previous code to determine the QC of temperature for
+float number 4900845 in synthetic data. EXPLAIN YOUR RESULTS.
 ```
 library(argoFloats)
 ais <- getIndex(filename = 'synthetic', age=0)
@@ -153,9 +204,12 @@ profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')
 ```
-As shown in the plot, 100% of the temperature data is considered "good". This implies to the user that all data is considered okay to use.
+As shown in the plot, 100% of the temperature data is considered "good". This
+implies to the user that all data is considered okay to use.
 
-*Exercise Two*: Use the first float from ID 4900845 in exercise one,to determine which tests were performed and/or failed during quality control testing.EXPLAIN YOUR RESULTS.
+*Exercise Two*: Use the first float from ID 4900845 in exercise one,to determine
+which tests were performed and/or failed during quality control testing.EXPLAIN
+YOUR RESULTS.
 
 ```
 library(argoFloats)
@@ -166,9 +220,12 @@ argos <- readProfiles(profiles)
 a1 <- argos[[1]]
 showQCTests(a1)
 ```
-As shown by the `showQCTests()` function, no quality control tests were actually performed on this float ID. This is a case where the user would have to self analyze their data to ensure all data seems reasonable.
+As shown by the `showQCTests()` function, no quality control tests were actually
+performed on this float ID. This is a case where the user would have to self
+analyze their data to ensure all data seems reasonable.
 
-*Exercise Three* : Use the following code to look at the `<PARAM>_ADJUSTED vs '<PARAM>`. EXPLAIN YOUR RESULTS.
+*Exercise Three* : Use the following code to look at the `<PARAM>_ADJUSTED vs
+'<PARAM>`. EXPLAIN YOUR RESULTS.
 ```
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
@@ -180,12 +237,31 @@ par(mfrow=c(1, 2))
 plot(raw, which="TS")
 plot(clean, which="TS")
 ```
-As shown by the plot, the plot containing "good" data and the plot containing "bad" data are the same. This indicates to the user that it is okay to use the data, even though QC tests were not performed, as shown by `showQCTests()`.
+As shown by the plot, the plot containing "good" data and the plot containing
+"bad" data are the same. This indicates to the user that it is okay to use the
+data, even though QC tests were not performed, as shown by `showQCTests()`.
+ 
+FIX ME!!! JLH (not done!!!)
 
+*Example Four* Use `useAdjusted()` on the float ID=5903586, profile=50 to
+determine the % difference between `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
 
- FIX ME:::: 
-Exercise Four (maybe):
-This could be a result of no QC tests being performed on the float ID, as shown by `showQCTests()`, or a result of the data being considered "good" even in the raw, or unadjusted form.
+```
+library(argoFloats)
+bai <- getIndex('synthetic')
+s <- subset(bai, ID='5903586')
+ss <- subset(s, 50)
+profiles <- getProfiles(ss)
+raw <- readProfiles(profiles)
+adj <- useAdjusted(raw)
+par(mfrow=c(1, 2))
+oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="oxygen")
+#mtext("Raw data", side=3, line=-1, col=2)
+oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
+#mtext("Adjusted data", side=3, line=-1, col=2)
+```
+
 
 # References
-[1] Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch, Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019. https://doi.org/10.13155/29825.
+[1] Wong, A., Keeley, R. and Carval, T., 2009. Argo quality control manual. Version, 2(5), p.32.
+[2] Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch, Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019. https://doi.org/10.13155/29825.
