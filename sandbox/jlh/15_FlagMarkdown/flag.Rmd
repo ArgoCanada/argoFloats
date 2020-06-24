@@ -76,7 +76,7 @@ par(mar=omar)
 This vignette will walk the users through the three step process using the float
 ID = 1901584 near the Bahamas.
 
-## Step One: QC Plot
+### Step One: QC Plot
 
 Our `argoFloats` package uses the flags of profiles to determine "good" and
 "bad" data. We then created a plot type to demonstrate the quality of data, the
@@ -101,7 +101,7 @@ plot(argos, which='QC', parameter='temperature')
 *Exercise One:* Use the previous code to determine the QC of temperature for
 float number 4900845 in synthetic data.EXPLAIN YOUR RESULTS
 
-## Step Two: showQCTests()
+### Step Two: showQCTests()
 The `showQCTests()` is a newly added function. It's purpose is to use integer
 values from the [hexToNibble()] function to internally convert hex digits. In
 this contenxt, the hex digits come from `HISTORY_QCTEST` of a single argoFloats
@@ -129,7 +129,7 @@ In section 3.11 Reference table 11: QC test binary IDs of the Argo User's Manual
 which tests were performed and/or failed during quality control testing. EXPLAIN
 YOUR RESULTS.
 
-## applyQC()
+### Step Three: applyQC()
 
 The `applyQC()` function examines quality-control (QC) within an argoFloats
 obect that was reated by `readProfiles(). By default, it replaced all suspecious
