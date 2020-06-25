@@ -71,26 +71,37 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 }
 
 
-#' Show which QC tests were performed and failed on an argos class
+#' Show QC test results for an argo object
 #'
-#' This function uses integer value from [hexToNibble()] internally to
-#' convert hex digits of `HISTORY_QCTEST` of a single [`argoFloats-class`]
-#' object that was created by [readProfiles()] to indicate which QC tests
-#' were performed and/or failed.
+#' `showQCTests` print a summary of the quality-control (QC) tests
+#' (if any) that were performed on an argo profile.  It uses
+#' [hexToNibble()] to decode the hexadecimal  values that may
+#' be stored in `historyQCTest` and `historyAction` within
+#' the `metadata` slot of an individual argo profile, as read
+#' directly with [oce::read.argo()] or indirectly with
+#' [readProfiles()], the latter being illustrated in the
+#' \dQuote{Examples} secton below.
+#' The format used in `historyQCTest` and `historyAction`
+#' is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
+#' of Carval et al. (2019), in which they are called
+#' `HISTORY_QC_TEST` and `HISTORY_ACTION`, respectively.
 #'
-#' @param x A single float of [`argoFloats-class`].
+#' @param x An [oce::argo-class] object, as read directly with [oce::read.argo()]
+#' or as extracted from the return value of a call to [readProfiles()], as
+#' in the \dQuote{Examples}.
 #'
-#' @return The associated quality-control (QC) test numbers performed and failed.
+#' @return This function returns nothing; its action is in the printing
+#' of results.
 #'
 #' @examples
-#' \dontrun{
 #' library(argoFloats)
-#' data('index')
-#' subset <- subset(index, 1)
-#' profiles <- getProfiles(subset)
-#' argos <- readProfiles(profiles)
-#' argos1 <- argos[[1]]
-#' showQCTests(argos[[1]])}
+#' a <- readProfiles(system.file("extdata", "D4900785_048.nc", package="argoFloats"))
+#' showQCTests(a[[1]])
+#'
+#' @references
+#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+#' \url{https://doi.org/10.13155/29825}.
 #'
 #' @export
 #' @author Jaimie Harbin and Dan Kelley

@@ -2,32 +2,43 @@
 % Please edit documentation in R/qc.R
 \name{showQCTests}
 \alias{showQCTests}
-\title{Show which QC tests were performed and failed on an argos class}
+\title{Show QC test results for an argo object}
 \usage{
 showQCTests(x)
 }
 \arguments{
-\item{x}{A single float of \code{\linkS4class{argoFloats}}.}
+\item{x}{An \link[oce:argo-class]{oce::argo} object, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
+or as extracted from the return value of a call to \code{\link[=readProfiles]{readProfiles()}}, as
+in the \dQuote{Examples}.}
 }
 \value{
-The associated quality-control (QC) test numbers performed and failed.
+This function returns nothing; its action is in the printing
+of results.
 }
 \description{
-This function uses integer value from \code{\link[=hexToNibble]{hexToNibble()}} internally to
-convert hex digits of \code{HISTORY_QCTEST} of a single \code{\linkS4class{argoFloats}}
-object that was created by \code{\link[=readProfiles]{readProfiles()}} to indicate which QC tests
-were performed and/or failed.
+\code{showQCTests} print a summary of the quality-control (QC) tests
+(if any) that were performed on an argo profile.  It uses
+\code{\link[=hexToNibble]{hexToNibble()}} to decode the hexadecimal  values that may
+be stored in \code{historyQCTest} and \code{historyAction} within
+the \code{metadata} slot of an individual argo profile, as read
+directly with \code{\link[oce:read.argo]{oce::read.argo()}} or indirectly with
+\code{\link[=readProfiles]{readProfiles()}}, the latter being illustrated in the
+\dQuote{Examples} secton below.
+The format used in \code{historyQCTest} and \code{historyAction}
+is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
+of Carval et al. (2019), in which they are called
+\code{HISTORY_QC_TEST} and \code{HISTORY_ACTION}, respectively.
 }
 \examples{
-\dontrun{
 library(argoFloats)
-data('index')
-subset <- subset(index, 1)
-profiles <- getProfiles(subset)
-argos <- readProfiles(profiles)
-argos1 <- argos[[1]]
-showQCTests(argos[[1]])}
+a <- readProfiles(system.file("extdata", "D4900785_048.nc", package="argoFloats"))
+showQCTests(a[[1]])
 
+}
+\references{
+Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+\url{https://doi.org/10.13155/29825}.
 }
 \author{
 Jaimie Harbin and Dan Kelley
