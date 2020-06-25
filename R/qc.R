@@ -117,15 +117,15 @@ showQCTests <- function(x)
     else if ("historyAction" %in% mnames)
         action <- x[['historyAction']]
     else
-        return(invisible())
+        return(invisible(NULL))
     if ("HISTORY_QCTEST" %in% mnames)
         tests <- x[['HISTORY_QCTEST']]
     else if ("historyAction" %in% mnames)
         tests <- x[['historyQCTest']]
     else
-        return(invisible())
+        return(invisible(NULL))
     if (is.null(tests))
-        return(invisible())
+        return(invisible(NULL))
     ## Match strings within 'action' to find the tests that were performed
     perf <- tests[1, which(action == "QCP$")]
     ## Match strings within 'action' to find the tests that failed
@@ -137,6 +137,6 @@ showQCTests <- function(x)
     failIndices <- which(1 == unlist(lapply(failChars, function(hex) hexToNibble(hex))))
     cat("Tests performed: ", paste(perfIndices, collapse=" "), "\n", sep="")
     cat("Tests failed:    ", paste(failIndices, collapse=" "), "\n", sep="")
-    invisible()
+    invisible(NULL)
 }
 

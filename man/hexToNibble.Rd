@@ -2,26 +2,26 @@
 % Please edit documentation in R/misc.R
 \name{hexToNibble}
 \alias{hexToNibble}
-\title{Convert a hex digit to integer vector of length 4}
+\title{Convert Hexadecimal Digit to Integer Vector}
 \usage{
 hexToNibble(x)
 }
 \arguments{
-\item{x}{A character value corresponding to a hex digit (i.e. 0 through 9, or A through F).}
+\item{x}{A character value corresponding to a hexadecimal digit (i.e. \code{"0"} through \code{"9"},
+\code{"a"} through \code{"f"}, or \code{"A"} through \code{"F"}).}
 }
 \value{
-An integer vector.
+An integer vector, in 'mathematical' order.  (This is the reverse of
+the order used by \code{\link[=rawToBits]{rawToBits()}}; see the \dQuote{Examples}.)
 }
 \description{
-This function converts hex digits to 4 integers indicating bits, in 'math' order. It's
-intended to be used to look at the hex digits of \code{HISTORY_QCTEST} of an \code{\linkS4class{argoFloats}}
-object that was created by \code{\link[=readProfiles]{readProfiles()}}. It then converts these hex digits to bits to
-be used within the \code{\link[=showQCTests]{showQCTests()}} function.
+\code{hexToNibble} converts a hexadecimal digit to 4 integers indicating bits, e.g. for use within
+\code{\link[=showQCTests]{showQCTests()}}.
 }
 \examples{
 library(argoFloats)
-hexToNibble('2')
-hexToNibble('e')
+hexToNibble('1') # 0 0 0 1
+hexToNibble('e') # 1 1 1 0
 
 }
 \author{

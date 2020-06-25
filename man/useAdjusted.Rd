@@ -14,7 +14,7 @@ should be printed.}
 }
 \description{
 Variables with original names indicating in the string \verb{_ADJUSTED} are
-assigned nicknams names ending in \code{Adjusted} by \code{\link[=readProfiles]{readProfiles()}}, so that
+assigned nicknames names ending in \code{Adjusted} by \code{\link[=readProfiles]{readProfiles()}}, so that
 e.g. \code{DOXY_ADJUSTED} gets the nickname \code{oxygenAdjusted}, while
 \code{DOXY} gets the nickname \code{oxygen}. \code{useAdjusted} switches
 these, renaming the adjusted values, so that e.g. \code{DOXY_ADJUSTED}
@@ -30,38 +30,41 @@ with argo analysts, it is somewhat ad-hoc and may be changed later.
 For this reason, users are advised strongly to examine their data files
 closely, before blindly calling \code{useAdjusted}. The procedure is as follows.
 
-There are two cases, depending on whether an item named \code{PARAMETER_DATA_MODE}
-is present in the metadata stored in the netcdf file.
+There are two cases, depending on whether an item named \code{parameterDataMode}
+is present within the metadata of the object.  (Note that this is
+the renamed value of the \code{PARAMETER_DATA_MODE} that may be present
+in the netcdf file.)
 \enumerate{
-\item \strong{Case 1.} If the \code{PARAMETER_DATA_MODE} field is present, then the
+\item \strong{Case 1.} If the \code{parameterDataMode} field is present, then the
 data columns are mapped to the parameter columns, and the following actions
 are undertaken.
 \itemize{
-\item If \code{PARAMETER_DATA_MODE} is \code{"A"} (meaning "Adjusted") then use the
+\item If \code{parameterDataMode} is \code{"A"} (meaning "Adjusted") then use the
 \verb{<PARAM>_ADJUSTED} values, \emph{unless} those values are all \code{NA}, in which case the
 raw values are used instead. This is to account for the convention described in
 Section 2.6.5 of Carval et al. (2019).
-\item If \code{PARAMETER_DATA_MODE} is \code{"D"} (meaning "Delayed"), then proceed as for
+\item If \code{parameterDataMode} is \code{"D"} (meaning "Delayed"), then proceed as for
 the \code{"A"} case.
-\item If \code{PARAMETER_DATA_MODE} is \code{"R"} (meaning "Realtime") then use the raw
+\item If \code{parameterDataMode} is \code{"R"} (meaning "Realtime") then use the raw
 values, even if the file contains data with \verb{<PARAM>_ADJUSTED} (e.g.
 \code{"TEMP_ADJUSTED"}, which is the name used in netcdf files for the adjusted
 temperature) in their names.
 }
-\item \strong{Case 2.} If no \code{PARAMETER_DATA_MODE} field is present, but \code{DATA_MODE}
-is present, then the latter is used.  This does not apply to individual columns,
-so the action depends on the data within the columns.
+\item \strong{Case 2.} If no \code{parameterDataMode} field is present, but \code{dataMode} (called
+\code{DATA_MODE} in the source netcdf file) is present, then the latter is used.
+This does not apply to individual columns, so the action depends on the data
+within the columns. There are three sub-cases.
 \itemize{
-\item If \code{DATA_MODE} is \code{"A"} (meaning "Adjusted") then each data type is
+\item If \code{dataMode} is \code{"A"} (meaning "Adjusted") then each data type is
 considered in turn, and if the \verb{<PARAM>_ADJUSTED} values are \emph{all} \code{NA}
 then the raw data are used, but if any of the \verb{<PARAM>_ADJUSTED} values
 are not \code{NA}, then \emph{all} the \verb{<PARAM>_ADJUSTED} data are used.
-\item If \code{DATA_MODE} is \code{"D"} (meaning "Delayed") then proceed as for
+\item If \code{dataMode} is \code{"D"} (meaning "Delayed") then proceed as for
 the \code{"A"} case.
-\item If \code{DATA_MODE} is \code{"R"} then then use the raw values, even if the file
+\item If \code{dataMode} is \code{"R"} then then use the raw values, even if the file
 contains data with \verb{<PARAM>_ADJUSTED} in their names.
 }
-\item \strong{Case 3.} If neither \code{DATA_MODE} nor \code{PARAMETER_DATA_MODE} is present
+\item \strong{Case 3.} If neither \code{dataMode} nor \code{parameterDataMode} is present
 in the metadata (a situation the developers have not encountered, but
 which is included for completeness) then if \verb{<PARAM>_ADJUSTED} fields
 are present, then they are handled as in the first and second items in
@@ -74,10 +77,8 @@ Case 2 above.
 A study of a large set of realtime-mode and delayed-mode datasets
 suggests that the \verb{_ADJUSTED} fields of the former consist only of \code{NA}
 values, so that \code{useAdjusted} should only be used on delayed-mode
-datasets. Users are cautioned that \code{useAdjusted} may
-changed during the summer of 2020, to detect the mode and perhaps
-refuse to exchange the data, if doing so would prevent wiping
-out unadjusted data by replacing them with \code{NA} values.
+datasets. Users are cautioned that \code{useAdjusted} may b subject to
+change during the summer of 2020.
 }
 
 \examples{

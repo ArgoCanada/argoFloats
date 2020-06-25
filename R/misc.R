@@ -3,7 +3,7 @@
 #' Switch unadjusted and adjusted data
 #'
 #' Variables with original names indicating in the string `_ADJUSTED` are
-#' assigned nicknams names ending in `Adjusted` by [readProfiles()], so that
+#' assigned nicknames names ending in `Adjusted` by [readProfiles()], so that
 #' e.g. `DOXY_ADJUSTED` gets the nickname `oxygenAdjusted`, while
 #' `DOXY` gets the nickname `oxygen`. `useAdjusted` switches
 #' these, renaming the adjusted values, so that e.g. `DOXY_ADJUSTED`
@@ -18,42 +18,45 @@
 #' For this reason, users are advised strongly to examine their data files
 #' closely, before blindly calling `useAdjusted`. The procedure is as follows.
 #'
-#' There are two cases, depending on whether an item named `PARAMETER_DATA_MODE`
-#' is present in the metadata stored in the netcdf file.
-#' 
-#' 1. **Case 1.** If the `PARAMETER_DATA_MODE` field is present, then the
+#' There are two cases, depending on whether an item named `parameterDataMode`
+#' is present within the metadata of the object.  (Note that this is
+#' the renamed value of the `PARAMETER_DATA_MODE` that may be present
+#' in the netcdf file.)
+#'
+#' 1. **Case 1.** If the `parameterDataMode` field is present, then the
 #'    data columns are mapped to the parameter columns, and the following actions
 #'    are undertaken.
-#' 
-#'     * If `PARAMETER_DATA_MODE` is `"A"` (meaning "Adjusted") then use the
+#'
+#'     * If `parameterDataMode` is `"A"` (meaning "Adjusted") then use the
 #'       `<PARAM>_ADJUSTED` values, *unless* those values are all `NA`, in which case the
 #'       raw values are used instead. This is to account for the convention described in
 #'       Section 2.6.5 of Carval et al. (2019).
-#' 
-#'     * If `PARAMETER_DATA_MODE` is `"D"` (meaning "Delayed"), then proceed as for
+#'
+#'     * If `parameterDataMode` is `"D"` (meaning "Delayed"), then proceed as for
 #'       the `"A"` case.
-#'     
-#'     * If `PARAMETER_DATA_MODE` is `"R"` (meaning "Realtime") then use the raw
+#'
+#'     * If `parameterDataMode` is `"R"` (meaning "Realtime") then use the raw
 #'       values, even if the file contains data with `<PARAM>_ADJUSTED` (e.g.
 #'     `"TEMP_ADJUSTED"`, which is the name used in netcdf files for the adjusted
 #'     temperature) in their names.
-#' 
-#' 2. **Case 2.** If no `PARAMETER_DATA_MODE` field is present, but `DATA_MODE`
-#'    is present, then the latter is used.  This does not apply to individual columns,
-#'    so the action depends on the data within the columns.  
-#' 
-#'     * If `DATA_MODE` is `"A"` (meaning "Adjusted") then each data type is
+#'
+#' 2. **Case 2.** If no `parameterDataMode` field is present, but `dataMode` (called
+#'    `DATA_MODE` in the source netcdf file) is present, then the latter is used.
+#'    This does not apply to individual columns, so the action depends on the data
+#'    within the columns. There are three sub-cases.
+#'
+#'     * If `dataMode` is `"A"` (meaning "Adjusted") then each data type is
 #'     considered in turn, and if the `<PARAM>_ADJUSTED` values are *all* `NA`
 #'     then the raw data are used, but if any of the `<PARAM>_ADJUSTED` values
 #'     are not `NA`, then *all* the `<PARAM>_ADJUSTED` data are used.
-#'     
-#'     * If `DATA_MODE` is `"D"` (meaning "Delayed") then proceed as for
+#'
+#'     * If `dataMode` is `"D"` (meaning "Delayed") then proceed as for
 #'       the `"A"` case.
-#'     
-#'     * If `DATA_MODE` is `"R"` then then use the raw values, even if the file
+#'
+#'     * If `dataMode` is `"R"` then then use the raw values, even if the file
 #'       contains data with `<PARAM>_ADJUSTED` in their names.
 #'
-#' 3. **Case 3.** If neither `DATA_MODE` nor `PARAMETER_DATA_MODE` is present
+#' 3. **Case 3.** If neither `dataMode` nor `parameterDataMode` is present
 #'    in the metadata (a situation the developers have not encountered, but
 #'    which is included for completeness) then if `<PARAM>_ADJUSTED` fields
 #'    are present, then they are handled as in the first and second items in
@@ -64,10 +67,8 @@
 #' A study of a large set of realtime-mode and delayed-mode datasets
 #' suggests that the `_ADJUSTED` fields of the former consist only of `NA`
 #' values, so that `useAdjusted` should only be used on delayed-mode
-#' datasets. Users are cautioned that `useAdjusted` may
-#' changed during the summer of 2020, to detect the mode and perhaps
-#' refuse to exchange the data, if doing so would prevent wiping
-#' out unadjusted data by replacing them with `NA` values.
+#' datasets. Users are cautioned that `useAdjusted` may b subject to
+#' change during the summer of 2020.
 #'
 #' @param argo An [`argoFloats-class`] object, as read by [readProfiles()].
 #'
@@ -188,21 +189,21 @@ useAdjustedProfile <- function(argo, debug=0)
 }
 
 
-#' Convert a hex digit to integer vector of length 4
+#' Convert Hexadecimal Digit to Integer Vector
 #'
-#' This function converts hex digits to 4 integers indicating bits, in 'math' order. It's
-#' intended to be used to look at the hex digits of `HISTORY_QCTEST` of an [`argoFloats-class`]
-#' object that was created by [readProfiles()]. It then converts these hex digits to bits to
-#' be used within the [showQCTests()] function.
+#' `hexToNibble` converts a hexadecimal digit to 4 integers indicating bits, e.g. for use within
+#' [showQCTests()].
 #'
-#' @param x A character value corresponding to a hex digit (i.e. 0 through 9, or A through F).
+#' @param x A character value corresponding to a hexadecimal digit (i.e. `"0"` through `"9"`,
+#' `"a"` through `"f"`, or `"A"` through `"F"`).
 #'
-#' @return An integer vector.
+#' @return An integer vector, in 'mathematical' order.  (This is the reverse of
+#' the order used by [rawToBits()]; see the \dQuote{Examples}.)
 #'
 #' @examples
 #' library(argoFloats)
-#' hexToNibble('2')
-#' hexToNibble('e')
+#' hexToNibble('1') # 0 0 0 1
+#' hexToNibble('e') # 1 1 1 0
 #'
 #' @export
 #'
