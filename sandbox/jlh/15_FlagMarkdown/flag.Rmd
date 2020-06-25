@@ -1,22 +1,39 @@
 ---
 title: "Introduction to argoFloats Quality Control"
-author: "Dan Kelley (https://orcid.org/0000-0001-7808-5911) and Jaimie Harbin (https://orcid.org/0000-0003-3774-3732)"
+author: "Dan Kelley (https://orcid.org/0000-0001-7808-5911), Jaimie Harbin (https://orcid.org/0000-0003-3774-3732), and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
 date: "`r Sys.Date()`"
 ---
 
 **Abstract**
 
+Argo floats undergo a series of testing to ensure the data provided is a
+reliable source. At first glance, however, it can be difficult for users to
+understand the Quality Control (QC) completed on profiles. The creators of
+`argoFloats` develped a way to therefore deal with flags and adjusted data
+starting with a three step process to deal with flags involving
+`plot(which='QC')`, `showQCTests()`and `applyQC()`. In addition to flag control,
+`argoFloats` also deals with adjusted data in `useAdjusted()`.
+
 # Introduction to Flags
 
 Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
 data found at the Data Assembly Centers are as accurate as possible. More
-specifically, testing is done in three levels [2]:
+specifically, testing is done in three levels [1]: 1: Real time that complete
+checks on all measurements and assigned a qualityflag within a 24-48 hour
+timeframe, 2. Delayed mode, and 3. Regional scientific analyses of all float
+data with other available data. The procedures for regional analyses are still
+to be determined.
 
-1: Real time that complete checks on all measurements and assigned a quality
-flag within a 24-48 hour timeframe
-2. Delayed mode
-3. Regional scientific analyses of all float data with other available data. The
-procedures for regional analyses are still to be determined.
+At first glance, it can be difficult for users to understand the Quality Control
+(QC) completed on profiles. To address this issue when dealing with Argo data,
+`argoFloats` created a way to deal with flags and adjusted data. Firstly, the
+creators of  `argoFloats` designed a three step process to deal with flags. Step
+one is `plot(which='QC')`, which shows the quality and mean of parameters. Step
+two is `showQCTests()`, which demonstrates which QC tests were performed and
+failed. Step three is `applyQC()`, which allows the users to get rid of 'bad'
+data if they wish. In addition to flag control, `argoFloats` also deals with
+adjusted data in `useAdjusted()`, which allows users to use adjusted data if
+available.
 
 # Flags
 
@@ -153,8 +170,7 @@ plot(raw, which="TS")
 plot(clean, which="TS")
 ```
 
-*Exercise Three* : Use the following code to look at the `<PARAM>_ADJUSTED` vs
-`<PARAM>`. EXPLAIN YOUR RESULTS.
+*Exercise Three* : Use `applyQC()` on float ID = 4900845. EXPLAIN YOUR RESULTS.
 
 # Adjusted Data
 
@@ -189,8 +205,8 @@ oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="temperature")
 mtext("Adjusted data", side=3, line=-1, col=2)
 ```
 
-*Example Four* Use `useAdjusted()` on the float ID=5903586, profile=50 to
-determine the % difference between `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
+*Exercise Four* Use `useAdjusted()` on the float ID=5903586, profile=50 to
+compare `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
 
 # Answers
 
@@ -224,8 +240,7 @@ As shown by the `showQCTests()` function, no quality control tests were actually
 performed on this float ID. This is a case where the user would have to self
 analyze their data to ensure all data seems reasonable.
 
-*Exercise Three* : Use the following code to look at the `<PARAM>_ADJUSTED vs
-'<PARAM>`. EXPLAIN YOUR RESULTS.
+*Exercise Three* : Use `applyQC()` on float ID = 4900845. EXPLAIN YOUR RESULTS.
 ```
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
@@ -240,13 +255,11 @@ plot(clean, which="TS")
 As shown by the plot, the plot containing "good" data and the plot containing
 "bad" data are the same. This indicates to the user that it is okay to use the
 data, even though QC tests were not performed, as shown by `showQCTests()`.
- 
-FIX ME!!! JLH (not done!!!)
 
-*Example Four* Use `useAdjusted()` on the float ID=5903586, profile=50 to
-determine the % difference between `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
+*Exercise Four* Use `useAdjusted()` on the float ID=5903586, profile=50 to
+compare `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
 
-```
+```{r}
 library(argoFloats)
 bai <- getIndex('synthetic')
 s <- subset(bai, ID='5903586')
@@ -256,11 +269,10 @@ raw <- readProfiles(profiles)
 adj <- useAdjusted(raw)
 par(mfrow=c(1, 2))
 oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="oxygen")
-#mtext("Raw data", side=3, line=-1, col=2)
+mtext("Raw data", side=3, line=-1, col=2)
 oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
-#mtext("Adjusted data", side=3, line=-1, col=2)
+mtext("Adjusted data", side=3, line=-1, col=2)
 ```
-
 
 # References
 [1] Wong, A., Keeley, R. and Carval, T., 2009. Argo quality control manual. Version, 2(5), p.32.
