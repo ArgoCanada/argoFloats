@@ -6,7 +6,7 @@ float <- "2902204"
 profile <- "131"
 source <- paste0(base, float, "_", profile)
 file <- paste0(float, "_", profile, ".json")
-if (!exists(file))
+if (!file.exists(file))
     download.file(source, file)
 a <- fromJSON(file=file)
 
