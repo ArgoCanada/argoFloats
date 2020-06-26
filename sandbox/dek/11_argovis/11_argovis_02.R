@@ -24,5 +24,4 @@ n <- 20
 cat("Some elements of the first", n, "profiles are:\n")
 df <- data.frame(ID=ids, longitude=lons, latitude=lats, parameters=params, dac=dacs, time=times)
 print(head(df, n))
-as.POSIXct(a[[1]]$date, "%Y-%m-%dT%H:%M:%S%z")
 
