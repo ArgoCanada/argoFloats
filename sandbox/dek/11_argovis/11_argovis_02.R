@@ -21,8 +21,11 @@ lats <- sapply(a, function(x) x[["lat"]])
 params <- sapply(a, function(x) paste0(x[["station_parameters"]], collapse=","))
 dacs <- sapply(a, function(x) paste0(x[["dac"]], collapse=","))
 times <- oce::numberAsPOSIXct(sapply(a, function(x) as.POSIXct(gsub("Z$", "", x[["date"]]), "%Y-%m-%dT%H:%M:%S", tz="UTC")))
+deeps <- sapply(a, function(x) paste0(x[["isDeep"]], collapse=","))
+BGCs <- sapply(a, function(x) paste0(x[["containsBGC"]], collapse=","))
 n <- 20
 cat("Some elements of the first", n, "profiles are:\n")
-df <- data.frame(ID=ids, mode=modes, longitude=lons, latitude=lats, parameters=params, dac=dacs, time=times)
+options(width=150)
+df <- data.frame(ID=ids, mode=modes, deep=deeps, longitude=lons, latitude=lats, dac=dacs, time=times, params=params, BGC=BGCs)
 print(head(df, n))
 
