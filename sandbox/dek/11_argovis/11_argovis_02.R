@@ -15,6 +15,7 @@ cat("This is what the first entry holds\n")
 cat(str(a[[1]]))
 
 ids <- sapply(a, function(x) x[["_id"]])
+modes <- sapply(a, function(x) x[["DATA_MODE"]])
 lons <- sapply(a, function(x) x[["lon"]])
 lats <- sapply(a, function(x) x[["lat"]])
 params <- sapply(a, function(x) paste0(x[["station_parameters"]], collapse=","))
@@ -22,6 +23,6 @@ dacs <- sapply(a, function(x) paste0(x[["dac"]], collapse=","))
 times <- oce::numberAsPOSIXct(sapply(a, function(x) as.POSIXct(gsub("Z$", "", x[["date"]]), "%Y-%m-%dT%H:%M:%S", tz="UTC")))
 n <- 20
 cat("Some elements of the first", n, "profiles are:\n")
-df <- data.frame(ID=ids, longitude=lons, latitude=lats, parameters=params, dac=dacs, time=times)
+df <- data.frame(ID=ids, mode=modes, longitude=lons, latitude=lats, parameters=params, dac=dacs, time=times)
 print(head(df, n))
 
