@@ -61,10 +61,19 @@ test_that("historyQCTest length and (trimmed) contents for issue 136", {
           filename <- system.file("extdata", "D4900785_048.nc", package="argoFloats")
           a <- expect_silent(readProfiles(filename))
           a1 <- a[[1]]
-          expect_equal(6, length(a1[["historyQCTest"]]))
+          ## We test two ways of storing the HISTORY_QC_TEST item as named in the netcdf file,
+          ## because the camelCase variety only became valid in late June of 2020, and then
+          ## only in the github vrsion, not yet the CRAN version.
+          test1 <- a1[["historyQCTest"]]
+          test2 <- a1[["HISTORY_QC_TEST"]]
           nc <- ncdf4::nc_open(filename)
           qcn <- ncdf4::ncvar_get(nc, "HISTORY_QCTEST")
-          ## Note trimming of blanks for the next test
-          expect_equal(a1[["historyQCTest"]], gsub("[ ]*", "", qcn))
+          if (length(test1)) {
+              expect_equal(6, length(test1))
+              expect_equal(test1, gsub("[ ]*", "", qcn))
+          } else if (length(test2)) {
+              expect_equal(6, length(test2))
+              expect_equal(test2, gsub("[ ]*", "", qcn))
+          }
 })
 
