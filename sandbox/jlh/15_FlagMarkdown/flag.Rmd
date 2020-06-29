@@ -9,18 +9,16 @@ date: "`r Sys.Date()`"
 Argo floats undergo a series of testing to ensure the data provided is a
 reliable source. At first glance, however, it can be difficult for users to
 understand the Quality Control (QC) completed on profiles. The creators of
-`argoFloats` develped a way to therefore deal with flags and adjusted data
-starting with a three step process to deal with flags involving
-`plot(which='QC')`, `showQCTests()`and `applyQC()`. In addition to flag control,
-`argoFloats` also deals with adjusted data in `useAdjusted()`.
+`argoFloats` developed a way to therefore deal with flags and adjusted data. When dealing with flags, a three step process exists involving `plot(which='QC')`, `showQCTests()`and `applyQC()`. In addition to flag control,
+`argoFloats` also deals with adjusted data with the `useAdjusted()` function.
 
 # Introduction to Flags
 
 Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
 data found at the Data Assembly Centers are as accurate as possible. More
-specifically, testing is done in three levels [1]: 1: Real time that complete
-checks on all measurements and assigned a qualityflag within a 24-48 hour
-timeframe, 2. Delayed mode, and 3. Regional scientific analyses of all float
+specifically, testing is done in three levels: 1: Real time that complete
+checks on all measurements and assigned a quality flag within a 24-48 hour
+time frame, 2. Delayed mode, and 3. Regional scientific analyses of all float
 data with other available data. The procedures for regional analyses are still
 to be determined.
 
@@ -67,15 +65,15 @@ plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
 x0 <- 0.25
 y0 <- 0.9
 dy <- 0.2
-wh <- textInBox(x0, y0, "What is the quality of the data?", col=colText)
+wh <- textInBox(x0, y0, "    What is the quality of the data?", col=colText)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
-textInBox(x0, y0, "Why is the quality like this?", col=colText)
+textInBox(x0, y0, "  Why is the quality like this?", col=colText)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
-textInBox(x0, y0, "Do I agree with the quality control?", col=colText)
+textInBox(x0, y0, "      Do I agree with the quality control?", col=colText)
 x0 <- 0.8
 y0 <- 0.9
 wh <- textInBox(x0, y0, "plot(which='QC') ", family="sans", col=colCode)
@@ -119,10 +117,11 @@ plot(argos, which='QC', parameter='temperature')
 float number 4900845 in synthetic data.EXPLAIN YOUR RESULTS
 
 ### Step Two: showQCTests()
+
 The `showQCTests()` is a newly added function. It's purpose is to use integer
-values from the [hexToNibble()] function to internally convert hex digits. In
-this contenxt, the hex digits come from `HISTORY_QCTEST` of a single argoFloats
-object that was created by [readProfiles()]. The `showQCTests()` is then used to
+values from the `hexToNibble()` function to internally convert hex digits. In
+this context, the hex digits come from `HISTORY_QCTEST` of a single argoFloats
+object that was created by `readProfiles()`. The `showQCTests()` is then used to
 indicate which QC tests were performed and/or failed.
 
 Using the same example as shown in `plot(which='QC')`, we can also determine
@@ -140,7 +139,7 @@ showQCTests(argos[[1]])
 ```
 
 In section 3.11 Reference table 11: QC test binary IDs of the Argo User's Manual
-[2], we see that test two is the "Imposible data test".
+[2], we see that test two is the "Impossible data test".
 
 *Exercise Two*: Use the first float from ID 4900845 in exercise one,to determine
 which tests were performed and/or failed during quality control testing. EXPLAIN
@@ -148,8 +147,8 @@ YOUR RESULTS.
 
 ### Step Three: applyQC()
 
-The `applyQC()` function examines quality-control (QC) within an argoFloats
-obect that was reated by `readProfiles(). By default, it replaced all suspecious
+The `applyQC()` function examines quality-control within an argoFloats
+object that was created by `readProfiles()`. By default, it replaces all suspicious
 data with NA values, so they will not appear in plots or be considered in
 calculations. This is an important early step in processing, because suspicious
 Argo floats commonly report data that are suspicious based on statistical and
@@ -175,6 +174,7 @@ plot(clean, which="TS")
 # Adjusted Data
 
 ### useAdjusted()
+
 In addition to flags flagging bad data based on tests, `argoFloats` package has
 also incorporated the idea of `<PARAM>_ADJUSTED` vs `<PARAM>_UNADJUSTED` which
 considers "bad" data that has been adjusted [2].
@@ -253,8 +253,7 @@ plot(raw, which="TS")
 plot(clean, which="TS")
 ```
 As shown by the plot, the plot containing "good" data and the plot containing
-"bad" data are the same. This indicates to the user that it is okay to use the
-data, even though QC tests were not performed, as shown by `showQCTests()`.
+"bad" data are the same. This is the result of no tests being completed for QC, as shown by `showQCTests()`.
 
 *Exercise Four* Use `useAdjusted()` on the float ID=5903586, profile=50 to
 compare `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
