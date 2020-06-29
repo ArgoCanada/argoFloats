@@ -177,12 +177,12 @@ plot(clean, which="TS")
 ### useAdjusted()
 
 In addition to flags flagging bad data based on tests, `argoFloats` package has
-also incorporated the idea of `<PARAM>_ADJUSTED` vs `<PARAM>_UNADJUSTED` which
+also incorporated the idea of `<param>Adjusted` vs `<param>Unadjusted` which
 considers "bad" data that has been adjusted [2].
 
-Variables with original names indicating in the string `<PARAM>_ADJUSTED` are
+Variables with original names indicating in the string `<param>Adjusted` are
 assigned nicknames names ending in Adjusted by `readProfiles()`, so that e.g.
-`DOXY_ADJUSTED` gets the nickname `oxygenAdjusted`, while `DOXY` gets the
+`doxyAdjusted` gets the nickname `oxygenAdjusted`, while `doxy` gets the
 nickname `oxygen`. `useAdjusted()` switches these, renaming the adjusted values,
 so that e.g. `DOXY_ADJUSTED` gets nickname `oxygen` and `DOXY` gets nickname
 `oxygenUnadjusted`. This is carried out for all data families, and also for the
@@ -207,7 +207,7 @@ mtext("Adjusted data", side=3, line=-1, col=2)
 ```
 
 *Exercise Four* Use `useAdjusted()` on the float with ID5903586, profile=50 to
-compare `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
+compare `<param>Adjusted` vs `<param>Unadjusted>`.
 
 # Answers
 
@@ -256,7 +256,7 @@ As shown by the plot, the plot containing "good" data and the plot containing
 "bad" data are the same. This is the result of no tests being completed for QC, as shown by `showQCTests()`.
 
 *Exercise Four* Use `useAdjusted()` on the float with ID 5903586, profile=50 to
-compare `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
+compare `<PARAM>_ADJUSTED` vs `<param>Unadjusted`.
 
 ```{r}
 library(argoFloats)
