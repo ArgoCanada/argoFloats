@@ -1,16 +1,18 @@
 ---
 title: "Introduction to argoFloats Quality Control"
-author: "Dan Kelley (https://orcid.org/0000-0001-7808-5911), Jaimie Harbin (https://orcid.org/0000-0003-3774-3732), and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
+author: "Jaimie Harbin (https://orcid.org/0000-0003-3774-3732), Dan Kelley (https://orcid.org/0000-0001-7808-5911),and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
 date: "`r Sys.Date()`"
 ---
 
 **Abstract**
 
 Argo floats undergo a series of testing to ensure the data provided is a
-reliable source. At first glance, however, it can be difficult for users to
-understand the Quality Control (QC) completed on profiles. The creators of
-`argoFloats` developed a way to therefore deal with flags and adjusted data. When dealing with flags, a three step process exists involving `plot(which='QC')`, `showQCTests()`and `applyQC()`. In addition to flag control,
-`argoFloats` also deals with adjusted data with the `useAdjusted()` function.
+reliable source. Understanding the Quality Control (QC) completed on profiles
+can be problematic, however. The creators of `argoFloats` therefore developed a
+way to deal with flags and adjusted data. When dealing with flags, a three step
+process exists involving `plot(which='QC')`, `showQCTests()`and `applyQC()`. In
+addition to flag control, `argoFloats` also deals with adjusted data with the
+`useAdjusted()` function.
 
 # Introduction to Flags
 
@@ -45,7 +47,7 @@ considering the quality control of Argo flags. The three step process encourages
 users to always analyze the data they are considering. The three step process is
 as follows:
 
-```{r qualityControlProcess, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.8, fig.width=5, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
+```{r qualityControlProcess, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=1.8, fig.width=5, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
 colText <- "darkblue"
 colCode <- "black"
 library(graphics)
@@ -64,16 +66,16 @@ par(mar=c(0,1,0,0))
 plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
 x0 <- 0.25
 y0 <- 0.9
-dy <- 0.2
+dy <- 0.3
 wh <- textInBox(x0, y0, "    What is the quality of the data?", col=colText)
 h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
-textInBox(x0, y0, "  Why is the quality like this?", col=colText)
+textInBox(x0, y0, "   What tests were performed?", col=colText)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
-textInBox(x0, y0, "      Do I agree with the quality control?", col=colText)
+textInBox(x0, y0, "   Set low-quality data to NA.", col=colText)
 x0 <- 0.8
 y0 <- 0.9
 wh <- textInBox(x0, y0, "plot(which='QC') ", family="sans", col=colCode)
@@ -84,12 +86,12 @@ y0 <- y0 - dy
 textInBox(x0, y0, "showQCTests() ", family="sans", col=colCode)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
-textInBox(x0, y0, "applyQC() ", family="sans", col=colCode)
+textInBox(x0, y0, "applyQC()  ", family="sans", col=colCode)
 par(mar=omar)
 ```
 
-This vignette will walk the users through the three step process using the float
-ID = 1901584 near the Bahamas.
+This vignette will walk the users through the three step process using the float with
+ID 1901584 near the Bahamas.
 
 ### Step One: QC Plot
 
@@ -101,8 +103,7 @@ must also provide the `parameter` of interest. If the user is uncertain about
 what parameter exists within a certain float, `argoFloats` will prompt the user
 with the appropriate parameters.
 
-An example of how to get the QC plot for temperature, or "TEMP" for the float ID
-= 1901584 is as follows:
+An example of how to get the QC plot for temperature, or "TEMP" for the float with ID 1901584 is as follows:
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE}
 library(argoFloats)
@@ -114,7 +115,7 @@ plot(argos, which='QC', parameter='temperature')
 ```
 
 *Exercise One:* Use the previous code to determine the QC of temperature for
-float number 4900845 in synthetic data.EXPLAIN YOUR RESULTS
+float number 4900845 in synthetic data.Explain your results.
 
 ### Step Two: showQCTests()
 
@@ -141,7 +142,7 @@ showQCTests(argos[[1]])
 In section 3.11 Reference table 11: QC test binary IDs of the Argo User's Manual
 [2], we see that test two is the "Impossible data test".
 
-*Exercise Two*: Use the first float from ID 4900845 in exercise one,to determine
+*Exercise Two*: Use the first float with ID 4900845 in exercise one,to determine
 which tests were performed and/or failed during quality control testing. EXPLAIN
 YOUR RESULTS.
 
@@ -169,7 +170,7 @@ plot(raw, which="TS")
 plot(clean, which="TS")
 ```
 
-*Exercise Three* : Use `applyQC()` on float ID = 4900845. EXPLAIN YOUR RESULTS.
+*Exercise Three* : Use `applyQC()` on float ID with 4900845. Explain your results.
 
 # Adjusted Data
 
@@ -205,13 +206,13 @@ oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="temperature")
 mtext("Adjusted data", side=3, line=-1, col=2)
 ```
 
-*Exercise Four* Use `useAdjusted()` on the float ID=5903586, profile=50 to
+*Exercise Four* Use `useAdjusted()` on the float with ID5903586, profile=50 to
 compare `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
 
 # Answers
 
 *Exercise One:* Use the previous code to determine the QC of temperature for
-float number 4900845 in synthetic data. EXPLAIN YOUR RESULTS.
+float number 4900845 in synthetic data. Explain your results.
 ```
 library(argoFloats)
 ais <- getIndex(filename = 'synthetic', age=0)
@@ -223,9 +224,8 @@ plot(argos, which='QC', parameter='temperature')
 As shown in the plot, 100% of the temperature data is considered "good". This
 implies to the user that all data is considered okay to use.
 
-*Exercise Two*: Use the first float from ID 4900845 in exercise one,to determine
-which tests were performed and/or failed during quality control testing.EXPLAIN
-YOUR RESULTS.
+*Exercise Two*: Use the first float with ID 4900845 in exercise one,to determine
+which tests were performed and/or failed during quality control testing. Explain your results.
 
 ```
 library(argoFloats)
@@ -240,7 +240,7 @@ As shown by the `showQCTests()` function, no quality control tests were actually
 performed on this float ID. This is a case where the user would have to self
 analyze their data to ensure all data seems reasonable.
 
-*Exercise Three* : Use `applyQC()` on float ID = 4900845. EXPLAIN YOUR RESULTS.
+*Exercise Three* : Use `applyQC()` on float ID = 4900845. Explain your results.
 ```
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
@@ -255,7 +255,7 @@ plot(clean, which="TS")
 As shown by the plot, the plot containing "good" data and the plot containing
 "bad" data are the same. This is the result of no tests being completed for QC, as shown by `showQCTests()`.
 
-*Exercise Four* Use `useAdjusted()` on the float ID=5903586, profile=50 to
+*Exercise Four* Use `useAdjusted()` on the float with ID 5903586, profile=50 to
 compare `<PARAM>_ADJUSTED` vs `<PARAM>_UNADUSTED>`.
 
 ```{r}
@@ -274,5 +274,5 @@ mtext("Adjusted data", side=3, line=-1, col=2)
 ```
 
 # References
-[1] Wong, A., Keeley, R. and Carval, T., 2009. Argo quality control manual. Version, 2(5), p.32.
-[2] Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch, Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019. https://doi.org/10.13155/29825.
+1. Wong, A., Keeley, R. and Carval, T., 2009. Argo quality control manual. Version, 2(5), p.32.
+2. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch, Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019. https://doi.org/10.13155/29825.
