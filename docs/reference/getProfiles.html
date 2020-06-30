@@ -46,8 +46,7 @@ a list of files to download from the server named in the index.
 Then these files are downloaded to the destdir directory,
 using filenames inferred from the source filenames. The
 value returned by getProfiles() is suitable for use
-by readProfiles(), and an example of this is given
-in the documentation for readProfiles()." />
+by readProfiles()." />
 
 
 
@@ -133,8 +132,7 @@ a list of files to download from the server named in the index.
 Then these files are downloaded to the <code>destdir</code> directory,
 using filenames inferred from the source filenames. The
 value returned by <code>getProfiles()</code> is suitable for use
-by <code><a href='readProfiles.html'>readProfiles()</a></code>, and an example of this is given
-in the documentation for <code><a href='readProfiles.html'>readProfiles()</a></code>.</p>
+by <code><a href='readProfiles.html'>readProfiles()</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>getProfiles</span>(
@@ -142,7 +140,8 @@ in the documentation for <code><a href='readProfiles.html'>readProfiles()</a></c
   <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>retries</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>skip</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>0</span>
 )</pre>
 
@@ -171,10 +170,18 @@ download, even if the destination file already exists.</p></td>
 if the first attempt fails.</p></td>
     </tr>
     <tr>
+      <th>skip</th>
+      <td><p>A logical value indicating whether to skip over netcdf
+files that cannot be downloaded from the server.  This is <code>TRUE</code> by
+default, to allow <code>getProfiles()</code> to handle out-of-date indices
+without stopping when it tries to download netcdf files that are no
+longer available.</p></td>
+    </tr>
+    <tr>
       <th>quiet</th>
       <td><p>logical value, passed to <code><a href='https://jeroen.cran.dev/curl/reference/curl_download.html'>curl::curl_download()</a></code>,
-that indicates whether to download silently.  Since some downloads
-can be slow, the default value is <code>quiet=FALSE</code>.</p></td>
+that indicates whether to download without showing a progress
+bar. (Problems will still be reported, though.)</p></td>
     </tr>
     <tr>
       <th>debug</th>
@@ -188,8 +195,12 @@ to see if the output suggests a problem in the call.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code><a href='argoFloats-class.html'>argoFloats</a></code> with type=<code>"profiles"</code>, which
-is suitable as the first argument of <code><a href='readProfiles.html'>readProfiles()</a></code>.</p>
+    <p>An object of class <code><a href='argoFloats-class.html'>argoFloats</a></code> with type=<code>"profiles"</code>, the
+<code>data</code> slot of which contains two items: <code>url</code>,
+which holds the URLs from which the netcdf
+files were downloaded, and <code>file</code>, which
+holds the path names of the downloaded files; the latter
+is used by <code><a href='readProfiles.html'>readProfiles()</a></code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>It should be noted that the constructed server URL follows
@@ -198,15 +209,13 @@ so if some other server is used, the URL may be wrong, leading
 to an error.  Similarly, if the patterns on these two
 servers change, then <code>getProfiles()</code> will fail. Users who
 encounter such problems are requested to report them
-to the authors; in a pinch, they may try altering the
-conditional block that follows the line</p><pre>## NB. the USGODAE and IFREMER servers are set up differently.
-</pre>
-
-<p>in the source-code file named <code>R/get.R</code>.</p>
-<p>If the data file cannot be downloaded after multiple trials, an
-error is issued, with a hint that running <code><a href='getIndex.html'>getIndex()</a></code> again
-might help, in case the filename on the server has changed since
-the index was last downloaded by <code><a href='getIndex.html'>getIndex()</a></code>.</p>
+to the authors.</p>
+<p>If a particular data file cannot be downloaded after multiple trials, then
+the behaviour depends on the value of the <code>skip</code> argument.  If that is
+<code>TRUE</code> (the default) then a <code>NA</code> value is inserted in the corresponding
+spot in the return value, but if it is <code>FALSE</code>, then an error is reported.
+Note that <code><a href='readProfiles.html'>readProfiles()</a></code> skips over any such <code>NA</code> entries,
+while reporting their positions within <code>index</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Download some Argo data files.</span>

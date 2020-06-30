@@ -132,7 +132,7 @@ as created by <code><a href='getIndex.html'>getIndex()</a></code>, either by spe
 indices to keep (using the <code>subset</code> argument) or by specifying
 a way to determine those indices (using the <code>...</code> argument).
 Note that only one subset condition may be given in the <code>...</code>
-argument, but that <code><a href='merge-argoFloats-ANY-method.html'>merge,argoFloats-method()</a></code>
+argument, but that <code><a href='merge-argoFloats-method.html'>merge,argoFloats-method()</a></code>
 can be used to merge indices  created by <code>subset</code>,
 which effectively creates a logical "or" operation.</p>
     </div>
@@ -156,7 +156,7 @@ indices of <code>x@data$index</code> to keep (example 1).</p></td>
       <th>...</th>
       <td><p>the first entry here must be either (a)
 a list named <code>circle</code>, <code>rectangle</code>, <code>polygon</code>,
-<code>parameter</code>, <code>time</code>, <code>institution</code>, <code>id</code>,<code>ocean</code>, or <code>mode</code>
+<code>parameter</code>, <code>time</code>, <code>institution</code>, <code>id</code>,<code>ocean</code>,<code>mode</code>, or <code>profile</code>.
 (examples 2 through 8)
 or (b) a logical value named <code>deep</code> (example 9).  Optionally, this entry
 may be followed by second entry named <code>silent</code>, which is a logical
@@ -191,7 +191,7 @@ and the first point is pasted onto the end, to close it.
 See example 4.</p></li>
 <li><p>A vector or list named <code>parameter</code> that holds character values that
 specify the names of measured parameters to keep. See section 3.3 of the
-Argo User's Manual, V3.2 (Carval et al. 2015) for a list of parameters.
+Argo User's Manual, V3.3 (Carval et al. 2019) for a list of parameters.
 See example 5.</p></li>
 <li><p>A list named <code>time</code> that has elements <code>from</code> and <code>to</code> that are POSIXt
 times that were created with eg. <code><a href='https://rdrr.io/r/base/DateTimeClasses.html'>POSIXct()</a></code>, with <code>tz="UTC"</code> to match
@@ -221,9 +221,11 @@ ocean. The permitted values are:
 <code>"P"</code> for Pacific Ocean Area, from 145 E to 70 W, and
 <code>"I"</code> for Indian Ocean Area, from 20 E to 145 E.
 See example 10.</p></li>
-<li><p>A character named <code>mode</code>, which permits <code>realtime</code> or <code>delayed</code> to distinguish
-between the Argo modes
+<li><p>A character value named <code>mode</code>, equal to either <code>realtime</code> or <code>delayed</code>,
+that selects whether to retain real-time data or delayed data.
 See example 11.</p></li>
+<li><p>An integer value named <code>profile</code> that specifies which profiles are to be retained.
+See example 12.</p></li>
 </ol>
 
 <p>In all cases, the notation is that longitude is positive
@@ -263,7 +265,7 @@ is positive for degrees North and negative for degrees South.</p>
 <span class='no'>index7</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='kw'>institution</span><span class='kw'>=</span><span class='st'>"ME"</span>)</div><div class='output co'>#&gt; <span class='message'>Kept 3 profiles (0.315%)</span></div><div class='input'>
 <span class='co'># Example 8: subset to a specific ID</span>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>filenam</span><span class='kw'>=</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
+<span class='no'>ai</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>(<span class='kw'>filename</span><span class='kw'>=</span><span class='st'>'merged'</span>, <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='st'>'~/data/argo'</span>)
 <span class='no'>index9</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>ai</span>, <span class='kw'>ID</span><span class='kw'>=</span><span class='st'>'1900722'</span>) }
 
 <span class='co'># Example 9: subset data to only include deep argo</span>
@@ -283,13 +285,21 @@ is positive for degrees North and negative for degrees South.</p>
 
 <span class='co'># Example 11: subset by delayed time</span>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>'index'</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>indexBgc</span>)
 <span class='no'>index11</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='kw'>mode</span><span class='kw'>=</span><span class='st'>'delayed'</span>)
 <span class='no'>profiles</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span>(<span class='no'>index11</span>)
 <span class='no'>argos</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span>(<span class='no'>profiles</span>)
-<span class='no'>oxygen</span> <span class='kw'>&lt;-</span> <span class='no'>argos</span><span class='kw'>[[</span><span class='st'>'oxygen'</span>]]
-<span class='no'>pressure</span> <span class='kw'>&lt;-</span> <span class='no'>argos</span><span class='kw'>[[</span><span class='st'>'pressure'</span>]]
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>oxygen</span>, <span class='no'>pressure</span>, <span class='kw'>ylim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span>(<span class='no'>pressure</span>)), <span class='kw'>na.rm</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>type</span><span class='kw'>=</span><span class='st'>'o'</span>)
+<span class='no'>oxygen</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span>(<span class='no'>argos</span><span class='kw'>[[</span><span class='st'>'oxygen'</span>]])
+<span class='no'>pressure</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span>(<span class='no'>argos</span><span class='kw'>[[</span><span class='st'>'pressure'</span>]])
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>oxygen</span>, <span class='no'>pressure</span>, <span class='kw'>ylim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span>(<span class='no'>pressure</span>, <span class='kw'>na.rm</span><span class='kw'>=</span><span class='fl'>TRUE</span>)),
+<span class='kw'>ylab</span><span class='kw'>=</span><span class='st'>'Pressure (dbar)'</span>, <span class='kw'>xlab</span><span class='kw'>=</span><span class='st'>"Oxygen (umol/kg)"</span>)
+}
+
+<span class='co'># Example 12: subset by profile</span>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>index</span>)
+<span class='no'>index12</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='kw'>profile</span><span class='kw'>=</span><span class='st'>'124'</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='st'>"File names with profile number 124:"</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>index12</span><span class='kw'>[[</span><span class='st'>"file"</span>]]), <span class='st'>"\n"</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

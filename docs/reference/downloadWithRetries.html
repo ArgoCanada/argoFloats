@@ -173,8 +173,8 @@ documentation for <code><a href='https://jeroen.cran.dev/curl/reference/curl_dow
     <tr>
       <th>quiet</th>
       <td><p>logical value, passed to <code><a href='https://jeroen.cran.dev/curl/reference/curl_download.html'>curl::curl_download()</a></code>,
-that indicates whether to download silently.  Since some downloads
-can be slow, the default value is <code>quiet=FALSE</code>.</p></td>
+that indicates whether to download without showing a progress
+bar. (Problems will still be reported, though.)</p></td>
     </tr>
     <tr>
       <th>force</th>
@@ -198,7 +198,8 @@ to see if the output suggests a problem in the call.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>String indicating the full pathname to the downloaded file.</p>
+    <p>A character value indicating the full pathname to the downloaded file,
+or <code>NA</code>, if there was a problem with the download.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
