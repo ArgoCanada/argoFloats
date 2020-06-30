@@ -71,6 +71,9 @@ NULL
 #' index <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=200))
 #' ```
+#'
+#' @template server_caveat
+#'
 #' @examples
 #' library(argoFloats)
 #' data(index)
@@ -92,6 +95,9 @@ NULL
 #' indexBgc <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'```
+#'
+#' @template server_caveat
+#'
 #' @examples
 #' library(argoFloats)
 #' data(indexBgc)
@@ -115,6 +121,9 @@ NULL
 #' indexMerged <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'```
+#'
+#' @template server_caveat
+#'
 #' @section Historical note:
 #' This "merged" file from the usgodae server is likely to be removed, when
 #' that server changes to the "synthetic" file format that the ifremer server
@@ -142,11 +151,13 @@ NULL
 #' indexSynthetic <- subset(indexAll,
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'```
-#' @section Historical note:
 #' This "synthetic" type of index is a replacement for the older "merged" index.  See
 #' \url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
 #' for more on the data file format, reasons for the change, and timetable for transition
 #' from "merged".
+#'
+#' @template server_caveat
+#'
 #' @examples
 #' library(argoFloats)
 #' data(indexSynthetic)
@@ -265,11 +276,14 @@ setMethod(f="initialize",
 #'     7. Otherwise, if `i` is a character value, then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
-#'        information with one (unnamed) item per profile.  Note that
-#'        items from the `metadata` are repeated and cast into a matrix
-#'        as the same dimensionality as pressure, as a way to make it
-#'        easier to e.g. use [oce::as.ctd()] to create a CTD object from
-#'        values returned by the present function, passed through [unlist()].
+#'        information with one (unnamed) item per profile.  If `j` is provided
+#'        and equal to `"byLevel"`, then the items from the `metadata` are
+#'        repeated (if necessary) and formed into matrix or vector of the same
+#'        shape as the `"pressure"` field; this can be convenient for computations
+#'        involving items that only occur once per profile, such as `"longitude"`,
+#'        but it should not be used for items that are not level-specific, such
+#'        as the various `"HISTORY_*"` elements, which apply to a dataset, not to
+#'        a level.
 #'     8. Otherwise, an error is reported.
 #' 5. Otherwise, an error is reported.
 #'
@@ -335,11 +349,10 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
-                      ## i is always 'file'
                       if (missing(j)) {
-                          return(x@data$file)
+                          return(x@data[[i]])
                       } else if (is.numeric(j)) {
-                          return(x@data$file[j])
+                          return(x@data[[i]][j])
                       } else {
                           stop("if j is given, it must be numeric")
                       }
@@ -368,18 +381,23 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i == "ID") {
                       return(unlist(lapply(x@data$argos, function(a) a[['id']])))
                   } else {
-                      return(lapply(x[["argos"]], function(a)
-                                    {
-                                        dimp <- dim(a[["pressure"]]) # should always have pressure
-                                        np <- prod(dimp)
-                                        res <- a[[i]]
-                                        ## Ensure res has same dimensionality as pressure
-                                        if (is.null(res))
-                                            res <- rep(NA, np)
-                                        else if (length(res) < np)
-                                            res <- matrix(rep(res, np), nrow=dimp[1], ncol=dimp[2])
-                                        res
-                                    }))
+                      if (!missing(j)) {
+                          if (j != "byLevel")
+                              stop("[[\"", i, "\"]], j]] requires that j be \"byLevel\", not \"", j, "\"")
+                          return(lapply(x[["argos"]],
+                                        function(a) {
+                                            pressure <- a[["pressure"]]
+                                            if (is.matrix(pressure))
+                                                matrix(a[[i]], nrow=nrow(pressure), ncol=ncol(pressure))
+                                            else 
+                                                rep(a[[i]], length.out=length(pressure))
+                                        }))
+                      } else {
+                          return(lapply(x[["argos"]],
+                                        function(a) {
+                                            a[[i]]
+                                        }))
+                      }
                   }
               } else {
                   stop("the object type must be \"index\", \"profiles\", or \"argos\", but it is \"", type, "\"")

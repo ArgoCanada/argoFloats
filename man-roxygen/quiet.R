@@ -1,4 +1,4 @@
 #' @param quiet logical value, passed to [curl::curl_download()],
-#' that indicates whether to download silently.  Since some downloads
-#' can be slow, the default value is `quiet=FALSE`.
+#' that indicates whether to download without showing a progress
+#' bar. (Problems will still be reported, though.)
 

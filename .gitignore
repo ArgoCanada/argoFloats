@@ -1,3 +1,4 @@
+*_index.txt.gz
 *.rda
 *.nc
 *~
@@ -11,6 +12,5 @@
 .RData
 doc
 Meta
-test*.R
 marmap*.csv
 

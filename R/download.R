@@ -13,9 +13,10 @@
 #' @template retries
 #' @template debug
 #'
-#' @return String indicating the full pathname to the downloaded file.
+#' @return A character value indicating the full pathname to the downloaded file,
+#' or `NA`, if there was a problem with the download.
 #'
-#' @importFrom curl curl_download
+## @importFrom curl curl_download
 #' @importFrom utils capture.output unzip
 #'
 #' @export
@@ -24,6 +25,8 @@
 downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode="wb", quiet=FALSE,
                                 force=FALSE, retries=3, debug=0)
 {
+    if (!requireNamespace("curl", quietly=TRUE))
+        stop("must install.packages(\"curl\") for downloadWithRetries() to work")
     if (missing(url))
         stop("must specify url")
     if (length(destdir) > 1)
@@ -52,7 +55,7 @@ downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode=
             success <- FALSE
             for (trial in seq_len(1 + retries)) {
                 capture.output({
-                    t <- try(curl::curl_download(url=url, destfile=destination, quiet=quiet, mode=mode))
+                    t <- try(curl::curl_download(url=url, destfile=destination, quiet=quiet, mode=mode), silent=TRUE)
                 })
                 if (inherits(t, "try-error")) {
                     argoFloatsDebug(debug, "failed download from \"", url, "\" ", if (trial < (1+retries)) "(will try again)\n" else "(final attempt)\n", sep="")
@@ -62,8 +65,11 @@ downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode=
                     break
                 }
             }
-            if (!success)
-                stop("failed download '", url, "'\n  after ", retries, " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
+            if (!success) {
+                if (!quiet)
+                    message("failed download '", url, "'\n  after ", retries, " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
+                return(NA)
+            }
             if (1 == length(grep(".zip$", destfile[i]))) {
                 destinationClean <- gsub(".zip$", "", destination[i])
                 unzip(destination[i], exdir=destinationClean)

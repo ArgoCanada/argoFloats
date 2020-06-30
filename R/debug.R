@@ -101,7 +101,7 @@ argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=FALSE, uninden
         }
         flush.console()
     }
-    invisible()
+    invisible(NULL)
 }
 
 

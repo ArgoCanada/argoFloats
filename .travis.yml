@@ -1,7 +1,9 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
+warnings_are_errors: false
 cache: packages
+after_success: travis_wait 30 Rscript -e 'library(covr); codecov(type="all")'
 
 addons:
     apt:
@@ -18,4 +20,5 @@ r_packages:
     - ocedata
     - rgdal
     - sf
+    - covr
 

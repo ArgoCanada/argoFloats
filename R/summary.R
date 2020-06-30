@@ -12,7 +12,7 @@
 #' data(index)
 #' summary(index)
 #'
-#' @importFrom oce processingLogShow vectorShow
+## @importFrom oce processingLogShow vectorShow
 #' @importFrom methods callNextMethod
 #' @importFrom utils head
 #' @export
@@ -22,6 +22,8 @@ setMethod(f="summary",
           signature="argoFloats",
           definition=function(object, ...)
           {
+              if (!requireNamespace("oce", quietly=TRUE))
+                  stop("must install.packages(\"oce\") for summary() to work")
               cat("argoFloats summary\n------------------\n\n")
               cat("* type:        ", object@metadata$type, "\n", sep="")
               if (object@metadata$type == "index") {
@@ -65,6 +67,6 @@ setMethod(f="summary",
                   cat("* hint: access these objects with e.g. x[[\"argos\"]]\n")
               }
               oce::processingLogShow(object)
-              invisible()
+              invisible(NULL)
           })
 

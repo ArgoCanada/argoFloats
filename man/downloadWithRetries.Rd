@@ -42,8 +42,8 @@ it makes sense to use this default in all instances.  See the
 documentation for \code{\link[curl:curl_download]{curl::curl_download()}}.}
 
 \item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download silently.  Since some downloads
-can be slow, the default value is \code{quiet=FALSE}.}
+that indicates whether to download without showing a progress
+bar. (Problems will still be reported, though.)}
 
 \item{force}{a logical value that indicates whether to force a file
 download, even if the destination file already exists.}
@@ -58,7 +58,8 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-String indicating the full pathname to the downloaded file.
+A character value indicating the full pathname to the downloaded file,
+or \code{NA}, if there was a problem with the download.
 }
 \description{
 General function for downloading and caching a dataset.

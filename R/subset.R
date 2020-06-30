@@ -37,7 +37,7 @@
 #'
 #' 5. A vector or list named `parameter` that holds character values that
 #' specify the names of measured parameters to keep. See section 3.3 of the
-#' Argo User's Manual, V3.2 (Carval et al. 2015) for a list of parameters.
+#' Argo User's Manual, V3.3 (Carval et al. 2019) for a list of parameters.
 #' See example 5.
 #'
 #' 6. A list named `time` that has elements `from` and `to` that are POSIXt
@@ -150,7 +150,7 @@
 #'
 #' # Example 8: subset to a specific ID
 #' \dontrun{
-#' ai <- getIndex(filenam='merged', destdir = '~/data/argo')
+#' ai <- getIndex(filename='merged', destdir = '~/data/argo')
 #' index9 <- subset(ai, ID='1900722') }
 #'
 #' # Example 9: subset data to only include deep argo
@@ -189,9 +189,9 @@
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
-#' @importFrom oce geodDist
+## @importFrom oce geodDist
 ## @importFrom sp point.in.polygon
-#' @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
+## @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
 #' @export
 setMethod(f="subset",
           signature="argoFloats",
@@ -214,7 +214,9 @@ setMethod(f="subset",
                           stop("In subset,argoFloats-method() : 'circle' must be a list containing 'longitude', 'latitude' and 'radius'.")
                       if (3 != sum(c("longitude", "latitude", "radius") %in% sort(names(circle))))
                           stop("In subset,argoFloats-method() : 'circle' must be a list containing 'longitude', 'latitude' and 'radius'")
-                      dist <- geodDist(x[["longitude"]], x[["latitude"]], circle$longitude, circle$latitude)
+                      if (!requireNamespace("oce", quietly=TRUE))
+                          stop("must install.packages(\"oce\") to subset by circle")
+                      dist <- oce::geodDist(x[["longitude"]], x[["latitude"]], circle$longitude, circle$latitude)
                       keep <- dist < circle$radius
                       keep[is.na(keep)] <- FALSE
                       x@data$index <- x@data$index[keep, ]
@@ -248,6 +250,9 @@ setMethod(f="subset",
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="polygon") {
+                      if (!requireNamespace("sf", quietly=TRUE))
+                          stop("must install.packages(\"sf\") for subset() by polygon to work")
+
                       polygon <- dots[[1]]
                       if(!is.list(dots[1]))
                           stop("In subset,argoFloats-method() : 'polygon' must be a list")
@@ -280,6 +285,8 @@ setMethod(f="subset",
                       ##
                       ## See https://github.com/ArgoCanada/argoFloats/issues/86
                       ok <- is.finite(alon) & is.finite(alat)
+                      if (!requireNamespace("sf", quietly=TRUE))
+                          stop("must install sf package for subset(...,polygon,...) to this to work")
                       Polygon <- sf::st_polygon(list(outer=cbind(plon, plat, rep(0, length(plon)))))
                       ## DOES NOT WORK (REQUIRES OTHER SOFTWARE??): Polygon <- sf::st_make_valid(Polygon)
                       if (!is.finite(sf::st_is_valid(Polygon))) {

@@ -57,7 +57,7 @@ and the first point is pasted onto the end, to close it.
 See example 4.
 \item A vector or list named \code{parameter} that holds character values that
 specify the names of measured parameters to keep. See section 3.3 of the
-Argo User's Manual, V3.2 (Carval et al. 2015) for a list of parameters.
+Argo User's Manual, V3.3 (Carval et al. 2019) for a list of parameters.
 See example 5.
 \item A list named \code{time} that has elements \code{from} and \code{to} that are POSIXt
 times that were created with eg. \code{\link[=POSIXct]{POSIXct()}}, with \code{tz="UTC"} to match
@@ -146,7 +146,7 @@ index7 <- subset(index, institution="ME")
 
 # Example 8: subset to a specific ID
 \dontrun{
-ai <- getIndex(filenam='merged', destdir = '~/data/argo')
+ai <- getIndex(filename='merged', destdir = '~/data/argo')
 index9 <- subset(ai, ID='1900722') }
 
 # Example 9: subset data to only include deep argo

@@ -9,7 +9,8 @@ getProfiles(
   destdir = NULL,
   force = FALSE,
   retries = 3,
-  quiet = FALSE,
+  skip = TRUE,
+  quiet = TRUE,
   debug = 0
 )
 }
@@ -27,9 +28,15 @@ download, even if the destination file already exists.}
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
 
+\item{skip}{A logical value indicating whether to skip over netcdf
+files that cannot be downloaded from the server.  This is \code{TRUE} by
+default, to allow \code{\link[=getProfiles]{getProfiles()}} to handle out-of-date indices
+without stopping when it tries to download netcdf files that are no
+longer available.}
+
 \item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download silently.  Since some downloads
-can be slow, the default value is \code{quiet=FALSE}.}
+that indicates whether to download without showing a progress
+bar. (Problems will still be reported, though.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
@@ -38,8 +45,12 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-An object of class \code{\linkS4class{argoFloats}} with type=\code{"profiles"}, which
-is suitable as the first argument of \code{\link[=readProfiles]{readProfiles()}}.
+An object of class \code{\linkS4class{argoFloats}} with type=\code{"profiles"}, the
+\code{data} slot of which contains two items: \code{url},
+which holds the URLs from which the netcdf
+files were downloaded, and \code{file}, which
+holds the path names of the downloaded files; the latter
+is used by \code{\link[=readProfiles]{readProfiles()}}.
 }
 \description{
 This takes an index constructed with \code{\link[=getIndex]{getIndex()}}, possibly
@@ -48,8 +59,7 @@ a list of files to download from the server named in the index.
 Then these files are downloaded to the \code{destdir} directory,
 using filenames inferred from the source filenames. The
 value returned by \code{\link[=getProfiles]{getProfiles()}} is suitable for use
-by \code{\link[=readProfiles]{readProfiles()}}, and an example of this is given
-in the documentation for \code{\link[=readProfiles]{readProfiles()}}.
+by \code{\link[=readProfiles]{readProfiles()}}.
 }
 \details{
 It should be noted that the constructed server URL follows
@@ -58,16 +68,14 @@ so if some other server is used, the URL may be wrong, leading
 to an error.  Similarly, if the patterns on these two
 servers change, then \code{\link[=getProfiles]{getProfiles()}} will fail. Users who
 encounter such problems are requested to report them
-to the authors; in a pinch, they may try altering the
-conditional block that follows the line\preformatted{## NB. the USGODAE and IFREMER servers are set up differently.
-}
+to the authors.
 
-in the source-code file named \code{R/get.R}.
-
-If the data file cannot be downloaded after multiple trials, an
-error is issued, with a hint that running \code{\link[=getIndex]{getIndex()}} again
-might help, in case the filename on the server has changed since
-the index was last downloaded by \code{\link[=getIndex]{getIndex()}}.
+If a particular data file cannot be downloaded after multiple trials, then
+the behaviour depends on the value of the \code{skip} argument.  If that is
+\code{TRUE} (the default) then a \code{NA} value is inserted in the corresponding
+spot in the return value, but if it is \code{FALSE}, then an error is reported.
+Note that \code{\link[=readProfiles]{readProfiles()}} skips over any such \code{NA} entries,
+while reporting their positions within \code{index}.
 }
 \examples{
 # Download some Argo data files.

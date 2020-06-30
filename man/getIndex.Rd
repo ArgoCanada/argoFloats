@@ -8,7 +8,7 @@ getIndex(
   filename = "argo",
   server = "auto",
   destdir = "~/data/argo",
-  age = 7,
+  age = 1,
   quiet = FALSE,
   debug = 0
 )
@@ -43,10 +43,10 @@ File clutter is reduced by creating a top-level directory called
 
 \item{age}{numeric value indicating how old a downloaded file
 must be (in days), for it to be considered out-of-date.  The
-default, \code{age=7}, limits downloads to once per week, as a way
+default, \code{age=1}, limits downloads to once per day, as a way
 to avoid slowing down a workflow with a download that might take
-a sizable fraction of an hour. Set \code{age=0} to force a download,
-regardless of the file age.}
+a minute or so. Note that setting \code{age=0} will force a new
+download, regardless of the age of the local file.}
 
 \item{quiet}{silence some progress indicators.  The default
 is to show such indicators.}
@@ -62,9 +62,11 @@ An object of class \code{\linkS4class{argoFloats}} with type=\code{"index"}, whi
 is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 }
 \description{
-This function gets an index of available Argo float profiles, either
-by downloading information from a data repository or by reusing an index
-(stored as an \code{.rda} file) that was prepared by a recent call to the function.
+This function gets an index of available Argo float profiles, typically
+for later use as the first argument to \code{\link[=getProfiles]{getProfiles()}}. The work is done
+either by downloading information from a data repository or by reusing an existing
+index (packaged within an \code{.rda} file) that was prepared by a recent call to the
+This choice is made behind the scenes, controlled by the \code{age} argument.
 }
 \details{
 The first step is to construct a URL for downloading, based on the
@@ -82,7 +84,9 @@ function, holds a list named \code{index} that holds following elements:
 \itemize{
 \item \code{ftpRoot}, the FTP root stored in the header of the source \code{file}
 (see next paragraph).
-\item \code{server}, the argument provided here.
+\item \code{server}, the URL at which the index was found, and from
+which \code{\link[=getProfiles]{getProfiles()}} can construct URLs from which to
+download the netcdf files for individual float profils.
 \item \code{filename}, the argument provided here.
 \item \code{header}, the preliminary lines in the source file that start
 with the \verb{#} character.
@@ -94,21 +98,24 @@ are set based on the authors' inspection of a downloaded file.
 }
 
 Some expertise is required in deciding on the value for the
-\code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of February 2020, the
-FTP site \verb{ftp://usgodae.org/pub/outgoing/argo} contains multiple
-files that appear to be indices.  These are listed as the left-hand
-column in the following table. The middle column lists nicknames
-for the some files, which can be provided as the \code{file} argument,
+\code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of June 2020, the
+FTP sites
+\url{ftp://usgodae.org/pub/outgoing/argo}
+and
+\url{ftp://ftp.ifremer.fr/ifremer/argo}
+contain multiple index files, as listed in the left-hand column of the
+following table. The middle column lists nicknames
+for some of the files.  These can be provided as the \code{file} argument,
 as alternatives to the full names.
-The right-hand column is a brief
-description of the file contents, inferred by examination
-of the file.  Note that there some files on the server
-have names similar to those given below, but ending in \code{.txt} instead
-of \code{.txt.gz}, but these files take longer to download and
-seem to be equivalent to the \code{.gz} versions, so \code{\link[=getIndex]{getIndex()}} is
-designed to work with them.  Also, note that, as of April 2020,
-the usgodaee server does not supply \code{"synthetic"} files, but
-the ifremer server does.
+The right-hand column describes the file contents.
+Note that the servers also provide files with names similar to those
+given in the table, but ending in \code{.txt}.  These are uncompressed
+equivalents of the \code{.gz} files that offer no advantage and take
+longer to download, so \code{\link[=getIndex]{getIndex()}} is not designed to work with them.
+Finally, note that, as of June 2020,
+the usgodae server does not supply \code{"synthetic"} files, but
+the ifremer server does; this is typically not a concern to users,
+because \code{getIndex} searches both servers for index files.
 \tabular{lll}{
 \emph{File Name}                           \tab \emph{Nickname}              \tab \emph{Contents}\cr
 \code{ar_greylist.txt}                     \tab -                       \tab Suspicious/malfunctioning floats\cr

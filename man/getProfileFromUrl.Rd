@@ -36,14 +36,17 @@ download, even if the destination file already exists.}
 if the first attempt fails.}
 
 \item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download silently.  Since some downloads
-can be slow, the default value is \code{quiet=FALSE}.}
+that indicates whether to download without showing a progress
+bar. (Problems will still be reported, though.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
 will print debugging information.  If a function call fails, the
 first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
+}
+\value{
+A character value, if the file could be downloaded, or \code{NULL} otherwise.
 }
 \description{
 Get Data for an Argo Float Profile
@@ -64,12 +67,14 @@ plot(argo, which=c(1, 4, 6, 5))
 index <- getIndex()
 lon0 <- -59.9149
 lat0 <- 43.9337
-dist <- geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
-w <- which.min(dist)
-url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
-fileSable <- getProfileFromUrl(url=url)
-argoSable <- read.oce(fileSable)
-plot(argoSable, which=c(1, 4, 6, 5))
+if (requireNamespace("oce")) {
+    dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
+    w <- which.min(dist)
+    url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
+    fileSable <- getProfileFromUrl(url=url)
+    argoSable <- read.oce(fileSable)
+    plot(argoSable, which=c(1, 4, 6, 5))
+}
 }
 
 }

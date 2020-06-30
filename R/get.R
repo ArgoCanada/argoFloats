@@ -12,6 +12,7 @@
 #' @template quiet
 #' @template debug
 #'
+#' @return A character value, if the file could be downloaded, or `NULL` otherwise.
 #' @examples
 #'\dontrun{
 #' # These examples assume that the ~/data/argo directory exists.
@@ -28,12 +29,14 @@
 #' index <- getIndex()
 #' lon0 <- -59.9149
 #' lat0 <- 43.9337
-#' dist <- geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
-#' w <- which.min(dist)
-#' url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
-#' fileSable <- getProfileFromUrl(url=url)
-#' argoSable <- read.oce(fileSable)
-#' plot(argoSable, which=c(1, 4, 6, 5))
+#' if (requireNamespace("oce")) {
+#'     dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
+#'     w <- which.min(dist)
+#'     url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
+#'     fileSable <- getProfileFromUrl(url=url)
+#'     argoSable <- read.oce(fileSable)
+#'     plot(argoSable, which=c(1, 4, 6, 5))
+#' }
 #'}
 #'
 #' @export
@@ -44,25 +47,29 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 {
     argoFloatsDebug(debug,  "getProfileFromUrl(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
                     if (missing(destfile)) "(missing)" else destfile, "\", ...) {", sep="", "\n", style="bold", unindent=1)
-    ## If the ID starts with ftp://, thn we just download the file directly, ignoring server
+    if (length(url) != 1)
+        stop("url must be of length 1, not of length ", length(url))
+    ## If the ID starts with ftp://, then we just download the file directly, ignoring server
     if (!grepl("^ftp://", url))
         stop("the url must start with \"ftp://\" -- contact authors if you need this limitation to be lifted")
     if (is.null(destfile)) {
         destfile <- gsub(".*/(.*).nc", "\\1.nc", url)
         argoFloatsDebug(debug,  "inferred destfile=\"", destfile, "\" from url.\n", sep="")
     }
-    downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode="wb", quiet=quiet,
-                        force=force, retries=retries, debug=debug-1)
+    res <- downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode="wb", quiet=quiet,
+                               force=force, retries=retries, debug=debug-1)
     argoFloatsDebug(debug,  "} # getProfileFromUrl()", sep="", "\n", style="bold", unindent=1)
-    paste0(destdir, "/", destfile)
+    if (is.na(res)) res else paste0(destdir, "/", destfile)
 }
 
 
 #' Get an Index of Available Argo Float Profiles
 #'
-#' This function gets an index of available Argo float profiles, either
-#' by downloading information from a data repository or by reusing an index
-#' (stored as an `.rda` file) that was prepared by a recent call to the function.
+#' This function gets an index of available Argo float profiles, typically
+#' for later use as the first argument to [getProfiles()]. The work is done
+#' either by downloading information from a data repository or by reusing an existing
+#' index (packaged within an `.rda` file) that was prepared by a recent call to the
+#' This choice is made behind the scenes, controlled by the `age` argument.
 #'
 #' The first step is to construct a URL for downloading, based on the
 #' `url` and `file` arguments. That URL will be a string ending in `.gz`,
@@ -78,7 +85,9 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' function, holds a list named `index` that holds following elements:
 #' * `ftpRoot`, the FTP root stored in the header of the source `file`
 #'    (see next paragraph).
-#' * `server`, the argument provided here.
+#' * `server`, the URL at which the index was found, and from
+#'    which [getProfiles()] can construct URLs from which to
+#'    download the netcdf files for individual float profils.
 #' * `filename`, the argument provided here.
 #' * `header`, the preliminary lines in the source file that start
 #'    with the `#` character.
@@ -89,21 +98,24 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #'    are set based on the authors' inspection of a downloaded file.
 #'
 #' Some expertise is required in deciding on the value for the
-#' `file` argument to [getIndex()].  As of February 2020, the
-#' FTP site `ftp://usgodae.org/pub/outgoing/argo` contains multiple
-#' files that appear to be indices.  These are listed as the left-hand
-#' column in the following table. The middle column lists nicknames
-#' for the some files, which can be provided as the `file` argument,
+#' `file` argument to [getIndex()].  As of June 2020, the
+#' FTP sites
+#' \url{ftp://usgodae.org/pub/outgoing/argo}
+#' and
+#' \url{ftp://ftp.ifremer.fr/ifremer/argo}
+#' contain multiple index files, as listed in the left-hand column of the
+#' following table. The middle column lists nicknames
+#' for some of the files.  These can be provided as the `file` argument,
 #' as alternatives to the full names.
-#' The right-hand column is a brief
-#' description of the file contents, inferred by examination
-#' of the file.  Note that there some files on the server
-#' have names similar to those given below, but ending in `.txt` instead
-#' of `.txt.gz`, but these files take longer to download and
-#' seem to be equivalent to the `.gz` versions, so [getIndex()] is
-#' designed to work with them.  Also, note that, as of April 2020,
-#' the usgodaee server does not supply `"synthetic"` files, but
-#' the ifremer server does.
+#' The right-hand column describes the file contents.
+#' Note that the servers also provide files with names similar to those
+#' given in the table, but ending in `.txt`.  These are uncompressed
+#' equivalents of the `.gz` files that offer no advantage and take
+#' longer to download, so [getIndex()] is not designed to work with them.
+#' Finally, note that, as of June 2020,
+#' the usgodae server does not supply `"synthetic"` files, but
+#' the ifremer server does; this is typically not a concern to users,
+#' because `getIndex` searches both servers for index files.
 #' \tabular{lll}{
 #' *File Name*                           \tab *Nickname*              \tab *Contents*\cr
 #' `ar_greylist.txt`                     \tab -                       \tab Suspicious/malfunctioning floats\cr
@@ -147,13 +159,14 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #'
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
-#' default, `age=7`, limits downloads to once per week, as a way
+#' default, `age=1`, limits downloads to once per day, as a way
 #' to avoid slowing down a workflow with a download that might take
-#' a sizable fraction of an hour. Set `age=0` to force a download,
-#' regardless of the file age.
+#' a minute or so. Note that setting `age=0` will force a new
+#' download, regardless of the age of the local file.
 #'
 #' @param quiet silence some progress indicators.  The default
 #' is to show such indicators.
+#'
 #' @template debug
 #'
 #' @return An object of class [`argoFloats-class`] with type=`"index"`, which
@@ -170,16 +183,20 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' @author Dan Kelley
 #'
 #' @importFrom utils read.csv tail
-#' @importFrom curl curl_download
-#' @importFrom oce processingLogAppend
+## @importFrom curl curl_download
+## @importFrom oce processingLogAppend
 #' @export
 getIndex <- function(filename="argo",
                      server="auto",
                      destdir="~/data/argo",
-                     age=7,
+                     age=1,
                      quiet=FALSE,
                      debug=0)
 {
+    if (!requireNamespace("oce", quietly=TRUE))
+        stop("must install.packages(\"oce\"), for getIndex() to work")
+    if (!requireNamespace("curl", quietly=TRUE))
+        stop("must install.packages(\"curl\") for getIndex() to work")
     ## Sample file
     ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
     ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
@@ -231,7 +248,7 @@ getIndex <- function(filename="argo",
     destfileRda <- gsub(".txt$", ".rda", destfile)
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
-    res@metadata$filename <- destfileRda
+    #res@metadata$filename <- destfileRda
 
     ## See if we have an .rda file that is sufficiently youthful.
     if (file.exists(destfileRda)) {
@@ -245,7 +262,7 @@ getIndex <- function(filename="argo",
             load(destfileRda)
             argoFloatsDebug(debug, "Finished loading '", destfileRda, "'.\n", sep="")
             res@metadata$server <- server[1]
-            res@metadata$filename <- filename
+            #res@metadata$filename <- filename
             res@metadata$destdir <- destdir
             res@metadata$destfileRda <- destfileRda
             res@metadata$ftpRoot <- argoFloatsIndex[["ftpRoot"]]
@@ -258,36 +275,42 @@ getIndex <- function(filename="argo",
     ## We need to download data. We do that to a temporary file, because we will be saving
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
-    downloadSuccess <- FALSE
     failedDownloads <- 0
+    iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
     for (iurl in seq_along(url)) {
         argoFloatsDebug(debug, "About to download temporary index file\n", sep="")
         argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
         argoFloatsDebug(debug, "from\n", sep="", showTime=FALSE)
         argoFloatsDebug(debug, "    '", url[iurl], "'\n", sep="", showTime=FALSE)
-        capture.output({
-            status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, quiet=quiet, mode="wb"), silent=!TRUE)
-        })
+        status <- try(curl::curl_download(url=url[iurl],
+                                          destfile=destfileTemp,
+                                          quiet=quiet,
+                                          mode="wb"))
+        ## status <- capture.output(try(curl::curl_download(url=url[iurl],
+        ##                                                  destfile=destfileTemp,
+        ##                                                  quiet=quiet,
+        ##                                                  mode="wb"),
+        ##                              silent=!TRUE),
+        ##                          type="message")
         if (!inherits(status, "try-error")) {
             if (failedDownloads > 0)
-                message('Successfully downloaded index file from server "', server[iurl], '".\n')
-            server <- server[iurl]
-            downloadSuccess <- TRUE
+                message("Downloaded index from ", server[iurl])
+            iurlSuccess <- iurl
             break                      # the download worked
         }
         if (iurl == length(url))
-            message('Cannot download the index file from the server "', server[iurl], '"\n')
+            message("Can't download index from ", server[iurl])
         else
-            message('Cannot download the index file from server "', server[iurl], '", so moving to the next possible server\n')
+            message("Can't download index from ", server[iurl], ", so moving to next server")
         failedDownloads <- failedDownloads + 1
     }
-    if (!downloadSuccess)
-        stop("Could not download the index file from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
+    if (0 == iurlSuccess)
+        stop("Could not download index from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
     argoFloatsDebug(debug, "About to read header.\n", sep="")
     first <- readLines(destfileTemp, 100)
-    hash <- which(grepl("^#", first))
     ## Typically, length(ftpRoot) is 2
     ftpRoot <- gsub("^[^:]*:[ ]*(.*)$", "\\1", first[which(grepl("^# FTP", first))])
+    hash <- which(grepl("^#", first))
     header <- first[hash]
     lastHash <- tail(hash, 1)
     names <- strsplit(first[1 + lastHash], ",")[[1]]
@@ -308,12 +331,13 @@ getIndex <- function(filename="argo",
     index$date <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")
     index$date_update <- as.POSIXct(as.character(index$date_update), format="%Y%m%d%H%M%S",tz="UTC")
     argoFloatsDebug(debug,  "saving cache file '", destfileRda, "'.\n", sep="")
-    argoFloatsIndex <- list(ftpRoot=ftpRoot, server=server, filename=filename, header=header, index=index)
+    argoFloatsIndex <- list(server=server[iurlSuccess], header=header, index=index)
     save(argoFloatsIndex, file=destfileRda)
     argoFloatsDebug(debug,  "removing temporary file '", destfileTemp, "'.\n", sep="")
     unlink(destfileTemp)
-    res@metadata$server <- server
-    res@metadata$filename <- filename
+    res@metadata$server <- server[iurlSuccess]
+    res@metadata$url <- url[iurlSuccess]
+    #res@metadata$filename <- filename[iurlSuccess]
     res@metadata$destfileRda <- destfileRda
     res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
     res@metadata$header <- argoFloatsIndex$header
@@ -336,8 +360,7 @@ getIndex <- function(filename="argo",
 #' Then these files are downloaded to the `destdir` directory,
 #' using filenames inferred from the source filenames. The
 #' value returned by [getProfiles()] is suitable for use
-#' by [readProfiles()], and an example of this is given
-#' in the documentation for [readProfiles()].
+#' by [readProfiles()].
 #'
 #' It should be noted that the constructed server URL follows
 #' a different pattern on the usgodae an ifremer servers, and
@@ -345,31 +368,38 @@ getIndex <- function(filename="argo",
 #' to an error.  Similarly, if the patterns on these two
 #' servers change, then [getProfiles()] will fail. Users who
 #' encounter such problems are requested to report them
-#' to the authors; in a pinch, they may try altering the
-#' conditional block that follows the line
-#' ```
-#' ## NB. the USGODAE and IFREMER servers are set up differently.
-#' ```
-#' in the source-code file named `R/get.R`.
+#' to the authors.
 #'
-#' If the data file cannot be downloaded after multiple trials, an
-#' error is issued, with a hint that running [getIndex()] again
-#' might help, in case the filename on the server has changed since
-#' the index was last downloaded by [getIndex()].
-#'
+#' If a particular data file cannot be downloaded after multiple trials, then
+#' the behaviour depends on the value of the `skip` argument.  If that is
+#' `TRUE` (the default) then a `NA` value is inserted in the corresponding
+#' spot in the return value, but if it is `FALSE`, then an error is reported.
+#' Note that [readProfiles()] skips over any such `NA` entries,
+#' while reporting their positions within `index`.
 #'
 #' @param index an [`argoFloats-class`] object of type `"index"`, as created
 #' by [getIndex()].
+#'
 #' @param destdir character value naming the directory into which to store the
 #' downloaded Argo files, or `NULL` (the default) to use the value of
 #' `destdir` that was provided in the [getIndex()] call that created `index`.
+#'
 #' @template force
+#'
 #' @template retries
+#'
+#' @template skip
+#'
 #' @template quiet
+#'
 #' @template debug
 #'
-#' @return An object of class [`argoFloats-class`] with type=`"profiles"`, which
-#' is suitable as the first argument of [readProfiles()].
+#' @return An object of class [`argoFloats-class`] with type=`"profiles"`, the
+#' `data` slot of which contains two items: `url`,
+#' which holds the URLs from which the netcdf
+#' files were downloaded, and `file`, which
+#' holds the path names of the downloaded files; the latter
+#' is used by [readProfiles()].
 #'
 #' @examples
 #' # Download some Argo data files.
@@ -383,11 +413,13 @@ getIndex <- function(filename="argo",
 #'
 #' @author Dan Kelley
 #'
-#' @importFrom oce processingLogAppend vectorShow
+## @importFrom oce processingLogAppend vectorShow
 #'
 #' @export
-getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE, debug=0)
+getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, skip=TRUE, quiet=TRUE, debug=0)
 {
+    if (!requireNamespace("oce", quietly=TRUE))
+        stop("must install.packages(\"oce\") for getProfiles() to work")
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
         stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
@@ -402,8 +434,8 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE
         file <- NULL
     } else {
         file <- rep("", n)
-        argoFloatsDebug(debug, vectorShow(index[["ftpRoot"]]))
-        argoFloatsDebug(debug, vectorShow(index[["file"]]))
+        argoFloatsDebug(debug, oce::vectorShow(index[["ftpRoot"]]))
+        argoFloatsDebug(debug, oce::vectorShow(index[["file"]]))
         ## The Construction of the remote filename is tricky was changed on 2020-04-30. Previously,
         ## we used "ftpRoot", inferred from the "# FTP" line in the header in the index file.
         ## However, as discussed at https://github.com/ArgoCanada/argoFloats/issues/82,
@@ -428,14 +460,19 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, quiet=FALSE
             warning("guessing on URL form (e.g. \"", urls[1], "\"), because server is neither usgodae.org nor ifremer.fr\n", immediate.=TRUE)
         }
         argoFloatsDebug(debug, oce::vectorShow(urls))
+        file <- vector("character", length(urls))
         for (i in seq_along(urls)) {
-            file[i] <- getProfileFromUrl(urls[i], destdir=destdir,
-                                         force=force, retries=retries, quiet=quiet, debug=debug)
+            name <- getProfileFromUrl(urls[i], destdir=destdir,
+                                      force=force, retries=retries, quiet=quiet, debug=debug)
+            if (is.na(name) && !skip)
+                stop("cannot download file '", urls[i], "', which is considered a failure, since skip=FALSE")
+            file[i] <- name
         }
     }
     res@metadata$destdir <- destdir
+    res@data$url <- urls
     res@data$file <- file
-    res@processingLog <- processingLogAppend(res@processingLog, "getProfiles(index, ...)")
+    res@processingLog <- oce::processingLogAppend(res@processingLog, "getProfiles(index, ...)")
     argoFloatsDebug(debug,  "} # getProfiles()\n", style="bold", showTime=FALSE, unindent=1)
     res
 }
