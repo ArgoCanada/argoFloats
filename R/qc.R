@@ -120,12 +120,13 @@ showQCTests <- function(x)
         return(invisible(NULL))
     if ("HISTORY_QCTEST" %in% mnames)
         tests <- x[['HISTORY_QCTEST']]
-    else if ("historyAction" %in% mnames)
+    else if ("historyQCTest" %in% mnames)
         tests <- x[['historyQCTest']]
     else
-        return(invisible(NULL))
-    if (is.null(tests))
-        return(invisible(NULL))
+        stop("No Quality Control Tests performed.")
+        #return(invisible(NULL))
+    #if (is.null(tests))
+        #return(invisible(NULL))
     ## Match strings within 'action' to find the tests that were performed
     perf <- tests[1, which(action == "QCP$")]
     ## Match strings within 'action' to find the tests that failed
