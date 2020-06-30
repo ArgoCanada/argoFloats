@@ -117,10 +117,11 @@ showQCTests <- function(x)
     else if ("historyAction" %in% mnames)
         action <- x[['historyAction']]
     else
-        return(invisible(NULL))
+        cat("No Quality Control tests were performed")
+        #return(invisible(NULL))
     if ("HISTORY_QCTEST" %in% mnames)
         tests <- x[['HISTORY_QCTEST']]
-    else if ("historyAction" %in% mnames)
+    else if ("historyQCTest" %in% mnames)
         tests <- x[['historyQCTest']]
     else
         return(invisible(NULL))
