@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A Package for Processing Argo Float Profiles — argoFloats-package • argoFloats</title>
+<title>Show QC test results for an argo object — showQCTests • argoFloats</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,19 @@
 
 
 
-<meta property="og:title" content="A Package for Processing Argo Float Profiles — argoFloats-package" />
-<meta property="og:description" content="The argoFloats package provides tools for downloading and processing Argo profile data.
-It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
-also to sift these profiles based on ID, time, geography, variable, institution, and ocean.
-Once downloaded, such datasets can be analysed within argoFloats or using other R tools
-and packages." />
+<meta property="og:title" content="Show QC test results for an argo object — showQCTests" />
+<meta property="og:description" content="showQCTests print a summary of the quality-control (QC) tests
+(if any) that were performed on an argo profile.  It uses
+hexToNibble() to decode the hexadecimal  values that may
+be stored in historyQCTest and historyAction within
+the metadata slot of an individual argo profile, as read
+directly with oce::read.argo() or indirectly with
+readProfiles(), the latter being illustrated in the
+&amp;#8220;Examples&amp;#8221; secton below.
+The format used in historyQCTest and historyAction
+is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
+of Carval et al. (2019), in which they are called
+HISTORY_QC_TEST and HISTORY_ACTION, respectively." />
 
 
 
@@ -118,61 +125,55 @@ and packages." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A Package for Processing Argo Float Profiles</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/AllClass.R'><code>R/AllClass.R</code></a></small>
-    <div class="hidden name"><code>argoFloats-package.Rd</code></div>
+    <h1>Show QC test results for an argo object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/qc.R'><code>R/qc.R</code></a></small>
+    <div class="hidden name"><code>showQCTests.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data.
-It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
-also to sift these profiles based on ID, time, geography, variable, institution, and ocean.
-Once downloaded, such datasets can be analysed within <code>argoFloats</code> or using other R tools
-and packages.</p>
+    <p><code>showQCTests</code> print a summary of the quality-control (QC) tests
+(if any) that were performed on an argo profile.  It uses
+<code><a href='hexToNibble.html'>hexToNibble()</a></code> to decode the hexadecimal  values that may
+be stored in <code>historyQCTest</code> and <code>historyAction</code> within
+the <code>metadata</code> slot of an individual argo profile, as read
+directly with <code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>oce::read.argo()</a></code> or indirectly with
+<code><a href='readProfiles.html'>readProfiles()</a></code>, the latter being illustrated in the
+&#8220;Examples&#8221; secton below.
+The format used in <code>historyQCTest</code> and <code>historyAction</code>
+is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
+of Carval et al. (2019), in which they are called
+<code>HISTORY_QC_TEST</code> and <code>HISTORY_ACTION</code>, respectively.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>showQCTests</span>(<span class='no'>x</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>An <a href='https://rdrr.io/pkg/oce/man/argo-class.html'>oce::argo</a> object, as read directly with <code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>oce::read.argo()</a></code>
+or as extracted from the return value of a call to <code><a href='readProfiles.html'>readProfiles()</a></code>, as
+in the &#8220;Examples&#8221;.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The development website is <a href='https://github.com/ArgoCanada/argoFloats'>https://github.com/ArgoCanada/argoFloats</a>, and
-<a href='https://argocanada.github.io/argoFloats/index.html'>https://argocanada.github.io/argoFloats/index.html</a> provides a simpler view
-that may be more helpful to most users.</p>
-<p>The sketch given below illustrates the typical workflow with the package, with
-descriptions of the steps on the left, and names of the relevant functions
-on the right.</p>
-<p><img src='figures/workflow.png' width=455px alt="Figure: workflow.png" /></p>
-<p>As illustrated, the central functions are named
-<code><a href='getIndex.html'>getIndex()</a></code>, <a href='subset-argoFloats-method.html'>subset()</a>,
-<code><a href='getProfiles.html'>getProfiles()</a></code>, and <code><a href='readProfiles.html'>readProfiles()</a></code>, and so a good way to
-get familiar with the package is to read their documentation entries
-and try the examples provided therein.  Some built-in datasets are provided
-for concreteness of illustration and for testing, but actual work always
-starts with a call to <code><a href='getIndex.html'>getIndex()</a></code> to download a full index of float data.</p>
-<p>In addition to these functions, <code>argoFloats</code> also provides
-specialized versions of R "generic" functions, as follows.</p><ol>
-<li><p><code>[[</code> provides a way to extract items from <code>argoFloats</code> objects,
-without getting lost in the details of storage.
-See <code><a href='sub-sub-argoFloats-method.html'>[[,argoFloats-method</a></code> for details.
-(Note that <code>[[&lt;-</code> is <em>not</em> specialized, since the
-user is highly discouraged from altering values within <code>argoFloats</code>
-objects.)</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/plot.html'>plot()</a></code> provides simple ways to plot aspects of <code><a href='argoFloats-class.html'>argoFloats</a></code> objects.
-See <code><a href='plot-argoFloats-method.html'>plot,argoFloats-method()</a></code> for details.</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/summary.html'>summary()</a></code> displays key features of <code><a href='argoFloats-class.html'>argoFloats</a></code> objects.
-See <code><a href='summary-argoFloats-method.html'>summary,argoFloats-method()</a></code> for details.</p></li>
-<li><p><code>show()</code> provides a one-line sketch of <code><a href='argoFloats-class.html'>argoFloats</a></code> objects.
-See <code><a href='argoFloats-methods.html'>show,argoFloats-method()</a></code> for details.</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/merge.html'>merge()</a></code> combines multiple index objects into a new index object.</p></li>
-</ol>
+    <p>This function returns nothing; its action is in the printing
+of results.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-<p>It should be noted that the profile elements within <code>argoFloats</code> objects are stored as
-in the form of <code>argo</code> objects as defined by the <code>oce</code> package.
-This means that <code>argoFloats</code> users can rely on
-a wide variety of <code>oce</code> functions to analyse their data.
-The full suite of R tools is also available, and the vastness of
-that suite explains why <code>argoFloats</code> is written in R.</p>
+    <p>Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+<a href='https://doi.org/10.13155/29825'>https://doi.org/10.13155/29825</a>.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
+<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"D4900785_048.nc"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"argoFloats"</span>))
+<span class='fu'>showQCTests</span>(<span class='no'>a</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt; Tests performed: 1 2 3 4 5 6 7 8 9 11 12 13 14 15 16 17 18 19
+#&gt; Tests failed:    </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

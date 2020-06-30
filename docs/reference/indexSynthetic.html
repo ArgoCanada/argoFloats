@@ -46,7 +46,11 @@ Bahamas, as of 2020 May 15, using the following code.library(argoFloats)
 indexAll &amp;lt;- getIndex(&quot;synthetic&quot;)
 indexSynthetic &amp;lt;- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-" />
+
+This &quot;synthetic&quot; type of index is a replacement for the older &quot;merged&quot; index.  See
+http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC
+for more on the data file format, reasons for the change, and timetable for transition
+from &quot;merged&quot;." />
 
 
 
@@ -133,18 +137,29 @@ Bahamas, as of 2020 May 15, using the following code.</p><pre><span class='fu'><
 <span class='no'>indexSynthetic</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>indexAll</span>,
     <span class='kw'>circle</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span>-<span class='fl'>77.06</span>, <span class='kw'>latitude</span><span class='kw'>=</span><span class='fl'>26.54</span>, <span class='kw'>radius</span><span class='kw'>=</span><span class='fl'>300</span>))</pre>
 
-    </div>
-
-
-
-    <h2 class="hasAnchor" id="historical-note"><a class="anchor" href="#historical-note"></a>Historical note</h2>
-
-    
-
 <p>This "synthetic" type of index is a replacement for the older "merged" index.  See
 <a href='http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC'>http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC</a>
 for more on the data file format, reasons for the change, and timetable for transition
 from "merged".</p>
+    </div>
+
+
+
+    <h2 class="hasAnchor" id="caveat-about-out-of-date-index-files"><a class="anchor" href="#caveat-about-out-of-date-index-files"></a>Caveat about out-of-date index files</h2>
+
+    
+
+
+<p>Note that the netcdf files on argo repositories are changeable,
+not just in content, but also in file name.  For example, the data acquired
+in a given profile of a given float may initially be provided in realtime
+mode (with a file name containing an "R" as the first or second character),
+my later be replaced later with a delayed-mode file (with a "D" in the first
+or second character). Since index files name data files directly, this means
+that index files can become out-of-date, containing references to netcdf
+files that no longer exist on the server. This applies to the sample
+index files provided with this package, and to user files, and it
+explains why <code><a href='getProfiles.html'>getProfiles()</a></code> skips over files that cannot be downloaded.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other datasets provided with argoFloats: 

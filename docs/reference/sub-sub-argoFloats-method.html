@@ -170,6 +170,12 @@ order listed here.</p><ol>
 <li><p>If <code>type</code> is <code>"index"</code>, i.e. if <code>x</code> was created with <code><a href='getIndex.html'>getIndex()</a></code>
 or with <code><a href='subset-argoFloats-method.html'>subset,argoFloats-method()</a></code> acting on the result of <code><a href='getIndex.html'>getIndex()</a></code>,
 then:</p><ol>
+<li><p>If <code>i</code> is numeric and <code>j</code> is unspecified, then <code>i</code> is taken to
+be an index that identifies the row(s) of the data frame that
+was constructed by <code><a href='getIndex.html'>getIndex()</a></code> based on the remote index file
+downloaded from the Argo server.  This has elements <code>file</code> for
+the remote file name, <code>date</code> for the date of the entry, <code>latitude</code>
+and <code>longitude</code> for the float position, etc.</p></li>
 <li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
 is returned. The choices are:
 <code>"destdir"</code>, <code>"destfileRda"</code>, <code>"filename"</code>, <code>"ftpRoot"</code>, <code>"header"</code>,
@@ -197,6 +203,8 @@ the ID codes, as indexed by <code>j</code>.</p></li>
 is returned.</p></li>
 </ol></li>
 <li><p>Otherwise, if <code>type</code> is <code>"profiles"</code>, i.e. if <code>x</code> was created with <code><a href='getProfiles.html'>getProfiles()</a></code>, then:</p><ol>
+<li><p>If <code>i</code> is numeric and <code>j</code> is unspecified, then return the local file name(s)
+that are identified by using <code>i</code> as an index.</p></li>
 <li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
 is returned. The choices are:
 <code>"type"</code> and <code>"destdir"</code>.</p></li>
@@ -215,6 +223,9 @@ by <code><a href='getProfiles.html'>getProfiles()</a></code>.</p></li>
 by <code><a href='getProfiles.html'>getProfiles()</a></code> is returned.</p></li>
 </ol></li>
 <li><p>Otherwise, if <code>type</code> is <code>"argos"</code>, i.e. if <code>x</code> was created with <code><a href='readProfiles.html'>readProfiles()</a></code>, then:</p><ol>
+<li><p>If <code>i</code> is numeric and <code>j</code> is unspecified, then return the argo objects identified
+by using <code>i</code> as an index.  Thus, e.g. <code>x[[i]]</code> is equivalent to
+<code>x[["profile", i]]</code>.</p></li>
 <li><p>If <code>i</code> is the name of an item in the <code>metadata</code> slot, then that item
 is returned. There is only choice, <code>"type"</code>.</p></li>
 <li><p>Otherwise, if <code>i</code> is the name of an item in the <code>data</code> slot, then that item
@@ -230,15 +241,19 @@ all the profiles in <code>x</code>, each an <code>argo</code> object as created 
 is returned.</p></li>
 <li><p>Otherwise, an error is reported.</p></li>
 </ol></li>
-<li><p>If <code>i</code> is <code>"length"</code>, the number of oce-type argo objects in <code>x</code> is returned.</p></li>
+<li><p>Otherwise, if <code>i</code> is <code>"length"</code>, the number of oce-type argo objects in <code>x</code> is returned.</p></li>
+<li><p>Otherwise, if <code>i</code> is <code>"ID"</code>, a vector of the IDs of the profiles is returned.</p></li>
 <li><p>Otherwise, if <code>i</code> is a character value, then it is taken to be
 an item within the <code>metadata</code> or <code>data</code> slots of the argo objects
 stored in <code>x</code>, and the returned value is a list containing that
-information with one (unnamed) item per profile.  Note that
-items from the <code>metadata</code> are repeated and cast into a matrix
-as the same dimensionality as pressure, as a way to make it
-easier to e.g. use <code><a href='https://rdrr.io/pkg/oce/man/as.ctd.html'>oce::as.ctd()</a></code> to create a CTD object from
-values returned by the present function, passed through <code><a href='https://rdrr.io/r/base/unlist.html'>unlist()</a></code>.</p></li>
+information with one (unnamed) item per profile.  If <code>j</code> is provided
+and equal to <code>"byLevel"</code>, then the items from the <code>metadata</code> are
+repeated (if necessary) and formed into matrix or vector of the same
+shape as the <code>"pressure"</code> field; this can be convenient for computations
+involving items that only occur once per profile, such as <code>"longitude"</code>,
+but it should not be used for items that are not level-specific, such
+as the various <code>"HISTORY_*"</code> elements, which apply to a dataset, not to
+a level.</p></li>
 <li><p>Otherwise, an error is reported.</p></li>
 </ol></li>
 <li><p>Otherwise, an error is reported.</p></li>
@@ -250,7 +265,7 @@ values returned by the present function, passed through <code><a href='https://r
 <span class='co'># Full remote filename for first two item in index</span>
 <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>index</span><span class='kw'>[[</span><span class='st'>"server"</span>]], <span class='st'>"/dac/"</span>, <span class='no'>index</span><span class='kw'>[[</span><span class='st'>"profile"</span>, <span class='fl'>1</span>:<span class='fl'>2</span>]])</div><div class='output co'>#&gt; [1] "ftp://usgodae.org/pub/outgoing/argo/dac/124"
 #&gt; [2] "ftp://usgodae.org/pub/outgoing/argo/dac/125"</div><div class='input'><span class='co'># File names and geographical locations of first 5 items in index</span>
-<span class='no'>index5</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='fl'>1</span>:<span class='fl'>5</span>)</div><div class='output co'>#&gt; <span class='message'>Kept 5 profiles (0.52%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span>(<span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"file"</span>]][<span class='fl'>1</span>]),
+<span class='no'>index5</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='fl'>1</span>:<span class='fl'>5</span>)</div><div class='output co'>#&gt; <span class='message'>Kept 5 profiles (0.525%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>file</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span>(<span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"file"</span>]][<span class='fl'>1</span>]),
            <span class='kw'>lon</span><span class='kw'>=</span><span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"longitude"</span>]],
            <span class='kw'>lat</span><span class='kw'>=</span><span class='no'>index5</span><span class='kw'>[[</span><span class='st'>"latitude"</span>]])</div><div class='output co'>#&gt;              file     lon    lat
 #&gt; 1 R1901584_124.nc -76.231 27.705
@@ -270,7 +285,7 @@ values returned by the present function, passed through <code><a href='https://r
 
       <footer>
       <div class="copyright">
-  <p>Developed by Dan Kelley.</p>
+  <p>Developed by Dan Kelley, Jaimie Harbin.</p>
 </div>
 
 <div class="pkgdown">

@@ -135,6 +135,21 @@ Bahamas, as of 2020 March 14, using the following code.</p><pre><span class='no'
 
 
 
+    <h2 class="hasAnchor" id="caveat-about-out-of-date-index-files"><a class="anchor" href="#caveat-about-out-of-date-index-files"></a>Caveat about out-of-date index files</h2>
+
+    
+
+
+<p>Note that the netcdf files on argo repositories are changeable,
+not just in content, but also in file name.  For example, the data acquired
+in a given profile of a given float may initially be provided in realtime
+mode (with a file name containing an "R" as the first or second character),
+my later be replaced later with a delayed-mode file (with a "D" in the first
+or second character). Since index files name data files directly, this means
+that index files can become out-of-date, containing references to netcdf
+files that no longer exist on the server. This applies to the sample
+index files provided with this package, and to user files, and it
+explains why <code><a href='getProfiles.html'>getProfiles()</a></code> skips over files that cannot be downloaded.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other datasets provided with argoFloats: 

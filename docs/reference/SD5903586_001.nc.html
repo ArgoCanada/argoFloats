@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A Package for Processing Argo Float Profiles — argoFloats-package • argoFloats</title>
+<title>Sample argo file (delayed synthetic bgc data) — SD5903586_001.nc • argoFloats</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,13 @@
 
 
 
-<meta property="og:title" content="A Package for Processing Argo Float Profiles — argoFloats-package" />
-<meta property="og:description" content="The argoFloats package provides tools for downloading and processing Argo profile data.
-It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
-also to sift these profiles based on ID, time, geography, variable, institution, and ocean.
-Once downloaded, such datasets can be analysed within argoFloats or using other R tools
-and packages." />
+<meta property="og:title" content="Sample argo file (delayed synthetic bgc data) — SD5903586_001.nc" />
+<meta property="og:description" content="This is the netcf file for profile 001 of argo float SD5903586, downloaded
+ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc
+on 2020 June 24.
+As its filename indicates, it holds &quot;synthetic&quot; data
+in &quot;delayed&quot; mode. The oxygen values are adjusted by 16%, as
+is shown here, and in the documentation for useAdjusted()." />
 
 
 
@@ -118,61 +119,44 @@ and packages." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A Package for Processing Argo Float Profiles</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/AllClass.R'><code>R/AllClass.R</code></a></small>
-    <div class="hidden name"><code>argoFloats-package.Rd</code></div>
+    <h1>Sample argo file (delayed synthetic bgc data)</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/extdata.R'><code>R/extdata.R</code></a></small>
+    <div class="hidden name"><code>SD5903586_001.nc.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data.
-It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
-also to sift these profiles based on ID, time, geography, variable, institution, and ocean.
-Once downloaded, such datasets can be analysed within <code>argoFloats</code> or using other R tools
-and packages.</p>
+    <p>This is the netcf file for profile 001 of argo float SD5903586, downloaded
+<a href='ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc'>ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc</a>
+on 2020 June 24.
+As its filename indicates, it holds "synthetic" data
+in "delayed" mode. The oxygen values are adjusted by 16%, as
+is shown here, and in the documentation for <code><a href='useAdjusted.html'>useAdjusted()</a></code>.</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>The development website is <a href='https://github.com/ArgoCanada/argoFloats'>https://github.com/ArgoCanada/argoFloats</a>, and
-<a href='https://argocanada.github.io/argoFloats/index.html'>https://argocanada.github.io/argoFloats/index.html</a> provides a simpler view
-that may be more helpful to most users.</p>
-<p>The sketch given below illustrates the typical workflow with the package, with
-descriptions of the steps on the left, and names of the relevant functions
-on the right.</p>
-<p><img src='figures/workflow.png' width=455px alt="Figure: workflow.png" /></p>
-<p>As illustrated, the central functions are named
-<code><a href='getIndex.html'>getIndex()</a></code>, <a href='subset-argoFloats-method.html'>subset()</a>,
-<code><a href='getProfiles.html'>getProfiles()</a></code>, and <code><a href='readProfiles.html'>readProfiles()</a></code>, and so a good way to
-get familiar with the package is to read their documentation entries
-and try the examples provided therein.  Some built-in datasets are provided
-for concreteness of illustration and for testing, but actual work always
-starts with a call to <code><a href='getIndex.html'>getIndex()</a></code> to download a full index of float data.</p>
-<p>In addition to these functions, <code>argoFloats</code> also provides
-specialized versions of R "generic" functions, as follows.</p><ol>
-<li><p><code>[[</code> provides a way to extract items from <code>argoFloats</code> objects,
-without getting lost in the details of storage.
-See <code><a href='sub-sub-argoFloats-method.html'>[[,argoFloats-method</a></code> for details.
-(Note that <code>[[&lt;-</code> is <em>not</em> specialized, since the
-user is highly discouraged from altering values within <code>argoFloats</code>
-objects.)</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/plot.html'>plot()</a></code> provides simple ways to plot aspects of <code><a href='argoFloats-class.html'>argoFloats</a></code> objects.
-See <code><a href='plot-argoFloats-method.html'>plot,argoFloats-method()</a></code> for details.</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/summary.html'>summary()</a></code> displays key features of <code><a href='argoFloats-class.html'>argoFloats</a></code> objects.
-See <code><a href='summary-argoFloats-method.html'>summary,argoFloats-method()</a></code> for details.</p></li>
-<li><p><code>show()</code> provides a one-line sketch of <code><a href='argoFloats-class.html'>argoFloats</a></code> objects.
-See <code><a href='argoFloats-methods.html'>show,argoFloats-method()</a></code> for details.</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/merge.html'>merge()</a></code> combines multiple index objects into a new index object.</p></li>
-</ol>
+    <div class='dont-index'><p>Other raw datasets: 
+<code><a href='D4900785_048.nc.html'>D4900785_048.nc</a></code>,
+<code><a href='SR2902204_131.nc.html'>SR2902204_131.nc</a></code></p></div>
 
-<p>It should be noted that the profile elements within <code>argoFloats</code> objects are stored as
-in the form of <code>argo</code> objects as defined by the <code>oce</code> package.
-This means that <code>argoFloats</code> users can rely on
-a wide variety of <code>oce</code> functions to analyse their data.
-The full suite of R tools is also available, and the vastness of
-that suite explains why <code>argoFloats</code> is written in R.</p>
-
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
+<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"SD5903586_001.nc"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"argoFloats"</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
+#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
+#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
+#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
+#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
+#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
+#&gt; <span class='warning'>    1</span></div><div class='input'><span class='no'>a1</span> <span class='kw'>&lt;-</span> <span class='no'>a</span><span class='kw'>[[</span><span class='fl'>1</span>]]
+<span class='co'># Illustrate oxygen adjustment</span>
+<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='no'>a1</span><span class='kw'>[[</span><span class='st'>"pressure"</span>]]
+<span class='no'>O</span> <span class='kw'>&lt;-</span> <span class='no'>a1</span><span class='kw'>[[</span><span class='st'>"oxygen"</span>]]
+<span class='no'>Oa</span>  <span class='kw'>&lt;-</span> <span class='no'>a1</span><span class='kw'>[[</span><span class='st'>"oxygenAdjusted"</span>]]
+<span class='no'>Percent</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span> * (<span class='no'>Oa</span> - <span class='no'>O</span>) / <span class='no'>O</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span>(<span class='no'>Percent</span>, <span class='kw'>main</span><span class='kw'>=</span><span class='st'>"Oxygen adjustment"</span>)</div><div class='img'><img src='SD5903586_001.nc-1.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -40,9 +40,11 @@
 
 
 <meta property="og:title" content="Get an Index of Available Argo Float Profiles — getIndex" />
-<meta property="og:description" content="This function gets an index of available Argo float profiles, either
-by downloading information from a data repository or by reusing an index
-(stored as an .rda file) that was prepared by a recent call to the function." />
+<meta property="og:description" content="This function gets an index of available Argo float profiles, typically
+for later use as the first argument to getProfiles(). The work is done
+either by downloading information from a data repository or by reusing an existing
+index (packaged within an .rda file) that was prepared by a recent call to the
+This choice is made behind the scenes, controlled by the age argument." />
 
 
 
@@ -122,16 +124,18 @@ by downloading information from a data repository or by reusing an index
     </div>
 
     <div class="ref-description">
-    <p>This function gets an index of available Argo float profiles, either
-by downloading information from a data repository or by reusing an index
-(stored as an <code>.rda</code> file) that was prepared by a recent call to the function.</p>
+    <p>This function gets an index of available Argo float profiles, typically
+for later use as the first argument to <code><a href='getProfiles.html'>getProfiles()</a></code>. The work is done
+either by downloading information from a data repository or by reusing an existing
+index (packaged within an <code>.rda</code> file) that was prepared by a recent call to the
+This choice is made behind the scenes, controlled by the <code>age</code> argument.</p>
     </div>
 
     <pre class="usage"><span class='fu'>getIndex</span>(
   <span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>"argo"</span>,
   <span class='kw'>server</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
   <span class='kw'>destdir</span> <span class='kw'>=</span> <span class='st'>"~/data/argo"</span>,
-  <span class='kw'>age</span> <span class='kw'>=</span> <span class='fl'>7</span>,
+  <span class='kw'>age</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>0</span>
 )</pre>
@@ -176,10 +180,10 @@ File clutter is reduced by creating a top-level directory called
       <th>age</th>
       <td><p>numeric value indicating how old a downloaded file
 must be (in days), for it to be considered out-of-date.  The
-default, <code>age=7</code>, limits downloads to once per week, as a way
+default, <code>age=1</code>, limits downloads to once per day, as a way
 to avoid slowing down a workflow with a download that might take
-a sizable fraction of an hour. Set <code>age=0</code> to force a download,
-regardless of the file age.</p></td>
+a minute or so. Note that setting <code>age=0</code> will force a new
+download, regardless of the age of the local file.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
@@ -215,7 +219,9 @@ server.</p>
 function, holds a list named <code>index</code> that holds following elements:</p><ul>
 <li><p><code>ftpRoot</code>, the FTP root stored in the header of the source <code>file</code>
 (see next paragraph).</p></li>
-<li><p><code>server</code>, the argument provided here.</p></li>
+<li><p><code>server</code>, the URL at which the index was found, and from
+which <code><a href='getProfiles.html'>getProfiles()</a></code> can construct URLs from which to
+download the netcdf files for individual float profils.</p></li>
 <li><p><code>filename</code>, the argument provided here.</p></li>
 <li><p><code>header</code>, the preliminary lines in the source file that start
 with the <code>#</code> character.</p></li>
@@ -227,21 +233,24 @@ are set based on the authors' inspection of a downloaded file.</p></li>
 </ul>
 
 <p>Some expertise is required in deciding on the value for the
-<code>file</code> argument to <code>getIndex()</code>.  As of February 2020, the
-FTP site <code>ftp://usgodae.org/pub/outgoing/argo</code> contains multiple
-files that appear to be indices.  These are listed as the left-hand
-column in the following table. The middle column lists nicknames
-for the some files, which can be provided as the <code>file</code> argument,
+<code>file</code> argument to <code>getIndex()</code>.  As of June 2020, the
+FTP sites
+<a href='ftp://usgodae.org/pub/outgoing/argo'>ftp://usgodae.org/pub/outgoing/argo</a>
+and
+<a href='ftp://ftp.ifremer.fr/ifremer/argo'>ftp://ftp.ifremer.fr/ifremer/argo</a>
+contain multiple index files, as listed in the left-hand column of the
+following table. The middle column lists nicknames
+for some of the files.  These can be provided as the <code>file</code> argument,
 as alternatives to the full names.
-The right-hand column is a brief
-description of the file contents, inferred by examination
-of the file.  Note that there some files on the server
-have names similar to those given below, but ending in <code>.txt</code> instead
-of <code>.txt.gz</code>, but these files take longer to download and
-seem to be equivalent to the <code>.gz</code> versions, so <code>getIndex()</code> is
-designed to work with them.  Also, note that, as of April 2020,
-the usgodaee server does not supply <code>"synthetic"</code> files, but
-the ifremer server does.</p><table class='table'>
+The right-hand column describes the file contents.
+Note that the servers also provide files with names similar to those
+given in the table, but ending in <code>.txt</code>.  These are uncompressed
+equivalents of the <code>.gz</code> files that offer no advantage and take
+longer to download, so <code>getIndex()</code> is not designed to work with them.
+Finally, note that, as of June 2020,
+the usgodae server does not supply <code>"synthetic"</code> files, but
+the ifremer server does; this is typically not a concern to users,
+because <code>getIndex</code> searches both servers for index files.</p><table class='table'>
 <tr><td><em>File Name</em></td><td><em>Nickname</em></td><td><em>Contents</em></td></tr>
 <tr><td><code>ar_greylist.txt</code></td><td>-</td><td>Suspicious/malfunctioning floats</td></tr>
 <tr><td><code>ar_index_global_meta.txt.gz</code></td><td>-</td><td>Metadata files</td></tr>
