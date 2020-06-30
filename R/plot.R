@@ -489,9 +489,10 @@ setMethod(f="plot",
                       m <- unlist(lapply(x[['profile']], meanf))
                       par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
                       if (any(is.finite(q))) {
-                          oce::oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE)
+                          oce::oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE, type='l')
+                          points(time, q, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
                           abline(h=50, col='red', lty='dashed')
-                          oce::oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), type='l', col='grey', drawTimeRange = FALSE)
+                          oce::oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), drawTimeRange = FALSE, type='l')
                           points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=0.75)
                       } else {
                           plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
