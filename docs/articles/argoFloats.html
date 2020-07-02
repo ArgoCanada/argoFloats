@@ -49,6 +49,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/qc.html">Introduction to argoFloats Quality Control</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -70,13 +82,11 @@
 
       
 
-      </header><script src="argoFloats_files/header-attrs-2.3/header-attrs.js"></script><script src="argoFloats_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="argoFloats_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Introduction to argoFloats</h1>
-                        <h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
+      <h1 data-toc-skip></h1>
             
-            <h4 class="date">2020-06-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/master/vignettes/argoFloats.Rmd"><code>vignettes/argoFloats.Rmd</code></a></small>
       <div class="hidden name"><code>argoFloats.Rmd</code></div>
@@ -171,11 +181,9 @@
 <div id="work-flow" class="section level1">
 <h1 class="hasAnchor">
 <a href="#work-flow" class="anchor"></a>Work Flow</h1>
-Figure 1 illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
-<div class="figure" style="text-align: center">
-<img src="argoFloats_files/figure-html/workflow-1.png" alt="Figure 1: Work flow of the argoFloats package." width="480"><p class="caption">
-Figure 1: Work flow of the argoFloats package.
-</p>
+<p>Figure 1 illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.</p>
+<div class="figure">
+<img src="argoFloats_flowchart" alt=""><p class="caption">Figure 1. Flow chart</p>
 </div>
 <p>As shown above, the central functions for the argoFloats package are <code><a href="../reference/getIndex.html">getIndex()</a></code>, <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code>, <code><a href="../reference/getProfiles.html">getProfiles()</a></code>, and <code><a href="../reference/readProfiles.html">readProfiles()</a></code>.</p>
 <p>Some built-in data sets are provided for concreteness of illustration and for testing, but actual work always starts with a call to <code><a href="../reference/getIndex.html">getIndex()</a></code> to download a full index of float data, which we will demonstrate later in this vignette.</p>
@@ -343,9 +351,10 @@ Figure 4: Line A03 section plot made by oce package.
 <p>The command can be useful for analyzing individual profiles, for example:</p>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">sub</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">ai</span>, <span class="fl">1</span>:<span class="fl">2</span>) <span class="co"># To subset for profiles</span>
 <span class="no">profiles</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span>(<span class="no">sub</span>)
-<span class="no">argos</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span>(<span class="no">profiles</span>, <span class="kw">handleFlags</span><span class="kw">=</span><span class="fl">TRUE</span>)
-<span class="no">pressure</span> <span class="kw">&lt;-</span> <span class="no">argos</span><span class="kw">[[</span><span class="st">'argos'</span>]]<span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="st">'pressure'</span>]]
-<span class="no">temperature</span> <span class="kw">&lt;-</span> <span class="no">argos</span><span class="kw">[[</span><span class="st">'argos'</span>]]<span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="st">'temperature'</span>]]
+<span class="no">argos</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span>(<span class="no">profiles</span>)
+<span class="no">argosClean</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/applyQC.html">applyQC</a></span>(<span class="no">argos</span>)
+<span class="no">pressure</span> <span class="kw">&lt;-</span> <span class="no">argosClean</span><span class="kw">[[</span><span class="st">'argos'</span>]]<span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="st">'pressure'</span>]]
+<span class="no">temperature</span> <span class="kw">&lt;-</span> <span class="no">argosClean</span><span class="kw">[[</span><span class="st">'argos'</span>]]<span class="kw">[[</span><span class="fl">1</span>]]<span class="kw">[[</span><span class="st">'temperature'</span>]]
 <span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">temperature</span>, <span class="no">pressure</span>, <span class="kw">ylim</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span>(<span class="no">pressure</span>, <span class="kw">na.rm</span><span class="kw">=</span><span class="fl">TRUE</span>)),
      <span class="kw">xlab</span><span class="kw">=</span><span class="st">'Temperature (C)'</span>, <span class="kw">ylab</span><span class="kw">=</span><span class="st">'Depth (dbar)'</span>)</pre></body></html></div>
 <p><em>Exercise 3:</em> Using the profile in the previous example, plot a TS diagram.</p>
@@ -393,8 +402,9 @@ Figure 4: Line A03 section plot made by oce package.
 <span class="no">ai</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span>(<span class="st">"merge"</span>)
 <span class="no">sub</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">ai</span>, <span class="fl">1</span>:<span class="fl">2</span>) <span class="co"># To subset for profiles</span>
 <span class="no">profiles</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span>(<span class="no">sub</span>)
-<span class="no">argos</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span>(<span class="no">profiles</span>, <span class="kw">handleFlags</span><span class="kw">=</span><span class="fl">TRUE</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">argos</span>, <span class="kw">which</span><span class="kw">=</span><span class="st">'TS'</span>)</pre></body></html></div>
+<span class="no">argos</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span>(<span class="no">profiles</span>)
+<span class="no">argosClean</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/applyQC.html">applyQC</a></span>(<span class="no">argos</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">argosClean</span>, <span class="kw">which</span><span class="kw">=</span><span class="st">'TS'</span>)</pre></body></html></div>
 </div>
   </div>
 
@@ -413,7 +423,7 @@ Figure 4: Line A03 section plot made by oce package.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
