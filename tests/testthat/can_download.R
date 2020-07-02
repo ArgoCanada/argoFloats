@@ -4,7 +4,7 @@
 canDownload <- function(destdir="~/data/argo")
 {
     ## FIXME(dek): add username for @harbinj in next line (also, I was guessing on @richardsc's linux name)
-    isDeveloper <- Sys.getenv("USER") == "kelley" || Sys.getenv("USERNAME") == "jaimieharbin" || Sys.getenv("USER") == "richardsc"
+    isDeveloper <- Sys.getenv("USER") == "kelley" || Sys.getenv("USER") == "jaimieharbin" || Sys.getenv("USER") == "richardsc"
     canWrite <- file.exists(destdir) && file.info(destdir)$isdir
     isDeveloper && canWrite
 }

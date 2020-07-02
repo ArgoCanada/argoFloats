@@ -53,7 +53,7 @@ considering the quality control of Argo flags. The three step process encourages
 users to always analyze the data they are considering. The three step process is
 as shown in the following diagram.
 
-![Flow chart of quality-control analysis.](flowchart)
+![Flow chart of quality-control analysis.](qc_flowchart)
 
 This vignette will walk the users through the three step process using the float with
 ID 1901584 near the Bahamas.

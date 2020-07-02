@@ -15,7 +15,6 @@
 ^create_data$
 ^exampleTS.R$
 ^README.R$
-^doc$
 ^Meta$
 ^test*.R$
 ^_pkgdown\.yml$
@@ -32,4 +31,4 @@
 ^tests/.*\.nc$
 ^tests/.*/.*\.nc$
 ^vignettes/.*\.nc$
-
+^.*\.json$

@@ -1,4 +1,4 @@
-png("flowchart.png", height=1.8, width=5, unit="in", pointsize=10, res=120)
+png("qc_flowchart.png", height=1.8, width=5, unit="in", pointsize=10, res=120)
 colText <- "black"
 colCode <- "black"
 library(graphics)
