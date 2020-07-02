@@ -25,7 +25,10 @@ df <- data.frame(ID=ids, mode=modes, deep=deeps, longitude=lons, latitude=lats, 
 print(head(df, n))
 stop()
 head(df, 4)
+
+
+
 class(params) # character
 params[[1]]
-parameters <- strsplit(params, split= " ")
+parameters <- unlist(strsplit(params, "[.]"))
 
