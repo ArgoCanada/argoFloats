@@ -10,7 +10,6 @@
 *.out
 *.png
 .RData
-doc
 Meta
 marmap*.csv
-
+*.json

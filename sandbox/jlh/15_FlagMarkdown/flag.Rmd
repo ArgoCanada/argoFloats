@@ -2,6 +2,8 @@
 title: "Introduction to argoFloats Quality Control"
 author: "Jaimie Harbin (https://orcid.org/0000-0003-3774-3732), Dan Kelley (https://orcid.org/0000-0001-7808-5911),and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
 date: "`r Sys.Date()`"
+vignette: |
+  %\VignetteIndexEntry{Introduction to argoFloats Quality Control} %\VignetteEngine{R.rsp::asis} %\VignetteEncoding[utf-8]{inputenc} %\VignetteKeyword{PDF}
 ---
 
 **Abstract**
@@ -258,7 +260,7 @@ As shown by the plot, the plot containing "good" data and the plot containing
 *Exercise Four* Use `useAdjusted()` on the float with ID 5903586, profile=50 to
 compare `<PARAM>_ADJUSTED` vs `<param>Unadjusted`.
 
-```{r}
+```
 library(argoFloats)
 bai <- getIndex('synthetic')
 s <- subset(bai, ID='5903586')
