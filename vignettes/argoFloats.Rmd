@@ -32,6 +32,7 @@ vignette: >
 ```{r, echo=FALSE}
 knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 ```
+
 **Abstract.** The `argoFloats` package makes it easy to get, read, and analyze core, biogeochemical(bgc), and deep Argo data. Our goal in making this package was to eliminate the gap between the freely available Argo data and the end user.
 
 # Introduction

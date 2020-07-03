@@ -1,3 +1,6 @@
+## ---- echo=FALSE--------------------------------------------------------------
+knitr::opts_chunk$set(collapse=TRUE, comment="#>")
+
 ## ---- warning=FALSE, error=FALSE, message=FALSE, eval=FALSE-------------------
 #  library(argoFloats)
 #  data("index")

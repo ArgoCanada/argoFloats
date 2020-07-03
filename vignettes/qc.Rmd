@@ -1,6 +1,6 @@
 ---
 title: "Introduction to argoFloats Quality Control"
-author: "Jaimie Harbin (https://orcid.org/0000-0003-3774-3732), Dan Kelley (https://orcid.org/0000-0001-7808-5911), and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
+author: "Jaimie Harbin (https://orcid.org/0000-0003-3774-3732), Dan Kelley (https://orcid.org/0000-0001-7808-5911) and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -17,8 +17,11 @@ vignette: >
   %\VignetteEncoding[utf-8]{inputenc}
 ---
 
-**Abstract**
+```{r, echo=FALSE}
+knitr::opts_chunk$set(collapse=TRUE, comment="#>")
+```
 
+**Abstract**
 Argo floats undergo a series of testing to ensure the data provided is a
 reliable source. Understanding the Quality Control (QC) completed on profiles
 can be problematic, however. The creators of `argoFloats` therefore developed a
