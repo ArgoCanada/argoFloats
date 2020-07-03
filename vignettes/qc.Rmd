@@ -50,7 +50,7 @@ available.
 
 # Flags
 
-As described by the Argo user’s manual [2], data that are given a flag value of
+As described by the Argo user's manual [2], data that are given a flag value of
 1, 2, 5, or 8 are considered 'good' data. If data are given a flag value of 9
 (or missing value) they are not used, and flags 3, 5, 6, and 7 are considered
 'bad' data.
@@ -288,4 +288,4 @@ mtext("Adjusted data", side=3, line=-1, col=2)
 
 # References
 1. Wong, A., Keeley, R. and Carval, T., 2009. Argo quality control manual. Version, 2(5), p.32.
-2. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch, Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019. https://doi.org/10.13155/29825.
+2. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch, Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019. https://doi.org/10.13155/29825.
