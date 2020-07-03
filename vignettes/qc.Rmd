@@ -118,7 +118,7 @@ with the appropriate parameters.
 
 An example of how to get the QC plot for temperature, or "TEMP" for the float with ID 1901584 is as follows:
 
-```{r, warning=FALSE, error=FALSE, message=FALSE}
+```{r, warning=FALSE, error=FALSE, message=FALSE, eval=FALSE}
 library(argoFloats)
 data("index")
 subset <- subset(index, ID='1901584')
@@ -127,7 +127,10 @@ argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')
 ```
 
-*Exercise One:* Use the previous code to determine the QC of temperature for
+![Figure 2: argoFloats QC plot for temperature, or "TEMP" for the float with ID 1901584](plotqc.png)
+
+
+**Exercise One:** Use the previous code to determine the QC of temperature for
 float number 4900845 in synthetic data.Explain your results.
 
 ### Step Two: showQCTests()
@@ -142,7 +145,7 @@ Using the same example as shown in `plot(which='QC')`, we can also determine
 which QC tests were performed on each profile. This is completed by
 `showQCTests()` in the following code:
 
-```{r, message=FALSE, error=FALSE, warning=FALSE}
+```{r, message=FALSE, error=FALSE, warning=FALSE, eval=FALSE}
 library(argoFloats)
 data('index')
 subset <- subset(index, 1)
@@ -152,10 +155,14 @@ argos1 <- argos[[1]]
 showQCTests(argos[[1]])
 ```
 
+![Figure 3: argoFloats showQCTests() function used on the first profile of float with ID 1901584](showQCTests.png)
+
+
+
 In section 3.11 Reference table 11: QC test binary IDs of the Argo User's Manual
 [2], we see that test two is the "Impossible data test".
 
-*Exercise Two*: Use the first float with ID 4900845 in exercise one,to determine
+**Exercise Two**: Use the first float with ID 4900845 in exercise one,to determine
 which tests were performed and/or failed during quality control testing. EXPLAIN
 YOUR RESULTS.
 
@@ -171,7 +178,7 @@ physical measures.
 Using the same example as shown in `plot(which='QC')` and `showQCTests()`, the
 user also has the ability to use `applyQC()` as shown below:
 
-```{r, message=FALSE, error=FALSE, warning=FALSE}
+```{r, message=FALSE, error=FALSE, warning=FALSE, eval=FALSE}
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(index)
@@ -183,7 +190,10 @@ plot(raw, which="TS")
 plot(clean, which="TS")
 ```
 
-*Exercise Three* : Use `applyQC()` on float ID with 4900845. Explain your results.
+![Figure 4: argoFloats applyQC() function used on float with ID 1901584](applyQC.png)
+
+
+**Exercise Three** : Use `applyQC()` on float ID with 4900845. Explain your results.
 
 # Adjusted Data
 
@@ -205,7 +215,7 @@ when `argoFloats` chooses to use adjusted data.
 An example of the significance of adjusted vs unadjusted can be shown below
 using the ID from the previous flag examples:
 
-```{r, warning=FALSE, error=FALSE, message=FALSE}
+```{r, warning=FALSE, error=FALSE, message=FALSE, eval=FALSE}
 library(argoFloats)
 data("index")
 subset <- subset(index, ID='1901584')
@@ -219,7 +229,10 @@ oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="temperature")
 mtext("Adjusted data", side=3, line=-1, col=2)
 ```
 
-*Exercise Four* Use `useAdjusted()` on the float with ID5903586, profile=50 to
+![Figure 5: argoFloats useAdjusted() function used on float with ID 1901584](useAdjusted.png)
+
+
+**Exercise Four** Use `useAdjusted()` on the float with ID5903586, profile=50 to
 compare `<param>Adjusted` vs `<param>Unadjusted>`.
 
 # Answers

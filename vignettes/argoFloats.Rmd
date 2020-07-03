@@ -53,6 +53,7 @@ argoFloats R 03: new website                           | Jaimie Harbin & Dan Kel
 argoFloats R 04: subset by ocean or polygon            | Jaimie Harbin & Dan Kelley | May 7, 2020    | https://youtu.be/tcGRB479Udk
 argoFloats R 05: TS diagram, colour-coded by oxygen    | Jaimie Harbin & Dan Kelley | May 14, 2020   | https://youtu.be/Y_SxjcOnW04
 argoFloats R 06: trajectory plot, colour coded by time | Jaimie Harbin & Dan Kelley | May 28, 2020   | https://youtu.be/7BB3UuwjUqo
+argoFloats R 07: maps with bathymetry | Jaimie Harbin & Dan Kelley | June 4, 2020 | https://youtu.be/Lc32MTMCbbI
 
 
 # Preliminary Setup
@@ -235,7 +236,7 @@ CP <- merge(aiCircle, aiPoly)
 plot(CP, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
 
-*Exercise 1:* Produce the same plot as shown above, however, only include data from 2013.
+**Exercise 1:** Produce the same plot as shown above, however, only include data from 2013.
 
 
 Additionally, a practical use of `rectangle` subset can be shown while analyzing the section data found within the oce package. This data includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
@@ -245,7 +246,7 @@ data(section, package='oce')
 plot(section)
 ```
 
-*Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2017.
+**Exercise 2:** Create a rectangle subset for this transect and plot the positions for the year 2017.
 
 ## getProfiles()
 
@@ -268,11 +269,14 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
      xlab='Temperature (C)', ylab='Depth (dbar)')
 ```
 
-*Exercise 3:* Using the profile in the previous example, plot a TS diagram.
+![Figure 5: Temperature profile created using argoFloats readProfiles function ](readProfiles.png)
+
+
+**Exercise 3:** Using the profile in the previous example, plot a TS diagram.
 
 # Solutions to Exercises
 
-*Exercise 1:* Produce the same plot as shown above, however, only include data from 2013.
+**Exercise 1:** Produce the same plot as shown above, however, only include data from 2013.
 
 
 ```{r, eval=FALSE}
@@ -294,7 +298,7 @@ cp <- merge(aic, aip)
 plot(cp, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
 
-*Exercise 2:* Create a rectangle subset for this transect and plot the positions for the year 2017.
+**Exercise 2:** Create a rectangle subset for this transect and plot the positions for the year 2017.
 
 ```{r, eval=FALSE}
 library(argoFloats)
@@ -315,7 +319,7 @@ aiTime <- subset(air, time=list(from=from, to=to))
 plot(aiTime, bathymetry=FALSE)         # also, try using bathymetry=TRUE
 ```
 
-*Exercise 3:* Using the profile in the previous example, plot a TS diagram.
+**Exercise 3:** Using the profile in the previous example, plot a TS diagram.
 
 ```{r, eval=FALSE}
 library(argoFloats)
