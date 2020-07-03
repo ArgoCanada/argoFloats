@@ -8,6 +8,7 @@
 ^man/figures/*R$
 ^docs$
 ^.*~$
+^.*.png$
 ^sandbox$
 ^.*_index_.*rda$
 ^CODE_OF_CONDUCT.md$

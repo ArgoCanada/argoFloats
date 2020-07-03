@@ -1,0 +1,8 @@
+if (!interactive()) png("plotqc.png", unit="in", width=5, height=2.8, pointsize=11, res=150)
+library(argoFloats)
+data("index")
+subset <- subset(index, ID='1901584')
+profiles <- getProfiles(subset)
+argos <- readProfiles(profiles)
+plot(argos, which='QC', parameter='temperature')
+if (!interactive()) dev.off()
