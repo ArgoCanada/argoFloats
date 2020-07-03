@@ -34,11 +34,9 @@ addition to flag control, `argoFloats` also deals with adjusted data with the
 
 Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
 data found at the Data Assembly Centers are as accurate as possible. More
-specifically, testing is done in three levels: 1: Real time that complete
+specifically, testing is done in two levels, Real time that complete
 checks on all measurements and assigned a quality flag within a 24-48 hour
-time frame, 2. Delayed mode, and 3. Regional scientific analyses of all float
-data with other available data. The procedures for regional analyses are still
-to be determined.
+time frame and Delayed mode [1].
 
 At first glance, it can be difficult for users to understand the Quality Control
 (QC) completed on profiles. To address this issue when dealing with Argo data,
@@ -258,5 +256,6 @@ mtext("Adjusted data", side=3, line=-1, col=2)
 ```
 
 # References
-1. Wong, A., Keeley, R. and Carval, T., 2009. Argo quality control manual. Version, 2(5), p.32.
+1.Wong, Annie, Robert Keeley, Thierry Carval, and Argo Data Management Team. “Argo Quality Control Manual for CTD and Trajectory Data,” January 1, 2020. https://archimer.ifremer.fr/doc/00228/33951/.
+
 2. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch, Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019. https://doi.org/10.13155/29825.
