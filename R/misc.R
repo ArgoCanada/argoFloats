@@ -17,6 +17,7 @@
 #' with argo analysts, it is somewhat ad-hoc and may be changed later.
 #' For this reason, users are advised strongly to examine their data files
 #' closely, before blindly calling `useAdjusted`. The procedure is as follows.
+#' **NOTE:** This function is still in development and does not work yet.
 #'
 #' There are two cases, depending on whether an item named `parameterDataMode`
 #' is present within the metadata of the object.  (Note that this is
