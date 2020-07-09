@@ -115,16 +115,21 @@ useAdjustedProfile <- function(argo, debug=0)
         stop("must install.packages(\"oce\") for useAdjusted() to work")
     argoFloatsDebug(debug, "useAdjusted() {\n", style="bold", sep="", unindent=1)
     res <- argo
+    ## Step 1. Find names of related variables, and set up 'convert', which is a
+    ## key to renaming things.  For example, "oxygenAdjusted" in the original will
+    ## become "oxygen", and "oxygen" in the original will become "oxygenUnadjusted".
     namesData <- names(argo@data)
     basenames <- subset(namesData, !grepl("Adjusted", namesData))
     convert <- list()
     for (basename in basenames) {
-        w <- grep(basename, namesData)
+        w <- grep(basename, namesData) ## FIXME: what if e.g. "oxygen" and "oxygenFrequency" co-occur in a profile?
         related <- namesData[w]
         argoFloatsDebug(debug, "basename '", basename, "'\n", sep="")
         if (length(related) > 1) {
             argoFloatsDebug(debug, "   relatives: '", paste(related, collapse="' '"), "'\n")
             for (r in related) {
+                ## FIXME: only do this if the Adjusted field has non-NA data.
+                ##??? if (any(is.finite(x@data[[basename]]))) {
                 if (grepl("Adjusted$", r)) {
                     convert[r] <- gsub("Adjusted", "", r)
                 } else if (grepl("AdjustedError", r)) {
@@ -132,6 +137,7 @@ useAdjustedProfile <- function(argo, debug=0)
                 } else {
                     convert[r] <- paste0(basename, "Unadjusted")
                 }
+                ##??? }
             }
         }
     }
@@ -140,7 +146,7 @@ useAdjustedProfile <- function(argo, debug=0)
         print(convert)
     }
     namesConvert <- names(convert)
-    ## Rename data
+    ## Step 2. Rename data
     namesData <- names(argo@data)
     tmp <- namesData
     for (i in seq_along(tmp)) {
@@ -151,7 +157,7 @@ useAdjustedProfile <- function(argo, debug=0)
     argoFloatsDebug(debug, "data ORIG:  ", paste(names(argo@data), collapse=" "), "\n")
     names(res@data) <- tmp
     argoFloatsDebug(debug, "data AFTER: ", paste(names(res@data), collapse=" "), "\n")
-    ## Rename metadata$flags
+    ## Step 3. Rename metadata$flags
     namesFlags <- names(argo@metadata$flags)
     tmp <- namesFlags
     for (i in seq_along(tmp)) {
@@ -162,7 +168,7 @@ useAdjustedProfile <- function(argo, debug=0)
     argoFloatsDebug(debug, "flags ORIG:  ", paste(names(argo@metadata$flags), collapse=" "), "\n")
     names(res@metadata$flags) <- tmp
     argoFloatsDebug(debug, "flags AFTER: ", paste(names(res@metadata$flags), collapse=" "), "\n")
-    ## Rename metadata$units
+    ## Step 4. Rename metadata$units
     namesUnits <- names(argo@metadata$units)
     tmp <- namesUnits
     for (i in seq_along(tmp)) {
@@ -173,7 +179,7 @@ useAdjustedProfile <- function(argo, debug=0)
     argoFloatsDebug(debug, "units ORIG:  ", paste(names(argo@metadata$units), collapse=" "), "\n")
     names(res@metadata$units) <- tmp
     argoFloatsDebug(debug, "units AFTER: ", paste(names(res@metadata$units), collapse=" "), "\n")
-    ## Rename metadata$dataNamesOriginal
+    ## Step 5. Rename metadata$dataNamesOriginal
     namesUnits <- names(argo@metadata$dataNamesOriginal)
     tmp <- namesUnits
     for (i in seq_along(tmp)) {

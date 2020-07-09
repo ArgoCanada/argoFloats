@@ -389,7 +389,7 @@ setMethod(f="[[",
                                             pressure <- a[["pressure"]]
                                             if (is.matrix(pressure))
                                                 matrix(a[[i]], nrow=nrow(pressure), ncol=ncol(pressure))
-                                            else 
+                                            else
                                                 rep(a[[i]], length.out=length(pressure))
                                         }))
                       } else {
