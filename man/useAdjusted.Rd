@@ -29,6 +29,7 @@ a combination of file inspection, a study of documentation, and discussions
 with argo analysts, it is somewhat ad-hoc and may be changed later.
 For this reason, users are advised strongly to examine their data files
 closely, before blindly calling \code{useAdjusted}. The procedure is as follows.
+\strong{NOTE:} This function is still in development and does not work yet.
 
 There are two cases, depending on whether an item named \code{parameterDataMode}
 is present within the metadata of the object.  (Note that this is
