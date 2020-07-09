@@ -14,7 +14,7 @@ output:
 vignette: >
   %\VignetteIndexEntry{Introduction to argoFloats Quality Control}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding[utf-8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, echo=FALSE}
