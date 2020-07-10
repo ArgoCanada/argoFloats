@@ -31,8 +31,8 @@
 #' that are numeric vectors specifying a polygon within which profiles
 #' will be retained. The polygon must not be self-intersecting,
 #' and an error message will be issued if it is.  If the polygon is not closed
-#' (i.e. if the first and last points do not coincide) then a warning is issued,
-#' and the first point is pasted onto the end, to close it.
+#' (i.e. if the first and last points do not coincide) the first point is pasted
+#' onto the end, to close it.
 #' See example 4.
 #'
 #' 5. A vector or list named `parameter` that holds character values that
@@ -266,7 +266,7 @@ setMethod(f="subset",
                           stop("lengths of polygon$longitude and polygon$latitude must match, but they are ",
                                length(plat), " and ", length(plon))
                       if ((head(plon, 1) != tail(plon, 1)) || head(plat, 1) != tail(plat, 1)) {
-                          warning("In subset,argoFloats-method(): Closing the polygon, since the first and last points did not match.\n", call.=FALSE)
+                          #warning("In subset,argoFloats-method(): Closing the polygon, since the first and last points did not match.\n", call.=FALSE)
                           plon <- c(plon, plon[1])
                           plat <- c(plat, plat[1])
                       }

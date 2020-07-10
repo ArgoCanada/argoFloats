@@ -52,8 +52,8 @@ limits of the selection region. See example 3.
 that are numeric vectors specifying a polygon within which profiles
 will be retained. The polygon must not be self-intersecting,
 and an error message will be issued if it is.  If the polygon is not closed
-(i.e. if the first and last points do not coincide) then a warning is issued,
-and the first point is pasted onto the end, to close it.
+(i.e. if the first and last points do not coincide) the first point is pasted
+onto the end, to close it.
 See example 4.
 \item A vector or list named \code{parameter} that holds character values that
 specify the names of measured parameters to keep. See section 3.3 of the
