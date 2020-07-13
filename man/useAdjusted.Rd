@@ -13,75 +13,16 @@ useAdjusted(argo, debug = 0)
 should be printed.}
 }
 \description{
-Variables with original names indicating in the string \verb{_ADJUSTED} are
-assigned nicknames names ending in \code{Adjusted} by \code{\link[=readProfiles]{readProfiles()}}, so that
-e.g. \code{DOXY_ADJUSTED} gets the nickname \code{oxygenAdjusted}, while
-\code{DOXY} gets the nickname \code{oxygen}. \code{useAdjusted} switches
-these, renaming the adjusted values, so that e.g. \code{DOXY_ADJUSTED}
-gets nickname \code{oxygen} and \code{DOXY} gets nickname \code{oxygenUnadjusted}.
-This is carried out for all data families, and also for the
-corresponding units and quality-control flags.  See \dQuote{Examples}
-for an example using the \link{SD5903586_001.nc} sample dataset.
+This is done by using \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} on each of the argo
+objects stored within the first argument.
 }
 \details{
-The adjustment process is complicated, and, since it was developed by
-a combination of file inspection, a study of documentation, and discussions
-with argo analysts, it is somewhat ad-hoc and may be changed later.
-For this reason, users are advised strongly to examine their data files
-closely, before blindly calling \code{useAdjusted}. The procedure is as follows.
-\strong{NOTE:} This function is still in development and does not work yet.
+(FIXME: JH add a few sentences here, please)
 
-There are two cases, depending on whether an item named \code{parameterDataMode}
-is present within the metadata of the object.  (Note that this is
-the renamed value of the \code{PARAMETER_DATA_MODE} that may be present
-in the netcdf file.)
-\enumerate{
-\item \strong{Case 1.} If the \code{parameterDataMode} field is present, then the
-data columns are mapped to the parameter columns, and the following actions
-are undertaken.
-\itemize{
-\item If \code{parameterDataMode} is \code{"A"} (meaning "Adjusted") then use the
-\verb{<PARAM>_ADJUSTED} values, \emph{unless} those values are all \code{NA}, in which case the
-raw values are used instead. This is to account for the convention described in
-Section 2.6.5 of Carval et al. (2019).
-\item If \code{parameterDataMode} is \code{"D"} (meaning "Delayed"), then proceed as for
-the \code{"A"} case.
-\item If \code{parameterDataMode} is \code{"R"} (meaning "Realtime") then use the raw
-values, even if the file contains data with \verb{<PARAM>_ADJUSTED} (e.g.
-\code{"TEMP_ADJUSTED"}, which is the name used in netcdf files for the adjusted
-temperature) in their names.
+See Reference 1 for the process of adding adjusted data to Argo
+files, and see the documentation of \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} for the
+details of how the preference for adjusted data is set.
 }
-\item \strong{Case 2.} If no \code{parameterDataMode} field is present, but \code{dataMode} (called
-\code{DATA_MODE} in the source netcdf file) is present, then the latter is used.
-This does not apply to individual columns, so the action depends on the data
-within the columns. There are three sub-cases.
-\itemize{
-\item If \code{dataMode} is \code{"A"} (meaning "Adjusted") then each data type is
-considered in turn, and if the \verb{<PARAM>_ADJUSTED} values are \emph{all} \code{NA}
-then the raw data are used, but if any of the \verb{<PARAM>_ADJUSTED} values
-are not \code{NA}, then \emph{all} the \verb{<PARAM>_ADJUSTED} data are used.
-\item If \code{dataMode} is \code{"D"} (meaning "Delayed") then proceed as for
-the \code{"A"} case.
-\item If \code{dataMode} is \code{"R"} then then use the raw values, even if the file
-contains data with \verb{<PARAM>_ADJUSTED} in their names.
-}
-\item \strong{Case 3.} If neither \code{dataMode} nor \code{parameterDataMode} is present
-in the metadata (a situation the developers have not encountered, but
-which is included for completeness) then if \verb{<PARAM>_ADJUSTED} fields
-are present, then they are handled as in the first and second items in
-Case 2 above.
-}
-}
-\section{Developer notes (may be removed at any time)}{
-
-
-A study of a large set of realtime-mode and delayed-mode datasets
-suggests that the \verb{_ADJUSTED} fields of the former consist only of \code{NA}
-values, so that \code{useAdjusted} should only be used on delayed-mode
-datasets. Users are cautioned that \code{useAdjusted} may b subject to
-change during the summer of 2020.
-}
-
 \examples{
 library(argoFloats)
 # Plot raw and adjusted oxygen for a sample dataset

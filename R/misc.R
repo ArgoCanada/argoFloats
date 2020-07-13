@@ -2,74 +2,14 @@
 
 #' Switch unadjusted and adjusted data
 #'
-#' Variables with original names indicating in the string `_ADJUSTED` are
-#' assigned nicknames names ending in `Adjusted` by [readProfiles()], so that
-#' e.g. `DOXY_ADJUSTED` gets the nickname `oxygenAdjusted`, while
-#' `DOXY` gets the nickname `oxygen`. `useAdjusted` switches
-#' these, renaming the adjusted values, so that e.g. `DOXY_ADJUSTED`
-#' gets nickname `oxygen` and `DOXY` gets nickname `oxygenUnadjusted`.
-#' This is carried out for all data families, and also for the
-#' corresponding units and quality-control flags.  See \dQuote{Examples}
-#' for an example using the [SD5903586_001.nc] sample dataset.
+#' This is done by using [oce::preferAdjusted()] on each of the argo
+#' objects stored within the first argument.
 #'
-#' The adjustment process is complicated, and, since it was developed by
-#' a combination of file inspection, a study of documentation, and discussions
-#' with argo analysts, it is somewhat ad-hoc and may be changed later.
-#' For this reason, users are advised strongly to examine their data files
-#' closely, before blindly calling `useAdjusted`. The procedure is as follows.
-#' **NOTE:** This function is still in development and does not work yet.
+#' (FIXME: JH add a few sentences here, please)
 #'
-#' There are two cases, depending on whether an item named `parameterDataMode`
-#' is present within the metadata of the object.  (Note that this is
-#' the renamed value of the `PARAMETER_DATA_MODE` that may be present
-#' in the netcdf file.)
-#'
-#' 1. **Case 1.** If the `parameterDataMode` field is present, then the
-#'    data columns are mapped to the parameter columns, and the following actions
-#'    are undertaken.
-#'
-#'     * If `parameterDataMode` is `"A"` (meaning "Adjusted") then use the
-#'       `<PARAM>_ADJUSTED` values, *unless* those values are all `NA`, in which case the
-#'       raw values are used instead. This is to account for the convention described in
-#'       Section 2.6.5 of Carval et al. (2019).
-#'
-#'     * If `parameterDataMode` is `"D"` (meaning "Delayed"), then proceed as for
-#'       the `"A"` case.
-#'
-#'     * If `parameterDataMode` is `"R"` (meaning "Realtime") then use the raw
-#'       values, even if the file contains data with `<PARAM>_ADJUSTED` (e.g.
-#'     `"TEMP_ADJUSTED"`, which is the name used in netcdf files for the adjusted
-#'     temperature) in their names.
-#'
-#' 2. **Case 2.** If no `parameterDataMode` field is present, but `dataMode` (called
-#'    `DATA_MODE` in the source netcdf file) is present, then the latter is used.
-#'    This does not apply to individual columns, so the action depends on the data
-#'    within the columns. There are three sub-cases.
-#'
-#'     * If `dataMode` is `"A"` (meaning "Adjusted") then each data type is
-#'     considered in turn, and if the `<PARAM>_ADJUSTED` values are *all* `NA`
-#'     then the raw data are used, but if any of the `<PARAM>_ADJUSTED` values
-#'     are not `NA`, then *all* the `<PARAM>_ADJUSTED` data are used.
-#'
-#'     * If `dataMode` is `"D"` (meaning "Delayed") then proceed as for
-#'       the `"A"` case.
-#'
-#'     * If `dataMode` is `"R"` then then use the raw values, even if the file
-#'       contains data with `<PARAM>_ADJUSTED` in their names.
-#'
-#' 3. **Case 3.** If neither `dataMode` nor `parameterDataMode` is present
-#'    in the metadata (a situation the developers have not encountered, but
-#'    which is included for completeness) then if `<PARAM>_ADJUSTED` fields
-#'    are present, then they are handled as in the first and second items in
-#'    Case 2 above.
-#'
-#' @section Developer notes (may be removed at any time):
-#'
-#' A study of a large set of realtime-mode and delayed-mode datasets
-#' suggests that the `_ADJUSTED` fields of the former consist only of `NA`
-#' values, so that `useAdjusted` should only be used on delayed-mode
-#' datasets. Users are cautioned that `useAdjusted` may b subject to
-#' change during the summer of 2020.
+#' See Reference 1 for the process of adding adjusted data to Argo
+#' files, and see the documentation of [oce::preferAdjusted()] for the
+#' details of how the preference for adjusted data is set.
 #'
 #' @param argo An [`argoFloats-class`] object, as read by [readProfiles()].
 #'
@@ -103,7 +43,7 @@ useAdjusted <- function(argo, debug=0)
         stop("useAdjusted() is only for argoFloats objects created by readProfiles()")
     res <- argo
     for (i in argo[["length"]])
-        res@data$argos[[i]] <- useAdjustedProfile(argo@data$argos[[i]])
+        res@data$argos[[i]] <- oce::preferAdjusted(argo@data$argos[[i]])
     res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     res
 }
