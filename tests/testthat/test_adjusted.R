@@ -19,12 +19,8 @@ test_that("useAdjusted() test",
                   expect_equal(a[["salinity"]], a[["PSAL_ADJUSTED"]])
                   expect_equal(a[["temperature"]], a[["TEMP_ADJUSTED"]])
                   expect_equal(a[["pressure"]], a[["PRES_ADJUSTED"]])
-                  expect_equal(a[["salinityUnadjusted"]], a[["PSAL"]])
-                  expect_equal(a[["temperatureUnadjusted"]], a[["TEMP"]])
-                  expect_equal(a[["pressureUnadjusted"]], a[["PRES"]])
                   for (field in c("salinity", "temperature", "pressure")) {
                       expect_equal(r[[paste0(field, "Adjusted")]], a[[field]])
-                      expect_equal(r[[field]], a[[paste0(field, "Unadjusted")]])
                       expect_equal(r[[paste0(field, "AdjustedError")]], a[[paste0(field, "AdjustedError")]])
                   }
               }

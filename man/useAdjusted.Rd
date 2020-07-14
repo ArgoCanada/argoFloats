@@ -13,11 +13,18 @@ useAdjusted(argo, debug = 0)
 should be printed.}
 }
 \description{
-This is done by using \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} on each of the argo
+This is done by using \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} on each of the Argo
 objects stored within the first argument.
 }
 \details{
-(FIXME: JH add a few sentences here, please)
+This is a complex process, however, simply put, \code{useAdjusted()} allows users
+to express preference for adjusted vs unadjusted data. If an Adjusted field exists,
+and it is not filled with all NA values, this function will return the Adjusted
+data. With oxygen, for example, if oxygenAdjusted exists, and it is not all NA values,
+\code{useAdjusted()} will turn "oxygenAdjusted" in the original file to "oxygen", and
+"oxygen" in the original file to "oxygenUnadjusted". If there was no adjusted field,
+or it was filled with all NA values, the original names would stay the same when
+using \code{useAdjusted()}.
 
 See Reference 1 for the process of adding adjusted data to Argo
 files, and see the documentation of \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} for the
