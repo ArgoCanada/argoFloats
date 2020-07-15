@@ -27,7 +27,7 @@ directly with \code{\link[oce:read.argo]{oce::read.argo()}} or indirectly with
 The format used in \code{historyQCTest} and \code{historyAction}
 is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
 of Carval et al. (2019), in which they are called
-\code{HISTORY_QC_TEST} and \code{HISTORY_ACTION}, respectively.
+\code{HISTORY_QCTEST} and \code{HISTORY_ACTION}, respectively.
 }
 \details{
 The tests, from Carval et al.(2019) Table 11, are as follows.\tabular{lll}{
@@ -54,6 +54,9 @@ The tests, from Carval et al.(2019) Table 11, are as follows.\tabular{lll}{
    20 \tab 1048576 \tab Questionable Argos position test \cr
    21 \tab 2097152 \tab Near-surface unpumped CTD salinity test \cr
    22 \tab 4194304 \tab Near-surface mixed air/water test \cr
+   23 \tab 8388608 \tab Interim rtqc flag scheme for data deeper than 2000 dbar \cr
+   24 \tab 16777216 \tab Interim rtqc flag scheme for data from experimental sensors \cr
+   25 \tab 33554432 \tab MEDD test \cr
 }
 }
 \examples{

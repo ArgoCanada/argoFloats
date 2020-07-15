@@ -84,7 +84,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' The format used in `historyQCTest` and `historyAction`
 #' is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
 #' of Carval et al. (2019), in which they are called
-#' `HISTORY_QC_TEST` and `HISTORY_ACTION`, respectively.
+#' `HISTORY_QCTEST` and `HISTORY_ACTION`, respectively.
 #'
 #' The tests, from Carval et al.(2019) Table 11, are as follows.
 #'
@@ -112,6 +112,9 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' 20  | 1048576 |  Questionable Argos position test
 #' 21  | 2097152 |  Near-surface unpumped CTD salinity test
 #' 22  | 4194304 |  Near-surface mixed air/water test
+#' 23  | 8388608 |  Interim rtqc flag scheme for data deeper than 2000 dbar
+#' 24  |16777216 | Interim rtqc flag scheme for data from experimental sensors
+#' 25  |33554432 | MEDD test
 #'
 #' @param x An [oce::argo-class] object, as read directly with [oce::read.argo()]
 #' or as extracted from the return value of a call to [readProfiles()], as
