@@ -86,6 +86,33 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' of Carval et al. (2019), in which they are called
 #' `HISTORY_QC_TEST` and `HISTORY_ACTION`, respectively.
 #'
+#' The tests, from Carval et al.(2019) Table 11, are as follows.
+#'
+#' Test|  Number |    Meaning
+#' ----|---------|----------------------
+#' 1   |       2 |  Platform Identification test
+#' 2   |       4 |  Impossible Date test
+#' 3   |       8 |  Impossible Location test
+#' 4   |      16 |  Position on Land test
+#' 5   |      32 |  Impossible Speed test
+#' 6   |      64 |  Global Range test
+#' 7   |     128 |  Regional Global Parameter test
+#' 8   |     256 |  Pressure Increasing test
+#' 9   |     512 |  Spike test
+#' 10  |    1024 |  Top and Bottom Spike test (obsolete)
+#' 11  |    2048 |  Gradient test
+#' 12  |    4096 |  Digit Rollover test
+#' 13  |    8192 |  Stuck Value test
+#' 14  |   16384 |  Density Inversion test
+#' 15  |   32768 |  Grey List test
+#' 16  |   65536 |  Gross Salinity or Temperature Sensor Drift test
+#' 17  |  131072 |  Visual QC test
+#' 18  |  261144 |  Frozen profile test
+#' 19  |  524288 |  Deepest pressure test
+#' 20  | 1048576 |  Questionable Argos position test
+#' 21  | 2097152 |  Near-surface unpumped CTD salinity test
+#' 22  | 4194304 |  Near-surface mixed air/water test
+#'
 #' @param x An [oce::argo-class] object, as read directly with [oce::read.argo()]
 #' or as extracted from the return value of a call to [readProfiles()], as
 #' in the \dQuote{Examples}.

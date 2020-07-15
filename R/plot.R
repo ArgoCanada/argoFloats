@@ -290,11 +290,16 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "  Dlat=", round(Dlat, 4), "\n", sep="")
                           argoFloatsDebug(debug, "  Dlon=", round(Dlon, 4), "\n", sep="")
                           argoFloatsDebug(debug, "  resolution=", resolution, "\n", sep="")
+                          argoFloatsDebug(debug, "  minlon=", round(usr[1]-Dlon, 3), "\n", sep="")
+                          argoFloatsDebug(debug, "  maxlon=", round(usr[2]+Dlon, 3), "\n", sep="")
+                          argoFloatsDebug(debug, "  minlat=", round(usr[3]-Dlat, 3), "\n", sep="")
+                          argoFloatsDebug(debug, "  maxlat=", round(usr[4]+Dlat, 3), "\n", sep="")
+                          
                           ## Round to 4 digits to prevent crazy filenames for no good reason
-                          bathy <- try(marmap::getNOAA.bathy(round(usr[1]-Dlon, 3),
-                                                             round(usr[2]+Dlon, 3),
-                                                             round(usr[3]-Dlat, 3),
-                                                             round(usr[4]+Dlat, 3),
+                          bathy <- try(marmap::getNOAA.bathy(max(-180, round(usr[1]-Dlon, 3)),
+                                                             min(+180, round(usr[2]+Dlon, 3)),
+                                                             max(-90, round(usr[3]-Dlat, 3)),
+                                                             min(+90, round(usr[4]+Dlat, 3)),
                                                              resolution=resolution,
                                                              keep=bathymetry$keep),
                                        silent=FALSE)
@@ -417,9 +422,9 @@ setMethod(f="plot",
                           polygon(coastlineWorldMedium[["longitude"]], coastlineWorldMedium[["latitude"]], col="tan")
                       } else {
                           argoFloatsDebug(debug, "using coastlineWorld from oce package, since the span is large\n")
-                          data("coastlineWorldg", package="ocedata", envir=environment())
-                          coastlineWorldg <- get("coastlineWorldMedium")
-                          polygon(coastlineWorldg[["longitude"]], coastlineWorldMedium[["latitude"]], col="tan")
+                          data("coastlineWorld", package="oce", envir=environment())
+                          coastlineWorld <- get("coastlineWorld")
+                          polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="tan")
                       }
                   } else {
                       argoFloatsDebug(debug, "using coastlineWorld from oce package, since the ocedata package is not installedi\n")

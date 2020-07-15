@@ -29,6 +29,33 @@ is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
 of Carval et al. (2019), in which they are called
 \code{HISTORY_QC_TEST} and \code{HISTORY_ACTION}, respectively.
 }
+\details{
+The tests, from Carval et al.(2019) Table 11, are as follows.\tabular{lll}{
+   Test \tab Number \tab Meaning \cr
+   1 \tab 2 \tab Platform Identification test \cr
+   2 \tab 4 \tab Impossible Date test \cr
+   3 \tab 8 \tab Impossible Location test \cr
+   4 \tab 16 \tab Position on Land test \cr
+   5 \tab 32 \tab Impossible Speed test \cr
+   6 \tab 64 \tab Global Range test \cr
+   7 \tab 128 \tab Regional Global Parameter test \cr
+   8 \tab 256 \tab Pressure Increasing test \cr
+   9 \tab 512 \tab Spike test \cr
+   10 \tab 1024 \tab Top and Bottom Spike test (obsolete) \cr
+   11 \tab 2048 \tab Gradient test \cr
+   12 \tab 4096 \tab Digit Rollover test \cr
+   13 \tab 8192 \tab Stuck Value test \cr
+   14 \tab 16384 \tab Density Inversion test \cr
+   15 \tab 32768 \tab Grey List test \cr
+   16 \tab 65536 \tab Gross Salinity or Temperature Sensor Drift test \cr
+   17 \tab 131072 \tab Visual QC test \cr
+   18 \tab 261144 \tab Frozen profile test \cr
+   19 \tab 524288 \tab Deepest pressure test \cr
+   20 \tab 1048576 \tab Questionable Argos position test \cr
+   21 \tab 2097152 \tab Near-surface unpumped CTD salinity test \cr
+   22 \tab 4194304 \tab Near-surface mixed air/water test \cr
+}
+}
 \examples{
 library(argoFloats)
 a <- readProfiles(system.file("extdata", "D4900785_048.nc", package="argoFloats"))
