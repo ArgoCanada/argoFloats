@@ -30,7 +30,11 @@ of Carval et al. (2019), in which they are called
 \code{HISTORY_QCTEST} and \code{HISTORY_ACTION}, respectively.
 }
 \details{
-The tests, from Carval et al.(2019) Table 11, are as follows.\tabular{lll}{
+The tests, from Carval et al. (2019) Table 11, are as follows
+(after correcting the "Number" for test 18 from
+261144 to 262144, because the former is not an
+integral power of 2, suggesting a typo
+in the manual).\tabular{lll}{
    Test \tab Number \tab Meaning \cr
    1 \tab 2 \tab Platform Identification test \cr
    2 \tab 4 \tab Impossible Date test \cr
@@ -49,7 +53,7 @@ The tests, from Carval et al.(2019) Table 11, are as follows.\tabular{lll}{
    15 \tab 32768 \tab Grey List test \cr
    16 \tab 65536 \tab Gross Salinity or Temperature Sensor Drift test \cr
    17 \tab 131072 \tab Visual QC test \cr
-   18 \tab 261144 \tab Frozen profile test \cr
+   18 \tab 262144 \tab Frozen profile test \cr
    19 \tab 524288 \tab Deepest pressure test \cr
    20 \tab 1048576 \tab Questionable Argos position test \cr
    21 \tab 2097152 \tab Near-surface unpumped CTD salinity test \cr

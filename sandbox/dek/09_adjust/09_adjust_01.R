@@ -19,5 +19,3 @@ for (argo in a[["profile"]]) {
 }
 table(testOfHypothesis)
 
-
-
