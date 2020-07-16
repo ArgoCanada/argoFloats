@@ -86,7 +86,11 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' of Carval et al. (2019), in which they are called
 #' `HISTORY_QCTEST` and `HISTORY_ACTION`, respectively.
 #'
-#' The tests, from Carval et al.(2019) Table 11, are as follows.
+#' The tests, from Carval et al. (2019) Table 11, are as follows
+#' (after correcting the "Number" for test 18 from
+#' 261144 to 262144, because the former is not an
+#' integral power of 2, suggesting a typo
+#' in the manual).
 #'
 #' Test|  Number |    Meaning
 #' ----|---------|----------------------
@@ -107,7 +111,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' 15  |   32768 |  Grey List test
 #' 16  |   65536 |  Gross Salinity or Temperature Sensor Drift test
 #' 17  |  131072 |  Visual QC test
-#' 18  |  261144 |  Frozen profile test
+#' 18  |  262144 |  Frozen profile test
 #' 19  |  524288 |  Deepest pressure test
 #' 20  | 1048576 |  Questionable Argos position test
 #' 21  | 2097152 |  Near-surface unpumped CTD salinity test

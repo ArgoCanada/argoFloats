@@ -3,12 +3,12 @@ library(oce)
 if (!exists("argoMerged")) { # cache for speed of repeated interactive source() actions
     data("indexMerged") # 39 items
     profilesMerged <- getProfiles(indexMerged)
-    argoMerged <- readProfiles(profilesMerged, handleFlags=FALSE)
+    argoMerged <- readProfiles(profilesMerged)
 }
 if (!exists("argoSynthetic")) { # cache for speed of repeated interactive source() actions
     data("indexSynthetic") # 39 items
     profilesSynthetic <- getProfiles(indexSynthetic)
-    argoSynthetic <- readProfiles(profilesSynthetic, handleFlags=FALSE)
+    argoSynthetic <- readProfiles(profilesSynthetic)
 }
 
 n <- argoMerged[["length"]] # number of profiles
