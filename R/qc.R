@@ -124,6 +124,12 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' or as extracted from the return value of a call to [readProfiles()], as
 #' in the \dQuote{Examples}.
 #'
+#' @param style A character value governing the output printed by `showQCFlags`,
+#' either `"brief"` (the default) for a single line stating all the tests by
+#' numbers, followed by lines giving the number and description of all failed tests,
+#' or `"full"` for a listing of each test that was performed, with an indication
+#' of whether `x` passes or fails it.
+#'
 #' @return This function returns nothing; its action is in the printing
 #' of results.
 #'
@@ -139,7 +145,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #'
 #' @export
 #' @author Jaimie Harbin and Dan Kelley
-showQCTests <- function(x)
+showQCTests <- function(x, style="brief")
 {
     QCTests <- c("Platform Identification test"=1,
                  "Impossible Date test"=2,
@@ -190,15 +196,28 @@ showQCTests <- function(x)
     perf <- tests[1, which(action == "QCP$")]
     ## Match strings within 'action' to find the tests that failed
     fail <- tests[1, which(action == "QCF$")]
-    perfIndices <- hexToBits(perf)
-    failIndices <- hexToBits(fail)
-    badIndices <- -1 + which(failIndices == 1)
-    cat("Tests performed: ", paste(QCTests[perfIndices==1], collapse=" "), "\n", sep="")
-    if (length(badIndices)) {
-        for (i in badIndices)
-            cat(sprintf("    Failed test %2d (%s)\n", QCTests[i], names(QCTests)[i]))
+    perfIndices <- which(1==hexToBits(perf))
+    failIndices <- -1 + which(1==hexToBits(fail))
+    if (style == "brief") {
+        cat("Tests performed: ", paste(QCTests[perfIndices], collapse=" "), "\n", sep="")
+        if (length(failIndices)) {
+            for (i in failIndices)
+                cat(sprintf("    Failed test %2d (%s)\n", QCTests[i], names(QCTests)[i]))
+        } else {
+            cat("    Passed all tests\n")
+        }
+    } else if (style == "full") {
+        cat("Test |  Status | Description\n")
+        cat("-----|---------|--------------------------------------------------------------\n")
+        for (i in QCTests) {
+            failed <- i %in% failIndices
+            skipped <- !(i %in% perfIndices)
+            status <- if (failed) "FAILED" else if (skipped) "Skipped" else "Passed"
+            cat(sprintf("%4d | %7s | %s\n", i, status, names(QCTests)[i]))
+        }
+        cat("-----|---------|--------------------------------------------------------------\n")
     } else {
-        cat("    Passed all tests\n")
+        stop("style must be either \"brief\" or \"full\", not \"", style, "\" as given")
     }
     invisible(NULL)
 }

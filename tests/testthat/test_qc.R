@@ -31,6 +31,6 @@ test_that("showing QC tests", {
         argos1 <- argos[[1]]
         ## this is only a consistency check with values as of 2020-07-17, not a real
         ## test of what to expect.
-        expect_output(showQCTests(argos[[1]]), "^Tests performed: 2 3 4 5 6 13 14 15 16 17 19 22 23 24 25\\n    Failed test 14 \\(Density Inversion test\\)*$")
+        expect_output(showQCTests(argos[[1]]), "^Tests performed: 2 3 4 5 6 13 14 15 16 17 19\\n    Failed test 14 \\(Density Inversion test\\)*$")
     }
 })
