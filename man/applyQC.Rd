@@ -27,11 +27,11 @@ more information on these QC code values.}
 use the actions set up by \code{\link[=readProfiles]{readProfiles()}}, which, by default.
 causes any data flagged as suspicious to be set to \code{NA}.}
 
-\item{debug}{Passed to \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.}
+\item{debug}{Passed to \code{\link[oce:handleFlags,argo-method]{oce::handleFlags,argo-method()}}.}
 }
 \value{
 A copy of \code{x} but with each of the objects within its
-\code{data} slot having been passed through \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.
+\code{data} slot having been passed through \code{\link[oce:handleFlags,argo-method]{oce::handleFlags,argo-method()}}.
 }
 \description{
 This function examines the quality-control (QC) flags within an \code{\linkS4class{argoFloats}}
@@ -42,7 +42,7 @@ report data that are suspicious based on statistical and physical measures, as
 is illustrated in the \dQuote{Examples} section.
 }
 \details{
-The work is done by using \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}
+The work is done by using \code{\link[oce:handleFlags,argo-method]{oce::handleFlags,argo-method()}}
 on each of the profiles stored within the object. In most cases, only
 the object needs to be specified, for the default actions coincide with
 common conventions for flags in argo data.
