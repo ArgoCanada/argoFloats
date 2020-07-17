@@ -15,7 +15,8 @@ getProfileFromUrl(
 )
 }
 \arguments{
-\item{url}{character value giving the URL for an Argo float a profile.}
+\item{url}{character value giving the URL for a netcdf file containing an
+particular profile of a particular Argo float.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value of \code{"."} means to store the

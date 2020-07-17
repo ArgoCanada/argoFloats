@@ -2,7 +2,8 @@
 
 #' Get Data for an Argo Float Profile
 #'
-#' @param url character value giving the URL for an Argo float a profile.
+#' @param url character value giving the URL for a netcdf file containing an
+#' particular profile of a particular Argo float.
 #' @template destdir
 #' @param destfile optional character value that specifies the name to be used
 #' for the downloaded file. If this is not specified, then a name is determined
@@ -87,7 +88,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #'    (see next paragraph).
 #' * `server`, the URL at which the index was found, and from
 #'    which [getProfiles()] can construct URLs from which to
-#'    download the netcdf files for individual float profils.
+#'    download the netcdf files for individual float profiles.
 #' * `filename`, the argument provided here.
 #' * `header`, the preliminary lines in the source file that start
 #'    with the `#` character.
