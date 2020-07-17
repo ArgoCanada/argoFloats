@@ -141,6 +141,31 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' @author Jaimie Harbin and Dan Kelley
 showQCTests <- function(x)
 {
+    QCTests <- c("Platform Identification test"=1,
+                 "Impossible Date test"=2,
+                 "Impossible Location test"=3,
+                 "Position on Land test"=4,
+                 "Impossible Speed test"=5,
+                 "Global Range test"=6,
+                 "Regional Global Parameter test"=7,
+                 "Pressure Increasing test"=8,
+                 "Spike test"=9,
+                 "Top and Bottom Spike test (obsolete)"=10,
+                 "Gradient test"=11,
+                 "Digit Rollover test"=12,
+                 "Stuck Value test"=13,
+                 "Density Inversion test"=14,
+                 "Grey List test"=15,
+                 "Gross Salinity or Temperature Sensor Drift test"=16,
+                 "Visual QC test"=17,
+                 "Frozen profile test"=18,
+                 "Deepest pressure test"=19,
+                 "Questionable Argos position test"=20,
+                 "Near-surface unpumped CTD salinity test"=21,
+                 "Near-surface mixed air/water test"=22,
+                 "Interim rtqc flag scheme for data deeper than 2000 dbar"=23,
+                 "Interim rtqc flag scheme for data from experimental sensors"=24,
+                 "MEDD test"=25)
     if (!inherits(x, 'argo'))
         stop("can only display Quality Control tests for oce objects of 'argo' class")
     ## Only attempt a display if the object holds HISTORY_ACTION and HISTORY_TESTS
@@ -165,15 +190,16 @@ showQCTests <- function(x)
     perf <- tests[1, which(action == "QCP$")]
     ## Match strings within 'action' to find the tests that failed
     fail <- tests[1, which(action == "QCF$")]
-    ## Break strings into characters
-    ##OLD perfChars <- strsplit(perf, "")[[1]]
-    ##OLD failChars <- strsplit(fail, "")[[1]]
-    ##OLD perfIndices <- which(1 == unlist(lapply(perfChars, function(hex) hexToNibble(hex))))
-    ##OLD failIndices <- which(1 == unlist(lapply(failChars, function(hex) hexToNibble(hex))))
     perfIndices <- hexToBits(perf)
     failIndices <- hexToBits(fail)
-    cat("Tests performed: ", paste(perfIndices, collapse=" "), "\n", sep="")
-    cat("Tests failed:    ", paste(failIndices, collapse=" "), "\n", sep="")
+    badIndices <- -1 + which(failIndices == 1)
+    cat("Tests performed: ", paste(QCTests[perfIndices==1], collapse=" "), "\n", sep="")
+    if (length(badIndices)) {
+        for (i in badIndices)
+            cat(sprintf("    Failed test %2d (%s)\n", QCTests[i], names(QCTests)[i]))
+    } else {
+        cat("    Passed all tests\n")
+    }
     invisible(NULL)
 }
 
