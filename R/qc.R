@@ -75,7 +75,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #'
 #' `showQCTests` print a summary of the quality-control (QC) tests
 #' (if any) that were performed on an argo profile.  It uses
-#' [hexToNibble()] to decode the hexadecimal  values that may
+#' [hexToBits()] to decode the hexadecimal  values that may
 #' be stored in `historyQCTest` and `historyAction` within
 #' the `metadata` slot of an individual argo profile, as read
 #' directly with [oce::read.argo()] or indirectly with
@@ -166,10 +166,12 @@ showQCTests <- function(x)
     ## Match strings within 'action' to find the tests that failed
     fail <- tests[1, which(action == "QCF$")]
     ## Break strings into characters
-    perfChars <- strsplit(perf, "")[[1]]
-    failChars <- strsplit(fail, "")[[1]]
-    perfIndices <- which(1 == unlist(lapply(perfChars, function(hex) hexToNibble(hex))))
-    failIndices <- which(1 == unlist(lapply(failChars, function(hex) hexToNibble(hex))))
+    ##OLD perfChars <- strsplit(perf, "")[[1]]
+    ##OLD failChars <- strsplit(fail, "")[[1]]
+    ##OLD perfIndices <- which(1 == unlist(lapply(perfChars, function(hex) hexToNibble(hex))))
+    ##OLD failIndices <- which(1 == unlist(lapply(failChars, function(hex) hexToNibble(hex))))
+    perfIndices <- hexToBits(perf)
+    failIndices <- hexToBits(fail)
     cat("Tests performed: ", paste(perfIndices, collapse=" "), "\n", sep="")
     cat("Tests failed:    ", paste(failIndices, collapse=" "), "\n", sep="")
     invisible(NULL)

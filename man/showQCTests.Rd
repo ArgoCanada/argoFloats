@@ -18,7 +18,7 @@ of results.
 \description{
 \code{showQCTests} print a summary of the quality-control (QC) tests
 (if any) that were performed on an argo profile.  It uses
-\code{\link[=hexToNibble]{hexToNibble()}} to decode the hexadecimal  values that may
+\code{\link[=hexToBits]{hexToBits()}} to decode the hexadecimal  values that may
 be stored in \code{historyQCTest} and \code{historyAction} within
 the \code{metadata} slot of an individual argo profile, as read
 directly with \code{\link[oce:read.argo]{oce::read.argo()}} or indirectly with

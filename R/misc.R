@@ -142,29 +142,32 @@ useAdjustedProfile <- function(argo, debug=0)
 
 #' Convert Hexadecimal Digit to Integer Vector
 #'
-#' `hexToNibble` converts a hexadecimal digit to 4 integers indicating bits, e.g. for use within
-#' [showQCTests()].
+#' `hexToBits` converts a string holding hexadecimal digits to a sequence of integers
+#' 0 or 1, for the bits.  This is mainly for for use within [showQCTests()].
 #'
-#' @param x A character value corresponding to a hexadecimal digit (i.e. `"0"` through `"9"`,
-#' `"a"` through `"f"`, or `"A"` through `"F"`).
+#' @param hex A vector of character values corresponding to a sequence of one or more
+#' hexadecimal digits (i.e. `"0"` through `"9"`,`"a"` through `"f"`, or `"A"` through `"F"`).
 #'
-#' @return An integer vector, in 'mathematical' order.  (This is the reverse of
-#' the order used by [rawToBits()]; see the \dQuote{Examples}.)
+#' @return An integer vector holding the bits as values 0 or 1.  The
+#' inverse of 'mathematical' order is used, as is the case for the base
+#' R function [rawToBits()]; see the \dQuote{Examples}.
 #'
 #' @examples
 #' library(argoFloats)
-#' hexToNibble('1') # 0 0 0 1
-#' hexToNibble('e') # 1 1 1 0
+#' hexToBits('3')    # 1 1 0 0
+#' hexToBits('4000') # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0
 #'
 #' @export
 #'
 #' @author Jaimie Harbin and Dan Kelley
-hexToNibble <- function(x)
+hexToBits <- function(hex)
 {
-    ## Prepend 0x0 to the character and make it raw, so we can use rawToBits; take
-    ## only the rightmost 4 bits since they correspond to our character.
-    raw <- as.raw(paste0('0x0', x))
-    rawRHS <- tail(rev(rawToBits(as.raw(paste0('0x0', x)))), 4)
-    ifelse(rawRHS == "01", 1, 0)
+    ## see https://github.com/ArgoCanada/argoFloats/issues/176
+    res <- NULL
+    for (h in strsplit(hex, "")[[1]]) {
+        bits <- ifelse(01 == rawToBits(as.raw(paste0("0x0", h))), 1, 0)
+        res <- c(res, tail(rev(bits), 4))
+    }
+    rev(res)
 }
 
