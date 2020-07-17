@@ -326,17 +326,17 @@ setMethod(f="[[",
                       return(x@data$index[i,])
                   } else if (length(i) == 1 && i == "index") {
                       return(x@data$index)
-                  } else if (length(i) == 1 && is.numeric(i)) {
-                      return(x@data$index[i,])
+                  ##??} else if (length(i) == 1 && is.numeric(i)) {
+                  ##??    return(x@data$index[i,])
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data$index)) {
                       return(if (missing(j)) x@data$index[[i]] else x@data$index[[i]][j])
                   } else if (length(i) == 1 && i == "profile") {
-                      profile <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3}).nc$", "\\1", x@data$index$file)
+                      profile <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3}[A-Z]*).nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) profile else profile[j]))
                   } else if (length(i) == 1 && i == "ID") {
-                      ID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}.nc$", "\\1", x@data$index$file)
+                      ID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$index$file))

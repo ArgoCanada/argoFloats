@@ -357,7 +357,7 @@ setMethod(f="subset",
                   } else if (dotsNames[1] == 'ID') {
                       ID <- dots[[1]]
                       file <- x@data$index$file
-                      fileID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}.nc$", "\\1", file)
+                      fileID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", file)
                       keep <- ID == fileID
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
