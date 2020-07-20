@@ -47,7 +47,8 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-A character value, if the file could be downloaded, or \code{NULL} otherwise.
+A character value naming the local location of the downloaded file,
+or \code{NULL} if the file could not be downloaded.
 }
 \description{
 Get Data for an Argo Float Profile

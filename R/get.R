@@ -13,7 +13,9 @@
 #' @template quiet
 #' @template debug
 #'
-#' @return A character value, if the file could be downloaded, or `NULL` otherwise.
+#' @return A character value naming the local location of the downloaded file,
+#' or `NULL` if the file could not be downloaded.
+#'
 #' @examples
 #'\dontrun{
 #' # These examples assume that the ~/data/argo directory exists.

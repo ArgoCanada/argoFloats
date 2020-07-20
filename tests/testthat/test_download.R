@@ -68,4 +68,13 @@ test_that("readProfile() handling of an out-of-date URL surrounded by valid URLs
           }
 )
 
-
+test_that("readProfile() handling of nonlocal source file",
+          {
+              if (canDownload()) {
+                  u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_001.nc"
+                  p <- readProfiles(u)
+                  expect_true(grepl("BD5903586_001.nc$", p[["filename"]]))
+              }
+          }
+)
+ 

@@ -2,43 +2,49 @@
 
 #' Read argo profiles from local files
 #'
-#' This works with either a list of local (netCDF) files,
+#' This works with either a vector of netCDF files,
 #' or a [`argoFloats-class`] object of type `"profiles"`, as
 #' created by [getProfiles()].
-#' During the reading, argo profile objects are created with [oce::read.argo()],
-#' after which quality-control flags are inserted into the objects for later use
-#' by [applyQC()], the documentation of which explains the meanings of the flags.
+#' During the reading, argo profile objects are created with [oce::read.argo()]
+#' or a replacement function provided as the `FUN` argument.
 #'
 #' By default, warnings are issued about any
 #' profiles in which 10 percent or more of the measurements are flagged
 #' with a quality-control code of 0, 3, 4, 6, 7, or 9 (see the
 #' [applyQC()] documentation for the meanings of these codes).
 #'
-#' @param profiles Either a character vector holding the names
-#' of local files to read, or (better) an [`argoFloats-class`] object created
-#' by [getProfiles()].
+#' @param profiles either (1) a character vector that holds
+#' the names of netcfd files or (2) an [`argoFloats-class`]
+#' object created by [getProfiles()]. In the first case, any
+#' items that start with `"ftp:"` are taken to represent
+#' the full paths to remote files, and these first downloaded
+#' to the `destdir` directory using [getProfileFromUrl()].
 #'
-#' @param FUN A function that reads the netcdf files in which the argo
+#' @param FUN a function that reads the netcdf files in which the argo
 #' profiles are stored.  If `FUN` not provided, then it defaults
 #' to [oce::read.argo()].  Only experts should consider anything
 #' other than this default, or a wrapper to it.
 #'
-#' @param silent A logical value (`FALSE` by default) indicating whether
+#' @param destdir a character value that specifies a directory into
+#' which to save downloaded files, in the case that they are
+#' provided in the `profiles` argument.
+#'
+#' @param silent a logical value (`FALSE` by default) indicating whether
 #' work silently, without displaying information about the progress.
 #'
-#' @param debug An integer specifying the level of debugging. If
+#' @param debug an integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
 #' a small amount of debugging information is printed.  Note that
 #' `debug-1` is passed to [oce::read.argo()], which actually reads
 #' the file, and so it will print messages if `debug` exceeds 1.
 #'
-#' @return [readProfiles] returns an [`argoFloats-class`] object
+#' @return An [`argoFloats-class`] object
 #' with `type="argos"`, in which the `data` slot
 #' contains a list named `argos` that holds objects
 #' that are created by [oce::read.argo()].
 #'
 #' @examples
-#' # Read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
+#' # Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
 #'\dontrun{
 #' library(argoFloats)
 #' data(index)
@@ -56,10 +62,16 @@
 #' mtext(paste(file, "\n (after applying QC)"), cex=0.7*par("cex"))
 #'}
 #'
+#' # Example 2: read from a URI
+#'\dontrun{
+#' u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_001.nc"
+#' p <- readProfiles(u)
+#'}
+#'
 #' @export
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, FUN, silent=FALSE, debug=0)
+readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, debug=0)
 {
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for readProfiles() to work")
@@ -83,12 +95,21 @@ readProfiles <- function(profiles, FUN, silent=FALSE, debug=0)
 
     res <- new("argoFloats", type="argos")
     if (is.character(profiles)) {
-        argoFloatsDebug(debug, "case 1: vector of character strings\n")
-        fileExists <- sapply(profiles, file.exists)
-        if (any(!fileExists))
-            stop("cannot find the following files: \"", paste(profiles[!fileExists], collapse="\", \""), "\"")
-        argoFloatsDebug(debug, "reading", length(profiles), "netcdf files.\n")
-        res@data$argos <- lapply(profiles, FUN, debug=debug-1)
+        argoFloatsDebug(debug, "Case 1: vector of ", length(profiles), " character valuesn", sep="")
+        n <- length(profiles)
+        res@data$argos <- vector("list", length=n)
+        for (i in seq_len(n)) {
+            if (grepl("^ftp:", profiles[i])) {
+                localFile <- getProfileFromUrl(profiles[i], destdir=destdir, debug=debug)
+                res@data$argos[[i]] <- FUN(localFile, debug=debug-1)
+            } else {
+                argoFloatsDebug(debug, "Attempting to read file '", profiles[i], "'.\n", sep="")
+                if (!file.exists(profiles[i]))
+                    stop("cannot find the local file: '", profiles[i], "'")
+                res@data$argos[[i]] <- FUN(profiles[i], debug=debug-1)
+            }
+        }
+        # res@data$argos <- lapply(profiles, FUN, debug=debug-1)
         n <- length(res@data$argos)
         argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles (over-rides oce defaults).\n")
         for (i in seq_len(n)) {

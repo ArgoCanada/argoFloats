@@ -4,40 +4,46 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(profiles, FUN, silent = FALSE, debug = 0)
+readProfiles(profiles, FUN, destdir = "~/data/argo", silent = FALSE, debug = 0)
 }
 \arguments{
-\item{profiles}{Either a character vector holding the names
-of local files to read, or (better) an \code{\linkS4class{argoFloats}} object created
-by \code{\link[=getProfiles]{getProfiles()}}.}
+\item{profiles}{either (1) a character vector that holds
+the names of netcfd files or (2) an \code{\linkS4class{argoFloats}}
+object created by \code{\link[=getProfiles]{getProfiles()}}. In the first case, any
+items that start with \code{"ftp:"} are taken to represent
+the full paths to remote files, and these first downloaded
+to the \code{destdir} directory using \code{\link[=getProfileFromUrl]{getProfileFromUrl()}}.}
 
-\item{FUN}{A function that reads the netcdf files in which the argo
+\item{FUN}{a function that reads the netcdf files in which the argo
 profiles are stored.  If \code{FUN} not provided, then it defaults
 to \code{\link[oce:read.argo]{oce::read.argo()}}.  Only experts should consider anything
 other than this default, or a wrapper to it.}
 
-\item{silent}{A logical value (\code{FALSE} by default) indicating whether
+\item{destdir}{a character value that specifies a directory into
+which to save downloaded files, in the case that they are
+provided in the \code{profiles} argument.}
+
+\item{silent}{a logical value (\code{FALSE} by default) indicating whether
 work silently, without displaying information about the progress.}
 
-\item{debug}{An integer specifying the level of debugging. If
+\item{debug}{an integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,
 a small amount of debugging information is printed.  Note that
 \code{debug-1} is passed to \code{\link[oce:read.argo]{oce::read.argo()}}, which actually reads
 the file, and so it will print messages if \code{debug} exceeds 1.}
 }
 \value{
-\link{readProfiles} returns an \code{\linkS4class{argoFloats}} object
+An \code{\linkS4class{argoFloats}} object
 with \code{type="argos"}, in which the \code{data} slot
 contains a list named \code{argos} that holds objects
 that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 }
 \description{
-This works with either a list of local (netCDF) files,
+This works with either a vector of netCDF files,
 or a \code{\linkS4class{argoFloats}} object of type \code{"profiles"}, as
 created by \code{\link[=getProfiles]{getProfiles()}}.
-During the reading, argo profile objects are created with \code{\link[oce:read.argo]{oce::read.argo()}},
-after which quality-control flags are inserted into the objects for later use
-by \code{\link[=applyQC]{applyQC()}}, the documentation of which explains the meanings of the flags.
+During the reading, argo profile objects are created with \code{\link[oce:read.argo]{oce::read.argo()}}
+or a replacement function provided as the \code{FUN} argument.
 }
 \details{
 By default, warnings are issued about any
@@ -46,7 +52,7 @@ with a quality-control code of 0, 3, 4, 6, 7, or 9 (see the
 \code{\link[=applyQC]{applyQC()}} documentation for the meanings of these codes).
 }
 \examples{
-# Read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
+# Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
 \dontrun{
 library(argoFloats)
 data(index)
@@ -62,6 +68,12 @@ mtext(file, cex=0.7*par("cex"))
 aWithoutNA <- argosWithoutNA[[1]]
 plotTS(clean[[1]], eos="unesco", type="o")
 mtext(paste(file, "\n (after applying QC)"), cex=0.7*par("cex"))
+}
+
+# Example 2: read from a URI
+\dontrun{
+u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_001.nc"
+p <- readProfiles(u)
 }
 
 }
