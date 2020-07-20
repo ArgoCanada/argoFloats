@@ -10,6 +10,7 @@ getIndex(
   destdir = "~/data/argo",
   age = 1,
   quiet = FALSE,
+  keep = FALSE,
   debug = 0
 )
 }
@@ -48,8 +49,16 @@ to avoid slowing down a workflow with a download that might take
 a minute or so. Note that setting \code{age=0} will force a new
 download, regardless of the age of the local file.}
 
-\item{quiet}{silence some progress indicators.  The default
-is to show such indicators.}
+\item{quiet}{logical value indicating whether to silence some
+progress indicators.  The default is to show such indicators.}
+
+\item{keep}{logical value indicating whether to retain the
+raw index file as downloaded from the server.  This is \code{FALSE}
+by default, indicating that the raw index file is to be
+discarded once it has been analysed.  (The relevant contents
+are stored in a local \code{.rda} file, but having the raw index
+file can be handy for double-checking things like the decoding
+of dates.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions

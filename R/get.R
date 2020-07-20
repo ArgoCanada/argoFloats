@@ -165,8 +165,16 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' a minute or so. Note that setting `age=0` will force a new
 #' download, regardless of the age of the local file.
 #'
-#' @param quiet silence some progress indicators.  The default
-#' is to show such indicators.
+#' @param quiet logical value indicating whether to silence some
+#' progress indicators.  The default is to show such indicators.
+#'
+#' @param keep logical value indicating whether to retain the
+#' raw index file as downloaded from the server.  This is `FALSE`
+#' by default, indicating that the raw index file is to be
+#' discarded once it has been analysed.  (The relevant contents
+#' are stored in a local `.rda` file, but having the raw index
+#' file can be handy for double-checking things like the decoding
+#' of dates.)
 #'
 #' @template debug
 #'
@@ -192,6 +200,7 @@ getIndex <- function(filename="argo",
                      destdir="~/data/argo",
                      age=1,
                      quiet=FALSE,
+                     keep=FALSE,
                      debug=0)
 {
     if (!requireNamespace("oce", quietly=TRUE))
@@ -334,6 +343,11 @@ getIndex <- function(filename="argo",
     argoFloatsDebug(debug,  "saving cache file '", destfileRda, "'.\n", sep="")
     argoFloatsIndex <- list(server=server[iurlSuccess], header=header, index=index)
     save(argoFloatsIndex, file=destfileRda)
+    if (keep) {
+        to <- paste0(destdir, "/", gsub(".*/", "", url[iurlSuccess]))
+        argoFloatsDebug(debug, "storing temporary raw index file\n    '", destfileTemp, "'\n  locally as\n    '", to, "'\n", sep="")
+        file.copy(from=destfileTemp, to=to)
+    }
     argoFloatsDebug(debug,  "removing temporary file '", destfileTemp, "'.\n", sep="")
     unlink(destfileTemp)
     res@metadata$server <- server[iurlSuccess]
