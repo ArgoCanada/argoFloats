@@ -1,6 +1,6 @@
 #' Sample argo file (synthetic realtime data)
 #'
-#' This is the netcdf file for profile 131 of argo float 2902204, downloaded from
+#' This is the netcdf file for cycle 131 of Argo float 2902204, downloaded from
 #' \url{ftp://ftp.ifremer.fr/ifremer/argo/dac/incois/2902204/profiles/SR2902204_131.nc}
 #' on 2020 June 24.
 #' As its filename indicates, it holds the "synthetic" version of "realtime" data.
@@ -22,7 +22,7 @@ NULL
 
 #' Sample argo file (delayed data)
 #'
-#' This is netcdf file for profile 048 of argo float 4900785, downloaded from
+#' This is netcdf file for cycle 048 of Argo float 4900785, downloaded from
 #' \url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/4900785/profiles/D4900785_048.nc}
 #' on 2020 June 24.
 #' As its filename indicates, it holds "realtime" data.
@@ -45,7 +45,7 @@ NULL
 
 #' Sample argo file (delayed synthetic bgc data)
 #'
-#' This is the netcf file for profile 001 of argo float SD5903586, downloaded
+#' This is the netcf file for cycle 001 of Argo float SD5903586, downloaded
 #' \url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc}
 #' on 2020 June 24.
 #' As its filename indicates, it holds "synthetic" data
