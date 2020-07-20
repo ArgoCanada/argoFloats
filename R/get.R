@@ -163,7 +163,8 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' default, `age=1`, limits downloads to once per day, as a way
 #' to avoid slowing down a workflow with a download that might take
 #' a minute or so. Note that setting `age=0` will force a new
-#' download, regardless of the age of the local file.
+#' download, regardless of the age of the local file, and that
+#' age is changed to 0 if `keep` is `TRUE`.
 #'
 #' @param quiet logical value indicating whether to silence some
 #' progress indicators.  The default is to show such indicators.
@@ -171,10 +172,9 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
 #' @param keep logical value indicating whether to retain the
 #' raw index file as downloaded from the server.  This is `FALSE`
 #' by default, indicating that the raw index file is to be
-#' discarded once it has been analysed.  (The relevant contents
-#' are stored in a local `.rda` file, but having the raw index
-#' file can be handy for double-checking things like the decoding
-#' of dates.)
+#' discarded once it has been analysed.  Note that if `keep`
+#' is `TRUE`, then the supplied value of `age` is converted
+#' to 0, to force a new download.
 #'
 #' @template debug
 #'
@@ -207,25 +207,35 @@ getIndex <- function(filename="argo",
         stop("must install.packages(\"oce\"), for getIndex() to work")
     if (!requireNamespace("curl", quietly=TRUE))
         stop("must install.packages(\"curl\") for getIndex() to work")
+    if (!is.logical(quiet))
+        stop("quiet must be a logical value")
+    if (1 != length(quiet))
+        stop("quiet must be a single value")
+    if (!is.logical(keep))
+        stop("keep must be a logical value")
+    if (1 != length(keep))
+        stop("keep must be a single value")
+    if (keep)
+        age <- 0
     ## Sample file
     ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
     ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
     res <- new("argoFloats", type="index")
     res@metadata$destdir <- destdir
-    argoFloatsDebug(debug,  "getIndex(server=\"", server, "\", filename=\"", filename, "\"", ", destdir=\"", destdir, "\") {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
+    argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     serverOrig <- server
     if (length(server) == 1 && server == "auto") {
         server <- c("usgodae", "ifremer")
-        argoFloatsDebug(debug, 'server "auto" expanded to c("',
-                        paste(server, collapse='", "'), "')\n", sep="")
+        argoFloatsDebug(debug, "Server 'auto' expanded to c('",
+                        paste(server, collapse="', '"), '").\n', sep="")
     }
     for (iserver in seq_along(server)) {
         if (server[iserver] == "usgodae") {
             server[iserver] <- "ftp://usgodae.org/pub/outgoing/argo"
-            argoFloatsDebug(debug, 'server "usgodae" expanded to "', server[iserver], "'\n")
+            argoFloatsDebug(debug, "Server item 'usgodae' expanded to '", server[iserver], "'.\n", sep="")
         } else if (server[iserver] == "ifremer") {
             server[iserver] <- "ftp://ftp.ifremer.fr/ifremer/argo"
-            argoFloatsDebug(debug, 'server "ifremer" expanded to "', server[iserver], "'\n")
+            argoFloatsDebug(debug, "Server item 'ifremer' expanded to '", server[iserver], "'.\n", sep="")
         }
     }
     if (!all(grepl("^ftp://", server)))
@@ -249,13 +259,19 @@ getIndex <- function(filename="argo",
         filename <- "argo_synthetic-profile_index.txt.gz"
     }
     if (filename != filenameOrig)
-        argoFloatsDebug(debug, "Converted filename=\"", filenameOrig, "\" to filename=\"", filename, "\".\n", sep="")
+        argoFloatsDebug(debug, "Converted filename='", filenameOrig, "' to filename='", filename, "'.\n", sep="")
     ## Note: 'url' is a vector; e.g. using server="auto" creates 2 elements in url
     url <- paste(server, filename, sep="/")
     destfile <- paste(destdir, filename, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
-    destfileRda <- gsub(".gz$", ".rda", destfile)
-    destfileRda <- gsub(".txt$", ".rda", destfile)
+    if (grepl("\\.txt\\.gz$", destfile)) {
+        destfileRda <- gsub(".txt.gz$", ".rda", destfile)
+    } else if (grepl("\\.txt", destfile)) {
+        destfileRda <- gsub(".txt$", ".rda", destfile)
+    } else {
+        stop("cannot construct .rda filename (please report an issue)")
+    }
+    argoFloatsDebug(debug, "Set destfileRda='", destfileRda, "'.\n", sep="")
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
     #res@metadata$filename <- destfileRda
@@ -285,13 +301,11 @@ getIndex <- function(filename="argo",
     ## We need to download data. We do that to a temporary file, because we will be saving
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
+    argoFloatsDebug(debug, "OS allocated temporary file\n    '", destfileTemp, "'.\n", sep="")
     failedDownloads <- 0
     iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
     for (iurl in seq_along(url)) {
-        argoFloatsDebug(debug, "About to download temporary index file\n", sep="")
-        argoFloatsDebug(debug, "    '", destfileTemp, "'\n", sep="", showTime=FALSE)
-        argoFloatsDebug(debug, "from\n", sep="", showTime=FALSE)
-        argoFloatsDebug(debug, "    '", url[iurl], "'\n", sep="", showTime=FALSE)
+        argoFloatsDebug(debug, "About to try downloading index file from\n    '", url[iurl], "'.\n", sep="")
         status <- try(curl::curl_download(url=url[iurl],
                                           destfile=destfileTemp,
                                           quiet=quiet,
@@ -316,7 +330,7 @@ getIndex <- function(filename="argo",
     }
     if (0 == iurlSuccess)
         stop("Could not download index from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
-    argoFloatsDebug(debug, "About to read header.\n", sep="")
+    argoFloatsDebug(debug, "About to read the header at the start of the index file.\n", sep="")
     first <- readLines(destfileTemp, 100)
     ## Typically, length(ftpRoot) is 2
     ftpRoot <- gsub("^[^:]*:[ ]*(.*)$", "\\1", first[which(grepl("^# FTP", first))])
@@ -328,27 +342,26 @@ getIndex <- function(filename="argo",
         names <- c("file", "date", "latitude", "longitude", "ocean",
                    "profiler_type", "institution", "parameters",
                    "param_data_mode", "date_update")
-        argoFloatsDebug(debug, "skipping (flawed) header in the merged file\n", sep="")
+        argoFloatsDebug(debug, "Skipping (flawed) header in the merged file.\n", sep="")
     }
-    argoFloatsDebug(debug, "about to read the newly-downloaded index file.\n", sep="")
+    argoFloatsDebug(debug, "Reading index file contents (can be slow).\n", sep="")
     index <- read.csv(destfileTemp, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE)
-    argoFloatsDebug(debug, "setting out-of-range latitude and longitude to NA.\n", sep="")
+    argoFloatsDebug(debug, "Setting out-of-range latitude and longitude to NA.\n", sep="")
     if ("latitude" %in% names(index))
         index$latitude[abs(index$latitude) > 90] <- NA
     if ("longitude" %in% names(index))
         index$longitude[abs(index$longitude) > 360] <- NA
-    argoFloatsDebug(debug, "decoding dates.\n", sep="")
+    argoFloatsDebug(debug, "Decoding dates.\n", sep="")
     index$date <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")
     index$date_update <- as.POSIXct(as.character(index$date_update), format="%Y%m%d%H%M%S",tz="UTC")
-    argoFloatsDebug(debug,  "saving cache file '", destfileRda, "'.\n", sep="")
     argoFloatsIndex <- list(server=server[iurlSuccess], header=header, index=index)
     save(argoFloatsIndex, file=destfileRda)
     if (keep) {
         to <- paste0(destdir, "/", gsub(".*/", "", url[iurlSuccess]))
-        argoFloatsDebug(debug, "storing temporary raw index file\n    '", destfileTemp, "'\n  locally as\n    '", to, "'\n", sep="")
+        argoFloatsDebug(debug, "Storing temporary raw index file\n    '", destfileTemp, "'\n  locally as\n    '", to, "'.\n", sep="")
         file.copy(from=destfileTemp, to=to)
     }
-    argoFloatsDebug(debug,  "removing temporary file '", destfileTemp, "'.\n", sep="")
+    argoFloatsDebug(debug,  "Removing temporary file\n    '", destfileTemp, "'.\n", sep="")
     unlink(destfileTemp)
     res@metadata$server <- server[iurlSuccess]
     res@metadata$url <- url[iurlSuccess]

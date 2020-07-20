@@ -47,7 +47,8 @@ must be (in days), for it to be considered out-of-date.  The
 default, \code{age=1}, limits downloads to once per day, as a way
 to avoid slowing down a workflow with a download that might take
 a minute or so. Note that setting \code{age=0} will force a new
-download, regardless of the age of the local file.}
+download, regardless of the age of the local file, and that
+age is changed to 0 if \code{keep} is \code{TRUE}.}
 
 \item{quiet}{logical value indicating whether to silence some
 progress indicators.  The default is to show such indicators.}
@@ -55,10 +56,9 @@ progress indicators.  The default is to show such indicators.}
 \item{keep}{logical value indicating whether to retain the
 raw index file as downloaded from the server.  This is \code{FALSE}
 by default, indicating that the raw index file is to be
-discarded once it has been analysed.  (The relevant contents
-are stored in a local \code{.rda} file, but having the raw index
-file can be handy for double-checking things like the decoding
-of dates.)}
+discarded once it has been analysed.  Note that if \code{keep}
+is \code{TRUE}, then the supplied value of \code{age} is converted
+to 0, to force a new download.}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
