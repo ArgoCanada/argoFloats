@@ -77,7 +77,7 @@
 #' that selects whether to retain real-time data or delayed data.
 #' See example 11.
 #'
-#' 12. An integer value named `profile` that specifies which profiles are to be retained.
+#' 12. An integer value named `cycle` that specifies which cycles are to be retained.
 #' See example 12.
 #'
 #' In all cases, the notation is that longitude is positive
@@ -91,7 +91,7 @@
 #'
 #' @param ... the first entry here must be either (a)
 #' a list named `circle`, `rectangle`, `polygon`,
-#' `parameter`, `time`, `institution`, `id`,`ocean`,`mode`, or `profile`.
+#' `parameter`, `time`, `institution`, `id`,`ocean`,`mode`, or `cycle`.
 #' (examples 2 through 8)
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
@@ -180,11 +180,11 @@
 #' ylab='Pressure (dbar)', xlab="Oxygen (umol/kg)")
 #' }
 #'
-#' # Example 12: subset by profile
+#' # Example 12: subset by cycle
 #' \dontrun{
 #' data(index)
-#' index12 <- subset(index, profile='124')
-#' cat("File names with profile number 124:", paste(index12[["file"]]), "\n")
+#' index12 <- subset(index, cycle='124')
+#' cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")
 #' }
 #'
 #' @author Dan Kelley and Jaimie Harbin
@@ -202,7 +202,7 @@ setMethod(f="subset",
               silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID', 'ocean', 'mode', or 'profile'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID', 'ocean', 'mode', or 'cycle'")
                   if (length(dots) > 1) {
                       if (length(dots) > 2 || !("silent" %in% dotsNames))
                           stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
@@ -387,20 +387,20 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=="profile") {
-                      profile <- dots[[1]]
+                  } else if (dotsNames[1]=="cycle") {
+                      cycle <- dots[[1]]
                       if (is.list(dots[1]))
-                          profile <- unlist(profile)
-                      nprofile <- length(profile)
-                      profileList <- lapply(x[["profile"]], function(p) strsplit(p, " ")[[1]])
-                      keep <- unlist(lapply(profileList, function(pl) nprofile == sum(profile %in% pl)))
+                          cycle <- unlist(cycle)
+                      ncycle <- length(cycle)
+                      cycleList <- lapply(x[["profile"]], function(p) strsplit(p, " ")[[1]])
+                      keep <- unlist(lapply(cycleList, function(pl) ncycle == sum(cycle %in% pl)))
                       if (sum(keep) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given profile", call.=FALSE)
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', 'ocean', 'mode', or 'profile'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', 'ocean', 'mode', or 'cycle'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)

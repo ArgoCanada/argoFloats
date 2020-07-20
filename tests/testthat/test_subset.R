@@ -81,9 +81,9 @@ test_that("subset by ocean", {
 })
 
 
-test_that("subset by profile", {
+test_that("subset by cycle", {
     data("index")
-    indexProfile <- subset(index, profile=124)
+    indexProfile <- subset(index, cycle=124)
     expect_equal(dim(indexProfile[["index"]]), c(5,8))
     expect_equal(indexProfile[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
     expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")

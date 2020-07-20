@@ -14,7 +14,7 @@ indices of \code{x@data$index} to keep (example 1).}
 
 \item{...}{the first entry here must be either (a)
 a list named \code{circle}, \code{rectangle}, \code{polygon},
-\code{parameter}, \code{time}, \code{institution}, \code{id},\code{ocean},\code{mode}, or \code{profile}.
+\code{parameter}, \code{time}, \code{institution}, \code{id},\code{ocean},\code{mode}, or \code{cycle}.
 (examples 2 through 8)
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
@@ -90,7 +90,7 @@ See example 10.
 \item A character value named \code{mode}, equal to either \code{realtime} or \code{delayed},
 that selects whether to retain real-time data or delayed data.
 See example 11.
-\item An integer value named \code{profile} that specifies which profiles are to be retained.
+\item An integer value named \code{cycle} that specifies which cycles are to be retained.
 See example 12.
 }
 
@@ -176,11 +176,11 @@ plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 ylab='Pressure (dbar)', xlab="Oxygen (umol/kg)")
 }
 
-# Example 12: subset by profile
+# Example 12: subset by cycle
 \dontrun{
 data(index)
-index12 <- subset(index, profile='124')
-cat("File names with profile number 124:", paste(index12[["file"]]), "\n")
+index12 <- subset(index, cycle='124')
+cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")
 }
 
 }
