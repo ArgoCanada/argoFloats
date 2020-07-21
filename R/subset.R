@@ -392,7 +392,9 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=="cycle") {
+                  } else if (dotsNames[1] == "profile" || dotsNames[1] == "cycle") {
+                      if (dotsNames[1] == "profile")
+                          warning("In subset,argoFloats-method : converted subset(x,profile=...) to subset(x,cycle=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Sep-01.", call.=FALSE)
                       cycle <- dots[[1]]
                       if (is.list(dots[1]))
                           cycle <- unlist(cycle)

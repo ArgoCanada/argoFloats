@@ -2,7 +2,9 @@
 
 ## argoFloats 0.1.3
 
-* can handle "synthetic" data (successor to "merged" data)
+* add several new built-in datasets
+* add several new functions
+* improve vignette and other documentation
 
 ## argoFloats 0.1.2
 
