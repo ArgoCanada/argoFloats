@@ -12,8 +12,8 @@ test_that("applyQC with default 'flag' and 'action' arguments",
                   clean <- applyQC(raw)
                   for (i in raw[["length"]]) {
                       for (field in c("temperature", "salinity", "pressure")) {
-                          bad <- raw[["profile", i]][[paste0(field, "Flag")]] %in% c(0,3,4,6,7,9)
-                          expect_true(all(is.na(clean[["profile", i]][[field]]) == bad))
+                          bad <- raw[["cycle", i]][[paste0(field, "Flag")]] %in% c(0,3,4,6,7,9)
+                          expect_true(all(is.na(clean[["cycle", i]][[field]]) == bad))
                       }
                   }
               }

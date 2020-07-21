@@ -392,7 +392,7 @@ setMethod(f="subset",
                       if (is.list(dots[1]))
                           cycle <- unlist(cycle)
                       ncycle <- length(cycle)
-                      cycleList <- lapply(x[["profile"]], function(p) strsplit(p, " ")[[1]])
+                      cycleList <- lapply(x[["cycle"]], function(p) strsplit(p, " ")[[1]])
                       keep <- unlist(lapply(cycleList, function(pl) ncycle == sum(cycle %in% pl)))
                       if (sum(keep) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given profile", call.=FALSE)

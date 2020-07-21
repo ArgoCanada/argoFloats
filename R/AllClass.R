@@ -243,7 +243,7 @@ setMethod(f="initialize",
 #'        `"type"` and `"destdir"`.
 #'     3. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  There is only one choice: `"file"`.
-#'     4. Otherwise, if `i` is `"profile"` then the return value is developed from the
+#'     4. Otherwise, if `i` is `"cycle"` then the return value is developed from the
 #'        `file` item in the `data` slot of `x`, in one of four sub-cases:
 #'         1. If `j` is not supplied, the return value is `file`,
 #'            i.e. a vector holding the full names of the files downloaded
@@ -256,12 +256,12 @@ setMethod(f="initialize",
 #' 4. Otherwise, if `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
 #'     1. If `i` is numeric and `j` is unspecified, then return the argo objects identified
 #'        by using `i` as an index.  Thus, e.g. `x[[i]]` is equivalent to
-#'        `x[["profile", i]]`.
+#'        `x[["cycle", i]]`.
 #'     2. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. There is only choice, `"type"`.
 #'     3. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  There is only one choice: `"argos"`.
-#'     4. Otherwise, if `i` is `"profile"` then the return value depends on the value of `j`.
+#'     4. Otherwise, if `i` is `"cycle"` then the return value depends on the value of `j`.
 #'         There are four sub-cases:
 #'         1. If `j` is not supplied, the return value is a list containing
 #'             all the profiles in `x`, each an `argo` object as created by
@@ -297,7 +297,7 @@ setMethod(f="initialize",
 #' @examples
 #' data(index)
 #' # Full remote filename for first two item in index
-#' paste0(index[["server"]], "/dac/", index[["profile", 1:2]])
+#' paste0(index[["server"]], "/dac/", index[["cycle", 1:2]])
 #' # File names and geographical locations of first 5 items in index
 #' index5 <- subset(index, 1:5)
 #' data.frame(file=gsub(".*/", "", index5[["file"]][1]),
@@ -332,7 +332,7 @@ setMethod(f="[[",
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data$index)) {
                       return(if (missing(j)) x@data$index[[i]] else x@data$index[[i]][j])
-                  } else if (length(i) == 1 && i == "profile") {
+                  } else if (length(i) == 1 && i == "cycle") {
                       profile <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3}[A-Z]*).nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) profile else profile[j]))
                   } else if (length(i) == 1 && i == "ID") {
@@ -368,7 +368,7 @@ setMethod(f="[[",
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
                       return(x@data[[i]])
-                  } else if (length(i) == 1 && i == "profile") {
+                  } else if (length(i) == 1 && i == "cycle") {
                       if (missing(j)) {
                           return(x@data$argos)
                       } else if (is.numeric(j)) {

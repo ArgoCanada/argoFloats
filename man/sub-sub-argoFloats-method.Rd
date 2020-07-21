@@ -82,7 +82,7 @@ is returned. The choices are:
 \code{"type"} and \code{"destdir"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
 is returned.  There is only one choice: \code{"file"}.
-\item Otherwise, if \code{i} is \code{"profile"} then the return value is developed from the
+\item Otherwise, if \code{i} is \code{"cycle"} then the return value is developed from the
 \code{file} item in the \code{data} slot of \code{x}, in one of four sub-cases:
 \enumerate{
 \item If \code{j} is not supplied, the return value is \code{file},
@@ -99,12 +99,12 @@ by \code{\link[=getProfiles]{getProfiles()}} is returned.
 \enumerate{
 \item If \code{i} is numeric and \code{j} is unspecified, then return the argo objects identified
 by using \code{i} as an index.  Thus, e.g. \code{x[[i]]} is equivalent to
-\code{x[["profile", i]]}.
+\code{x[["cycle", i]]}.
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
 is returned. There is only choice, \code{"type"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
 is returned.  There is only one choice: \code{"argos"}.
-\item Otherwise, if \code{i} is \code{"profile"} then the return value depends on the value of \code{j}.
+\item Otherwise, if \code{i} is \code{"cycle"} then the return value depends on the value of \code{j}.
 There are four sub-cases:
 \enumerate{
 \item If \code{j} is not supplied, the return value is a list containing
@@ -137,7 +137,7 @@ a level.
 \examples{
 data(index)
 # Full remote filename for first two item in index
-paste0(index[["server"]], "/dac/", index[["profile", 1:2]])
+paste0(index[["server"]], "/dac/", index[["cycle", 1:2]])
 # File names and geographical locations of first 5 items in index
 index5 <- subset(index, 1:5)
 data.frame(file=gsub(".*/", "", index5[["file"]][1]),

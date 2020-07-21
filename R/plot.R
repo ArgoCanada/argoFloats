@@ -488,10 +488,10 @@ setMethod(f="plot",
                   }
                   meanf <- function(x)
                       mean(x[[parameter]], na.rm=TRUE)
-                  time <- oce::numberAsPOSIXct(unlist(lapply(x[['profile']], function(x) x[['time']])))
+                  time <- oce::numberAsPOSIXct(unlist(lapply(x[["cycle"]], function(x) x[['time']])))
                   for (parameter in parameter) {
-                      q <- unlist(lapply(x[['profile']], qf))
-                      m <- unlist(lapply(x[['profile']], meanf))
+                      q <- unlist(lapply(x[["cycle"]], qf))
+                      m <- unlist(lapply(x[["cycle"]], meanf))
                       par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
                       if (any(is.finite(q))) {
                           oce::oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE, type='l')

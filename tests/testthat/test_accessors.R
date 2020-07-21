@@ -34,8 +34,8 @@ test_that("access float ID", {
 })
 
 test_that("access float profile number", {
-          expect_equal(c("124", "125", "126"), index[["profile", 1:3]])
-          expect_equal(c("124", "125", "126"), head(index[["profile"]], 3))
+          expect_equal(c("124", "125", "126"), index[["cycle", 1:3]])
+          expect_equal(c("124", "125", "126"), head(index[["cycle"]], 3))
 })
 
 test_that("access within profiles", {
