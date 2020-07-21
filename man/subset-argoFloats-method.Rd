@@ -91,6 +91,11 @@ See example 10.
 that selects whether to retain real-time data or delayed data.
 See example 11.
 \item An integer value named \code{cycle} that specifies which cycles are to be retained.
+This is done by regular-expression matching of the filename, looking between the
+underline character (\code{"_"}) and the suffix (\code{.nc}), but note that the expression
+is made up of a compulsory component comprising 3 or 4 digits, and an optional
+component that is either blank or the character \code{"D"} (which designates a
+descending profile).  Thus, \code{001} will match both \verb{*_001.nc} and \verb{*_001D.nc}.
 See example 12.
 }
 

@@ -78,6 +78,11 @@
 #' See example 11.
 #'
 #' 12. An integer value named `cycle` that specifies which cycles are to be retained.
+#' This is done by regular-expression matching of the filename, looking between the
+#' underline character (`"_"`) and the suffix (`.nc`), but note that the expression
+#' is made up of a compulsory component comprising 3 or 4 digits, and an optional
+#' component that is either blank or the character `"D"` (which designates a
+#' descending profile).  Thus, `001` will match both `*_001.nc` and `*_001D.nc`.
 #' See example 12.
 #'
 #' In all cases, the notation is that longitude is positive
@@ -391,9 +396,16 @@ setMethod(f="subset",
                       cycle <- dots[[1]]
                       if (is.list(dots[1]))
                           cycle <- unlist(cycle)
+                      cycle <- as.character(cycle)
                       ncycle <- length(cycle)
-                      cycleList <- lapply(x[["cycle"]], function(p) strsplit(p, " ")[[1]])
-                      keep <- unlist(lapply(cycleList, function(pl) ncycle == sum(cycle %in% pl)))
+                      xcycle <- x[["cycle"]]
+                      ##OLD cycleList <- lapply(x[["cycle"]], function(p) strsplit(p, " ")[[1]])
+                      ##OLD keep <- unlist(lapply(cycleList, function(pl) ncycle == sum(cycle %in% pl)))
+                      keep <- grepl(cycle[1], xcycle)
+                      for (i in seq_along(cycle)) {
+                          if (i > 1)
+                              keep <- keep | grepl(cycle[i], xcycle)
+                      }
                       if (sum(keep) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given profile", call.=FALSE)
                       if (!silent)
