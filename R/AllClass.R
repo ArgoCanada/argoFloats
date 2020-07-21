@@ -333,7 +333,8 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@data$index)) {
                       return(if (missing(j)) x@data$index[[i]] else x@data$index[[i]][j])
                   } else if (length(i) == 1 && i == "cycle") {
-                      profile <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3}[A-Z]*).nc$", "\\1", x@data$index$file)
+                      cycle <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1}).nc$", "\\1", x@data$index$file)
+                      Jaimie <<- profile
                       return(as.vector(if (missing(j)) profile else profile[j]))
                   } else if (length(i) == 1 && i == "ID") {
                       ID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", x@data$index$file)
