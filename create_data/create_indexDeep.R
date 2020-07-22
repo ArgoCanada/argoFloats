@@ -9,6 +9,6 @@ if (FALSE) {
     library(argoFloats)
     subset <- subset(getIndex(), deep=TRUE)
     indexDeep <- subset(subset, circle=list(longitude=105, latitude=-67, radius=800))
-    save(indexDeep, filename="indexDeep.rda")
+    save(indexDeep, file="indexDeep.rda")
     tools::resaveRdaFiles('indexDeep.rda')
 }
