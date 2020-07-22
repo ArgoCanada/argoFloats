@@ -31,3 +31,4 @@
 ^tests/.*/.*\.nc$
 ^vignettes/.*\.nc$
 ^.*\.json$
+^doc$
