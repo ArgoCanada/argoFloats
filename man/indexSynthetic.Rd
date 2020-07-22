@@ -3,7 +3,7 @@
 \docType{data}
 \name{indexSynthetic}
 \alias{indexSynthetic}
-\title{A sample index of synthetic (i.e. combined) argo and biogeochemical-argo profiles}
+\title{A sample index of synthetic (i.e. combined) Argo and biogeochemical-argo profiles}
 \description{
 This was created by subsetting a global index to the 39 BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
@@ -43,6 +43,7 @@ unique(indexSynthetic[["parameters"]])
 \seealso{
 Other datasets provided with argoFloats: 
 \code{\link{indexBgc}},
+\code{\link{indexDeep}},
 \code{\link{indexMerged}},
 \code{\link{index}}
 }
