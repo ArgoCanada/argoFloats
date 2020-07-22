@@ -3,7 +3,7 @@
 \docType{data}
 \name{indexBgc}
 \alias{indexBgc}
-\title{A sample index of biogeochemical-argo profiles}
+\title{A sample index of biogeochemical-Argo profiles}
 \description{
 This was created by subsetting a global index to the 39 BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
@@ -37,6 +37,7 @@ unique(indexBgc[["parameters"]])
 }
 \seealso{
 Other datasets provided with argoFloats: 
+\code{\link{indexDeep}},
 \code{\link{indexMerged}},
 \code{\link{indexSynthetic}},
 \code{\link{index}}

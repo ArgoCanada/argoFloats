@@ -84,7 +84,7 @@ NULL
 NULL
 
 
-#' A sample index of biogeochemical-argo profiles
+#' A sample index of biogeochemical-Argo profiles
 #'
 #' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
@@ -110,7 +110,7 @@ NULL
 NULL
 
 
-#' A sample index of merged argo and biogeochemical-argo profiles
+#' A sample index of merged Argo and biogeochemical-Argo profiles
 #'
 #' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
@@ -140,7 +140,7 @@ NULL
 #' @family datasets provided with argoFloats
 NULL
 
-#' A sample index of synthetic (i.e. combined) argo and biogeochemical-argo profiles
+#' A sample index of synthetic (i.e. combined) Argo and biogeochemical-argo profiles
 #'
 #' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
@@ -169,6 +169,28 @@ NULL
 #' @family datasets provided with argoFloats
 NULL
 
+#' A sample index of deep Argo
+#'
+#' This was created by subsetting a global index to the 163 deep Argo profiles
+#' that were within a 800km radius of Antarctica (67S,105E), as of 2020 July 22,
+#' using the following code.
+#'```
+#' library(argoFloats)
+#' subset <- subset(getIndex(), deep=TRUE)
+#' sub2 <- subset(subset, circle=list(longitude=105, latitude=-67, radius=800))
+#'```
+#'
+#' @template server_caveat
+#'
+#' @examples
+#' library(argoFloats)
+#' data(indexDeep)
+#' plot(indexDeep, bathymetry=FALSE)
+#' summary(indexDeep)
+#' @name indexDeep
+#' @docType data
+#' @family datasets provided with argoFloats
+NULL
 
 #'
 #' Class to hold argoFloats objects
