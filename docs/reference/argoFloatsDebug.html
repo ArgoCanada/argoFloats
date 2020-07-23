@@ -8,6 +8,13 @@
 
 <title>Possibly print debugging information. — argoFloatsDebug • argoFloats</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -45,6 +52,7 @@ also call it directly in their own code.  Within the package, the value
 of debug is generally reduced by 1 on each nested function call, leading
 to indented messages. Most functions start and end with a call to
 argoFloatsDebug() that has style=&quot;bold&quot; and unindent=1." />
+<meta property="og:image" content="/logo.png" />
 
 
 
@@ -190,7 +198,7 @@ to be done, as explained in the &#8220;Details&#8221; section.</p></td>
     <pre class="examples"><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"plain text\n"</span>)</div><div class='output co'>#&gt;     plain text</div><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"red text\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"red"</span>)</div><div class='output co'>#&gt; <span style='color: #BB0000;'>    red text
 #&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"blue text\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"blue"</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'>    blue text
 #&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"bold text\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"bold"</span>)</div><div class='output co'>#&gt; </span><span style='font-weight: bold;'>    bold text
-#&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"italic text with time stamp\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"italic"</span>, <span class='kw'>showTime</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='font-style: italic;'>    [09:47:41] italic text with time stamp
+#&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"italic text with time stamp\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"italic"</span>, <span class='kw'>showTime</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='font-style: italic;'>    [13:28:13] italic text with time stamp
 #&gt; </span><span></div><div class='input'>
 </div></span></pre>
   </div>
