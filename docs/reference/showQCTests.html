@@ -42,7 +42,7 @@
 <meta property="og:title" content="Show QC test results for an argo object — showQCTests" />
 <meta property="og:description" content="showQCTests print a summary of the quality-control (QC) tests
 (if any) that were performed on an argo profile.  It uses
-hexToNibble() to decode the hexadecimal  values that may
+hexToBits() to decode the hexadecimal  values that may
 be stored in historyQCTest and historyAction within
 the metadata slot of an individual argo profile, as read
 directly with oce::read.argo() or indirectly with
@@ -51,7 +51,7 @@ readProfiles(), the latter being illustrated in the
 The format used in historyQCTest and historyAction
 is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
 of Carval et al. (2019), in which they are called
-HISTORY_QC_TEST and HISTORY_ACTION, respectively." />
+HISTORY_QCTEST and HISTORY_ACTION, respectively." />
 
 
 
@@ -101,6 +101,18 @@ HISTORY_QC_TEST and HISTORY_ACTION, respectively." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/qc.html">Introduction to argoFloats Quality Control</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -133,7 +145,7 @@ HISTORY_QC_TEST and HISTORY_ACTION, respectively." />
     <div class="ref-description">
     <p><code>showQCTests</code> print a summary of the quality-control (QC) tests
 (if any) that were performed on an argo profile.  It uses
-<code><a href='hexToNibble.html'>hexToNibble()</a></code> to decode the hexadecimal  values that may
+<code><a href='hexToBits.html'>hexToBits()</a></code> to decode the hexadecimal  values that may
 be stored in <code>historyQCTest</code> and <code>historyAction</code> within
 the <code>metadata</code> slot of an individual argo profile, as read
 directly with <code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>oce::read.argo()</a></code> or indirectly with
@@ -142,10 +154,10 @@ directly with <code><a href='https://rdrr.io/pkg/oce/man/read.argo.html'>oce::re
 The format used in <code>historyQCTest</code> and <code>historyAction</code>
 is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
 of Carval et al. (2019), in which they are called
-<code>HISTORY_QC_TEST</code> and <code>HISTORY_ACTION</code>, respectively.</p>
+<code>HISTORY_QCTEST</code> and <code>HISTORY_ACTION</code>, respectively.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>showQCTests</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>showQCTests</span>(<span class='no'>x</span>, <span class='kw'>style</span> <span class='kw'>=</span> <span class='st'>"brief"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,12 +168,56 @@ of Carval et al. (2019), in which they are called
 or as extracted from the return value of a call to <code><a href='readProfiles.html'>readProfiles()</a></code>, as
 in the &#8220;Examples&#8221;.</p></td>
     </tr>
+    <tr>
+      <th>style</th>
+      <td><p>A character value governing the output printed by <code>showQCFlags</code>,
+either <code>"brief"</code> (the default) for a single line stating all the tests by
+numbers, followed by lines giving the number and description of all failed tests,
+or <code>"full"</code> for a listing of each test that was performed, with an indication
+of whether <code>x</code> passes or fails it.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>This function returns nothing; its action is in the printing
 of results.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The tests, from Carval et al. (2019) Table 11, are as follows
+(after correcting the "Number" for test 18 from
+261144 to 262144, because the former is not an
+integral power of 2, suggesting a typo
+in the manual).</p><table class='table'>
+<tr><td>Test</td><td>Number</td><td>Meaning</td></tr>
+<tr><td>1</td><td>2</td><td>Platform Identification test</td></tr>
+<tr><td>2</td><td>4</td><td>Impossible Date test</td></tr>
+<tr><td>3</td><td>8</td><td>Impossible Location test</td></tr>
+<tr><td>4</td><td>16</td><td>Position on Land test</td></tr>
+<tr><td>5</td><td>32</td><td>Impossible Speed test</td></tr>
+<tr><td>6</td><td>64</td><td>Global Range test</td></tr>
+<tr><td>7</td><td>128</td><td>Regional Global Parameter test</td></tr>
+<tr><td>8</td><td>256</td><td>Pressure Increasing test</td></tr>
+<tr><td>9</td><td>512</td><td>Spike test</td></tr>
+<tr><td>10</td><td>1024</td><td>Top and Bottom Spike test (obsolete)</td></tr>
+<tr><td>11</td><td>2048</td><td>Gradient test</td></tr>
+<tr><td>12</td><td>4096</td><td>Digit Rollover test</td></tr>
+<tr><td>13</td><td>8192</td><td>Stuck Value test</td></tr>
+<tr><td>14</td><td>16384</td><td>Density Inversion test</td></tr>
+<tr><td>15</td><td>32768</td><td>Grey List test</td></tr>
+<tr><td>16</td><td>65536</td><td>Gross Salinity or Temperature Sensor Drift test</td></tr>
+<tr><td>17</td><td>131072</td><td>Visual QC test</td></tr>
+<tr><td>18</td><td>262144</td><td>Frozen profile test</td></tr>
+<tr><td>19</td><td>524288</td><td>Deepest pressure test</td></tr>
+<tr><td>20</td><td>1048576</td><td>Questionable Argos position test</td></tr>
+<tr><td>21</td><td>2097152</td><td>Near-surface unpumped CTD salinity test</td></tr>
+<tr><td>22</td><td>4194304</td><td>Near-surface mixed air/water test</td></tr>
+<tr><td>23</td><td>8388608</td><td>Interim rtqc flag scheme for data deeper than 2000 dbar</td></tr>
+<tr><td>24</td><td>16777216</td><td>Interim rtqc flag scheme for data from experimental sensors</td></tr>
+<tr><td>25</td><td>33554432</td><td>MEDD test</td></tr>
+</table>
+
+
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -171,8 +227,8 @@ Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
 <span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"D4900785_048.nc"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"argoFloats"</span>))
-<span class='fu'>showQCTests</span>(<span class='no'>a</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt; Tests performed: 1 2 3 4 5 6 7 8 9 11 12 13 14 15 16 17 18 19
-#&gt; Tests failed:    </div><div class='input'>
+<span class='fu'>showQCTests</span>(<span class='no'>a</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt; Tests performed: 2 3 4 5 6 7 8 9 10 12 13 14 15 16 17 18 19 20
+#&gt;     Passed all tests</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -189,7 +245,7 @@ Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

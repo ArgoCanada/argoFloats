@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge argoFloats Indices — merge,argoFloats,ANY-method • argoFloats</title>
+<title>Convert Hexadecimal Digit to Integer Vector — hexToBits • argoFloats</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Merge argoFloats Indices — merge,argoFloats,ANY-method" />
-<meta property="og:description" content="Merge argoFloats Indices" />
+<meta property="og:title" content="Convert Hexadecimal Digit to Integer Vector — hexToBits" />
+<meta property="og:description" content="hexToBits converts a string holding hexadecimal digits to a sequence of integers
+0 or 1, for the bits.  This is mainly for for use within showQCTests()." />
 
 
 
@@ -90,6 +91,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/qc.html">Introduction to argoFloats Quality Control</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -114,48 +127,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge argoFloats Indices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/merge.R'><code>R/merge.R</code></a></small>
-    <div class="hidden name"><code>merge-argoFloats-ANY-method.Rd</code></div>
+    <h1>Convert Hexadecimal Digit to Integer Vector</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/misc.R'><code>R/misc.R</code></a></small>
+    <div class="hidden name"><code>hexToBits.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge argoFloats Indices</p>
+    <p><code>hexToBits</code> converts a string holding hexadecimal digits to a sequence of integers
+0 or 1, for the bits.  This is mainly for for use within <code><a href='showQCTests.html'>showQCTests()</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for argoFloats,ANY</span>
-<span class='fu'><a href='https://rdrr.io/r/base/merge.html'>merge</a></span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>hexToBits</span>(<span class='no'>hex</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x, y</th>
-      <td><p>two <code><a href='argoFloats-class.html'>argoFloats</a></code> objects of type <code>index</code>, e.g. as created by <code><a href='getIndex.html'>getIndex()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>optional additional objects like <code>x</code> and <code>y</code>.</p></td>
+      <th>hex</th>
+      <td><p>A vector of character values corresponding to a sequence of one or more
+hexadecimal digits (i.e. <code>"0"</code> through <code>"9"</code>,<code>"a"</code> through <code>"f"</code>, or <code>"A"</code> through <code>"F"</code>).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An <code><a href='argoFloats-class.html'>argoFloats</a></code> object of type <code>index</code>.</p>
+    <p>An integer vector holding the bits as values 0 or 1.  The
+inverse of 'mathematical' order is used, as is the case for the base
+R function <code><a href='https://rdrr.io/r/base/rawConversion.html'>rawToBits()</a></code>; see the &#8220;Examples&#8221;.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>index</span>)
-
-<span class='co'># Index of floats within 50km of Abaca Island</span>
-<span class='no'>C</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='kw'>circle</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span>-<span class='fl'>77.5</span>, <span class='kw'>latitude</span><span class='kw'>=</span><span class='fl'>27.5</span>, <span class='kw'>radius</span><span class='kw'>=</span><span class='fl'>50</span>))</div><div class='output co'>#&gt; <span class='message'>Kept 97 profiles (10.2%)</span></div><div class='input'>
-<span class='co'># Index of floats within a rectangle near Abaca Island</span>
-<span class='no'>lonRect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>76.5</span>, -<span class='fl'>76</span>)
-<span class='no'>latRect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>26.5</span>, <span class='fl'>27.5</span>)
-<span class='no'>R</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='kw'>rectangle</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span><span class='no'>lonRect</span>, <span class='kw'>latitude</span><span class='kw'>=</span><span class='no'>latRect</span>))</div><div class='output co'>#&gt; <span class='message'>Kept 53 profiles (5.56%)</span></div><div class='input'>
-<span class='no'>RC</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/merge.html'>merge</a></span>(<span class='no'>C</span>, <span class='no'>R</span>)
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>RC</span>, <span class='kw'>bathymetry</span><span class='kw'>=</span><span class='fl'>FALSE</span>)}</div></pre>
+<span class='fu'>hexToBits</span>(<span class='st'>'3'</span>)    <span class='co'># 1 1 0 0</span></div><div class='output co'>#&gt; [1] 1 1 0 0</div><div class='input'><span class='fu'>hexToBits</span>(<span class='st'>'4000'</span>) <span class='co'># 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0</span></div><div class='output co'>#&gt;  [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -171,7 +174,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
