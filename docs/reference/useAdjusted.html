@@ -40,15 +40,8 @@
 
 
 <meta property="og:title" content="Switch unadjusted and adjusted data — useAdjusted" />
-<meta property="og:description" content="Variables with original names indicating in the string _ADJUSTED are
-assigned nicknames names ending in Adjusted by readProfiles(), so that
-e.g. DOXY_ADJUSTED gets the nickname oxygenAdjusted, while
-DOXY gets the nickname oxygen. useAdjusted switches
-these, renaming the adjusted values, so that e.g. DOXY_ADJUSTED
-gets nickname oxygen and DOXY gets nickname oxygenUnadjusted.
-This is carried out for all data families, and also for the
-corresponding units and quality-control flags.  See &amp;#8220;Examples&amp;#8221;
-for an example using the SD5903586_001.nc sample dataset." />
+<meta property="og:description" content="This is done by using oce::preferAdjusted() on each of the Argo
+objects stored within the first argument." />
 
 
 
@@ -98,6 +91,18 @@ for an example using the SD5903586_001.nc sample dataset." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/qc.html">Introduction to argoFloats Quality Control</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -128,15 +133,8 @@ for an example using the SD5903586_001.nc sample dataset." />
     </div>
 
     <div class="ref-description">
-    <p>Variables with original names indicating in the string <code>_ADJUSTED</code> are
-assigned nicknames names ending in <code>Adjusted</code> by <code><a href='readProfiles.html'>readProfiles()</a></code>, so that
-e.g. <code>DOXY_ADJUSTED</code> gets the nickname <code>oxygenAdjusted</code>, while
-<code>DOXY</code> gets the nickname <code>oxygen</code>. <code>useAdjusted</code> switches
-these, renaming the adjusted values, so that e.g. <code>DOXY_ADJUSTED</code>
-gets nickname <code>oxygen</code> and <code>DOXY</code> gets nickname <code>oxygenUnadjusted</code>.
-This is carried out for all data families, and also for the
-corresponding units and quality-control flags.  See &#8220;Examples&#8221;
-for an example using the <a href='SD5903586_001.nc.html'>SD5903586_001.nc</a> sample dataset.</p>
+    <p>This is done by using <code><a href='https://rdrr.io/pkg/oce/man/preferAdjusted.html'>oce::preferAdjusted()</a></code> on each of the Argo
+objects stored within the first argument.</p>
     </div>
 
     <pre class="usage"><span class='fu'>useAdjusted</span>(<span class='no'>argo</span>, <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
@@ -157,59 +155,14 @@ should be printed.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The adjustment process is complicated, and, since it was developed by
-a combination of file inspection, a study of documentation, and discussions
-with argo analysts, it is somewhat ad-hoc and may be changed later.
-For this reason, users are advised strongly to examine their data files
-closely, before blindly calling <code>useAdjusted</code>. The procedure is as follows.</p>
-<p>There are two cases, depending on whether an item named <code>parameterDataMode</code>
-is present within the metadata of the object.  (Note that this is
-the renamed value of the <code>PARAMETER_DATA_MODE</code> that may be present
-in the netcdf file.)</p><ol>
-<li><p><strong>Case 1.</strong> If the <code>parameterDataMode</code> field is present, then the
-data columns are mapped to the parameter columns, and the following actions
-are undertaken.</p><ul>
-<li><p>If <code>parameterDataMode</code> is <code>"A"</code> (meaning "Adjusted") then use the
-<code>&lt;PARAM&gt;_ADJUSTED</code> values, <em>unless</em> those values are all <code>NA</code>, in which case the
-raw values are used instead. This is to account for the convention described in
-Section 2.6.5 of Carval et al. (2019).</p></li>
-<li><p>If <code>parameterDataMode</code> is <code>"D"</code> (meaning "Delayed"), then proceed as for
-the <code>"A"</code> case.</p></li>
-<li><p>If <code>parameterDataMode</code> is <code>"R"</code> (meaning "Realtime") then use the raw
-values, even if the file contains data with <code>&lt;PARAM&gt;_ADJUSTED</code> (e.g.
-<code>"TEMP_ADJUSTED"</code>, which is the name used in netcdf files for the adjusted
-temperature) in their names.</p></li>
-</ul></li>
-<li><p><strong>Case 2.</strong> If no <code>parameterDataMode</code> field is present, but <code>dataMode</code> (called
-<code>DATA_MODE</code> in the source netcdf file) is present, then the latter is used.
-This does not apply to individual columns, so the action depends on the data
-within the columns. There are three sub-cases.</p><ul>
-<li><p>If <code>dataMode</code> is <code>"A"</code> (meaning "Adjusted") then each data type is
-considered in turn, and if the <code>&lt;PARAM&gt;_ADJUSTED</code> values are <em>all</em> <code>NA</code>
-then the raw data are used, but if any of the <code>&lt;PARAM&gt;_ADJUSTED</code> values
-are not <code>NA</code>, then <em>all</em> the <code>&lt;PARAM&gt;_ADJUSTED</code> data are used.</p></li>
-<li><p>If <code>dataMode</code> is <code>"D"</code> (meaning "Delayed") then proceed as for
-the <code>"A"</code> case.</p></li>
-<li><p>If <code>dataMode</code> is <code>"R"</code> then then use the raw values, even if the file
-contains data with <code>&lt;PARAM&gt;_ADJUSTED</code> in their names.</p></li>
-</ul></li>
-<li><p><strong>Case 3.</strong> If neither <code>dataMode</code> nor <code>parameterDataMode</code> is present
-in the metadata (a situation the developers have not encountered, but
-which is included for completeness) then if <code>&lt;PARAM&gt;_ADJUSTED</code> fields
-are present, then they are handled as in the first and second items in
-Case 2 above.</p></li>
-</ol>
-
-    <h2 class="hasAnchor" id="developer-notes-may-be-removed-at-any-time-"><a class="anchor" href="#developer-notes-may-be-removed-at-any-time-"></a>Developer notes (may be removed at any time)</h2>
-
-    
-
-
-<p>A study of a large set of realtime-mode and delayed-mode datasets
-suggests that the <code>_ADJUSTED</code> fields of the former consist only of <code>NA</code>
-values, so that <code>useAdjusted</code> should only be used on delayed-mode
-datasets. Users are cautioned that <code>useAdjusted</code> may b subject to
-change during the summer of 2020.</p>
+    <p>This is a complex process, however, simply put, <code>useAdjusted()</code> allows users
+to express preference for adjusted vs unadjusted data. If an Adjusted field exists,
+and it is not filled with all NA values, this function will return the Adjusted
+data. If there is no Adjusted data, or it is all NA values, <code>useAdjusted()</code> will
+return the original data.</p>
+<p>See Reference 1 for the process of adding adjusted data to Argo
+files, and see the documentation of <code><a href='https://rdrr.io/pkg/oce/man/preferAdjusted.html'>oce::preferAdjusted()</a></code> for the
+details of how the preference for adjusted data is set.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -246,7 +199,7 @@ Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Sample argo file (synthetic realtime data) — SR2902204_131.nc" />
-<meta property="og:description" content="This is the netcdf file for profile 131 of argo float 2902204, downloaded from
+<meta property="og:description" content="This is the netcdf file for cycle 131 of Argo float 2902204, downloaded from
 ftp://ftp.ifremer.fr/ifremer/argo/dac/incois/2902204/profiles/SR2902204_131.nc
 on 2020 June 24.
 As its filename indicates, it holds the &quot;synthetic&quot; version of &quot;realtime&quot; data." />
@@ -93,6 +93,18 @@ As its filename indicates, it holds the &quot;synthetic&quot; version of &quot;r
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/qc.html">Introduction to argoFloats Quality Control</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -123,7 +135,7 @@ As its filename indicates, it holds the &quot;synthetic&quot; version of &quot;r
     </div>
 
     <div class="ref-description">
-    <p>This is the netcdf file for profile 131 of argo float 2902204, downloaded from
+    <p>This is the netcdf file for cycle 131 of Argo float 2902204, downloaded from
 <a href='ftp://ftp.ifremer.fr/ifremer/argo/dac/incois/2902204/profiles/SR2902204_131.nc'>ftp://ftp.ifremer.fr/ifremer/argo/dac/incois/2902204/profiles/SR2902204_131.nc</a>
 on 2020 June 24.
 As its filename indicates, it holds the "synthetic" version of "realtime" data.</p>
@@ -155,11 +167,11 @@ As its filename indicates, it holds the "synthetic" version of "realtime" data.<
 #&gt; * hint: access these objects with e.g. x[["argos"]]
 #&gt; * Processing Log
 #&gt; 
-#&gt;     - 2020-06-30 13:05:48 UTC: `create 'argoFloats' object`
-#&gt;     - 2020-06-30 13:05:48 UTC: `readProfiles(profiles = system.file("extdata", "SR2902204_131.nc",     package = "argoFloats"))`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>a</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt; Argo Summary
+#&gt;     - 2020-07-23 11:41:07 UTC: `create 'argoFloats' object`
+#&gt;     - 2020-07-23 11:41:08 UTC: `readProfiles(profiles = system.file("extdata", "SR2902204_131.nc",     package = "argoFloats"))`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>a</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt; Argo Summary
 #&gt; ------------
 #&gt; 
-#&gt; * Source:              "/private/var/folders/rx/k1x_t_q12zb9hbjr4ldxmjc80000gn/T/RtmpEWfoPv/temp_libpath173a737b26c6/argoFloats/extdata/SR2902204_131.nc"
+#&gt; * Source:              "/private/var/folders/w4/qwr963cn6n5190slvx34f3qc0000gn/T/RtmpA3LJ63/temp_libpathd21f687a8c44/argoFloats/extdata/SR2902204_131.nc"
 #&gt; * id:                  "2902204"
 #&gt; * Profiles:            0 delayed; 0 adjusted; 0 realtime
 #&gt; * Time:                2018-01-23 18:18:35 
@@ -210,10 +222,10 @@ As its filename indicates, it holds the "synthetic" version of "realtime" data.<
 #&gt; 
 #&gt; * Processing Log
 #&gt; 
-#&gt;     - 2020-06-30 13:05:48 UTC: `create 'argo' object`
-#&gt;     - 2020-06-30 13:05:48 UTC: `initializeFlagScheme(object, name="argo", mapping=list(not_assessed=0,passed_all_tests=1,probably_good=2,probably_bad=3,bad=4,changed=5,not_used_6=6,not_used_7=7,estimated=8,missing=9)), default=c(0,3,4,9))`
-#&gt;     - 2020-06-30 13:05:48 UTC: `read.argo(file="/private/var/folders/rx/k1x_t_q12zb9hbjr4ldxmjc80000gn/T/RtmpEWfoPv/temp_libpath173a737b26c6/argoFloats/extdata/SR2902204_131.nc")`
-#&gt;     - 2020-06-30 13:05:48 UTC: `override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)`</div><div class='input'>
+#&gt;     - 2020-07-23 11:41:07 UTC: `create 'argo' object`
+#&gt;     - 2020-07-23 11:41:07 UTC: `initializeFlagScheme(object, name="argo", mapping=list(not_assessed=0,passed_all_tests=1,probably_good=2,probably_bad=3,bad=4,changed=5,not_used_6=6,not_used_7=7,estimated=8,missing=9)), default=c(0,3,4,9))`
+#&gt;     - 2020-07-23 11:41:08 UTC: `read.argo(file="/private/var/folders/w4/qwr963cn6n5190slvx34f3qc0000gn/T/RtmpA3LJ63/temp_libpathd21f687a8c44/argoFloats/extdata/SR2902204_131.nc")`
+#&gt;     - 2020-07-23 11:41:08 UTC: `override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)`</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -230,7 +242,7 @@ As its filename indicates, it holds the "synthetic" version of "realtime" data.<
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

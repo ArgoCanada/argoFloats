@@ -42,8 +42,8 @@
 <meta property="og:title" content="A sample index of profiles — index" />
 <meta property="og:description" content="This was created by subsetting a global index to the 1788 Argo profiles
 that were within a 200km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 March 14, using the following code.indexAll &amp;lt;- getIndex()
-index &amp;lt;- subset(indexAll,
+Bahamas, as of 2020 March 14, using the following code.indexAll &amp;amp;lt;- getIndex()
+index &amp;amp;lt;- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=200))
 " />
 
@@ -95,6 +95,18 @@ index &amp;lt;- subset(indexAll,
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/qc.html">Introduction to argoFloats Quality Control</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -127,8 +139,8 @@ index &amp;lt;- subset(indexAll,
     <div class="ref-description">
     <p>This was created by subsetting a global index to the 1788 Argo profiles
 that were within a 200km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 March 14, using the following code.</p><pre><span class='no'>indexAll</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span>()
-<span class='no'>index</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>indexAll</span>,
+Bahamas, as of 2020 March 14, using the following code.</p><pre><span class='no'>indexAll</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='fu'><a href='getIndex.html'>getIndex</a></span>()
+<span class='no'>index</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>indexAll</span>,
     <span class='kw'>circle</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span>-<span class='fl'>77.06</span>, <span class='kw'>latitude</span><span class='kw'>=</span><span class='fl'>26.54</span>, <span class='kw'>radius</span><span class='kw'>=</span><span class='fl'>200</span>))</pre>
 
     </div>
@@ -154,6 +166,7 @@ explains why <code><a href='getProfiles.html'>getProfiles()</a></code> skips ove
 
     <div class='dont-index'><p>Other datasets provided with argoFloats: 
 <code><a href='indexBgc.html'>indexBgc</a></code>,
+<code><a href='indexDeep.html'>indexDeep</a></code>,
 <code><a href='indexMerged.html'>indexMerged</a></code>,
 <code><a href='indexSynthetic.html'>indexSynthetic</a></code></p></div>
 
@@ -176,7 +189,7 @@ explains why <code><a href='getProfiles.html'>getProfiles()</a></code> skips ove
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

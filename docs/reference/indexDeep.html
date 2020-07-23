@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge argoFloats Indices — merge,argoFloats-method • argoFloats</title>
+<title>A sample index of deep Argo — indexDeep • argoFloats</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,13 @@
 
 
 
-<meta property="og:title" content="Merge argoFloats Indices — merge,argoFloats-method" />
-<meta property="og:description" content="Merge argoFloats Indices" />
+<meta property="og:title" content="A sample index of deep Argo — indexDeep" />
+<meta property="og:description" content="This was created by subsetting a global index to the 163 deep Argo profiles
+that were within a 800km radius of Antarctica (67S,105E), as of 2020 July 22,
+using the following code.library(argoFloats)
+subset &amp;amp;lt;- subset(getIndex(), deep=TRUE)
+sub2 &amp;amp;lt;- subset(subset, circle=list(longitude=105, latitude=-67, radius=800))
+" />
 
 
 
@@ -126,48 +131,71 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge argoFloats Indices</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/merge.R'><code>R/merge.R</code></a></small>
-    <div class="hidden name"><code>merge-argoFloats-method.Rd</code></div>
+    <h1>A sample index of deep Argo</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/AllClass.R'><code>R/AllClass.R</code></a></small>
+    <div class="hidden name"><code>indexDeep.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge argoFloats Indices</p>
+    <p>This was created by subsetting a global index to the 163 deep Argo profiles
+that were within a 800km radius of Antarctica (67S,105E), as of 2020 July 22,
+using the following code.</p><pre><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
+<span class='no'>subset</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='fu'><a href='getIndex.html'>getIndex</a></span>(), <span class='kw'>deep</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='no'>sub2</span> <span class='kw'>&amp;</span><span class='no'>lt</span>;- <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>subset</span>, <span class='kw'>circle</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span><span class='fl'>105</span>, <span class='kw'>latitude</span><span class='kw'>=</span>-<span class='fl'>67</span>, <span class='kw'>radius</span><span class='kw'>=</span><span class='fl'>800</span>))</pre>
+
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for argoFloats</span>
-<span class='fu'><a href='https://rdrr.io/r/base/merge.html'>merge</a></span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>)</pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x, y</th>
-      <td><p>two <code><a href='argoFloats-class.html'>argoFloats</a></code> objects of type <code>index</code>, e.g. as created by <code><a href='getIndex.html'>getIndex()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>optional additional objects like <code>x</code> and <code>y</code>.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="caveat-about-out-of-date-index-files"><a class="anchor" href="#caveat-about-out-of-date-index-files"></a>Caveat about out-of-date index files</h2>
 
-    <p>An <code><a href='argoFloats-class.html'>argoFloats</a></code> object of type <code>index</code>.</p>
+    
+
+
+<p>Note that the netcdf files on argo repositories are changeable,
+not just in content, but also in file name.  For example, the data acquired
+in a given profile of a given float may initially be provided in realtime
+mode (with a file name containing an "R" as the first or second character),
+my later be replaced later with a delayed-mode file (with a "D" in the first
+or second character). Since index files name data files directly, this means
+that index files can become out-of-date, containing references to netcdf
+files that no longer exist on the server. This applies to the sample
+index files provided with this package, and to user files, and it
+explains why <code><a href='getProfiles.html'>getProfiles()</a></code> skips over files that cannot be downloaded.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other datasets provided with argoFloats: 
+<code><a href='indexBgc.html'>indexBgc</a></code>,
+<code><a href='indexMerged.html'>indexMerged</a></code>,
+<code><a href='indexSynthetic.html'>indexSynthetic</a></code>,
+<code><a href='index.html'>index</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>argoFloats</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>index</span>)
-
-<span class='co'># Index of floats within 50km of Abaca Island</span>
-<span class='no'>C</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='kw'>circle</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span>-<span class='fl'>77.5</span>, <span class='kw'>latitude</span><span class='kw'>=</span><span class='fl'>27.5</span>, <span class='kw'>radius</span><span class='kw'>=</span><span class='fl'>50</span>))</div><div class='output co'>#&gt; <span class='message'>Kept 97 profiles (10.2%)</span></div><div class='input'>
-<span class='co'># Index of floats within a rectangle near Abaca Island</span>
-<span class='no'>lonRect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>76.5</span>, -<span class='fl'>76</span>)
-<span class='no'>latRect</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>26.5</span>, <span class='fl'>27.5</span>)
-<span class='no'>R</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>index</span>, <span class='kw'>rectangle</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>longitude</span><span class='kw'>=</span><span class='no'>lonRect</span>, <span class='kw'>latitude</span><span class='kw'>=</span><span class='no'>latRect</span>))</div><div class='output co'>#&gt; <span class='message'>Kept 53 profiles (5.56%)</span></div><div class='input'>
-<span class='no'>RC</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/merge.html'>merge</a></span>(<span class='no'>C</span>, <span class='no'>R</span>)
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>RC</span>, <span class='kw'>bathymetry</span><span class='kw'>=</span><span class='fl'>FALSE</span>)}</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>indexDeep</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>indexDeep</span>, <span class='kw'>bathymetry</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='img'><img src='indexDeep-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>indexDeep</span>)</div><div class='output co'>#&gt; argoFloats summary
+#&gt; ------------------
+#&gt; 
+#&gt; * type:        index
+#&gt; * server:      "ftp://usgodae.org/pub/outgoing/argo"
+#&gt; * file:        
+#&gt; * url:         ftp://usgodae.org/pub/outgoing/argo/ar_index_global_prof.txt.gz
+#&gt; * ftpRoot:      ""
+#&gt; * destfileRda: ~/data/argo/ar_index_global_prof.rda
+#&gt; * header:
+#&gt;     # Title : Profile directory file of the Argo Global Data Assembly Center
+#&gt;     # Description : The directory file describes all individual profile files of the argo GDAC ftp site.
+#&gt;     # Project : ARGO
+#&gt;     # Format version : 2.1
+#&gt;     # Date of update : 20200722114650
+#&gt;     # FTP root number 1 : ftp://ftp.ifremer.fr/ifremer/argo/dac
+#&gt;     # FTP root number 2 : ftp://usgodae.org/pub/outgoing/argo/dac
+#&gt;     # GDAC node : NRL-MRY
+#&gt; * index with 163 rows and column names: "file", "date", "latitude", "longitude", "ocean", "profiler_type", "institution and "date_update"
+#&gt; * hint: use getProfiles() to download these files from the repository
+#&gt; * Processing Log
+#&gt; 
+#&gt;     - 2020-07-22 14:16:48 UTC: `create 'argoFloats' object`</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
