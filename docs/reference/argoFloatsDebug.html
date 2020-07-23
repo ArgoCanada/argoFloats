@@ -52,7 +52,6 @@ also call it directly in their own code.  Within the package, the value
 of debug is generally reduced by 1 on each nested function call, leading
 to indented messages. Most functions start and end with a call to
 argoFloatsDebug() that has style=&quot;bold&quot; and unindent=1." />
-<meta property="og:image" content="/logo.png" />
 
 
 
@@ -195,12 +194,13 @@ to be done, as explained in the &#8220;Details&#8221; section.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"plain text\n"</span>)</div><div class='output co'>#&gt;     plain text</div><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"red text\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"red"</span>)</div><div class='output co'>#&gt; <span style='color: #BB0000;'>    red text
-#&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"blue text\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"blue"</span>)</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'>    blue text
-#&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"bold text\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"bold"</span>)</div><div class='output co'>#&gt; </span><span style='font-weight: bold;'>    bold text
-#&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"italic text with time stamp\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"italic"</span>, <span class='kw'>showTime</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; </span><span style='font-style: italic;'>    [13:28:13] italic text with time stamp
-#&gt; </span><span></div><div class='input'>
-</div></span></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"plain text\n"</span>)
+<span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"red text\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"red"</span>)
+<span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"blue text\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"blue"</span>)
+<span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"bold text\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"bold"</span>)
+<span class='fu'>argoFloatsDebug</span>(<span class='fl'>1</span>, <span class='st'>"italic text with time stamp\n"</span>, <span class='kw'>style</span><span class='kw'>=</span><span class='st'>"italic"</span>, <span class='kw'>showTime</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
