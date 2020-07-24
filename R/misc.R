@@ -9,7 +9,7 @@
 #' sketch provided in the \dQuote{Details} section, below.
 #'
 #' The value returned by `useAdjusted` is similar to the first argument
-#' in all respects, except that the individual `argo` objects store within
+#' in all respects, except that the individual `argo` objects stored within
 #' its `data` slot have their `metadata` slots modified to indicate a
 #' preference for adjusted data over unadjusted data. Because of that,
 #' future calls to \code{\link{[[,argoFloats-method}} will

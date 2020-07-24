@@ -39,7 +39,7 @@ sketch provided in the \dQuote{Details} section, below.
 }
 \details{
 The value returned by \code{useAdjusted} is similar to the first argument
-in all respects, except that the individual \code{argo} objects store within
+in all respects, except that the individual \code{argo} objects stored within
 its \code{data} slot have their \code{metadata} slots modified to indicate a
 preference for adjusted data over unadjusted data. Because of that,
 future calls to \code{\link{[[,argoFloats-method}} will
