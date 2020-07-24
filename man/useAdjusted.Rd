@@ -4,45 +4,75 @@
 \alias{useAdjusted}
 \title{Switch unadjusted and adjusted data}
 \usage{
-useAdjusted(argo, debug = 0)
+useAdjusted(argo, which = "all", fallback = TRUE, debug = 0)
 }
 \arguments{
-\item{argo}{An \code{\linkS4class{argoFloats}} object, as read by \code{\link[=readProfiles]{readProfiles()}}.}
+\item{argo}{an \code{\linkS4class{argoFloats}} object, as read by \code{\link[=readProfiles]{readProfiles()}}.}
 
-\item{debug}{An integer that, if positive, indicates that some debugging information
+\item{which}{a character vector (passed to
+\code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} directly) naming the items for which
+(depending also on the value of \code{fallback}) adjusted values
+are to be sought by future calls to \code{\link{[[,argoFloats-method}}.
+The short names are used, e.g. \code{which="oxygen"} means that
+adjusted oxygen is to be returned in future calls
+such as \code{argo[["oxygen"]]}.  The default,
+\code{"all"}, means to  use adjusted values for any item in \code{argo}
+that has adjusted values.}
+
+\item{fallback}{a logical value (passed to
+\code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} directly) indicating whether to fall back
+to unadjusted values for any data field in which the
+adjusted values are all \code{NA}.  The default value, \code{TRUE},
+avoids a problem with biogeochemical fields, where adjustment
+of any one field may lead to insertion of "adjusted" values for
+other fields that consist of nothing more than \code{NA}s.}
+
+\item{debug}{an integer that, if positive, indicates that some debugging information
 should be printed.}
 }
 \description{
 This is done by using \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} on each of the Argo
-objects stored within the first argument.
+objects stored within the first argument.  The procedure is fairly
+complicated, so users are urged to read the documentation
+for \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} after reading the
+sketch provided in the \dQuote{Details} section, below.
 }
 \details{
-This is a complex process, however, simply put, \code{useAdjusted()} allows users
-to express preference for adjusted vs unadjusted data. If an Adjusted field exists,
-and it is not filled with all NA values, this function will return the Adjusted
-data. If there is no Adjusted data, or it is all NA values, \code{useAdjusted()} will
-return the original data.
+The value returned by \code{useAdjusted} is similar to the first argument
+in all respects, except that the individual \code{argo} objects store within
+its \code{data} slot have their \code{metadata} slots modified to indicate a
+preference for adjusted data over unadjusted data. Because of that,
+future calls to \code{\link{[[,argoFloats-method}} will
+return adjusted data instead of unadjusted data, for data items
+specified by \code{which}, and subject to the constraint imposed by
+\code{fallback}.
 
-See Reference 1 for the process of adding adjusted data to Argo
-files, and see the documentation of \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} for the
-details of how the preference for adjusted data is set.
+See the documentation for \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} for more
+on the procedure, and see Reference 1 for the process of adding
+adjusted data to Argo files.  Although it might seem that adjusted data
+will always be preferable to unadjusted data, this is not always
+the case, and a careful analyst will study both data streams, and
+look through the processing notes for any float that is of individual
+interest.
 }
 \examples{
 library(argoFloats)
 # Plot raw and adjusted oxygen for a sample dataset
 raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
 adj <- useAdjusted(raw)
-par(mfrow=c(1, 2))
-oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="oxygen")
-mtext("Raw data", side=3, line=-1, col=2)
-oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
-mtext("Adjusted data", side=3, line=-1, col=2)
+adj1 <- raw[[1]]
+raw1 <- adj[[1]]
+plot(raw1[["oxygen"]], adj1[["oxygen"]] - raw1[["oxygen"]],
+     xlab="Raw O2", ylab="Adj O2 - Raw O2")
+summary(lm(adj1[["oxygen"]] ~ raw1[["oxygen"]]))
 
 }
 \references{
-Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+\enumerate{
+\item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 \url{https://doi.org/10.13155/29825}.
+}
 }
 \author{
 Dan Kelley and Jaimie Harbin

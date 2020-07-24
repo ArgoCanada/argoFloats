@@ -3,21 +3,49 @@
 #' Switch unadjusted and adjusted data
 #'
 #' This is done by using [oce::preferAdjusted()] on each of the Argo
-#' objects stored within the first argument.
+#' objects stored within the first argument.  The procedure is fairly
+#' complicated, so users are urged to read the documentation
+#' for [oce::preferAdjusted()] after reading the
+#' sketch provided in the \dQuote{Details} section, below.
 #'
-#' This is a complex process, however, simply put, `useAdjusted()` allows users
-#' to express preference for adjusted vs unadjusted data. If an Adjusted field exists,
-#' and it is not filled with all NA values, this function will return the Adjusted
-#' data. If there is no Adjusted data, or it is all NA values, `useAdjusted()` will
-#' return the original data.
+#' The value returned by `useAdjusted` is similar to the first argument
+#' in all respects, except that the individual `argo` objects store within
+#' its `data` slot have their `metadata` slots modified to indicate a
+#' preference for adjusted data over unadjusted data. Because of that,
+#' future calls to \code{\link{[[,argoFloats-method}} will
+#' return adjusted data instead of unadjusted data, for data items
+#' specified by `which`, and subject to the constraint imposed by
+#' `fallback`.
 #'
-#' See Reference 1 for the process of adding adjusted data to Argo
-#' files, and see the documentation of [oce::preferAdjusted()] for the
-#' details of how the preference for adjusted data is set.
+#' See the documentation for [oce::preferAdjusted()] for more
+#' on the procedure, and see Reference 1 for the process of adding
+#' adjusted data to Argo files.  Although it might seem that adjusted data
+#' will always be preferable to unadjusted data, this is not always
+#' the case, and a careful analyst will study both data streams, and
+#' look through the processing notes for any float that is of individual
+#' interest.
 #'
-#' @param argo An [`argoFloats-class`] object, as read by [readProfiles()].
+#' @param argo an [`argoFloats-class`] object, as read by [readProfiles()].
 #'
-#' @param debug An integer that, if positive, indicates that some debugging information
+#' @param which a character vector (passed to
+#' [oce::preferAdjusted()] directly) naming the items for which
+#' (depending also on the value of `fallback`) adjusted values
+#' are to be sought by future calls to \code{\link{[[,argoFloats-method}}.
+#' The short names are used, e.g. `which="oxygen"` means that
+#' adjusted oxygen is to be returned in future calls
+#' such as `argo[["oxygen"]]`.  The default,
+#' `"all"`, means to  use adjusted values for any item in `argo`
+#' that has adjusted values.
+#'
+#' @param fallback a logical value (passed to
+#' [oce::preferAdjusted()] directly) indicating whether to fall back
+#' to unadjusted values for any data field in which the
+#' adjusted values are all `NA`.  The default value, `TRUE`,
+#' avoids a problem with biogeochemical fields, where adjustment
+#' of any one field may lead to insertion of "adjusted" values for
+#' other fields that consist of nothing more than `NA`s.
+##'
+#' @param debug an integer that, if positive, indicates that some debugging information
 #' should be printed.
 #'
 #' @examples
@@ -25,21 +53,21 @@
 #' # Plot raw and adjusted oxygen for a sample dataset
 #' raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
 #' adj <- useAdjusted(raw)
-#' par(mfrow=c(1, 2))
-#' oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="oxygen")
-#' mtext("Raw data", side=3, line=-1, col=2)
-#' oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="oxygen")
-#' mtext("Adjusted data", side=3, line=-1, col=2)
+#' adj1 <- raw[[1]]
+#' raw1 <- adj[[1]]
+#' plot(raw1[["oxygen"]], adj1[["oxygen"]] - raw1[["oxygen"]],
+#'      xlab="Raw O2", ylab="Adj O2 - Raw O2")
+#' summary(lm(adj1[["oxygen"]] ~ raw1[["oxygen"]]))
 #'
 #' @references
-#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 #' \url{https://doi.org/10.13155/29825}.
 #'
 #' @export
 #'
 #' @author Dan Kelley and Jaimie Harbin
-useAdjusted <- function(argo, debug=0)
+useAdjusted <- function(argo, which="all", fallback=TRUE, debug=0)
 {
     if (!inherits(argo, "argoFloats"))
         stop("useAdjusted() is only for argoFloats objects")
@@ -47,7 +75,7 @@ useAdjusted <- function(argo, debug=0)
         stop("useAdjusted() is only for argoFloats objects created by readProfiles()")
     res <- argo
     for (i in argo[["length"]])
-        res@data$argos[[i]] <- oce::preferAdjusted(argo@data$argos[[i]])
+        res@data$argos[[i]] <- oce::preferAdjusted(argo@data$argos[[i]], which=which, fallback=fallback)
     res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     res
 }
