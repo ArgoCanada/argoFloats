@@ -1,6 +1,8 @@
 # Figure 1: Flow Chart of the action taken when a user applies
 # useAdjusted(which=ALL)
 
+if (!interactive()) png("diagram.png")
+
 library(DiagrammeR)
 grViz("digraph flowchart {
       # node definitions with substituted label text
@@ -36,3 +38,6 @@ grViz("digraph flowchart {
       [8]: '`[[` returns <param>Adjusted values'
       [9]: '`[[` returns <param> values'
       ")
+
+if (!interactive()) dev.off()
+
