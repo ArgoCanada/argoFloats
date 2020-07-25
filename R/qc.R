@@ -184,7 +184,7 @@ showQCTests <- function(x, style="brief")
     else
         cat("No Quality Control tests were performed")
         #return(invisible(NULL))
-    if ("HISTORY_QCTEST" %in% mnames)
+    if ("HISTORY_QCTEST" %in% mnames) # to handle oce before version 1.3-0
         tests <- x[['HISTORY_QCTEST']]
     else if ("historyQCTest" %in% mnames)
         tests <- x[['historyQCTest']]
@@ -196,8 +196,13 @@ showQCTests <- function(x, style="brief")
     perf <- tests[1, which(action == "QCP$")]
     ## Match strings within 'action' to find the tests that failed
     fail <- tests[1, which(action == "QCF$")]
+    ## Add zeros on left of 'fail', if needed to match length of 'perf'
+    failFull <- paste0(paste(rep("0",nchar(perf)-nchar(fail)),collapse=""), fail, sep="")
+    ##DEBUG cat(oce::vectorShow(perf))
+    ##DEBUG cat(oce::vectorShow(fail))
+    ##DEBUG cat(oce::vectorShow(failFull))
     perfIndices <- which(1==hexToBits(perf))
-    failIndices <- -1 + which(1==hexToBits(fail))
+    failIndices <- -1 + which(1==hexToBits(failFull))
     if (style == "brief") {
         cat("Tests performed: ", paste(QCTests[perfIndices], collapse=" "), "\n", sep="")
         if (length(failIndices)) {
