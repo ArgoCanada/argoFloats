@@ -80,17 +80,37 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' the `metadata` slot of an individual argo profile, as read
 #' directly with [oce::read.argo()] or indirectly with
 #' [readProfiles()], the latter being illustrated in the
-#' \dQuote{Examples} secton below.
-#' The format used in `historyQCTest` and `historyAction`
+#' \dQuote{Examples} section below.  The \dQuote{Details}
+#' section provides an explanation of how `showQCTests` works
+#' at a low level, as an adjunct to the Argo documentation.
+#'
+#' The format used in the `historyQCTest` and `historyAction`
+#' elements of the `metadata` slot of an [oce::argo-class] object
 #' is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
 #' of Carval et al. (2019), in which they are called
 #' `HISTORY_QCTEST` and `HISTORY_ACTION`, respectively.
+#' Both of these things are vectors of character values,
+#' with the entries within `historyAction` providing names for
+#' the entries within `historyQCTest`.
 #'
-#' The tests, from Carval et al. (2019) Table 11, are as follows
-#' (after correcting the "Number" for test 18 from
+#' In the context of `showQCTests`, the focus is on the element
+#' of `historyAction` that equals `"QCP$"` (which maps to the element
+#' of `historyQCTest` that specifies the QC tests that were
+#' performed) and `"QCF$"` (which maps to the results of those
+#' tests).  These mapped elements are character values providing
+#' hexadecimal digits that are decoded with [hexToBits()], possibly after
+#' lengthening the `historyQCTest` value matching`"QCF$"` by adding `"0"` digits
+#' on the left to make the length be the same as that of the
+#' `historyQCTest` value matching `"QCP$".
+#'
+#' The bits decoded from the relevant elements of `historyQCTest`
+#' correspond to QC tests as indicated in the following table.
+#' This is based on Table 11 of Carval et al. (2019),
+#' after correcting the "Number" for test 18 from
 #' 261144 to 262144, because the former is not an
 #' integral power of 2, suggesting a typo
-#' in the manual).
+#' in the manual (since the whole point of the numerical scheme
+#' is that the individual bits map to individual tests).
 #'
 #' Test|  Number |    Meaning
 #' ----|---------|----------------------
