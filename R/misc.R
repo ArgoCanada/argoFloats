@@ -6,7 +6,9 @@
 #' objects stored within the first argument.  The procedure is fairly
 #' complicated, so users are urged to read the documentation
 #' for [oce::preferAdjusted()] after reading the
-#' sketch provided in the \dQuote{Details} section, below.
+#' sketch provided in the \dQuote{Details} section and to
+#' familiarizing themselves with the flow chart below that demonstrates the
+#' steps taken when a user specifies `which=ALL` or `which=<param>`.
 #'
 #' The value returned by `useAdjusted` is similar to the first argument
 #' in all respects, except that the individual `argo` objects stored within
@@ -24,6 +26,8 @@
 #' the case, and a careful analyst will study both data streams, and
 #' look through the processing notes for any float that is of individual
 #' interest.
+#' 
+#' \if{html}{\figure{useAdjustedDiagram.png}{options: width=455px alt="Figure: useAdjustedDiagram.png"}}
 #'
 #' @param argo an [`argoFloats-class`] object, as read by [readProfiles()].
 #'

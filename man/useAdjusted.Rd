@@ -35,7 +35,9 @@ This is done by using \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} on
 objects stored within the first argument.  The procedure is fairly
 complicated, so users are urged to read the documentation
 for \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} after reading the
-sketch provided in the \dQuote{Details} section, below.
+sketch provided in the \dQuote{Details} section and to
+familiarizing themselves with the flow chart below that demonstrates the
+steps taken when a user specifies \code{which=ALL} or \verb{which=<param>}.
 }
 \details{
 The value returned by \code{useAdjusted} is similar to the first argument
@@ -54,6 +56,8 @@ will always be preferable to unadjusted data, this is not always
 the case, and a careful analyst will study both data streams, and
 look through the processing notes for any float that is of individual
 interest.
+
+\if{html}{\figure{useAdjustedDiagram.png}{options: width=455px alt="Figure: useAdjustedDiagram.png"}}
 }
 \examples{
 library(argoFloats)
