@@ -6,12 +6,11 @@ if (!interactive()) png("diagram.png")
 library(DiagrammeR)
 grViz("digraph flowchart {
       # node definitions with substituted label text
-      node [fontname = Helvetica, shape = rectangle, color=red]        
+      node [fontname = Helvetica, shape = rectangle, color=black]        
       tab1 [label = '@@1']
       tab2 [label = '@@2']
       tab3 [label = '@@3']
       tab5 [label = '@@5']
-      node [fontname = Helvetica, shape = rectangle, color=black]
       tab4 [label = '@@4']
 
       # edge definitions with the node IDs
