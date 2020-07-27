@@ -232,15 +232,15 @@ showQCTests <- function(x, style="brief")
             cat("    Passed all tests\n")
         }
     } else if (style == "full") {
-        cat("Test |  Status | Description\n")
-        cat("-----|---------|--------------------------------------------------------------\n")
+        cat("Test |  Status  | Description\n")
+        cat("-----|----------|--------------------------------------------------------------\n")
         for (i in QCTests) {
             failed <- i %in% failIndices
             skipped <- !(i %in% perfIndices)
-            status <- if (failed) "FAILED" else if (skipped) "Skipped" else "Passed"
+            status <- if (failed) "*Failed*" else if (skipped) " Skipped" else "  Passed"
             cat(sprintf("%4d | %7s | %s\n", i, status, names(QCTests)[i]))
         }
-        cat("-----|---------|--------------------------------------------------------------\n")
+        cat("-----|----------|--------------------------------------------------------------\n")
     } else {
         stop("style must be either \"brief\" or \"full\", not \"", style, "\" as given")
     }
