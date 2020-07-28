@@ -57,7 +57,7 @@ As described by the Argo user's manual [2], data that are given a flag value of
 'bad' data.
 
 `argoFloats` has taken this idea, and has incorporated a 3 step process when
-considering the quality control of Argo flags. The three step process encourages
+considering the QC of Argo flags. The three step process encourages
 users to always analyze the data they are considering and acknowledges that the
 user assumes all risk from their Argo data, as described in section 1.3 of the
 Argo User's Manual [2]. The three step process is as shown in the following
@@ -65,8 +65,7 @@ diagram.
 
 ![Figure 1: argoFloats Quality Control Flag Process](qc_flowchart.png)
 
-This vignette will walk the users through the three step process using the float with
-ID 1901584 near the Bahamas.
+This vignette will walk the users through the three step flag process using the float with ID 1901584 near the Bahamas.
 
 ### Step One: QC Plot
 
@@ -92,7 +91,7 @@ plot(argos, which='QC', parameter='temperature')
 ![Figure 2: argoFloats QC plot for temperature, or "TEMP" for the float with ID 1901584](plotqc.png)
 
 
-*Exercise One:* Use the previous code to determine the QC of temperature for
+**Exercise One:** Use the previous code to determine the QC of temperature for
 float number 4900845 in synthetic data using `plot(..which='QC')`. Explain your results.
 
 ### Step Two: showQCTests()
@@ -127,7 +126,7 @@ YOUR RESULTS.
 
 ### Step Three: applyQC()
 
-The `applyQC()` function examines quality-control within an argoFloats
+The `applyQC()` function examines quality-control within an `argoFloats`
 object that was created by `readProfiles()`. By default, it replaces all suspicious
 data with NA values, so they will not appear in plots or be considered in
 calculations. This is an important early step in processing, because suspicious
@@ -165,7 +164,7 @@ within the first argument. The procedure is fairly complicated, so users are
 urged to read the documentation for `oce::preferAdjusted()` after reading the
 sketch provided in the “Details” section of `?useAdjusted()` and to familiarizing themselves with the flow chart below that demonstrates the steps taken when a user specifies `which=ALL` or `which=<param>`.
 
-![Figure 4: Flow chat for useAdjusted() function within argoFloats package when which argument is equal to ALL or <param>](useAdjustedDiagram.png)
+![Figure 4: Flow chat for useAdjusted() function within argoFloats package when which argument is equal to ALL or param](useAdjustedDiagram.png)
 
 An example of the significance of adjusted data can be shown below:
 
@@ -185,7 +184,7 @@ summary(unlist(adj[['oxygen']]))
 ![Figure 5: argoFloats useAdjusted() function used on float with ID 1901584](useAdjusted.png)
 
 
-*Exercise Four* Use `useAdjusted()` on the float with ID 5903586, profile=50 to
+**Exercise Four** Use `useAdjusted()` on the float with ID 5903586, profile=50 to
 compare `<param>adjusted`
 
 # Answers
@@ -224,7 +223,7 @@ analyze their data to ensure all data seems reasonable.
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(indexSynthetic)
-i <- subset(index, ID='4900845')
+i <- subset(indexSynthetic, ID='4900845')
 raw <- readProfiles(getProfiles(i))
 clean <- applyQC(raw)
 par(mfrow=c(1, 2))
