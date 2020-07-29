@@ -57,7 +57,7 @@ the case, and a careful analyst will study both data streams, and
 look through the processing notes for any float that is of individual
 interest.
 
-\if{html}{\figure{useAdjustedDiagram.png}{options: width=455px alt="Figure: useAdjustedDiagram.png"}}
+\if{html}{\figure{useAdjustedDiagram.png}{options: width=455px alt="Figure: useAdjustedDiagram.png" fig.cap="hello"}}
 }
 \examples{
 library(argoFloats)

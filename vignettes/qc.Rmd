@@ -14,7 +14,7 @@ output:
 vignette: >
   %\VignetteIndexEntry{Introduction to argoFloats Quality Control}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteEncoding{UTF-8}?
 ---
 
 ```{r, echo=FALSE}
@@ -164,7 +164,7 @@ within the first argument. The procedure is fairly complicated, so users are
 urged to read the documentation for `oce::preferAdjusted()` after reading the
 sketch provided in the “Details” section of `?useAdjusted()` and to familiarizing themselves with the flow chart below that demonstrates the steps taken when a user specifies `which=ALL` or `which=<param>`.
 
-![Figure 4: Flow chat for useAdjusted() function within argoFloats package when which argument is equal to ALL or param](useAdjustedDiagram.png)
+![Figure 4: Flow chat for useAdjusted() function within argoFloats package when which argument is equal to ALL or param](../man/figures/useAdjustedDiagram.png)
 
 An example of the significance of adjusted data can be shown below:
 

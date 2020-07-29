@@ -12,17 +12,17 @@ grViz("digraph flowchart {
       tab4 [label = '@@4']
 
       # edge definitions with the node IDs
-      tab1 -> tab2 [label= 'Yes', fontname= Helvetic]
-      tab2 -> tab3 [label= 'Yes', fontname= Helvetic]
-      tab2 -> tab4 [label= 'No', fontname= Helvetic]
-      tab3 -> tab4 [label= 'No', fontname= Helvetic]
-      tab3 -> tab5 [label= 'Yes', fontname= Helvetic]
-      tab1 -> tab5 [label= 'No', fontname= Helvetic]
+      tab1 -> tab2 [label= 'Yes', fontname= Helvetica]
+      tab2 -> tab3 [label= 'Yes', fontname= Helvetica]
+      tab2 -> tab4 [label= 'No', fontname= Helvetica]
+      tab3 -> tab4 [label= 'No', fontname= Helvetica]
+      tab3 -> tab5 [label= 'Yes', fontname= Helvetica]
+      tab1 -> tab5 [label= 'No', fontname= Helvetica]
     
       }
 
       [1]: 'Is there an adjusted data field?'
-      [2]: 'Are the parameters all NA Values?'
+      [2]: 'Are all the <param> values NA?'
       [3]: 'Is fallback=TRUE?'
       [4]: '`[[` returns <param>Adjusted values'
       [5]: '`[[` returns <param> values'
