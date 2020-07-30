@@ -79,7 +79,7 @@ names the institution.  The permitted values are:
 See example 7.
 \item A list named \code{deep} that holds a logical value indicating weather argo floats
 are deep argo (i.e. \code{profiler_type} 849, 862, and 864). See example 8.
-\item A list named \code{ID} that holds a character value specifying a float identifier.
+\item A list named \code{id} that holds a character value specifying a float identifier.
 See example 9.
 \item A list named \code{ocean}, which holds a single character element that names the
 ocean. The permitted values are:
@@ -149,10 +149,10 @@ index6 <- subset(index, time=list(from=from, to=to))
 # Example 7: subset to the Canadian MEDS data
 index7 <- subset(index, institution="ME")
 
-# Example 8: subset to a specific ID
+# Example 8: subset to a specific id
 \dontrun{
 ai <- getIndex(filename='merged', destdir = '~/data/argo')
-index9 <- subset(ai, ID='1900722') }
+index9 <- subset(ai, id='1900722') }
 
 # Example 9: subset data to only include deep argo
 \dontrun{

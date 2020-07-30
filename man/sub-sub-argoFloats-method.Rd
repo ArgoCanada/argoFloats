@@ -60,14 +60,14 @@ is returned.  The choices are:
 the \code{data} slot is returned.  This is a good way to learn the
 longitude and latitude of the profile, the file name on the server,
 etc.
-\item Otherwise, if \code{i} is \code{"ID"} then the return value is developed from the
+\item Otherwise, if \code{i} is \code{"id"} then the return value is developed from the
 \code{index$file} item within the \code{data} slot of \code{x}, in one of three cases:
 \enumerate{
 \item If \code{j} is not supplied, the return value is a vector holding the
 identifiers (character codes for numbers) for all the data files
 referred to in the index.
 \item Otherwise, if \code{j} is numeric, then the return value is a subset of
-the ID codes, as indexed by \code{j}.
+the id codes, as indexed by \code{j}.
 \item Otherwise, an error is reported.
 }
 \item If \code{i} is \code{"length"}, the number of remote files pointed to by the index
@@ -117,7 +117,7 @@ is returned.
 \item Otherwise, an error is reported.
 }
 \item Otherwise, if \code{i} is \code{"length"}, the number of oce-type argo objects in \code{x} is returned.
-\item Otherwise, if \code{i} is \code{"ID"}, a vector of the IDs of the profiles is returned.
+\item Otherwise, if \code{i} is \code{"id"}, a vector of the ids of the profiles is returned.
 \item Otherwise, if \code{i} is a character value, then it is taken to be
 an item within the \code{metadata} or \code{data} slots of the argo objects
 stored in \code{x}, and the returned value is a list containing that

@@ -65,7 +65,7 @@ diagram.
 
 ![Figure 1: argoFloats Quality Control Flag Process](qc_flowchart.png)
 
-This vignette will walk the users through the three step flag process using the float with ID 1901584 near the Bahamas.
+This vignette will walk the users through the three step flag process using the float with id 1901584 near the Bahamas.
 
 ### Step One: QC Plot
 
@@ -77,18 +77,18 @@ must also provide the `parameter` of interest. If the user is uncertain about
 what parameter exists within a certain float, `argoFloats` will prompt the user
 with the appropriate parameters.
 
-An example of how to get the QC plot for temperature, or "TEMP" for the float with ID 1901584 is as follows:
+An example of how to get the QC plot for temperature, or "TEMP" for the float with id 1901584 is as follows:
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE, eval=FALSE}
 library(argoFloats)
 data("index")
-subset <- subset(index, ID='1901584')
+subset <- subset(index, id='1901584')
 profiles <- getProfiles(subset)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')
 ```
 
-![Figure 2: argoFloats QC plot for temperature, or "TEMP" for the float with ID 1901584](plotqc.png)
+![Figure 2: argoFloats QC plot for temperature, or "TEMP" for the float with id 1901584](plotqc.png)
 
 
 **Exercise One:** Use the previous code to determine the QC of temperature for
@@ -109,7 +109,7 @@ which QC tests were performed on each profile. This is completed by
 ```{r, message=FALSE, error=FALSE, warning=FALSE, eval=FALSE}
 library(argoFloats)
 data('index')
-s <- subset(index, ID='1901584')
+s <- subset(index, id='1901584')
 subset <- subset(s, cycle='124') 
 profiles <- getProfiles(subset)
 argos <- readProfiles(profiles)
@@ -117,10 +117,10 @@ argos1 <- argos[[1]]
 showQCTests(argos[[1]])
 ```
 
-In section 3.11 Reference table 11: QC test binary IDs of the Argo User's Manual
+In section 3.11 Reference table 11: QC test binary ids of the Argo User's Manual
 [2], we see that test 14 was failed: ie. the Density Inversion Test.
 
-**Exercise Two**: Use the first float with ID 4900845 in exercise one,to determine
+**Exercise Two**: Use the first float with id 4900845 in exercise one,to determine
 which tests were performed and/or failed during quality control testing. EXPLAIN
 YOUR RESULTS.
 
@@ -140,7 +140,7 @@ user also has the ability to use `applyQC()` as shown below:
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(index)
-i <- subset(index, ID='1901584')
+i <- subset(index, id='1901584')
 raw <- readProfiles(getProfiles(i))
 clean <- applyQC(raw)
 par(mfrow=c(1, 2))
@@ -148,10 +148,10 @@ plot(raw, which="TS")
 plot(clean, which="TS")
 ```
 
-![Figure 3: argoFloats applyQC() function used on float with ID 1901584](applyQC.png)
+![Figure 3: argoFloats applyQC() function used on float with id 1901584](applyQC.png)
 
 
-**Exercise Three** : Use `applyQC()` on float ID with 4900845. Explain your results.
+**Exercise Three** : Use `applyQC()` on float id with 4900845. Explain your results.
 
 # Adjusted Data
 
@@ -181,10 +181,10 @@ summary(unlist(raw[['oxygen']]))
 summary(unlist(adj[['oxygen']]))
 ```
 
-![Figure 5: argoFloats useAdjusted() function used on float with ID 1901584](useAdjusted.png)
+![Figure 5: argoFloats useAdjusted() function used on float with id 1901584](useAdjusted.png)
 
 
-**Exercise Four** Use `useAdjusted()` on the float with ID 5903586, profile=50 to
+**Exercise Four** Use `useAdjusted()` on the float with id 5903586, profile=50 to
 compare `<param>adjusted`
 
 # Answers
@@ -194,7 +194,7 @@ float number 4900845 in synthetic data using `plot(..which='QC')`. Explain your 
 ```
 library(argoFloats)
 ais <- getIndex(filename = 'synthetic', age=0)
-sub <- subset(ais, ID='4900845')
+sub <- subset(ais, id='4900845')
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')
@@ -202,28 +202,28 @@ plot(argos, which='QC', parameter='temperature')
 As shown in the plot, 100% of the temperature data is considered "good". This
 implies to the user that all data is considered okay to use.
 
-*Exercise Two*: Use the first float with ID 4900845 in exercise one,to determine
+*Exercise Two*: Use the first float with id 4900845 in exercise one,to determine
 which tests were performed and/or failed during quality control testing. Explain your results.
 
 ```
 library(argoFloats)
 data('indexSynthetic')
-sub <- subset(indexSynthetic, ID='4900845')
+sub <- subset(indexSynthetic, id='4900845')
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
 a1 <- argos[[1]]
 showQCTests(a1)
 ```
 As shown by the `showQCTests()` function, no quality control tests were actually
-performed on this float ID. This is a case where the user would have to self
+performed on this float id. This is a case where the user would have to self
 analyze their data to ensure all data seems reasonable.
 
-*Exercise Three* : Use `applyQC()` on float ID = 4900845. Explain your results.
+*Exercise Three* : Use `applyQC()` on float id = 4900845. Explain your results.
 ```
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(indexSynthetic)
-i <- subset(indexSynthetic, ID='4900845')
+i <- subset(indexSynthetic, id='4900845')
 raw <- readProfiles(getProfiles(i))
 clean <- applyQC(raw)
 par(mfrow=c(1, 2))
@@ -233,13 +233,13 @@ plot(clean, which="TS")
 As shown by the plot, the plot containing "good" data and the plot containing
 "bad" data are the same. This is the result of no tests being completed for QC, as shown by `showQCTests()`.
 
-*Exercise Four* Use `useAdjusted()` on the float with ID 5903586, profile=50 to
+*Exercise Four* Use `useAdjusted()` on the float with id 5903586, profile=50 to
 compare `<param>adjusted`. Explain your results.
 
 ```
 library(argoFloats)
 bai <- getIndex('synthetic')
-s <- subset(bai, ID='5903586')
+s <- subset(bai, id='5903586')
 ss <- subset(s, 50)
 profiles <- getProfiles(ss)
 raw <- readProfiles(profiles)

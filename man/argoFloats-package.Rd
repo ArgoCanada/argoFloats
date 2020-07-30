@@ -7,7 +7,7 @@
 \description{
 The \code{argoFloats} package provides tools for downloading and processing Argo profile data.
 It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
-also to sift these profiles based on ID, time, geography, variable, institution, and ocean.
+also to sift these profiles based on id, time, geography, variable, institution, and ocean.
 Once downloaded, such datasets can be analysed within \code{argoFloats} or using other R tools
 and packages.
 }
