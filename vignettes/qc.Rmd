@@ -12,7 +12,7 @@ output:
     dpi: 72
     dev.args: list(pointsize=11)
 vignette: >
-  %\VignetteIndexEntry{Introduction to argoFloats Quality Control}
+  %\VignetteIndexEntry{Handling Quality Control Flags and Adjusted Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}?
 ---
@@ -182,7 +182,7 @@ summary(unlist(adj[['oxygen']]))
 ![Figure 5: argoFloats useAdjusted() function used on float with `id` 1901584](useAdjusted.png)
 
 
-**Exercise Four** Use `useAdjusted()` on the float with `id` 5903586, profile=50 to
+**Exercise Four** Use `useAdjusted()` on the float with `id` 5903586, cycle=50 to
 compare `<param>adjusted`
 
 # Answers
@@ -231,7 +231,7 @@ plot(clean, which="TS")
 As shown by the plot, the plot containing "good" data and the plot containing
 "bad" data are the same. This is the result of no tests being completed for QC, as shown by `showQCTests()`.
 
-*Exercise Four* Use `useAdjusted()` on the float with `id` 5903586, profile=50 to
+*Exercise Four* Use `useAdjusted()` on the float with `id` 5903586, cycle=50 to
 compare `<param>adjusted`. Explain your results.
 
 ```

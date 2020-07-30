@@ -1,6 +1,6 @@
 ---
 title: "Introduction to argoFloats Quality Control"
-author: "Jaimie Harbin (https://orcid.org/0000-0003-3774-3732), Dan Kelley (https://orcid.org/0000-0001-7808-5911),and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
+author: "Jaimie Harbin (https://orcid.org/0000-0003-3774-3732), Dan Kelley (https://orcid.org/0000-0001-7808-5911)"
 date: "`r Sys.Date()`"
 vignette: |
   %\VignetteIndexEntry{Introduction to argoFloats Quality Control} %\VignetteEngine{R.rsp::asis} %\VignetteEncoding[utf-8]{inputenc} %\VignetteKeyword{PDF}
@@ -111,8 +111,8 @@ An example of how to get the QC plot for temperature, or "TEMP" for the float wi
 library(argoFloats)
 data("index")
 subset <- subset(index, ID='1901584')
-profiles <- getProfiles(subset)
-argos <- readProfiles(profiles)
+cycles <- getProfiles(subset)
+argos <- readProfiles(cycles)
 plot(argos, which='QC', parameter='temperature')
 ```
 
@@ -128,15 +128,15 @@ object that was created by `readProfiles()`. The `showQCTests()` is then used to
 indicate which QC tests were performed and/or failed.
 
 Using the same example as shown in `plot(which='QC')`, we can also determine
-which QC tests were performed on each profile. This is completed by
+which QC tests were performed on each cycle. This is completed by
 `showQCTests()` in the following code:
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE}
 library(argoFloats)
 data('index')
 subset <- subset(index, 1)
-profiles <- getProfiles(subset)
-argos <- readProfiles(profiles)
+cycles <- getProfiles(subset)
+argos <- readProfiles(cycles)
 argos1 <- argos[[1]]
 showQCTests(argos[[1]])
 ```
@@ -198,8 +198,8 @@ using the ID from the previous flag examples:
 library(argoFloats)
 data("index")
 subset <- subset(index, ID='1901584')
-profiles <- getProfiles(subset)
-raw <- readProfiles(profiles)
+cycles <- getProfiles(subset)
+raw <- readProfiles(cycles)
 adj <- useAdjusted(raw)
 par(mfrow=c(1, 2))
 oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="temperature")
@@ -208,7 +208,7 @@ oce::plotProfile(oce::as.ctd(adj[[1]]), xtype="temperature")
 mtext("Adjusted data", side=3, line=-1, col=2)
 ```
 
-*Exercise Four* Use `useAdjusted()` on the float with ID5903586, profile=50 to
+*Exercise Four* Use `useAdjusted()` on the float with ID5903586, cycle=50 to
 compare `<param>Adjusted` vs `<param>Unadjusted>`.
 
 # Answers
@@ -219,8 +219,8 @@ float number 4900845 in synthetic data. Explain your results.
 library(argoFloats)
 ais <- getIndex(filename = 'synthetic', age=0)
 sub <- subset(ais, ID='4900845')
-profiles <- getProfiles(sub)
-argos <- readProfiles(profiles)
+cycles <- getProfiles(sub)
+argos <- readProfiles(cycles)
 plot(argos, which='QC', parameter='temperature')
 ```
 As shown in the plot, 100% of the temperature data is considered "good". This
@@ -233,8 +233,8 @@ which tests were performed and/or failed during quality control testing. Explain
 library(argoFloats)
 data('indexSynthetic')
 sub <- subset(indexSynthetic, ID='4900845')
-profiles <- getProfiles(sub)
-argos <- readProfiles(profiles)
+cycles <- getProfiles(sub)
+argos <- readProfiles(cycles)
 a1 <- argos[[1]]
 showQCTests(a1)
 ```
@@ -257,7 +257,7 @@ plot(clean, which="TS")
 As shown by the plot, the plot containing "good" data and the plot containing
 "bad" data are the same. This is the result of no tests being completed for QC, as shown by `showQCTests()`.
 
-*Exercise Four* Use `useAdjusted()` on the float with ID 5903586, profile=50 to
+*Exercise Four* Use `useAdjusted()` on the float with ID 5903586, cycle=50 to
 compare `<PARAM>_ADJUSTED` vs `<param>Unadjusted`.
 
 ```
@@ -265,8 +265,8 @@ library(argoFloats)
 bai <- getIndex('synthetic')
 s <- subset(bai, ID='5903586')
 ss <- subset(s, 50)
-profiles <- getProfiles(ss)
-raw <- readProfiles(profiles)
+cycles <- getProfiles(ss)
+raw <- readProfiles(cycles)
 adj <- useAdjusted(raw)
 par(mfrow=c(1, 2))
 oce::plotProfile(oce::as.ctd(raw[[1]]), xtype="oxygen")

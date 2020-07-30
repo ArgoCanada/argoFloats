@@ -15,7 +15,7 @@ summary(p[[1]])
 file <- nc_open("/Users/jaimiekeeping/data/argo/D1900167_042.nc")
 
 #Jaimie
-subset <- subset(getIndex(), profile='042')
+subset <- subset(getIndex(), cycle='042')
 subset2 <- subset(subset, ID='1900167')
 sort(names(subset2[['index']])) # vs sort(names(s[['index']])) (which is from index, and has a date)
 gp <- getProfiles(subset2)
