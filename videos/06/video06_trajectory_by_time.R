@@ -1,12 +1,12 @@
 library(argoFloats)
 library(oce)
 data(index)
-ID <- index[["ID"]]
+id <- index[["id"]]
 cycle <- index[["cycle"]]
-tableSorted <- sort(table(ID))
+tableSorted <- sort(table(id))
 ## isolate the float that has the most cycles
-ID0 <- names(tail(tableSorted, 1))
-index0 <- subset(index, ID=ID0)
+id0 <- names(tail(tableSorted, 1))
+index0 <- subset(index, id=id0)
 o <- order(as.numeric(index0[["cycle"]]))
 lon <- index0[["longitude"]][o]
 lat <- index0[["latitude"]][o]
@@ -22,4 +22,4 @@ points(-77.06,26.54, pch="*", cex=1.8, col='black')
 lines(lon, lat)
 sub <- seq(1, length(lon), by=10)
 text(lon[sub], lat[sub], cycle[sub], cex=2/3, pos=1)
-mtext(paste("Float", ID0), adj=0)
+mtext(paste("Float", id0), adj=0)

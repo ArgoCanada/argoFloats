@@ -30,6 +30,16 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 #  plot(raw, which="TS")
 #  plot(clean, which="TS")
 
+## ---- eval=FALSE--------------------------------------------------------------
+#  library(argoFloats)
+#  data(index)
+#  i <- subset(index, id='1901584')
+#  raw <- readProfiles(getProfiles(i))
+#  clean <- applyQC(raw)
+#  A <- raw[[1]]
+#  D <- data.frame(T = A[['temperature']], TF=A[['temperatureFlag']], S=A[['salinity']], SF=A[['salinityFlag']], P=A[['pressure']], PF=A[['pressureFlag']])
+#  head(D)
+
 ## ---- warning=FALSE, error=FALSE, message=FALSE, eval=FALSE-------------------
 #  library(argoFloats)
 #  raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
@@ -37,8 +47,6 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 #  par(mfrow=c(1,2), mar=c(5,4,1,2))
 #  hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
 #  hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
-#  summary(unlist(raw[['oxygen']]))
-#  summary(unlist(adj[['oxygen']]))
 #  summary(unlist(raw[['oxygen']]))
 #  summary(unlist(adj[['oxygen']]))
 

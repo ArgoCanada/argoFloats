@@ -1,8 +1,8 @@
 library(argoFloats)
 library(oce)
-ID0 <- '6900388'
+id0 <- '6900388'
 if (!exists("index0"))
-    index0 <- subset(getIndex(), ID=ID0)
+    index0 <- subset(getIndex(), id=id0)
 
 lon <- index0[["longitude"]]
 lat <- index0[["latitude"]]
@@ -21,7 +21,7 @@ points(lon, lat, pch=21, cex=1, bg=cm$zcol, col="black", lwd=1.2)
 lines(lon, lat)
 sub <- seq(1, length(lon), by=10)
 text(lon[sub], lat[sub], cycle[sub], cex=2/3, pos=1)
-mtext(paste("Float", ID0), adj=0)
+mtext(paste("Float", id0), adj=0)
 
 if (!interactive())
     dev.off()

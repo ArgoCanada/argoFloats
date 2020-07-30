@@ -144,11 +144,11 @@ geographical <- TRUE
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' plot(a[[1]], which="TS")
 #'
-#' # Example 7: Temperature QC plot for an ID in Arabian Sea
+#' # Example 7: Temperature QC plot for an id in Arabian Sea
 #' \dontrun{
 #' library(argoFloats)
 #' ais <- getIndex(filename='synthetic', age=0)
-#' sub <- subset(ais, ID='2902123')
+#' sub <- subset(ais, id='2902123')
 #' lonRect <- c(56, 66)
 #' latRect <- c(11,12)
 #' s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
@@ -470,10 +470,10 @@ setMethod(f="plot",
               } else if (which == "QC") {
                   if (x[['type']] != 'argos')
                       stop("In plot,argoFloats-method(): The type of x must be 'argos'", call.=FALSE)
-                  IDs <- x[['ID']]
-                  nID <- length(unique(IDs))
-                  if (nID != 1)
-                      stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single ID", call.=FALSE)
+                  ids <- x[['id']]
+                  nid <- length(unique(ids))
+                  if (nid != 1)
+                      stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single id", call.=FALSE)
                   dots <- list(...)
                   knownParameters <- names(x[[1]]@metadata$flags)
                   parameter <- dots$parameter

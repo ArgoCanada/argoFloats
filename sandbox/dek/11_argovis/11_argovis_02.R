@@ -26,6 +26,6 @@ BGCs <- sapply(a, function(x) paste0(x[["containsBGC"]], collapse=","))
 n <- 20
 cat("Some elements of the first", n, "profiles are:\n")
 options(width=150)
-df <- data.frame(ID=ids, mode=modes, deep=deeps, longitude=lons, latitude=lats, dac=dacs, time=times, params=params, BGC=BGCs)
+df <- data.frame(id=ids, mode=modes, deep=deeps, longitude=lons, latitude=lats, dac=dacs, time=times, params=params, BGC=BGCs)
 print(head(df, n))
 
