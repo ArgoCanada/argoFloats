@@ -27,10 +27,10 @@ test_that("accessors work on 'index' data file", {
           expect_equal(head(index[["latitude"]],3), c(27.705, 27.773, 28.064))
 })
 
-test_that("access float ID", {
-          expect_equal("4900227", index[['ID', 953]])
-          expect_equal(c("1901584", "1901584", "1901584"), index[['ID', 1:3]])
-          expect_equal(c("1901584", "1901584", "1901584"), head(index[['ID']], 3))
+test_that("access float id", {
+          expect_equal("4900227", index[['id', 953]])
+          expect_equal(c("1901584", "1901584", "1901584"), index[['id', 1:3]])
+          expect_equal(c("1901584", "1901584", "1901584"), head(index[['id']], 3))
 })
 
 test_that("access float profile number", {

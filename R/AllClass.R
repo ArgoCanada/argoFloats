@@ -4,7 +4,7 @@
 #'
 #' The `argoFloats` package provides tools for downloading and processing Argo profile data.
 #' It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
-#' also to sift these profiles based on ID, time, geography, variable, institution, and ocean.
+#' also to sift these profiles based on id, time, geography, variable, institution, and ocean.
 #' Once downloaded, such datasets can be analysed within `argoFloats` or using other R tools
 #' and packages.
 #'
@@ -247,13 +247,13 @@ setMethod(f="initialize",
 #'        the `data` slot is returned.  This is a good way to learn the
 #'        longitude and latitude of the profile, the file name on the server,
 #'        etc.
-#'     7. Otherwise, if `i` is `"ID"` then the return value is developed from the
+#'     7. Otherwise, if `i` is `"id"` then the return value is developed from the
 #'        `index$file` item within the `data` slot of `x`, in one of three cases:
 #'         1. If `j` is not supplied, the return value is a vector holding the
 #'            identifiers (character codes for numbers) for all the data files
 #'            referred to in the index.
 #'         2. Otherwise, if `j` is numeric, then the return value is a subset of
-#'            the ID codes, as indexed by `j`.
+#'            the id codes, as indexed by `j`.
 #'         3. Otherwise, an error is reported.
 #'     8. If `i` is `"length"`, the number of remote files pointed to by the index
 #'        is returned.
@@ -294,7 +294,7 @@ setMethod(f="initialize",
 #'            is returned.
 #'         4. Otherwise, an error is reported.
 #'     5. Otherwise, if `i` is `"length"`, the number of oce-type argo objects in `x` is returned.
-#'     6. Otherwise, if `i` is `"ID"`, a vector of the IDs of the profiles is returned.
+#'     6. Otherwise, if `i` is `"id"`, a vector of the ids of the profiles is returned.
 #'     7. Otherwise, if `i` is a character value, then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
@@ -361,9 +361,9 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i == "cycle") {
                       cycle <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1}).nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
-                  } else if (length(i) == 1 && i == "ID") {
-                      ID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", x@data$index$file)
-                      return(as.vector(if (missing(j)) ID else ID[j]))
+                  } else if (length(i) == 1 && i == "id") {
+                      id <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", x@data$index$file)
+                      return(as.vector(if (missing(j)) id else id[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$index$file))
                   } else {
@@ -404,7 +404,7 @@ setMethod(f="[[",
                       }
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$argos))
-                  } else if (length(i) == 1 && i == "ID") {
+                  } else if (length(i) == 1 && i == "id") {
                       return(unlist(lapply(x@data$argos, function(a) a[['id']])))
                   } else {
                       if (!missing(j)) {

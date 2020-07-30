@@ -53,23 +53,23 @@ test_that("subset by institution", {
     expect_equal(indexi[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
-test_that("subset by float ID", {
+test_that("subset by float id", {
     data("index")
-    indexID <- expect_message(subset(index, ID="1901584"),
+    indexid <- expect_message(subset(index, id="1901584"),
                              "Kept 9 profiles \\(0.944%\\)")
-    expect_equal(dim(indexID[["index"]]), c(9,8))
-    expect_equal(indexID[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-    expect_equal(indexID[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+    expect_equal(dim(indexid[["index"]]), c(9,8))
+    expect_equal(indexid[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+    expect_equal(indexid[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
 test_that("subset by deep", {
     data("index")
-    indexID <- expect_message(subset(index, deep=TRUE), "Kept 0 profiles \\(0%\\)")
+    indexid <- expect_message(subset(index, deep=TRUE), "Kept 0 profiles \\(0%\\)")
 })
 
 test_that("silencing subset", {
     data("index")
-    indexID <- expect_silent(subset(index, deep=TRUE, silent=TRUE))
+    indexid <- expect_silent(subset(index, deep=TRUE, silent=TRUE))
 })
 
 test_that("subset by ocean", {
