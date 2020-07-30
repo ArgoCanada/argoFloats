@@ -1,4 +1,4 @@
-if (!interactive()) png("useAdjusted.png", unit="in", width=5, height=2.8, pointsize=11, res=150)
+if (!interactive()) png("useAdjusted.png", unit="in", width=7, height=3.92, pointsize=11, res=100)
 library(argoFloats)
 raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
 adj <- useAdjusted(raw)

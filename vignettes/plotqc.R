@@ -1,5 +1,5 @@
-if (!interactive()) png("plotqc.png", unit="in", width=4, height=2.8, pointsize=11, res=150)
-par((mar=c(3, 2.5, 1, 1)+0.2), mgp=c(2, 0.7, 0), cex.lab=0.75)
+if (!interactive()) png("plotqc.png", unit="in", width=7, height=4, pointsize=11, res=100)
+par((mar=c(3, 2.5, 1, 1)+0.2), mgp=c(2, 0.7, 0))
 library(argoFloats)
 data("index")
 subset <- subset(index, ID='1901584')
