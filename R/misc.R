@@ -54,14 +54,11 @@
 #'
 #' @examples
 #' library(argoFloats)
-#' # Plot raw and adjusted oxygen for a sample dataset
 #' raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
 #' adj <- useAdjusted(raw)
-#' adj1 <- raw[[1]]
-#' raw1 <- adj[[1]]
-#' plot(raw1[["oxygen"]], adj1[["oxygen"]] - raw1[["oxygen"]],
-#'      xlab="Raw O2", ylab="Adj O2 - Raw O2")
-#' summary(lm(adj1[["oxygen"]] ~ raw1[["oxygen"]]))
+#' par(mfrow=c(1,2), mar=c(5,4,1,2))
+#' hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
+#' hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
 #'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
