@@ -45,16 +45,18 @@ geographical <- TRUE
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
 #' for other arguments that can be provided.
 #'
-#' * For `which=\"QC\"`, two time-series panels are shown, with
+#' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
-#' An additional argument named `variable` must be givn, to name the
+#' An additional argument named `parameter` must be given, to name the
 #' quantity of interest.  The function only works if `x` is an
-#' [`argoFloats-class`] object creatd with [readProfiles()].
+#' [`argoFloats-class`] object created with [readProfiles()].
 #' The top panel shows the percent of data flagged with codes
 #' 1 (meaning good data), 2 (probably good), 5 (changed)
 #' or 8 (estimated).  Thus, low values on the top panel reveal
-#' profiles that are questionable. The bottom panel shows the mean value
-#' of the parameter in question.  See Example 7.
+#' profiles that are questionable. Note that if all of data at a given time
+#' have flag 0, meaning not assessed, then a quality of 0 is plotted at that
+#' time. The bottom panel shows the mean value of the parameter in question
+#' regardless of the flag value. See Example 7.
 #'
 #' @param x An [`argoFloats-class`] object.
 #'
@@ -482,7 +484,7 @@ setMethod(f="plot",
                   if (!(parameter %in% knownParameters))
                       stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: ", paste(knownParameters, collapse=', '), call.=FALSE)
                   qf <- function(x) {
-                      # qf returns 100 if data are all 'good' = 1 or 'probably good' = 2
+                      # qf returns 100 if data are all 'good' = 1 or 'probably good' = 2 or 'changed' = 5 or 'estimated' = 8
                       flag <- x[[paste0(parameter, 'Flag')]]
                       100 * sum(1 == flag | 2 == flag | 5 == flag | 8 == flag, na.rm=TRUE) / length(flag)
                   }

@@ -201,9 +201,10 @@ showQCTests <- function(x, style="brief")
         action <- x[['HISTORY_ACTION']]
     else if ("historyAction" %in% mnames)
         action <- x[['historyAction']]
-    else
-        cat("No Quality Control tests were performed")
-        #return(invisible(NULL))
+    else {
+        cat("historyAction is not present in the metadata for this cycle, so no report can be given")
+        return(invisible(NULL))
+    }
     if ("HISTORY_QCTEST" %in% mnames) # to handle oce before version 1.3-0
         tests <- x[['HISTORY_QCTEST']]
     else if ("historyQCTest" %in% mnames)

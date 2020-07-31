@@ -116,16 +116,18 @@ only works if \code{x} is an object that was created by  \code{\link[=getProfile
 The scales for the plot can be altered by putting \code{Slim} and \code{Tlim}
 arguments in the \code{...} list; see the documentation for \code{\link[oce:plotTS]{oce::plotTS()}}
 for other arguments that can be provided.
-\item For \verb{which=\\"QC\\"}, two time-series panels are shown, with
+\item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
-An additional argument named \code{variable} must be givn, to name the
+An additional argument named \code{parameter} must be given, to name the
 quantity of interest.  The function only works if \code{x} is an
-\code{\linkS4class{argoFloats}} object creatd with \code{\link[=readProfiles]{readProfiles()}}.
+\code{\linkS4class{argoFloats}} object created with \code{\link[=readProfiles]{readProfiles()}}.
 The top panel shows the percent of data flagged with codes
 1 (meaning good data), 2 (probably good), 5 (changed)
 or 8 (estimated).  Thus, low values on the top panel reveal
-profiles that are questionable. The bottom panel shows the mean value
-of the parameter in question.  See Example 7.
+profiles that are questionable. Note that if all of data at a given time
+have flag 0, meaning not assessed, then a quality of 0 is plotted at that
+time. The bottom panel shows the mean value of the parameter in question
+regardless of the flag value. See Example 7.
 }
 }
 \examples{

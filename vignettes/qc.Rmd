@@ -191,7 +191,7 @@ compare `<param>adjusted`
 float number 4900845 in synthetic data using `plot(...,which='QC')`. Explain your results.
 ```
 library(argoFloats)
-ais <- getIndex(filename = 'synthetic', age=0)
+ais <- getIndex(filename = 'synthetic')
 sub <- subset(ais, id='4900845')
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
