@@ -191,8 +191,8 @@ compare `<param>adjusted`
 float number 4900845 in synthetic data using `plot(...,which='QC')`. Explain your results.
 ```
 library(argoFloats)
-ais <- getIndex(filename = 'synthetic')
-sub <- subset(ais, id='4900845')
+data('indexSynthetic')
+sub <- subset(indexSynthetic, id='4900845')
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')
@@ -212,24 +212,21 @@ argos <- readProfiles(profiles)
 a1 <- argos[[1]]
 showQCTests(a1)
 ```
-As shown by the `showQCTests()` function, no quality control tests were actually
-performed on this float id. This is a case where the user would have to self
-analyze their data to ensure all data seems reasonable.
+As shown by the `showQCTests()` function, `historyAction` is not present in the metadata for this cycle, so no report can be given. This is a case where the user would have to self analyze their data to ensure all data seems reasonable.
 
 *Exercise Three* : Use `applyQC()` on float `id` = 4900845. Explain your results.
 ```
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(indexSynthetic)
-i <- subset(indexSynthetic, id='4900845')
-raw <- readProfiles(getProfiles(i))
-clean <- applyQC(raw)
+sub <- subset(indexSynthetic, id='4900845')
+profiles <- readProfiles(getProfiles(sub))
+clean <- applyQC(profiles)
 par(mfrow=c(1, 2))
-plot(raw, which="TS")
+plot(profiles, which="TS")
 plot(clean, which="TS")
 ```
-As shown by the plot, the plot containing "good" data and the plot containing
-"bad" data are the same. This is the result of no tests being completed for QC, as shown by `showQCTests()`.
+As shown by the plot, the plot containing "good" data and the plot containing "bad" data are the same. This indicates no "bad" data were taken away, and it is up to the user to determine the validy of the data.
 
 *Exercise Four* Use `useAdjusted()` on the float with `id` 5903586, cycle=50 to
 compare `<param>adjusted`. Explain your results.
@@ -250,7 +247,7 @@ mtext("Adjusted data", side=3, line=-1, col=2)
 summary(unlist(raw[['oxygen']]))
 summary(unlist(adj[['oxygen']]))
 ```
-As shown from `plot(..,which='QC')` and 'showQCTests()`, there has been no QC completed on this profile, and therefore no adjustments. This is a case where a use must analyze their data to determine if it is "good" data.
+There are no adjustments. This is a case where a use must analyze their data to determine if it is "good" data.
 
 # References
 
