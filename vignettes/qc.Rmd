@@ -47,7 +47,7 @@ flag value of 9 (or missing value) they are not used, and flags 3, 5, 6, and 7
 are considered 'bad' data.
 
 `argoFloats` has taken this idea, and has incorporated a 3 step process when
-considering the QC of Argo flags. The three step process encourages
+considering the QC of Argo floats. The three step process encourages
 users to always analyze the data they are considering, and acknowledges that the
 user assumes all risk from their Argo data, as described in section 1.3 of the
 Argo User's Manual (Carval et al. 2019). The three step process is shown in the following diagram.
@@ -58,13 +58,13 @@ This vignette will walk the users through the three step flag process using the 
 
 ### Step One: QC Plot
 
-Our `argoFloats` package uses the flags of profiles to determine "good" and
-"bad" data. We then created a plot type to demonstrate the quality of data, the
-`QC` plot. The `QC` plot plots parameter quality and parameter mean. This
-only works if `x` is an object that was created by `getProfiles()`. The user
-must also provide the `parameter` of interest. If the user is uncertain about
-what parameter exists within a certain float, `argoFloats` will prompt the user
-with the appropriate parameters.
+Our `argoFloats` package uses the flags of profiles to distinguish between "good" and
+"bad" data. Based on this, we created a plot type to display the quality of data, the `QC`
+plot. The `QC` plot is a two panel plot that shows parameter quality and
+parameter mean. This only works if `x` is an object that was created by
+`getProfiles()` and the user provides the `parameter` of interest. If the
+user is uncertain about what parameters exist within a certain cycle,
+`argoFloats` will prompt the user with the appropriate parameters.
 
 An example of how to get the `QC` plot for temperature for the float with `id` 1901584 is as follows:
 
@@ -80,20 +80,19 @@ plot(argos, which='QC', parameter='temperature')
 ![Figure 2: QC plot for temperature recorded by the float with `id` 1901584](plotqc.png)
 
 
-**Exercise One:** Use the previous code to determine the QC of temperature for
-float number 4900845 in synthetic data using `plot(..., which='QC')`. Explain your results.
+**Exercise 1:** Use the previous code to determine the QC of temperature for
+float `id` 4900845 in synthetic data. Explain your results.
 
 ### Step Two: showQCTests()
 
-`showQCTests` print a summary of the QC tests (if any) that were
-performed on an Argo profile. It uses `hexToBits()` to decode the hexadecimal
-values that may be stored in `historyQCTest` and `historyAction` within the metadata
+`showQCTests` prints a summary of the QC tests (if any) that were
+performed on an Argo cycle. It uses `hexToBits()` to decode the hexadecimal
+values that may be stored in `historyQCTest`. From there it pairs the determined test values with the appropriate action, QC Tests performed or QC Tests failed, found in `historyAction` within the metadata
 slot of an individual Argo profile, as read directly with `oce::read.argo()` or
 indirectly with `readProfiles()`.
 
-Using the same example as shown in `plot(..., which='QC')`, we can also determine
-which QC tests were performed on each profile. This is completed by
-`showQCTests()` in the following code:
+Using the same example as shown in `plot(..., which='QC')`, an example of 
+`showQCTests()` is shown below:
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE, eval=FALSE}
 library(argoFloats)
@@ -108,8 +107,7 @@ showQCTests(argos2[[1]])
 In section 3.11 Reference table 11: QC test binary ids of the Argo User's Manual
 (Carval et al. 2019), we see that test 14 was failed: ie. the Density Inversion Test.
 
-**Exercise Two**: Use the first float with `id` 4900845 in exercise one to determine
-which tests were performed and/or failed during quality control testing. Explain your results.
+**Exercise 2**: Use the first cycle of Argo float with `id` 4900845 in exercise one to determine which tests were performed and/or failed during quality control testing. Explain your results.
 
 ### Step Three: applyQC()
 
@@ -120,8 +118,7 @@ is an important early step in processing, because suspicious Argo floats
 commonly report data that are suspicious based on statistical and physical
 measures.
 
-Using the same example as shown in `plot(...,which='QC')` and `showQCTests()`, the
-user also has the ability to use `applyQC()` as shown below:
+Using the same example as shown in `plot(...,which='QC')` and `showQCTests()`, the below example demonstrates the significance of `applyQC` with a TS diagram.
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE, eval=FALSE}
 library(argoFloats)
@@ -138,7 +135,7 @@ plot(clean, which="TS")
 ![Figure 3: argoFloats applyQC() function used on float with `id` 1901584](applyQC.png)
 
 
-**Exercise Three** : Use `applyQC()` on float `id` with 4900845. Explain your results.
+**Exercise 3** : Use `applyQC()` on float `id` with 4900845 and plot comparing TS diagrams. Explain your results.
 
 **NOTE:** Although, the `applyQC` function removes the "bad" data for the user, if they wish to analyze the data themselves, one easy way using basic R functions is as follows:
 
@@ -156,12 +153,15 @@ head(D)
 
 ### useAdjusted()
 
-In addition to flags marking bad data based on tests, `argoFloats` package has also incorporated the idea of `<param>Adjusted` which considers "bad" data that has been adjusted (Carval et al. 2019).
-
-This is done by using `oce::preferAdjusted()` on each of the Argo objects stored
-within the first argument. The procedure is fairly complicated, so users are
-urged to read the documentation for `oce::preferAdjusted()` after reading the
-sketch provided in the “Details” section of `?useAdjusted()` and familiarizing themselves with the flow chart below that demonstrates the steps taken when a user specifies `which=ALL` or `which=<param>`.
+Some data sets undergo adjustments that are made in recognition of the Quality
+Control (QC) analysis or improved calibrations. These type of data sets are
+considered "adjusted" and are handled using `useAdjusted()`. `useAdjusted()` is done by using
+`oce::preferAdjusted()` on each of the Argo objects stored within the first
+argument. The procedure is fairly complicated, so users are urged to read the
+documentation for `oce::preferAdjusted()` after reading the sketch provided in
+the “Details” section of `?useAdjusted()` and familiarizing themselves with the
+flow chart below that demonstrates the steps taken when a user specifies
+`which=ALL` or `which=<param>`.
 
 ![Figure 4: Flow chat for useAdjusted() function within argoFloats package when which argument is equal to ALL or param](../man/figures/useAdjustedDiagram.png)
 
@@ -181,13 +181,13 @@ summary(unlist(adj[['oxygen']]))
 ![Figure 5: argoFloats useAdjusted() function used on float with `id` 1901584](useAdjusted.png)
 
 
-**Exercise Four** Use `useAdjusted()` on the float with `id` 5903586, cycle=50 to
-compare `<param>adjusted`
+**Exercise 4** Use `useAdjusted()` on the float with `id` 5903586, cycle=50 to
+compare adjusted to raw data.
 
 # Answers
 
-*Exercise One:* Use the previous code to determine the QC of temperature for
-float number 4900845 in synthetic data using `plot(...,which='QC')`. Explain your results.
+**Exercise 1:** Use the previous code to determine the QC of temperature for
+float `id` 4900845 in synthetic data. Explain your results.
 ```
 library(argoFloats)
 data('indexSynthetic')
@@ -199,8 +199,7 @@ plot(argos, which='QC', parameter='temperature')
 As shown in the plot, 100% of the temperature data is considered "good". This
 implies to the user that all data is considered okay to use.
 
-*Exercise Two*: Use the first float with `id` 4900845 in exercise one to determine
-which tests were performed and/or failed during quality control testing. Explain your results.
+**Exercise 2**: Use the first cycle of Argo float with `id` 4900845 in exercise one to determine which tests were performed and/or failed during quality control testing. Explain your results.
 
 ```
 library(argoFloats)
@@ -213,7 +212,7 @@ showQCTests(a1)
 ```
 As shown by the `showQCTests()` function, `historyAction` is not present in the metadata for this cycle, so no report can be given. This is a case where the user would have to self analyze their data to ensure all data seems reasonable.
 
-*Exercise Three* : Use `applyQC()` on float `id` = 4900845. Explain your results.
+**Exercise 3** : Use `applyQC()` on float `id` with 4900845 and plot comparing TS diagrams. Explain your results.
 ```
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
@@ -227,8 +226,8 @@ plot(clean, which="TS")
 ```
 As shown by the plot, the plot containing "good" data and the plot containing "bad" data are the same. This indicates no "bad" data were taken away, and it is up to the user to determine the validy of the data.
 
-*Exercise Four* Use `useAdjusted()` on the float with `id` 5903586, cycle=50 to
-compare `<param>adjusted`. Explain your results.
+**Exercise 4** Use `useAdjusted()` on the float with `id` 5903586, cycle=50 to
+compare adjusted to raw data.
 
 ```
 library(argoFloats)

@@ -115,7 +115,10 @@ indicating whether to draw a depth-color palette to the right of the plot.
 only works if \code{x} is an object that was created by  \code{\link[=getProfiles]{getProfiles()}}.
 The scales for the plot can be altered by putting \code{Slim} and \code{Tlim}
 arguments in the \code{...} list; see the documentation for \code{\link[oce:plotTS]{oce::plotTS()}}
-for other arguments that can be provided.
+for other arguments that can be provided. This plot has a default color code
+to represent bad vs good data. Bad data, flagged 3, 4, 6, and 7, is represented
+with red dots, and good data, flaged 1, 2, 5, and 8, is displayed in black dots.
+See reference one, section 3.2.1 for distinction between good and bad data.
 \item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{parameter} must be given, to name the
@@ -145,6 +148,7 @@ points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
 # Example 3: TS of first 10 profiles
 # (Slow, so not run by default.)
 \dontrun{
+index10 <- subset(index, 1:10)
 profiles10 <- getProfiles(index10, destdir="~/data/argo")
 argos10 <- readProfiles(profiles10)
 plot(argos10, which="TS")}
@@ -167,7 +171,7 @@ plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
 # Example 6: TS plot for a particular argo
 library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-plot(a[[1]], which="TS")
+plot(a, which="TS")
 
 # Example 7: Temperature QC plot for an id in Arabian Sea
 \dontrun{
@@ -181,6 +185,13 @@ profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')}
 
+}
+\references{
+\enumerate{
+\item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+\url{https://doi.org/10.13155/29825}.
+}
 }
 \author{
 Dan Kelley

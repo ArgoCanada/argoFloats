@@ -43,7 +43,10 @@ geographical <- TRUE
 #' only works if `x` is an object that was created by  [getProfiles()].
 #' The scales for the plot can be altered by putting `Slim` and `Tlim`
 #' arguments in the `...` list; see the documentation for [oce::plotTS()]
-#' for other arguments that can be provided.
+#' for other arguments that can be provided. This plot has a default color code
+#' to represent bad vs good data. Bad data, flagged 3, 4, 6, and 7, is represented
+#' with red dots, and good data, flaged 1, 2, 5, and 8, is displayed in black dots.
+#' See reference one, section 3.2.1 for distinction between good and bad data. 
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
@@ -122,6 +125,7 @@ geographical <- TRUE
 #' # Example 3: TS of first 10 profiles
 #' # (Slow, so not run by default.)
 #'\dontrun{
+#' index10 <- subset(index, 1:10)
 #' profiles10 <- getProfiles(index10, destdir="~/data/argo")
 #' argos10 <- readProfiles(profiles10)
 #' plot(argos10, which="TS")}
@@ -144,7 +148,7 @@ geographical <- TRUE
 #' # Example 6: TS plot for a particular argo
 #' library(argoFloats)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-#' plot(a[[1]], which="TS")
+#' plot(a, which="TS")
 #'
 #' # Example 7: Temperature QC plot for an id in Arabian Sea
 #' \dontrun{
@@ -157,6 +161,11 @@ geographical <- TRUE
 #' profiles <- getProfiles(s)
 #' argos <- readProfiles(profiles)
 #' plot(argos, which='QC', parameter='temperature')}
+#' 
+#' @references
+#' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+#' \url{https://doi.org/10.13155/29825}.
 #'
 #' @importFrom grDevices extendrange gray rgb
 #' @importFrom graphics abline axis box par plot.window points polygon text
@@ -456,8 +465,13 @@ setMethod(f="plot",
                                      longitude=longitude)
                   if (is.null(cex))
                       cex <- 0.5
-                  if (is.null(col))
-                      col <- rgb(0, 0, 1, 0.5)
+                  if (is.null(col)) {
+                      if (which == "TS") {
+                          col <- "flags"
+                       } else {
+                          col <- rgb(0, 0, 1, 0.5)
+                       }
+                  }
                   if (is.null(pch))
                       pch <- 20
                   omgp <- par("mgp")
@@ -467,6 +481,14 @@ setMethod(f="plot",
                   if (is.null(mar))
                       mar <- par("mar") # c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
                   par(mar=mar, mgp=mgp)
+                  if (col == "flags") {
+                      salinityFlag <- unlist(x[["salinityFlag"]])
+                      temperatureFlag <- unlist(x[["temperatureFlag"]])
+                      goodT <- temperatureFlag %in% c(1, 2, 5, 8)
+                      goodS <- salinityFlag %in% c(1, 2, 5, 8)
+                      good <- goodS & goodT
+                      col <- ifelse(good, "black", "red")
+                  }
                   oce::plotTS(ctd, cex=cex, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
                   par(mar=omar, mgp=omgp)
               } else if (which == "QC") {
