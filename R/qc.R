@@ -77,7 +77,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' (if any) that were performed on an Argo profile.  It uses
 #' [hexToBits()] to decode the hexadecimal  values that may
 #' be stored in `historyQCTest`. From there it pairs the determined
-#' test values with the appropriate action, QC Tests performed or QC
+#' test values with the appropriate actions, QC Tests performed or QC
 #' Tests failed, found in `historyAction` within the `metadata` slot
 #' of an individual argo profile, as read directly with [oce::read.argo()]
 #' or indirectly with [readProfiles()], the latter being illustrated in the
