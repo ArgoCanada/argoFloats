@@ -74,12 +74,13 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' Show QC test results for an argo object
 #'
 #' `showQCTests` print a summary of the quality-control (QC) tests
-#' (if any) that were performed on an argo profile.  It uses
+#' (if any) that were performed on an Argo profile.  It uses
 #' [hexToBits()] to decode the hexadecimal  values that may
-#' be stored in `historyQCTest` and `historyAction` within
-#' the `metadata` slot of an individual argo profile, as read
-#' directly with [oce::read.argo()] or indirectly with
-#' [readProfiles()], the latter being illustrated in the
+#' be stored in `historyQCTest`. From there it pairs the determined
+#' test values with the appropriate action, QC Tests performed or QC
+#' Tests failed, found in `historyAction` within the `metadata` slot
+#' of an individual argo profile, as read directly with [oce::read.argo()]
+#' or indirectly with [readProfiles()], the latter being illustrated in the
 #' \dQuote{Examples} section below.  The \dQuote{Details}
 #' section provides an explanation of how `showQCTests` works
 #' at a low level, as an adjunct to the Argo documentation.

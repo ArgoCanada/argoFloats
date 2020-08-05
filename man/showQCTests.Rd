@@ -23,12 +23,13 @@ of results.
 }
 \description{
 \code{showQCTests} print a summary of the quality-control (QC) tests
-(if any) that were performed on an argo profile.  It uses
+(if any) that were performed on an Argo profile.  It uses
 \code{\link[=hexToBits]{hexToBits()}} to decode the hexadecimal  values that may
-be stored in \code{historyQCTest} and \code{historyAction} within
-the \code{metadata} slot of an individual argo profile, as read
-directly with \code{\link[oce:read.argo]{oce::read.argo()}} or indirectly with
-\code{\link[=readProfiles]{readProfiles()}}, the latter being illustrated in the
+be stored in \code{historyQCTest}. From there it pairs the determined
+test values with the appropriate action, QC Tests performed or QC
+Tests failed, found in \code{historyAction} within the \code{metadata} slot
+of an individual argo profile, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
+or indirectly with \code{\link[=readProfiles]{readProfiles()}}, the latter being illustrated in the
 \dQuote{Examples} section below.  The \dQuote{Details}
 section provides an explanation of how \code{showQCTests} works
 at a low level, as an adjunct to the Argo documentation.
