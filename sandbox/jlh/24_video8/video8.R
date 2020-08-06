@@ -7,7 +7,7 @@ argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')
 
 # showQCTests
-argos[[1]][['filename']]
+index1[['cycle']]
 index2 <- subset(index1, cycle='124') 
 profiles2 <- getProfiles(index2)
 argos2 <- readProfiles(profiles2)

@@ -32,10 +32,9 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 ## ---- eval=FALSE--------------------------------------------------------------
 #  library(argoFloats)
 #  data(index)
-#  i <- subset(index, id='1901584')
-#  raw <- readProfiles(getProfiles(i))
-#  clean <- applyQC(raw)
-#  A <- raw[[1]]
+#  index1 <- subset(index, id='1901584')
+#  argos <- readProfiles(getProfiles(index1))
+#  A <- argos[[1]]
 #  D <- data.frame(T = A[['temperature']], TF=A[['temperatureFlag']], S=A[['salinity']], SF=A[['salinityFlag']], P=A[['pressure']], PF=A[['pressureFlag']])
 #  head(D)
 

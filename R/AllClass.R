@@ -276,26 +276,18 @@ setMethod(f="initialize",
 #'     5. If `i` is `"length"`, the number of local file names that were downloaded
 #'        by [getProfiles()] is returned.
 #' 4. Otherwise, if `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
-#'     1. If `i` is numeric and `j` is unspecified, then return the argo objects identified
-#'        by using `i` as an index.  Thus, e.g. `x[[i]]` is equivalent to
-#'        `x[["cycle", i]]`.
-#'     2. If `i` is the name of an item in the `metadata` slot, then that item
+#'     1. If `i` is equal to `"argos"` return a list that holds all of the `oce::argo-class`
+#'        objects that are stored within `x`.
+#'     2. If `i` is numeric and `j` is unspecified, then return the argo objects identified
+#'        by using `i` as an index.
+#'     3. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. There is only choice, `"type"`.
-#'     3. Otherwise, if `i` is the name of an item in the `data` slot, then that item
-#'        is returned.  There is only one choice: `"argos"`.
-#'     4. Otherwise, if `i` is `"cycle"` then the return value depends on the value of `j`.
-#'         There are four sub-cases:
-#'         1. If `j` is not supplied, the return value is a list containing
-#'             all the profiles in `x`, each an `argo` object as created by
-#'             [oce::read.argo()] in the `oce` package.
-#'         2. Otherwise, if `j` is a single integer,  then the return value is a single
-#'            `argo` object.
-#'         3. Otherwise, if `j` is a vector  of integers, then a list of `argo` objects
-#'            is returned.
-#'         4. Otherwise, an error is reported.
-#'     5. Otherwise, if `i` is `"length"`, the number of oce-type argo objects in `x` is returned.
-#'     6. Otherwise, if `i` is `"id"`, a vector of the ids of the profiles is returned.
-#'     7. Otherwise, if `i` is a character value, then it is taken to be
+#'     4. Otherwise, if `i` is the name of an item in the `data` slot, then that item
+#'        is returned as a named list.  There is only one choice: `"argos"`.
+#'     5. Otherwise, if `i` is `"cycle"` a character vector of the cycle numbers is returned.
+#'     6. Otherwise, if `i` is `"length"`, the number of oce-type argo objects in `x` is returned.
+#'     7. Otherwise, if `i` is `"id"`, a vector of the ids of the profiles is returned.
+#'     8. Otherwise, if `i` is a character value, then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
 #'        information with one (unnamed) item per profile.  If `j` is provided
@@ -306,7 +298,7 @@ setMethod(f="initialize",
 #'        but it should not be used for items that are not level-specific, such
 #'        as the various `"HISTORY_*"` elements, which apply to a dataset, not to
 #'        a level.
-#'     8. Otherwise, an error is reported.
+#'     9. Otherwise, an error is reported.
 #' 5. Otherwise, an error is reported.
 #'
 #' @param x an [`argoFloats-class`] object.
@@ -395,13 +387,16 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@data)) {
                       return(x@data[[i]])
                   } else if (length(i) == 1 && i == "cycle") {
-                      if (missing(j)) {
-                          return(x@data$argos)
-                      } else if (is.numeric(j)) {
-                          return(x@data$argos[[j]])
-                      } else {
-                          stop("cannot interpret i=", paste(i, collapse=","), " and j=", paste(j, collapse=", "), " for an object of type=\"", type, "\"")
-                      }
+                      return(gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", unlist(x[['filename']])))
+
+                      ## } else if (length(i) == 1 && i == "cycle") {
+                      ##  if (missing(j)) {
+                      ##      return(x@data$argos)
+                      ##  } else if (is.numeric(j)) {
+                      ##      return(x@data$argos[[j]])
+                      ##  } else {
+                      ##      stop("cannot interpret i=", paste(i, collapse=","), " and j=", paste(j, collapse=", "), " for an object of type=\"", type, "\"")
+                      ##  }
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$argos))
                   } else if (length(i) == 1 && i == "id") {

@@ -97,25 +97,15 @@ by \code{\link[=getProfiles]{getProfiles()}} is returned.
 }
 \item Otherwise, if \code{type} is \code{"argos"}, i.e. if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then:
 \enumerate{
+\item If \code{i} is equal to \code{"argos"} return a list that holds all of the \code{oce::argo-class}
+objects that are stored within \code{x}.
 \item If \code{i} is numeric and \code{j} is unspecified, then return the argo objects identified
-by using \code{i} as an index.  Thus, e.g. \code{x[[i]]} is equivalent to
-\code{x[["cycle", i]]}.
+by using \code{i} as an index.
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
 is returned. There is only choice, \code{"type"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
-is returned.  There is only one choice: \code{"argos"}.
-\item Otherwise, if \code{i} is \code{"cycle"} then the return value depends on the value of \code{j}.
-There are four sub-cases:
-\enumerate{
-\item If \code{j} is not supplied, the return value is a list containing
-all the profiles in \code{x}, each an \code{argo} object as created by
-\code{\link[oce:read.argo]{oce::read.argo()}} in the \code{oce} package.
-\item Otherwise, if \code{j} is a single integer,  then the return value is a single
-\code{argo} object.
-\item Otherwise, if \code{j} is a vector  of integers, then a list of \code{argo} objects
-is returned.
-\item Otherwise, an error is reported.
-}
+is returned as a named list.  There is only one choice: \code{"argos"}.
+\item Otherwise, if \code{i} is \code{"cycle"} a character vector of the cycle numbers is returned.
 \item Otherwise, if \code{i} is \code{"length"}, the number of oce-type argo objects in \code{x} is returned.
 \item Otherwise, if \code{i} is \code{"id"}, a vector of the ids of the profiles is returned.
 \item Otherwise, if \code{i} is a character value, then it is taken to be
