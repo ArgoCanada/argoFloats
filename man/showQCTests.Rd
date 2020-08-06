@@ -26,7 +26,7 @@ of results.
 (if any) that were performed on an Argo profile.  It uses
 \code{\link[=hexToBits]{hexToBits()}} to decode the hexadecimal  values that may
 be stored in \code{historyQCTest}. From there it pairs the determined
-test values with the appropriate action, QC Tests performed or QC
+test values with the appropriate actions, QC Tests performed or QC
 Tests failed, found in \code{historyAction} within the \code{metadata} slot
 of an individual argo profile, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
 or indirectly with \code{\link[=readProfiles]{readProfiles()}}, the latter being illustrated in the
