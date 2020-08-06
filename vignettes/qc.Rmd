@@ -91,13 +91,10 @@ values that may be stored in `historyQCTest`. From there it pairs the determined
 slot of an individual Argo profile, as read directly with `oce::read.argo()` or
 indirectly with `readProfiles()`.
 
-Using the same example as shown in `plot(..., which='QC')`, an example of 
+Using the same example as shown in `plot(..., which='QC')`, and variables defined in the previous code, an example of 
 `showQCTests()` is shown below:
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE, eval=FALSE}
-library(argoFloats)
-data('index')
-index1 <- subset(index, id='1901584')
 index2 <- subset(index1, cycle='124') 
 profiles2 <- getProfiles(index2)
 argos2 <- readProfiles(profiles2)
@@ -118,14 +115,9 @@ is an important early step in processing, because suspicious Argo floats
 commonly report data that are suspicious based on statistical and physical
 measures.
 
-Using the same example as shown in `plot(...,which='QC')` and `showQCTests()`, the below example demonstrates the significance of `applyQC` with a TS diagram.
+Using the same example as shown in `plot(...,which='QC')` and `showQCTests()`, and variables defined in the previous code, the below example demonstrates the significance of `applyQC` with a TS diagram.
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE, eval=FALSE}
-library(argoFloats)
-# Contrast TS diagrams for raw and flag-handled data
-data(index)
-index1 <- subset(index, id='1901584')
-argos <- readProfiles(getProfiles(index1))
 clean <- applyQC(argos)
 par(mfrow=c(1, 2))
 plot(argos, which="TS")
