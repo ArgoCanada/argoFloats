@@ -166,22 +166,81 @@ flow chart below that demonstrates the steps taken when a user specifies
 
 An example of the significance of adjusted data can be shown below:
 
-```{r, warning=FALSE, error=FALSE, message=FALSE, eval=FALSE}
+**FIXME:** 'significance' above is an overly vague word, and it will remind
+readers of statistical significance, which this is not.  I think we need a
+short paragraph here, explaining what the code is going to do.  Some points to
+touch on: (a) using built-in dataset named X, (b) focussing on first cycle,
+etc.  And, after, we should have a paragraph that tells the p value of the
+regression, etc.
+
+```{r, warning=FALSE, error=FALSE, message=FALSE, fig.cap="*Figure 5.* Comparison of raw and adjusted oxygen for built-in float file `SD5903586_001.nc`.  The dotted line is a 1:1 relationship, and the red line is the result of linear regression (see text)."}
 library(argoFloats)
 raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
 adj <- useAdjusted(raw)
-par(mfrow=c(1,2), mar=c(5,4,1,2))
-hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
-hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
-summary(unlist(raw[['oxygen']]))
-summary(unlist(adj[['oxygen']]))
+# Focus on oxygen in the first cycle
+rawOxygen <- raw[[1]][["oxygen"]]
+adjOxygen <- adj[[1]][["oxygen"]]
+plot(rawOxygen, adjOxygen,
+     xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"),
+     ylab=expression("Adjusted Oxygen ["*mu*mol/kg*"]"))
+abline(0, 1, lty=3)
+model <- lm(adjOxygen ~ rawOxygen)
+abline(model, col=2)
 ```
 
-![Figure 5: argoFloats useAdjusted() function used on float with `id` 1901584](useAdjusted.png)
+**FIXME: next few lines are some rough text to show JH how we can grab
+regression results. Note that we can only use the results of a regression after
+the fact, so we cannot show things like I'm showing in text above a figure.**
+
+The mean absolute residual of the linear regression between adjusted and raw
+oxygen concentrations is $`r round(mean(abs((model$residuals))),8)`$
+$\mu$mol/kg, suggesting that the adjustment amounted to a simple linear
+transform.
+
+
+
+**FIXME: Some changes/notes by DK:**
+
+* I changed the graph to illustrate better that the adjustment is a simple
+linear transformation.
+
+* This code block was using a built-in file, not the file stated in its
+caption, so the caption was wrong.
+
+* There is no need for a pre-built PNG with a built-in dataset (since no
+downloading is required, meaning that CRAN can handle this), so we can save
+some space in the package.
+
+* This code block was marked as do-not-execute, which is risky because it means
+that the user (and we) cannot rely on it still working in future.
+
+* Notice how I demonstrated here how to make fancy labels, with units
+(containing Greek letters)
+
+* I used italics in the figure number, which seems to make it stand out better.
+I also ended the caption with a period.  Let's discuss whether to change
+throughout.
+
+* The title of the following exercise makes it look just like the example
+above.  We need always to inform the reader of what's going on, and where they
+are in their journey.  This is what I call ``glue'' text.
 
 
 **Exercise 4** Use `useAdjusted()` on the float with `id` 5903586, cycle=50 to
 compare adjusted to raw data.
+
+**FIXME: question from DK:**
+
+The solution says there are no adjustments, but I think there *are* adjustments, e.g. the `summary()` calls reveal
+as follows:
+```
+ summary(unlist(raw[['oxygen']]))
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
+  0.0555   0.5035   0.9494  50.1615 115.6693 176.6477      487 
+> summary(unlist(adj[['oxygen']]))
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
+  0.0643   0.5841   1.1013  58.1873 134.1763 204.9114      487 
+```
 
 # Answers
 
@@ -244,7 +303,18 @@ mtext("Adjusted data", side=3, line=-1, col=2)
 summary(unlist(raw[['oxygen']]))
 summary(unlist(adj[['oxygen']]))
 ```
-There are no adjustments. This is a case where a use must analyze their data to determine if it is "good" data.
+The result of the `summary()` calls is as follows.
+```
+            Min.          1st Qu.           Median             Mean 
+  0.055451575667   0.503543332219   0.949396371841  50.161460198152 
+         3rd Qu.             Max.             NA's 
+115.669265747070 176.647735595703              487 
+> summary(unlist(adj[['oxygen']]))
+            Min.          1st Qu.           Median             Mean 
+  0.064323827624   0.584110274911   1.101299762726  58.187292793021 
+         3rd Qu.             Max.             NA's 
+134.176345825195 204.911361694336              487 
+```
 
 # References
 
