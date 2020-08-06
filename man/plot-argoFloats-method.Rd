@@ -24,53 +24,54 @@
 )
 }
 \arguments{
-\item{x}{An \code{\linkS4class{argoFloats}} object.}
+\item{x}{an \code{\linkS4class{argoFloats}} object.}
 
-\item{which}{A string that indicates the type of plot; see \dQuote{Details}.}
+\item{which}{a character value indicating the type of plot; see \dQuote{Details}.}
 
-\item{bathymetry}{An argument used only if \code{which="map"}, to control
+\item{bathymetry}{an argument used only if \code{which="map"}, to control
 whether (and how) to indicate water depth; see `\dQuote{Details}.}
 
-\item{xlim, ylim}{Limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and other conventional
+\item{xlim, ylim}{numerical values, each a two-element vector, that
+set the \code{x} and \code{y} limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and other conventional
 plotting functions.}
 
-\item{xlab}{A character value indicating the name for the horizontal axis, or
+\item{xlab}{a character value indicating the name for the horizontal axis, or
 \code{NULL}, which indicates that this function should choose an appropriate name
 depending on the value of \code{which}. Note that \code{xlab} is not obeyed if
 \code{which="TS"}, because altering that label can be confusing to the user.}
 
-\item{ylab}{As \code{xlab}, but for the vertical axis.}
+\item{ylab}{as \code{xlab}, but for the vertical axis.}
 
-\item{cex}{A character expansion factor for plot symbols, or \code{NULL}, to get an
+\item{cex}{a character expansion factor for plot symbols, or \code{NULL}, to get an
 value that depends on the value of \code{which}.}
 
-\item{col}{The colour to be used for plot symbols, or \code{NULL}, to get an value
+\item{col}{the colour to be used for plot symbols, or \code{NULL}, to get an value
 that depends on the value of \code{which}.
 (See \code{\link[=par]{par()}} for more on specifying \code{pch}.)}
 
-\item{pch}{An integer or code indicating the type of plot symbol, or \code{NULL},
+\item{pch}{an integer or code indicating the type of plot symbol, or \code{NULL},
 to get a value that depends on the value of \code{which}.
 (See \code{\link[=par]{par()}} for more on specifying \code{pch}.)}
 
-\item{bg}{The colour to be used for plot symbol interior, for \code{pch}
+\item{bg}{the colour to be used for plot symbol interior, for \code{pch}
 values that distinguish between the interior of the symbol and the
 border, e.g. for \code{pch=21}.}
 
-\item{mar}{Either a four-element vector giving the margins to be used for
+\item{mar}{either a four-element vector giving the margins to be used for
 the plot (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
 \link{par}\code{("mar")}.}
 
-\item{mgp}{Either a three-element vector giving the geometry for
+\item{mgp}{either a three-element vector giving the geometry for
 axis labels (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
 \link{par}\code{("mgp")}.}
 
-\item{eos}{A character value indicating the equation of state to use
+\item{eos}{a character value indicating the equation of state to use
 if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
 see \code{\link[oce:plotTS]{oce::plotTS()}}.}
 
-\item{debug}{An integer specifying the level of debugging.}
+\item{debug}{an integer specifying the level of debugging.}
 
-\item{\dots}{Extra arguments passed to the plot calls that are made
+\item{\dots}{extra arguments passed to the plot calls that are made
 within this function.}
 }
 \description{

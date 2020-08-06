@@ -7,11 +7,11 @@
 showQCTests(x, style = "brief")
 }
 \arguments{
-\item{x}{An \link[oce:argo-class]{oce::argo} object, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
+\item{x}{an \link[oce:argo-class]{oce::argo} object, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
 or as extracted from the return value of a call to \code{\link[=readProfiles]{readProfiles()}}, as
 in the \dQuote{Examples}.}
 
-\item{style}{A character value governing the output printed by \code{showQCFlags},
+\item{style}{a character value governing the output printed by \code{showQCFlags},
 either \code{"brief"} (the default) for a single line stating all the tests by
 numbers, followed by lines giving the number and description of all failed tests,
 or \code{"full"} for a listing of each test that was performed, with an indication

@@ -7,10 +7,10 @@
 applyQC(x, flags = NULL, actions = NULL, debug = 0)
 }
 \arguments{
-\item{x}{An \code{\linkS4class{argoFloats}} object of type \code{"argos"}, as created by
+\item{x}{an \code{\linkS4class{argoFloats}} object of type \code{"argos"}, as created by
 \code{\link[=readProfiles]{readProfiles()}}.}
 
-\item{flags}{A vector of integers that are the quality-control flag
+\item{flags}{a vector of integers that are the quality-control flag
 values for data that are to be set to \code{NA} in the returned result.
 The default, \code{NULL}, means to use the flags set up by \code{\link[=readProfiles]{readProfiles()}}
 which, unless specified otherwise in the call to that function, are
@@ -23,11 +23,13 @@ with QC codes of 0 (for data that have not yet been assessed),
 9 (for "missing" data).  See Section 3.2.2 of Carval et al. (2019) for
 more information on these QC code values.}
 
-\item{actions}{The actions to perform. The default, \code{NULL}, means to
+\item{actions}{the actions to perform. The default, \code{NULL}, means to
 use the actions set up by \code{\link[=readProfiles]{readProfiles()}}, which, by default.
 causes any data flagged as suspicious to be set to \code{NA}.}
 
-\item{debug}{Passed to \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.}
+\item{debug}{an integer passed to \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.  If this
+is set to a positive value, then some debugging information will be printed
+as the processing is done.}
 }
 \value{
 A copy of \code{x} but with each of the objects within its

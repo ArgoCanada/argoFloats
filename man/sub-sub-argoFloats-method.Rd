@@ -88,18 +88,18 @@ by \code{\link[=getProfiles]{getProfiles()}} is returned.
 }
 \item Otherwise, if \code{type} is \code{"argos"}, i.e. if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then:
 \enumerate{
-\item If \code{i} is equal to \code{"argos"} return a list that holds all of the \code{oce::argo-class}
-objects that are stored within \code{x}.
+\item If \code{i} is equal to \code{"argos"}, then a list holding the \link[oce:argo-class]{oce::argo}
+objects stored within \code{x} is returned.
 \item If \code{i} is numeric and \code{j} is unspecified, then return the argo objects identified
 by using \code{i} as an index.
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
 is returned. There is only choice, \code{"type"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
-is returned as a named list.  There is only one choice: \code{"argos"}.
-\item Otherwise, if \code{i} is \code{"cycle"} a character vector of the cycle numbers is returned.
-\item Otherwise, if \code{i} is \code{"length"}, the number of oce-type argo objects in \code{x} is returned.
-\item Otherwise, if \code{i} is \code{"id"}, a vector of the ids of the profiles is returned.
-\item Otherwise, if \code{i} is a character value, then it is taken to be
+is returned as a named list.  (At present, there is only one choice: \code{"argos"}.)
+\item Otherwise, if \code{i} is \code{"cycle"} then a character vector of the cycle numbers is returned.
+\item Otherwise, if \code{i} is \code{"length"} then the number of oce-type argo objects in \code{x} is returned.
+\item Otherwise, if \code{i} is \code{"id"} then a vector of the ids of the profiles is returned.
+\item Otherwise, if \code{i} is a character value then it is taken to be
 an item within the \code{metadata} or \code{data} slots of the argo objects
 stored in \code{x}, and the returned value is a list containing that
 information with one (unnamed) item per profile.  If \code{j} is provided

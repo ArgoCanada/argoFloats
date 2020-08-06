@@ -61,53 +61,54 @@ geographical <- TRUE
 #' time. The bottom panel shows the mean value of the parameter in question
 #' regardless of the flag value. See Example 7.
 #'
-#' @param x An [`argoFloats-class`] object.
+#' @param x an [`argoFloats-class`] object.
 #'
-#' @param which A string that indicates the type of plot; see \dQuote{Details}.
+#' @param which a character value indicating the type of plot; see \dQuote{Details}.
 #'
-#' @param bathymetry An argument used only if `which="map"`, to control
+#' @param bathymetry an argument used only if `which="map"`, to control
 #' whether (and how) to indicate water depth; see `\dQuote{Details}.
 #'
-#' @param xlim,ylim Limits of plot axes, as for [plot.default()] and other conventional
+#' @param xlim,ylim numerical values, each a two-element vector, that
+#' set the `x` and `y` limits of plot axes, as for [plot.default()] and other conventional
 #' plotting functions.
 #'
-#' @param xlab A character value indicating the name for the horizontal axis, or
+#' @param xlab a character value indicating the name for the horizontal axis, or
 #' `NULL`, which indicates that this function should choose an appropriate name
 #' depending on the value of `which`. Note that `xlab` is not obeyed if
 #' `which="TS"`, because altering that label can be confusing to the user.
 #'
-#' @param ylab As `xlab`, but for the vertical axis.
+#' @param ylab as `xlab`, but for the vertical axis.
 #'
-#' @param cex A character expansion factor for plot symbols, or `NULL`, to get an
+#' @param cex a character expansion factor for plot symbols, or `NULL`, to get an
 #' value that depends on the value of `which`.
 #'
-#' @param col The colour to be used for plot symbols, or `NULL`, to get an value
+#' @param col the colour to be used for plot symbols, or `NULL`, to get an value
 #' that depends on the value of `which`.
 #' (See [par()] for more on specifying `pch`.)
 #'
-#' @param bg The colour to be used for plot symbol interior, for `pch`
+#' @param bg the colour to be used for plot symbol interior, for `pch`
 #' values that distinguish between the interior of the symbol and the
 #' border, e.g. for `pch=21`.
 #'
-#' @param pch An integer or code indicating the type of plot symbol, or `NULL`,
+#' @param pch an integer or code indicating the type of plot symbol, or `NULL`,
 #' to get a value that depends on the value of `which`.
 #' (See [par()] for more on specifying `pch`.)
 #'
-#' @param mar Either a four-element vector giving the margins to be used for
+#' @param mar either a four-element vector giving the margins to be used for
 #' the plot (see [par()] for details), or `NULL`, which means to use
 #' [par]`("mar")`.
 #'
-#' @param mgp Either a three-element vector giving the geometry for
+#' @param mgp either a three-element vector giving the geometry for
 #' axis labels (see [par()] for details), or `NULL`, which means to use
 #' [par]`("mgp")`.
 #'
-#' @param eos A character value indicating the equation of state to use
+#' @param eos a character value indicating the equation of state to use
 #' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
 #' see [oce::plotTS()].
 #'
-#' @param debug An integer specifying the level of debugging.
+#' @param debug an integer specifying the level of debugging.
 #'
-#' @param \dots Extra arguments passed to the plot calls that are made
+#' @param \dots extra arguments passed to the plot calls that are made
 #' within this function.
 #'
 #' @examples

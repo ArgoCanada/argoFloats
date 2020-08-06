@@ -14,10 +14,10 @@
 #' the object needs to be specified, for the default actions coincide with
 #' common conventions for flags in argo data.
 #'
-#' @param x An [`argoFloats-class`] object of type `"argos"`, as created by
+#' @param x an [`argoFloats-class`] object of type `"argos"`, as created by
 #' [readProfiles()].
 #'
-#' @param flags A vector of integers that are the quality-control flag
+#' @param flags a vector of integers that are the quality-control flag
 #' values for data that are to be set to `NA` in the returned result.
 #' The default, `NULL`, means to use the flags set up by [readProfiles()]
 #' which, unless specified otherwise in the call to that function, are
@@ -30,11 +30,13 @@
 #' 9 (for "missing" data).  See Section 3.2.2 of Carval et al. (2019) for
 #' more information on these QC code values.
 #'
-#' @param actions The actions to perform. The default, `NULL`, means to
+#' @param actions the actions to perform. The default, `NULL`, means to
 #' use the actions set up by [readProfiles()], which, by default.
 #' causes any data flagged as suspicious to be set to `NA`.
 #'
-#' @param debug Passed to [oce::handleFlags,argo-method()].
+#' @param debug an integer passed to [oce::handleFlags,argo-method()].  If this
+#' is set to a positive value, then some debugging information will be printed
+#' as the processing is done.
 #'
 #' @return A copy of `x` but with each of the objects within its
 #' `data` slot having been passed through [oce::handleFlags,argo-method()].
@@ -141,11 +143,11 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' 24  |16777216 | Interim rtqc flag scheme for data from experimental sensors
 #' 25  |33554432 | MEDD test
 #'
-#' @param x An [oce::argo-class] object, as read directly with [oce::read.argo()]
+#' @param x an [oce::argo-class] object, as read directly with [oce::read.argo()]
 #' or as extracted from the return value of a call to [readProfiles()], as
 #' in the \dQuote{Examples}.
 #'
-#' @param style A character value governing the output printed by `showQCFlags`,
+#' @param style a character value governing the output printed by `showQCFlags`,
 #' either `"brief"` (the default) for a single line stating all the tests by
 #' numbers, followed by lines giving the number and description of all failed tests,
 #' or `"full"` for a listing of each test that was performed, with an indication

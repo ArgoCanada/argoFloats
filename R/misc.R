@@ -26,7 +26,7 @@
 #' the case, and a careful analyst will study both data streams, and
 #' look through the processing notes for any float that is of individual
 #' interest.
-#' 
+#'
 #' \if{html}{\figure{useAdjustedDiagram.png}{options: width=455px alt="Figure: useAdjustedDiagram.png" fig.cap="hello"}}
 #'
 #' @param argo an [`argoFloats-class`] object, as read by [readProfiles()].
@@ -174,7 +174,7 @@ useAdjustedProfile <- function(argo, debug=0)
 #' `hexToBits` converts a string holding hexadecimal digits to a sequence of integers
 #' 0 or 1, for the bits.  This is mainly for for use within [showQCTests()].
 #'
-#' @param hex A vector of character values corresponding to a sequence of one or more
+#' @param hex a vector of character values corresponding to a sequence of one or more
 #' hexadecimal digits (i.e. `"0"` through `"9"`,`"a"` through `"f"`, or `"A"` through `"F"`).
 #'
 #' @return An integer vector holding the bits as values 0 or 1.  The

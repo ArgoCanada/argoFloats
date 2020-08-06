@@ -269,18 +269,18 @@ setMethod(f="initialize",
 #'     5. If `i` is `"length"`, the number of local file names that were downloaded
 #'        by [getProfiles()] is returned.
 #' 4. Otherwise, if `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
-#'     1. If `i` is equal to `"argos"` return a list that holds all of the `oce::argo-class`
-#'        objects that are stored within `x`.
+#'     1. If `i` is equal to `"argos"`, then a list holding the [oce::argo-class]
+#'        objects stored within `x` is returned.
 #'     2. If `i` is numeric and `j` is unspecified, then return the argo objects identified
 #'        by using `i` as an index.
 #'     3. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. There is only choice, `"type"`.
 #'     4. Otherwise, if `i` is the name of an item in the `data` slot, then that item
-#'        is returned as a named list.  There is only one choice: `"argos"`.
-#'     5. Otherwise, if `i` is `"cycle"` a character vector of the cycle numbers is returned.
-#'     6. Otherwise, if `i` is `"length"`, the number of oce-type argo objects in `x` is returned.
-#'     7. Otherwise, if `i` is `"id"`, a vector of the ids of the profiles is returned.
-#'     8. Otherwise, if `i` is a character value, then it is taken to be
+#'        is returned as a named list.  (At present, there is only one choice: `"argos"`.)
+#'     5. Otherwise, if `i` is `"cycle"` then a character vector of the cycle numbers is returned.
+#'     6. Otherwise, if `i` is `"length"` then the number of oce-type argo objects in `x` is returned.
+#'     7. Otherwise, if `i` is `"id"` then a vector of the ids of the profiles is returned.
+#'     8. Otherwise, if `i` is a character value then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
 #'        information with one (unnamed) item per profile.  If `j` is provided

@@ -10,20 +10,12 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 #  plot(argos, which='QC', parameter='temperature')
 
 ## ---- message=FALSE, error=FALSE, warning=FALSE, eval=FALSE-------------------
-#  library(argoFloats)
-#  data('index')
-#  index1 <- subset(index, id='1901584')
 #  index2 <- subset(index1, cycle='124')
 #  profiles2 <- getProfiles(index2)
 #  argos2 <- readProfiles(profiles2)
 #  showQCTests(argos2[[1]])
 
 ## ---- message=FALSE, error=FALSE, warning=FALSE, eval=FALSE-------------------
-#  library(argoFloats)
-#  # Contrast TS diagrams for raw and flag-handled data
-#  data(index)
-#  index1 <- subset(index, id='1901584')
-#  argos <- readProfiles(getProfiles(index1))
 #  clean <- applyQC(argos)
 #  par(mfrow=c(1, 2))
 #  plot(argos, which="TS")
