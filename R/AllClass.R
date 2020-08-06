@@ -265,14 +265,7 @@ setMethod(f="initialize",
 #'        `"type"` and `"destdir"`.
 #'     3. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  There is only one choice: `"file"`.
-#'     4. Otherwise, if `i` is `"cycle"` then the return value is developed from the
-#'        `file` item in the `data` slot of `x`, in one of four sub-cases:
-#'         1. If `j` is not supplied, the return value is `file`,
-#'            i.e. a vector holding the full names of the files downloaded
-#'            by [getProfiles()].
-#'         2. Otherwise, if `j` is numeric, then the return value is a vector of the
-#'            `file` entries, as indexed by `j`.
-#'         3. Otherwise, an error is reported.
+#'     4. Otherwise, if `i` is `"cycle"` a character vector of the cycle numbers is returned.
 #'     5. If `i` is `"length"`, the number of local file names that were downloaded
 #'        by [getProfiles()] is returned.
 #' 4. Otherwise, if `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
@@ -364,6 +357,8 @@ setMethod(f="[[",
               } else if (type == "profiles") { # made by getProfiles()
                   if (is.numeric(i) && missing(j)) {
                       return(x@data$file[[i]])
+                  } else if (length(i) == 1 && i == "cycle") {
+                      return(gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", x[['file']]))
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {

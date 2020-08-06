@@ -54,6 +54,7 @@ test_that("access within profiles", {
           longitude <- expect_silent(a[["longitude", "byLevel"]])
           salinity <- expect_silent(a[["salinity"]])
           expect_equal(dim(longitude), dim(salinity))
+          expect_equal(a[['cycle']], "048")
 })
 
 test_that("historyQCTest length and (trimmed) contents for issue 136", {
@@ -76,4 +77,3 @@ test_that("historyQCTest length and (trimmed) contents for issue 136", {
               expect_equal(test2, gsub("[ ]*", "", qcn))
           }
 })
-

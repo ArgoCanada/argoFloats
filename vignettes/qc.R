@@ -38,13 +38,17 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 #  D <- data.frame(T = A[['temperature']], TF=A[['temperatureFlag']], S=A[['salinity']], SF=A[['salinityFlag']], P=A[['pressure']], PF=A[['pressureFlag']])
 #  head(D)
 
-## ---- warning=FALSE, error=FALSE, message=FALSE, eval=FALSE-------------------
-#  library(argoFloats)
-#  raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
-#  adj <- useAdjusted(raw)
-#  par(mfrow=c(1,2), mar=c(5,4,1,2))
-#  hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
-#  hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
-#  summary(unlist(raw[['oxygen']]))
-#  summary(unlist(adj[['oxygen']]))
+## ---- warning=FALSE, error=FALSE, message=FALSE, fig.cap="*Figure 5.* Comparison of raw and adjusted oxygen for built-in float file `SD5903586_001.nc`.  The dotted line is a 1:1 relationship, and the red line is the result of linear regression (see text)."----
+library(argoFloats)
+raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+adj <- useAdjusted(raw)
+# Focus on oxygen in the first cycle
+rawOxygen <- raw[[1]][["oxygen"]]
+adjOxygen <- adj[[1]][["oxygen"]]
+plot(rawOxygen, adjOxygen,
+     xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"),
+     ylab=expression("Adjusted Oxygen ["*mu*mol/kg*"]"))
+abline(0, 1, lty=3)
+model <- lm(adjOxygen ~ rawOxygen)
+abline(model, col=2)
 

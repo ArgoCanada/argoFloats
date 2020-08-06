@@ -82,16 +82,7 @@ is returned. The choices are:
 \code{"type"} and \code{"destdir"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
 is returned.  There is only one choice: \code{"file"}.
-\item Otherwise, if \code{i} is \code{"cycle"} then the return value is developed from the
-\code{file} item in the \code{data} slot of \code{x}, in one of four sub-cases:
-\enumerate{
-\item If \code{j} is not supplied, the return value is \code{file},
-i.e. a vector holding the full names of the files downloaded
-by \code{\link[=getProfiles]{getProfiles()}}.
-\item Otherwise, if \code{j} is numeric, then the return value is a vector of the
-\code{file} entries, as indexed by \code{j}.
-\item Otherwise, an error is reported.
-}
+\item Otherwise, if \code{i} is \code{"cycle"} a character vector of the cycle numbers is returned.
 \item If \code{i} is \code{"length"}, the number of local file names that were downloaded
 by \code{\link[=getProfiles]{getProfiles()}} is returned.
 }
