@@ -40,13 +40,7 @@ test_that("access float profile number", {
 
 test_that("access within profiles", {
           filename <- system.file("extdata", "D4900785_048.nc", package="argoFloats")
-          ## FIXME: when I run the next line interactively, or by the "Run tests" 
-          ## action for an editor window opened to this file, then it works.  However,
-          ## when I run it as a "R CMD check", it fails.  I do not know why, and
-          ## will look into this in more detail at some point, but, for now, I
-          ## am commenting-out the line.
-          ##a <- expect_silent(readProfiles(filename))
-          a <- readProfiles(filename)
+          a <- expect_silent(readProfiles(filename))
           expect_error(a[["longitude", "wrong"]], "requires that j be \"byLevel\", not \"wrong\"")
           longitude <- expect_silent(a[["longitude"]])
           expect_true(is.list(longitude))
