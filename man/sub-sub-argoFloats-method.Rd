@@ -34,6 +34,10 @@ order listed here.
 \enumerate{
 \item If \code{i} is \code{"metadata"} then the \code{metadata} slot of \code{x} is returned.
 \item Otherwise, if \code{i} is \code{"data"} then the \code{data} slot of \code{x} is returned.
+\item Otherwise, if \code{i} is \code{"cycle"} then a character vector of the cycle
+numbers is returned.
+\item Otherwise, if \code{i} is \code{"id"} then a character vector of the id numbers
+is returned.
 \item Otherwise, the following steps are taken, depending on \code{type}.
 }
 \item If \code{type} is \code{"index"}, i.e. if \code{x} was created with \code{\link[=getIndex]{getIndex()}}
@@ -82,7 +86,6 @@ is returned. The choices are:
 \code{"type"} and \code{"destdir"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
 is returned.  There is only one choice: \code{"file"}.
-\item Otherwise, if \code{i} is \code{"cycle"} a character vector of the cycle numbers is returned.
 \item If \code{i} is \code{"length"}, the number of local file names that were downloaded
 by \code{\link[=getProfiles]{getProfiles()}} is returned.
 }
@@ -96,9 +99,7 @@ by using \code{i} as an index.
 is returned. There is only choice, \code{"type"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
 is returned as a named list.  (At present, there is only one choice: \code{"argos"}.)
-\item Otherwise, if \code{i} is \code{"cycle"} then a character vector of the cycle numbers is returned.
 \item Otherwise, if \code{i} is \code{"length"} then the number of oce-type argo objects in \code{x} is returned.
-\item Otherwise, if \code{i} is \code{"id"} then a vector of the ids of the profiles is returned.
 \item Otherwise, if \code{i} is a character value then it is taken to be
 an item within the \code{metadata} or \code{data} slots of the argo objects
 stored in \code{x}, and the returned value is a list containing that
