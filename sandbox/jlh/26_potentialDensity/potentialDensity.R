@@ -7,4 +7,5 @@ profiles2 <- getProfiles(index2)
 argos2 <- readProfiles(profiles2)
 a <- argos2[[1]]
 sigma <- swSigmaT(salinity=a[['salinity']], temperature=a[['temperature']], pressure=a[['pressure']], longitude=a[['longitude']], latitude=a[['latitude']])
-ifelse(diff(sigma> 0.03), TRUE, FALSE)
+diff <- abs(diff(sigma))
+ifelse(diff > 0.03, TRUE, FALSE)
