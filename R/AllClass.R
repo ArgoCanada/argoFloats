@@ -222,7 +222,11 @@ setMethod(f="initialize",
 #' 1. For all object types:
 #'     1. If `i` is `"metadata"` then the `metadata` slot of `x` is returned.
 #'     2. Otherwise, if `i` is `"data"` then the `data` slot of `x` is returned.
-#'     3. Otherwise, the following steps are taken, depending on `type`.
+#'     3. Otherwise, if `i` is `"cycle"` then a character vector of the cycle
+#'        numbers is returned.
+#'     4. Otherwise, if `i` is `"id"` then a character vector of the id numbers
+#'        is returned.
+#'     5. Otherwise, the following steps are taken, depending on `type`.
 #'
 #' 2. If `type` is `"index"`, i.e. if `x` was created with [getIndex()]
 #' or with [subset,argoFloats-method()] acting on the result of [getIndex()],
@@ -265,8 +269,7 @@ setMethod(f="initialize",
 #'        `"type"` and `"destdir"`.
 #'     3. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  There is only one choice: `"file"`.
-#'     4. Otherwise, if `i` is `"cycle"` a character vector of the cycle numbers is returned.
-#'     5. If `i` is `"length"`, the number of local file names that were downloaded
+#'     4. If `i` is `"length"`, the number of local file names that were downloaded
 #'        by [getProfiles()] is returned.
 #' 4. Otherwise, if `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
 #'     1. If `i` is equal to `"argos"`, then a list holding the [oce::argo-class]
@@ -277,10 +280,8 @@ setMethod(f="initialize",
 #'        is returned. There is only choice, `"type"`.
 #'     4. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned as a named list.  (At present, there is only one choice: `"argos"`.)
-#'     5. Otherwise, if `i` is `"cycle"` then a character vector of the cycle numbers is returned.
-#'     6. Otherwise, if `i` is `"length"` then the number of oce-type argo objects in `x` is returned.
-#'     7. Otherwise, if `i` is `"id"` then a vector of the ids of the profiles is returned.
-#'     8. Otherwise, if `i` is a character value then it is taken to be
+#'     5. Otherwise, if `i` is `"length"` then the number of oce-type argo objects in `x` is returned.
+#'     6. Otherwise, if `i` is a character value then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
 #'        information with one (unnamed) item per profile.  If `j` is provided
@@ -291,7 +292,7 @@ setMethod(f="initialize",
 #'        but it should not be used for items that are not level-specific, such
 #'        as the various `"HISTORY_*"` elements, which apply to a dataset, not to
 #'        a level.
-#'     9. Otherwise, an error is reported.
+#'     7. Otherwise, an error is reported.
 #' 5. Otherwise, an error is reported.
 #'
 #' @param x an [`argoFloats-class`] object.
@@ -359,6 +360,9 @@ setMethod(f="[[",
                       return(x@data$file[[i]])
                   } else if (length(i) == 1 && i == "cycle") {
                       return(gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", x[['file']]))
+                  } else if (length(i) == 1 && i == "id") {
+                      id <- gsub("^.*/[A-Z]*([0-9]*)_[0-9]{3}[A-Z]*.nc$", "\\1", x[['file']])
+                      return(as.vector(if (missing(j)) id else id[j]))
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
