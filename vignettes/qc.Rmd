@@ -25,7 +25,7 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 Argo floats data undergo a series of testing procedures to assess the quality.
 In addition, some data sets undergo adjustments that are made in recognition of
 the Quality Control (QC) analysis or to employ information about improved
-calibrations, etc. The creators of `argoFloats` therefore developed a way to
+calibrations, etc. The creators of `argoFloats` therefore developed ways to
 deal with QC flags and adjusted data. For quality control, this centers around
 three functions: `plot(which='QC')`, `showQCTests()`and `applyQC()`. Adjusted
 data are handled with the `useAdjusted()` function.
@@ -41,16 +41,16 @@ scientists who apply procedures to check the quality.
 
 # Flags
 
-As described by the Argo user's manual (Carval et al. 2019), data that are given
-a flag value of 1, 2, 5, or 8 are considered 'good' data. If data are given a
-flag value of 9 (or missing value) they are not used, and flags 3, 5, 6, and 7
-are considered 'bad' data.
+As described in the Argo user's manual (Carval et al. 2019), data that are given
+a flag value of 1, 2, 5, or 8 are considered 'good', those given a
+flag value of 9 are missing, and those given flags 3, 5, 6, and 7
+are considered 'bad'.
 
-`argoFloats` has taken this idea, and has incorporated a 3 step process when
-considering the QC of Argo floats. The three step process encourages users to
+The `argoFloats` package, using the associated `oce` package, has incorporated a 3-step process when
+considering argo QC flags. The process encourages users to
 always analyze the data they are considering, and acknowledges that the user
 assumes all risk from their Argo data, as described in section 1.3 of the Argo
-User's Manual (Carval et al. 2019). The three step process is shown in the
+User's Manual (Carval et al. 2019). The process is shown in the
 following diagram.
 
 ![Figure 1: argoFloats Quality Control Flag Process.](qc_flowchart.png)
@@ -60,15 +60,19 @@ demonstrating examples using the float with `id` 1901584 near the Bahamas.
 
 ### Step One: QC Plot
 
-Our `argoFloats` package uses the flags of profiles to distinguish between
-"good" and "bad" data. Based on this, we created a plot type to display the
-quality of data, the `QC` plot. The `QC` plot is a two panel plot that shows
-parameter quality and parameter mean. This only works if `x` is an object that
-was created by `getProfiles()` and the user provides the `parameter` of
-interest. If the user is uncertain about what parameters exist within a certain
-cycle, `argoFloats` will prompt the user with the appropriate parameters.
+`argoFloats` uses the flags within profiles to distinguish between
+"good" and "bad" data. It offers a specialized plot type that displays the
+quality of data, with a two-panel plot that shows
+parameter quality and parameter mean. This only works on objects that
+were created by `getProfiles()`.  The user must provide the `parameter` of
+interest, but if this is not supplied, the function will issue a message
+about the permitted parameters for the dataset.
 
-An example of how to get the `QC` plot for temperature for the float with `id` 1901584 is as follows:
+```{r echo=FALSE}
+id <- '1901584'
+```
+An example of how to get the `QC` plot for temperature for the float with `id`
+equal to `r id` is as follows:
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE, eval=FALSE}
 library(argoFloats)
@@ -79,23 +83,28 @@ argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')
 ```
 
-![Figure 2: QC plot for temperature recorded by the float with `id` 1901584.](plotqc.png)
+![Figure 2: QC plot for temperature recorded by the float with `id` `r id`. The top panel shows the percentage of good data within the individual cycles (or profiles), with the dotted line and red dots indicating a threshold of at least 50 percent good data.  The bottom panel shows the mean of those data that are considered good.](plotqc.png)
 
-As shown by the above plot, both "good" and "bad" data exist within this
-subsection of float `id` 1901584. For example, the first cycle is considered
-"bad", as shown by the red dot. If the user had the desire to investigate the QC
+As shown, both "good" and "bad" data exist within this
+subsection of the data recorded by float `r id`. For example, the first cycle is marked as
+"bad" (since under 50 percent of its data are considered good), as shown by the red dot. If the user had the desire to investigate the QC
 performed on this data, the next step would be to use the `showQCTests`
 function.
 
 
 **Exercise 1:** Use the previous code to determine the quality of
-temperature data for float `id` 4900845 in the built in synthetic dataset.
+temperature data for float `id` 4900845 referred to in the built-in synthetic index dataset.
 Explain your results.
 
 ### Step Two: showQCTests()
 
-`showQCTests` prints a summary of the QC tests (if any) that were performed on
-an Argo cycle. It uses `hexToBits()` to decode the hexadecimal values that may
+`showQCTests` prints a summary of the QC tests that were performed on an Argo
+cycle.  *Caution:* some datasets have flags, indicating that QC procedures had
+been performed, even though the metadata contains no indication of such
+procedures; this means that `showQCTests` can sometimes suggest that no tests
+were done, even though the evidence is that they *had* been done.
+
+`showQCTests` uses `hexToBits()` to decode the hexadecimal values that may
 be stored in `historyQCTest`. From there it pairs the determined test values
 with the appropriate actions, QC Tests performed or QC Tests failed, found in
 `historyAction` within the metadata slot of an individual Argo profile, as read
@@ -130,11 +139,17 @@ parameters:
 
 ```{r, eval=FALSE}
 A <- argos[[1]]
-D <- data.frame(T = A[['temperature']], TF=A[['temperatureFlag']], S=A[['salinity']], SF=A[['salinityFlag']], P=A[['pressure']], PF=A[['pressureFlag']])
+D <- data.frame(T=A[['temperature']], TF=A[['temperatureFlag']],
+                S=A[['salinity']], SF=A[['salinityFlag']],
+                P=A[['pressure']], PF=A[['pressureFlag']])
 ```
 
-
-**FIXME DEK** I THINK IT WOULD BE A GOOD IDEA TO WRITE A PARAGRAPH SUGGESTING WHAT ACTION IS SUPPOSTED TO HAPPEN IF DENSITY INVERSION TEST IS FAILED AND IF THAT IS WHAT HAPPENED. I NEED SOME HELP WITH THIS BECAUSE THE ACTION IS BASED ON POTENTIAL DENSITY AND I WANT TO MAKE SURE I UNDERSTAND THIS CORRECTLY.
+Note that this particular test is based on potential density, so some further
+calculations will be required to check on the procedure.  The procedure is not
+simple, and some study of the Argo documention will be required of any user who
+wants to check on the procedures. Even then, a reasonable level of coding
+expertise would be required of anyone intending to alter the procedures.
+Proceed with caution!
 
 **Exercise 2**: Use the first cycle of Argo float with `id` 4900845 in the
 synthetic dataset to determine which tests were performed and/or failed during
@@ -145,7 +160,7 @@ quality control testing. Explain your results.
 The `applyQC()` function examines QC within an `argoFloats` object that was
 created by `readProfiles()`. By default, it replaces all suspicious data with NA
 values, so they will not appear in plots or be considered in calculations. This
-is an important early step in processing, because suspicious Argo floats
+is an important early step in processing, because Argo floats
 commonly report data that are suspicious based on statistical and physical
 measures.
 
@@ -163,7 +178,11 @@ plot(clean, which="TS")
 
 ![Figure 3: argoFloats applyQC() function used on float with `id` 1901584.](applyQC.png)
 
-Where the importance of QC testing is clearly represented.
+Although Figure 3 provides a clear illustration of the need for QC testing and
+the handling of QC flags, it also illustrates limitations, for the plot on the
+right still contains several data points that are far from the overall data cloud,
+and therefore very likely to be erronous.  A good step at this point might be
+to find the individual cycles/profiles containing those stray points.
 
 **Exercise 3** : Use `applyQC()` on float with `id` 4900845 from exercise 1 and
 plot comparing TS diagrams. Do the plots look different? Use basic R functions
@@ -191,7 +210,7 @@ oxygen optodes, floats can initially read low compared to climatology. In the
 example below we used the built in data set, named SD5903586_001.nc, to focus on
 the oxygen in the first cycle with float `id` 5903586 in the synthetic data.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, error=FALSE, fig.cap="*Figure 5.* Comparison of raw and adjusted oxygen profiles for built-in float file `SD5903586_001.nc`."}
+```{r,  warning=FALSE, message=FALSE, error=FALSE, fig.cap="*Figure 5.* Comparison of raw and adjusted oxygen profiles for built-in float file `SD5903586_001.nc`."}
 library(argoFloats)
 raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
 adjusted <- useAdjusted(raw)
@@ -199,9 +218,15 @@ rawOxygen <- unlist(raw[['oxygen']])
 rawPressure <- unlist(raw[['pressure']])
 adjustedOxygen <- unlist(adjusted[['oxygen']])
 adjustedPressure <- unlist(adjusted[['pressure']])
-plot(rawOxygen, rawPressure, ylim=rev(range(rawPressure, na.rm=TRUE)), pch=16, col='blue', xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"), ylab='Pressure (dbar)')
-points(adjustedOxygen, adjustedPressure, ylim=rev(range(unlist(adjusted[['pressure']]), na.rm=TRUE)), pch=16, col='red')
-legend("bottomright", col=c('blue','red'), c("Raw", "Adjusted"), pch=c(16, 16))
+xlim <- range(c(rawOxygen, adjustedOxygen), na.rm=TRUE)
+plot(rawOxygen, rawPressure,
+     pch=1, col=1,
+     xlim=xlim, ylim=rev(range(rawPressure, na.rm=TRUE)),
+     xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"),
+     ylab='Pressure (dbar)')
+points(adjustedOxygen, adjustedPressure,
+       pch=3, col=2)
+legend("bottomright", pch=c(1,3), col=c(1,2), c("Raw", "Adjusted"))
 ```
 
 As displayed by the plot, there are differences between raw and adjusted data.
@@ -221,9 +246,9 @@ The mean absolute residual of the linear regression between adjusted and raw
 oxygen concentrations is $`r round(mean(abs((model$residuals))),8)`$
 $\mu$mol/kg, suggesting that the adjustment amounted to a simple linear
 transform. Additionally, the summary of the linear regression, given by
-`summary(model)`, tells us that the p-value is < 2.2e-16, indicating that the
-user rejects the null hypothesis and the difference between raw and adjusted
-values is statistically significant.
+`summary(model)`, tells us that the p-value is < 2.2e-16, suggesting that the
+user rejects the null hypothesis of equality between raw and adjusted
+values.
 
 **Exercise 4** Use the same `id` and cycle as the previous example to determine
 if there is a statistically significant difference between raw and adjusted
@@ -232,7 +257,7 @@ datasets for chlorophyll A.
 # Answers
 
 **Exercise 1:** Use the previous code to determine the quality of
-temperature data for float `id` 4900845 in the built in synthetic dataset.
+temperature data for float `id` 4900845 referred to in the built-in synthetic index dataset.
 Explain your results.
 ```
 library(argoFloats)
