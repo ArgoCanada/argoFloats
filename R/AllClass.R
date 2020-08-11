@@ -359,7 +359,8 @@ setMethod(f="[[",
                   if (is.numeric(i) && missing(j)) {
                       return(x@data$file[[i]])
                   } else if (length(i) == 1 && i == "cycle") {
-                      return(gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", x[['file']]))
+                      cycle <- gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", x[['file']])
+                      return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "id") {
                       id <- gsub("^.*/[A-Z]*([0-9]*)_[0-9]{3}[A-Z]*.nc$", "\\1", x[['file']])
                       return(as.vector(if (missing(j)) id else id[j]))
@@ -386,7 +387,8 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@data)) {
                       return(x@data[[i]])
                   } else if (length(i) == 1 && i == "cycle") {
-                      return(gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", unlist(x[['filename']])))
+                      cycle <- gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", unlist(x[['filename']]))
+                      return(as.vector(if (missing(j)) cycle else cycle[j]))
 
                       ## } else if (length(i) == 1 && i == "cycle") {
                       ##  if (missing(j)) {
@@ -399,7 +401,8 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$argos))
                   } else if (length(i) == 1 && i == "id") {
-                      return(unlist(lapply(x@data$argos, function(a) a[['id']])))
+                      id <- unlist(lapply(x@data$argos, function(a) a[['id']]))
+                      return(as.vector(if (missing(j)) id else id[j]))
                   } else {
                       if (!missing(j)) {
                           if (j != "byLevel")
