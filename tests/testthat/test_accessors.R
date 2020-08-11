@@ -38,7 +38,7 @@ test_that("access float profile number", {
           expect_equal(c("124", "125", "126"), head(index[["cycle"]], 3))
 })
 
-test_that("access within profiles", {
+test_that("access within cycles", {
           filename <- system.file("extdata", "D4900785_048.nc", package="argoFloats")
           a <- expect_silent(readProfiles(filename))
           expect_error(a[["longitude", "wrong"]], "requires that j be \"byLevel\", not \"wrong\"")
@@ -49,6 +49,7 @@ test_that("access within profiles", {
           salinity <- expect_silent(a[["salinity"]])
           expect_equal(dim(longitude), dim(salinity))
           expect_equal(a[["cycle"]], "048")
+          expect_equal(a[["cycle",1]], "048")
 })
 
 test_that("historyQCTest length and (trimmed) contents for issue 136", {
