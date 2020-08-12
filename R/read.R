@@ -190,7 +190,7 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
                         if (sum(badCases, na.rm=TRUE) > 1) " have " else " has ",
                         ">10% of ", flagName, " values with QC flag of 4, signalling bad data.",
                         "\n    The indices of the bad profiles are as follows.",
-                        "\n    ", paste(which(badCases), collapse=" "))
+                        "\n    ", paste(which(badCases), collapse=" "), immediate. = TRUE)
             }
         }
     }

@@ -15,7 +15,8 @@ index1[['cycle']]
 index2 <- subset(index1, cycle='124')
 profiles2 <- getProfiles(index2)
 argos2 <- readProfiles(profiles2)
-showQCTests(argos2[[1]], style='full')
+showQCTests(argos2[[1]])
+#showQCTests(argos2[[1]], style='full')
 
 # applyQC()
 clean <- applyQC(argos)
