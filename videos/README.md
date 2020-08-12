@@ -26,3 +26,8 @@
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/Lc32MTMCbbI
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/07/video07_map_with_bathymetry.R
+* **argoFloats R 08: Introduction to quality control flags** (August 12, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video
+    - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/08/video08_qc_intro.R
+ 
