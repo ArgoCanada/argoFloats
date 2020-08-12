@@ -1,3 +1,7 @@
+## Video 8: Quality Control
+
+## Part 1: Overview
+
 # QC Plot
 library(argoFloats)
 data("index")
@@ -8,7 +12,7 @@ plot(argos, which='QC', parameter='temperature')
 
 # showQCTests
 index1[['cycle']]
-index2 <- subset(index1, cycle='124') 
+index2 <- subset(index1, cycle='124')
 profiles2 <- getProfiles(index2)
 argos2 <- readProfiles(profiles2)
 showQCTests(argos2[[1]], style='full')
@@ -19,31 +23,29 @@ par(mfrow=c(1, 2))
 plot(argos, which="TS")
 plot(clean, which="TS")
 
-# Exploring bad Data
-# left point
-par(mfrow=c(1, 1))
-T <- unlist(clean[['temperature']])
-S <- unlist(clean[['salinity']])
-plot(S,T)
-identify(S,T)
-# To determine which profile the 467th position is in
-for (x in 1:9){
-    print(length(unlist(clean[['salinity']][x])))
+
+## Part 2: Exploring bad Data
+
+# Identify the bad data
+par(mfrow=c(1,1))
+plot(clean, which="TS", eos="gsw")
+SA <- unlist(clean[["SA"]])
+CT <- unlist(clean[["CT"]])
+bad <- identify(SA, CT, n=1)
+SAbad <- SA[bad]
+CTbad <- CT[bad]
+points(SAbad, CTbad) # plot it, to check
+
+# Find the cycle that holds the identified bad data
+cycles <- clean[["argos"]]
+for (icycle in seq_along(cycles)) {
+    cycle <- cycles[[icycle]]
+    w <- which(SAbad == cycle[["SA"]] & CTbad == cycle[["CT"]])
+    if (length(w)) {
+        message("found bad point SA=", SAbad, ", CT=", CTbad,
+                " in cycle ", icycle, " level ", w,
+                " pressure ", cycle[["pressure"]][w])
+        break
+    }
 }
-# This tells us is in the 7th cycle at position 54.
-S[467]
-argos[['salinity']][[7]][54,]
-T[467]
-argos[['temperature']][[7]][54,]
-salinityF <- unlist(clean[['salinityFlag']])[467]
-temperatureF <- unlist(clean[['temperatureFlag']])[467]
-
-# Right points
-identity(S,T)
-salinityFR <- unlist(clean[['salinityFlag']])[546]
-temperatureFR <- unlist(clean[['temperatureFlag']])[546]
-
-
-
-
 
