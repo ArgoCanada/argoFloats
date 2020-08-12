@@ -43,7 +43,7 @@ scientists who apply procedures to check the quality.
 
 As described in the Argo user's manual (Carval et al. 2019), data that are given
 a flag value of 1, 2, 5, or 8 are considered 'good', those given a
-flag value of 9 are missing, and those given flags 3, 5, 6, and 7
+flag value of 9 are missing, and those given flags 3, 4, 6, and 7
 are considered 'bad'.
 
 The `argoFloats` package, using the associated `oce` package, has incorporated a 3-step process when
