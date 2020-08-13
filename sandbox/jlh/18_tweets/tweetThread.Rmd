@@ -29,7 +29,7 @@ For example, the following code demonstrates how to use the easy-to-follow work 
 ![](TS.png)
 
 # Tweet 6
-To subset by ocean "Area", the following code is used. Note: we'e also incorporated a subset by polygon to better improve this subset.
+To subset by ocean "Area", the following code is used. Note: we've also incorporated a subset by polygon to better improve this subset.
 
 ![](oceanAreaCode.png)
 ![](oceanArea.png)
