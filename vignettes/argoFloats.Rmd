@@ -55,6 +55,7 @@ argoFloats R 04: subset by ocean or polygon            | Jaimie Harbin & Dan Kel
 argoFloats R 05: TS diagram, colour-coded by oxygen    | Jaimie Harbin & Dan Kelley | May 14, 2020   | https://youtu.be/Y_SxjcOnW04
 argoFloats R 06: trajectory plot, colour coded by time | Jaimie Harbin & Dan Kelley | May 28, 2020   | https://youtu.be/7BB3UuwjUqo
 argoFloats R 07: maps with bathymetry | Jaimie Harbin & Dan Kelley | June 4, 2020 | https://youtu.be/Lc32MTMCbbI
+argoFloats R 08: Introduction to quality control flags | Jaimie Harbin & Dan Kelley | August 12, 2020 | https://www.youtube.com/watch?v=nN4xs0wCnB4
 
 
 # Preliminary Setup
