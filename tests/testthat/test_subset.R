@@ -3,6 +3,7 @@
 
 library(argoFloats)
 library(testthat)
+source("can_download.R")
 
 context("subset")
 
@@ -88,3 +89,15 @@ test_that("subset by cycle", {
     expect_equal(indexProfile[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
     expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
+
+test_that("subset by direction",
+          {
+              if (canDownload()) {
+                  data(indexBgc)
+                  subset1 <- subset(indexBgc, direction='decent')
+                  subset2 <- subset(indexBgc, direction='ascent')
+                  expect_equal(subset1[["file"]], "coriolis/6901494/profiles/BD6901494_353D.nc")
+                  expect_equal(subset2[["file"]][1], "aoml/4900845/profiles/BR4900845_086.nc")
+              }
+          }
+)
