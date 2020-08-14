@@ -7,16 +7,7 @@ argos <- readProfiles(profiles)
 clean <- applyQC(argos)
 plot(clean, which="TS")
 
-salinity <- unlist(x[["salinity", debug=debug]])
-temperature <- unlist(x[["temperature", debug=debug]])
-pressure <- unlist(x[["pressure", debug=debug]])
-## Use byLevel to repeat the latitude and longitude values across
-## the depths in each profile, so that the resultant vector
-## will match the salinity, temperature and pressure vectors.
-latitude <- unlist(x[["latitude", "byLevel", debug=debug]])
-longitude <- unlist(x[["longitude", "byLevel", debug=debug]])
-ctd <- oce::as.ctd(salinity=salinity,
-                   temperature=temperature,
-                   pressure=pressure,
-                   latitude=latitude,
-                   longitude=longitude)
+str(clean[['temperature']])
+clean[['cycle']]
+vec <- c(125,126)
+lapply(vec, function(v)  which(v ==clean[['cycle']]))
