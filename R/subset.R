@@ -84,6 +84,10 @@
 #' component that is either blank or the character `"D"` (which designates a
 #' descending profile).  Thus, `001` will match both `*_001.nc` and `*_001D.nc`.
 #' See example 12.
+#' 
+#' 13. A character value named `direction`, equal to either `decent` or `ascent`,
+#' that selects whether to retain data from the ascent or decent phase.
+#' See example 13.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -191,6 +195,14 @@
 #' index12 <- subset(index, cycle='124')
 #' cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")
 #' }
+#' 
+#' # Example 13: subset by direction
+#' \dontrun{
+#' library(argoFloats)
+#' index13A <- subset(getIndex(), deep=TRUE)
+#' index13B <- subset(deep, direction='decent')
+#' index13B[['file']]
+#' }
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -207,7 +219,7 @@ setMethod(f="subset",
               silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', 'mode', or 'cycle'")
+                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'")
                   if (length(dots) > 1) {
                       if (length(dots) > 2 || !("silent" %in% dotsNames))
                           stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
@@ -415,8 +427,20 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
+                  } else if (dotsNames[1]=="direction") {
+                      direction <- dots[[1]]
+                      if (!is.character(direction))
+                          stop("In subset,argoFloats-method() : 'direction' must be character value of either 'ascent' or 'decent'")
+                      if (direction == 'ascent') {
+                          keep <- grepl("^.*[^D].nc$", x@data$index$file)
+                      } else if (direction == 'decent') {
+                          keep <- grepl("^.*D.nc$", x@data$index$file)
+                      } else {
+                          stop("In subset,argoFloats-method() : 'direction' must be either 'ascent' or 'decent', not '", direction, "'", call.=FALSE)
+                      }
+                      x@data$index <- x@data$index[keep, ]
                   } else {
-                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'id', 'ocean', 'mode', or 'cycle'", call.=FALSE)
+                      stop("In subset,argoFloats-method() : the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'", call.=FALSE)
                   }
               } else {
                   if (length(dotsNames) != 0)

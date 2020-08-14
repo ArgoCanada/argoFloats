@@ -97,6 +97,9 @@ is made up of a compulsory component comprising 3 or 4 digits, and an optional
 component that is either blank or the character \code{"D"} (which designates a
 descending profile).  Thus, \code{001} will match both \verb{*_001.nc} and \verb{*_001D.nc}.
 See example 12.
+\item A character value named \code{direction}, equal to either \code{decent} or \code{ascent},
+that selects whether to retain data from the ascent or decent phase.
+See example 13.
 }
 
 In all cases, the notation is that longitude is positive
@@ -186,6 +189,14 @@ ylab='Pressure (dbar)', xlab="Oxygen (umol/kg)")
 data(index)
 index12 <- subset(index, cycle='124')
 cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")
+}
+
+# Example 13: subset by direction
+\dontrun{
+library(argoFloats)
+index13A <- subset(getIndex(), deep=TRUE)
+index13B <- subset(deep, direction='decent')
+index13B[['file']]
 }
 
 }
