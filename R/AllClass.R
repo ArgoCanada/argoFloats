@@ -352,6 +352,8 @@ setMethod(f="[[",
                       return(as.vector(if (missing(j)) id else id[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$index$file))
+                  } else if (length(i) == 1 && i == "parameters") {
+                      stop("there are no parameters for core Argo index objects. Try BGC, Merged, or Synthetic Argo.")
                   } else {
                       stop("cannot interpret i=", paste(i, collapse=","), " for an object of type=\"index\"")
                   }
