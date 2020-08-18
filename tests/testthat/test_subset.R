@@ -3,7 +3,7 @@
 
 library(argoFloats)
 library(testthat)
-source("can_download.R")
+source("can_download.R")               # need this if using getProfiles()
 
 context("subset")
 
@@ -46,58 +46,60 @@ test_that("subset by time", {
 })
 
 test_that("subset by institution", {
-    data("index")
-    indexi <- expect_message(subset(index, institution="AO"),
-                             "Kept 897 profiles \\(94.1%\\)")
-    expect_equal(dim(indexi[["index"]]), c(897,8))
-    expect_equal(indexi[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-    expect_equal(indexi[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          data("index")
+          indexi <- expect_message(subset(index, institution="AO"),
+                                   "Kept 897 profiles \\(94.1%\\)")
+          expect_equal(dim(indexi[["index"]]), c(897,8))
+          expect_equal(indexi[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexi[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
 test_that("subset by float id", {
-    data("index")
-    indexid <- expect_message(subset(index, id="1901584"),
-                             "Kept 9 profiles \\(0.944%\\)")
-    expect_equal(dim(indexid[["index"]]), c(9,8))
-    expect_equal(indexid[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-    expect_equal(indexid[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          data("index")
+          indexid <- expect_message(subset(index, id="1901584"),
+                                    "Kept 9 profiles \\(0.944%\\)")
+          expect_equal(dim(indexid[["index"]]), c(9,8))
+          expect_equal(indexid[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexid[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
 test_that("subset by deep", {
-    data("index")
-    indexid <- expect_message(subset(index, deep=TRUE), "Kept 0 profiles \\(0%\\)")
+          data("index")
+          indexid <- expect_message(subset(index, deep=TRUE), "Kept 0 profiles \\(0%\\)")
 })
 
 test_that("silencing subset", {
-    data("index")
-    indexid <- expect_silent(subset(index, deep=TRUE, silent=TRUE))
+          data("index")
+          indexid <- expect_silent(subset(index, deep=TRUE, silent=TRUE))
 })
 
 test_that("subset by ocean", {
-    data("index")
-    indexOcean <- subset(index, ocean='A')
-    expect_equal(dim(indexOcean[["index"]]), c(953,8))
-    expect_equal(indexOcean[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-    expect_equal(indexOcean[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          data("index")
+          indexOcean <- subset(index, ocean='A')
+          expect_equal(dim(indexOcean[["index"]]), c(953,8))
+          expect_equal(indexOcean[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexOcean[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
-
 
 test_that("subset by cycle", {
-    data("index")
-    indexProfile <- subset(index, cycle=124)
-    expect_equal(dim(indexProfile[["index"]]), c(5,8))
-    expect_equal(indexProfile[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-    expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          data("index")
+          indexProfile <- subset(index, cycle=124)
+          expect_equal(dim(indexProfile[["index"]]), c(5,8))
+          expect_equal(indexProfile[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
-test_that("subset by direction",
-          {
-              if (canDownload()) {
-                  data(indexBgc)
-                  subset1 <- subset(indexBgc, direction='decent')
-                  subset2 <- subset(indexBgc, direction='ascent')
-                  expect_equal(subset1[["file"]], "coriolis/6901494/profiles/BD6901494_353D.nc")
-                  expect_equal(subset2[["file"]][1], "aoml/4900845/profiles/BR4900845_086.nc")
-              }
+test_that("subset by direction", {
+          data(indexBgc)
+          subset1 <- subset(indexBgc, direction='decent')
+          subset2 <- subset(indexBgc, direction='ascent')
+          expect_equal(subset1[["file"]], "coriolis/6901494/profiles/BD6901494_353D.nc")
+          expect_equal(subset2[["file"]][1], "aoml/4900845/profiles/BR4900845_086.nc")
+})
+
+test_that("subset by column", {
+          if (canDownload()) {
+              ## insert test here
           }
-)
+})
+
