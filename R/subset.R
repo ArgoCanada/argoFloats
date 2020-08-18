@@ -216,13 +216,51 @@ setMethod(f="subset",
               ##subsetString <- paste(deparse(substitute(subset)), collapse=" ")
               dots <- list(...)
               dotsNames <- names(dots)
+              #message("type =", x@metadata$type)
+              if (x@metadata$type == "profiles") {
+                  stop("Error: in subset,argoFloats-method() :\n  subset doesn't work for type = profiles", call.=FALSE)
+              }
+              if (x@metadata$type == "argos") {
+                  if (length(dotsNames) == 0)
+                      stop("Error: in subset,argoFloats-method() :\n  must give column", call.=FALSE)
+                  column <- dots[[1]]
+                  print(column)
+                  ## Loop over all objects within the data, and within that loop look at data within the object, and for each of
+                  ## them, if its a vactor subset according to column and if its a matrix subset accoring to column
+
+                  res <- x
+                  argos <- x[['argos']]
+                  ## Loop over all objects
+                  for (iargo in seq_along(argos)) {
+                      message(iargo)
+                      argo <- argos[[iargo]]
+                      for (name in names(argo@data)) {
+                          item <- argo@data[[name]]
+                          print(name)
+                          if (is.matrix(item)) {
+                              dim <- dim(item) 
+                              if (column > dim[2])
+                                  stop("Error in subset,argoFloats-method() :\n  Only have ", dim[2], " columns", call.=FALSE)
+                              newItem <- item[, column, drop=FALSE]
+                              res@data$argos[[iargo]]@data[[name]] <- newItem 
+                          } else {
+                              length <- length(item)
+                              if (column > length)
+                                  stop("Error in subset,argoFloats-method() :\n  Only have ", length, " columns", call.=FALSE)
+                              newItem <- item[column, drop=FALSE]
+                              res@data$argos[[iargo]]@data[[name]] <- newItem 
+                          }
+                      }
+                  }
+                  return(res)
+              }
               silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("must specify the subset, with 'subset' argument,'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'")
+                      stop("must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'")
                   if (length(dots) > 1) {
                       if (length(dots) > 2 || !("silent" %in% dotsNames))
-                          stop("in subset,argoFloats-method() : cannot give more than one method in the '...' argument", call.=FALSE)
+                          stop("Error in subset,argoFloats-method() :\n  cannot give more than one method in the '...' argument", call.=FALSE)
                   }
                   N <- length(x@data$index[[1]]) # used in calculating percentages
                   if (dotsNames[1] == "circle") {
