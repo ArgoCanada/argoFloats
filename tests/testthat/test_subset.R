@@ -98,8 +98,12 @@ test_that("subset by direction", {
 })
 
 test_that("subset by column", {
-          if (canDownload()) {
-              ## insert test here
+    if (canDownload()) {
+        argo <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")),
+                               "Of 1 profiles read, 1 has")
+        argo2 <- subset(argo, column=1)
+        expect_equal(length(argo2), 1)
+              
           }
 })
 
