@@ -9,7 +9,9 @@
 #' [argoFloatsDebug()] that has `style="bold"` and `unindent=1`.
 #'
 #' @param debug an integer specifying the level of debugging. Values greater
-#' than zero indicate that some printing should be done. Many functions
+#' than zero indicate that some printing should be done. Values greater
+#' than 3 are trimmed to 3. Many functions pass `debug=debug-1` down to
+#' deeper functions, which yields a nesting-indent format in the output.
 #' @param ... values to be printed, analogous to the `...` argument
 #' list of [cat()].
 #' @param style character value indicating special formatting, with `"plain"`
@@ -38,9 +40,9 @@
 #' @export
 argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=FALSE, unindent=0)
 {
-    debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
+    debug <- max(0, min(3, floor(debug+0.5))) # max 3 levels deep
     if (debug > 0) {
-        n <- 3 - debug - unindent
+        n <- 4 - debug - unindent
         if (is.character(style) && style == "plain") {
             if (n > 0)
                 cat(paste(rep("  ", n), collapse=""))

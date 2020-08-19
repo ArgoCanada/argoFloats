@@ -103,7 +103,6 @@ test_that("subset by column", {
                                "Of 1 profiles read, 1 has")
         argo2 <- subset(argo, column=1)
         expect_equal(length(argo2), 1)
-              
+
           }
 })
-
