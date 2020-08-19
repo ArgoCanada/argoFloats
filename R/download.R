@@ -5,12 +5,19 @@
 #' General function for downloading and caching a dataset.
 #'
 #' @template url
+#'
 #' @template destdir
+#'
 #' @template destfile
+#'
 #' @template mode
+#'
 #' @template quiet
-#' @template force
+#'
+#' @template age
+#'
 #' @template retries
+#'
 #' @template debug
 #'
 #' @return A character value indicating the full pathname to the downloaded file,
@@ -23,7 +30,7 @@
 #'
 #' @author Dan Kelley
 downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode="wb", quiet=FALSE,
-                                force=FALSE, retries=3, debug=0)
+                                age=365, retries=3, debug=0)
 {
     if (!requireNamespace("curl", quietly=TRUE))
         stop("must install.packages(\"curl\") for downloadWithRetries() to work")
@@ -40,17 +47,19 @@ downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode=
                     style="bold", sep="", unindent=1)
     argoFloatsDebug(debug, "    destfile='", paste(destfile, collapse="', '"), "',\n",
                     style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    mode='", mode, "'", ", quiet=", quiet, ", force=", force, ",\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    retries=", retries, ") {\n",
+    argoFloatsDebug(debug, "    mode='", mode, "'", ", quiet=", quiet, ", retries=", retries, ") {\n",
                     style="bold", sep="", unindent=1)
     n <- length(url)
     if (length(destfile) != n)
         stop("length(url)=", n, " must equal length(destfile)=", length(destfile))
     for (i in 1:n) {
         destination <- paste0(destdir, "/", destfile[i])
-        if (!force && file.exists(destination)) {
-            argoFloatsDebug(debug, "Skipping \"", destination, "\" because it already exists\n", sep="")
+        if (file.exists(destination)) {
+            destinationAge <- (as.integer(Sys.time()) - as.integer(file.info(destination)$mtime)) / 86400 # in days
+            argoFloatsDebug(debug, "destinationAge=", destinationAge, "\n", sep="")
+        }
+        if (file.exists(destination) && destinationAge < age) {
+            argoFloatsDebug(debug, "Skipping \"", destination, "\" because it already exists and its age, ", destinationAge, "d, is under specified age=", age, "d\n", sep="")
         } else {
             success <- FALSE
             for (trial in seq_len(1 + retries)) {

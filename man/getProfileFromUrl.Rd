@@ -8,7 +8,7 @@ getProfileFromUrl(
   url = NULL,
   destdir = "~/data/argo",
   destfile = NULL,
-  force = FALSE,
+  age = 365,
   retries = 3,
   quiet = FALSE,
   debug = 0
@@ -30,8 +30,10 @@ File clutter is reduced by creating a top-level directory called
 for the downloaded file. If this is not specified, then a name is determined
 from the value of \code{url}.}
 
-\item{force}{a logical value that indicates whether to force a file
-download, even if the destination file already exists.}
+\item{age}{a numerical value indicating a time interval, in days.  If the file
+to be downloaded from the server already exists locally, and was created
+is less than \code{age} days in the past, it will not be downloaded.  The default
+is one year.  Setting \code{age=0} will force a download.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}

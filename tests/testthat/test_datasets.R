@@ -3,7 +3,7 @@
 
 library(argoFloats)
 
-context("built-in datasets")
+context("built-in index datasets")
 data(index)
 data(indexBgc)
 data(indexMerged)

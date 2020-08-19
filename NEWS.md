@@ -2,6 +2,7 @@
 
 ## argoFloats 0.1.3
 
+* widen support of `age` argument, remove support for `force`
 * add several new built-in datasets
 * add several new functions
 * improve vignette and other documentation

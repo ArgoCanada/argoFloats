@@ -7,7 +7,7 @@
 getProfiles(
   index,
   destdir = NULL,
-  force = FALSE,
+  age = 365,
   retries = 3,
   skip = TRUE,
   quiet = TRUE,
@@ -22,8 +22,10 @@ by \code{\link[=getIndex]{getIndex()}}.}
 downloaded Argo files, or \code{NULL} (the default) to use the value of
 \code{destdir} that was provided in the \code{\link[=getIndex]{getIndex()}} call that created \code{index}.}
 
-\item{force}{a logical value that indicates whether to force a file
-download, even if the destination file already exists.}
+\item{age}{a numerical value indicating a time interval, in days.  If the file
+to be downloaded from the server already exists locally, and was created
+is less than \code{age} days in the past, it will not be downloaded.  The default
+is one year.  Setting \code{age=0} will force a download.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}

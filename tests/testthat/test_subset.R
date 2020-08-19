@@ -97,9 +97,9 @@ test_that("subset by direction", {
           expect_equal(subset2[["file"]][1], "aoml/4900845/profiles/BR4900845_086.nc")
 })
 
-test_that("subset by column", {
-          if (canDownload()) {
-              ## insert test here
-          }
-})
+##FIXME: test_that("subset by column", {
+##FIXME:           if (canDownload()) {
+##FIXME:               ## insert test here
+##FIXME:           }
+##FIXME: })
 
