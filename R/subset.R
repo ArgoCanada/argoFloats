@@ -243,6 +243,7 @@ setMethod(f="subset",
               if (x@metadata$type == "argos") {
                   if (length(dotsNames) == 0)
                       stop("in subset,argoFloats-method() :\n  must give column", call.=FALSE)
+                  if (dotsNames[1] == "column") {
                   column <- dots[[1]]
                   ## Loop over all objects within the data, and within that loop look at data within the object, and for each of
                   ## them, if its a vactor subset according to column and if its a matrix subset accoring to column
@@ -271,11 +272,17 @@ setMethod(f="subset",
                       }
                   }
                   return(res)
-              }
+                  }
+                  else {
+                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column'", call.=FALSE)
+                  }
+
+              } 
+              if (x@metadata$type == "index") {
               silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
                   if (length(dots) == 0)
-                      stop("in subset,argoFloats-method() :\n  must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'")
+                      stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'")
                   if (length(dots) > 1) {
                       if (length(dots) > 2 || !("silent" %in% dotsNames))
                           stop("in subset,argoFloats-method() :\n  cannot give more than one method in the '...' argument", call.=FALSE)
@@ -496,8 +503,8 @@ setMethod(f="subset",
                       }
                       x@data$index <- x@data$index[keep, ]
                   } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'", call.=FALSE)
-                  }
+                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for indices is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'", call.=FALSE)
+                  }}
               } else {
                   if (length(dotsNames) != 0)
                       stop("in subset,argoFloats-method():\n  cannot give both 'subset' and '...' arguments", call.=FALSE)
