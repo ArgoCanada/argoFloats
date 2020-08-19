@@ -46,7 +46,7 @@ geographical <- TRUE
 #' for other arguments that can be provided. This plot has a default color code
 #' to represent bad vs good data. Bad data, flagged 3, 4, 6, and 7, is represented
 #' with red dots, and good data, flaged 1, 2, 5, and 8, is displayed in black dots.
-#' See reference one, section 3.2.1 for distinction between good and bad data. 
+#' See reference one, section 3.2.1 for distinction between good and bad data.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
@@ -162,7 +162,7 @@ geographical <- TRUE
 #' profiles <- getProfiles(s)
 #' argos <- readProfiles(profiles)
 #' plot(argos, which='QC', parameter='temperature')}
-#' 
+#'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
@@ -208,7 +208,6 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
-                  
                   ## Draw empty plot box, with axes, to set par("usr") for later use with bathymetry.
                   if (geographical) {
                       xlab <- if (is.null(xlab)) "" else xlab
@@ -217,7 +216,6 @@ setMethod(f="plot",
                       xlab <- if (is.null(xlab)) "Longitude" else xlab
                       ylab <- if (is.null(ylab)) "Latitude" else ylab
                   }
-                  
                   ## Decode bathymetry
                   if (is.logical(bathymetry)) {
                       drawBathymetry <- bathymetry
@@ -306,7 +304,6 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "  maxlon=", round(usr[2]+Dlon, 3), "\n", sep="")
                           argoFloatsDebug(debug, "  minlat=", round(usr[3]-Dlat, 3), "\n", sep="")
                           argoFloatsDebug(debug, "  maxlat=", round(usr[4]+Dlat, 3), "\n", sep="")
-                          
                           ## Round to 4 digits to prevent crazy filenames for no good reason
                           bathy <- try(marmap::getNOAA.bathy(max(-180, round(usr[1]-Dlon, 3)),
                                                              min(+180, round(usr[2]+Dlon, 3)),
@@ -411,7 +408,6 @@ setMethod(f="plot",
                          ...)
                   ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
                   ## on just the distance spanned in the north-south direction.
-                  
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
                   if (ocedataIsInstalled) {
                       usr <- par("usr")

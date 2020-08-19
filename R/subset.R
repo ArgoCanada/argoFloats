@@ -14,7 +14,7 @@
 #' B) type `"argos"`, as created by [readProfiles()]. Note that the only subset
 #' condition that can be give in the `...` argument is `column` for `argos`
 #' type.
-#' 
+#'
 #' The possibilities for the `...` argument are as follows.
 #'
 #' 1. An integer vector giving indices to keep. See example 1.
@@ -86,15 +86,15 @@
 #' component that is either blank or the character `"D"` (which designates a
 #' descending profile).  Thus, `001` will match both `*_001.nc` and `*_001D.nc`.
 #' See example 12.
-#' 
+#'
 #' 13. A character value named `direction`, equal to either `decent` or `ascent`,
 #' that selects whether to retain data from the ascent or decent phase.
 #' See example 13.
-#' 
+#'
 #' 14. An integer value named `column`, that selects which column of parameters
 #' to obtain. Note that this type of subset is solely possible for `argos` type
 #' objects.
-#' 
+#'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
 #' is positive for degrees North and negative for degrees South.
@@ -201,7 +201,7 @@
 #' index12 <- subset(index, cycle='124')
 #' cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")
 #' }
-#' 
+#'
 #' # Example 13: subset by direction
 #' \dontrun{
 #' library(argoFloats)
@@ -209,7 +209,7 @@
 #' index13B <- subset(deep, direction='decent')
 #' index13B[['file']]
 #' }
-#' 
+#'
 #' # Example 14
 #' \dontrun{
 #' library(argoFloats)
@@ -222,7 +222,7 @@
 #' col1= argos14B[['oxygen']][[1]],
 #' col2=argos14C[['oxygen']][[1]])
 #' }
-#' 
+#'
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -257,17 +257,17 @@ setMethod(f="subset",
                           item <- argo@data[[name]]
                           print(name)
                           if (is.matrix(item)) {
-                              dim <- dim(item) 
+                              dim <- dim(item)
                               if (column > dim[2])
                                   stop("in subset,argoFloats-method() :\n  Only have ", dim[2], " columns", call.=FALSE)
                               newItem <- item[, column, drop=FALSE]
-                              res@data$argos[[iargo]]@data[[name]] <- newItem 
+                              res@data$argos[[iargo]]@data[[name]] <- newItem
                           } else {
                               length <- length(item)
                               if (column > length)
                                   stop("in subset,argoFloats-method() :\n  Only have ", length, " columns", call.=FALSE)
                               newItem <- item[column, drop=FALSE]
-                              res@data$argos[[iargo]]@data[[name]] <- newItem 
+                              res@data$argos[[iargo]]@data[[name]] <- newItem
                           }
                       }
                   }
@@ -277,7 +277,7 @@ setMethod(f="subset",
                       stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column'", call.=FALSE)
                   }
 
-              } 
+              }
               if (x@metadata$type == "index") {
               silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
