@@ -7,15 +7,17 @@ source("can_download.R")               # need this if using getProfiles()
 
 context("subset")
 
-test_that("subset by circle", {
-          data("index")
-          a <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100))
-          indexc <- expect_message(subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100)),
-                                   "Kept 304 profiles \\(31.9%\\)")
-          expect_equal(dim(indexc[["index"]]), c(304, 8))
-          expect_equal(indexc[["index"]][["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
-          expect_equal(indexc[["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
-})
+test_that("subset by circle",
+          {
+              data("index")
+              a <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100))
+              indexc <- expect_message(subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100)),
+                                       "Kept 304 profiles \\(31.9%\\)")
+              expect_equal(dim(indexc[["index"]]), c(304, 8))
+              expect_equal(indexc[["index"]][["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
+              expect_equal(indexc[["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
+          }
+)
 
 test_that("subset by rectangle", {
           data("index")
@@ -89,20 +91,31 @@ test_that("subset by cycle", {
           expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
-test_that("subset by direction", {
-          data(indexBgc)
-          subset1 <- subset(indexBgc, direction='decent')
-          subset2 <- subset(indexBgc, direction='ascent')
-          expect_equal(subset1[["file"]], "coriolis/6901494/profiles/BD6901494_353D.nc")
-          expect_equal(subset2[["file"]][1], "aoml/4900845/profiles/BR4900845_086.nc")
-})
-
-test_that("subset by column", {
-    if (canDownload()) {
-        argo <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")),
-                               "Of 1 profiles read, 1 has")
-        argo2 <- subset(argo, column=1)
-        expect_equal(length(argo2), 1)
-
+test_that("subset by direction",
+          {
+              data(indexBgc)
+              subset1 <- subset(indexBgc, direction='decent')
+              subset2 <- subset(indexBgc, direction='ascent')
+              expect_equal(subset1[["file"]], "coriolis/6901494/profiles/BD6901494_353D.nc")
+              expect_equal(subset2[["file"]][1], "aoml/4900845/profiles/BR4900845_086.nc")
           }
-})
+)
+
+test_that("subset by column",
+          {
+              if (canDownload()) {
+                  i <- expect_silent(getIndex(filename="merged"))
+                  a <- readProfiles(getProfiles(subset(subset(i, id="5903889"), cycle="074")))
+                  a1 <- expect_silent(subset(a, column=1))
+                  a2 <- expect_silent(subset(a, column=2))
+                  oxygen <- a[["oxygen"]][[1]]
+                  oxygen1 <- a1[["oxygen"]][[1]]
+                  oxygen2 <- a2[["oxygen"]][[1]]
+                  expect_equal(dim(oxygen), c(510, 2))
+                  expect_equal(dim(oxygen1), c(510, 1))
+                  expect_equal(dim(oxygen2), c(510, 1))
+                  expect_equal(oxygen1, oxygen[, 1, drop=FALSE])
+                  expect_equal(oxygen2, oxygen[, 2, drop=FALSE])
+              }
+          }
+)

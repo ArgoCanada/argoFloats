@@ -27,7 +27,7 @@ See \dQuote{Details} and \dQuote{Examples}.}
 An \code{\linkS4class{argoFloats}} object.
 }
 \description{
-Isolate a subset of an \code{\linkS4class{argoFloats}} for two object types:
+Return a subset of an \code{\linkS4class{argoFloats}} for two object types:
 A) type \code{"index"}, as created by \code{\link[=getIndex]{getIndex()}}, either by specifying indices
 to keep (using the \code{subset} argument) or by specifying a way to determine
 those indices (using the \code{...} argument). Note that only one subset condition
@@ -105,6 +105,8 @@ See example 13.
 \item An integer value named \code{column}, that selects which column of parameters
 to obtain. Note that this type of subset is solely possible for \code{argos} type
 objects.
+\item A integer value named \code{debug} that controls whether \code{subset()} prints
+some information to describe what it is doing.
 }
 
 In all cases, the notation is that longitude is positive
