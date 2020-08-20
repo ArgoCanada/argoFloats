@@ -278,7 +278,6 @@ setMethod(f="subset",
                   }
 
               }
-              if (x@metadata$type == "index") {
               silent <- "silent" %in% dotsNames && dots$silent
               if (missing(subset)) {
                   if (length(dots) == 0)
@@ -504,7 +503,7 @@ setMethod(f="subset",
                       x@data$index <- x@data$index[keep, ]
                   } else {
                       stop("in subset,argoFloats-method():\n  the only permitted '...' argument for indices is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'", call.=FALSE)
-                  }}
+              }
               } else {
                   if (length(dotsNames) != 0)
                       stop("in subset,argoFloats-method():\n  cannot give both 'subset' and '...' arguments", call.=FALSE)
