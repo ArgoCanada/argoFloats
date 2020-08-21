@@ -2,7 +2,7 @@
 ## The tests relating to data dimensions will need to be altered if the dataset is altered.
 
 library(argoFloats)
-library(testthat)
+##library(testthat)
 source("can_download.R")               # need this if using getProfiles()
 
 context("subset")

@@ -400,7 +400,7 @@ setMethod(f="plot",
                       oce::imagep(as.numeric(rownames(bathy)),
                                   as.numeric(colnames(bathy)),
                                   -bathy, colormap=bathymetry$colormap, add=TRUE)
-                  points(longitude, latitude,
+                  points(unlist(longitude), unlist(latitude),
                          cex=if (is.null(cex)) 1 else cex,
                          col=if (is.null(col)) "white" else col,
                          pch=if (is.null(pch)) 21 else pch,
