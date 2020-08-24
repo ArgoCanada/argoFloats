@@ -1,5 +1,5 @@
 if (!interactive()) png("TSpanama.png", unit="in", width=7, height=4, pointsize=11, res=100)
-par(mfrow=c(1,2), mar=c(3,3,1,1))
+par(mfrow=c(1,2), mar=c(3,3,1,2))
 library(argoFloats)
 ai <- getIndex()
 s <- subset(ai, circle=list(longitude=-83, latitude=9, radius=150))

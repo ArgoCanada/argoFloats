@@ -5,12 +5,17 @@
 #' @param url character value giving the URL for a netcdf file containing an
 #' particular profile of a particular Argo float.
 #' @template destdir
+#'
 #' @param destfile optional character value that specifies the name to be used
 #' for the downloaded file. If this is not specified, then a name is determined
 #' from the value of `url`.
-#' @template force
+#'
+#' @template age
+#'
 #' @template retries
+#'
 #' @template quiet
+#'
 #' @template debug
 #'
 #' @return A character value naming the local location of the downloaded file,
@@ -45,8 +50,7 @@
 #' @export
 #'
 #' @author Dan Kelley
-getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
-                              force=FALSE, retries=3, quiet=FALSE, debug=0)
+getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, age=365, retries=3, quiet=FALSE, debug=0)
 {
     argoFloatsDebug(debug,  "getProfileFromUrl(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
                     if (missing(destfile)) "(missing)" else destfile, "\", ...) {", sep="", "\n", style="bold", unindent=1)
@@ -60,7 +64,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL,
         argoFloatsDebug(debug,  "inferred destfile=\"", destfile, "\" from url.\n", sep="")
     }
     res <- downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode="wb", quiet=quiet,
-                               force=force, retries=retries, debug=debug-1)
+                               age=age, retries=retries, debug=debug-1)
     argoFloatsDebug(debug,  "} # getProfileFromUrl()", sep="", "\n", style="bold", unindent=1)
     if (is.na(res)) res else paste0(destdir, "/", destfile)
 }
@@ -414,7 +418,7 @@ getIndex <- function(filename="argo",
 #' downloaded Argo files, or `NULL` (the default) to use the value of
 #' `destdir` that was provided in the [getIndex()] call that created `index`.
 #'
-#' @template force
+#' @template age
 #'
 #' @template retries
 #'
@@ -446,8 +450,9 @@ getIndex <- function(filename="argo",
 ## @importFrom oce processingLogAppend vectorShow
 #'
 #' @export
-getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, skip=TRUE, quiet=TRUE, debug=0)
+getProfiles <- function(index, destdir=NULL, age=365, retries=3, skip=TRUE, quiet=TRUE, debug=0)
 {
+    debug <- max(0, min(3, floor(debug+0.5)))
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for getProfiles() to work")
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
@@ -492,8 +497,7 @@ getProfiles <- function(index, destdir=NULL, force=FALSE, retries=3, skip=TRUE, 
         argoFloatsDebug(debug, oce::vectorShow(urls))
         file <- vector("character", length(urls))
         for (i in seq_along(urls)) {
-            name <- getProfileFromUrl(urls[i], destdir=destdir,
-                                      force=force, retries=retries, quiet=quiet, debug=debug)
+            name <- getProfileFromUrl(urls[i], destdir=destdir, age=age, retries=retries, quiet=quiet, debug=debug-1)
             if (is.na(name) && !skip)
                 stop("cannot download file '", urls[i], "', which is considered a failure, since skip=FALSE")
             file[i] <- name

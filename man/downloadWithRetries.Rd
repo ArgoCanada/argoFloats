@@ -10,7 +10,7 @@ downloadWithRetries(
   destfile = NULL,
   mode = "wb",
   quiet = FALSE,
-  force = FALSE,
+  age = 365,
   retries = 3,
   debug = 0
 )
@@ -45,8 +45,10 @@ documentation for \code{\link[curl:curl_download]{curl::curl_download()}}.}
 that indicates whether to download without showing a progress
 bar. (Problems will still be reported, though.)}
 
-\item{force}{a logical value that indicates whether to force a file
-download, even if the destination file already exists.}
+\item{age}{a numerical value indicating a time interval, in days.  If the file
+to be downloaded from the server already exists locally, and was created
+is less than \code{age} days in the past, it will not be downloaded.  The default
+is one year.  Setting \code{age=0} will force a download.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}

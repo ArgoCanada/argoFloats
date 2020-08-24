@@ -25,7 +25,7 @@ Users can easily sift through data based on geographical region, parameter, time
 # Tweet 5
 For example, the following code demonstrates how to use the easy-to-follow work flow to produces a TS plot near Bermuda:
 
-![](TScode.png)
+![](TSCode.png)
 ![](TS.png)
 
 # Tweet 6
@@ -37,7 +37,7 @@ To subset by ocean "Area", the following code is used. Note: we've also incorpor
 # Tweet 7
 The code shown below demonstrates how to use our subset by polygon and TS plot function to create a TS diagram comparing the Atlantic and Pacific Ocean near the Isthmus of Panama.
 
-![](polygonCode.png)
+![](TSPanamaCode.png)
 ![](TSpanama.png)
 
 # Tweet 8
@@ -73,7 +73,7 @@ In the QC plot, the first cycle is considered "bad". To determine which QC Tests
 ![](showQCTestsCode.png)
 ![](showQCTestOutput.png)
 
-#Tweet 13
+# Tweet 13
 
 If the user agrees with the test failed, they can replace all suspicious data with NA. For example, the following code shows the need for QC testing in our previous example.
 

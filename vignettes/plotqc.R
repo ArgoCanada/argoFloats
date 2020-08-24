@@ -7,3 +7,4 @@ profiles <- getProfiles(subset)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')
 if (!interactive()) dev.off()
+

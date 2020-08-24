@@ -2,19 +2,22 @@
 ## The tests relating to data dimensions will need to be altered if the dataset is altered.
 
 library(argoFloats)
-library(testthat)
+##library(testthat)
+source("can_download.R")               # need this if using getProfiles()
 
 context("subset")
 
-test_that("subset by circle", {
-          data("index")
-          a <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100))
-          indexc <- expect_message(subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100)),
-                                   "Kept 304 profiles \\(31.9%\\)")
-          expect_equal(dim(indexc[["index"]]), c(304, 8))
-          expect_equal(indexc[["index"]][["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
-          expect_equal(indexc[["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
-})
+test_that("subset by circle",
+          {
+              data("index")
+              a <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100))
+              indexc <- expect_message(subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100)),
+                                       "Kept 304 profiles \\(31.9%\\)")
+              expect_equal(dim(indexc[["index"]]), c(304, 8))
+              expect_equal(indexc[["index"]][["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
+              expect_equal(indexc[["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
+          }
+)
 
 test_that("subset by rectangle", {
           data("index")
@@ -45,46 +48,74 @@ test_that("subset by time", {
 })
 
 test_that("subset by institution", {
-    data("index")
-    indexi <- expect_message(subset(index, institution="AO"),
-                             "Kept 897 profiles \\(94.1%\\)")
-    expect_equal(dim(indexi[["index"]]), c(897,8))
-    expect_equal(indexi[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-    expect_equal(indexi[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          data("index")
+          indexi <- expect_message(subset(index, institution="AO"),
+                                   "Kept 897 profiles \\(94.1%\\)")
+          expect_equal(dim(indexi[["index"]]), c(897,8))
+          expect_equal(indexi[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexi[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
 test_that("subset by float id", {
-    data("index")
-    indexid <- expect_message(subset(index, id="1901584"),
-                             "Kept 9 profiles \\(0.944%\\)")
-    expect_equal(dim(indexid[["index"]]), c(9,8))
-    expect_equal(indexid[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-    expect_equal(indexid[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          data("index")
+          indexid <- expect_message(subset(index, id="1901584"),
+                                    "Kept 9 profiles \\(0.944%\\)")
+          expect_equal(dim(indexid[["index"]]), c(9,8))
+          expect_equal(indexid[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexid[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
 test_that("subset by deep", {
-    data("index")
-    indexid <- expect_message(subset(index, deep=TRUE), "Kept 0 profiles \\(0%\\)")
+          data("index")
+          indexid <- expect_message(subset(index, deep=TRUE), "Kept 0 profiles \\(0%\\)")
 })
 
 test_that("silencing subset", {
-    data("index")
-    indexid <- expect_silent(subset(index, deep=TRUE, silent=TRUE))
+          data("index")
+          indexid <- expect_silent(subset(index, deep=TRUE, silent=TRUE))
 })
 
 test_that("subset by ocean", {
-    data("index")
-    indexOcean <- subset(index, ocean='A')
-    expect_equal(dim(indexOcean[["index"]]), c(953,8))
-    expect_equal(indexOcean[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-    expect_equal(indexOcean[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          data("index")
+          indexOcean <- subset(index, ocean='A')
+          expect_equal(dim(indexOcean[["index"]]), c(953,8))
+          expect_equal(indexOcean[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexOcean[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
-
 
 test_that("subset by cycle", {
-    data("index")
-    indexProfile <- subset(index, cycle=124)
-    expect_equal(dim(indexProfile[["index"]]), c(5,8))
-    expect_equal(indexProfile[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-    expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          data("index")
+          indexProfile <- subset(index, cycle=124)
+          expect_equal(dim(indexProfile[["index"]]), c(5,8))
+          expect_equal(indexProfile[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
+
+test_that("subset by direction",
+          {
+              data(indexBgc)
+              subset1 <- subset(indexBgc, direction='decent')
+              subset2 <- subset(indexBgc, direction='ascent')
+              expect_equal(subset1[["file"]], "coriolis/6901494/profiles/BD6901494_353D.nc")
+              expect_equal(subset2[["file"]][1], "aoml/4900845/profiles/BR4900845_086.nc")
+          }
+)
+
+test_that("subset by column",
+          {
+              if (canDownload()) {
+                  i <- expect_silent(getIndex(filename="merged"))
+                  a <- readProfiles(getProfiles(subset(subset(i, id="5903889"), cycle="074")))
+                  a1 <- expect_silent(subset(a, column=1))
+                  a2 <- expect_silent(subset(a, column=2))
+                  oxygen <- a[["oxygen"]][[1]]
+                  oxygen1 <- a1[["oxygen"]][[1]]
+                  oxygen2 <- a2[["oxygen"]][[1]]
+                  expect_equal(dim(oxygen), c(510, 2))
+                  expect_equal(dim(oxygen1), c(510, 1))
+                  expect_equal(dim(oxygen2), c(510, 1))
+                  expect_equal(oxygen1, oxygen[, 1, drop=FALSE])
+                  expect_equal(oxygen2, oxygen[, 2, drop=FALSE])
+              }
+          }
+)

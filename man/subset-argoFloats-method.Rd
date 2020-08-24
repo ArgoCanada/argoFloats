@@ -27,14 +27,16 @@ See \dQuote{Details} and \dQuote{Examples}.}
 An \code{\linkS4class{argoFloats}} object.
 }
 \description{
-Isolate a subset of an \code{\linkS4class{argoFloats}} object of type \code{"index"},
-as created by \code{\link[=getIndex]{getIndex()}}, either by specifying
-indices to keep (using the \code{subset} argument) or by specifying
-a way to determine those indices (using the \code{...} argument).
-Note that only one subset condition may be given in the \code{...}
-argument, but that \code{\link[=merge,argoFloats-method]{merge,argoFloats-method()}}
-can be used to merge indices  created by \code{subset},
-which effectively creates a logical "or" operation.
+Return a subset of an \code{\linkS4class{argoFloats}} for two object types:
+A) type \code{"index"}, as created by \code{\link[=getIndex]{getIndex()}}, either by specifying indices
+to keep (using the \code{subset} argument) or by specifying a way to determine
+those indices (using the \code{...} argument). Note that only one subset condition
+may be given in the \code{...} argument, but that \code{\link[=merge,argoFloats-method]{merge,argoFloats-method()}} can
+be used to merge indices  created by \code{subset}, which effectively creates a
+logical "or" operation.
+B) type \code{"argos"}, as created by \code{\link[=readProfiles]{readProfiles()}}. Note that the only subset
+condition that can be give in the \code{...} argument is \code{column} for \code{argos}
+type.
 }
 \details{
 The possibilities for the \code{...} argument are as follows.
@@ -97,6 +99,14 @@ is made up of a compulsory component comprising 3 or 4 digits, and an optional
 component that is either blank or the character \code{"D"} (which designates a
 descending profile).  Thus, \code{001} will match both \verb{*_001.nc} and \verb{*_001D.nc}.
 See example 12.
+\item A character value named \code{direction}, equal to either \code{decent} or \code{ascent},
+that selects whether to retain data from the ascent or decent phase.
+See example 13.
+\item An integer value named \code{column}, that selects which column of parameters
+to obtain. Note that this type of subset is solely possible for \code{argos} type
+objects.
+\item A integer value named \code{debug} that controls whether \code{subset()} prints
+some information to describe what it is doing.
 }
 
 In all cases, the notation is that longitude is positive
@@ -187,6 +197,28 @@ data(index)
 index12 <- subset(index, cycle='124')
 cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")
 }
+
+# Example 13: subset by direction
+\dontrun{
+library(argoFloats)
+index13A <- subset(getIndex(), deep=TRUE)
+index13B <- subset(deep, direction='decent')
+index13B[['file']]
+}
+
+# Example 14
+\dontrun{
+library(argoFloats)
+index14A <- subset(getIndex(filename='merge'), id="5903889")
+index14B <- subset(index14A, cycle='074')
+argos14A <- readProfiles(getProfiles(index14B))
+argos14B <- subset(argos14A, column=1)
+argos14C <- subset(argos14A, column=2)
+D <- data.frame(Oxygen = argos14A[['oxygen']],
+col1= argos14B[['oxygen']][[1]],
+col2=argos14C[['oxygen']][[1]])
+}
+
 
 }
 \author{

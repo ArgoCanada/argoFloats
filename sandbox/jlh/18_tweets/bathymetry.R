@@ -10,7 +10,7 @@ lat <- index0[["latitude"]]
 profile <- index0[['profile']]
 t <- index0[["date"]]
 
-par(mar=c(2,2,1,1))
+par(mar=c(2,2,1,2))
 
 cm <- colormap(t, col=oceColorsJet)
 drawPalette(colormap=cm, tformat="%Y-%m", pos=3)
