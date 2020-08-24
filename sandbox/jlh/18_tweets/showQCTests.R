@@ -6,5 +6,3 @@ profiles2 <- getProfiles(index2)
 argos2 <- readProfiles(profiles2)
 showQCTests(argos2[[1]], style='full')
 
-
-
