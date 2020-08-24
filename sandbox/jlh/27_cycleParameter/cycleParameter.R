@@ -7,7 +7,13 @@ argos <- readProfiles(profiles)
 clean <- applyQC(argos)
 plot(clean, which="TS")
 
+C <-clean[['cycle']]
+for(i in C) {
+    subset <- subset(clean, cycle=i)
+    plot(subset, which='TS')
+}
+
 str(clean[['temperature']])
 clean[['cycle']]
-vec <- c(125,126)
-lapply(vec, function(v)  which(v ==clean[['cycle']]))
+C <-as.numeric((clean[['cycle']]))
+lapply(range, function(v)  which(v ==clean[['cycle']]))
