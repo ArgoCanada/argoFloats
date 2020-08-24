@@ -294,10 +294,21 @@ setMethod(f="subset",
                       }
                       argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                       return(res)
-                  } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column'", call.=FALSE)
+                  } else if (dotsNames[1] == 'cycle') {
+                      argoFloatsDebug(debug, "subsetting by cycle for 'argos' type\n")
+                      cycle <- dots[[1]]
+                      file <- unlist(x[['filename']])
+                      filecycle <- gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", file)
+                      keep <- cycle == filecycle
+                      #if (!silent)
+                       #   message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                      return(as.vector(keep))
                   }
-              }
+                 
+                  else {    
+                  stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column'", call.=FALSE)
+                  }
+                  }
               if (missing(subset)) {
                   #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
                   if (length(dots) == 0)
