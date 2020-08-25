@@ -107,11 +107,10 @@
 #' @param subset optional numerical or logical vector that indicates which
 #' indices of `x@data$index` to keep (example 1).
 #'
-## FIXME: keep this list up-to-date, as we add things
-#' @param ... the first entry here must be either (a)
-#' a list named `circle`, `rectangle`, `polygon`,
-#' `parameter`, `time`, `institution`, `id`,`ocean`,`mode`, or `cycle`.
-#' (examples 2 through 8)
+#' @param ... the first entry here must be either (a) a list named `circle`,
+#' `rectangle`, `polygon`, `parameter`, `time`, `institution`,
+#' `id`,`ocean`,`mode`,`cycle`, `direction`, or `column`.
+#'  (examples 2 through 8, and 10 through 14),
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
 #' value indicating whether to prevent the printing of messages that

@@ -12,10 +12,10 @@
 \item{subset}{optional numerical or logical vector that indicates which
 indices of \code{x@data$index} to keep (example 1).}
 
-\item{...}{the first entry here must be either (a)
-a list named \code{circle}, \code{rectangle}, \code{polygon},
-\code{parameter}, \code{time}, \code{institution}, \code{id},\code{ocean},\code{mode}, or \code{cycle}.
-(examples 2 through 8)
+\item{...}{the first entry here must be either (a) a list named \code{circle},
+\code{rectangle}, \code{polygon}, \code{parameter}, \code{time}, \code{institution},
+\code{id},\code{ocean},\code{mode},\code{cycle}, \code{direction}, or \code{column}.
+(examples 2 through 8, and 10 through 14),
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
 value indicating whether to prevent the printing of messages that
