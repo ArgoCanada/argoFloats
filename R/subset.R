@@ -12,7 +12,7 @@
 #' be used to merge indices  created by `subset`, which effectively creates a
 #' logical "or" operation.
 #' B) type `"argos"`, as created by [readProfiles()]. Note that the only subset
-#' condition that can be give in the `...` argument is `column` for `argos`
+#' condition that can be give in the `...` argument is `column` or `cycle` for `argos`
 #' type.
 #'
 #' The possibilities for the `...` argument are as follows.
@@ -85,6 +85,7 @@
 #' is made up of a compulsory component comprising 3 or 4 digits, and an optional
 #' component that is either blank or the character `"D"` (which designates a
 #' descending profile).  Thus, `001` will match both `*_001.nc` and `*_001D.nc`.
+#' Note this can be used for both `"index"` and `"argos"` types.
 #' See example 12.
 #'
 #' 13. A character value named `direction`, equal to either `decent` or `ascent`,
@@ -305,7 +306,7 @@ setMethod(f="subset",
                   }
                  
                   else {    
-                  stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column'", call.=FALSE)
+                  stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column' or 'cycle'", call.=FALSE)
                   }
                   }
               if (missing(subset)) {
