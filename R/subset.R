@@ -12,7 +12,7 @@
 #' be used to merge indices  created by `subset`, which effectively creates a
 #' logical "or" operation.
 #' B) type `"argos"`, as created by [readProfiles()]. Note that the only subset
-#' condition that can be give in the `...` argument is `column` for `argos`
+#' condition that can be give in the `...` argument is `column` or `cycle` for `argos`
 #' type.
 #'
 #' The possibilities for the `...` argument are as follows.
@@ -85,6 +85,7 @@
 #' is made up of a compulsory component comprising 3 or 4 digits, and an optional
 #' component that is either blank or the character `"D"` (which designates a
 #' descending profile).  Thus, `001` will match both `*_001.nc` and `*_001D.nc`.
+#' Note this can be used for both `"index"` and `"argos"` types.
 #' See example 12.
 #'
 #' 13. A character value named `direction`, equal to either `decent` or `ascent`,
@@ -92,8 +93,8 @@
 #' See example 13.
 #'
 #' 14. An integer value named `column`, that selects which column of parameters
-#' to obtain. Note that this type of subset is solely possible for `argos` type
-#' objects.
+#' to obtain. Note that this type of subset is possible for `argos` and `index`
+#' type objects.
 #'
 #' 15. A integer value named `debug` that controls whether `subset()` prints
 #' some information to describe what it is doing.
@@ -213,7 +214,7 @@
 #' index13B[['file']]
 #' }
 #'
-#' # Example 14
+#' # Example 14: subset by column (for argos type)
 #' \dontrun{
 #' library(argoFloats)
 #' index14A <- subset(getIndex(filename='merge'), id="5903889")
@@ -224,6 +225,15 @@
 #' D <- data.frame(Oxygen = argos14A[['oxygen']],
 #' col1= argos14B[['oxygen']][[1]],
 #' col2=argos14C[['oxygen']][[1]])
+#' }
+#'
+#' # Example 15: subset by cycle (for argos type) to create TS diagram
+#' \dontrun{
+#' data("index")
+#' index15 <- subset(index, id="1901584")
+#' profiles <- getProfiles(index15)
+#' argos <- readProfiles(profiles)
+#' plot(subset(argos, cycle='147'), which='TS')
 #' }
 #'
 #'
@@ -259,16 +269,18 @@ setMethod(f="subset",
               if (x@metadata$type == "profiles") {
                   stop("in subset,argoFloats-method() :\n  subset doesn't work for type = profiles", call.=FALSE)
               }
+              ## Step 1: handle 'argo' type first. Note that 'subset' is ignored; rather, we insist that either
+              ## 'column' or 'cycle' be provided.
               if (x@metadata$type == "argos") {
                   argoFloatsDebug(debug, "subsetting with type=\"argos\"\n")
                   if (length(dotsNames) == 0)
-                      stop("in subset,argoFloats-method() :\n  must give column", call.=FALSE)
+                      stop("in subset,argoFloats-method() :\n  must give 'column' or 'cycle' argument", call.=FALSE)
                   if (dotsNames[1] == "column") {
                       argoFloatsDebug(debug, "subsetting by column\n")
                       column <- dots[[1]]
                       ## Loop over all objects within the data, and within that loop look at data within the object,
                       ## and for each of them, if its a vactor subset according to column and if its a matrix
-                      ## subset accoring to column
+                      ## subset according to column
                       res <- x
                       argos <- x[['argos']]
                       ## Loop over all objects
@@ -293,10 +305,30 @@ setMethod(f="subset",
                       }
                       argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                       return(res)
+                  } else if (dotsNames[1] == 'cycle') {
+                      argoFloatsDebug(debug, "subsetting by cycle for 'argos' type\n")
+                      cycle <- dots[[1]]
+                      file <- unlist(x[['filename']])
+                      fileCycle <- sapply(x[['data']][[1]], function(x) x[["cycleNumber"]])
+                      ## Insist that the cycles are available
+                      keep <- rep(FALSE, length(fileCycle))
+                      for (thisCycle in cycle) {
+                          if (!(thisCycle %in% fileCycle))
+                              stop("In subset,argoFloats-method(): Cycle '", thisCycle, "' not found. Try one of: ", paste(fileCycle, collapse=', '), call.=FALSE)
+                          keep <- keep | (thisCycle == fileCycle)
+                      }
+                      res <- x
+                      res@data[[1]] <- x@data[[1]][keep]
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/length(keep)), "%)")
+                      argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
+                      return(res)
                   } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column'", call.=FALSE)
+                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column' or 'cycle'", call.=FALSE)
                   }
               }
+              ## Step 2: Now we know the type is either 'index' or 'profiles'.  In either case,
+              ## 'subset' can be provided, so we check for its existence first.
               if (missing(subset)) {
                   #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
                   if (length(dots) == 0)
