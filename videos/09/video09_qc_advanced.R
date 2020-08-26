@@ -1,6 +1,6 @@
-## Video 8: Quality Control
+## Video 9: Quality Control Advanced
 
-## Part 1: Overview
+## Part 1: Overview (from video 08)
 
 # QC Plot
 library(argoFloats)
