@@ -122,3 +122,19 @@ test_that("subset by column",
               }
           }
 )
+test_that("subset by cycle",
+          {
+              if (canDownload()) {
+                  data("index")
+                  index1 <- expect_message(subset(index, id="1901584"),
+                                           "Kept 9 profiles \\(0.944%\\)")
+                  profiles <- expect_silent(getProfiles(index1))
+                  argos <- expect_warning(readProfiles(profiles),
+                                          "Of 9 profiles read, 8 have")
+                  argos2 <- expect_message(subset(argos, cycle='147'),
+                                           "Kept 1 profiles \\(11.1%\\)")
+                  expect_equal(argos2[["cycle"]], "147")
+                  expect_equal(unique(argos2[['cycle']]), "147")
+              }
+          }
+)
