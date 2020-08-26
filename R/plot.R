@@ -39,14 +39,15 @@ geographical <- TRUE
 #'        d. `palette`, an optional logical value (with `TRUE` as the default)
 #'           indicating whether to draw a depth-color palette to the right of the plot.
 #'
-#' * For `which="TS"`,  an overall TS plot is created.  This
-#' only works if `x` is an object that was created by  [getProfiles()].
-#' The scales for the plot can be altered by putting `Slim` and `Tlim`
-#' arguments in the `...` list; see the documentation for [oce::plotTS()]
-#' for other arguments that can be provided. This plot has a default color code
-#' to represent bad vs good data. Bad data, flagged 3, 4, 6, and 7, is represented
-#' with red dots, and good data, flaged 1, 2, 5, and 8, is displayed in black dots.
-#' See reference one, section 3.2.1 for distinction between good and bad data.
+#' * For `which="TS"`,  an overall TS plot is created.  This only works if `x`
+#' is an object that was created by  [getProfiles()]. The scales for the plot
+#' can be altered by putting `Slim` and `Tlim` arguments in the `...` list. The
+#' `cycle` argument specifies which particular cycle to display; see the
+#' documentation for [oce::plotTS()] for other arguments that can be provided.
+#' This plot has a default color code to represent bad vs good data. Bad data,
+#' flagged 3, 4, 6, and 7, is represented with red dots, and good data, flaged
+#' 1, 2, 5, and 8, is displayed in black dots. See reference one, section 3.2.1
+#' for distinction between good and bad data.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
@@ -162,7 +163,16 @@ geographical <- TRUE
 #' profiles <- getProfiles(s)
 #' argos <- readProfiles(profiles)
 #' plot(argos, which='QC', parameter='temperature')}
-#'
+#' 
+#' # Example 8: Temperature-Salinity plot for a single cycle
+#' \dontrun{
+#' data("index")
+#' index8 <- subset(index, id='1901584')
+#' profiles <- getProfiles(index8)
+#' argos <- readProfiles(profiles)
+#' clean <- applyQC(argos)
+#' plot(clean, which='TS', cycle=147)}
+#' 
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
@@ -466,6 +476,9 @@ setMethod(f="plot",
                                      longitude=longitude)
                   } else if (!(cycle %in% knownCycles)){
                       stop("In plot,argoFloats-method(): Cycle '", cycle, "' not found. Try one of: ", paste(knownCycles, collapse=', '), call.=FALSE)
+                  }
+                  else if ((cycle %in% knownCycles)){
+                      message("jaimie")
                   }
                   if (is.null(cex))
                       cex <- 0.5
