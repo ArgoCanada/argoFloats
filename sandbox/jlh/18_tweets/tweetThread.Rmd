@@ -6,43 +6,42 @@ output: html_document
 # Tweet 1
 
 Hi Argo community! I want to introduce you to a newly developed R package, argoFloats. This package was created by myself, Dan Kelley, and Jaimie Harbin to provide tools for downloading and analyzing collections of oceanographic Argo float datasets.
+
 ![](argoFloats_logo_06.png)
 
 
 # Tweet 2
-argoFloats has an easy-to-follow work flow, to allow the users to effectively
-access, download, and read Argo data. It targets both experienced and new R
-users.
+argoFloats has an easy-to-follow work flow, to allow users to effectively access, download, and read Argo data. It targets both experienced and new R users.
 
 ![](../../../vignettes/flowchart.png)
 
 # Tweet 3
-To get familiar with argoFloats, check out the user website, https://argocanada.github.io/argoFloats/index.html, or developer website https://github.com/ArgoCanada/argoFloats for more advanced R users.
+To get familiar with argoFloats, check out the user website (https://argocanada.github.io/argoFloats/index.html) or the developer website (https://github.com/ArgoCanada/argoFloats) for more advanced R users.
 
 # Tweet 4
-Users can easily sift through data based on geographical region, parameter, time, institution, deep Argo, id, ocean, mode, cycle, direction, and column. A series of real-time examples exists at our Youtube channel https://www.youtube.com/channel/UCmVBNwRRGx5sRa1skvfOrvA.
+Users can easily sift through data based on geographical region, parameter, time, institution, deep Argo, id, ocean, mode, cycle, direction, or column. A series of real-time examples exists at our Youtube channel https://www.youtube.com/channel/UCmVBNwRRGx5sRa1skvfOrvA.
 
 # Tweet 5
-For example, the following code demonstrates how to use the easy-to-follow work flow to produces a TS plot near Bermuda:
+For example, the following code demonstrates the workflow to produce a TS plot near Bermuda.
 
 ![](TSCode.png)
 ![](TS.png)
 
 # Tweet 6
-To subset by ocean "Area", the following code is used. Note: we've also incorporated a subset by polygon to better improve this subset.
+To subset by ocean "Area", the following code is used. Note: regarding those spurious red dots in the Pacific, we also provide a method to subset by polygon.
 
 ![](oceanAreaCode.png)
 ![](oceanArea.png)
 
 # Tweet 7
-The code shown below demonstrates how to use our subset by polygon and TS plot function to create a TS diagram comparing the Atlantic and Pacific Ocean near the Isthmus of Panama.
+The code shown below demonstrates how to subset by polygon to study watermass contrasts between the Atlantic and Pacific oceans across the Isthmus of Panama.
 
 ![](TSPanamaCode.png)
 ![](TSpanama.png)
 
 # Tweet 8
 
-In addition, argoFloats users have the ability to create a TS diagram, colour-coded by oxygen using the following code:
+In addition, argoFloats users have the ability to create a TS diagram, colour-coding for oxygen, as follows.
 
 ![](TSoxygenCode.png)
 
@@ -50,52 +49,46 @@ In addition, argoFloats users have the ability to create a TS diagram, colour-co
 ![](TSoxygen.png)
 
 # Tweet 9
-Bathymetry has recently been added to the argoFloats package. A great example of this is shown by this trajectory plot colour coded by time, with bathymetry in the Labrador Sea.
+Bathymetry can be shown on argoFloats map plots. A good example of this is shown in a trajectory plot for a float in the Labrador Sea, colour-coded for time.
 
 ![](bathymetryCode.png)
 
 ![](bathymetry.png)
 
 # Tweet 10
-What about Quality Control (QC), you say? argoFloats has incorporated a simple work flow to work with Argo float QC flags.
+What about Quality Control (QC), you say? argoFloats offers an easy workflow for handling Argo QC flags.
 
 ![](../../../vignettes/qc_flowchart.png)
 
 # Tweet 11
-The first phase when dealing with QC for Argo data is to plot the quality of the data using the QC plot. This is shown in the code below where each point is a cycle representing "bad" data in red, and "good" data in black.
+The first phase when dealing with QC for Argo data is to plot the quality of the data using the QC plot. This is shown below, where each point is a cycle representing "bad" data in red, and "good" data in black.
 
 ![](plotQCCode.png)
 ![](../../../vignettes/plotqc.png)
 
 # Tweet 12
-In the QC plot, the first cycle is considered "bad". To determine which QC Tests were performed on that cycle the following code is used to produce the following output:
+In the QC plot, the first cycle is considered "bad". Here's how to determine which QC Tests were performed on that cycle:
 
 ![](showQCTestsCode.png)
 ![](showQCTestOutput.png)
 
 # Tweet 13
 
-If the user agrees with the test failed, they can replace all suspicious data with NA. For example, the following code shows the need for QC testing in our previous example.
+If you agree with the test failed, you can replace all suspicious data with NA. For example, the following shows the need for QC testing in our previous example ... but there are still some stray points!
 
 ![](applyQCCode.png)
 ![](../../../vignettes/applyQC.png)
 
 # Tweet 15
-In addition to flags, some data sets undergo adjustments that are made in
-recognition of the QC analysis or to employ information about improved
-calibrations, etc. For this reason the useAdjusted function was created.
+In addition to flags, some datasets undergo adjustments that are made in recognition of the QC analysis or to employ information about improved calibrations, etc. We'll get into that in the next tweet.
 
 # Tweet 16
-useAdjusted can be a fairly complicated process. However, the diagram below
-demonstrates the actions taken when a user specifies `which=ALL` or
-`which=<param>`.
+useAdjusted can be a fairly complicated process; the following diagram demonstrates the actions taken when a user specifies `which=ALL` or `which=<param>`.
 
 ![](../../../man/figures/useAdjustedDiagram.png)
 
 # Tweet 17
-An example where useAdjusted is useful is when dealing with oxygen data. Often
-times, BGC data need calibration due to sensors and that can be represented in
-the data, as shown below.
+The useAdjusted function is handy when dealing with oxygen data, which may be adjusted due to sensor recalibration, etc.
 
 ![](useAdjustedCode.png)
 ![](useAdjusted.png)
