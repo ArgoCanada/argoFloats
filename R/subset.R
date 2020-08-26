@@ -269,7 +269,7 @@ setMethod(f="subset",
                       column <- dots[[1]]
                       ## Loop over all objects within the data, and within that loop look at data within the object,
                       ## and for each of them, if its a vactor subset according to column and if its a matrix
-                      ## subset accoring to column
+                      ## subset according to column
                       res <- x
                       argos <- x[['argos']]
                       ## Loop over all objects
@@ -298,17 +298,17 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "subsetting by cycle for 'argos' type\n")
                       cycle <- dots[[1]]
                       file <- unlist(x[['filename']])
-                      filecycle <- gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", file)
-                      keep <- cycle == filecycle
-                      #if (!silent)
-                       #   message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                      return(as.vector(keep))
+                      fileCycle <- sapply(x[['data']][[1]], function(x) x[["cycleNumber"]]) 
+                      keep <- cycle %in% fileCycle
+                      res <- x
+                      res@data <- x@data[keep]
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                      return(res)
+                  } else {    
+                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column' or 'cycle'", call.=FALSE)
                   }
-                 
-                  else {    
-                  stop("in subset,argoFloats-method():\n  the only permitted '...' argument for argos type is 'column' or 'cycle'", call.=FALSE)
-                  }
-                  }
+              }
               if (missing(subset)) {
                   #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
                   if (length(dots) == 0)

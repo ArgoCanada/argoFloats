@@ -455,10 +455,6 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "TS plot\n", sep="")
                   if ((x[["type"]] != "argos"))
                       stop("In plot,argoFloats-method(): : x must have been created by readProfiles()", call.=FALSE)
-                  dots <- list(...)
-                  knownCycles <- as.numeric(x[['cycle']]) 
-                  cycle <- dots$cycle
-                  if(is.null(cycle)) {
                   if (!(eos %in% c("gsw", "unesco")))
                       stop("eos must be \"gsw\" or \"unesco\", not \"", eos, "\"")
                   salinity <- unlist(x[["salinity", debug=debug]])
@@ -474,12 +470,6 @@ setMethod(f="plot",
                                      pressure=pressure,
                                      latitude=latitude,
                                      longitude=longitude)
-                  } else if (!(cycle %in% knownCycles)){
-                      stop("In plot,argoFloats-method(): Cycle '", cycle, "' not found. Try one of: ", paste(knownCycles, collapse=', '), call.=FALSE)
-                  }
-                  else if ((cycle %in% knownCycles)){
-                      stop("jaimie")
-                  }
                   if (is.null(cex))
                       cex <- 0.5
                   if (is.null(col)) {
