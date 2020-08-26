@@ -93,8 +93,8 @@
 #' See example 13.
 #'
 #' 14. An integer value named `column`, that selects which column of parameters
-#' to obtain. Note that this type of subset is solely possible for `argos` type
-#' objects.
+#' to obtain. Note that this type of subset is possible for `argos` and `index`
+#' type objects.
 #'
 #' 15. A integer value named `debug` that controls whether `subset()` prints
 #' some information to describe what it is doing.
@@ -227,8 +227,13 @@
 #' col2=argos14C[['oxygen']][[1]])
 #' }
 #'
-#' # Example 15: subset by cycle (for argos type)
+#' # Example 15: subset by cycle (for argos type) to create TS diagram
 #' \dontrun{
+#' data("index")
+#' index15 <- subset(index, id="1901584")
+#' profiles <- getProfiles(index15)
+#' argos <- readProfiles(profiles)
+#' plot(subset(argos, cycle='147'), which='TS')
 #' }
 #'
 #'
@@ -305,11 +310,17 @@ setMethod(f="subset",
                       cycle <- dots[[1]]
                       file <- unlist(x[['filename']])
                       fileCycle <- sapply(x[['data']][[1]], function(x) x[["cycleNumber"]])
-                      keep <- cycle %in% fileCycle
+                      ## Insist that the cycles are available
+                      keep <- rep(FALSE, length(fileCycle))
+                      for (thisCycle in cycle) {
+                          if (!(thisCycle %in% fileCycle))
+                              stop("In subset,argoFloats-method(): Cycle '", thisCycle, "' not found. Try one of: ", paste(fileCycle, collapse=', '), call.=FALSE)
+                          keep <- keep | (thisCycle == fileCycle)
+                      }
                       res <- x
-                      res@data <- x@data[keep]
+                      res@data[[1]] <- x@data[[1]][keep]
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/length(keep)), "%)")
                       argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                       return(res)
                   } else {
