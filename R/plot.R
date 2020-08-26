@@ -478,7 +478,7 @@ setMethod(f="plot",
                       stop("In plot,argoFloats-method(): Cycle '", cycle, "' not found. Try one of: ", paste(knownCycles, collapse=', '), call.=FALSE)
                   }
                   else if ((cycle %in% knownCycles)){
-                      message("jaimie")
+                      stop("jaimie")
                   }
                   if (is.null(cex))
                       cex <- 0.5

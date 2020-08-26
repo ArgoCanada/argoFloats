@@ -112,14 +112,15 @@ computed with \code{\link[oce:colormap]{oce::colormap()}} applied to the bathyme
 d. \code{palette}, an optional logical value (with \code{TRUE} as the default)
 indicating whether to draw a depth-color palette to the right of the plot.
 }
-\item For \code{which="TS"},  an overall TS plot is created.  This
-only works if \code{x} is an object that was created by  \code{\link[=getProfiles]{getProfiles()}}.
-The scales for the plot can be altered by putting \code{Slim} and \code{Tlim}
-arguments in the \code{...} list; see the documentation for \code{\link[oce:plotTS]{oce::plotTS()}}
-for other arguments that can be provided. This plot has a default color code
-to represent bad vs good data. Bad data, flagged 3, 4, 6, and 7, is represented
-with red dots, and good data, flaged 1, 2, 5, and 8, is displayed in black dots.
-See reference one, section 3.2.1 for distinction between good and bad data.
+\item For \code{which="TS"},  an overall TS plot is created.  This only works if \code{x}
+is an object that was created by  \code{\link[=getProfiles]{getProfiles()}}. The scales for the plot
+can be altered by putting \code{Slim} and \code{Tlim} arguments in the \code{...} list. The
+\code{cycle} argument specifies which particular cycle to display; see the
+documentation for \code{\link[oce:plotTS]{oce::plotTS()}} for other arguments that can be provided.
+This plot has a default color code to represent bad vs good data. Bad data,
+flagged 3, 4, 6, and 7, is represented with red dots, and good data, flaged
+1, 2, 5, and 8, is displayed in black dots. See reference one, section 3.2.1
+for distinction between good and bad data.
 \item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{parameter} must be given, to name the
@@ -185,6 +186,15 @@ s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')}
+
+# Example 8: Temperature-Salinity plot for a single cycle
+\dontrun{
+data("index")
+index8 <- subset(index, id='1901584')
+profiles <- getProfiles(index8)
+argos <- readProfiles(profiles)
+clean <- applyQC(argos)
+plot(clean, which='TS', cycle=147)}
 
 }
 \references{
