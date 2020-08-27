@@ -30,4 +30,9 @@
     - Jaimie Harbin and Dan Kelley
     - Video
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/08/video08_qc_intro.R
- 
+
+* **argoFloats R 09: Advanced Quality control** (August 27, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video
+    - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/09/video09_qc_advanced.R
+  
