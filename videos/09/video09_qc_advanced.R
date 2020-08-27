@@ -32,6 +32,7 @@ par(mfrow=c(1,1))
 plot(clean, which="TS", eos="gsw")
 SA <- unlist(clean[["SA"]])
 CT <- unlist(clean[["CT"]])
+message("Please click a point on the graph that you think is bad")
 bad <- identify(SA, CT, n=1)
 SAbad <- SA[bad]
 CTbad <- CT[bad]
