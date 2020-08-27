@@ -1,4 +1,4 @@
-This video provides more detail on the analysis of quality control (QC) flags for Argo float data, and is a follow-up to video 08.
+This video, a followup to video 8, shows a sample of visual QC analysis.  First, we identify and isolate bad points on a TS plot.  Then, we contextualize the result in terms of the QC tests that were done on the archived Argo dataset.
 
 R language,oceanography,Dalhousie University,Argo float,computing,data processing,quality control,flags
 
