@@ -44,8 +44,8 @@ for (icycle in seq_along(cycles)) {
     w <- which(SAbad == cycle[["SA"]] & CTbad == cycle[["CT"]])
     if (length(w)) {
         message("found bad point SA=", SAbad, ", CT=", CTbad,
-                " in cycle ", icycle, " level ", w,
-                " pressure ", cycle[["pressure"]][w])
+		icycle, "-th cycle (i.e. cycle = ",cycle,")",
+		" at pressure ", cycle[["pressure"]][w])
         break
     }
 }
