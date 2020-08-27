@@ -28,11 +28,11 @@
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/07/video07_map_with_bathymetry.R
 * **argoFloats R 08: Introduction to Quality Control flags** (August 12, 2020)
     - Jaimie Harbin and Dan Kelley
-    - Video https://www.youtube.com/watch?v=nN4xs0wCnB4
+    - Video https://youtu.be/nN4xs0wCnB4
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/08/video08_qc_intro.R
 
 * **argoFloats R 09: Advanced Quality Control** (August 27, 2020)
     - Jaimie Harbin and Dan Kelley
-    - Video
+    - Video https://youtu.be/dYzEO5S2GBw
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/09/video09_qc_advanced.R
   
