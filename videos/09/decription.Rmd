@@ -1,4 +1,4 @@
-This video provides more detail on the analysis of quality control (QC) flags for Argo float data, and is a follow up to video 08.
+This video provides more detail on the analysis of quality control (QC) flags for Argo float data, and is a follow-up to video 08.
 
 R language,oceanography,Dalhousie University,Argo float,computing,data processing,quality control,flags
 
