@@ -182,7 +182,9 @@ Although Figure 3 provides a clear illustration of the need for QC testing and
 the handling of QC flags, it also illustrates limitations, for the plot on the
 right still contains several data points that are far from the overall data cloud,
 and therefore very likely to be erronous.  A good step at this point might be
-to find the individual cycles/profiles containing those stray points.
+to find the individual cycles/profiles containing those stray points. This type
+of analysis can be found at our Youtube page in video 08
+(https://youtu.be/nN4xs0wCnB4) and video 09 (https://youtu.be/dYzEO5S2GBw).
 
 **Exercise 3** : Use `applyQC()` on float with `id` 4900845 from exercise 1 and
 plot comparing TS diagrams. Do the plots look different? Use basic R functions
