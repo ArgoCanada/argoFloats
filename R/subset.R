@@ -284,8 +284,33 @@ setMethod(f="subset",
                       res <- x
                       argos <- x[['argos']]
                       ## Loop over all objects
+                      message("column=",paste(column, collapse=" "))
                       for (iargo in seq_along(argos)) {
                           argo <- argos[[iargo]]
+                          ## Handle the metadata slot
+                          for (name in names(argo@metadata)) {
+                              message("name=",name)
+                              argoFloatsDebug(debug, "subsetting metadata item named '", name, "'\n", sep="")
+                              ## Pass some things through directly.
+                              if (name %in% c("units", "filename", "flagScheme", "dataNamesOriginal")) 
+                                  next
+                              item <- argo@metadata[[name]]
+                              ## Handle things that are encoded as characters in a string,
+                              ## namely 'direction', 'juldQc', and 'positionQc'.
+                              if (is.character(item) && length(item) == 1) {
+                                  message("character")
+                                  res@data$argos[[iargo]]@metadata[[name]] <- paste(strsplit(item,"")[[1]][column],collapse="")
+                              } else if (is.vector(name)) {
+                                  message("vector")
+                                  res@data$argos[[iargo]]@metadata[[name]] <- item[column]
+                              } else if (is.matrix(name)) {
+                                  message("matrix")
+                                  res@data$argos[[iargo]]@metadata[[name]] <- item[, column, drop=FALSE]
+                              } else {
+                                  stop("cannot subset metadata item named '", name, "' because it is not a length-one string, a vector, or a matrix")
+                              }
+                          }
+                          ## Handle the data slot
                           for (name in names(argo@data)) {
                               item <- argo@data[[name]]
                               if (is.matrix(item)) {
