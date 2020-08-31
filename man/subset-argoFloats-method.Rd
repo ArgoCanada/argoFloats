@@ -14,7 +14,7 @@ indices of \code{x@data$index} to keep (example 1).}
 
 \item{...}{the first entry here must be either (a) a list named \code{circle},
 \code{rectangle}, \code{polygon}, \code{parameter}, \code{time}, \code{institution},
-\code{id},\code{ocean},\code{mode},\code{cycle}, \code{direction}, or \code{column}.
+\code{id},\code{ocean},\code{dataMode},\code{cycle}, \code{direction}, or \code{column}.
 (examples 2 through 8, and 10 through 14),
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
@@ -89,7 +89,7 @@ ocean. The permitted values are:
 \code{"P"} for Pacific Ocean Area, from 145 E to 70 W, and
 \code{"I"} for Indian Ocean Area, from 20 E to 145 E.
 See example 10.
-\item A character value named \code{mode}, equal to either \code{realtime} or \code{delayed},
+\item A character value named \code{dataMode}, equal to either \code{realtime} or \code{delayed},
 that selects whether to retain real-time data or delayed data.
 See example 11.
 \item An integer value named \code{cycle} that specifies which cycles are to be retained.
@@ -183,7 +183,7 @@ points(pacific[['longitude']], pacific[['latitude']], pch=20, col=3) }
 # Example 11: subset by delayed time
 \dontrun{
 data(indexBgc)
-index11 <- subset(index, mode='delayed')
+index11 <- subset(index, dataMode='delayed')
 profiles <- getProfiles(index11)
 argos <- readProfiles(profiles)
 oxygen <- unlist(argos[['oxygen']])

@@ -75,7 +75,7 @@
 #' `"I"` for Indian Ocean Area, from 20 E to 145 E.
 #' See example 10.
 #'
-#' 11. A character value named `mode`, equal to either `realtime` or `delayed`,
+#' 11. A character value named `dataMode`, equal to either `realtime` or `delayed`,
 #' that selects whether to retain real-time data or delayed data.
 #' See example 11.
 #'
@@ -110,7 +110,7 @@
 #'
 #' @param ... the first entry here must be either (a) a list named `circle`,
 #' `rectangle`, `polygon`, `parameter`, `time`, `institution`,
-#' `id`,`ocean`,`mode`,`cycle`, `direction`, or `column`.
+#' `id`,`ocean`,`dataMode`,`cycle`, `direction`, or `column`.
 #'  (examples 2 through 8, and 10 through 14),
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
@@ -190,7 +190,7 @@
 #' # Example 11: subset by delayed time
 #' \dontrun{
 #' data(indexBgc)
-#' index11 <- subset(index, mode='delayed')
+#' index11 <- subset(index, dataMode='delayed')
 #' profiles <- getProfiles(index11)
 #' argos <- readProfiles(profiles)
 #' oxygen <- unlist(argos[['oxygen']])
@@ -332,7 +332,7 @@ setMethod(f="subset",
               if (missing(subset)) {
                   #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
                   if (length(dots) == 0)
-                      stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'")
+                      stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', dataMode', 'cycle', or 'direction'")
                   if (length(dots) > 2)
                       stop("in subset,argoFloats-method() :\n  cannot give more than one method in the '...' argument", call.=FALSE)
                   N <- length(x@data$index[[1]]) # used in calculating percentages
@@ -506,17 +506,17 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=="mode") {
-                      argoFloatsDebug(debug, "subsetting by mode\n")
-                      mode <- dots[[1]]
-                      if (!is.character(mode))
-                          stop("in subset,argoFloats-method():\n  'mode' must be character value")
-                      if (mode == 'delayed') {
+                  } else if (dotsNames[1]=="dataMode") {
+                      argoFloatsDebug(debug, "subsetting by dataMode\n")
+                      dataMode <- dots[[1]]
+                      if (!is.character(dataMode))
+                          stop("in subset,argoFloats-method():\n  'dataMode' must be character value")
+                      if (dataMode == 'delayed') {
                           keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}D.*$", x[["file"]])
-                      } else if (mode == 'realtime') {
+                      } else if (dataMode == 'realtime') {
                           keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}R.*$", x[["file"]])
                       } else {
-                          stop("in subset,argoFloats-method():\n  'mode' must be either 'realtime' or 'delayed', not '", mode, "'")
+                          stop("in subset,argoFloats-method():\n  'dataMode' must be either 'realtime' or 'delayed', not '", dataMode, "'")
                       }
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
@@ -557,7 +557,7 @@ setMethod(f="subset",
                       }
                       x@data$index <- x@data$index[keep, ]
                   } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for indices is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'id', 'ocean', 'mode', 'cycle', or 'direction'", call.=FALSE)
+                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for indices is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'id', 'ocean', 'dataMode', 'cycle', or 'direction'", call.=FALSE)
                   }
                   }
               } else {
