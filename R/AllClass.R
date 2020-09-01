@@ -292,7 +292,7 @@ setMethod(f="initialize",
 #'        but it should not be used for items that are not level-specific, such
 #'        as the various `"HISTORY_*"` elements, which apply to a dataset, not to
 #'        a level.
-#'     7. Otherwise, an error is reported.
+#'     7. Otherwise, NULL is reported.
 #' 5. Otherwise, an error is reported.
 #'
 #' @param x an [`argoFloats-class`] object.
