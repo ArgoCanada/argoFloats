@@ -272,16 +272,18 @@ setMethod(f="initialize",
 #'     4. If `i` is `"length"`, the number of local file names that were downloaded
 #'        by [getProfiles()] is returned.
 #' 4. Otherwise, if `type` is `"argos"`, i.e. if `x` was created with [readProfiles()], then:
-#'     1. If `i` is equal to `"argos"`, then a list holding the [oce::argo-class]
-#'        objects stored within `x` is returned.
-#'     2. If `i` is numeric and `j` is unspecified, then return the argo objects identified
+#'     1. If `i` is equal to `"argos"`, and `j` is unspecified, then a list
+#'        holding the [oce::argo-class] objects stored within `x` is returned.
+#'     2. If `i` is equal to `"argos"`, and `j` is provided, then the associated
+#'        [oce::argo-class] object is returned.
+#'     3. If `i` is numeric and `j` is unspecified, then return the argo objects identified
 #'        by using `i` as an index.
-#'     3. If `i` is the name of an item in the `metadata` slot, then that item
+#'     4. If `i` is the name of an item in the `metadata` slot, then that item
 #'        is returned. There is only choice, `"type"`.
-#'     4. Otherwise, if `i` is the name of an item in the `data` slot, then that item
+#'     5. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned as a named list.  (At present, there is only one choice: `"argos"`.)
-#'     5. Otherwise, if `i` is `"length"` then the number of oce-type argo objects in `x` is returned.
-#'     6. Otherwise, if `i` is a character value then it is taken to be
+#'     6. Otherwise, if `i` is `"length"` then the number of oce-type argo objects in `x` is returned.
+#'     7. Otherwise, if `i` is a character value then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
 #'        information with one (unnamed) item per profile.  If `j` is provided
@@ -292,7 +294,7 @@ setMethod(f="initialize",
 #'        but it should not be used for items that are not level-specific, such
 #'        as the various `"HISTORY_*"` elements, which apply to a dataset, not to
 #'        a level.
-#'     7. Otherwise, NULL is reported.
+#'     8. Otherwise, NULL is reported.
 #' 5. Otherwise, an error is reported.
 #'
 #' @param x an [`argoFloats-class`] object.
@@ -387,7 +389,7 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
-                      return(x@data[[i]])
+                      return(if (missing(j)) x@data[[i]] else x@data[[i]][[j]])
                   } else if (length(i) == 1 && i == "cycle") {
                       cycle <- gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", unlist(x[['filename']]))
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
