@@ -289,7 +289,7 @@ setMethod(f="subset",
                           argo <- argos[[iargo]]
                           ## Handle the metadata slot
                           for (name in names(argo@metadata)) {
-                              message("name=",name)
+                              ##message("name=",name)
                               argoFloatsDebug(debug, "subsetting metadata item named '", name, "'\n", sep="")
                               ## Pass some things through directly.
                               if (name %in% c("units", "filename", "flagScheme", "dataNamesOriginal"))
@@ -298,7 +298,7 @@ setMethod(f="subset",
                               ## Handle things that are encoded as characters in a string,
                               ## namely 'direction', 'juldQC', and 'positionQC'.
                               if (name == "direction" || grepl("QC$", name)) {
-                                  message("  -- character")
+                                 ## message("  -- character")
                                   res@data$argos[[iargo]]@metadata[[name]] <- paste(strsplit(item,"")[[1]][column],collapse="")
                               } else if (is.list(item)) {
                                   ##message("list")
@@ -317,6 +317,13 @@ setMethod(f="subset",
                               } else if (is.matrix(name)) {
                                   ##message("matrix")
                                   res@data$argos[[iargo]]@metadata[[name]] <- item[, column, drop=FALSE]
+                              } else if (is.array(name)) {
+                                  argoFloatsDebug(debug, "name=", name, " has dim ", paste(dim(res@metadata[[name]]), collapse=" "), "\n")
+                                  if (length(dim(res@metadata[[name]])) <= 3) {
+                                      res@metadata[[name]] <- item[, , keep, drop=FALSE]
+                                  } else {
+                                      warning("not subsetting \"", name, "\" in metadata, because it is an array of rank > 3")
+                                  }
                               } else {
                                   stop("cannot subset metadata item named '", name, "' because it is not a length-one string, a vector, or a matrix")
                               }
