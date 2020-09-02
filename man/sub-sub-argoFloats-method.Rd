@@ -91,8 +91,10 @@ by \code{\link[=getProfiles]{getProfiles()}} is returned.
 }
 \item Otherwise, if \code{type} is \code{"argos"}, i.e. if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then:
 \enumerate{
-\item If \code{i} is equal to \code{"argos"}, then a list holding the \link[oce:argo-class]{oce::argo}
-objects stored within \code{x} is returned.
+\item If \code{i} is equal to \code{"argos"}, and \code{j} is unspecified, then a list
+holding the \link[oce:argo-class]{oce::argo} objects stored within \code{x} is returned.
+\item If \code{i} is equal to \code{"argos"}, and \code{j} is provided, then the associated
+\link[oce:argo-class]{oce::argo} object is returned.
 \item If \code{i} is numeric and \code{j} is unspecified, then return the argo objects identified
 by using \code{i} as an index.
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
@@ -111,7 +113,7 @@ involving items that only occur once per profile, such as \code{"longitude"},
 but it should not be used for items that are not level-specific, such
 as the various \code{"HISTORY_*"} elements, which apply to a dataset, not to
 a level.
-\item Otherwise, an error is reported.
+\item Otherwise, NULL is reported.
 }
 \item Otherwise, an error is reported.
 }
