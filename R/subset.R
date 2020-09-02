@@ -296,7 +296,7 @@ setMethod(f="subset",
                                   next
                               item <- argo@metadata[[name]]
                               ## Handle things that are encoded as characters in a string,
-                              ## namely 'direction', 'juldQc', and 'positionQc'.
+                              ## namely 'direction', 'juldQC', and 'positionQC'.
                               if (name == "direction" || grepl("QC$", name)) {
                                   message("  -- character")
                                   res@data$argos[[iargo]]@metadata[[name]] <- paste(strsplit(item,"")[[1]][column],collapse="")
