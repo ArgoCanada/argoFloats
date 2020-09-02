@@ -276,7 +276,7 @@ setMethod(f="subset",
                   if (length(dotsNames) == 0)
                       stop("in subset,argoFloats-method() :\n  must give 'column' or 'cycle' argument", call.=FALSE)
                   if (dotsNames[1] == "column") {
-                      argoFloatsDebug(debug, "subsetting by column\n")
+                      argoFloatsDebug(debug, "subsetting by column ", column, "\n")
                       column <- dots[[1]]
                       ## Loop over all objects within the data, and within that loop look at data within the object,
                       ## and for each of them, if its a vactor subset according to column and if its a matrix
@@ -284,8 +284,51 @@ setMethod(f="subset",
                       res <- x
                       argos <- x[['argos']]
                       ## Loop over all objects
+                      ##message("column=",paste(column, collapse=" "))
                       for (iargo in seq_along(argos)) {
                           argo <- argos[[iargo]]
+                          ## Handle the metadata slot
+                          for (name in names(argo@metadata)) {
+                              ##message("name=",name)
+                              argoFloatsDebug(debug, "subsetting metadata item named '", name, "'\n", sep="")
+                              ## Pass some things through directly.
+                              if (name %in% c("units", "filename", "flagScheme", "dataNamesOriginal"))
+                                  next
+                              item <- argo@metadata[[name]]
+                              ## Handle things that are encoded as characters in a string,
+                              ## namely 'direction', 'juldQC', and 'positionQC'.
+                              if (name == "direction" || grepl("QC$", name)) {
+                                 ## message("  -- character")
+                                  res@data$argos[[iargo]]@metadata[[name]] <- paste(strsplit(item,"")[[1]][column],collapse="")
+                              } else if (is.list(item)) {
+                                  ##message("list")
+                                  for (l in seq_along(item)) {
+                                      ##print(dim(item[[l]]))
+                                      D <- dim(item[[l]])
+                                      if (column > D[2])
+                                          stop("cannot access column ", column, " of metadata item \"", name, "\" because its dimension is ", paste(D, collapse=" "))
+                                      ##cat("BEFORE:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
+                                      res@data$argos[[iargo]]@metadata[[name]][[l]] <- item[[l]][, column, drop=FALSE]
+                                      ##cat("AFTER:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
+                                  }
+                              } else if (is.vector(name)) {
+                                  ##message("vector")
+                                  res@data$argos[[iargo]]@metadata[[name]] <- item[column]
+                              } else if (is.matrix(name)) {
+                                  ##message("matrix")
+                                  res@data$argos[[iargo]]@metadata[[name]] <- item[, column, drop=FALSE]
+                              } else if (is.array(name)) {
+                                  argoFloatsDebug(debug, "name=", name, " has dim ", paste(dim(res@metadata[[name]]), collapse=" "), "\n")
+                                  if (length(dim(res@metadata[[name]])) <= 3) {
+                                      res@metadata[[name]] <- item[, , keep, drop=FALSE]
+                                  } else {
+                                      warning("not subsetting \"", name, "\" in metadata, because it is an array of rank > 3")
+                                  }
+                              } else {
+                                  stop("cannot subset metadata item named '", name, "' because it is not a length-one string, a vector, or a matrix")
+                              }
+                          }
+                          ## Handle the data slot
                           for (name in names(argo@data)) {
                               item <- argo@data[[name]]
                               if (is.matrix(item)) {
