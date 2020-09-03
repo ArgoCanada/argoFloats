@@ -10,6 +10,7 @@ pinlon <- function(lon)
 pinusr <- function(usr)
     c(pinlon(usr[1]), pinlon(usr[2]), pinlat(usr[3]), pinlat(usr[4]))
 
+#' @importFrom graphics rect
 argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 {
     ## Low-lwvel axis plot, which limits axes to -180,180 and -90,90.
@@ -189,7 +190,7 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' profiles <- getProfiles(s)
 #' argos <- readProfiles(profiles)
 #' plot(argos, which='QC', parameter='temperature')}
-#' 
+#'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
@@ -519,7 +520,7 @@ setMethod(f="plot",
                   if (nid != 1)
                       stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single id", call.=FALSE)
                   dots <- list(...)
-                  knownParameters <- names(x[[1]]@metadata$flags)
+                  knownParameters <- names(x[[1]]@metadata$flags) # FIXME: is it possible that later cycles have different flags?
                   parameter <- dots$parameter
                   if (is.null(parameter))
                       stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
@@ -538,11 +539,12 @@ setMethod(f="plot",
                       m <- unlist(lapply(x[["argos"]], meanf))
                       par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
                       if (any(is.finite(q))) {
-                          oce::oce.plot.ts(time,q, ylab=paste(parameter, "% Good"), drawTimeRange = FALSE, type='l')
-                          points(time, q, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=1)
+                          o <- order(time) # cycles are not time-ordered in index files
+                          oce::oce.plot.ts(time[o], q[o], ylab=paste(parameter, "% Good"), drawTimeRange = FALSE, type='l')
+                          points(time[o], q[o], col=ifelse(q[o] < 50, 'red', 'black'), pch=20, cex=1)
                           abline(h=50, col='red', lty='dashed')
-                          oce::oce.plot.ts(time, m, ylab=paste(parameter, "Mean"), drawTimeRange = FALSE, type='l')
-                          points(time, m, col=ifelse(q < 50, 'red', 'black'), pch=20, cex=1)
+                          oce::oce.plot.ts(time[o], m[o], ylab=paste(parameter, "Mean"), drawTimeRange = FALSE, type='l')
+                          points(time[o], m[o], col=ifelse(q[o] < 50, 'red', 'black'), pch=20, cex=1)
                       } else {
                           plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
                           box()
