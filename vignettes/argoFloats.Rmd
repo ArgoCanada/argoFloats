@@ -57,6 +57,7 @@ argoFloats R 06: trajectory plot, colour coded by time | Jaimie Harbin & Dan Kel
 argoFloats R 07: maps with bathymetry | Jaimie Harbin & Dan Kelley | June 4, 2020 | https://youtu.be/Lc32MTMCbbI
 argoFloats R 08: Introduction to quality control flags | Jaimie Harbin & Dan Kelley | August 12, 2020 | https://www.youtube.com/watch?v=nN4xs0wCnB4
 argoFloats R 09: Advanced Quality Control | Dan Kelley & Jaimie Harbin | August 27, 2020 | https://youtu.be/dYzEO5S2GBw
+argoFloats R 10: Using adjusted data streams | Dan Kelley & Jaimie Harbin | September 3, 2020 | https://youtu.be/AuauWeUnopc
 
 
 # Preliminary Setup
