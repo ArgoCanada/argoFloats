@@ -38,6 +38,6 @@
  
  * **argoFloats R 10: Using adjusted data streams** (September 3, 2020)
     - Jaimie Harbin and Dan Kelley
-    - Video
+    - Video https://youtu.be/AuauWeUnopc
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/10/video10_useAdjusted.R
    
