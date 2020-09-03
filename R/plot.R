@@ -2,6 +2,33 @@
 
 geographical <- TRUE
 
+## Utility functions to trim lat and lon.
+pinlat <- function(lat)
+    ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
+pinlon <- function(lon)
+    ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
+pinusr <- function(usr)
+    c(pinlon(usr[1]), pinlon(usr[2]), pinlat(usr[3]), pinlat(usr[4]))
+
+argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
+{
+    ## Low-lwvel axis plot, which limits axes to -180,180 and -90,90.
+    usr <- pinusr(par("usr"))
+    xat <- pretty(usr[1:2], 10)
+    xat <- xat[usr[1] < xat & xat < usr[2]]
+    xlabels <- paste(abs(xat), ifelse(xat < 0, "W", ifelse(xat > 0, "E", "")), sep="")
+    yat <- pretty(usr[3:4], 10)
+    yat <- yat[usr[3] < yat & yat < usr[4]]
+    ylabels <- paste(abs(yat), ifelse(yat < 0, "S", ifelse(yat > 0, "N", "")), sep="")
+    if (axes) {
+        axis(1, pos=pinlat(usr[3]), at=xat, labels=xlabels, lwd=1)
+        axis(2, pos=pinlon(usr[1]), at=yat, labels=ylabels, lwd=1)
+    }
+    if (box) {
+        rect(pinlon(usr[1]), pinlat(usr[3]), pinlon(usr[2]), pinlat(usr[4]), lwd=1)
+    }
+ }
+
 #' Plot an argoFloats object
 #'
 #' The action depends on the `type` of the object, and
@@ -264,14 +291,14 @@ setMethod(f="plot",
                               argoFloatsDebug(debug, "  temporarily set par(mar=c(", paste(par("mar"), collapse=", "), ")) to allow for the palette\n", sep="")
                           }
                           if (!is.null(xlim) && !is.null(ylim)) {
+                              message("DANNY")
                               argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
                                               "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
                                               "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
                                               "    xlim=c(", paste(ylim, collapse=","), ")\n",
                                               "    ylim=c(", paste(ylim, collapse=","), ")\n",
                                               "    asp=", asp, "\n", sep="")
-                              plot.window(extendrange(longitude), extendrange(latitude),
-                                          xlim=xlim, ylim=ylim,
+                              plot.window(xlim=xlim, ylim=ylim,
                                           xaxs="i", yaxs="i",
                                           asp=asp,
                                           xlab=xlab, ylab=ylab)
@@ -280,12 +307,13 @@ setMethod(f="plot",
                                               "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
                                               "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
                                               "    asp=", asp, "\n", sep="")
-                              plot.window(extendrange(longitude), extendrange(latitude),
+                              plot.window(pinlon(extendrange(longitude)), pinlat(extendrange(latitude)),
                                           xaxs="i", yaxs="i",
                                           asp=asp,
                                           xlab=xlab, ylab=ylab)
                           }
                           if (bathymetry$palette) {
+                              message("setting mar to ", paste(tmpmar, collapse=" "))
                               par(mar=tmpmar)
                           }
                           usr <- par("usr")
@@ -357,7 +385,7 @@ setMethod(f="plot",
                                           "    xlim=c(", paste(ylim, collapse=","), ")\n",
                                           "    ylim=c(", paste(ylim, collapse=","), ")\n",
                                           "    asp=", asp, "\n", sep="")
-                          plot(extendrange(longitude), extendrange(latitude),
+                          plot(pinlon(extendrange(longitude)), pinlat(extendrange(latitude)),
                                xlim=xlim, ylim=ylim,
                                xaxs="i", yaxs="i",
                                asp=asp,
@@ -367,24 +395,16 @@ setMethod(f="plot",
                                           "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
                                           "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
                                           "    asp=", asp, "\n", sep="")
-                          plot(extendrange(longitude), extendrange(latitude),
+                          plot(pinlon(extendrange(longitude)), pinlat(extendrange(latitude)),
                                xaxs="i", yaxs="i",
                                asp=asp,
                                xlab=xlab, ylab=ylab, type="n", axes=FALSE)
                       }
                       argoFloatsDebug(debug, "after plot(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
-                      xaxp <- par("xaxp")
-                      xat <- seq(xaxp[1], xaxp[2], length.out=xaxp[3]+1)
-                      xlabel <- paste(abs(xat), ifelse(xat < 0, "W", ifelse(xat > 0, "E", "")), sep="")
-                      axis(1, at=xat, labels=xlabel)
-                      yaxp <- par("yaxp")
-                      yat <- seq(yaxp[1], yaxp[2], length.out=yaxp[3]+1)
-                      ylabel <- paste(abs(yat), ifelse(yat < 0, "S", ifelse(yat > 0, "N", "")), sep="")
-                      axis(2, at=yat, labels=ylabel)
-                      box()
+                      argoFloatsMapAxes()
                   } else {
                       if (!is.null(xlim) && !is.null(ylim)) {
-                          plot(extendrange(longitude), extendrange(latitude),
+                          plot(pinlon(extendrange(longitude)), pinlat(extendrange(latitude)),
                                xlim=xlim, ylim=ylim,
                                xaxs="i", yaxs="i",
                                asp=asp,
@@ -396,10 +416,12 @@ setMethod(f="plot",
                                xlab=xlab, ylab=ylab, type="n")
                       }
                   }
-                  if (drawBathymetry)
+                  if (drawBathymetry) {
                       oce::imagep(as.numeric(rownames(bathy)),
                                   as.numeric(colnames(bathy)),
                                   -bathy, colormap=bathymetry$colormap, add=TRUE)
+                      argoFloatsMapAxes(axes=FALSE) # clean up image by redrawing box
+                  }
                   points(unlist(longitude), unlist(latitude),
                          cex=if (is.null(cex)) 1 else cex,
                          col=if (is.null(col)) "white" else col,
@@ -411,11 +433,12 @@ setMethod(f="plot",
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
                   if (ocedataIsInstalled) {
                       usr <- par("usr")
-                      l <- oce::geodDist(usr[1], usr[3], usr[1], usr[4]) # length [km] on left margin
-                      r <- oce::geodDist(usr[2], usr[3], usr[2], usr[4]) # length [km] on right margin
-                      b <- oce::geodDist(usr[1], usr[1], usr[2], usr[1]) # length [km] on bottom margin
-                      t <- oce::geodDist(usr[1], usr[4], usr[2], usr[4]) # length [km] on top margin
-                      mapSpan <- max(l, r, b, t) # largest length [km]
+                      mapSpan <- diff(range(latitude, na.rm=TRUE)) * 111 # km
+                      ##? l <- oce::geodDist(pinlon(usr[1]), pinlat(usr[3]), pinlon(usr[1]), pinlat(usr[4]))
+                      ##? r <- oce::geodDist(pinlon(usr[2]), pinlat(usr[3]), pinlon(usr[2]), pinlat(usr[4]))
+                      ##? b <- oce::geodDist(pinlon(usr[1]), pinlat(usr[1]), pinlon(usr[2]), pinlat(usr[1]))
+                      ##? t <- oce::geodDist(pinlon(usr[1]), pinlat(usr[4]), pinlon(usr[2]), pinlat(usr[4]))
+                      ##? mapSpan <- max(l, r, b, t) # largest length [km]
                       C <- 2 * 3.14 * 6.4e3 # circumferance of earth [km]
                       argoFloatsDebug(debug, "mapSpan=", mapSpan, ", C=", C, "\n")
                       if (mapSpan < 500) {
