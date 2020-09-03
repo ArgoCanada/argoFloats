@@ -2,6 +2,7 @@
 library(argoFloats)
 library(ocedata)
 library(oce)
+if (!interactive()) png("227_%d.png")
 par(mar=c(3,3,1,3))
 data("coastlineWorldMedium")
 ai <- getIndex(age=10) # no need to download very latest data
@@ -12,4 +13,6 @@ plot(subset)
 plot(subset, bathymetry=FALSE)
 plot(subset, xlim=c(0, 50), ylim=c(0,90))
 plot(subset, xlim=c(0, 50), ylim=c(0,90),bathymetry=FALSE)
+if (!interactive()) dev.off()
+
 
