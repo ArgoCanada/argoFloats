@@ -35,4 +35,9 @@
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/dYzEO5S2GBw
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/09/video09_qc_advanced.R
-  
+ 
+ * **argoFloats R 10: Using adjusted data streams** (September 3, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video
+    - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/10/video10_useAdjusted.R
+   

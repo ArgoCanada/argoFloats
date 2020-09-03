@@ -14,3 +14,4 @@ plot(rawOxygen, rawPressure,
 points(adjustedOxygen, adjustedPressure,
        pch=3, col=2)
 legend("bottomright", pch=c(1,3), col=c(1,2), c("Raw", "Adjusted"))
+
