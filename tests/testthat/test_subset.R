@@ -108,7 +108,8 @@ test_that("subset by column",
                   s <- expect_message(subset(subset(i, id="5903889"), cycle="074"),
                                       "Kept 223 profiles")
                   p <- expect_silent(getProfiles(s))
-                  a <- expect_silent(readProfiles(p))
+                  a <- expect_warning(readProfiles(p),
+                                      "Of 1 profiles read, 1 has")
                   a1 <- expect_silent(subset(a, column=1))
                   a2 <- expect_silent(subset(a, column=2))
                   oxygen <- a[["oxygen"]][[1]]

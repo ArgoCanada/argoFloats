@@ -68,13 +68,13 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #'           indicating whether to draw a depth-color palette to the right of the plot.
 #'
 #' * For `which="TS"`,  an overall TS plot is created.  This only works if `x`
-#' is an object that was created by  [getProfiles()]. The scales for the plot
+#' is an object that was created by [readProfiles()]. The scales for the plot
 #' can be altered by putting `Slim` and `Tlim` arguments in the `...` list; see
 #' the documentation for [oce::plotTS()] for other arguments that can be
 #' provided. This plot has a default color code to represent bad vs good data.
 #' Bad data, flagged 3, 4, 6, and 7, is represented with red dots, and good
-#' data, flaged 1, 2, 5, and 8, is displayed in black dots. See reference one,
-#' section 3.2.1 for distinction between good and bad data.
+#' data, flaged 1, 2, 5, and 8, is displayed in black dots. See reference
+#' 1 (section 3.2.1) for the distinction between good and bad data.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
