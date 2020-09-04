@@ -89,7 +89,7 @@ ui <- fluidPage(headerPanel(title="", windowTitle=title),
                                                       choices=c("Core"="core", "Deep"="deep", "BGC"="bgc"),
                                                       selected=c("core", "deep", "bgc"),
                                                       inline=TRUE))),
-                fluidRow(column(2, textInput("id", "Float ID", value="All")),
+                fluidRow(column(2, textInput("id", "Float ID", value="")),
                          column(2, selectInput("focus", "Focus",
                                                choices=c("All"="all", "Single"="single"),
                                                selected="all")),
@@ -162,7 +162,7 @@ server <- function(input, output, session)
                          updateTextInput(session, "focus", value="all")
                      } else {
                          if (input$focus == "all")
-                             showNotification("Since you entered a float ID, you might want to change Focus to \"Single\"", type="message", duration=10)
+                             showNotification(paste0("Since you entered a float ID (", input$id, "), you might want to change Focus to \"Single\""), type="message", duration=10)
                          state$focusID <<- input$id
                      }
                  }
