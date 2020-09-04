@@ -33,7 +33,7 @@ startTime <- as.POSIXlt(endTime - 21*86400) # default to 21d, which will usually
 
 ## Get data
 if (file.exists("argo.rda")) {
-    msg("using data cached in \"argo.rda\"\n")
+    msg("Using data cached in \"argo.rda\"\n")
     load("argo.rda")
 } else {
     i <- getIndex()
@@ -124,10 +124,12 @@ server <- function(input, output, session)
     colours <- list(core="yellow", bgc="green", deep="purple")
 
     ## Observers
-    output$info <- renderText({
-        if (sum(visible)) {
-            x <- input$hover$x
-            y <- input$hover$y
+    output$info <- renderText({ # show location.  If lat range is under 90deg, also show nearest float within 100km
+        x <- input$hover$x
+        y <- input$hover$y
+        lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
+        latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
+        if (diff(range(state$ylim)) < 90 && sum(visible)) {
             fac <- 1 / cos(y * pi / 180)^2 # for deltaLon^2 compared with deltaLat^2
             dist2 <- ifelse(visible, fac*(x - argo$longitude)^2 + (y - argo$latitude)^2, 1000)
             i <- which.min(dist2)
@@ -135,8 +137,6 @@ server <- function(input, output, session)
             ID <- argo$id[i]
             cycle <- argo$cycle[i]
             time <- argo$time[i]
-            lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
-            latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
             ##paste(sprintf("%.3fN %.3fE id=%s cycle=%s", input$hover$x, input$hover$y, ID, cycle))
             if (length(dist) && dist < 100) {
                 sprintf("%s %s, %.0f km from ID %s, cycle %s\n%s", lonstring, latstring, dist, ID, cycle, format(time, "%Y-%m-%d"))
@@ -144,7 +144,7 @@ server <- function(input, output, session)
                 sprintf("%s %s", lonstring, latstring)
             }
         } else {
-            "No floats in view"
+            sprintf("%s %s", lonstring, latstring)
         }
     })
 
