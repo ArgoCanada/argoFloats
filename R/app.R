@@ -1,6 +1,5 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 library(oce)
-library(argoFloats)
 library(shiny)
 
 ## Convenience functions that print to the R console, mainly useful during development.
@@ -36,14 +35,14 @@ if (file.exists("argo.rda")) {
     msg("Using data cached in \"argo.rda\"\n")
     load("argo.rda")
 } else {
-    i <- getIndex()
+    i <- argoFloats::getIndex()
     n <- i[["length"]]
     id <- i[["id"]]
     cycle <- i[["cycle"]]
     lon <- i[["longitude"]]
     lat <- i[["latitude"]]
     n <- length(id)
-    iBGC <- getIndex("bgc")
+    iBGC <- argoFloats::getIndex("bgc")
     idBGC <- unique(iBGC[["id"]])
     type <- rep("core", n)
     type[id %in% idBGC] <- "bgc"
