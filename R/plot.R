@@ -523,7 +523,7 @@ setMethod(f="plot",
                   if (is.null(mar))
                       mar <- par("mar") # c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
                   par(mar=mar, mgp=mgp)
-                  if (col == "flags") {
+                  if (col[1] == "flags") {
                       salinityFlag <- unlist(x[["salinityFlag"]])
                       temperatureFlag <- unlist(x[["temperatureFlag"]])
                       goodT <- temperatureFlag %in% c(1, 2, 5, 8)
