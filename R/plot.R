@@ -68,13 +68,15 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #'           indicating whether to draw a depth-color palette to the right of the plot.
 #'
 #' * For `which="TS"`,  an overall TS plot is created.  This only works if `x`
-#' is an object that was created by [readProfiles()]. The scales for the plot
+#' is an [argoFloats-class] object of type `"argos"`, i.e. if it was
+#' created by [readProfiles()]. The scales for the plot
 #' can be altered by putting `Slim` and `Tlim` arguments in the `...` list; see
 #' the documentation for [oce::plotTS()] for other arguments that can be
 #' provided. This plot has a default color code to represent bad vs good data.
-#' Bad data, flagged 3, 4, 6, and 7, is represented with red dots, and good
-#' data, flaged 1, 2, 5, and 8, is displayed in black dots. See reference
-#' 1 (section 3.2.1) for the distinction between good and bad data.
+#' This scheme comes from section 3.2.1 of reference 1, in which
+#' data are considered bad if flagged 3, 4, 6, or 7, and good
+#' if flaged 1, 2, 5, or 8; good points are in black and bad ones are in
+#' red.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
@@ -111,8 +113,8 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' value that depends on the value of `which`.
 #'
 #' @param col the colour to be used for plot symbols, or `NULL`, to get an value
-#' that depends on the value of `which`.
-#' (See [par()] for more on specifying `pch`.)
+#' that depends on the value of `which`.  If `which="TS"`, then the
+#' `TScontrol` argument takes precedence over `col`.
 #'
 #' @param bg the colour to be used for plot symbol interior, for `pch`
 #' values that distinguish between the interior of the symbol and the
@@ -133,6 +135,14 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' @param eos a character value indicating the equation of state to use
 #' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
 #' see [oce::plotTS()].
+#'
+#' @param TScontrol a list that permits particular control of the `which="TS"`
+#' case. It is ignored for the other cases.  If `TScontrol` contains a
+#' vector element named `colByCycle`, then the `col` argument will be ignored,
+#' and instead individual cycles will be coloured as dictated by successive
+#' elements in `colByCycle`.  Note that `colByCycle` will be repeated to
+#' match the number of cycles, so e.g. using `TScontrol=list(colByCycle=1:2)`
+#' will colour alternate cycles with black and red.
 #'
 #' @param debug an integer specifying the level of debugging.
 #'
@@ -214,6 +224,7 @@ setMethod(f="plot",
                               cex=NULL, col=NULL, pch=NULL, bg=NULL,
                               mar=NULL, mgp=NULL,
                               eos="gsw",
+                              TScontrol=list(),
                               debug=0,
                               ...)
           {
@@ -486,12 +497,22 @@ setMethod(f="plot",
                                      longitude=longitude)
                   if (is.null(cex))
                       cex <- 0.5
-                  if (is.null(col)) {
-                      if (which == "TS") {
-                          col <- "flags"
-                       } else {
-                          col <- rgb(0, 0, 1, 0.5)
-                       }
+                  if (is.null(TScontrol$colByCycle)) {
+                      if (is.null(col)) {
+                          if (which == "TS") {
+                              col <- "flags"
+                          } else {
+                              col <- rgb(0, 0, 1, 0.5)
+                          }
+                      }
+                  } else {
+                      ## Ignore 'col' if TScontrol contains 'colByCycle'
+                      colByCycle <- TScontrol$colByCycle
+                      cycle <- unlist(x[["cycle", debug=debug]])
+                      lengths <- sapply(x[['argos']], function(cc) length(cc[["pressure"]]))
+                      ## Increase the col length, so e.g. TScontrol=list(colByCycle=1:2) will alternate colours
+                      colByCycle <- rep(colByCycle, length.out=length(cycle))
+                      col <- unlist(lapply(seq_along(cycle), function(i) rep(colByCycle[i], lengths[i])))
                   }
                   if (is.null(pch))
                       pch <- 20

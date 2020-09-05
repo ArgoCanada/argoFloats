@@ -19,6 +19,7 @@
   mar = NULL,
   mgp = NULL,
   eos = "gsw",
+  TScontrol = list(),
   debug = 0,
   ...
 )
@@ -46,8 +47,8 @@ depending on the value of \code{which}. Note that \code{xlab} is not obeyed if
 value that depends on the value of \code{which}.}
 
 \item{col}{the colour to be used for plot symbols, or \code{NULL}, to get an value
-that depends on the value of \code{which}.
-(See \code{\link[=par]{par()}} for more on specifying \code{pch}.)}
+that depends on the value of \code{which}.  If \code{which="TS"}, then the
+\code{TScontrol} argument takes precedence over \code{col}.}
 
 \item{pch}{an integer or code indicating the type of plot symbol, or \code{NULL},
 to get a value that depends on the value of \code{which}.
@@ -68,6 +69,14 @@ axis labels (see \code{\link[=par]{par()}} for details), or \code{NULL}, which m
 \item{eos}{a character value indicating the equation of state to use
 if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
 see \code{\link[oce:plotTS]{oce::plotTS()}}.}
+
+\item{TScontrol}{a list that permits particular control of the \code{which="TS"}
+case. It is ignored for the other cases.  If \code{TScontrol} contains a
+vector element named \code{colByCycle}, then the \code{col} argument will be ignored,
+and instead individual cycles will be coloured as dictated by successive
+elements in \code{colByCycle}.  Note that \code{colByCycle} will be repeated to
+match the number of cycles, so e.g. using \code{TScontrol=list(colByCycle=1:2)}
+will colour alternate cycles with black and red.}
 
 \item{debug}{an integer specifying the level of debugging.}
 
@@ -113,13 +122,15 @@ d. \code{palette}, an optional logical value (with \code{TRUE} as the default)
 indicating whether to draw a depth-color palette to the right of the plot.
 }
 \item For \code{which="TS"},  an overall TS plot is created.  This only works if \code{x}
-is an object that was created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
+is an \linkS4class{argoFloats} object of type \code{"argos"}, i.e. if it was
+created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
 can be altered by putting \code{Slim} and \code{Tlim} arguments in the \code{...} list; see
 the documentation for \code{\link[oce:plotTS]{oce::plotTS()}} for other arguments that can be
 provided. This plot has a default color code to represent bad vs good data.
-Bad data, flagged 3, 4, 6, and 7, is represented with red dots, and good
-data, flaged 1, 2, 5, and 8, is displayed in black dots. See reference
-1 (section 3.2.1) for the distinction between good and bad data.
+This scheme comes from section 3.2.1 of reference 1, in which
+data are considered bad if flagged 3, 4, 6, or 7, and good
+if flaged 1, 2, 5, or 8; good points are in black and bad ones are in
+red.
 \item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{parameter} must be given, to name the
