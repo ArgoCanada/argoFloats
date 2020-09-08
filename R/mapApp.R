@@ -123,7 +123,11 @@ serverMapApp <- function(input, output, session) {
     ## Depending on whether 'hires' selected, 'topo' wil be one of the following two version:
     data("topoWorld", package = "oce", envir = environment())
     topoWorld <- get("topoWorld")
-    
+    if (file.exists("topoWorldFine.rda")) {
+        load("topoWorldFine.rda")
+    } else {
+        topoWorldFine <- topoWorld
+    }
     ## Get data.  Since this is slow, we will cache locally into a file named argo.rda, and use that if
     ## it is young enough.  The FALSE part of this loop constructs and saves such a file.
     if (file.exists("argo.rda") &&
@@ -170,7 +174,7 @@ serverMapApp <- function(input, output, session) {
     }
     ## vector indicating whether to keep any given cycle.
     visible <- rep(TRUE, length(argo$lon))
-    
+
     ## Prevent off-world points
     pinlat <- function(lat)
         ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
@@ -189,7 +193,7 @@ serverMapApp <- function(input, output, session) {
         )
         text(0.5, 0.5, msg, col = 2, font = 2)
     }
-    
+
     output$info <-
         shiny::renderText({
             # show location.  If lat range is under 90deg, also show nearest float within 100km
@@ -227,35 +231,35 @@ serverMapApp <- function(input, output, session) {
                 sprintf("%s %s", lonstring, latstring)
             }
         })
-    
+
     shiny::observeEvent(input$goE,
                         {
                             dx <- diff(state$xlim) # present longitude span
                             state$xlim <<-
                                 pinlat(state$xlim + dx / 4)
                         })
-    
+
     shiny::observeEvent(input$goW,
                         {
                             dx <- diff(state$xlim) # present longitude span
                             state$xlim <<-
                                 pinlat(state$xlim - dx / 4)
                         })
-    
+
     shiny::observeEvent(input$goS,
                         {
                             dy <- diff(state$ylim) # present latitude span
                             state$ylim <<-
                                 pinlat(state$ylim - dy / 4)
                         })
-    
+
     shiny::observeEvent(input$goN,
                         {
                             dy <- diff(state$ylim) # present latitude span
                             state$ylim <<-
                                 pinlat(state$ylim + dy / 4)
                         })
-    
+
     shiny::observeEvent(input$zoomIn,
                         {
                             state$xlim <<-
@@ -263,7 +267,7 @@ serverMapApp <- function(input, output, session) {
                             state$ylim <<-
                                 pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
                         })
-    
+
     shiny::observeEvent(input$zoomOut,
                         {
                             state$xlim <<-
@@ -271,7 +275,7 @@ serverMapApp <- function(input, output, session) {
                             state$ylim <<-
                                 pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
                         })
-    
+
     shiny::observeEvent(input$code,
                         {
                             msg <- "library(argoFloats)<br>"
@@ -349,7 +353,7 @@ serverMapApp <- function(input, output, session) {
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title =
                                                                     "R code", size = "l"))
                         })
-    
+
     shiny::observeEvent(input$id,
                         {
                             if (0 == nchar(input$id)) {
@@ -380,7 +384,7 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                         })
-    
+
     shiny::observeEvent(input$focus,
                         {
                             if (input$focus == "single") {
@@ -416,7 +420,7 @@ serverMapApp <- function(input, output, session) {
                                 state$focusID <<- NULL
                             }
                         })
-    
+
     shiny::observeEvent(input$dblclick,
                         {
                             x <- input$dblclick$x
@@ -453,7 +457,7 @@ serverMapApp <- function(input, output, session) {
                             shiny::showNotification(shiny::HTML(msg), duration =
                                                         NULL)
                         })
-    
+
     shiny::observeEvent(input$start,
                         {
                             if (0 == nchar(input$start)) {
@@ -474,7 +478,7 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                         })
-    
+
     shiny::observeEvent(input$end,
                         {
                             if (0 == nchar(input$end)) {
@@ -495,7 +499,7 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                         })
-    
+
     shiny::observeEvent(input$help,
                         {
                             msg <-
@@ -503,7 +507,7 @@ serverMapApp <- function(input, output, session) {
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title =
                                                                     "Using this application", size = "l"))
                         })                                  # help
-    
+
     shiny::observeEvent(input$keypressTrigger,
                         {
                             key <- intToUtf8(input$keypress)
@@ -594,7 +598,7 @@ serverMapApp <- function(input, output, session) {
                                 )
                             }
                         })                                  # keypressTrigger
-    
+
     output$plotMap <- shiny::renderPlot({
         start <- state$startTime
         end <- state$endTime
@@ -630,12 +634,16 @@ serverMapApp <- function(input, output, session) {
                     type = "n",
                     asp = 1 / cos(pi / 180 * mean(state$ylim))
                 )
-                ## FIXME: select hi or low res next
+                topo <-
+                    if ("hires" %in% input$view)
+                        topoWorldFine
+                else
+                    topoWorld
                 if ("topo" %in% input$view) {
                     image(
-                        topoWorld[["longitude"]],
-                        topoWorld[["latitude"]],
-                        topoWorld[["z"]],
+                        topo[["longitude"]],
+                        topo[["latitude"]],
+                        topo[["z"]],
                         add = TRUE,
                         breaks = seq(-8000, 0, 100),
                         col = oce::oceColorsGebco(80)
@@ -673,7 +681,7 @@ serverMapApp <- function(input, output, session) {
                         coastlineWorldFine
                 else
                     coastlineWorld
-                polygon(coastline[["longitude"]], coastline[["latitude"]], col =
+                 polygon(coastline[["longitude"]], coastline[["latitude"]], col =
                             "tan")
                 rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
                 ## For focusID mode, we do not trim by time or space
@@ -797,6 +805,20 @@ serverMapApp <- function(input, output, session) {
 #' are stored in a local file named `argo.rda`, which is then used for the functioning
 #' of the app.  In the interests of speed, a check is made on startup for the
 #' existence of this file, and it will be reused if it is less than 7 days old.
+#'
+#' The `hi-res` button will only affect the coastline, not the topography,
+#' unless there is a local file named `topoWorldFine.rda` that contains
+#' an alternative topographic information. Here is how to create such a file:
+#'```R
+#' library(oce)
+#' topoFile <- download.topo(west=-180, east=180,
+#'                           south=-90, north=90,
+#'                           resolution=10,
+#'                           format="netcdf", destdir=".")
+#' topoWorldFine <- read.topo(topoFile)
+#' save(topoWorldFine, file="topoWorldFine.rda")
+#' unlink(topoFile) # clean up
+#'```
 #'
 ## @param age a numerical value that gives the maximum permitted age (in
 ## days) of a local cache file named `argo.rda`; see \dQuote{Details}.

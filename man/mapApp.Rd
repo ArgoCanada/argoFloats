@@ -19,6 +19,18 @@ the core-argo and bgc-argo index tables, cross-indexing so it can determine
 are stored in a local file named \code{argo.rda}, which is then used for the functioning
 of the app.  In the interests of speed, a check is made on startup for the
 existence of this file, and it will be reused if it is less than 7 days old.
+
+The \code{hi-res} button will only affect the coastline, not the topography,
+unless there is a local file named \code{topoWorldFine.rda} that contains
+an alternative topographic information. Here is how to create such a file:\if{html}{\out{<div class="R">}}\preformatted{library(oce)
+topoFile <- download.topo(west=-180, east=180,
+                          south=-90, north=90,
+                          resolution=10,
+                          format="netcdf", destdir=".")
+topoWorldFine <- read.topo(topoFile)
+save(topoWorldFine, file="topoWorldFine.rda")
+unlink(topoFile) # clean up
+}\if{html}{\out{</div>}}
 }
 \examples{
 \dontrun{
