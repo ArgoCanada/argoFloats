@@ -32,3 +32,4 @@
 ^vignettes/.*\.nc$
 ^.*\.json$
 ^doc$
+argo.rda
