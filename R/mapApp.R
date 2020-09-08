@@ -93,14 +93,15 @@ uiMapApp  <- shiny::fluidPage(
         ),
         shiny::column(8, shiny::verbatimTextOutput("info"))
     ),
-    shiny::fluidRow(shinycssloaders::withSpinner(
+    ## using withSpinner does not work here
+    shiny::fluidRow(
         plotOutput(
             "plotMap",
             hover = shiny::hoverOpts("hover"),
             dblclick = shiny::dblclickOpts("dblclick"),
             brush = shiny::brushOpts("brush", delay = 2000, resetOnNew = TRUE)
         )
-    ))
+    )
 )
 
 serverMapApp <- function(input, output, session) {
@@ -162,24 +163,24 @@ serverMapApp <- function(input, output, session) {
                    argo$longitude)
         n <- length(argo$longitude)
         ok <- is.finite(argo$time)
-        argo <- argo[ok,]
+        argo <- argo[ok, ]
         n <- length(argo$longitude)
         ok <- is.finite(argo$longitude)
-        argo <- argo[ok,]
+        argo <- argo[ok, ]
         n <- length(argo$longitude)
         n <- length(argo$latitude)
         ok <- is.finite(argo$latitude)
-        argo <- argo[ok,]
+        argo <- argo[ok, ]
         save(argo, file = "argo.rda")
     }
     ## vector indicating whether to keep any given cycle.
     visible <- rep(TRUE, length(argo$lon))
-
+    
     ## Prevent off-world points
     pinlat <- function(lat)
-        ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
+        ifelse(lat < -90,-90, ifelse(90 < lat, 90, lat))
     pinlon <- function(lon)
-        ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
+        ifelse(lon < -180,-180, ifelse(180 < lon, 180, lon))
     ## Show an error instead of a plot
     showError <- function(msg)
     {
@@ -193,7 +194,7 @@ serverMapApp <- function(input, output, session) {
         )
         text(0.5, 0.5, msg, col = 2, font = 2)
     }
-
+    
     output$info <-
         shiny::renderText({
             # show location.  If lat range is under 90deg, also show nearest float within 100km
@@ -231,35 +232,35 @@ serverMapApp <- function(input, output, session) {
                 sprintf("%s %s", lonstring, latstring)
             }
         })
-
+    
     shiny::observeEvent(input$goE,
                         {
                             dx <- diff(state$xlim) # present longitude span
                             state$xlim <<-
                                 pinlat(state$xlim + dx / 4)
                         })
-
+    
     shiny::observeEvent(input$goW,
                         {
                             dx <- diff(state$xlim) # present longitude span
                             state$xlim <<-
                                 pinlat(state$xlim - dx / 4)
                         })
-
+    
     shiny::observeEvent(input$goS,
                         {
                             dy <- diff(state$ylim) # present latitude span
                             state$ylim <<-
                                 pinlat(state$ylim - dy / 4)
                         })
-
+    
     shiny::observeEvent(input$goN,
                         {
                             dy <- diff(state$ylim) # present latitude span
                             state$ylim <<-
                                 pinlat(state$ylim + dy / 4)
                         })
-
+    
     shiny::observeEvent(input$zoomIn,
                         {
                             state$xlim <<-
@@ -267,7 +268,7 @@ serverMapApp <- function(input, output, session) {
                             state$ylim <<-
                                 pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
                         })
-
+    
     shiny::observeEvent(input$zoomOut,
                         {
                             state$xlim <<-
@@ -275,7 +276,7 @@ serverMapApp <- function(input, output, session) {
                             state$ylim <<-
                                 pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
                         })
-
+    
     shiny::observeEvent(input$code,
                         {
                             msg <- "library(argoFloats)<br>"
@@ -353,7 +354,7 @@ serverMapApp <- function(input, output, session) {
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title =
                                                                     "R code", size = "l"))
                         })
-
+    
     shiny::observeEvent(input$id,
                         {
                             if (0 == nchar(input$id)) {
@@ -384,7 +385,7 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                         })
-
+    
     shiny::observeEvent(input$focus,
                         {
                             if (input$focus == "single") {
@@ -420,7 +421,7 @@ serverMapApp <- function(input, output, session) {
                                 state$focusID <<- NULL
                             }
                         })
-
+    
     shiny::observeEvent(input$dblclick,
                         {
                             x <- input$dblclick$x
@@ -457,7 +458,7 @@ serverMapApp <- function(input, output, session) {
                             shiny::showNotification(shiny::HTML(msg), duration =
                                                         NULL)
                         })
-
+    
     shiny::observeEvent(input$start,
                         {
                             if (0 == nchar(input$start)) {
@@ -478,7 +479,7 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                         })
-
+    
     shiny::observeEvent(input$end,
                         {
                             if (0 == nchar(input$end)) {
@@ -499,15 +500,15 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                         })
-
+    
     shiny::observeEvent(input$help,
                         {
                             msg <-
-                                "Enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in yellow, deep in purple, and bgc in green), whether to show coastline and topography in high or low resolution, whether to show topography, and whether to connect points to indicate float paths. <br><br>Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you may change to focus to Single, to see the whole history of that float's trajectory.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, and the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window."
+                                "Enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in yellow, deep in purple, and bgc in green), whether to show coastline and topography in high or low resolution, whether to show topography, and whether to connect points to indicate float paths. <br><br>Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you may change to focus to Single, to see the whole history of that float's trajectory.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, and the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title =
                                                                     "Using this application", size = "l"))
                         })                                  # help
-
+    
     shiny::observeEvent(input$keypressTrigger,
                         {
                             key <- intToUtf8(input$keypress)
@@ -598,7 +599,7 @@ serverMapApp <- function(input, output, session) {
                                 )
                             }
                         })                                  # keypressTrigger
-
+    
     output$plotMap <- shiny::renderPlot({
         start <- state$startTime
         end <- state$endTime
@@ -681,7 +682,7 @@ serverMapApp <- function(input, output, session) {
                         coastlineWorldFine
                 else
                     coastlineWorld
-                 polygon(coastline[["longitude"]], coastline[["latitude"]], col =
+                polygon(coastline[["longitude"]], coastline[["latitude"]], col =
                             "tan")
                 rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
                 ## For focusID mode, we do not trim by time or space
@@ -711,7 +712,7 @@ serverMapApp <- function(input, output, session) {
                     if (view %in% input$view) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
-                        lonlat <- argo[k, ]
+                        lonlat <- argo[k,]
                         points(
                             lonlat$lon,
                             lonlat$lat,
@@ -731,7 +732,7 @@ serverMapApp <- function(input, output, session) {
                                 o <- order(LONLAT$time)
                                 no <- length(o)
                                 if (no > 1) {
-                                    LONLAT <- LONLAT[o,]
+                                    LONLAT <- LONLAT[o, ]
                                     lines(
                                         LONLAT$lon,
                                         LONLAT$lat,

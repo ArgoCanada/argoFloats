@@ -1,4 +1,5 @@
 ^.git$
+^.github$
 ^issues$
 ^.travis.yml$
 ^appveyor.yml$
@@ -32,4 +33,5 @@
 ^vignettes/.*\.nc$
 ^.*\.json$
 ^doc$
-argo.rda
+^topoWorldFine.rda$
+^argo.rda$
