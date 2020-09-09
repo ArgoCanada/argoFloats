@@ -69,10 +69,10 @@ uiMapApp  <- shiny::fluidPage(
         shiny::column(
             4,
             style = "margin-top: 20px;",
-            shiny::actionButton("goS", "\U21E9"),
-            shiny::actionButton("goN", "\U21E7"),
-            shiny::actionButton("goW", "\U21E6"),
-            shiny::actionButton("goE", "\U21E8"),
+            shiny::actionButton("goS", HTML("&darr;")), #"\U21E9"),
+            shiny::actionButton("goN", HTML("&uarr;")), #"\U21E7"),
+            shiny::actionButton("goW", HTML("&larr;")), #"\U21E6"),
+            shiny::actionButton("goE", HTML("&rarr;")), #"\U21E8"),
             shiny::actionButton("zoomIn", "+"),
             shiny::actionButton("zoomOut", "-")
         )
@@ -800,7 +800,7 @@ serverMapApp <- function(input, output, session) {
 #' Help button and to read the popup window that it creates.
 #'
 #' This app will use [getIndex()] to download index files from the Argo server
-#' the first time it runs, this make take a few seconds.  Then it will combine
+#' the first time it runs, this make take up to a minute or so.  Then it will combine
 #' information from the core-Argo and bgc-Argo index tables, cross-indexing so
 #' it can determine the Argo type for each profile (or cycle).  The results of
 #' this combination are stored in a local file named `argo.rda`, which is then

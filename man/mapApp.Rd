@@ -14,7 +14,7 @@ Help button and to read the popup window that it creates.
 }
 \details{
 This app will use \code{\link[=getIndex]{getIndex()}} to download index files from the Argo server
-the first time it runs, this make take a few seconds.  Then it will combine
+the first time it runs, this make take up to a minute or so.  Then it will combine
 information from the core-Argo and bgc-Argo index tables, cross-indexing so
 it can determine the Argo type for each profile (or cycle).  The results of
 this combination are stored in a local file named \code{argo.rda}, which is then
