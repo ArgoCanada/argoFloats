@@ -13,8 +13,8 @@ jobs:
     - uses: actions/stale@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'Stale issue message'
-        stale-pr-message: 'Stale pull request message'
+        stale-issue-message: 'The Stale-bot has marked this issue as Stale, because no new comments have been added in the past 30 days. Unless a  comment is added within the next 7 days, the Stale-bot will close the issue. The purpose of these automated actions is to prevent the developers from forgetting about unattended tasks.'
+        stale-pr-message: 'The Stale-bot has marked this pull request as Stale, because no new comments have been added in the past 30 days. Unless a  comment is added within the next 7 days, the Stale-bot will close the issue. The purpose of these automated actions is to prevent the developers from forgetting about unattended pull requests.'
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
         days-before-stale: 30
