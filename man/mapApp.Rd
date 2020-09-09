@@ -2,7 +2,7 @@
 % Please edit documentation in R/mapApp.R
 \name{mapApp}
 \alias{mapApp}
-\title{Interactive app for viewing argo float positions}
+\title{Interactive app for viewing Argo float positions}
 \usage{
 mapApp()
 }
@@ -13,12 +13,14 @@ straightforward, especially for those who take a moment to click on the
 Help button and to read the popup window that it creates.
 }
 \details{
-This app will use \code{\link[=getIndex]{getIndex()}} to download index files from the
-Argo server the first time it runs.  Then it will combine information from
-the core-argo and bgc-argo index tables, cross-indexing so it can determine
-are stored in a local file named \code{argo.rda}, which is then used for the functioning
-of the app.  In the interests of speed, a check is made on startup for the
-existence of this file, and it will be reused if it is less than 7 days old.
+This app will use \code{\link[=getIndex]{getIndex()}} to download index files from the Argo server
+the first time it runs, this make take a few seconds.  Then it will combine
+information from the core-Argo and bgc-Argo index tables, cross-indexing so
+it can determine the Argo type for each profile (or cycle).  The results of
+this combination are stored in a local file named \code{argo.rda}, which is then
+used for the functioning of the app.  In the interest of speed, a check is
+made on start up for the existence of this file, and it will be reused if it
+is less than 7 days old.
 
 The \code{hi-res} button will only affect the coastline, not the topography,
 unless there is a local file named \code{topoWorldFine.rda} that contains

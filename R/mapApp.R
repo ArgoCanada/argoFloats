@@ -792,20 +792,21 @@ serverMapApp <- function(input, output, session) {
     }, height = 500, pointsize = 18)       # plotMap
 }                                 # server
 
-#' Interactive app for viewing argo float positions
+#' Interactive app for viewing Argo float positions
 #'
 #' The GUI permits specifying a spatial-temporal region of interest, a set
 #' of float types to show, etc.  The interface ought to be reasonably
 #' straightforward, especially for those who take a moment to click on the
 #' Help button and to read the popup window that it creates.
 #'
-#' This app will use [getIndex()] to download index files from the
-#' Argo server the first time it runs.  Then it will combine information from
-#' the core-argo and bgc-argo index tables, cross-indexing so it can determine
-#" the argo type for each profile (or cycle).  The results of this combination
-#' are stored in a local file named `argo.rda`, which is then used for the functioning
-#' of the app.  In the interests of speed, a check is made on startup for the
-#' existence of this file, and it will be reused if it is less than 7 days old.
+#' This app will use [getIndex()] to download index files from the Argo server
+#' the first time it runs, this make take a few seconds.  Then it will combine
+#' information from the core-Argo and bgc-Argo index tables, cross-indexing so
+#' it can determine the Argo type for each profile (or cycle).  The results of
+#' this combination are stored in a local file named `argo.rda`, which is then
+#' used for the functioning of the app.  In the interest of speed, a check is
+#' made on start up for the existence of this file, and it will be reused if it
+#' is less than 7 days old.
 #'
 #' The `hi-res` button will only affect the coastline, not the topography,
 #' unless there is a local file named `topoWorldFine.rda` that contains
