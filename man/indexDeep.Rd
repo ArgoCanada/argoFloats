@@ -6,7 +6,7 @@
 \title{A sample index of deep Argo}
 \description{
 This was created by subsetting a global index to the 163 deep Argo profiles
-that were within a 800km radius of Antarctica (67S,105E), as of 2020 July 22,
+that were within a 800km radius of Antarctica (67S,105E), as of 2020 September 10,
 using the following code.\preformatted{library(argoFloats)
 subset <- subset(getIndex(), deep=TRUE)
 sub2 <- subset(subset, circle=list(longitude=105, latitude=-67, radius=800))
