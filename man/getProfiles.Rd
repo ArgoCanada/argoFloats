@@ -31,10 +31,14 @@ is one year.  Setting \code{age=0} will force a download.}
 if the first attempt fails.}
 
 \item{skip}{A logical value indicating whether to skip over netcdf
-files that cannot be downloaded from the server.  This is \code{TRUE} by
-default, to allow \code{\link[=getProfiles]{getProfiles()}} to handle out-of-date indices
-without stopping when it tries to download netcdf files that are no
-longer available.}
+files that cannot be downloaded from the server.  This is \code{FALSE} by
+default, so that \code{\link[=getProfiles]{getProfiles()}} will raise an error if it is
+impossible to re-download an outdated file.  This is not
+unexpected with built-in index files, e.g. \code{data(index)},
+because this package cannot be updated every time the Argo
+servers change the names of netcdf files.  However, users
+are commonly working with index files they created with
+\code{\link[=getIndex]{getIndex()}}, so they ought to be up-to-date.}
 
 \item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
 that indicates whether to download without showing a progress
@@ -74,8 +78,8 @@ to the authors.
 
 If a particular data file cannot be downloaded after multiple trials, then
 the behaviour depends on the value of the \code{skip} argument.  If that is
-\code{TRUE} (the default) then a \code{NA} value is inserted in the corresponding
-spot in the return value, but if it is \code{FALSE}, then an error is reported.
+\code{TRUE} then a \code{NA} value is inserted in the corresponding
+spot in the return value, but if it is \code{FALSE} (the default), then an error is reported.
 Note that \code{\link[=readProfiles]{readProfiles()}} skips over any such \code{NA} entries,
 while reporting their positions within \code{index}.
 }

@@ -412,8 +412,8 @@ getIndex <- function(filename="argo",
 #'
 #' If a particular data file cannot be downloaded after multiple trials, then
 #' the behaviour depends on the value of the `skip` argument.  If that is
-#' `TRUE` (the default) then a `NA` value is inserted in the corresponding
-#' spot in the return value, but if it is `FALSE`, then an error is reported.
+#' `TRUE` then a `NA` value is inserted in the corresponding
+#' spot in the return value, but if it is `FALSE` (the default), then an error is reported.
 #' Note that [readProfiles()] skips over any such `NA` entries,
 #' while reporting their positions within `index`.
 #'
@@ -505,7 +505,7 @@ getProfiles <- function(index, destdir=NULL, age=365, retries=3, skip=TRUE, quie
         for (i in seq_along(urls)) {
             name <- getProfileFromUrl(urls[i], destdir=destdir, age=age, retries=retries, quiet=quiet, debug=debug-1)
             if (is.na(name) && !skip)
-                stop("cannot download file '", urls[i], "', which is considered a failure, since skip=FALSE")
+                stop("cannot download file '", urls[i], "', which is considered a failure, since skip=FALSE.  This normally results from a stale index file; try using getIndex(age=0) to refresh your index.")
             file[i] <- name
         }
     }
