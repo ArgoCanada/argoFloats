@@ -51,7 +51,6 @@ test_that("access within cycles", {
           expect_equal(a[["cycle"]], "048")
           expect_equal(a[["cycle",1]], "048")
           expect_equal(a[["id",1]], "4900785")
-          
 })
 
 test_that("historyQCTest length and (trimmed) contents for issue 136", {

@@ -8,7 +8,7 @@ test_that("applyQC with default 'flag' and 'action' arguments",
               if (canDownload()) {
                   data(index)
                   i <- subset(index, 1:5) # first 5 profiles
-                  raw <- expect_warning(readProfiles(getProfiles(i)), "^Of 5 profiles read")
+                  raw <- expect_output(expect_warning(readProfiles(getProfiles(i)), "^Of 5 profiles read"), "|====")
                   clean <- applyQC(raw)
                   for (i in raw[["length"]]) {
                       for (field in c("temperature", "salinity", "pressure")) {
@@ -23,11 +23,12 @@ test_that("applyQC with default 'flag' and 'action' arguments",
 test_that("showing QC tests", {
     if (canDownload()) {
         data('index')
-        subset <- subset(index, 1)
-        indexq <- expect_message(subset(index, 1),
-                                 "Kept 1 profiles \\(0.105%\\)")
+        subset <- expect_message(subset(index, 1), "Kept 1 profile")
+        ## DK: this was not used
+        ##indexq <- expect_message(subset(index, 1),
+        ##                         "Kept 1 profiles \\(0.105%\\)")
         profiles <- getProfiles(subset)
-        argos <- expect_warning(readProfiles(profiles), "^Of 1 profiles read")
+        argos <- expect_output(expect_warning(readProfiles(profiles), "^Of 1 profiles read"), "|===")
         argos1 <- argos[[1]]
         ## this is only a consistency check with values as of 2020-07-17, not a real
         ## test of what to expect.

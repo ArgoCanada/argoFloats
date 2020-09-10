@@ -7,7 +7,7 @@ test_that("useAdjusted() test",
               for (nc in c("D4900785_048.nc", "SD5903586_001.nc")) {
                   filename <- system.file("extdata", nc, package="argoFloats")
                   ## raw
-                  r <- readProfiles(filename, silent=TRUE)
+                  r <- readProfiles(filename, quiet=TRUE)
                   expect_equal(r[["salinity"]], r[["PSAL"]])
                   expect_equal(r[["temperature"]], r[["TEMP"]])
                   expect_equal(r[["pressure"]], r[["PRES"]])

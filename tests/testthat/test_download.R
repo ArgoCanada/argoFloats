@@ -1,7 +1,7 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 library(argoFloats)
 source("can_download.R")
-context("bioargo download")
+context("bgc download")
 destdir <- "~/data/argo" # QUESTION: could we use a tmpdir and still be within CRAN guidelines?
 
 test_that("getIndex()",
@@ -33,7 +33,7 @@ test_that("readProfiles()",
               if (canDownload()) {
                   data(index)
                   p <- expect_message(getProfiles(subset(index, 1:4)), "Kept 4 profiles \\(0.42%\\)")
-                  a <- expect_warning(readProfiles(p), "Of 4 profiles read, 4 have")
+                  a <- expect_output(expect_warning(readProfiles(p), "Of 4 profiles read, 4 have"), "|===")
                   expect_equal(4, length(a[["cycle"]]))
                   expect_true(is.character(a[["cycle"]]))
                   expect_true(inherits(a[[1]], "oce"))
@@ -64,7 +64,8 @@ test_that("readProfile() handling of an out-of-date URL surrounded by valid URLs
                   data(index)
                   s <- subset(index, 778 + seq(-1, 1))  # middle is aoml/4901622/profiles/R4901622_167.nc
                   p <- expect_silent(getProfiles(s)) # default is skip=TRUE
-                  a <- readProfiles(p)
+                  a <- expect_output(readProfiles(p), "|===")
+                  a <- expect_silent(readProfiles(p, quiet=TRUE))
               }
           }
 )
@@ -73,7 +74,7 @@ test_that("readProfile() handling of nonlocal source file",
           {
               if (canDownload()) {
                   u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_001.nc"
-                  p <- readProfiles(u)
+                  p <- expect_silent(readProfiles(u))
                   expect_true(grepl("BD5903586_001.nc$", p[["filename"]]))
               }
           }

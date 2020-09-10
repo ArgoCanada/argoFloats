@@ -72,7 +72,7 @@ test_that("subset by deep", {
 
 test_that("silencing subset", {
           data("index")
-          indexid <- expect_silent(subset(index, deep=TRUE, silent=TRUE))
+          indexid <- expect_silent(subset(index, deep=TRUE, quiet=TRUE))
 })
 
 test_that("subset by ocean", {
