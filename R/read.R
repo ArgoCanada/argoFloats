@@ -29,8 +29,7 @@
 #' which to save downloaded files, in the case that they are
 #' provided in the `profiles` argument.
 #'
-#' @param silent a logical value (`FALSE` by default) indicating whether
-#' work silently, without displaying information about the progress.
+#' @template quiet
 #'
 #' @param debug an integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
@@ -69,16 +68,15 @@
 #'}
 #'
 #' @export
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, debug=0)
+readProfiles <- function(profiles, FUN, destdir="~/data/argo", quiet=FALSE, debug=0)
 {
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for readProfiles() to work")
     if (!requireNamespace("ncdf4", quietly=TRUE))
         stop("must install.packages(\"ncdf4\") for readProfiles() to work")
-    debug <- floor(0.5 + debug)
-    debug <- max(0, debug)
     res <- NULL
     argoFloatsDebug(debug, "readProfiles() {\n", style="bold", sep="", unindent=1)
     if (missing(FUN)) {
@@ -92,7 +90,6 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
     ## checking argoFloats.
     ncversion <- ncdf4::nc_version()
     argoFloatsDebug(debug, "ncdf4 version: ", ncversion, "\n")
-
     res <- new("argoFloats", type="argos")
     if (is.character(profiles)) {
         argoFloatsDebug(debug, "Case 1: vector of ", length(profiles), " character valuesn", sep="")
@@ -100,7 +97,7 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
         res@data$argos <- vector("list", length=n)
         for (i in seq_len(n)) {
             if (grepl("^ftp:", profiles[i])) {
-                localFile <- getProfileFromUrl(profiles[i], destdir=destdir, debug=debug)
+                localFile <- getProfileFromUrl(profiles[i], destdir=destdir, debug=debug, quiet=quiet)
                 res@data$argos[[i]] <- FUN(localFile, debug=debug-1)
             } else {
                 argoFloatsDebug(debug, "Attempting to read file '", profiles[i], "'.\n", sep="")
@@ -147,6 +144,8 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
             res@data$argos <- lapply(fullFileNames, oce::read.argo, debug=debug-1)
             n <- length(res@data$argos)
             argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles (over-rides oce defaults).\n")
+            if (!quiet)
+                pb <- txtProgressBar(0, n, 0, style=3)
             for (i in seq_len(n)) {
                 res@data$argos[[i]]@metadata$flagScheme <- list(name="argo",
                                                                 mapping=list(not_assessed=0,
@@ -162,7 +161,11 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
                                                                 default=c(0, 3, 4, 9))
                 res@data$argos[[i]]@processingLog <- oce::processingLogAppend(res@data$argos[[i]]@processingLog,
                                                                               "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
-             }
+                if (!quiet)
+                    setTxtProgressBar(pb, i)
+            }
+            if (!quiet)
+                close(pb)
         } else {
             stop("'profiles' must be a character vector or an object created by getProfiles()")
         }
@@ -170,7 +173,7 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
         stop("'profiles' must be a character vector or an object created by getProfiles().")
     }
     ## tabulate flags (ignore "Adjusted" items)
-    if (!silent || debug) {
+    if (!quiet || debug) {
         flagNamesAll <- unique(sort(unlist(lapply(res@data$argos, function(a) names(a@metadata$flags)))))
         flagNames <- flagNamesAll[!grepl("Adjusted$", flagNamesAll)]
         for (flagName in flagNames) {

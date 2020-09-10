@@ -4,7 +4,7 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(profiles, FUN, destdir = "~/data/argo", silent = FALSE, debug = 0)
+readProfiles(profiles, FUN, destdir = "~/data/argo", quiet = FALSE, debug = 0)
 }
 \arguments{
 \item{profiles}{either (1) a character vector that holds
@@ -23,8 +23,9 @@ other than this default, or a wrapper to it.}
 which to save downloaded files, in the case that they are
 provided in the \code{profiles} argument.}
 
-\item{silent}{a logical value (\code{FALSE} by default) indicating whether
-work silently, without displaying information about the progress.}
+\item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
+that indicates whether to download without showing a progress
+bar. (Problems will still be reported, though.)}
 
 \item{debug}{an integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,
