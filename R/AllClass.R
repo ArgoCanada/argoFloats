@@ -62,9 +62,9 @@ NULL
 
 #' A sample index of profiles
 #'
-#' This was created by subsetting a global index to the 1788 Argo profiles
+#' This was created by subsetting a global index to the 978 Argo profiles
 #' that were within a 200km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 March 14, using the following code.
+#' Bahamas, as of 2020 September 10, using the following code.
 #' ```
 #  library(argoFloats)
 #' indexAll <- getIndex()
@@ -88,7 +88,7 @@ NULL
 #'
 #' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 March 23, using the following code.
+#' Bahamas, as of 2020 September 10, using the following code.
 #'```
 #' library(argoFloats)
 #' indexAll <- getIndex("bgc")
@@ -114,7 +114,7 @@ NULL
 #'
 #' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 March 23, using the following code.
+#' Bahamas, as of 2020 September 10, using the following code.
 #'```
 #' library(argoFloats)
 #' indexAll <- getIndex("merged")
@@ -144,7 +144,7 @@ NULL
 #'
 #' This was created by subsetting a global index to the 39 BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 May 15, using the following code.
+#' Bahamas, as of 2020 September 10, using the following code.
 #'```
 #' library(argoFloats)
 #' indexAll <- getIndex("synthetic")
@@ -172,7 +172,7 @@ NULL
 #' A sample index of deep Argo
 #'
 #' This was created by subsetting a global index to the 163 deep Argo profiles
-#' that were within a 800km radius of Antarctica (67S,105E), as of 2020 July 22,
+#' that were within a 800km radius of Antarctica (67S,105E), as of 2020 September 10,
 #' using the following code.
 #'```
 #' library(argoFloats)
