@@ -6,11 +6,11 @@
 ## Note that this code is not run, because we want the dataset to be *static*.
 ## In fact, we check that it is unchanged, in the test suite.
 ##
-## The download was done on 2020 March 23, and yielded 39 profiles.
+## The download was done on 2020 September 10, and yielded 39 profiles.
 
 if (FALSE) {
     library(argoFloats)
-    indexAll <- getIndex("merged")
+    indexAll <- getIndex("merged", age=0)
     indexMerged <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
     save(indexMerged, file="indexMerged.rda")
     tools::resaveRdaFiles('indexMerged.rda')

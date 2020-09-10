@@ -7,14 +7,14 @@
 ## Note that this code is not run, because we want the dataset to be *static*.
 ## In fact, we check that it is unchanged, in the test suite.
 ##
-## The download was done on 2020 May 15, and yielded 39 profiles. Note that this
+## The download was done on 2020 September 10, and yielded 39 profiles. Note that this
 ## failed with the usgodae server on that date, because it was not yet serving
 ## synthetic files, but this is not a problem because getIndex() found the
 ## ifremer server after it found the usgodae server to be deficient.
 
 if (FALSE) {
     library(argoFloats)
-    indexAll <- getIndex("synthetic")
+    indexAll <- getIndex("synthetic", age=0)
     indexSynthetic <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))
     save(indexSynthetic, file="indexSynthetic.rda")
     tools::resaveRdaFiles('indexSynthetic.rda')
