@@ -17,7 +17,7 @@ test_that("indexMerged and indexSynthetic files correspond", {
 })
 
 test_that("index is of expected dimension", {
-          expect_equal(dim(index[["index"]]), c(953, 8))
+          expect_equal(dim(index[["index"]]), c(978, 8))
           expect_equal(names(index[["index"]]), c("file", "date", "latitude", "longitude", "ocean", "profiler_type",
                                                   "institution", "date_update"))
 })

@@ -3,7 +3,7 @@
 
 ## The download was done on 2020 September 10, and yielded 174 profiles.
 
-if (FALSE) {
+if (!FALSE) {
     ## An indexDeep of Argo profile data within 800km
     ## of Antarctica (67S,105E).
     library(argoFloats)

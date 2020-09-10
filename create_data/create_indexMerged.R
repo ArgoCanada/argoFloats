@@ -8,7 +8,7 @@
 ##
 ## The download was done on 2020 September 10, and yielded 39 profiles.
 
-if (FALSE) {
+if (!FALSE) {
     library(argoFloats)
     indexAll <- getIndex("merged", age=0)
     indexMerged <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))

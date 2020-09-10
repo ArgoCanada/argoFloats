@@ -12,7 +12,7 @@
 ## synthetic files, but this is not a problem because getIndex() found the
 ## ifremer server after it found the usgodae server to be deficient.
 
-if (FALSE) {
+if (!FALSE) {
     library(argoFloats)
     indexAll <- getIndex("synthetic", age=0)
     indexSynthetic <- subset(indexAll, circle=list(longitude=-77.06, latitude=26.54, radius=300))

@@ -4,6 +4,19 @@ clean:
 	-rm *~ *.rda *.out
 profiles:
 	Rscript create_profiles.R > create_profiles.out
+
+indices:
+	make index
+	make indexBgc
+	make indexMerged
+	make indexSynthetic
+install_indices:
+	make install_index
+	make install_indexBgc
+	make install_indexMerged
+	make install_indexSynthetic
+
+
 index: force
 	Rscript create_index.R > create_index.out
 indexBgc: force

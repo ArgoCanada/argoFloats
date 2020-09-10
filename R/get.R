@@ -353,14 +353,20 @@ getIndex <- function(filename="argo",
     argoFloatsDebug(debug, "Reading index file contents (can be slow).\n", sep="")
     index <- read.csv(destfileTemp, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE)
     argoFloatsDebug(debug, "Setting out-of-range latitude and longitude to NA.\n", sep="")
-    if ("latitude" %in% names(index))
+    if ("latitude" %in% names(index)) {
         index$latitude[abs(index$latitude) > 90] <- NA
-    if ("longitude" %in% names(index))
+    } else {
+        stop("this index file is mis-configured; it does not contain a column named \"latitude\"")
+    }
+    if ("longitude" %in% names(index)) {
         index$longitude[abs(index$longitude) > 360] <- NA
+    } else {
+        stop("this index file is mis-configured; it does not contain a column named \"longitude\"")
+    }
     argoFloatsDebug(debug, "Decoding dates.\n", sep="")
     index$date <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")
     index$date_update <- as.POSIXct(as.character(index$date_update), format="%Y%m%d%H%M%S",tz="UTC")
-    argoFloatsIndex <- list(server=server[iurlSuccess], header=header, index=index)
+    argoFloatsIndex <- list(server=server[iurlSuccess], ftpRoot=ftpRoot, header=header, index=index)
     save(argoFloatsIndex, file=destfileRda)
     if (keep) {
         to <- paste0(destdir, "/", gsub(".*/", "", url[iurlSuccess]))

@@ -8,6 +8,6 @@ context("show")
 
 test_that("show", {
           data("index")
-          expect_output(print(index), "argoFloats object of type \"index\" with 953 items")
+          expect_output(print(index), "argoFloats object of type \"index\" with 978 items")
 })
 

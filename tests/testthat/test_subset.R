@@ -9,11 +9,11 @@ context("subset")
 
 test_that("subset by circle",
           {
+              N <- 310
               data("index")
-              a <- subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100))
               indexc <- expect_message(subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100)),
-                                       "Kept 304 profiles \\(31.9%\\)")
-              expect_equal(dim(indexc[["index"]]), c(304, 8))
+                                       paste("Kept", N, "profiles"))
+              expect_equal(dim(indexc[["index"]]), c(N, 8))
               expect_equal(indexc[["index"]][["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
               expect_equal(indexc[["file"]][1], "aoml/4900183/profiles/D4900183_025.nc")
           }
@@ -22,7 +22,7 @@ test_that("subset by circle",
 test_that("subset by rectangle", {
           data("index")
           indexr <- expect_message(subset(index, rectangle=list(longitude=c(-77, -76), latitude=c(25, 26))),
-                                   "Kept 76 profiles \\(7.97%\\)")
+                                   "Kept 76 profiles")
           expect_equal(dim(indexr[["index"]]), c(76, 8))
           expect_equal(indexr[["index"]][["file"]][1], "aoml/4900183/profiles/D4900183_024.nc")
           expect_equal(indexr[["file"]][1], "aoml/4900183/profiles/D4900183_024.nc")
@@ -30,18 +30,23 @@ test_that("subset by rectangle", {
 
 test_that("subset by polygon", {
           data("index")
-          indexp <- subset(index, polygon=list(latitude=c(25,27,25), longitude=c(-78,-77,-74)))
-          expect_equal(dim(indexp[["index"]]), c(379,8))
+          N <- 382
+          indexp <- expect_message(subset(index,
+                                          polygon=list(latitude=c(25,27,25),
+                                                       longitude=c(-78,-77,-74))),
+                                   paste("Kept", N, "profiles"))
+          expect_equal(dim(indexp[["index"]]), c(N, 8))
           expect_equal(indexp[["index"]][["file"]][1], "aoml/4901533/profiles/R4901533_080.nc")
           expect_equal(indexp[["file"]][1], "aoml/4901533/profiles/R4901533_080.nc")
 })
 
 test_that("subset by time", {
           data("index")
+          N <- 9
           from <- as.POSIXct("2019-01-01", tz="UTC")
           to <- as.POSIXct("2019-12-31", tz="UTC")
           indext <- expect_message(subset(index, time=list(from=from, to=to)),
-                                   "Kept 9 profiles \\(0.944%\\)")
+                                   paste("Kept", N, "profiles"))
           expect_equal(dim(indext[["index"]]), c(9,8))
           expect_equal(indext[["index"]][["file"]][1], "aoml/4901628/profiles/R4901628_212.nc")
           expect_equal(indext[["file"]][1], "aoml/4901628/profiles/R4901628_212.nc")
@@ -49,18 +54,20 @@ test_that("subset by time", {
 
 test_that("subset by institution", {
           data("index")
+          N <- 914
           indexi <- expect_message(subset(index, institution="AO"),
-                                   "Kept 897 profiles \\(94.1%\\)")
-          expect_equal(dim(indexi[["index"]]), c(897,8))
+                                   paste("Kept", N, "profiles"))
+          expect_equal(dim(indexi[["index"]]), c(N, 8))
           expect_equal(indexi[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
           expect_equal(indexi[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
 test_that("subset by float id", {
           data("index")
+          N <- 9
           indexid <- expect_message(subset(index, id="1901584"),
-                                    "Kept 9 profiles \\(0.944%\\)")
-          expect_equal(dim(indexid[["index"]]), c(9,8))
+                                    paste("Kept", N, "profiles"))
+          expect_equal(dim(indexid[["index"]]), c(N, 8))
           expect_equal(indexid[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
           expect_equal(indexid[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
@@ -72,21 +79,25 @@ test_that("subset by deep", {
 
 test_that("silencing subset", {
           data("index")
-          indexid <- expect_silent(subset(index, deep=TRUE, quiet=TRUE))
+          N <- 0
+          indexid <- expect_message(subset(index, deep=TRUE, quiet=TRUE),
+                                    paste("Kept", N, "profiles"))
 })
 
 test_that("subset by ocean", {
           data("index")
-          indexOcean <- subset(index, ocean='A')
-          expect_equal(dim(indexOcean[["index"]]), c(953,8))
+          N <- 978
+          indexOcean <- expect_message(subset(index, ocean='A'), paste("Kept", N, "profiles"))
+          expect_equal(dim(indexOcean[["index"]]), c(N, 8))
           expect_equal(indexOcean[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
           expect_equal(indexOcean[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
 test_that("subset by cycle", {
           data("index")
-          indexProfile <- subset(index, cycle=124)
-          expect_equal(dim(indexProfile[["index"]]), c(5,8))
+          N <- 5
+          indexProfile <- expect_message(subset(index, cycle=124), paste("Kept", N, "profiles"))
+          expect_equal(dim(indexProfile[["index"]]), c(N, 8))
           expect_equal(indexProfile[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
           expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
@@ -105,18 +116,23 @@ test_that("subset by column",
           {
               if (canDownload()) {
                   i <- expect_silent(getIndex(filename="merged"))
-                  s <- expect_message(subset(subset(i, id="5903889"), cycle="074"),
-                                      "Kept 223 profiles")
+                  N <- 223
+                  s <- expect_message(subset(i, id="5903889"),
+                                      paste("Kept", N, "profiles"))
+                  N <- 1
+                  s <- expect_message(subset(s, cycle="074"),
+                                      paste("Kept", N, "profiles"))
                   p <- expect_silent(getProfiles(s))
-                  a <- expect_silent(readProfiles(p))
+                  a <- expect_output(expect_warning(readProfiles(p), "Of 1 profile"), "|===")
                   a1 <- expect_silent(subset(a, column=1))
                   a2 <- expect_silent(subset(a, column=2))
                   oxygen <- a[["oxygen"]][[1]]
                   oxygen1 <- a1[["oxygen"]][[1]]
                   oxygen2 <- a2[["oxygen"]][[1]]
-                  expect_equal(dim(oxygen), c(510, 2))
-                  expect_equal(dim(oxygen1), c(510, 1))
-                  expect_equal(dim(oxygen2), c(510, 1))
+                  N <- 510
+                  expect_equal(dim(oxygen), c(N, 2))
+                  expect_equal(dim(oxygen1), c(N, 1))
+                  expect_equal(dim(oxygen2), c(N, 1))
                   expect_equal(oxygen1, oxygen[, 1, drop=FALSE])
                   expect_equal(oxygen2, oxygen[, 2, drop=FALSE])
               }
@@ -126,11 +142,12 @@ test_that("subset by cycle",
           {
               if (canDownload()) {
                   data("index")
+                  N <- 9
                   index1 <- expect_message(subset(index, id="1901584"),
-                                           "Kept 9 profiles \\(0.944%\\)")
+                                           paste("Kept", N, "profiles"))
                   profiles <- expect_silent(getProfiles(index1))
-                  argos <- expect_warning(readProfiles(profiles),
-                                          "Of 9 profiles read, 8 have")
+                  argos <- expect_output(expect_warning(readProfiles(profiles),
+                                          "Of 9 profiles read, 8 have"), "|===")
                   argos2 <- expect_message(subset(argos, cycle='147'),
                                            "Kept 1 profiles \\(11.1%\\)")
                   expect_equal(argos2[["cycle"]], "147")
