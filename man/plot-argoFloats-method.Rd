@@ -127,10 +127,10 @@ created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
 can be altered by putting \code{Slim} and \code{Tlim} arguments in the \code{...} list; see
 the documentation for \code{\link[oce:plotTS]{oce::plotTS()}} for other arguments that can be
 provided. This plot has a default color code to represent bad vs good data.
-This scheme comes from section 3.2.1 of reference 1, in which
+This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
 data are considered bad if flagged 3, 4, 6, or 7, and good
-if flagged 1, 2, 5, or 8; good points are in black and bad ones are in
-red.
+if flagged 1, 2, 5, or 8; good values are plotted with black symbols,
+and bad ones are plotted with red symbols.
 \item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{parameter} must be given, to name the

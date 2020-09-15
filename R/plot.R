@@ -73,10 +73,10 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' can be altered by putting `Slim` and `Tlim` arguments in the `...` list; see
 #' the documentation for [oce::plotTS()] for other arguments that can be
 #' provided. This plot has a default color code to represent bad vs good data.
-#' This scheme comes from section 3.2.1 of reference 1, in which
+#' This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
 #' data are considered bad if flagged 3, 4, 6, or 7, and good
-#' if flagged 1, 2, 5, or 8; good points are in black and bad ones are in
-#' red.
+#' if flagged 1, 2, 5, or 8; good values are plotted with black symbols,
+#' and bad ones are plotted with red symbols.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
@@ -303,7 +303,6 @@ setMethod(f="plot",
                               argoFloatsDebug(debug, "  temporarily set par(mar=c(", paste(par("mar"), collapse=", "), ")) to allow for the palette\n", sep="")
                           }
                           if (!is.null(xlim) && !is.null(ylim)) {
-                              message("DANNY")
                               argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
                                               "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
                                               "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
@@ -524,14 +523,16 @@ setMethod(f="plot",
                       mar <- par("mar") # c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
                   par(mar=mar, mgp=mgp)
                   if (col[1] == "flags") {
+                      argoFloatsDebug(debug, "col is 'flags'\n")
                       salinityFlag <- unlist(x[["salinityFlag"]])
                       temperatureFlag <- unlist(x[["temperatureFlag"]])
                       goodT <- temperatureFlag %in% c(1, 2, 5, 8)
                       goodS <- salinityFlag %in% c(1, 2, 5, 8)
                       good <- goodS & goodT
                       col <- ifelse(good, "black", "red")
+                      bg <- ifelse(good, "black", "red")
                   }
-                  oce::plotTS(ctd, cex=cex, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
+                  oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
                   par(mar=omar, mgp=omgp)
               } else if (which == "QC") {
                   if (x[['type']] != 'argos')
