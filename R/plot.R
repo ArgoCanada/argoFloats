@@ -231,7 +231,7 @@ setMethod(f="plot",
               if (!requireNamespace("oce", quietly=TRUE))
                   stop("must install.packages(\"oce\") for plot() to work")
               debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
-              argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1)
+              argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1, style="bold")
               if (!inherits(x, "argoFloats"))
                   stop("In plot() : method is only for objects of class 'argoFloats'", call.=FALSE)
               if (length(which) != 1)
@@ -578,6 +578,6 @@ setMethod(f="plot",
               } else {
                   stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'", call.=FALSE)
               }
-              argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1)
+              argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1, style="bold")
           }
 )
