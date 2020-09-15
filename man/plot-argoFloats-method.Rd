@@ -47,7 +47,7 @@ depending on the value of \code{which}. Note that \code{xlab} is not obeyed if
 value that depends on the value of \code{which}.}
 
 \item{col}{the colour to be used for plot symbols, or \code{NULL}, to get an value
-that depends on the value of \code{which}.  If \code{which="TS"}, then the
+that depends on the value of \code{which} (see \dQuote{Details}).  If \code{which="TS"}, then the
 \code{TScontrol} argument takes precedence over \code{col}.}
 
 \item{pch}{an integer or code indicating the type of plot symbol, or \code{NULL},
@@ -129,7 +129,7 @@ the documentation for \code{\link[oce:plotTS]{oce::plotTS()}} for other argument
 provided. This plot has a default color code to represent bad vs good data.
 This scheme comes from section 3.2.1 of reference 1, in which
 data are considered bad if flagged 3, 4, 6, or 7, and good
-if flaged 1, 2, 5, or 8; good points are in black and bad ones are in
+if flagged 1, 2, 5, or 8; good points are in black and bad ones are in
 red.
 \item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.

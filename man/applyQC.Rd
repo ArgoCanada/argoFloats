@@ -15,7 +15,8 @@ values for data that are to be set to \code{NA} in the returned result.
 The default, \code{NULL}, means to use the flags set up by \code{\link[=readProfiles]{readProfiles()}}
 which, unless specified otherwise in the call to that function, are
 set up to regard as suspicious any data entries that are flagged
-with QC codes of 0 (for data that have not yet been assessed),
+with QC codes of
+0 (for data that have not yet been assessed),
 3 (for "probably bad" data),
 4 (for "bad" data),
 6 (an unused flag),

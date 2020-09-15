@@ -75,7 +75,7 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' provided. This plot has a default color code to represent bad vs good data.
 #' This scheme comes from section 3.2.1 of reference 1, in which
 #' data are considered bad if flagged 3, 4, 6, or 7, and good
-#' if flaged 1, 2, 5, or 8; good points are in black and bad ones are in
+#' if flagged 1, 2, 5, or 8; good points are in black and bad ones are in
 #' red.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
@@ -113,7 +113,7 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' value that depends on the value of `which`.
 #'
 #' @param col the colour to be used for plot symbols, or `NULL`, to get an value
-#' that depends on the value of `which`.  If `which="TS"`, then the
+#' that depends on the value of `which` (see \dQuote{Details}).  If `which="TS"`, then the
 #' `TScontrol` argument takes precedence over `col`.
 #'
 #' @param bg the colour to be used for plot symbol interior, for `pch`
