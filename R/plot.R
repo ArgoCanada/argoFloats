@@ -530,7 +530,8 @@ setMethod(f="plot",
                       goodS <- salinityFlag %in% c(1, 2, 5, 8)
                       good <- goodS & goodT
                       col <- ifelse(good, "black", "red")
-                      bg <- ifelse(good, "black", "red")
+                      if (pch == 21)
+                          bg <- ifelse(good, "black", "red")
                   }
                   oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
                   par(mar=omar, mgp=omgp)
