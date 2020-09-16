@@ -91,6 +91,13 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' time. The bottom panel shows the mean value of the parameter in question
 #' regardless of the flag value. See Example 7.
 #'
+#' * For `which="temperature profile"` a temperature profile is plotted which uses the
+#' oceanographic convenction of putting lower pressures near the top of the plot.
+#' See Example 8.
+#'
+#' * For `which="salinity profile"` a temperature profile is plotted which uses the
+#' oceanographic convenction of putting lower pressures near the top of the plot.
+#' See Example 9.
 #' @param x an [`argoFloats-class`] object.
 #'
 #' @param which a character value indicating the type of plot; see \dQuote{Details}.
@@ -201,6 +208,16 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' argos <- readProfiles(profiles)
 #' plot(argos, which='QC', parameter='temperature')}
 #'
+#' Example 8: Temperature profile of the 131st cycle of float id 2902204
+#' library(argoFloats)
+#' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+#' plot(a, which="temperature profile")
+#'
+#' Example 9: Salinity profile of the 131st cycle of float id 2902204
+#' library(argoFloats)
+#' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+#' plot(a, which="salinity profile")
+#'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
@@ -213,7 +230,7 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 ## @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method
-#' @author Dan Kelley
+#' @author Dan Kelley and Jaimie Harbin
 setMethod(f="plot",
           signature=signature("argoFloats"),
           definition=function(x,
