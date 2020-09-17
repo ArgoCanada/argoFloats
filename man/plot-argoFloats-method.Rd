@@ -30,7 +30,7 @@
 \item{which}{a character value indicating the type of plot; see \dQuote{Details}.}
 
 \item{bathymetry}{an argument used only if \code{which="map"}, to control
-whether (and how) to indicate water depth; see `\dQuote{Details}.}
+whether (and how) to indicate water depth; see \dQuote{Details}.}
 
 \item{xlim, ylim}{numerical values, each a two-element vector, that
 set the \code{x} and \code{y} limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and other conventional
@@ -109,17 +109,24 @@ that shows water depth. There are three possible values for \code{bathymetry}:
 data downloaded with \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}, as in Example 4;
 \item A list with items controlling both the bathymetry data and its
 representation in the plot, as in Example 5.  Those items are:
-a. \code{source}, a mandatory value that either the string \code{"auto"} (the default) to use
+\enumerate{
+\item \code{source}, a mandatory value that either the string \code{"auto"} (the default) to use
 \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to download the data, or a value
 returned by a previous call to that function;
-b. \code{keep}, an optional logical value (with \code{TRUE} as the default) that is passed to
+\item \code{keep}, an optional logical value (with \code{TRUE} as the default) that is passed to
 \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to indicate whether to keep a local file of bathymetry,
 as a way to avoid intermittent problems with the NOAA server;
-c. \code{colormap}, an optional value that is either the string \code{"auto"} (the default)
-for a form of GEBCO colors computed with \code{\link[oce:oceColorsGebco]{oce::oceColorsGebco()}}, or a value
+\item \code{contour}, an optional logical value (with \code{FALSE} as the default) indicating
+(as in example 5A) whether to represent bathymetry with contours (with depths of 100m,
+200m, 500m shown, along with 1km, 2km up to 10km), as opposed to an image;
+\item \code{colormap}, ignored if \code{contour} is \code{TRUE},
+an optional value that is either the string \code{"auto"} (the default)
+for a form of GEBCO colors (as in example 5B) computed with \code{\link[oce:oceColorsGebco]{oce::oceColorsGebco()}}, or a value
 computed with \code{\link[oce:colormap]{oce::colormap()}} applied to the bathymetry data; and
-d. \code{palette}, an optional logical value (with \code{TRUE} as the default)
-indicating whether to draw a depth-color palette to the right of the plot.
+\item \code{palette}, ignored if \code{contour} is \code{TRUE},
+an optional logical value (with \code{TRUE} as the default)
+indicating (again, as in example 5B) whether to draw a depth-color palette to the right of the plot.
+}
 }
 \item For \code{which="TS"},  an overall TS plot is created.  This only works if \code{x}
 is an \linkS4class{argoFloats} object of type \code{"argos"}, i.e. if it was
@@ -175,10 +182,24 @@ plot(index, bathymetry=TRUE)}
 # (Slow, so not run by default.)
 \dontrun{
 par(mar=c(3, 3, 1, 1))
-# Note that colormap shows water depth, not elevation above sea level
 bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
-cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
-plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
+
+# Example 5A. Simple contour version.
+plot(index, bathymetry=list(source=bathy, contour=TRUE))
+
+# Example 5B. Simple colour version.
+cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
+plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
+
+# Example 5C. Comples contour version, with full customization.
+# Suppose the user has defined vectors lon and lat, and matrix z,
+# by using marmap::getNOAA.bathy() or any other means.
+asp <- 1/cos(pi/180*mean(blat))
+# In next, user replaces ... below with any of the 15 arguments that
+# contour provides for customization.
+contour(blon, blat, bz, asp=asp, ...)
+# In next, user replaces ... with any desired specification of dots.
+points(index[["longitude"]], index[["latitude"]], ...)}
 
 # Example 6: TS plot for a particular argo
 library(argoFloats)

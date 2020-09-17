@@ -55,17 +55,23 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #'        data downloaded with [marmap::getNOAA.bathy()], as in Example 4;
 #'     3. A list with items controlling both the bathymetry data and its
 #'        representation in the plot, as in Example 5.  Those items are:
-#'        a. `source`, a mandatory value that either the string `"auto"` (the default) to use
-#'           [marmap::getNOAA.bathy()] to download the data, or a value
-#'           returned by a previous call to that function;
-#'        b. `keep`, an optional logical value (with `TRUE` as the default) that is passed to
-#'           [marmap::getNOAA.bathy()] to indicate whether to keep a local file of bathymetry,
-#'           as a way to avoid intermittent problems with the NOAA server;
-#'        c. `colormap`, an optional value that is either the string `"auto"` (the default)
-#'           for a form of GEBCO colors computed with [oce::oceColorsGebco()], or a value
-#'           computed with [oce::colormap()] applied to the bathymetry data; and
-#'        d. `palette`, an optional logical value (with `TRUE` as the default)
-#'           indicating whether to draw a depth-color palette to the right of the plot.
+#'
+#'         1. `source`, a mandatory value that either the string `"auto"` (the default) to use
+#'            [marmap::getNOAA.bathy()] to download the data, or a value
+#'            returned by a previous call to that function;
+#'         2. `keep`, an optional logical value (with `TRUE` as the default) that is passed to
+#'            [marmap::getNOAA.bathy()] to indicate whether to keep a local file of bathymetry,
+#'            as a way to avoid intermittent problems with the NOAA server;
+#'         3. `contour`, an optional logical value (with `FALSE` as the default) indicating
+#'            (as in example 5A) whether to represent bathymetry with contours (with depths of 100m,
+#'            200m, 500m shown, along with 1km, 2km up to 10km), as opposed to an image;
+#'         4. `colormap`, ignored if `contour` is `TRUE`,
+#'            an optional value that is either the string `"auto"` (the default)
+#'            for a form of GEBCO colors (as in example 5B) computed with [oce::oceColorsGebco()], or a value
+#'            computed with [oce::colormap()] applied to the bathymetry data; and
+#'         5. `palette`, ignored if `contour` is `TRUE`,
+#'            an optional logical value (with `TRUE` as the default)
+#'            indicating (again, as in example 5B) whether to draw a depth-color palette to the right of the plot.
 #'
 #' * For `which="TS"`,  an overall TS plot is created.  This only works if `x`
 #' is an [argoFloats-class] object of type `"argos"`, i.e. if it was
@@ -105,7 +111,7 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' @param which a character value indicating the type of plot; see \dQuote{Details}.
 #'
 #' @param bathymetry an argument used only if `which="map"`, to control
-#' whether (and how) to indicate water depth; see `\dQuote{Details}.
+#' whether (and how) to indicate water depth; see \dQuote{Details}.
 #'
 #' @param xlim,ylim numerical values, each a two-element vector, that
 #' set the `x` and `y` limits of plot axes, as for [plot.default()] and other conventional
@@ -188,10 +194,24 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' # (Slow, so not run by default.)
 #'\dontrun{
 #' par(mar=c(3, 3, 1, 1))
-#' # Note that colormap shows water depth, not elevation above sea level
 #' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
-#' cm <- colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oceColorsGebco(...)))
-#' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))}
+#'
+#' # Example 5A. Simple contour version.
+#' plot(index, bathymetry=list(source=bathy, contour=TRUE))
+#'
+#' # Example 5B. Simple colour version.
+#' cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
+#' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
+#'
+#' # Example 5C. Comples contour version, with full customization.
+#' # Suppose the user has defined vectors lon and lat, and matrix z,
+#' # by using marmap::getNOAA.bathy() or any other means.
+#' asp <- 1/cos(pi/180*mean(blat))
+#' # In next, user replaces ... below with any of the 15 arguments that
+#' # contour provides for customization.
+#' contour(blon, blat, bz, asp=asp, ...)
+#' # In next, user replaces ... with any desired specification of dots.
+#' points(index[["longitude"]], index[["latitude"]], ...)}
 #'
 #' # Example 6: TS plot for a particular argo
 #' library(argoFloats)
@@ -216,7 +236,7 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' \url{https://doi.org/10.13155/29825}.
 #'
 #' @importFrom grDevices extendrange gray rgb
-#' @importFrom graphics abline axis box par plot.window points polygon text
+#' @importFrom graphics abline axis box contour par plot.window points polygon text
 #' @importFrom utils data
 ## @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
 ## @importFrom marmap getNOAA.bathy
@@ -267,13 +287,15 @@ setMethod(f="plot",
                   ## Decode bathymetry
                   if (is.logical(bathymetry)) {
                       drawBathymetry <- bathymetry
-                      bathymetry <- list(source="auto", keep=TRUE, colormap="auto", palette=TRUE)
+                      bathymetry <- list(source="auto", keep=TRUE, contour=FALSE, colormap="auto", palette=TRUE)
                   } else if (is.list(bathymetry)) {
                       drawBathymetry <- TRUE
                       if (!("source" %in% names(bathymetry)))
                           stop("In plot() : 'bathymetry' is a list, it must contain 'source', at least", call.=FALSE)
                       if (is.null(bathymetry$keep))
                           bathymetry$keep <- TRUE
+                      if (is.null(bathymetry$contour))
+                          bathymetry$contour <- FALSE
                       if (is.null(bathymetry$colormap))
                           bathymetry$colormap <- "auto"
                       if (is.null(bathymetry$palette))
@@ -306,7 +328,7 @@ setMethod(f="plot",
                           ## > B<-par("mar")
                           ## > A-B
                           ## [1] -8.881784e-16  0.000000e+00  0.000000e+00 -2.750000e+00
-                          if (bathymetry$palette) {
+                          if (!bathymetry$contour && bathymetry$palette) {
                               tmpmar <- par("mar")
                               par(mar=tmpmar + c(0, 0, 0, 2.75))
                               argoFloatsDebug(debug, "  temporarily set par(mar=c(", paste(par("mar"), collapse=", "), ")) to allow for the palette\n", sep="")
@@ -332,7 +354,7 @@ setMethod(f="plot",
                                           asp=asp,
                                           xlab=xlab, ylab=ylab)
                           }
-                          if (bathymetry$palette) {
+                          if (!bathymetry$contour && bathymetry$palette) {
                               message("setting mar to ", paste(tmpmar, collapse=" "))
                               par(mar=tmpmar)
                           }
@@ -371,7 +393,7 @@ setMethod(f="plot",
                           stop("cannot determine bathymetry data source")
                       }
                       ## Handle colormap
-                      if (is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
+                      if (!bathymetry$contour && is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
                           argoFloatsDebug(debug, "setting a default colormap for 0m to ", -min(bathy), "m depth\n")
                           bathymetry$colormap <- oce::colormap(zlim=c(0, -min(bathy)),
                                                                col=function(...)
@@ -384,7 +406,7 @@ setMethod(f="plot",
                       ## there is no axis to the left of the palette, so we do not need space for one.
                       ## We recover the stolen space by putting it back at the RHS, where it can be
                       ## useful, especially if a map plot has another plot to its right.
-                      if (bathymetry$palette) {
+                      if (!bathymetry$contour && bathymetry$palette) {
                           argoFloatsDebug(debug, "drawing a bathymetry palette\n")
                           ## Increase space to right of axis, decreasing equally to the left.
                           textHeight <- par("cin")[2]
@@ -437,9 +459,20 @@ setMethod(f="plot",
                       }
                   }
                   if (drawBathymetry) {
-                      oce::imagep(as.numeric(rownames(bathy)),
+                      if (bathymetry$contour) {
+                          argoFloatsDebug(debug, "indicating bathymetry with contours\n")
+                          contour(as.numeric(rownames(bathy)),
                                   as.numeric(colnames(bathy)),
-                                  -bathy, colormap=bathymetry$colormap, add=TRUE)
+                                  -bathy,
+                                  breaks=c(100, 200, 500, seq(1e3, 10e3, 1e3)),
+                                  labels=c("100m", "200m", "500m", paste(1:10, "km", sep="")),
+                                  labcex=0.9, add=TRUE)
+                      } else {
+                          argoFloatsDebug(debug, "indicating bathymetry with an image\n")
+                          oce::imagep(as.numeric(rownames(bathy)),
+                                      as.numeric(colnames(bathy)),
+                                      -bathy, colormap=bathymetry$colormap, add=TRUE)
+                      }
                       argoFloatsMapAxes(axes=FALSE) # clean up image by redrawing box
                   }
                   points(unlist(longitude), unlist(latitude),
