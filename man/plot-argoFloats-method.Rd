@@ -181,7 +181,7 @@ plot(index, bathymetry=TRUE)}
 # Example 5: map with fine-grained bathymetry control
 # (Slow, so not run by default.)
 \dontrun{
-par(mar=c(3, 3, 1, 1))
+par(mar=c(2, 2, 1, 1))
 bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
 
 # Example 5A. Simple contour version.
@@ -191,15 +191,24 @@ plot(index, bathymetry=list(source=bathy, contour=TRUE))
 cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
 plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
 
-# Example 5C. Comples contour version, with full customization.
-# Suppose the user has defined vectors lon and lat, and matrix z,
-# by using marmap::getNOAA.bathy() or any other means.
-asp <- 1/cos(pi/180*mean(blat))
-# In next, user replaces ... below with any of the 15 arguments that
-# contour provides for customization.
-contour(blon, blat, bz, asp=asp, ...)
-# In next, user replaces ... with any desired specification of dots.
-points(index[["longitude"]], index[["latitude"]], ...)}
+# Example 5C. Customized map, sidestepping this function.
+lon <- as.numeric(rownames(bathy))
+lat <- as.numeric(colnames(bathy))
+depth <- -bathy # convert from elevation to depth
+asp <- 1/cos(pi/180*mean(lat))
+# Limit plot region to float region.
+xlim <- range(index[["longitude"]])
+ylim <- range(index[["latitude"]])
+# Colourize 1km, 2km, etc, isobaths.
+contour(x=lon, y=lat, z=depth, xlab="", ylab="",
+        xlim=xlim, ylim=ylim, asp=asp,
+        col=1:6, lwd=3, levels=1000*1:6, drawlabels=FALSE)
+# Show land
+data(coastlineWorldFine, package="ocedata")
+polygon(coastlineWorldFine[["longitude"]],
+        coastlineWorldFine[["latitude"]], col="tan")
+# Indicate float positions.
+points(index[["longitude"]], index[["latitude"]], pch=20)}
 
 # Example 6: TS plot for a particular argo
 library(argoFloats)
