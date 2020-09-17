@@ -21,7 +21,7 @@ with QC codes of
 4 (for "bad" data),
 6 (an unused flag),
 7 (an unused flag), or
-9 (for "missing" data).  See Section 3.2.2 of Carval et al. (2019) for
+9 (for "missing" data).  See Sections 3.2.1 and 3.2.2 of Carval et al. (2019) for
 more information on these QC code values.}
 
 \item{actions}{the actions to perform. The default, \code{NULL}, means to

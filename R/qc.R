@@ -28,7 +28,7 @@
 #' 4 (for "bad" data),
 #' 6 (an unused flag),
 #' 7 (an unused flag), or
-#' 9 (for "missing" data).  See Section 3.2.2 of Carval et al. (2019) for
+#' 9 (for "missing" data).  See Sections 3.2.1 and 3.2.2 of Carval et al. (2019) for
 #' more information on these QC code values.
 #'
 #' @param actions the actions to perform. The default, `NULL`, means to
@@ -68,6 +68,11 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
     if ("argos" != x[["type"]])
         stop("can only handle flags in an object of type \"argos\", as created with readProfiles()")
     res <- x
+    if (is.null(flags))
+        flags <- c(0, 3, 4, 6, 7, 9)
+    ##message("next is flags:"); print(flags)
+    if (is.null(actions))
+        actions <- "NA"
     res@data$argos <- lapply(x@data$argos, oce::handleFlags, flags=flags, actions=actions, debug=debug)
     res@processingLog <- oce::processingLogAppend(x@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     res
