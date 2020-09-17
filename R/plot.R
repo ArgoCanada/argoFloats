@@ -90,6 +90,15 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 #' time. The bottom panel shows the mean value of the parameter in question
 #' regardless of the flag value. See Example 7.
+##
+## # FIXME(JLH): add such things
+## plot(x, which="profile", parameter="T", ...) # the "..." goes to oce::plotProfile()
+## plot(x, which="profile", parameter=NAME) # where NAME is in the data for the object
+## plot(x, which="profile", parameter="temperature")
+## plot(x, which="profile", parameter="CT")
+## plot(x, which="profile", parameter="theta")
+## plot(x, which="timeseries", parameter="T")
+##
 #'
 #' @param x an [`argoFloats-class`] object.
 #'
