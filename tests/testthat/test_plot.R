@@ -33,3 +33,19 @@ test_that("plot QC", {
     
           
           )
+
+test_that("plot profile", {
+    a <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")),
+                        "Of 1 profiles read, 1 has")
+    expect_error(plot(a, which="profile", "In plot,argoFloats-method():
+                      Please provide a parameter, one of pressure, pressureAdjusted, temperature,
+                      temperatureAdjusted, salinity, salinityAdjusted, oxygen, oxygenAdjusted, chlorophyllA,
+                      chlorophyllAAdjusted, BBP700, BBP700Adjusted, nitrate, nitrateAdjusted "))
+    expect_error(plot(a, which="profile", parameter="nitrate",
+                      "In plot,argoFloats-method(): Parameter 'nitrate' not found.
+                      Try one of: pressure, pressureAdjusted, temperature, temperatureAdjusted,
+                      salinity, salinityAdjusted, oxygen, oxygenAdjusted, chlorophyllA, chlorophyllAAdjusted,
+                      BBP700, BBP700Adjusted" ))
+    
+}
+)

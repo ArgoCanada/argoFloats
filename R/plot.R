@@ -593,17 +593,17 @@ setMethod(f="plot",
                       stop("In plot,argoFloats-method(): The type of x must be 'argos'", call.=FALSE)
                   dots <- list(...)
                   knownParameters <- names(x[[1]]@metadata$flags)
-                  parameter <- dots$parameter
+                  parameter <<- dots$parameter
                   if (is.null(parameter))
                       stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
                   if (!(parameter %in% knownParameters))
                       stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: ", paste(knownParameters, collapse=', '), call.=FALSE)
                   if ((parameter %in% knownParameters)) {
-                      unit <<- x[['units']][[1]]$parameter$unit ## Need to get rid of expression
+                      U <<- x[['units']][[1]]$oxygen$unit[[1]] ## Need to figure out how to make this general with parameter
                       pressure <- unlist(x[['pressure']])
                       p <<- unlist(x[[parameter]])
-                      plot(p, pressure, ylim=rev(range(pressure, na.rm=TRUE)), type="p", xlab= parameter, ylab='Pressure [dbar]')
-                  }
+                      plot(p, pressure, ylim=rev(range(pressure, na.rm=TRUE)), type="p", xlab = bquote("["*.(U)*"]"), ylab='Pressure [dbar]')
+                  } # Need to add parameter name before units in xlab
               } else {
                   stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'", call.=FALSE)
               }
