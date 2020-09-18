@@ -91,13 +91,12 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' time. The bottom panel shows the mean value of the parameter in question
 #' regardless of the flag value. See Example 7.
 #'
-#' * For `which="temperature profile"` a temperature profile is plotted which uses the
-#' oceanographic convenction of putting lower pressures near the top of the plot.
+#' * For `which="profile"`  a profile plot, showing variation of some quantity
+#' with pressure is shown. An additional argument named `parameter` must be given,
+#' to name the quality on interest. Note: this is plotted  using the oceanographic
+#' convention of putting lower pressures near the top of the plot.
 #' See Example 8.
 #'
-#' * For `which="salinity profile"` a temperature profile is plotted which uses the
-#' oceanographic convenction of putting lower pressures near the top of the plot.
-#' See Example 9.
 #' @param x an [`argoFloats-class`] object.
 #'
 #' @param which a character value indicating the type of plot; see \dQuote{Details}.
@@ -211,12 +210,7 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' Example 8: Temperature profile of the 131st cycle of float id 2902204
 #' library(argoFloats)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-#' plot(a, which="temperature profile")
-#'
-#' Example 9: Salinity profile of the 131st cycle of float id 2902204
-#' library(argoFloats)
-#' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-#' plot(a, which="salinity profile")
+#' plot(a, which="profile", parameter="temperature")
 #'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -593,6 +587,22 @@ setMethod(f="plot",
                           box()
                           text(0, 0.5, paste(' No', parameter, 'flags available'), pos=4)
                       }
+                  }
+              } else if (which == "profile") {
+                  if (x[['type']] != 'argos')
+                      stop("In plot,argoFloats-method(): The type of x must be 'argos'", call.=FALSE)
+                  dots <- list(...)
+                  knownParameters <- names(x[[1]]@metadata$flags)
+                  parameter <- dots$parameter
+                  if (is.null(parameter))
+                      stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
+                  if (!(parameter %in% knownParameters))
+                      stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: ", paste(knownParameters, collapse=', '), call.=FALSE)
+                  if ((parameter %in% knownParameters)) {
+                      unit <<- x[['units']][[1]]$parameter$unit ## Need to get rid of expression
+                      pressure <- unlist(x[['pressure']])
+                      p <<- unlist(x[[parameter]])
+                      plot(p, pressure, ylim=rev(range(pressure, na.rm=TRUE)), type="p", xlab= parameter, ylab='Pressure [dbar]')
                   }
               } else {
                   stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'", call.=FALSE)
