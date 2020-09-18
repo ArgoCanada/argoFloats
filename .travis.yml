@@ -21,4 +21,5 @@ r_packages:
     - rgdal
     - sf
     - covr
+    - shinycssloaders
 
