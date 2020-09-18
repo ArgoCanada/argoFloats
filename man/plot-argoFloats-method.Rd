@@ -86,7 +86,12 @@ within this function.}
 \description{
 The action depends on the \code{type} of the object, and
 this is set up by the function that created the object;
-see \dQuote{Details}.
+see \dQuote{Details}. These are basic plot styles, with
+somewhat limited scope for customization. Since the data with
+\linkS4class{argoFloats} objects are easy to extract, users should
+not find it difficult to create their own plots to meet a
+particular aesthetic; Example 5C provides an example for
+maps.
 }
 \details{
 The various plot types are as follows.
