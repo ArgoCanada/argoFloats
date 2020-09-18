@@ -65,18 +65,35 @@
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 #' \url{https://doi.org/10.13155/29825}.
 #'
+#' @importFrom utils packageVersion
 #' @export
 #'
 #' @author Dan Kelley and Jaimie Harbin
 useAdjusted <- function(argo, which="all", fallback=TRUE, debug=0)
 {
+    argoFloatsDebug(debug, "useAdjusted() {\n", sep="", unindent=1, style="bold")
     if (!inherits(argo, "argoFloats"))
         stop("useAdjusted() is only for argoFloats objects")
     if ("argos" != argo[["type"]])
         stop("useAdjusted() is only for argoFloats objects created by readProfiles()")
     res <- argo
-    for (i in argo[["length"]])
-        res@data$argos[[i]] <- oce::preferAdjusted(argo@data$argos[[i]], which=which, fallback=fallback)
+    ## NOTE: use a workaround for preferVersion, if
+    ## the installed oce is too old to have it.
+    if (packageVersion("oce") > "1.2.0") {
+        argoFloatsDebug(debug, "using oce::preferAdjusted() because the oce version is > 1.2.0\n")
+        for (i in argo[["length"]]) {
+            res@data$argos[[i]] <- oce::preferAdjusted(argo@data$argos[[i]], which=which, fallback=fallback)
+        }
+    } else {
+        argoFloatsDebug(debug, "using a workaround for oce::preferAdjusted() because oce is < 1.2.0\n")
+        for (i in argo[["length"]]) {
+            tmp <- res@data$argos[[i]]
+            tmp@metadata$adjustedFallback <- fallback
+            tmp@metadata$adjustedWhich <- which
+            res@data$argos[[i]] <- tmp
+        }
+    }
+    argoFloatsDebug(debug, "} # \n", sep="", unindent=1, style="bold")
     res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     res
 }
