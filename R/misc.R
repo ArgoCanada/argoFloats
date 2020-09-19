@@ -11,11 +11,10 @@
 #' that means that the user will need to install \CRANpkg{oce} from
 #' github.com/dankelley/oce, not from CRAN.
 #'
-#' If \CRANpkg{oce} is version under 1.3.0, `useAdjusted()` reports
-#' an error.  Otherwise, it carries out its work by
-#' applying `preferAdjusted()` from
-#' in the \CRANpkg{oce} to each of the Argo
-#' objects stored within the the `data` slot of `x`.
+#' If the version of \CRANpkg{oce} is lower than 1.3.0, `useAdjusted()`
+#' reports an error.  Otherwise, it carries out its work by
+#' applying `preferAdjusted()` from the \CRANpkg{oce} to each
+#' of the Argo objects stored within the `data` slot of `x`.
 #'
 #' Although one might guess that adjusted data
 #' are always be preferable to original data, this is not always
@@ -53,11 +52,14 @@
 #'
 #' @examples
 #' library(argoFloats)
-#' raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
-#' adj <- useAdjusted(raw)
-#' par(mfrow=c(1,2), mar=c(5,4,1,2))
-#' hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
-#' hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
+#' # Note that useAdjusted() requires oce version to be 1.3.0 or higher.
+#' if (packageVersion("oce") >= "1.3.0") {
+#'     raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+#'     adj <- useAdjusted(raw)
+#'     par(mfrow=c(1,2), mar=c(5,4,1,2))
+#'     hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
+#'     hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
+#' }
 #'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -75,22 +77,11 @@ useAdjusted <- function(argo, which="all", fallback=TRUE, debug=0)
         stop("useAdjusted() is only for argoFloats objects")
     if ("argos" != argo[["type"]])
         stop("useAdjusted() is only for argoFloats objects created by readProfiles()")
+    if (packageVersion("oce") < "1.3.0")
+        stop("useAdjusted() requires the oce version to be 1.3.0 or higher.")
     res <- argo
-    ## NOTE: use a workaround for preferVersion, if
-    ## the installed oce is too old to have it.
-    if (packageVersion("oce") > "1.2.0") {
-        argoFloatsDebug(debug, "using oce::preferAdjusted() because the oce version is > 1.2.0\n")
-        for (i in argo[["length"]]) {
-            res@data$argos[[i]] <- oce::preferAdjusted(argo@data$argos[[i]], which=which, fallback=fallback)
-        }
-    } else {
-        argoFloatsDebug(debug, "using a workaround for oce::preferAdjusted() because oce is < 1.2.0\n")
-        for (i in argo[["length"]]) {
-            tmp <- res@data$argos[[i]]
-            tmp@metadata$adjustedFallback <- fallback
-            tmp@metadata$adjustedWhich <- which
-            res@data$argos[[i]] <- tmp
-        }
+    for (i in argo[["length"]]) {
+        res@data$argos[[i]] <- oce::preferAdjusted(argo@data$argos[[i]], which=which, fallback=fallback)
     }
     argoFloatsDebug(debug, "} # \n", sep="", unindent=1, style="bold")
     res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))

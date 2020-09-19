@@ -30,6 +30,21 @@ deal with QC flags and adjusted data. For quality control, this centers around
 three functions: `plot(which='QC')`, `showQCTests()`and `applyQC()`. Adjusted
 data are handled with the `useAdjusted()` function.
 
+<!--
+
+# Developer note
+
+I thought that after rebuilding the package and its vignttes, and installing
+the package, using
+```{r eval=FALSE}
+library(argoFloats)
+load_all()
+browseVignettes('argoFloats')
+```
+would show the updated version, but it does NOT. It shows the old version.
+
+-->
+
 # How QC Flags are set
 
 Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
@@ -39,7 +54,7 @@ User's Manual (Carval et al. 2019), real time measurements are assigned a QC
 flag within a 24-48 hour time frame, and delayed mode are looked at by
 scientists who apply procedures to check the quality.
 
-# Flags
+# Handling Flags
 
 As described in the Argo user's manual (Carval et al. 2019), data that are given
 a flag value of 1, 2, 5, or 8 are considered 'good', those given a
@@ -58,7 +73,7 @@ following diagram.
 This vignette will walk the users through the three step flag process while
 demonstrating examples using the float with `id` 1901584 near the Bahamas.
 
-### Step One: QC Plot
+## Making QC Plots
 
 `argoFloats` uses the flags within profiles to distinguish between
 "good" and "bad" data. It offers a specialized plot type that displays the
@@ -71,8 +86,8 @@ about the permitted parameters for the dataset.
 ```{r echo=FALSE}
 id <- '1901584'
 ```
-An example of how to get the `QC` plot for temperature for the float with `id`
-equal to `r id` is as follows:
+The following shows how to get the `QC` plot for temperature for the float with
+`id` equal to "`r id`".
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE, eval=FALSE}
 library(argoFloats)
@@ -96,7 +111,7 @@ function.
 temperature data for float `id` 4900845 referred to in the built-in synthetic index dataset.
 Explain your results.
 
-### Step Two: showQCTests()
+## Discovering which tests were performed
 
 `showQCTests` prints a summary of the QC tests that were performed on an Argo
 cycle.  *Caution:* some datasets have flags, indicating that QC procedures had
@@ -114,7 +129,7 @@ To analyze the first cycle shown by the `plot(..., which='QC')` example, we will
 use previously defined variables and the `showQCTests()` function as shown below.
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE, eval=FALSE}
-index2 <- subset(index1, cycle='124') 
+index2 <- subset(index1, cycle='124')
 profiles2 <- getProfiles(index2)
 argos2 <- readProfiles(profiles2)
 showQCTests(argos2[[1]])
@@ -155,7 +170,7 @@ Proceed with caution!
 synthetic dataset to determine which tests were performed and/or failed during
 quality control testing. Explain your results.
 
-### Step Three: applyQC()
+## Applying QC flags
 
 The `applyQC()` function examines QC within an `argoFloats` object that was
 created by `readProfiles()`. By default, it replaces all suspicious data with NA
@@ -190,21 +205,30 @@ of analysis can be found at our Youtube page in video 08
 plot comparing TS diagrams. Do the plots look different? Use basic R functions
 to determine if the data are different. Explain your results.
 
-# Adjusted Data
+# Using Adjusted Data
 
-### useAdjusted()
+**Preliminary note:** the `useAdjusted()` function requires that the version of
+`oce` be 1.3.0 or higher.  Therefore, the code provided in this section is wrapped in tests
+of the version number, for otherwise the vignette would not build for all users. It
+is likely that the CRAN version will be bumped to 1.3.0 sometime in the autumn of 2020,
+but until then, users will need to build `oce` from source, using
+```{r eval=FALSE}
+devtools::install_github("dankelley/oce", ref="develop")
+```
 
 Some data sets undergo adjustments that are made in recognition of the Quality
 Control (QC) analysis or improved calibrations. These type of data sets are
-considered "adjusted" and are handled using `useAdjusted()`. `useAdjusted()` is
-done by using `oce::preferAdjusted()` on each of the Argo objects stored within
-the first argument. The procedure is fairly complicated, so users are urged to
-read the documentation for `oce::preferAdjusted()` after reading the sketch
-provided in the “Details” section of `?useAdjusted()` and familiarizing
-themselves with the flow chart below that demonstrates the steps taken when a
-user specifies `which=ALL` or `which=<param>`.
+considered "adjusted" and are handled using `useAdjusted()`, provided that the
+version of `oce` is 1.3.0 or higher (otherwise, `useAdjusted()` will report an
+error).  The procedure is that the `oce` function `preferAdjusted()` is called
+on each of the Argo objects stored within the first argument, which will then
+cause future uses of the `[[` accessor to return adjusted versions of
+variables.  It should be noted that the adjusted versions are not always
+preferable (e.g. sometimes the adjusted values are all `NA`), so
+`useAdjusted()` is a somewhat sophisticated process, as is explained in the
+documentation for `useAdjusted()` and illustrated the following flowchart.
 
-![Figure 4: Flow chat for useAdjusted() function within argoFloats package when which argument is equal to ALL or param.](../man/figures/useAdjustedDiagram.png)
+![Figure 4: Flow chart for `useAdjusted()`.](../man/figures/useAdjustedDiagram.png)
 
 One example where it is useful to use adjusted data is when considering oxygen.
 Often times, BCG sensors have calibration issues and more specifically for
@@ -213,22 +237,24 @@ example below we used the built in data set, named SD5903586_001.nc, to focus on
 the oxygen in the first cycle with float `id` 5903586 in the synthetic data.
 
 ```{r,  warning=FALSE, message=FALSE, error=FALSE, fig.cap="*Figure 5.* Comparison of raw and adjusted oxygen profiles for built-in float file `SD5903586_001.nc`."}
-library(argoFloats)
-raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
-adjusted <- useAdjusted(raw)
-rawOxygen <- unlist(raw[['oxygen']])
-rawPressure <- unlist(raw[['pressure']])
-adjustedOxygen <- unlist(adjusted[['oxygen']])
-adjustedPressure <- unlist(adjusted[['pressure']])
-xlim <- range(c(rawOxygen, adjustedOxygen), na.rm=TRUE)
-plot(rawOxygen, rawPressure,
-     pch=1, col=1,
-     xlim=xlim, ylim=rev(range(rawPressure, na.rm=TRUE)),
-     xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"),
-     ylab='Pressure (dbar)')
-points(adjustedOxygen, adjustedPressure,
-       pch=3, col=2)
-legend("bottomright", pch=c(1,3), col=c(1,2), c("Raw", "Adjusted"))
+if (packageVersion("oce") > "1.2.0") {
+    library(argoFloats)
+    raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+    adjusted <- useAdjusted(raw)
+    rawOxygen <- unlist(raw[['oxygen']])
+    rawPressure <- unlist(raw[['pressure']])
+    adjustedOxygen <- unlist(adjusted[['oxygen']])
+    adjustedPressure <- unlist(adjusted[['pressure']])
+    xlim <- range(c(rawOxygen, adjustedOxygen), na.rm=TRUE)
+    plot(rawOxygen, rawPressure,
+         pch=1, col=1,
+         xlim=xlim, ylim=rev(range(rawPressure, na.rm=TRUE)),
+         xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"),
+         ylab='Pressure (dbar)')
+    points(adjustedOxygen, adjustedPressure,
+           pch=3, col=2)
+    legend("bottomright", pch=c(1,3), col=c(1,2), c("Raw", "Adjusted"))
+}
 ```
 
 As displayed by the plot, there are differences between raw and adjusted data.
@@ -236,21 +262,30 @@ To determine if these differences are statistically different, basic R functions
 can be used as shown below:
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE, fig.cap="*Figure 6.* Comparison of raw and adjusted oxygen for built-in float file `SD5903586_001.nc`.  The dotted line is a 1:1 relationship, and the red line is the result of linear regression (see text)."}
-plot(rawOxygen, adjustedOxygen,
-     xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"),
-     ylab=expression("Adjusted Oxygen ["*mu*mol/kg*"]"))
-abline(0, 1, lty=3)
-model <- lm(adjustedOxygen ~ rawOxygen)
-abline(model, col=2)
+if (packageVersion("oce") > "1.2.0") {
+    plot(rawOxygen, adjustedOxygen,
+         xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"),
+         ylab=expression("Adjusted Oxygen ["*mu*mol/kg*"]"))
+    abline(0, 1, lty=3)
+    model <- lm(adjustedOxygen ~ rawOxygen)
+    abline(model, col=2)
+}
 ```
-
-The mean absolute residual of the linear regression between adjusted and raw
-oxygen concentrations is $`r round(mean(abs((model$residuals))),8)`$
-$\mu$mol/kg, suggesting that the adjustment amounted to a simple linear
-transform. Additionally, the summary of the linear regression, given by
-`summary(model)`, tells us that the p-value is < 2.2e-16, suggesting that the
-user rejects the null hypothesis of equality between raw and adjusted
-values.
+```{r echo=FALSE}
+if (packageVersion("oce") > "1.2.0") {
+    residual <- round(mean(abs((model$residuals))),8)
+} else {
+    residual <- 9.8e-7 # value obtained with oce 1.3.0
+}
+```
+An examination of the linear fit,
+```{r}
+if (packageVersion("oce") > "1.2.0") {
+    summary(model)
+}
+```
+reveals that the adjustment involved a simple scaling, in which the oxygen
+value was increased by 16 percent.
 
 **Exercise 4** Use the same `id` and cycle as the previous example to determine
 if there is a statistically significant difference between raw and adjusted
@@ -261,7 +296,7 @@ datasets for chlorophyll A.
 **Exercise 1:** Use the previous code to determine the quality of
 temperature data for float `id` 4900845 referred to in the built-in synthetic index dataset.
 Explain your results.
-```
+```{r eval=FALSE}
 library(argoFloats)
 data('indexSynthetic')
 index1 <- subset(indexSynthetic, id='4900845')
@@ -277,7 +312,7 @@ all data is considered okay to use.
 synthetic dataset to determine which tests were performed and/or failed during
 quality control testing. Explain your results.
 
-```
+```{r eval=FALSE}
 library(argoFloats)
 data('indexSynthetic')
 index1 <- subset(indexSynthetic, id='4900845')
@@ -293,7 +328,7 @@ user must self analyze their data to ensure all data seems reasonable to use.
 **Exercise 3** : Use `applyQC()` on float with `id` 4900845 from exercise 1 and
 plot comparing TS diagrams. Do the plots look different? Use basic R functions
 to determine if the data are different. Explain your results.
-```
+```{r eval=FALSE}
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(indexSynthetic)
@@ -308,7 +343,7 @@ As shown by the plot, the plot containing "good" data and the plot containing
 "bad" data look the same. Using basic R functions as follows verifies that the
 datasets are the same.
 
-```
+```{r eval=FALSE}
 summary(unlist(argos[['temperature']]))
 summary(unlist(clean[['temperature']]))
 summary(unlist(argos[['salinity']]))
@@ -323,7 +358,7 @@ datasets for chlorophyll A.
 
 To plot the profile of chlorophyll A for float `id` 5903586, `cycle` = 001, the
 following code is used:
-```
+```{r eval=FALSE}
 library(argoFloats)
 raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
 adjusted <- useAdjusted(raw)
@@ -338,7 +373,7 @@ legend("bottomright", col=c('blue','red'), c("Raw", "Adjusted"), pch=c(16, 16))
 Using basic R functions to determine if the raw and adjusted datasets are
 significantly different is as follows:
 
-```
+```{r eval=FALSE}
 plot(rawC, adjustedC,
      xlab=expression("Raw Chlorophyll (mg/m3)"),
      ylab=expression("Adjusted Chlorophyll (mg/m3)"))

@@ -41,11 +41,10 @@ that means that the user will need to install \CRANpkg{oce} from
 github.com/dankelley/oce, not from CRAN.
 }
 \details{
-If \CRANpkg{oce} is version under 1.3.0, \code{useAdjusted()} reports
-an error.  Otherwise, it carries out its work by
-applying \code{preferAdjusted()} from
-in the \CRANpkg{oce} to each of the Argo
-objects stored within the the \code{data} slot of \code{x}.
+If the version of \CRANpkg{oce} is lower than 1.3.0, \code{useAdjusted()}
+reports an error.  Otherwise, it carries out its work by
+applying \code{preferAdjusted()} from the \CRANpkg{oce} to each
+of the Argo objects stored within the \code{data} slot of \code{x}.
 
 Although one might guess that adjusted data
 are always be preferable to original data, this is not always
@@ -60,11 +59,14 @@ adding adjusted data to Argo files.
 }
 \examples{
 library(argoFloats)
-raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
-adj <- useAdjusted(raw)
-par(mfrow=c(1,2), mar=c(5,4,1,2))
-hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
-hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
+# Note that useAdjusted() requires oce version to be 1.3.0 or higher.
+if (packageVersion("oce") >= "1.3.0") {
+    raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+    adj <- useAdjusted(raw)
+    par(mfrow=c(1,2), mar=c(5,4,1,2))
+    hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
+    hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
+}
 
 }
 \references{
