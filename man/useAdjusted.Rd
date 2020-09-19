@@ -2,15 +2,15 @@
 % Please edit documentation in R/misc.R
 \name{useAdjusted}
 \alias{useAdjusted}
-\title{Switch unadjusted and adjusted data}
+\title{Switch [[ Focus to Adjusted data}
 \usage{
 useAdjusted(argo, which = "all", fallback = TRUE, debug = 0)
 }
 \arguments{
 \item{argo}{an \code{\linkS4class{argoFloats}} object, as read by \code{\link[=readProfiles]{readProfiles()}}.}
 
-\item{which}{a character vector (passed to
-\code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} directly) naming the items for which
+\item{which}{a character vector (passed directly to
+\code{preferAdjusted()}, or its mimic) naming the items for which
 (depending also on the value of \code{fallback}) adjusted values
 are to be sought by future calls to \code{\link{[[,argoFloats-method}}.
 The short names are used, e.g. \code{which="oxygen"} means that
@@ -19,8 +19,8 @@ such as \code{argo[["oxygen"]]}.  The default,
 \code{"all"}, means to  use adjusted values for any item in \code{argo}
 that has adjusted values.}
 
-\item{fallback}{a logical value (passed to
-\code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} directly) indicating whether to fall back
+\item{fallback}{a logical value (passed directly to
+\code{preferAdjusted()} or its mimic) indicating whether to fall back
 to unadjusted values for any data field in which the
 adjusted values are all \code{NA}.  The default value, \code{TRUE},
 avoids a problem with biogeochemical fields, where adjustment
@@ -31,41 +31,42 @@ other fields that consist of nothing more than \code{NA}s.}
 should be printed.}
 }
 \description{
-This is done by using \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} on each of the Argo
-objects stored within the first argument.  The procedure is fairly
-complicated, so users are urged to read the documentation
-for \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} after reading the
-sketch provided in the \dQuote{Details} section and to
-familiarizing themselves with the flow chart below that demonstrates the
-steps taken when a user specifies \code{which=ALL} or \verb{which=<param>}.
+This function returns a version of \code{x} for which the enclosed
+\link[oce:argo-class]{oce::argo} objects are modified in a way that makes
+future uses of \code{\link{[[,argoFloats-method}}
+return the \emph{adjusted} data, not the original data.
+\strong{NOTE:} For this to work, the version 1.3.0 or greater
+of \CRANpkg{oce} must be installed, and, as of September 2020,
+that means that the user will need to install \CRANpkg{oce} from
+github.com/dankelley/oce, not from CRAN.
 }
 \details{
-The value returned by \code{useAdjusted} is similar to the first argument
-in all respects, except that the individual \code{argo} objects stored within
-its \code{data} slot have their \code{metadata} slots modified to indicate a
-preference for adjusted data over unadjusted data. Because of that,
-future calls to \code{\link{[[,argoFloats-method}} will
-return adjusted data instead of unadjusted data, for data items
-specified by \code{which}, and subject to the constraint imposed by
-\code{fallback}.
+If the version of \CRANpkg{oce} is lower than 1.3.0, \code{useAdjusted()}
+reports an error.  Otherwise, it carries out its work by
+applying \code{preferAdjusted()} from the \CRANpkg{oce} to each
+of the Argo objects stored within the \code{data} slot of \code{x}.
 
-See the documentation for \code{\link[oce:preferAdjusted]{oce::preferAdjusted()}} for more
-on the procedure, and see Reference 1 for the process of adding
-adjusted data to Argo files.  Although it might seem that adjusted data
-will always be preferable to unadjusted data, this is not always
-the case, and a careful analyst will study both data streams, and
-look through the processing notes for any float that is of individual
-interest.
+Although one might guess that adjusted data
+are always be preferable to original data, this is not always
+the case.  Indeed, it is common for the adjusted data to consist
+entirely of \code{NA} values.  A careful analyst should study both
+data streams, and should also read the processing notes
+for any float (or float cycle) that is of particular interest.
+See Reference 1 for more information on the process of
+adding adjusted data to Argo files.
 
 \if{html}{\figure{useAdjustedDiagram.png}{options: width=455px alt="Figure: useAdjustedDiagram.png" fig.cap="hello"}}
 }
 \examples{
 library(argoFloats)
-raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
-adj <- useAdjusted(raw)
-par(mfrow=c(1,2), mar=c(5,4,1,2))
-hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
-hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
+# Note that useAdjusted() requires oce version to be 1.3.0 or higher.
+if (packageVersion("oce") >= "1.3.0") {
+    raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+    adj <- useAdjusted(raw)
+    par(mfrow=c(1,2), mar=c(5,4,1,2))
+    hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
+    hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
+}
 
 }
 \references{
