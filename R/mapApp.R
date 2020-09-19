@@ -14,6 +14,7 @@ startTime <- as.POSIXlt(endTime - 21 * 86400)
 
 #' @importFrom grDevices grey
 #' @importFrom graphics arrows image lines mtext
+#' @importFrom shiny fluidPage headerPanel tags column fluidRow p actionButton textInput checkboxGroupInput selectInput dblclickOpts brushOpts
 
 uiMapApp  <- shiny::fluidPage(
     shiny::headerPanel(title = "", windowTitle = "argoFloats mapApp"),
@@ -831,6 +832,7 @@ serverMapApp <- function(input, output, session) {
 #' mapApp()}
 #'
 #' @author Dan Kelley
+#' @importFrom shiny shinApp
 #' @export
 #mapApp <- function(age = 7)
 mapApp <- function()
