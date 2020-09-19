@@ -1,9 +1,5 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-if (!require("shiny"))
-    stop("must install.packages(\"shiny\") for this to work")
-if (!require("shinycssloaders"))
-    stop("must install.packages(\"shinycssloaders\") for this to work")
 
 ##cacheAge <- 5                          # a global variable
 col <- list(core = 7, bgc = 3, deep = 6)
@@ -17,6 +13,10 @@ startTime <- as.POSIXlt(endTime - 21 * 86400)
 #' @importFrom shiny fluidPage headerPanel tags column fluidRow p actionButton textInput checkboxGroupInput selectInput dblclickOpts brushOpts
 
 uiMapApp  <- shiny::fluidPage(
+    if (!requireNamespace("shiny"), quietly=TRUE)
+        stop("must install.packages(\"shiny\") for this to work")
+    if (!requireNamespace("shinycssloaders", quietly=TRUE))
+        stop("must install.packages(\"shinycssloaders\") for this to work")
     shiny::headerPanel(title = "", windowTitle = "argoFloats mapApp"),
     shiny::tags$script(
         '$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'
@@ -838,6 +838,8 @@ serverMapApp <- function(input, output, session) {
 mapApp <- function()
 {
     ##cacheAge <<- age
+    if (!requireNamespace("shiny"), quietly=TRUE)
+        stop("must install.packages(\"shiny\") for this to work")
     print(shiny::shinyApp(ui = uiMapApp, server = serverMapApp))
 }
 
