@@ -10,13 +10,12 @@ startTime <- as.POSIXlt(endTime - 21 * 86400)
 
 #' @importFrom grDevices grey
 #' @importFrom graphics arrows image lines mtext
-#' @importFrom shiny fluidPage headerPanel tags column fluidRow p actionButton textInput checkboxGroupInput selectInput dblclickOpts brushOpts
-
+## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 uiMapApp  <- shiny::fluidPage(
-    if (!requireNamespace("shiny"), quietly=TRUE)
-        stop("must install.packages(\"shiny\") for this to work")
-    if (!requireNamespace("shinycssloaders", quietly=TRUE))
-        stop("must install.packages(\"shinycssloaders\") for this to work")
+    ## if (!requireNamespace("shiny", quietly=TRUE))
+    ##     stop("must install.packages('shiny') for mapApp() to work")
+    ## if (!requireNamespace("shinycssloaders", quietly=TRUE))
+    ##     stop("must install.packages('shinycssloaders') for mapApp() to work")
     shiny::headerPanel(title = "", windowTitle = "argoFloats mapApp"),
     shiny::tags$script(
         '$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'
@@ -70,10 +69,10 @@ uiMapApp  <- shiny::fluidPage(
         shiny::column(
             4,
             style = "margin-top: 20px;",
-            shiny::actionButton("goS", HTML("&darr;")), #"\U21E9"),
-            shiny::actionButton("goN", HTML("&uarr;")), #"\U21E7"),
-            shiny::actionButton("goW", HTML("&larr;")), #"\U21E6"),
-            shiny::actionButton("goE", HTML("&rarr;")), #"\U21E8"),
+            shiny::actionButton("goS", shiny::HTML("&darr;")), #"\U21E9"),
+            shiny::actionButton("goN", shiny::HTML("&uarr;")), #"\U21E7"),
+            shiny::actionButton("goW", shiny::HTML("&larr;")), #"\U21E6"),
+            shiny::actionButton("goE", shiny::HTML("&rarr;")), #"\U21E8"),
             shiny::actionButton("zoomIn", "+"),
             shiny::actionButton("zoomOut", "-")
         )
@@ -96,7 +95,7 @@ uiMapApp  <- shiny::fluidPage(
     ),
     ## using withSpinner does not work here
     shiny::fluidRow(
-        plotOutput(
+        shiny::plotOutput(
             "plotMap",
             hover = shiny::hoverOpts("hover"),
             dblclick = shiny::dblclickOpts("dblclick"),
@@ -832,13 +831,13 @@ serverMapApp <- function(input, output, session) {
 #' mapApp()}
 #'
 #' @author Dan Kelley
-#' @importFrom shiny shinApp
+## @importFrom shiny shinyApp
 #' @export
 #mapApp <- function(age = 7)
 mapApp <- function()
 {
     ##cacheAge <<- age
-    if (!requireNamespace("shiny"), quietly=TRUE)
+    if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages(\"shiny\") for this to work")
     print(shiny::shinyApp(ui = uiMapApp, server = serverMapApp))
 }
