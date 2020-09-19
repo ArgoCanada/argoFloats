@@ -1,38 +1,37 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-#' Switch unadjusted and adjusted data
+#' Switch [[ Focus to Adjusted data
 #'
-#' This is done by using [oce::preferAdjusted()] on each of the Argo
-#' objects stored within the first argument.  The procedure is fairly
-#' complicated, so users are urged to read the documentation
-#' for [oce::preferAdjusted()] after reading the
-#' sketch provided in the \dQuote{Details} section and to
-#' familiarizing themselves with the flow chart below that demonstrates the
-#' steps taken when a user specifies `which=ALL` or `which=<param>`.
+#' This function returns a version of `x` for which the enclosed
+#' [oce::argo-class] objects are modified in a way that makes
+#' future uses of \code{\link{[[,argoFloats-method}}
+#' return the *adjusted* data, not the original data.
+#' **NOTE:** For this to work, the version 1.3.0 or greater
+#' of \CRANpkg{oce} must be installed, and, as of September 2020,
+#' that means that the user will need to install \CRANpkg{oce} from
+#' github.com/dankelley/oce, not from CRAN.
 #'
-#' The value returned by `useAdjusted` is similar to the first argument
-#' in all respects, except that the individual `argo` objects stored within
-#' its `data` slot have their `metadata` slots modified to indicate a
-#' preference for adjusted data over unadjusted data. Because of that,
-#' future calls to \code{\link{[[,argoFloats-method}} will
-#' return adjusted data instead of unadjusted data, for data items
-#' specified by `which`, and subject to the constraint imposed by
-#' `fallback`.
+#' If \CRANpkg{oce} is version under 1.3.0, `useAdjusted()` reports
+#' an error.  Otherwise, it carries out its work by
+#' applying `preferAdjusted()` from
+#' in the \CRANpkg{oce} to each of the Argo
+#' objects stored within the the `data` slot of `x`.
 #'
-#' See the documentation for [oce::preferAdjusted()] for more
-#' on the procedure, and see Reference 1 for the process of adding
-#' adjusted data to Argo files.  Although it might seem that adjusted data
-#' will always be preferable to unadjusted data, this is not always
-#' the case, and a careful analyst will study both data streams, and
-#' look through the processing notes for any float that is of individual
-#' interest.
+#' Although one might guess that adjusted data
+#' are always be preferable to original data, this is not always
+#' the case.  Indeed, it is common for the adjusted data to consist
+#' entirely of `NA` values.  A careful analyst should study both
+#' data streams, and should also read the processing notes
+#' for any float (or float cycle) that is of particular interest.
+#' See Reference 1 for more information on the process of
+#' adding adjusted data to Argo files.
 #'
 #' \if{html}{\figure{useAdjustedDiagram.png}{options: width=455px alt="Figure: useAdjustedDiagram.png" fig.cap="hello"}}
 #'
 #' @param argo an [`argoFloats-class`] object, as read by [readProfiles()].
 #'
-#' @param which a character vector (passed to
-#' [oce::preferAdjusted()] directly) naming the items for which
+#' @param which a character vector (passed directly to
+#' `preferAdjusted()`, or its mimic) naming the items for which
 #' (depending also on the value of `fallback`) adjusted values
 #' are to be sought by future calls to \code{\link{[[,argoFloats-method}}.
 #' The short names are used, e.g. `which="oxygen"` means that
@@ -41,8 +40,8 @@
 #' `"all"`, means to  use adjusted values for any item in `argo`
 #' that has adjusted values.
 #'
-#' @param fallback a logical value (passed to
-#' [oce::preferAdjusted()] directly) indicating whether to fall back
+#' @param fallback a logical value (passed directly to
+#' `preferAdjusted()` or its mimic) indicating whether to fall back
 #' to unadjusted values for any data field in which the
 #' adjusted values are all `NA`.  The default value, `TRUE`,
 #' avoids a problem with biogeochemical fields, where adjustment
