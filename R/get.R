@@ -238,14 +238,15 @@ getIndex <- function(filename="argo",
     for (iserver in seq_along(server)) {
         if (server[iserver] == "usgodae") {
             server[iserver] <- "ftp://usgodae.org/pub/outgoing/argo"
-            argoFloatsDebug(debug, "Server item 'usgodae' expanded to '", server[iserver], "'.\n", sep="")
+            argoFloatsDebug(debug, "Server 'usgodae' expanded to '", server[iserver], "'.\n", sep="")
         } else if (server[iserver] == "ifremer") {
             server[iserver] <- "ftp://ftp.ifremer.fr/ifremer/argo"
-            argoFloatsDebug(debug, "Server item 'ifremer' expanded to '", server[iserver], "'.\n", sep="")
+            argoFloatsDebug(debug, "Server 'ifremer' expanded to '", server[iserver], "'.\n", sep="")
         }
     }
+
     if (!all(grepl("^ftp://", server)))
-        stop("server must be 'auto', or a vector of strings starting with \"ftp://\", but it is ",
+        stop("server must be \"auto\", \"usgodae\", \"ifremer\", or a vector of strings starting with \"ftp://\", but it is ",
              if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
              else paste0("\"", server, "\""), "\n", sep="")
     ## Ensure that we can save the file
@@ -307,7 +308,7 @@ getIndex <- function(filename="argo",
     ## We need to download data. We do that to a temporary file, because we will be saving
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
-    argoFloatsDebug(debug, "OS allocated temporary file\n    '", destfileTemp, "'.\n", sep="")
+    argoFloatsDebug(debug, "Allocated the temporary file\n    '", destfileTemp, "'.\n", sep="")
     failedDownloads <- 0
     iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
     for (iurl in seq_along(url)) {
