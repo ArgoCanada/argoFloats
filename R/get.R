@@ -100,9 +100,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #'    with the `#` character.
 #' * `data`, a data frame containing the items in the source file.
 #'    The names of these items are determined automatically from
-#'    `"argo"` and `"bgcargo"` files, but for `"merged"` files,
-#'    the header is malformed (as of February 2020) and so the names
-#'    are set based on the authors' inspection of a downloaded file.
+#'    `"argo"`,`"bgcargo"`, `"synthetic"` files.
 #'
 #' Some expertise is required in deciding on the value for the
 #' `file` argument to [getIndex()].  As of June 2020, the
@@ -119,10 +117,10 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #' given in the table, but ending in `.txt`.  These are uncompressed
 #' equivalents of the `.gz` files that offer no advantage and take
 #' longer to download, so [getIndex()] is not designed to work with them.
-#' Finally, note that, as of June 2020,
-#' the usgodae server does not supply `"synthetic"` files, but
-#' the ifremer server does; this is typically not a concern to users,
-#' because `getIndex` searches both servers for index files.
+##' Finally, note that, as of June 2020,
+##' the usgodae server does not supply `"synthetic"` files, but
+##' the ifremer server does; this is typically not a concern to users,
+##' because `getIndex` searches both servers for index files.
 #' \tabular{lll}{
 #' *File Name*                           \tab *Nickname*              \tab *Contents*\cr
 #' `ar_greylist.txt`                     \tab -                       \tab Suspicious/malfunctioning floats\cr
@@ -132,7 +130,6 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #' `ar_index_global_traj.txt.gz`         \tab -                       \tab Trajectory files\cr
 #' `argo_bio-profile_index.txt.gz`       \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T)\cr
 #' `argo_bio-traj_index.txt.gz`          \tab -                       \tab Bio-trajectory files\cr
-#' `argo_merge-profile_index.txt.gz`     \tab `"merge"` or `"merged"` \tab Merged `"argo"` and `"bgc"` data\cr
 #' `argo_synthetic-profile_index.txt.gz` \tab `"synthetic"`           \tab Synthetic data, successor to `"merge"`\cr
 #' }
 #'
@@ -189,9 +186,9 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #'
 #' @examples
 #'\dontrun{
-#' # Download an index of merged argo/bgc-argo floats, and plot temporal coverage.
+#' # Download an index of synthetic argo/bgc-argo floats, and plot temporal coverage.
 #' library(argoFloats)
-#' i <- getIndex("merged")
+#' i <- getIndex("synthetic")
 #' summary(i)
 #' hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)}
 #'
@@ -238,14 +235,15 @@ getIndex <- function(filename="argo",
     for (iserver in seq_along(server)) {
         if (server[iserver] == "usgodae") {
             server[iserver] <- "ftp://usgodae.org/pub/outgoing/argo"
-            argoFloatsDebug(debug, "Server item 'usgodae' expanded to '", server[iserver], "'.\n", sep="")
+            argoFloatsDebug(debug, "Server 'usgodae' expanded to '", server[iserver], "'.\n", sep="")
         } else if (server[iserver] == "ifremer") {
             server[iserver] <- "ftp://ftp.ifremer.fr/ifremer/argo"
-            argoFloatsDebug(debug, "Server item 'ifremer' expanded to '", server[iserver], "'.\n", sep="")
+            argoFloatsDebug(debug, "Server 'ifremer' expanded to '", server[iserver], "'.\n", sep="")
         }
     }
+
     if (!all(grepl("^ftp://", server)))
-        stop("server must be 'auto', or a vector of strings starting with \"ftp://\", but it is ",
+        stop("server must be \"auto\", \"usgodae\", \"ifremer\", or a vector of strings starting with \"ftp://\", but it is ",
              if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
              else paste0("\"", server, "\""), "\n", sep="")
     ## Ensure that we can save the file
@@ -260,7 +258,7 @@ getIndex <- function(filename="argo",
     } else if (filename == "bgcargo" || filename == "bgc") {
         filename <- "argo_bio-profile_index.txt.gz"
     } else if (filename == "merge" || filename == "merged") {
-        filename <- "argo_merge-profile_index.txt.gz"
+        stop("in getIndex() :\n Merged datasets are now changed to synthetic. Try filename='synthetic'", call.=FALSE)
     } else if (filename == "synthetic") {
         filename <- "argo_synthetic-profile_index.txt.gz"
     }
@@ -307,7 +305,7 @@ getIndex <- function(filename="argo",
     ## We need to download data. We do that to a temporary file, because we will be saving
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
-    argoFloatsDebug(debug, "OS allocated temporary file\n    '", destfileTemp, "'.\n", sep="")
+    argoFloatsDebug(debug, "Allocated the temporary file\n    '", destfileTemp, "'.\n", sep="")
     failedDownloads <- 0
     iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
     for (iurl in seq_along(url)) {

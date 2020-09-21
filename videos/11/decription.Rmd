@@ -1,0 +1,4 @@
+This video demonstrates how to use the mapApp() function in the argoFloats R package, to get an interactive view of Argo float trajectories.
+
+R language,oceanography,Dalhousie University,Argo float,computing,data processing,adjusted data
+

@@ -143,13 +143,13 @@ rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
 points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
 polygon(poly$longitude, poly$latitude, border=4)
 
-# Example 5: subset argo_merge data containing 'DOXY' parameters
+# Example 5: subset synthetic data containing 'DOXY' parameters
 # Data containing 'DOXY' data
-data(indexMerged)
-index5A <- subset(indexMerged, parameter="DOXY")
+data(indexSynthetic)
+index5A <- subset(indexSynthetic, parameter="DOXY")
 # Data containing both 'PSAL' and 'DOWN_IRRADIANCE380' data
-data(indexMerged)
-index5B <- subset(indexMerged, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
+data(indexSynthetic)
+index5B <- subset(indexSynthetic, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
 
 # Example 6: subset data for the year 2019
 data(index)

@@ -107,37 +107,37 @@ NULL
 #' @name indexBgc
 #' @docType data
 #' @family datasets provided with argoFloats
-NULL
+#' NULL
 
 
-#' A sample index of merged Argo and biogeochemical-Argo profiles
-#'
-#' This was created by subsetting a global index to the 39 BGC Argo profiles
-#' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 September 10, using the following code.
-#'```
-#' library(argoFloats)
-#' indexAll <- getIndex("merged")
-#' indexMerged <- subset(indexAll,
-#'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#'```
-#'
-#' @template server_caveat
-#'
-#' @section Historical note:
-#' This "merged" file from the usgodae server is likely to be removed, when
-#' that server changes to the "synthetic" file format that the ifremer server
-#' uses (as of May, 2020 and perhaps months previously, since the changeover
-#' data was supposed to be Dec, 2019).
-#' @examples
-#' library(argoFloats)
-#' data(indexMerged)
-#' plot(indexMerged, bathymetry=FALSE)
-#' summary(indexMerged)
-#' unique(indexMerged[["parameters"]])
-#' @name indexMerged
-#' @docType data
-#' @family datasets provided with argoFloats
+## A sample index of merged Argo and biogeochemical-Argo profiles
+##
+## This was created by subsetting a global index to the 39 BGC Argo profiles
+## that were within a 300km radius of Marsh Harbour, Abaco Island,
+## Bahamas, as of 2020 September 10, using the following code.
+##```
+## library(argoFloats)
+## indexAll <- getIndex("merged")
+## indexMerged <- subset(indexAll,
+##     circle=list(longitude=-77.06, latitude=26.54, radius=300))
+##```
+##
+## @template server_caveat
+##
+## @section Historical note:
+## This "merged" file from the usgodae server is likely to be removed, when
+## that server changes to the "synthetic" file format that the ifremer server
+## uses (as of May, 2020 and perhaps months previously, since the changeover
+## data was supposed to be Dec, 2019).
+## @examples
+## library(argoFloats)
+## data(indexMerged)
+## plot(indexMerged, bathymetry=FALSE)
+## summary(indexMerged)
+## unique(indexMerged[["parameters"]])
+## @name indexMerged
+## @docType data
+## @family datasets provided with argoFloats
 NULL
 
 #' A sample index of synthetic (i.e. combined) Argo and biogeochemical-argo profiles
@@ -336,21 +336,19 @@ setMethod(f="[[",
                       return(x@data$index[i,])
                   } else if (length(i) == 1 && i == "index") {
                       return(x@data$index)
-                  ##??} else if (length(i) == 1 && is.numeric(i)) {
-                  ##??    return(x@data$index[i,])
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data$index)) {
                       return(if (missing(j)) x@data$index[[i]] else x@data$index[[i]][j])
                   } else if (length(i) == 1 && i == "profile") {
-                      warning("converted x[[\"profile\"]] to x[[\"cycle\"]] for backwards compatibility;\n  NOTE: this conversion will cease after 2020-Sep-01.")
-                      cycle <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1}).nc$", "\\1", x@data$index$file)
+                      warning("converted x[[\"profile\"]] to x[[\"cycle\"]] for backwards compatibility;\n  NOTE: this conversion will cease after September, 2020.")
+                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "cycle") {
-                      cycle <- gsub("^[a-z]*/[0-9]*/profiles/[A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1}).nc$", "\\1", x@data$index$file)
+                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "id") {
-                      id <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", x@data$index$file)
+                      id <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3}[A-Z]*\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) id else id[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$index$file))
@@ -363,10 +361,10 @@ setMethod(f="[[",
                   if (is.numeric(i) && missing(j)) {
                       return(x@data$file[[i]])
                   } else if (length(i) == 1 && i == "cycle") {
-                      cycle <- gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", x[['file']])
+                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3})[A-Z]*\\.nc$", "\\1", x[["file"]])
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "id") {
-                      id <- gsub("^.*/[A-Z]*([0-9]*)_[0-9]{3}[A-Z]*.nc$", "\\1", x[['file']])
+                      id <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3}[A-Z]*\\.nc$", "\\1", x[["file"]])
                       return(as.vector(if (missing(j)) id else id[j]))
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
@@ -391,17 +389,8 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@data)) {
                       return(if (missing(j)) x@data[[i]] else x@data[[i]][[j]])
                   } else if (length(i) == 1 && i == "cycle") {
-                      cycle <- gsub("^.*/[A-Z]*[0-9]*_([0-9]{3})[A-Z]*.nc$", "\\1", unlist(x[['filename']]))
+                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3})[A-Z]*\\.nc$", "\\1", unlist(x[['filename']]))
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
-
-                      ## } else if (length(i) == 1 && i == "cycle") {
-                      ##  if (missing(j)) {
-                      ##      return(x@data$argos)
-                      ##  } else if (is.numeric(j)) {
-                      ##      return(x@data$argos[[j]])
-                      ##  } else {
-                      ##      stop("cannot interpret i=", paste(i, collapse=","), " and j=", paste(j, collapse=", "), " for an object of type=\"", type, "\"")
-                      ##  }
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$argos))
                   } else if (length(i) == 1 && i == "id") {
@@ -434,7 +423,6 @@ setMethod(f="[[",
                       argoFloatsDebug(debug, "type=\"argos\"\n", sep="")
                       unlist(lapply(x[["argos"]], function(a) rep(a[[i]], length=length(a[["salinity"]]))))
                   } else if (type == "index") {
-                      ## argoFloatsDebug(debug, "type=\"index\"\n", sep="")
                       x@data$index[[i]]
                   } else {
                       stop("[[\"", i, "\"]] only works for objects created by readProfiles()")

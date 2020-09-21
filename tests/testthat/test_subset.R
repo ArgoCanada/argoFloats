@@ -115,26 +115,26 @@ test_that("subset by direction",
 test_that("subset by column",
           {
               if (canDownload()) {
-                  i <- expect_silent(getIndex(filename="merged"))
-                  N <- 223
-                  s <- expect_message(subset(i, id="5903889"),
+                  i <- expect_silent(getIndex())
+                  N <- 305
+                  s <- expect_message(subset(i, id="5902250"),
                                       paste("Kept", N, "profiles"))
                   N <- 1
-                  s <- expect_message(subset(s, cycle="074"),
+                  s <- expect_message(subset(s, cycle="253"),
                                       paste("Kept", N, "profiles"))
                   p <- expect_silent(getProfiles(s))
-                  a <- expect_output(expect_warning(readProfiles(p), "Of 1 profile"), "|===")
+                  a <- expect_output(readProfiles(p), "|===")
                   a1 <- expect_silent(subset(a, column=1))
                   a2 <- expect_silent(subset(a, column=2))
-                  oxygen <- a[["oxygen"]][[1]]
-                  oxygen1 <- a1[["oxygen"]][[1]]
-                  oxygen2 <- a2[["oxygen"]][[1]]
-                  N <- 510
-                  expect_equal(dim(oxygen), c(N, 2))
-                  expect_equal(dim(oxygen1), c(N, 1))
-                  expect_equal(dim(oxygen2), c(N, 1))
-                  expect_equal(oxygen1, oxygen[, 1, drop=FALSE])
-                  expect_equal(oxygen2, oxygen[, 2, drop=FALSE])
+                  salinity <- a[["salinity"]][[1]]
+                  salinity1 <- a1[["salinity"]][[1]]
+                  salinity2 <- a2[["salinity"]][[1]]
+                  N <- 69
+                  expect_equal(dim(salinity), c(N, 2))
+                  expect_equal(dim(salinity1), c(N, 1))
+                  expect_equal(dim(salinity2), c(N, 1))
+                  expect_equal(salinity1, salinity[, 1, drop=FALSE])
+                  expect_equal(salinity2, salinity[, 2, drop=FALSE])
               }
           }
 )

@@ -83,7 +83,7 @@ As shown above, the central functions for the argoFloats package are `getIndex()
 
 Some built-in data sets are provided for concreteness of illustration and for testing, but actual work always starts with a call to `getIndex()` to download a full index of float data, which we will demonstrate later in this vignette.
 
-To begin to get familiar with how the `argoFloats` package works, we will begin looking at the built in data sets. Built into the `argoFloats` package is the `index`, `indexBgc`, and `indexMerged` indices, referring to core Argo, BGC-Argo, and a combination respectively. For the sake of this vignette we will focus on the `index` data set.
+To begin to get familiar with how the `argoFloats` package works, we will begin looking at the built in data sets. Built into the `argoFloats` package is the `index`, `indexBgc`, `indexSynthetic`, and `indexDeep` indices, referring to core Argo, BGC-Argo, and a combination, deep Argo respectively. It should be noted that as of September 21, 2020, `indexMerged` no longer exists as the switch to `indexSynthetic` has been made. For the sake of this vignette we will focus on the `index` data set.
 
 The first step is to access the required packages that will be needed during this tutorial, with
 ```{r message=FALSE, warning=FALSE}
@@ -138,7 +138,7 @@ It should be noted that the profile elements within `argoFloats` objects are sto
 ##  getIndex()
 Until this point, we have demonstrated how the user can become familiar with embedded indices. As previously described, however, actual work always starts with downloading a full index of float data. As shown by Figure 1, the `getIndex()` command is used to get an index of available Argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.
 
-The `getIndex()` command works by specifying the server, with first trying the USGODAE server \url{ftp://usgodae.org/pub/outgoing/argo} and then the IRREMER server \url{ftp://ftp.ifremer.fr/ifremer/argo} if that does not work. The next step is to specify the file name. The table below can be obtained using `?getIndex()`. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: `"argo"`, `"bgc"` or `"bgcargo"`, `"merge"` or `"merged"`, or `"synthetic"`. The following table summarizes the contents of the various files indicated by the `filename` argument.
+The `getIndex()` command works by specifying the server, with first trying the USGODAE server \url{ftp://usgodae.org/pub/outgoing/argo} and then the IRREMER server \url{ftp://ftp.ifremer.fr/ifremer/argo} if that does not work. The next step is to specify the file name. The table below can be obtained using `?getIndex()`. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: `"argo"`, `"bgc"` or `"bgcargo"`, or `"synthetic"`. The following table summarizes the contents of the various files indicated by the `filename` argument.
 
 File Name                             | Nickname                | Contents
 --------------------------------------|-------------------------|--------------------------------------
@@ -149,7 +149,6 @@ File Name                             | Nickname                | Contents
 `ar_index_global_traj.txt.gz`         | -                       | Trajectory files
 `argo_bio-profile_index.txt.gz`       | `"bgc"` or `"bgcargo"`  | Biogeochemical data (without S or T)
 `argo_bio-traj_index.txt.gz`          | -                       | Biogeochemical trajectory files
-`argo_merge-profile_index.txt.gz`     | `"merge"` or `"merged"` | Merged `"argo"` and `"bgc"` data
 `argo_synthetic-profile_index.txt.gz` | `"synthetic"`           | Synthetic data, successor to `"merge"`
 
 
@@ -273,7 +272,7 @@ plot(aiTime, bathymetry=FALSE)         # also, try using bathymetry=TRUE
 
 ```{r, eval=FALSE}
 library(argoFloats)
-ai <- getIndex("merge")
+ai <- getIndex("synthetic")
 sub <- subset(ai, 1:2) # To subset for profiles
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)

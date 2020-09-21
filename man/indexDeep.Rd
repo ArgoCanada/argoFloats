@@ -36,7 +36,6 @@ summary(indexDeep)
 \seealso{
 Other datasets provided with argoFloats: 
 \code{\link{indexBgc}},
-\code{\link{indexMerged}},
 \code{\link{indexSynthetic}},
 \code{\link{index}}
 }

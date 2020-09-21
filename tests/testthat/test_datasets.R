@@ -6,15 +6,15 @@ library(argoFloats)
 context("built-in index datasets")
 data(index)
 data(indexBgc)
-data(indexMerged)
+#data(indexMerged)
 data(indexSynthetic)
 
-test_that("indexMerged and indexSynthetic files correspond", {
-          m <- indexMerged[["file"]]
-          s <- indexSynthetic[["file"]]
-          ## MR and MD files both become SD files
-          expect_equal(gsub("MR", "SD", gsub("MD", "SD", m)), s)
-})
+#test_that("indexMerged and indexSynthetic files correspond", {
+#          m <- indexMerged[["file"]]
+#          s <- indexSynthetic[["file"]]
+#          ## MR and MD files both become SD files
+#          expect_equal(gsub("MR", "SD", gsub("MD", "SD", m)), s)
+#})
 
 test_that("index is of expected dimension", {
           expect_equal(dim(index[["index"]]), c(978, 8))
@@ -28,11 +28,11 @@ test_that("indexBgc is of expected dimension", {
                                                      "institution", "parameters", "param_data_mode", "date_update"))
 })
 
-test_that("indexMerged is of expected dimension", {
-          expect_equal(dim(indexMerged[["index"]]), c(39, 10))
-          expect_equal(names(indexMerged[["index"]]), c("file", "date", "latitude", "longitude", "ocean", "profiler_type",
-                                                     "institution", "parameters", "param_data_mode", "date_update"))
-})
+#test_that("indexMerged is of expected dimension", {
+#         expect_equal(dim(indexMerged[["index"]]), c(39, 10))
+#          expect_equal(names(indexMerged[["index"]]), c("file", "date", "latitude", "longitude", "ocean", "profiler_type",
+#                                                     "institution", "parameters", "param_data_mode", "date_update"))
+#})
 
 
 test_that("accessors work on 'index' data file", {

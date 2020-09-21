@@ -74,7 +74,11 @@ test_that("readProfile() handling of nonlocal source file",
           {
               if (canDownload()) {
                   u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_001.nc"
-                  p <- expect_silent(readProfiles(u))
+                  if (packageVersion("oce") > "1.2.0") {
+                      p <- expect_silent(readProfiles(u))
+                  } else {
+                      p <- expect_warning(readProfiles(u), "no variable named 'PRES_QC'")
+                  }
                   expect_true(grepl("BD5903586_001.nc$", p[["filename"]]))
               }
           }
