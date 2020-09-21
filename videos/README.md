@@ -40,4 +40,8 @@
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/AuauWeUnopc
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/10/video10_useAdjusted.R
+ 
+ * **argoFloats R 11: mapApp()** (September 21, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video TBA
    
