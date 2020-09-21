@@ -43,5 +43,5 @@
  
  * **argoFloats R 11: mapApp()** (September 21, 2020)
     - Jaimie Harbin and Dan Kelley
-    - Video TBA
+    - Video https://youtu.be/PEkIBwXLLpE
    
