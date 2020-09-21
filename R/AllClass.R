@@ -107,7 +107,7 @@ NULL
 #' @name indexBgc
 #' @docType data
 #' @family datasets provided with argoFloats
-NULL
+#' NULL
 
 
 ## A sample index of merged Argo and biogeochemical-Argo profiles

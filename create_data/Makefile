@@ -21,8 +21,6 @@ index: force
 	Rscript create_index.R > create_index.out
 indexBgc: force
 	Rscript create_indexBgc.R > create_indexBgc.out
-#indexMerged: force
-	#Rscript create_indexMerged.R > create_indexMerged.out
 indexSynthetic: force
 	Rscript create_indexSynthetic.R > create_indexSynthetic.out
 indexDeep: force

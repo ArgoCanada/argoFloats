@@ -100,7 +100,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #'    with the `#` character.
 #' * `data`, a data frame containing the items in the source file.
 #'    The names of these items are determined automatically from
-#'    `"argo"` and `"bgcargo"` files.
+#'    `"argo"`,`"bgcargo"`, `"synthetic"` files.
 #'
 #' Some expertise is required in deciding on the value for the
 #' `file` argument to [getIndex()].  As of June 2020, the
