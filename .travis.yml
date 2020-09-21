@@ -14,6 +14,8 @@ addons:
             - netcdf-bin
 
 r_packages:
+    - shiny
+    - shinycssloaders
     - marmap
     - ncdf4
     - oce
@@ -21,6 +23,3 @@ r_packages:
     - rgdal
     - sf
     - covr
-    - shiny
-    - shinycssloaders
-
