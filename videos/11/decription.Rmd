@@ -2,4 +2,3 @@ This video demonstrates how to use the mapApp() function in the argoFloats R pac
 
 R language,oceanography,Dalhousie University,Argo float,computing,data processing,adjusted data
 
-
