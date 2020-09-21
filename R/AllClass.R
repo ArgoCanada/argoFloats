@@ -107,37 +107,37 @@ NULL
 #' @name indexBgc
 #' @docType data
 #' @family datasets provided with argoFloats
-NULL
+#' NULL
 
 
-#' A sample index of merged Argo and biogeochemical-Argo profiles
-#'
-#' This was created by subsetting a global index to the 39 BGC Argo profiles
-#' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 September 10, using the following code.
-#'```
-#' library(argoFloats)
-#' indexAll <- getIndex("merged")
-#' indexMerged <- subset(indexAll,
-#'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-#'```
-#'
-#' @template server_caveat
-#'
-#' @section Historical note:
-#' This "merged" file from the usgodae server is likely to be removed, when
-#' that server changes to the "synthetic" file format that the ifremer server
-#' uses (as of May, 2020 and perhaps months previously, since the changeover
-#' data was supposed to be Dec, 2019).
-#' @examples
-#' library(argoFloats)
-#' data(indexMerged)
-#' plot(indexMerged, bathymetry=FALSE)
-#' summary(indexMerged)
-#' unique(indexMerged[["parameters"]])
-#' @name indexMerged
-#' @docType data
-#' @family datasets provided with argoFloats
+## A sample index of merged Argo and biogeochemical-Argo profiles
+##
+## This was created by subsetting a global index to the 39 BGC Argo profiles
+## that were within a 300km radius of Marsh Harbour, Abaco Island,
+## Bahamas, as of 2020 September 10, using the following code.
+##```
+## library(argoFloats)
+## indexAll <- getIndex("merged")
+## indexMerged <- subset(indexAll,
+##     circle=list(longitude=-77.06, latitude=26.54, radius=300))
+##```
+##
+## @template server_caveat
+##
+## @section Historical note:
+## This "merged" file from the usgodae server is likely to be removed, when
+## that server changes to the "synthetic" file format that the ifremer server
+## uses (as of May, 2020 and perhaps months previously, since the changeover
+## data was supposed to be Dec, 2019).
+## @examples
+## library(argoFloats)
+## data(indexMerged)
+## plot(indexMerged, bathymetry=FALSE)
+## summary(indexMerged)
+## unique(indexMerged[["parameters"]])
+## @name indexMerged
+## @docType data
+## @family datasets provided with argoFloats
 NULL
 
 #' A sample index of synthetic (i.e. combined) Argo and biogeochemical-argo profiles

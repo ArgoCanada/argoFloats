@@ -38,7 +38,6 @@ unique(indexBgc[["parameters"]])
 \seealso{
 Other datasets provided with argoFloats: 
 \code{\link{indexDeep}},
-\code{\link{indexMerged}},
 \code{\link{indexSynthetic}},
 \code{\link{index}}
 }

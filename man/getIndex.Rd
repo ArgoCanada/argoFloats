@@ -101,9 +101,7 @@ download the netcdf files for individual float profiles.
 with the \verb{#} character.
 \item \code{data}, a data frame containing the items in the source file.
 The names of these items are determined automatically from
-\code{"argo"} and \code{"bgcargo"} files, but for \code{"merged"} files,
-the header is malformed (as of February 2020) and so the names
-are set based on the authors' inspection of a downloaded file.
+\code{"argo"} and \code{"bgcargo"} files.
 }
 
 Some expertise is required in deciding on the value for the
@@ -134,7 +132,6 @@ because \code{getIndex} searches both servers for index files.
 \code{ar_index_global_traj.txt.gz}         \tab -                       \tab Trajectory files\cr
 \code{argo_bio-profile_index.txt.gz}       \tab \code{"bgc"} or \code{"bgcargo"}  \tab Biogeochemical Argo data (without S or T)\cr
 \code{argo_bio-traj_index.txt.gz}          \tab -                       \tab Bio-trajectory files\cr
-\code{argo_merge-profile_index.txt.gz}     \tab \code{"merge"} or \code{"merged"} \tab Merged \code{"argo"} and \code{"bgc"} data\cr
 \code{argo_synthetic-profile_index.txt.gz} \tab \code{"synthetic"}           \tab Synthetic data, successor to \code{"merge"}\cr
 }
 
@@ -147,9 +144,9 @@ an object that can be plotted or analysed in other ways.
 }
 \examples{
 \dontrun{
-# Download an index of merged argo/bgc-argo floats, and plot temporal coverage.
+# Download an index of synthetic argo/bgc-argo floats, and plot temporal coverage.
 library(argoFloats)
-i <- getIndex("merged")
+i <- getIndex("synthetic")
 summary(i)
 hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)}
 
