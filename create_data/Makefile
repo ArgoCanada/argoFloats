@@ -8,12 +8,12 @@ profiles:
 indices:
 	make index
 	make indexBgc
-	make indexMerged
+	#make indexMerged
 	make indexSynthetic
 install_indices:
 	make install_index
 	make install_indexBgc
-	make install_indexMerged
+	#make install_indexMerged
 	make install_indexSynthetic
 
 
@@ -21,8 +21,8 @@ index: force
 	Rscript create_index.R > create_index.out
 indexBgc: force
 	Rscript create_indexBgc.R > create_indexBgc.out
-indexMerged: force
-	Rscript create_indexMerged.R > create_indexMerged.out
+#indexMerged: force
+	#Rscript create_indexMerged.R > create_indexMerged.out
 indexSynthetic: force
 	Rscript create_indexSynthetic.R > create_indexSynthetic.out
 indexDeep: force
@@ -31,8 +31,8 @@ install_index:
 	cp index.rda ../data
 install_indexBgc:
 	cp indexBgc.rda ../data
-install_indexMerged:
-	cp indexMerged.rda ../data
+#install_indexMerged:
+	#cp indexMerged.rda ../data
 install_indexSynthetic:
 	cp indexSynthetic.rda ../data
 install_indexDeep:

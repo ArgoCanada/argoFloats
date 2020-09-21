@@ -1,4 +1,4 @@
-This README.md provides the steps to insert a built in data set. To date (July 22, 2020), `argoFloats` has index, indexMerged, indexBgc, indexSynthetic, and indexDeep.
+This README.md provides the steps to insert a built in data set. To date (July 22, 2020), `argoFloats` has index, indexBgc, indexSynthetic, and indexDeep.
 
 # Step one : Decide the area of interest 
 In this step the creators of `argoFloats` aims to have a few hundred floats.
