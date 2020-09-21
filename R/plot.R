@@ -648,17 +648,20 @@ setMethod(f="plot",
                   if (x[['type']] != 'argos')
                       stop("In plot,argoFloats-method(): The type of x must be 'argos'", call.=FALSE)
                   dots <- list(...)
-                  knownParameters <- names(x[[1]]@metadata$flags)
+                  knownParameters <- names(x[[1]]@data)
                   parameter <<- dots$parameter
                   if (is.null(parameter))
                       stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
                   if (!(parameter %in% knownParameters))
                       stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: ", paste(knownParameters, collapse=', '), call.=FALSE)
                   if ((parameter %in% knownParameters)) {
-                      U <<- x[['units']][[1]]$oxygen$unit[[1]] ## Need to figure out how to make this general with parameter
+                      #U <<- x[['units']][[1]]$oxygen$unit[[1]] ## Need to figure out how to make this general with parameter
+                      X <<- x
+                      U <<- x[['units']][[1]][[parameter]]$unit[[1]] ## Need to figure out how to make this general with parameter
                       pressure <- unlist(x[['pressure']])
                       p <<- unlist(x[[parameter]])
-                      plot(p, pressure, ylim=rev(range(pressure, na.rm=TRUE)), type="p", xlab = bquote("["*.(U)*"]"), ylab='Pressure [dbar]')
+                      xlab <-  bquote(.(parameter)*" ["*.(U)*"]")
+                      plot(p, pressure, ylim=rev(range(pressure, na.rm=TRUE)), type="p", xlab = xlab, ylab='Pressure [dbar]')
                   } # Need to add parameter name before units in xlab
               } else {
                   stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'", call.=FALSE)
