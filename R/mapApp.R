@@ -10,7 +10,7 @@ startTime <- as.POSIXlt(endTime - 21 * 86400)
 
 #' @importFrom grDevices grey
 #' @importFrom graphics arrows image lines mtext
-## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
+#' @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 uiMapApp  <- shiny::fluidPage(
     ## if (!requireNamespace("shiny", quietly=TRUE))
     ##     stop("must install.packages('shiny') for mapApp() to work")
@@ -831,7 +831,7 @@ serverMapApp <- function(input, output, session) {
 #' mapApp()}
 #'
 #' @author Dan Kelley
-## @importFrom shiny shinyApp
+#' @importFrom shiny shinyApp
 #' @export
 #mapApp <- function(age = 7)
 mapApp <- function()
