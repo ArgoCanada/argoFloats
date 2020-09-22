@@ -485,17 +485,17 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "subsetting by time\n")
                       time <- dots[[1]]
                       if(!is.list(dots[1]))
-                          stop("in subset,argoFloats-method():\n  'time' must be a list")
+                          stop("in subset,argoFloats-method():\n  'time' must be a list", call.=FALSE)
                       if (!inherits(time$from, "POSIXt"))
-                          stop("'time' must be a list containing POSIX times")
+                          stop("in subset,argoFloats-method():\n  'time' must be a list containing POSIXt times", call.=FALSE)
                       if (2 != sum(c("from", "to") %in% names(time)))
-                          stop("in subset,argoFloats-method():\n  'time' must be a list containing 'to'and 'from'")
+                          stop("in subset,argoFloats-method():\n  'time' must be a list containing 'to'and 'from'", call.=FALSE)
                       if (length(time$from) != 1)
                           stop("from must be of length 1")
                       if (length(time$to) != 1)
                           stop("to must be of length 1")
                       if (time$to <= time$from)
-                          stop ("'to' must be greater than 'from'")
+                          stop ("in subset,argoFloats-method():\n 'to' must be greater than 'from'", call.=FALSE)
                       keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
                       keep[is.na(keep)] <- FALSE
                       if (!silent)
@@ -517,7 +517,7 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "subsetting by deep\n")
                       deep <- dots[[1]]
                       if (!as.logical(deep))
-                          stop("deep must be a logical vector indicating TRUE or FALSE")
+                          stop("in subset,argoFloats-method():\n deep must be a logical vector indicating TRUE or FALSE", call.=FALSE)
                       if (deep) {
                           keep <- grep("849|862|864", x@data$index$profiler_type)
                       } else {
@@ -543,7 +543,7 @@ setMethod(f="subset",
                       if(!is.list(dots[1]))
                           stop("in subset,argoFloats-method():\n  'ocean' must be a list")
                       if (length(ocean) > 1)
-                          stop("'ocean' cannot hold more than one element")
+                          stop("in subset,argoFloats-method():\n 'ocean' cannot hold more than one element", call.=FALSE)
                       keep <- grepl(ocean, x@data$index$ocean)
                       keep[is.na(keep)] <- FALSE
                       if (!silent)
@@ -553,13 +553,13 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "subsetting by dataMode\n")
                       dataMode <- dots[[1]]
                       if (!is.character(dataMode))
-                          stop("in subset,argoFloats-method():\n  'dataMode' must be character value")
+                          stop("in subset,argoFloats-method():\n  'dataMode' must be character value",call.=FALSE)
                       if (dataMode == 'delayed') {
                           keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}D.*$", x[["file"]])
                       } else if (dataMode == 'realtime') {
                           keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}R.*$", x[["file"]])
                       } else {
-                          stop("in subset,argoFloats-method():\n  'dataMode' must be either 'realtime' or 'delayed', not '", dataMode, "'")
+                          stop("in subset,argoFloats-method():\n  'dataMode' must be either 'realtime' or 'delayed', not '", dataMode, "'", call.=FALSE)
                       }
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
@@ -590,7 +590,7 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "subsetting by direction\n")
                       direction <- dots[[1]]
                       if (!is.character(direction))
-                          stop("in subset,argoFloats-method():\n  'direction' must be character value of either 'ascent' or 'decent'")
+                          stop("in subset,argoFloats-method():\n  'direction' must be character value of either 'ascent' or 'decent'", call.=FALSE)
                       if (direction == 'ascent') {
                           keep <- grepl("^.*[^D].nc$", x@data$index$file)
                       } else if (direction == 'decent') {

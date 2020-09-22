@@ -191,5 +191,17 @@ test_that("subset stop messages", {
     index13 <- expect_error(subset(index, polygon=list(dog=c(1,2), cat=c(1,3)), "Error: in subset,argoFloats-method():
   'polygon' must be a list containing 'longitude' and 'latitude' "))
     }
+    index14 <- expect_error(subset(index, time=list(from="hi", to="bye"), " Error: in subset,argoFloats-method():
+  'time' must be a list containing POSIX times "))
+    index15 <- expect_error(subset(index, time=list(from=as.POSIXct("2019-12-31", tz="UTC"),to=as.POSIXct("2019-01-31", tz="UTC")),"Error: in subset,argoFloats-method():
+ 'to' must be greater than 'from' "))
+    index16 <- expect_error(subset(index, dataMode=1, "Error: in subset,argoFloats-method():
+  'dataMode' must be character value "))
+    index17 <- expect_error(subset(index, dataMode='dog'," Error: in subset,argoFloats-method():
+  'dataMode' must be either 'realtime' or 'delayed', not 'dog'"))
+    index18 <- expect_error(subset(index, direction=1,"Error: in subset,argoFloats-method():
+  'direction' must be character value of either 'ascent' or 'decent'"))
+    index19 <- expect_error(subset(index,direction="dog", "Error: in subset,argoFloats-method():
+  'direction' must be either 'ascent' or 'decent', not 'dog'" ))
 }
 )
