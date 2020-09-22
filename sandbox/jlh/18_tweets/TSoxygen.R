@@ -2,8 +2,8 @@ library(oce)
 library(argoFloats)
 if (!interactive()) png("TSoxygen.png", unit="in", width=7, height=4, pointsize=11, res=100)
 par(mar=c(2,2,1,1))
-# Acquire merged argo index, subset by circle, and then subset by oxygen
-ai <- getIndex(filename='merge')
+# Acquire synthetic argo index, subset by circle, and then subset by oxygen
+ai <- getIndex(filename='synthetic')
 subc <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=300))
 subo <- subset(subc, parameter='DOXY')
 

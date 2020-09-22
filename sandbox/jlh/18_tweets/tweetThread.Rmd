@@ -93,3 +93,6 @@ The useAdjusted function is handy when dealing with oxygen data, which may be ad
 ![](useAdjustedCode.png)
 ![](useAdjusted.png)
 
+# Tweet 18
+Lastly, typing mapApp() opens a interactive app to analyze specific regions, floats, time, etc.
+
