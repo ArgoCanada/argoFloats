@@ -3,8 +3,8 @@
 library(oce)
 library(argoFloats)
 
-# Acquire merged argo index, subset by circle, and then subset by oxygen
-ai <- getIndex(filename='merge')
+# Acquire synthetic argo index, subset by circle, and then subset by oxygen
+ai <- getIndex(filename='synthetic')
 subc <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=300))
 subo <- subset(subc, parameter='DOXY')
 
