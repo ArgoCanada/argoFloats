@@ -16,6 +16,7 @@ install:
   - R -e 'devtools::install_deps(dependencies=TRUE)'
 
 r_packages:
+    - devtools
     - shiny
     - shinycssloaders
     - marmap
