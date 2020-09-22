@@ -101,7 +101,7 @@ download the netcdf files for individual float profiles.
 with the \verb{#} character.
 \item \code{data}, a data frame containing the items in the source file.
 The names of these items are determined automatically from
-\code{"argo"} and \code{"bgcargo"} files.
+\code{"argo"},\code{"bgcargo"}, \code{"synthetic"} files.
 }
 
 Some expertise is required in deciding on the value for the

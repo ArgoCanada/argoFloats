@@ -35,10 +35,5 @@ plot(indexBgc, bathymetry=FALSE)
 summary(indexBgc)
 unique(indexBgc[["parameters"]])
 }
-\seealso{
-Other datasets provided with argoFloats: 
-\code{\link{indexDeep}},
-\code{\link{indexSynthetic}},
-\code{\link{index}}
-}
-\concept{datasets provided with argoFloats}
+\concept{datasets provided with argoFloats
+NULL}
