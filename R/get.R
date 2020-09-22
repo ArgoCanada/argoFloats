@@ -258,7 +258,7 @@ getIndex <- function(filename="argo",
     } else if (filename == "bgcargo" || filename == "bgc") {
         filename <- "argo_bio-profile_index.txt.gz"
     } else if (filename == "merge" || filename == "merged") {
-        stop("in getIndex() :\n Merged datasets are now changed to synthetic. Try filename='synthetic'", call.=FALSE)
+        stop("in getIndex() :\n Merged datasets are no longer available. Try using filename='synthetic'", call.=FALSE)
     } else if (filename == "synthetic") {
         filename <- "argo_synthetic-profile_index.txt.gz"
     }
