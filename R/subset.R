@@ -169,7 +169,7 @@
 #'
 #' # Example 8: subset to a specific id
 #' \dontrun{
-#' ai <- getIndex(filename='merged', destdir = '~/data/argo')
+#' ai <- getIndex(filename='synthetic', destdir = '~/data/argo')
 #' index9 <- subset(ai, id='1900722') }
 #'
 #' # Example 9: subset data to only include deep argo
