@@ -8,14 +8,10 @@ col <- list(core = 7, bgc = 3, deep = 6)
 endTime <- as.POSIXlt(Sys.time())
 startTime <- as.POSIXlt(endTime - 21 * 86400)
 
+
 #' @importFrom grDevices grey
 #' @importFrom graphics arrows image lines mtext
-#' @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
-uiMapApp  <- shiny::fluidPage(
-    ## if (!requireNamespace("shiny", quietly=TRUE))
-    ##     stop("must install.packages('shiny') for mapApp() to work")
-    ## if (!requireNamespace("shinycssloaders", quietly=TRUE))
-    ##     stop("must install.packages('shinycssloaders') for mapApp() to work")
+uiMapApp <- shiny::fluidPage(
     shiny::headerPanel(title = "", windowTitle = "argoFloats mapApp"),
     shiny::tags$script(
         '$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'
@@ -104,7 +100,10 @@ uiMapApp  <- shiny::fluidPage(
     )
 )
 
+## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 serverMapApp <- function(input, output, session) {
+    if (!requireNamespace("shiny", quietly=TRUE))
+        stop("must install.packages('shiny') for mapApp() to work")
     AGE <- 7
     ## State variable: reactive!
     state <- shiny::reactiveValues(
@@ -175,7 +174,7 @@ serverMapApp <- function(input, output, session) {
     }
     ## vector indicating whether to keep any given cycle.
     visible <- rep(TRUE, length(argo$lon))
-    
+
     ## Prevent off-world points
     pinlat <- function(lat)
         ifelse(lat < -90,-90, ifelse(90 < lat, 90, lat))
@@ -194,7 +193,7 @@ serverMapApp <- function(input, output, session) {
         )
         text(0.5, 0.5, msg, col = 2, font = 2)
     }
-    
+
     output$info <-
         shiny::renderText({
             # show location.  If lat range is under 90deg, also show nearest float within 100km
