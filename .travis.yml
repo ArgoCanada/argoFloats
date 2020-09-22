@@ -12,6 +12,8 @@ addons:
             - libudunits2-dev
             - libnetcdf-dev
             - netcdf-bin
+install:
+  - R -e 'devtools::install_deps(dependencies=TRUE)'
 
 r_packages:
     - shiny
