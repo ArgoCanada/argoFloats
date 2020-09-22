@@ -342,7 +342,7 @@ getIndex <- function(filename="argo",
     header <- first[hash]
     lastHash <- tail(hash, 1)
     names <- strsplit(first[1 + lastHash], ",")[[1]]
-   # if (grepl("merge", filename)) {
+   #if (grepl("merge", filename)) {
    #     names <- c("file", "date", "latitude", "longitude", "ocean",
    #                "profiler_type", "institution", "parameters",
    #                "param_data_mode", "date_update")
