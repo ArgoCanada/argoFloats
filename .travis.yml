@@ -13,7 +13,7 @@ addons:
             - libnetcdf-dev
             - netcdf-bin
 install:
-  - R -e 'devtools::install_deps(dependencies=TRUE)'
+  - R -e 'install.packages("devtools");devtools::install_deps(dependencies=TRUE)'
 
 r_packages:
     - devtools
