@@ -306,7 +306,7 @@ setMethod(f="subset",
                                       ##print(dim(item[[l]]))
                                       D <- dim(item[[l]])
                                       if (column > D[2])
-                                          stop("cannot access column ", column, " of metadata item \"", name, "\" because its dimension is ", paste(D, collapse=" "))
+                                          stop("in subset,argoFloats-method() :\n cannot access column ", column, " of metadata item \"", name, "\" because its dimension is ", paste(D, collapse=" "), call.=FALSE)
                                       ##cat("BEFORE:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
                                       res@data$argos[[iargo]]@metadata[[name]][[l]] <- item[[l]][, column, drop=FALSE]
                                       ##cat("AFTER:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
@@ -375,7 +375,7 @@ setMethod(f="subset",
               if (missing(subset)) {
                   #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
                   if (length(dots) == 0)
-                      stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', dataMode', 'cycle', or 'direction'")
+                      stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', dataMode', 'cycle', or 'direction'", call.=FALSE)
                   if (length(dots) > 2)
                       stop("in subset,argoFloats-method() :\n  cannot give more than one method in the '...' argument", call.=FALSE)
                   N <- length(x@data$index[[1]]) # used in calculating percentages
@@ -385,9 +385,9 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "subsetting by circle\n")
                       circle <- dots[[1]]
                       if (!is.list(dots[1]))
-                          stop("in subset,argoFloats-method() :\n  'circle' must be a list containing 'longitude', 'latitude' and 'radius'.")
+                          stop("in subset,argoFloats-method() :\n  'circle' must be a list containing 'longitude', 'latitude' and 'radius'.", call.=FALSE)
                       if (3 != sum(c("longitude", "latitude", "radius") %in% sort(names(circle))))
-                          stop("in subset,argoFloats-method() :\n  'circle' must be a list containing 'longitude', 'latitude' and 'radius'")
+                          stop("in subset,argoFloats-method() :\n  'circle' must be a list containing 'longitude', 'latitude' and 'radius'", call.=FALSE)
                       if (!requireNamespace("oce", quietly=TRUE))
                           stop("must install.packages(\"oce\") to subset by circle")
                       dist <- oce::geodDist(x[["longitude"]], x[["latitude"]], circle$longitude, circle$latitude)
@@ -400,9 +400,9 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "subsetting by rectangle\n")
                       rectangle <- dots[[1]]
                       if (!is.list(dots[1]))
-                          stop("in subset,argoFloats-method():\n  'rectangle' must be a list containing 'longitude' and 'latitude'")
+                          stop("in subset,argoFloats-method():\n  'rectangle' must be a list containing 'longitude' and 'latitude'", call.=FALSE)
                       if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
-                          stop("in subset,argoFloats-method():\n  'rectangle' must be a list containing 'longitude' and 'latitude'")
+                          stop("in subset,argoFloats-method():\n  'rectangle' must be a list containing 'longitude' and 'latitude'", call.=FALSE)
                       keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
                       keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[['latitude']] <= rectangle$latitude[2]
                       ok <- is.finite(keeplon) & is.finite(keeplat)
@@ -431,11 +431,11 @@ setMethod(f="subset",
                           stop("must install.packages(\"sf\") for subset() by polygon to work")
                       polygon <- dots[[1]]
                       if(!is.list(dots[1]))
-                          stop("in subset,argoFloats-method():\n  'polygon' must be a list")
+                          stop("in subset,argoFloats-method():\n  'polygon' must be a list", call.=FALSE)
                       if (length(polygon) != 2)
-                          stop("in subset,argoFloats-method():\n  'polygon' must be a list of two elements")
+                          stop("in subset,argoFloats-method():\n  'polygon' must be a list of two elements", call.=FALSE)
                       if (2 != sum(c("longitude", "latitude") %in% names(polygon)))
-                          stop("in subset,argoFloats-method():\n  'polygon' must be a list containing 'longitude' and 'latitude'")
+                          stop("in subset,argoFloats-method():\n  'polygon' must be a list containing 'longitude' and 'latitude'", call.=FALSE)
                       plat <- polygon$latitude
                       plon <- polygon$longitude
                       if (length(plat) != length(plon))
