@@ -80,8 +80,8 @@ test_that("subset by deep", {
 test_that("silencing subset", {
           data("index")
           N <- 0
-          indexid <- expect_message(subset(index, deep=TRUE, quiet=TRUE),
-                                    paste("Kept", N, "profiles"))
+          indexid <- expect_error(subset(index, deep=TRUE, quiet=TRUE, " Error: in subset,argoFloats-method() :
+  cannot give more than one method in the '...' argument"))
 })
 
 test_that("subset by ocean", {
