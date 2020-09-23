@@ -156,6 +156,18 @@ test_that("subset by cycle",
           }
 )
 
+test_that("subset by dataMode",
+          {
+              data("index")
+              N <- 517
+              index1 <- expect_message(subset(index, dataMode="delayed"),
+                                       paste("Kept", N, "profiles"))
+              N <- 461
+              index2 <- expect_message(subset(index, dataMode="realtime"),
+                                       paste("Kept", N, "profiles"))
+          }
+)
+
 test_that("subset stop messages", {
     if (canDownload()){
     data("index")
