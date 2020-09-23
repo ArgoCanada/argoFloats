@@ -516,7 +516,7 @@ setMethod(f="subset",
                   } else if (dotsNames[1] == 'deep') {
                       argoFloatsDebug(debug, "subsetting by deep\n")
                       deep <- dots[[1]]
-                      if (!as.logical(deep))
+                      if (!is.logical(deep))
                           stop("in subset,argoFloats-method():\n deep must be a logical vector indicating TRUE or FALSE", call.=FALSE)
                       if (deep) {
                           keep <- grep("849|862|864", x@data$index$profiler_type)
