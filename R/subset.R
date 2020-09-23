@@ -376,7 +376,7 @@ setMethod(f="subset",
                   #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
                   if (length(dots) == 0)
                       stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', dataMode', 'cycle', or 'direction'", call.=FALSE)
-                  if (length(dots) > 2)
+                  if (length(dots) > 1)
                       stop("in subset,argoFloats-method() :\n  cannot give more than one method in the '...' argument", call.=FALSE)
                   N <- length(x@data$index[[1]]) # used in calculating percentages
                   if (x@metadata$type == "index") {
