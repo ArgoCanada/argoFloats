@@ -153,8 +153,8 @@ NULL
 #'```
 #' This "synthetic" type of index is a replacement for the older "merged" index.  See
 #' \url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
-#' for more on the data file format, reasons for the change, and timetable for transition
-#' from "merged".
+#' for more on the data file format, the reasons for the change, and the
+#' timetable for the transition from "merged".
 #'
 #' @template server_caveat
 #'

@@ -51,9 +51,14 @@ test_that("access float id", {
     expect_equal(c("1901584", "1901584", "1901584"), head(index[['id']], 3))
 })
 
-test_that("access float profile number", {
+test_that("access float cycle number", {
     expect_equal(c("124", "125", "126"), index[["cycle", 1:3]])
     expect_equal(c("124", "125", "126"), head(index[["cycle"]], 3))
+    filename <-
+        system.file("extdata", "D4900785_048.nc", package = "argoFloats")
+    argos <- expect_silent(readProfiles(filename))
+    expect_equal(argos[["cycle"]], "048")
+    expect_equal(argos[['cycle',1]], "048")
 })
 
 test_that("access within cycles", {
@@ -93,3 +98,14 @@ test_that("historyQCTest length and (trimmed) contents for issue 136", {
         expect_equal(test2, gsub("[ ]*", "", qcn))
     }
 })
+
+test_that("access length", {
+    expect_equal(index[["length"]], 978)
+    filename <-
+        system.file("extdata", "D4900785_048.nc", package = "argoFloats")
+    argos <- expect_silent(readProfiles(filename))
+    expect_equal(argos[['length']], 1)
+    
+})
+
+
