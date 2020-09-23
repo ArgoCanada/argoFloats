@@ -169,51 +169,45 @@ test_that("subset by dataMode",
 )
 
 test_that("subset stop messages", {
-    if (canDownload()){
     data("index")
     N <- 9
     index1 <- expect_message(subset(index, id="1901584"),
                              paste("Kept", N, "profiles"))
-    profiles <- expect_silent(getProfiles(index1))
-    argos <- expect_output(expect_warning(readProfiles(profiles),
-                                          "Of 9 profiles read, 8 have"), "|===")
-    index2 <- expect_error(subset(argos, "Error: in subset,argoFloats-method() :
+    argos <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")))
+    argos2 <- expect_error(subset(argos, "Error: in subset,argoFloats-method() :
                                       must give 'column' or 'cycle' argument"))
-    index3 <- expect_error(subset(profiles, " Error: in subset,argoFloats-method() :
-  subset doesn't work for type = profiles "))
-    index4 <- expect_error(subset(argos, column=2, 
+    argos3 <- expect_error(subset(argos, column=2, 
     "Error: in subset,argoFloats-method() :
- cannot access column 2 of metadata item 'flags' because its dimension is 67 1 "))
-    index5 <- expect_message(subset(argos, cycle=124, "Kept 1 profiles (11.1%)"))
-    index6 <- expect_error(subset(argos, map=1, " Error: in subset,argoFloats-method():
+ cannot access column 2 of metadata item 'flags' because its dimension is 335 1 "))
+    argos4 <- expect_message(subset(argos, cycle=131, "Kept 1 profiles (100%)"))
+    argos5 <- expect_error(subset(argos, map=1, " Error: in subset,argoFloats-method():
   the only permitted '...' argument for argos type is 'column' or 'cycle'"))
-    index7 <- expect_error(subset(argos, cycle=1, "Error: In subset,argoFloats-method(): Cycle '1' not found. Try one of: 124, 125, 126, 128, 129, 132, 147, 148, 150"))
-    index8 <- expect_error(subset(index, circle='dog', " Error: in subset,argoFloats-method() :
+    argos6 <- expect_error(subset(argos, cycle=1, "Error: In subset,argoFloats-method(): Cycle '1' not found. Try one of: 131"))
+    index2 <- expect_error(subset(index, circle='dog', " Error: in subset,argoFloats-method() :
   'circle' must be a list containing 'longitude', 'latitude' and 'radius'"))
-    index9 <- expect_error(subset(index, circle=list(longitude=-77.5, latitude=27.5), " Error: in subset,argoFloats-method() :
+    index3 <- expect_error(subset(index, circle=list(longitude=-77.5, latitude=27.5), " Error: in subset,argoFloats-method() :
   'circle' must be a list containing 'longitude', 'latitude' and 'radius'"))
-    index10 <- expect_error(subset(index, rectangle='dog', " Error: in subset,argoFloats-method():
+    index4 <- expect_error(subset(index, rectangle='dog', " Error: in subset,argoFloats-method():
   'rectangle' must be a list containing 'longitude' and 'latitude'"))
-    index10 <- expect_error(subset(index, rectangle=list(longitude=c(-76.5, -76)), "Error: in subset,argoFloats-method():
+    index5 <- expect_error(subset(index, rectangle=list(longitude=c(-76.5, -76)), "Error: in subset,argoFloats-method():
   'rectangle' must be a list containing 'longitude' and 'latitude' "))
-    index11 <- expect_error(subset(index, polygon='dog', " Error: in subset,argoFloats-method():
+    index6 <- expect_error(subset(index, polygon='dog', " Error: in subset,argoFloats-method():
   'polygon' must be a list of two elements "))
-    index12 <- expect_error(subset(index, polygon=list(c(1,3)), " Error: in subset,argoFloats-method():
+    index7 <- expect_error(subset(index, polygon=list(c(1,3)), " Error: in subset,argoFloats-method():
   'polygon' must be a list of two elements "))
-    index13 <- expect_error(subset(index, polygon=list(dog=c(1,2), cat=c(1,3)), "Error: in subset,argoFloats-method():
+    index8 <- expect_error(subset(index, polygon=list(dog=c(1,2), cat=c(1,3)), "Error: in subset,argoFloats-method():
   'polygon' must be a list containing 'longitude' and 'latitude' "))
-    index14 <- expect_error(subset(index, time=list(from="hi", to="bye"), " Error: in subset,argoFloats-method():
+    index9 <- expect_error(subset(index, time=list(from="hi", to="bye"), " Error: in subset,argoFloats-method():
   'time' must be a list containing POSIX times "))
-    index15 <- expect_error(subset(index, time=list(from=as.POSIXct("2019-12-31", tz="UTC"),to=as.POSIXct("2019-01-31", tz="UTC")),"Error: in subset,argoFloats-method():
+    index10 <- expect_error(subset(index, time=list(from=as.POSIXct("2019-12-31", tz="UTC"),to=as.POSIXct("2019-01-31", tz="UTC")),"Error: in subset,argoFloats-method():
  'to' must be greater than 'from' "))
-    index16 <- expect_error(subset(index, dataMode=1, "Error: in subset,argoFloats-method():
+    index11 <- expect_error(subset(index, dataMode=1, "Error: in subset,argoFloats-method():
   'dataMode' must be character value "))
-    index17 <- expect_error(subset(index, dataMode='dog'," Error: in subset,argoFloats-method():
+    index12 <- expect_error(subset(index, dataMode='dog'," Error: in subset,argoFloats-method():
   'dataMode' must be either 'realtime' or 'delayed', not 'dog'"))
-    index18 <- expect_error(subset(index, direction=1,"Error: in subset,argoFloats-method():
+    index13 <- expect_error(subset(index, direction=1,"Error: in subset,argoFloats-method():
   'direction' must be character value of either 'ascent' or 'decent'"))
-    index19 <- expect_error(subset(index,direction="dog", "Error: in subset,argoFloats-method():
+    index14 <- expect_error(subset(index,direction="dog", "Error: in subset,argoFloats-method():
   'direction' must be either 'ascent' or 'decent', not 'dog'" ))
-}
 }
 )
