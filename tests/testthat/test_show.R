@@ -9,7 +9,6 @@ context("show")
 test_that("show", {
         data("index")
         index1 <- expect_message(subset(index,1:5,"Kept 5 profiles (0.511%)"))
-        profiles <- getProfiles(index1)
         a <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")))
     })
 
