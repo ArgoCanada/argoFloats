@@ -38,5 +38,5 @@ o <- new("ctd")
 o <- oceSetData(o, "pressure", pp, unit=punit)
 o <- oceSetData(o, parameter, vv, unit=vunit)
 summary(o)
-plotProfile(o, xtype="oxygen", type="p")
+plotProfile(o, xtype=parameter, type="p")
 
