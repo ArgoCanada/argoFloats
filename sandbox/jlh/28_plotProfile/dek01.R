@@ -7,7 +7,7 @@ argoFloatsPlotProfile <- function(x, parameter, ...)
     varNames <- unique(unlist(lapply(1:N, function(i) names(x[[i]][['data']]))))
     print(varNames)
     if (!parameter %in% varNames)
-        stop('jaimie')
+        stop('FIXME(jlh)')
     pressure <- lapply(1:N, function(i) x[[i]][['pressure']])
     variable <- lapply(1:N, function(i) x[[i]][[parameter]])
     nn <- unlist(lapply(1:N, function(i) prod(dim(x[[i]][[parameter]]))))
@@ -24,15 +24,19 @@ argoFloatsPlotProfile <- function(x, parameter, ...)
             pp <- c(pp, NA, pressure[[i]])
             vv <- c(vv, NA, variable[[i]])
         }
-        cat(vectorShow(i))
-        cat(vectorShow(length(pp)))
-        cat(vectorShow(length(vv)))
+        ## cat(vectorShow(i))
+        ## cat(vectorShow(length(pp)))
+        ## cat(vectorShow(length(vv)))
     }
     o <- new("ctd")
     o <- oceSetData(o, "pressure", pp, unit=punit)
     o <- oceSetData(o, parameter, vv, unit=vunit)
                                         #summary(o)
-    oce::plotProfile(o, xtype=parameter, ...)
+    if ("keepNA" %in% names(list(...))) {
+        oce::plotProfile(o, xtype=parameter, ...)
+    } else {
+        oce::plotProfile(o, xtype=parameter, keepNA=TRUE, ...)
+    }
 }
 
 
@@ -44,6 +48,6 @@ if (exists("argos")) { # cache for speed
     subset <- subset(indexSynthetic, 1:10)
     argos <- readProfiles(getProfiles(subset))
 }
-argoFloatsPlotProfile(argos,"temperature",  col='blue')
+argoFloatsPlotProfile(argos,"temperature",  col='blue', ytype="depth")
 
 
