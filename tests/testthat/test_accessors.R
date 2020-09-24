@@ -108,4 +108,17 @@ test_that("access length", {
     
 })
 
+test_that("test access argos type", {
+              filename <-
+                  system.file("extdata", "D4900785_048.nc", package = "argoFloats")
+              argos <- expect_silent(readProfiles(filename))
+              expect_equal(argos[['latitude']][[1]], 27.916)
+})
+test_that("test error messages",{
+              data("index")
+              expect_error(index[["parameters"]], "there are no parameters for core Argo index objects. Try BGC, Merged, or Synthetic Argo.")
+              expect_error(index[['dog']], "cannot interpret i=dog for an object of type=\"index\"")
+
+})
+
 
