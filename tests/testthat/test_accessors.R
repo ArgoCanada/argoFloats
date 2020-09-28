@@ -51,7 +51,7 @@ test_that("access float id", {
     expect_equal(c("1901584", "1901584", "1901584"), head(index[['id']], 3))
 })
 
-test_that("access float cycle number", {
+test_that("access float cycle number/ profile", {
     expect_equal(c("124", "125", "126"), index[["cycle", 1:3]])
     expect_equal(c("124", "125", "126"), head(index[["cycle"]], 3))
     filename <-
@@ -119,6 +119,10 @@ test_that("test error messages",{
               expect_error(index[["parameters"]], "there are no parameters for core Argo index objects. Try BGC, Merged, or Synthetic Argo.")
               expect_error(index[['dog']], "cannot interpret i=dog for an object of type=\"index\"")
 
+})
+test_that("access to metadata",{
+    index1 <- expect_silent(index[['metadata']])
+    expect_equal(index1[[1]], "index")
 })
 
 
