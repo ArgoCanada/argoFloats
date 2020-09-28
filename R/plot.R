@@ -536,7 +536,7 @@ setMethod(f="plot",
                   if ((x[["type"]] != "argos"))
                       stop("In plot,argoFloats-method(): : x must have been created by readProfiles()", call.=FALSE)
                   if (!(eos %in% c("gsw", "unesco")))
-                      stop("eos must be \"gsw\" or \"unesco\", not \"", eos, "\"")
+                      stop("In plot,argoFloats-method(): \n eos must be \"gsw\" or \"unesco\", not \"", eos, "\"", call.=FALSE)
                   salinity <- unlist(x[["salinity", debug=debug]])
                   temperature <- unlist(x[["temperature", debug=debug]])
                   pressure <- unlist(x[["pressure", debug=debug]])
