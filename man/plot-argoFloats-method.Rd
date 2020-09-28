@@ -155,11 +155,12 @@ profiles that are questionable. Note that if all of data at a given time
 have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 time. The bottom panel shows the mean value of the parameter in question
 regardless of the flag value. See Example 7.
-\item For \code{which="profile"}  a profile plot, showing variation of some quantity
-with pressure is shown. An additional argument named \code{parameter} must be given,
-to name the quality on interest. Note: this is plotted  using the oceanographic
-convention of putting lower pressures near the top of the plot.
-See Example 8.
+\item For \code{which="profile"} a profile plot, showing variation of some quantity
+with pressure is shown using the oceanographic convention of putting lower
+pressures near the top of the plot. An additional argument named \code{parameter}
+must be given, to name the quantity on interest. Note: this uses the \code{oce::plotProfile}
+function with \code{keepNA} defaulting to \code{TRUE}. Visit \code{\link[oce:plotProfile]{oce::plotProfile}} for additional
+possible arguments. See Example 8.
 }
 }
 \examples{
