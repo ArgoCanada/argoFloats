@@ -111,11 +111,12 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 ## plot(x, which="timeseries", parameter="T")
 ##
 #'
-#' * For `which="profile"`  a profile plot, showing variation of some quantity
-#' with pressure is shown. An additional argument named `parameter` must be given,
-#' to name the quality on interest. Note: this is plotted  using the oceanographic
-#' convention of putting lower pressures near the top of the plot.
-#' See Example 8.
+#' * For `which="profile"` a profile plot, showing variation of some quantity
+#' with pressure is shown using the oceanographic convention of putting lower
+#' pressures near the top of the plot. An additional argument named `parameter`
+#' must be given, to name the quantity on interest. Note: this uses the `oce::plotProfile`
+#' function with `keepNA` defaulting to `TRUE`. Visit [`oce::plotProfile`] for additional
+#' possible arguments. See Example 8.
 #'
 #' @param x an [`argoFloats-class`] object.
 #'
@@ -250,7 +251,7 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #' argos <- readProfiles(profiles)
 #' plot(argos, which='QC', parameter='temperature')}
 #'
-#' Example 8: Temperature profile of the 131st cycle of float id 2902204
+#' # Example 8: Temperature profile of the 131st cycle of float id 2902204
 #' library(argoFloats)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' plot(a, which="profile", parameter="temperature")
@@ -650,19 +651,46 @@ setMethod(f="plot",
                   dots <- list(...)
                   knownParameters <- names(x[[1]]@data)
                   parameter <<- dots$parameter
+                  N <- length(x[['argos']])
                   if (is.null(parameter))
                       stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
                   if (!(parameter %in% knownParameters))
                       stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: ", paste(knownParameters, collapse=', '), call.=FALSE)
                   if ((parameter %in% knownParameters)) {
-                      #U <<- x[['units']][[1]]$oxygen$unit[[1]] ## Need to figure out how to make this general with parameter
-                      X <<- x
-                      U <<- x[['units']][[1]][[parameter]]$unit[[1]] ## Need to figure out how to make this general with parameter
-                      pressure <- unlist(x[['pressure']])
-                      p <<- unlist(x[[parameter]])
-                      xlab <-  bquote(.(parameter)*" ["*.(U)*"]")
-                      plot(p, pressure, ylim=rev(range(pressure, na.rm=TRUE)), type="p", xlab = xlab, ylab='Pressure [dbar]')
-                  } # Need to add parameter name before units in xlab
+                      argoFloatsPlotProfile <- function(x, parameter, ...)
+                      {
+                          pressure <- lapply(1:N, function(i) x[[i]][['pressure']])
+                          variable <- lapply(1:N, function(i) x[[i]][[parameter]])
+                          nn <- unlist(lapply(1:N, function(i) prod(dim(x[[i]][[parameter]]))))
+                          pp <- NULL
+                          vv <- NULL
+                          punit <- NULL
+                          vunit <- NULL
+                          for (i in seq_len(N)) {
+                              if (nn[i] > 0) {
+                                  if (is.null(vunit))
+                                      vunit <- x[[1]][[paste0(parameter, "Unit")]]
+                                  if (is.null(punit))
+                                      punit <- x[[1]][[paste0("pressureUnit")]]
+                                  pp <- c(pp, NA, pressure[[i]])
+                                  vv <- c(vv, NA, variable[[i]])
+                              }
+                              ## cat(vectorShow(i))
+                              ## cat(vectorShow(length(pp)))
+                              ## cat(vectorShow(length(vv)))
+                          }
+                          o <- new("ctd")
+                          o <- oce::oceSetData(o, "pressure", pp, unit=punit)
+                          o <- oce::oceSetData(o, parameter, vv, unit=vunit)
+                          #summary(o)
+                          if ("keepNA" %in% names(list(...))) {
+                              oce::plotProfile(o, xtype=parameter, ...)
+                          } else {
+                              oce::plotProfile(o, xtype=parameter, keepNA=TRUE, ...)
+                          }
+                      }
+                  }
+                  argoFloatsPlotProfile(x, parameter=parameter)
               } else {
                   stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'", call.=FALSE)
               }

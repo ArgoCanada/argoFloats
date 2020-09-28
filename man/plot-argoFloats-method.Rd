@@ -237,7 +237,7 @@ profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')}
 
-Example 8: Temperature profile of the 131st cycle of float id 2902204
+# Example 8: Temperature profile of the 131st cycle of float id 2902204
 library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 plot(a, which="profile", parameter="temperature")
