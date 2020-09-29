@@ -13,7 +13,7 @@ pinusr <- function(usr)
 #' @importFrom graphics rect
 argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 {
-    ## Low-lwvel axis plot, which limits axes to -180,180 and -90,90.
+    ## Low-level axis plot, which limits axes to -180,180 and -90,90.
     usr <- pinusr(par("usr"))
     xat <- pretty(usr[1:2], 10)
     xat <- xat[usr[1] < xat & xat < usr[2]]
@@ -683,6 +683,7 @@ setMethod(f="plot",
                           vv <- NULL
                           punit <- NULL
                           vunit <- NULL
+                          argoFloatsDebug(debug, "number of profiles: ", N, "\n")
                           for (i in seq_len(N)) {
                               if (nn[i] > 0) {
                                   if (is.null(vunit))
@@ -699,7 +700,6 @@ setMethod(f="plot",
                           o <- new("ctd")
                           o <- oce::oceSetData(o, "pressure", pp, unit=punit)
                           o <- oce::oceSetData(o, parameter, vv, unit=vunit)
-                          #summary(o)
                           if ("keepNA" %in% names(list(...))) {
                               oce::plotProfile(o, xtype=parameter, ...)
                           } else {
@@ -707,7 +707,7 @@ setMethod(f="plot",
                           }
                       }
                   }
-                  argoFloatsPlotProfile(x, parameter=parameter)
+                  argoFloatsPlotProfile(x, parameter=parameter, debug=debug-1)
               } else {
                   stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?'plot,argoFloats-method'", call.=FALSE)
               }
