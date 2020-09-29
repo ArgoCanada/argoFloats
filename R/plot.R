@@ -665,8 +665,9 @@ setMethod(f="plot",
                   if (x[['type']] != 'argos')
                       stop("In plot,argoFloats-method(): The type of x must be 'argos'", call.=FALSE)
                   dots <- list(...)
-                  knownParameters <- names(x[[1]]@data)
-                  parameter <<- dots$parameter
+                  N <- length(x[['argos']])
+                  knownParameters <- unique(unlist(lapply(1:N, function(i) names(x[[i]][['data']]))))
+                  parameter <- dots$parameter
                   N <- length(x[['argos']])
                   if (is.null(parameter))
                       stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
