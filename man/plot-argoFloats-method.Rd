@@ -158,6 +158,12 @@ profiles that are questionable. Note that if all of data at a given time
 have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 time. The bottom panel shows the mean value of the parameter in question
 regardless of the flag value. See Example 7.
+\item For \code{which="profile"} a profile plot, showing variation of some quantity
+with pressure is shown using the oceanographic convention of putting lower
+pressures near the top of the plot. An additional argument named \code{parameter}
+must be given, to name the quantity on interest. Note: this uses the \code{oce::plotProfile}
+function with \code{keepNA} defaulting to \code{TRUE}. Visit \code{\link[oce:plotProfile]{oce::plotProfile}} for additional
+possible arguments. See Example 8.
 }
 }
 \examples{
@@ -239,6 +245,11 @@ profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')}
 
+# Example 8: Temperature profile of the 131st cycle of float id 2902204
+library(argoFloats)
+a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+plot(a, which="profile", parameter="temperature")
+
 }
 \references{
 \enumerate{
@@ -248,5 +259,5 @@ Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 }
 }
 \author{
-Dan Kelley
+Dan Kelley and Jaimie Harbin
 }
