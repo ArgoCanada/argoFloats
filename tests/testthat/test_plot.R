@@ -2,12 +2,15 @@
 
 library(argoFloats)
 library(testthat)
+library(oce)
 
 context("plot")
 
 test_that("plot map", {
-    data("index")
-    expect_silent(plot(index, which="map", bathymetry=FALSE))
+    data(index)
+    data(topoWorld)
+    plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
+    plot(index, bathymetry=list(source=topoWorld))
 })
 
 test_that("plot TS", {
