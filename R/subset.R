@@ -420,8 +420,8 @@ setMethod(f="subset",
                       nparameters <- length(parameters)
                       parametersList <- lapply(x[["parameters"]], function(p) strsplit(p, " ")[[1]])
                       keep <- unlist(lapply(parametersList, function(pl) nparameters == sum(parameters %in% pl)))
-                      if (sum(keep) < 1)
-                          warning("in subset,argoFloats-method(..., parameter):\n  found no profiles with given parameter", call.=FALSE)
+                      #if (sum(keep) < 1)
+                          #warning("in subset,argoFloats-method(..., parameter):\n  found no profiles with given parameter", call.=FALSE)
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]

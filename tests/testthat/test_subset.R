@@ -168,6 +168,16 @@ test_that("subset by dataMode",
           }
 )
 
+test_that("subset by parameter", {
+  data("indexBgc")
+  N <- 37
+  index1 <- expect_message(subset(indexBgc, parameter="DOXY"),
+                           paste("Kept", N, "profiles"))
+  index2 <- expect_error(subset(indexBgc, parameter="TEMP","Kept 0 profiles"))
+                
+  
+})
+
 test_that("subset stop messages", {
     data("index")
     N <- 9
@@ -209,5 +219,7 @@ test_that("subset stop messages", {
   'direction' must be character value of either 'ascent' or 'decent'"))
     index14 <- expect_error(subset(index,direction="dog", "Error: in subset,argoFloats-method():
   'direction' must be either 'ascent' or 'decent', not 'dog'" ))
+    index15 <- expect_error(subset(index,parameter="temperature", " Error: there are no parameters for core Argo index objects. Try BGC, Merged, or Synthetic Argo. " ))
+    
 }
 )

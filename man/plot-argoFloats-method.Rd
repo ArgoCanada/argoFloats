@@ -115,22 +115,25 @@ data downloaded with \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}
 \item A list with items controlling both the bathymetry data and its
 representation in the plot, as in Example 5.  Those items are:
 \enumerate{
-\item \code{source}, a mandatory value that either the string \code{"auto"} (the default) to use
-\code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to download the data, or a value
-returned by a previous call to that function;
+\item \code{source}, a mandatory value that is one of
+(a) the string \code{"auto"} (the default) to use
+\code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to download the data,
+(b) a value returned by \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}, or
+(c) a value returned by \code{\link[oce:read.topo]{oce::read.topo()}}.
 \item \code{keep}, an optional logical value (with \code{TRUE} as the default) that is passed to
 \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to indicate whether to keep a local file of bathymetry,
 as a way to avoid intermittent problems with the NOAA server;
 \item \code{contour}, an optional logical value (with \code{FALSE} as the default) indicating
-(as in example 5A) whether to represent bathymetry with contours (with depths of 100m,
-200m, 500m shown, along with 1km, 2km up to 10km), as opposed to an image;
+(as in Examples 5A and 5B) whether to represent bathymetry with contours
+(with depths of 100m, 200m, 500m shown, along with 1km, 2km up to 10km),
+as opposed to an image;
 \item \code{colormap}, ignored if \code{contour} is \code{TRUE},
 an optional value that is either the string \code{"auto"} (the default)
-for a form of GEBCO colors (as in example 5B) computed with \code{\link[oce:oceColorsGebco]{oce::oceColorsGebco()}}, or a value
+for a form of GEBCO colors (as in Example 5C) computed with \code{\link[oce:oceColorsGebco]{oce::oceColorsGebco()}}, or a value
 computed with \code{\link[oce:colormap]{oce::colormap()}} applied to the bathymetry data; and
 \item \code{palette}, ignored if \code{contour} is \code{TRUE},
 an optional logical value (with \code{TRUE} as the default)
-indicating (again, as in example 5B) whether to draw a depth-color palette to the right of the plot.
+indicating (again, as in Example 5C) whether to draw a depth-color palette to the right of the plot.
 }
 }
 \item For \code{which="TS"},  an overall TS plot is created.  This only works if \code{x}
@@ -195,14 +198,18 @@ plot(index, bathymetry=TRUE)}
 par(mar=c(2, 2, 1, 1))
 bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
 
-# Example 5A. Simple contour version.
+# Example 5A. Simple contour version, using marmap::getNOAA.bathy().
 plot(index, bathymetry=list(source=bathy, contour=TRUE))
 
-# Example 5B. Simple colour version.
+# Example 5B. Simple contour version, using oce::read.topo().
+data(topoWorld) # very coarse, read by oce::read.topo()
+plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
+
+# Example 5C. Simple colour version.
 cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
 plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
 
-# Example 5C. Customized map, sidestepping this function.
+# Example 5D. Customized map, sidestepping this function.
 lon <- as.numeric(rownames(bathy))
 lat <- as.numeric(colnames(bathy))
 depth <- -bathy # convert from elevation to depth
