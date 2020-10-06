@@ -701,9 +701,9 @@ setMethod(f="plot",
                           o <- oce::oceSetData(o, "pressure", pp, unit=punit)
                           o <- oce::oceSetData(o, parameter, vv, unit=vunit)
                           if ("keepNA" %in% names(list(...))) {
-                              oce::plotProfile(o, xtype=parameter, ...)
+                              oce::plotProfile(o, xtype=parameter, cex=cex, col=col, pch=pch, ...)
                           } else {
-                              oce::plotProfile(o, xtype=parameter, keepNA=TRUE, ...)
+                              oce::plotProfile(o, keepNA=TRUE, xtype=parameter, cex=cex, col=col, pch=pch, ...)
                           }
                       }
                   }
