@@ -139,6 +139,12 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE)
 #'
 #' @param ylab as `xlab`, but for the vertical axis.
 #'
+#' @param type a character value that controls line type, as for [par()].  If
+#' not specified, a choice is made automatically based on the value of `which`,
+#' e.g. if `which` is `"map"`, points will be plotted (as if `type="p"` had been 
+#' given), but if `which` is `"profile"` then lines will be plotted (as if
+#' `type="l"` had been given).
+#'
 #' @param cex a character expansion factor for plot symbols, or `NULL`, to get an
 #' value that depends on the value of `which`.
 #'
@@ -283,7 +289,7 @@ setMethod(f="plot",
                               bathymetry=TRUE,
                               xlim=NULL, ylim=NULL,
                               xlab=NULL, ylab=NULL,
-                              cex=NULL, col=NULL, pch=NULL, bg=NULL,
+                              type=NULL, cex=NULL, col=NULL, pch=NULL, bg=NULL,
                               mar=NULL, mgp=NULL,
                               eos="gsw",
                               TScontrol=list(),
@@ -701,9 +707,15 @@ setMethod(f="plot",
                           o <- oce::oceSetData(o, "pressure", pp, unit=punit)
                           o <- oce::oceSetData(o, parameter, vv, unit=vunit)
                           if ("keepNA" %in% names(list(...))) {
-                              oce::plotProfile(o, xtype=parameter, cex=cex, col=col, pch=pch, ...)
+                              oce::plotProfile(o, xtype=parameter, cex=cex,
+                                               type=if(is.null(type)) "l" else type,
+                                               col=if (is.null(col)) par("col") else col,
+                                               pch=pch, ...)
                           } else {
-                              oce::plotProfile(o, keepNA=TRUE, xtype=parameter, cex=cex, col=col, pch=pch, ...)
+                              oce::plotProfile(o, keepNA=TRUE, xtype=parameter, cex=cex,
+                                               type=if(is.null(type)) "l" else type,
+                                               col=if (is.null(col)) par("col") else col,
+                                               pch=pch, ...)
                           }
                       }
                   }
