@@ -12,6 +12,7 @@
   ylim = NULL,
   xlab = NULL,
   ylab = NULL,
+  type = NULL,
   cex = NULL,
   col = NULL,
   pch = NULL,
@@ -42,6 +43,12 @@ depending on the value of \code{which}. Note that \code{xlab} is not obeyed if
 \code{which="TS"}, because altering that label can be confusing to the user.}
 
 \item{ylab}{as \code{xlab}, but for the vertical axis.}
+
+\item{type}{a character value that controls line type, as for \code{\link[=par]{par()}}.  If
+not specified, a choice is made automatically based on the value of \code{which},
+e.g. if \code{which} is \code{"map"}, points will be plotted (as if \code{type="p"} had been
+given), but if \code{which} is \code{"profile"} then lines will be plotted (as if
+\code{type="l"} had been given).}
 
 \item{cex}{a character expansion factor for plot symbols, or \code{NULL}, to get an
 value that depends on the value of \code{which}.}
