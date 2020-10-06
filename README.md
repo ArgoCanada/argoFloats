@@ -17,8 +17,8 @@ install_github('ArgoCanada/argoFloats', ref='develop')
 ```
 where, of course, the `devtools` package must be installed first, if it is not
 already present on the user's system.  It is also necessary to have reasonably
-up-to-date versions of the `oce` and `ocedata` packages installed, which is
-accomplished with
+up-to-date versions of the `oce` and `ocedata` packages installed. The very
+latest versions may be installed with
 ```R
 install_github('dankelley/oce', ref='develop')
 install_github('dankelley/ocedata', ref='develop')
