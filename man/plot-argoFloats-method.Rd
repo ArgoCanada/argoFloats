@@ -8,6 +8,7 @@
   x,
   which = "map",
   bathymetry = TRUE,
+  geographical = 0,
   xlim = NULL,
   ylim = NULL,
   xlab = NULL,
@@ -32,6 +33,19 @@
 
 \item{bathymetry}{an argument used only if \code{which="map"}, to control
 whether (and how) to indicate water depth; see \dQuote{Details}.}
+
+\item{geographical}{flag indicating the style of axes
+for the \code{which="map"} case.  With
+\code{geographical=0} (which is the default),
+the axis ticks are labelled with signed longitudes and latitudes, measured in
+degrees. The signs are dropped with \code{geographical=1}.
+In the \code{geographical=4} case, signs are also dropped, but hemispheres
+are indicated by writing \code{S}, \code{N}, \code{W} or \code{E} after axis tick labels, except
+at the equator and prime meridian.
+Note that this scheme mimics that
+used by \code{\link[oce:plot-coastline-method]{oce::plot,coastline-method()}}, although the
+latter also takes values 2 and 3, which cause a display of angles in degrees,
+minutes and seconds, which seldom makes sense for large-scale argo maps.}
 
 \item{xlim, ylim}{numerical values, each a two-element vector, that
 set the \code{x} and \code{y} limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and other conventional
@@ -243,14 +257,14 @@ plot(a, which="TS")
 # Example 7: Temperature QC plot for an id in Arabian Sea
 \dontrun{
 library(argoFloats)
-ais <- getIndex(filename='synthetic', age=0)
+ais <- getIndex(filename="synthetic", age=0)
 sub <- subset(ais, id='2902123')
 lonRect <- c(56, 66)
 latRect <- c(11,12)
 s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
-plot(argos, which='QC', parameter='temperature')}
+plot(argos, which="QC", parameter="temperature")}
 
 # Example 8: Temperature profile of the 131st cycle of float id 2902204
 library(argoFloats)
