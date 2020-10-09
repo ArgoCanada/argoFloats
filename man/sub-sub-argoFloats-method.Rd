@@ -105,14 +105,15 @@ is returned as a named list.  (At present, there is only one choice: \code{"argo
 \item Otherwise, if \code{i} is a character value then it is taken to be
 an item within the \code{metadata} or \code{data} slots of the argo objects
 stored in \code{x}, and the returned value is a list containing that
-information with one (unnamed) item per profile.  If \code{j} is provided
+information with one (unnamed) item per profile.  \strong{FIXME: this does not work: <<<}
+If \code{j} is provided
 and equal to \code{"byLevel"}, then the items from the \code{metadata} are
 repeated (if necessary) and formed into matrix or vector of the same
 shape as the \code{"pressure"} field; this can be convenient for computations
 involving items that only occur once per profile, such as \code{"longitude"},
 but it should not be used for items that are not level-specific, such
 as the various \code{"HISTORY_*"} elements, which apply to a dataset, not to
-a level.
+a level.\strong{>>> EMXIF}
 \item Otherwise, NULL is reported.
 }
 \item Otherwise, an error is reported.

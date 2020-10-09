@@ -408,7 +408,7 @@ setMethod(f="plot",
                                       asp=asp,
                                       xlab=xlab, ylab=ylab)
                           if (!bathymetry$contour && bathymetry$palette) {
-                              message("setting mar to ", paste(tmpmar, collapse=" "))
+                              argoFloatsDebug(debug, "setting mar to ", paste(tmpmar, collapse=" "), "\n")
                               par(mar=tmpmar)
                           }
                           usr <- par("usr")

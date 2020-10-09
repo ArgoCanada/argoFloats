@@ -286,14 +286,15 @@ setMethod(f="initialize",
 #'     7. Otherwise, if `i` is a character value then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
-#'        information with one (unnamed) item per profile.  If `j` is provided
+#'        information with one (unnamed) item per profile.  **FIXME: this does not work: <<<**
+#'        If `j` is provided
 #'        and equal to `"byLevel"`, then the items from the `metadata` are
 #'        repeated (if necessary) and formed into matrix or vector of the same
 #'        shape as the `"pressure"` field; this can be convenient for computations
 #'        involving items that only occur once per profile, such as `"longitude"`,
 #'        but it should not be used for items that are not level-specific, such
 #'        as the various `"HISTORY_*"` elements, which apply to a dataset, not to
-#'        a level.
+#'        a level.**>>> EMXIF**
 #'     8. Otherwise, NULL is reported.
 #' 5. Otherwise, an error is reported.
 #'
@@ -316,6 +317,7 @@ setMethod(f="initialize",
 #'
 #' @author Dan Kelley
 #'
+## @importFrom oce as.ctd
 #' @export
 #' @docType methods
 #' @aliases [[,argoFloats-method
@@ -326,12 +328,18 @@ setMethod(f="[[",
                   stop("Must name an item to retrieve, e.g. 'x[[\"latitude\"]]'", call.=FALSE)
               dots <- list(...)
               debug <- if (!is.null(dots$debug)) dots$debug else 0
-              if (length(i) == 1 && i == "metadata")
+              argoFloatsDebug(debug, "[[i=", i, ", j=", if (missing(j)) "(missing)" else j, "]] {\n", sep="", style="bold", unindent=1)
+              if (length(i) == 1 && i == "metadata") {
+                  argoFloatsDebug(debug, "} # returned metadata slot\n", style="bold", unindent=1)
                   return(x@metadata)
-              if (length(i) == 1 && i == "data")
+              }
+              if (length(i) == 1 && i == "data") {
+                  argoFloatsDebug(debug, "} # returned data slot\n", style="bold", unindent=1)
                   return(x@data)
+              }
               type <- x@metadata$type
               if (type == "index") {
+                  argoFloatsDebug(debug, "type==\"index\"\n")
                   if (is.numeric(i)) {
                       return(x@data$index[i,])
                   } else if (length(i) == 1 && i == "index") {
@@ -341,9 +349,11 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@data$index)) {
                       return(if (missing(j)) x@data$index[[i]] else x@data$index[[i]][j])
                   } else if (length(i) == 1 && i == "profile") {
-                      warning("converted x[[\"profile\"]] to x[[\"cycle\"]] for backwards compatibility;\n  NOTE: this conversion will cease after September, 2020.")
-                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
-                      return(as.vector(if (missing(j)) cycle else cycle[j]))
+                      stop("In [[ : the old syntax [['profile']] is no longer converted to [['cycle']]")
+                      ## changed to stop() 2020-10-07
+                      ## warning("converted x[[\"profile\"]] to x[[\"cycle\"]] for backwards compatibility;\n  NOTE: this conversion will cease after September, 2020.")
+                      ## cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
+                      ## return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "cycle") {
                       cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
@@ -358,6 +368,7 @@ setMethod(f="[[",
                       stop("cannot interpret i=", paste(i, collapse=","), " for an object of type=\"index\"", call.=FALSE)
                   }
               } else if (type == "profiles") { # made by getProfiles()
+                  argoFloatsDebug(debug, "type==\"profiles\"\n")
                   if (is.numeric(i) && missing(j)) {
                       return(x@data$file[[i]])
                   } else if (length(i) == 1 && i == "cycle") {
@@ -382,22 +393,32 @@ setMethod(f="[[",
                       stop("cannot interpret i=", paste(i, collapse=","), " for an object of type=\"", type, "\"")
                   }
               } else if (type == "argos") { # made by readProfiles()
+                  argoFloatsDebug(debug, "type==\"argos\"\n")
                   if (is.numeric(i) && missing(j)) {
                       return(x@data$argos[[i]])
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
+                      argoFloatsDebug(debug, "i=\"", i, "\" is in metadata\n")
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
+                      argoFloatsDebug(debug, "i=\"", i, "\" is in data\n")
                       return(if (missing(j)) x@data[[i]] else x@data[[i]][[j]])
                   } else if (length(i) == 1 && i == "cycle") {
+                      argoFloatsDebug(debug, "i=\"", i, "\" is detected specifically\n")
                       cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3})[A-Z]*\\.nc$", "\\1", unlist(x[['filename']]))
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$argos))
+                  } else if (length(i) == 1 && i == "filename") {
+                      argoFloatsDebug(debug, "i=\"", i, "\" is detected specifically\n")
+                      id <- unlist(lapply(x@data$argos, function(a) a[['filename']]))
+                      return(as.vector(if (missing(j)) id else id[j]))
                   } else if (length(i) == 1 && i == "id") {
                       id <- unlist(lapply(x@data$argos, function(a) a[['id']]))
                       return(as.vector(if (missing(j)) id else id[j]))
                   } else {
+                      argoFloatsDebug(debug, "no special argoFloats case found, so must look within individual oce::argo objects\n")
                       if (!missing(j)) {
+                          argoFloatsDebug(debug, "j was given. FIXME: THE RESULTS MAY BE INCORRECT\n")
                           if (j != "byLevel")
                               stop("[[\"", i, "\"]], j]] requires that j be \"byLevel\", not \"", j, "\"")
                           return(lapply(x[["argos"]],
@@ -409,10 +430,41 @@ setMethod(f="[[",
                                                 rep(a[[i]], length.out=length(pressure))
                                         }))
                       } else {
-                          return(lapply(x[["argos"]],
-                                        function(a) {
-                                            a[[i]]
-                                        }))
+                          if (i == "longitude" || i == "latitude") {
+                              argoFloatsDebug(debug, "returning", i, "from the oce::argo object metadata\n")
+                              RES <- lapply(x@data$argos, function(a) a[[i]])
+                              argoFloatsDebug(debug, "}\n", style="bold", unindent=1)
+                              return(RES)
+                          } else {
+                              argoFloatsDebug(debug, "will return i=\"", i, "\" from the oce [[ method\n", sep="")
+                              RES <- lapply(x[["argos"]],
+                                            function(a) {
+                                                ## Assume uniform dimensionality for all @data in a given argo object
+                                                p <- a@data[["pressure"]]
+                                                if (is.null(p)) {
+                                                    warning("oce::argo object lacks pressure, so [[ is returning NULL\n")
+                                                    NULL
+                                                }
+                                                if (is.matrix(p)) {
+                                                    nrow <- nrow(p)
+                                                    ncol <- ncol(p)
+                                                    ##> message("case 1: is a matrix with nrow=", nrow, ", ncol=", ncol)
+                                                    res <- matrix(NA, nrow=nrow, ncol=ncol)
+                                                    for (col in seq_len(ncol)) {
+                                                        ##> message("col=",col)
+                                                        ctd <- oce::as.ctd(a, profile=col)
+                                                        res[, col] <- ctd[[i]]
+                                                    }
+                                                } else {
+                                                    ##> message("case 2: not a matrix")
+                                                    ctd <- oce::as.ctd(a)
+                                                    res <- ctd[[i]]
+                                                }
+                                                res
+                                            })
+                              argoFloatsDebug(debug, "}\n", style="bold", unindent=1)
+                              return(RES)
+                          }
                       }
                   }
               } else {
@@ -420,14 +472,14 @@ setMethod(f="[[",
               }
               if (i %in% c("longitude", "latitude")) {
                   res <- if (type == "argos") {
-                      argoFloatsDebug(debug, "type=\"argos\"\n", sep="")
+                      ## argoFloatsDebug(debug, "type=\"argos\"\n", sep="")
                       unlist(lapply(x[["argos"]], function(a) rep(a[[i]], length=length(a[["salinity"]]))))
                   } else if (type == "index") {
                       x@data$index[[i]]
                   } else {
                       stop("[[\"", i, "\"]] only works for objects created by readProfiles()")
                   }
-                  argoFloatsDebug(debug, "[[ for '", i, "' returning ", length(res), " values\n", sep="")
+                  ## argoFloatsDebug(debug, "[[ for '", i, "' returning ", length(res), " values\n", sep="")
                   return(res)
               }
               return(NULL)
