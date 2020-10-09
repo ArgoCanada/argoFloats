@@ -8,35 +8,36 @@ pinlon <- function(lon)
 pinusr <- function(usr)
     c(pinlon(usr[1]), pinlon(usr[2]), pinlat(usr[3]), pinlat(usr[4]))
 
-#' @importFrom graphics rect
-argoFloatsMapAxes <- function(axes=TRUE, box=TRUE, geographical=0)
-{
-    ## Low-level axis plot, which limits axes to -180,180 and -90,90.
-    usr <- pinusr(par("usr"))
-    xat <- pretty(usr[1:2], 10)
-    xat <- xat[usr[1] < xat & xat < usr[2]]
-    yat <- pretty(usr[3:4], 10)
-    yat <- yat[usr[3] < yat & yat < usr[4]]
-    if (geographical == 0) {
-        xlabels <- xat
-        ylabels <- yat
-    } else if (geographical == 1) {
-        xlabels <- abs(xat)
-        ylabels <- abs(yat)
-    } else if (geographical == 4) {
-        xlabels <- paste(abs(xat), ifelse(xat < 0, "W", ifelse(xat > 0, "E", "")), sep="")
-        ylabels <- paste(abs(yat), ifelse(yat < 0, "S", ifelse(yat > 0, "N", "")), sep="")
-    } else {
-        stop("In plot() : programming error: \"geographical\" must be 0, 1, or 4", call.=FALSE)
-    }
-    if (axes) {
-        axis(1, pos=pinlat(usr[3]), at=xat, labels=xlabels, lwd=1)
-        axis(2, pos=pinlon(usr[1]), at=yat, labels=ylabels, lwd=1)
-    }
-    if (box) {
-        rect(pinlon(usr[1]), pinlat(usr[3]), pinlon(usr[2]), pinlat(usr[4]), lwd=1)
-    }
- }
+## issue259 argoFloatsMapAxes <- function(axes=TRUE, box=TRUE, geographical=0)
+## issue259 {
+## issue259     ## Low-level axis plot, which limits axes to -180,180 and -90,90.
+## issue259     usr <- pinusr(par("usr"))
+## issue259     xat <- pretty(usr[1:2], 10)
+## issue259     xat <- xat[usr[1] < xat & xat < usr[2]]
+## issue259     yat <- pretty(usr[3:4], 10)
+## issue259     yat <- yat[usr[3] < yat & yat < usr[4]]
+## issue259     if (geographical == 0) {
+## issue259         xlabels <- xat
+## issue259         ylabels <- yat
+## issue259     } else if (geographical == 1) {
+## issue259         xlabels <- abs(xat)
+## issue259         ylabels <- abs(yat)
+## issue259     } else if (geographical == 4) {
+## issue259         xlabels <- paste(abs(xat), ifelse(xat < 0, "W", ifelse(xat > 0, "E", "")), sep="")
+## issue259         ylabels <- paste(abs(yat), ifelse(yat < 0, "S", ifelse(yat > 0, "N", "")), sep="")
+## issue259     } else {
+## issue259         stop("In plot() : programming error: \"geographical\" must be 0, 1, or 4", call.=FALSE)
+## issue259     }
+## issue259     if (axes) {
+## issue259         axis(1, pos=pinlat(usr[3]), at=xat, labels=xlabels, lwd=1)
+## issue259         axis(2, pos=pinlon(usr[1]), at=yat, labels=ylabels, lwd=1)
+## issue259     }
+## issue259     axis(3, labels=FALSE, lwd=1)
+## issue259     axis(4, labels=FALSE, lwd=1)
+## issue259     if (box) {
+## issue259         rect(pinlon(usr[1]), pinlat(usr[3]), pinlon(usr[2]), pinlat(usr[4]), lwd=1)
+## issue259     }
+## issue259  }
 
 #' Plot an argoFloats object
 #'
@@ -295,8 +296,8 @@ argoFloatsMapAxes <- function(axes=TRUE, box=TRUE, geographical=0)
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 #' \url{https://doi.org/10.13155/29825}.
 #'
+#' @importFrom graphics abline axis box contour par plot.window points polygon rect text
 #' @importFrom grDevices extendrange gray rgb
-#' @importFrom graphics abline axis box contour par plot.window points polygon text
 #' @importFrom utils data
 ## @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
 ## @importFrom marmap getNOAA.bathy
@@ -339,6 +340,11 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
+                  if (is.null(xlim))
+                      xlim <- extendrange(longitude)
+                  if (is.null(ylim))
+                      ylim <- extendrange(latitude)
+
                   ## Draw empty plot box, with axes, to set par("usr") for later use with bathymetry.
                   xlab <- if (is.null(xlab)) "" else xlab
                   ylab <- if (is.null(ylab)) "" else ylab
@@ -391,27 +397,16 @@ setMethod(f="plot",
                               par(mar=tmpmar + c(0, 0, 0, 2.75))
                               argoFloatsDebug(debug, "  temporarily set par(mar=c(", paste(par("mar"), collapse=", "), ")) to allow for the palette\n", sep="")
                           }
-                          if (!is.null(xlim) && !is.null(ylim)) {
-                              argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
-                                              "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
-                                              "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
-                                              "    xlim=c(", paste(ylim, collapse=","), ")\n",
-                                              "    ylim=c(", paste(ylim, collapse=","), ")\n",
-                                              "    asp=", asp, "\n", sep="")
-                              plot.window(xlim=xlim, ylim=ylim,
-                                          xaxs="i", yaxs="i",
-                                          asp=asp,
-                                          xlab=xlab, ylab=ylab)
-                          } else {
-                              argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
-                                              "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
-                                              "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
-                                              "    asp=", asp, "\n", sep="")
-                              plot.window(pinlon(extendrange(longitude)), pinlat(extendrange(latitude)),
-                                          xaxs="i", yaxs="i",
-                                          asp=asp,
-                                          xlab=xlab, ylab=ylab)
-                          }
+                          argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
+                                          "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
+                                          "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
+                                          "    xlim=c(", paste(ylim, collapse=","), ")\n",
+                                          "    ylim=c(", paste(ylim, collapse=","), ")\n",
+                                          "    asp=", asp, "\n", sep="")
+                          plot.window(xlim=xlim, ylim=ylim,
+                                      xaxs="i", yaxs="i",
+                                      asp=asp,
+                                      xlab=xlab, ylab=ylab)
                           if (!bathymetry$contour && bathymetry$palette) {
                               message("setting mar to ", paste(tmpmar, collapse=" "))
                               par(mar=tmpmar)
@@ -483,33 +478,65 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed\n")
                       }
                   }
-                  argoFloatsDebug(debug, "about to use plot(), with xlim=",
+                  argoFloatsDebug(debug, "initial xlim=",
                                   "c(", paste(xlim, collapse=","), ") and ylim=",
                                   "c(", paste(ylim, collapse=","), ")\n", sep="")
-                  if (!is.null(xlim) && !is.null(ylim)) {
-                      argoFloatsDebug(debug, "about to plot, with\n",
-                                      "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
-                                      "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
-                                      "    xlim=c(", paste(ylim, collapse=","), ")\n",
-                                      "    ylim=c(", paste(ylim, collapse=","), ")\n",
-                                      "    asp=", asp, "\n", sep="")
-                      plot(pinlon(extendrange(longitude)), pinlat(extendrange(latitude)),
-                           xlim=xlim, ylim=ylim,
-                           xaxs="i", yaxs="i",
-                           asp=asp,
-                           xlab=xlab, ylab=ylab, type="n", axes=FALSE)
+                  ## Extend to world edge, if we are close
+                  if (xlim[1] < -170) xlim[1] <- -180
+                  if (xlim[2] >  170) xlim[2] <-  180
+                  if (ylim[1] < -70) ylim[1] <- -90
+                  if (ylim[2] >  70) ylim[2] <-  90
+                  argoFloatsDebug(debug, "after to-world-edge, xlim=",
+                                  "c(", paste(xlim, collapse=","), ") and ylim=",
+                                  "c(", paste(ylim, collapse=","), ")\n", sep="")
+                  ## Trim to world domain
+                  xlim <- ifelse(xlim < -180, -180, ifelse(xlim > 180, 180, xlim))
+                  ylim <- ifelse(ylim <  -80,  -90, ifelse(ylim >  80,  90, ylim))
+                  argoFloatsDebug(debug, "after domain-trim, xlim=",
+                                  "c(", paste(xlim, collapse=","), ") and ylim=",
+                                  "c(", paste(ylim, collapse=","), ")\n", sep="")
+                  argoFloatsDebug(debug, "about to plot, with\n",
+                                  "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
+                                  "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
+                                  "    xlim=c(", paste(xlim, collapse=","), ")\n",
+                                  "    ylim=c(", paste(ylim, collapse=","), ")\n",
+                                  "    asp=", asp, "\n", sep="")
+                  plot(xlim, ylim,
+                       xaxs="i", yaxs="i",
+                       asp=asp,
+                       xlab=xlab, ylab=ylab, type="n", axes=FALSE)
+                  ## Draw box and axes.  Note that we cannot just use axis() because we
+                  ## do not want to show e.g. lat beyond 90N.
+                  usrTrimmed <- par("usr")
+                  usrTrimmed[1] <- max(-180, usrTrimmed[1])
+                  usrTrimmed[2] <- min(180, usrTrimmed[2])
+                  usrTrimmed[3] <- max(-90, usrTrimmed[3])
+                  usrTrimmed[4] <- min(90, usrTrimmed[4])
+                  rect(usrTrimmed[1], usrTrimmed[3], usrTrimmed[2], usrTrimmed[4], lwd=1)
+                  ## Construct axes 
+                  xat <- pretty(usrTrimmed[1:2])
+                  if (diff(range(xat)) > 300)
+                      xat <- seq(-180, 180, 45)
+                  yat <- pretty(usrTrimmed[3:4])
+                  if (diff(range(yat)) > 150)
+                      yat <- seq(-90, 90, 45)
+                  if (geographical == 0) {
+                      xlabels <- xat
+                      ylabels <- yat
+                  } else if (geographical == 1) {
+                      xlabels <- abs(xat)
+                      ylabels <- abs(yat)
+                  } else if (geographical == 4) {
+                      xlabels <- paste(abs(xat), ifelse(xat < 0, "W", ifelse(xat > 0, "E", "")), sep="")
+                      ylabels <- paste(abs(yat), ifelse(yat < 0, "S", ifelse(yat > 0, "N", "")), sep="")
                   } else {
-                      argoFloatsDebug(debug, "about to plot, with\n",
-                                      "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
-                                      "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
-                                      "    asp=", asp, "\n", sep="")
-                      plot(pinlon(extendrange(longitude)), pinlat(extendrange(latitude)),
-                           xaxs="i", yaxs="i",
-                           asp=asp,
-                           xlab=xlab, ylab=ylab, type="n", axes=FALSE)
+                      stop("In plot() : programming error: \"geographical\" must be 0, 1, or 4", call.=FALSE)
                   }
-                  argoFloatsDebug(debug, "after plot(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
-                  argoFloatsMapAxes(geographical=geographical)
+                  axis(1, at=xat, labels=xlabels, pos=usrTrimmed[3])
+                  axis(2, at=yat, labels=ylabels, pos=usrTrimmed[1])
+                  axis(3, at=xat, labels=FALSE, pos=usrTrimmed[4])
+                  axis(4, at=yat, labels=FALSE, pos=usrTrimmed[2])
+                  ## argoFloatsMapAxes(geographical=geographical)
                   if (drawBathymetry) {
                       if (bathymetry$contour) {
                           argoFloatsDebug(debug, "indicating bathymetry with contours\n")
@@ -525,7 +552,7 @@ setMethod(f="plot",
                                       as.numeric(colnames(bathy)),
                                       -bathy, colormap=bathymetry$colormap, add=TRUE)
                       }
-                      argoFloatsMapAxes(axes=FALSE) # clean up image by redrawing box
+                      rect(usrTrimmed[1], usrTrimmed[3], usrTrimmed[2], usrTrimmed[4], lwd=1)
                   }
                   points(unlist(longitude), unlist(latitude),
                          cex=if (is.null(cex)) 1 else cex,
