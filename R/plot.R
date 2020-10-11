@@ -90,16 +90,8 @@ pinusr <- function(usr)
 #'            an optional logical value (with `TRUE` as the default)
 #'            indicating (again, as in Example 5C) whether to draw a depth-color palette to the right of the plot.
 #'
-#' * For `which="TS"`,  an overall TS plot is created.  This only works if `x`
-#' is an [argoFloats-class] object of type `"argos"`, i.e. if it was
-#' created by [readProfiles()]. The scales for the plot
-#' can be altered by putting `Slim` and `Tlim` arguments in the `...` list; see
-#' the documentation for [oce::plotTS()] for other arguments that can be
-#' provided. This plot has a default color code to represent bad vs good data.
-#' This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
-#' data are considered bad if flagged 3, 4, 6, or 7, and good
-#' if flagged 1, 2, 5, or 8; good values are plotted with black symbols,
-#' and bad ones are plotted with red symbols.
+#' * For `which="profile"`, a profile plot is created, showing the variation of some quantity
+#' with pressure.  This is analgous to [oce::plotProfile()] in the \CRANpkg{oce} package.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
@@ -113,26 +105,22 @@ pinusr <- function(usr)
 #' have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 #' time. The bottom panel shows the mean value of the parameter in question
 #' regardless of the flag value. See Example 7.
-##
-## # FIXME(JLH): add such things
-## plot(x, which="profile", parameter="T", ...) # the "..." goes to oce::plotProfile()
-## plot(x, which="profile", parameter=NAME) # where NAME is in the data for the object
-## plot(x, which="profile", parameter="temperature")
-## plot(x, which="profile", parameter="CT")
-## plot(x, which="profile", parameter="theta")
-## plot(x, which="timeseries", parameter="T")
-##
 #'
-#' * For `which="profile"` a profile plot, showing variation of some quantity
-#' with pressure is shown using the oceanographic convention of putting lower
-#' pressures near the top of the plot. An additional argument named `parameter`
-#' must be given, to name the quantity on interest. Note: this uses the `oce::plotProfile`
-#' function with `keepNA` defaulting to `TRUE`. Visit [`oce::plotProfile`] for additional
-#' possible arguments. See Example 8.
+#' * For `which="TS"`,  an overall TS plot is created.  This only works if `x`
+#' is an [argoFloats-class] object of type `"argos"`, i.e. if it was
+#' created by [readProfiles()]. The scales for the plot
+#' can be altered by putting `Slim` and `Tlim` arguments in the `...` list; see
+#' the documentation for [oce::plotTS()] for other arguments that can be
+#' provided. This plot has a default color code to represent bad vs good data.
+#' This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
+#' data are considered bad if flagged 3, 4, 6, or 7, and good
+#' if flagged 1, 2, 5, or 8; good values are plotted with black symbols,
+#' and bad ones are plotted with red symbols.
 #'
 #' @param x an [`argoFloats-class`] object.
 #'
-#' @param which a character value indicating the type of plot; see \dQuote{Details}.
+#' @param which a character value indicating the type of plot. The possible
+#' choices are `"map"`, `"profile"`, `"QC"` and `"TS"`; see \dQuote{Details}.
 #'
 #' @param bathymetry an argument used only if `which="map"`, to control
 #' whether (and how) to indicate water depth; see \dQuote{Details}.
@@ -274,7 +262,7 @@ pinusr <- function(usr)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' plot(a, which="TS")
 #'
-#' # Example 7: Temperature QC plot for an id in Arabian Sea
+#' # Example 7: Temperature QC plot for a float in the Arabian Sea
 #' \dontrun{
 #' library(argoFloats)
 #' ais <- getIndex(filename="synthetic", age=0)
@@ -286,9 +274,11 @@ pinusr <- function(usr)
 #' argos <- readProfiles(profiles)
 #' plot(argos, which="QC", parameter="temperature")}
 #'
-#' # Example 8: Temperature profile of the 131st cycle of float id 2902204
+#' # Example 8: Temperature profile of the 131st cycle of float with id 2902204
 #' library(argoFloats)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+#' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
+#' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 #' plot(a, which="profile", parameter="temperature")
 #'
 #' @references
@@ -762,7 +752,7 @@ setMethod(f="plot",
                           box()
                           axis(2)
                           axis(3)
-                          mtext(oce::resizableLabel("pressure"), side=2, line=par("mgp")[1], cex=par("cex"))
+                          mtext(oce::resizableLabel("p"), side=2, line=par("mgp")[1], cex=par("cex"))
                           mtext(oce::resizableLabel(parameter), side=3, line=par("mgp")[1], cex=par("cex"))
                           ## OLD: if ("keepNA" %in% names(list(...))) {
                           ## OLD:     oce::plotProfile(o, xtype=parameter, cex=cex,

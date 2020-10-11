@@ -29,7 +29,8 @@
 \arguments{
 \item{x}{an \code{\linkS4class{argoFloats}} object.}
 
-\item{which}{a character value indicating the type of plot; see \dQuote{Details}.}
+\item{which}{a character value indicating the type of plot. The possible
+choices are \code{"map"}, \code{"profile"}, \code{"QC"} and \code{"TS"}; see \dQuote{Details}.}
 
 \item{bathymetry}{an argument used only if \code{which="map"}, to control
 whether (and how) to indicate water depth; see \dQuote{Details}.}
@@ -157,16 +158,8 @@ an optional logical value (with \code{TRUE} as the default)
 indicating (again, as in Example 5C) whether to draw a depth-color palette to the right of the plot.
 }
 }
-\item For \code{which="TS"},  an overall TS plot is created.  This only works if \code{x}
-is an \linkS4class{argoFloats} object of type \code{"argos"}, i.e. if it was
-created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
-can be altered by putting \code{Slim} and \code{Tlim} arguments in the \code{...} list; see
-the documentation for \code{\link[oce:plotTS]{oce::plotTS()}} for other arguments that can be
-provided. This plot has a default color code to represent bad vs good data.
-This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
-data are considered bad if flagged 3, 4, 6, or 7, and good
-if flagged 1, 2, 5, or 8; good values are plotted with black symbols,
-and bad ones are plotted with red symbols.
+\item For \code{which="profile"}, a profile plot is created, showing the variation of some quantity
+with pressure.  This is analgous to \code{\link[oce:plotProfile]{oce::plotProfile()}} in the \CRANpkg{oce} package.
 \item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{parameter} must be given, to name the
@@ -179,12 +172,16 @@ profiles that are questionable. Note that if all of data at a given time
 have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 time. The bottom panel shows the mean value of the parameter in question
 regardless of the flag value. See Example 7.
-\item For \code{which="profile"} a profile plot, showing variation of some quantity
-with pressure is shown using the oceanographic convention of putting lower
-pressures near the top of the plot. An additional argument named \code{parameter}
-must be given, to name the quantity on interest. Note: this uses the \code{oce::plotProfile}
-function with \code{keepNA} defaulting to \code{TRUE}. Visit \code{\link[oce:plotProfile]{oce::plotProfile}} for additional
-possible arguments. See Example 8.
+\item For \code{which="TS"},  an overall TS plot is created.  This only works if \code{x}
+is an \linkS4class{argoFloats} object of type \code{"argos"}, i.e. if it was
+created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
+can be altered by putting \code{Slim} and \code{Tlim} arguments in the \code{...} list; see
+the documentation for \code{\link[oce:plotTS]{oce::plotTS()}} for other arguments that can be
+provided. This plot has a default color code to represent bad vs good data.
+This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
+data are considered bad if flagged 3, 4, 6, or 7, and good
+if flagged 1, 2, 5, or 8; good values are plotted with black symbols,
+and bad ones are plotted with red symbols.
 }
 }
 \examples{
@@ -254,7 +251,7 @@ library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 plot(a, which="TS")
 
-# Example 7: Temperature QC plot for an id in Arabian Sea
+# Example 7: Temperature QC plot for a float in the Arabian Sea
 \dontrun{
 library(argoFloats)
 ais <- getIndex(filename="synthetic", age=0)
@@ -266,9 +263,11 @@ profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
 plot(argos, which="QC", parameter="temperature")}
 
-# Example 8: Temperature profile of the 131st cycle of float id 2902204
+# Example 8: Temperature profile of the 131st cycle of float with id 2902204
 library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
+par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 plot(a, which="profile", parameter="temperature")
 
 }
