@@ -437,6 +437,8 @@ setMethod(f="[[",
                               return(RES)
                           } else {
                               argoFloatsDebug(debug, "Determining \"", i, "\" with oce::as.ctd() and then oce::[[,ctd-method.\n", sep="")
+                              if (!requireNamespace("oce", quietly=TRUE))
+                                  stop("must install.packages(\"oce\"), for [[ to work")
                               ## OLD computable <- c("CT", "SA", "sigmaTheta", "spice")
                               RES <- lapply(x[["argos"]],
                                             function(a) {
