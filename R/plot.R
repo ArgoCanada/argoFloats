@@ -667,9 +667,9 @@ setMethod(f="plot",
                   knownParameters <- names(x[[1]]@metadata$flags) # FIXME: is it possible that later cycles have different flags?
                   parameter <- dots$parameter
                   if (is.null(parameter))
-                      stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
+                      stop("In plot,argoFloats-method(): Please provide a parameter, one of \"", paste(sort(knownParameters), collapse="\", \""), "\"", call.=FALSE)
                   if (!(parameter %in% knownParameters))
-                      stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: ", paste(knownParameters, collapse=', '), call.=FALSE)
+                      stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: \"", paste(sort(knownParameters), collapse="\", \""), "\"", call.=FALSE)
                   qf <- function(x) {
                       # qf returns 100 if data are all "good" = 1 or "probably good" = 2 or "changed" = 5 or "estimated" = 8
                       flag <- x[[paste0(parameter, "Flag")]]
@@ -703,13 +703,28 @@ setMethod(f="plot",
                       stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)
                   dots <- list(...)
                   N <- length(x[["argos"]])
+                  ## The known parameter names include not just the things stored in the
+                  ## data slot (of *any* of the profiles), but also some computable things. We
+                  ## will always have longitude and latitude, so there's no need to check for them.
+                  ## A core profile will always get the computable things, but bgc profiles
+                  ## may lack e.g. salinity and temperature, so all we need to check for is
+                  ## salinity, temperature, and pressure.
                   knownParameters <- unique(unlist(lapply(1:N, function(i) names(x[[i]][["data"]]))))
+                  if (all(c("salinity", "temperature", "pressure") %in% knownParameters)) {
+                      knownParameters <- c(knownParameters,
+                                           "SA", "CT", "sigma0", "sigma1", "sigma2", "sigma3", "sigma4", "sigmaTheta",
+                                           "theta",
+                                           "spice",
+                                           "N2")
+                  }
+                  argoFloatsDebug(debug, "knownParameters: \"", paste(sort(knownParameters), collapse="\", \""), "\".\n", sep="")
+                  #print(sort(knownParameters))
                   parameter <- dots$parameter
                   N <- length(x[["argos"]])
                   if (is.null(parameter))
                       stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
                   if (!(parameter %in% knownParameters))
-                      stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: ", paste(knownParameters, collapse=', '), call.=FALSE)
+                      stop("In plot,argoFloats-method(): parameter=\"", parameter, "\" is not in the dataset, or calculable from that dataset; try one of the following: \"", paste(sort(knownParameters), collapse='", "'), "\".", call.=FALSE)
                   if ((parameter %in% knownParameters)) {
                       argoFloatsPlotProfile <- function(x, parameter, ...)
                       {
@@ -718,15 +733,15 @@ setMethod(f="plot",
                           nn <- unlist(lapply(1:N, function(i) prod(dim(x[[i]][[parameter]]))))
                           pp <- NULL
                           vv <- NULL
-                          punit <- NULL
-                          vunit <- NULL
+                          ## OLD: punit <- NULL
+                          ## OLD: vunit <- NULL
                           argoFloatsDebug(debug, "number of profiles: ", N, "\n")
                           for (i in seq_len(N)) {
                               if (nn[i] > 0) {
-                                  if (is.null(vunit))
-                                      vunit <- x[[1]][[paste0(parameter, "Unit")]]
-                                  if (is.null(punit))
-                                      punit <- x[[1]][[paste0("pressureUnit")]]
+                                  ## OLD: if (is.null(vunit))
+                                  ## OLD:     vunit <- x[[1]][[paste0(parameter, "Unit")]]
+                                  ## OLD: if (is.null(punit))
+                                  ## OLD:     punit <- x[[1]][[paste0("pressureUnit")]]
                                   pp <- c(pp, NA, pressure[[i]])
                                   vv <- c(vv, NA, variable[[i]])
                               }
@@ -734,23 +749,39 @@ setMethod(f="plot",
                               ## cat(vectorShow(length(pp)))
                               ## cat(vectorShow(length(vv)))
                           }
-                          o <- new("ctd")
-                          o <- oce::oceSetData(o, "pressure", pp, unit=punit)
-                          o <- oce::oceSetData(o, parameter, vv, unit=vunit)
-                          if ("keepNA" %in% names(list(...))) {
-                              oce::plotProfile(o, xtype=parameter, cex=cex,
-                                               type=if(is.null(type)) "l" else type,
-                                               col=if (is.null(col)) par("col") else col,
-                                               pch=pch, ...)
-                          } else {
-                              oce::plotProfile(o, keepNA=TRUE, xtype=parameter, cex=cex,
-                                               type=if(is.null(type)) "l" else type,
-                                               col=if (is.null(col)) par("col") else col,
-                                               pch=pch, ...)
-                          }
+                          ## OLD: o <- new("ctd")
+                          ## OLD: o <- oce::oceSetData(o, "pressure", pp, unit=punit)
+                          ## OLD: o <- oce::oceSetData(o, parameter, vv, unit=vunit)
+                          plot(vv, pp, ylim=rev(range(pp, na.rm=TRUE)),
+                               axes=FALSE,
+                               ylab=oce::resizableLabel("p"),
+                               xlab="",
+                               cex=cex,
+                               type=if(is.null(type)) "l" else type,
+                               col=if (is.null(col)) par("col") else col,
+                               pch=pch, ...)
+                          box()
+                          axis(2)
+                          axis(3)
+                          mtext(oce::resizableLabel(parameter), side=3, line=2)
+                          ## OLD: if ("keepNA" %in% names(list(...))) {
+                          ## OLD:     oce::plotProfile(o, xtype=parameter, cex=cex,
+                          ## OLD:                      type=if(is.null(type)) "l" else type,
+                          ## OLD:                      col=if (is.null(col)) par("col") else col,
+                          ## OLD:                      pch=pch, ...)
+                          ## OLD: } else {
+                          ## OLD:     message("DAN 1")
+                          ## OLD:     DANo<<-o
+                          ## OLD:     DANparameter<<-parameter
+                          ## OLD:     oce::plotProfile(o, keepNA=TRUE, xtype=parameter, cex=cex,
+                          ## OLD:                      type=if(is.null(type)) "l" else type,
+                          ## OLD:                      col=if (is.null(col)) par("col") else col,
+                          ## OLD:                      pch=pch, ...)
+                          ## OLD:     message("DAN 2")
+                          ## OLD: }
                       }
                   }
-                  argoFloatsPlotProfile(x, parameter=parameter, debug=debug-1)
+                  argoFloatsPlotProfile(x, parameter=parameter)
               } else {
                   stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?\"plot,argoFloats-method\"", call.=FALSE)
               }
