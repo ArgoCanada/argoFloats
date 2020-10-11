@@ -754,8 +754,7 @@ setMethod(f="plot",
                           ## OLD: o <- oce::oceSetData(o, parameter, vv, unit=vunit)
                           plot(vv, pp, ylim=rev(range(pp, na.rm=TRUE)),
                                axes=FALSE,
-                               ylab=oce::resizableLabel("p"),
-                               xlab="",
+                               ylab="", xlab="", # draw axes later, in oceanographic 'profile' locations
                                cex=cex,
                                type=if(is.null(type)) "l" else type,
                                col=if (is.null(col)) par("col") else col,
@@ -763,7 +762,8 @@ setMethod(f="plot",
                           box()
                           axis(2)
                           axis(3)
-                          mtext(oce::resizableLabel(parameter), side=3, line=2)
+                          mtext(oce::resizableLabel("pressure"), side=2, line=par("mgp")[1], cex=par("cex"))
+                          mtext(oce::resizableLabel(parameter), side=3, line=par("mgp")[1], cex=par("cex"))
                           ## OLD: if ("keepNA" %in% names(list(...))) {
                           ## OLD:     oce::plotProfile(o, xtype=parameter, cex=cex,
                           ## OLD:                      type=if(is.null(type)) "l" else type,
