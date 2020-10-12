@@ -21,7 +21,8 @@
   mar = NULL,
   mgp = NULL,
   eos = "gsw",
-  TScontrol = list(),
+  TSControl = NULL,
+  profileControl = NULL,
   debug = 0,
   ...
 )
@@ -70,7 +71,7 @@ value that depends on the value of \code{which}.}
 
 \item{col}{the colour to be used for plot symbols, or \code{NULL}, to get an value
 that depends on the value of \code{which} (see \dQuote{Details}).  If \code{which="TS"}, then the
-\code{TScontrol} argument takes precedence over \code{col}.}
+\code{TSControl} argument takes precedence over \code{col}.}
 
 \item{pch}{an integer or code indicating the type of plot symbol, or \code{NULL},
 to get a value that depends on the value of \code{which}.
@@ -92,13 +93,21 @@ axis labels (see \code{\link[=par]{par()}} for details), or \code{NULL}, which m
 if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
 see \code{\link[oce:plotTS]{oce::plotTS()}}.}
 
-\item{TScontrol}{a list that permits particular control of the \code{which="TS"}
-case. It is ignored for the other cases.  If \code{TScontrol} contains a
+\item{TSControl}{a list that permits particular control of the \code{which="TS"}
+case, and is ignored for the other cases.
+If \code{TSControl} is not supplied as an argument,
+points will be coloured black if their quality-control flags indicate
+good data, or red otherwise.
+Otherwise, if \code{TSControl} contains a
 vector element named \code{colByCycle}, then the \code{col} argument will be ignored,
 and instead individual cycles will be coloured as dictated by successive
-elements in \code{colByCycle}.  Note that \code{colByCycle} will be repeated to
-match the number of cycles, so e.g. using \code{TScontrol=list(colByCycle=1:2)}
-will colour alternate cycles with black and red.}
+elements in \code{colByCycle}.}
+
+\item{profileControl}{a list that permits particular control of the \code{which="profile"}
+case.  If provided, it must contain elements named \code{parameter} (a character value
+naming the quantity to plot on the x axis) and \code{ytype} (a character value equalling
+either \code{"pressure"} or \code{"sigma0"}).  If not provided, this defaults to
+\code{list(parameter="temperature", ytype="pressure")}.}
 
 \item{debug}{an integer specifying the level of debugging.}
 
@@ -159,7 +168,8 @@ indicating (again, as in Example 5C) whether to draw a depth-color palette to th
 }
 }
 \item For \code{which="profile"}, a profile plot is created, showing the variation of some quantity
-with pressure.  This is analgous to \code{\link[oce:plotProfile]{oce::plotProfile()}} in the \CRANpkg{oce} package.
+with pressure or potential density anomaly, as specified by the \code{profileControl} argument;
+see Examples 8 and 9.
 \item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{parameter} must be given, to name the
@@ -254,7 +264,7 @@ plot(a, which="TS")
 # Example 7: Temperature QC plot for a float in the Arabian Sea
 \dontrun{
 library(argoFloats)
-ais <- getIndex(filename="synthetic", age=0)
+ais <- getIndex(filename="synthetic")
 sub <- subset(ais, id='2902123')
 lonRect <- c(56, 66)
 latRect <- c(11,12)
@@ -268,7 +278,14 @@ library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
-plot(a, which="profile", parameter="temperature")
+plot(a, which="profile")
+
+# Example 9: As Example 8, but showing temperature dependence on potential density anomaly.
+library(argoFloats)
+a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
+par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
+plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sigma0"))
 
 }
 \references{

@@ -91,7 +91,8 @@ pinusr <- function(usr)
 #'            indicating (again, as in Example 5C) whether to draw a depth-color palette to the right of the plot.
 #'
 #' * For `which="profile"`, a profile plot is created, showing the variation of some quantity
-#' with pressure.  This is analgous to [oce::plotProfile()] in the \CRANpkg{oce} package.
+#' with pressure or potential density anomaly, as specified by the `profileControl` argument;
+#' see Examples 8 and 9.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
@@ -160,7 +161,7 @@ pinusr <- function(usr)
 #'
 #' @param col the colour to be used for plot symbols, or `NULL`, to get an value
 #' that depends on the value of `which` (see \dQuote{Details}).  If `which="TS"`, then the
-#' `TScontrol` argument takes precedence over `col`.
+#' `TSControl` argument takes precedence over `col`.
 #'
 #' @param bg the colour to be used for plot symbol interior, for `pch`
 #' values that distinguish between the interior of the symbol and the
@@ -182,13 +183,21 @@ pinusr <- function(usr)
 #' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
 #' see [oce::plotTS()].
 #'
-#' @param TScontrol a list that permits particular control of the `which="TS"`
-#' case. It is ignored for the other cases.  If `TScontrol` contains a
+#' @param TSControl a list that permits particular control of the `which="TS"`
+#' case, and is ignored for the other cases.
+#' If `TSControl` is not supplied as an argument,
+#' points will be coloured black if their quality-control flags indicate
+#' good data, or red otherwise.
+#' Otherwise, if `TSControl` contains a
 #' vector element named `colByCycle`, then the `col` argument will be ignored,
 #' and instead individual cycles will be coloured as dictated by successive
-#' elements in `colByCycle`.  Note that `colByCycle` will be repeated to
-#' match the number of cycles, so e.g. using `TScontrol=list(colByCycle=1:2)`
-#' will colour alternate cycles with black and red.
+#' elements in `colByCycle`. 
+#'
+#' @param profileControl a list that permits particular control of the `which="profile"`
+#' case.  If provided, it must contain elements named `parameter` (a character value
+#' naming the quantity to plot on the x axis) and `ytype` (a character value equalling 
+#' either `"pressure"` or `"sigma0"`).  If not provided, this defaults to
+#' `list(parameter="temperature", ytype="pressure")`.
 #'
 #' @param debug an integer specifying the level of debugging.
 #'
@@ -265,7 +274,7 @@ pinusr <- function(usr)
 #' # Example 7: Temperature QC plot for a float in the Arabian Sea
 #' \dontrun{
 #' library(argoFloats)
-#' ais <- getIndex(filename="synthetic", age=0)
+#' ais <- getIndex(filename="synthetic")
 #' sub <- subset(ais, id='2902123')
 #' lonRect <- c(56, 66)
 #' latRect <- c(11,12)
@@ -279,7 +288,14 @@ pinusr <- function(usr)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 #' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
-#' plot(a, which="profile", parameter="temperature")
+#' plot(a, which="profile")
+#'
+#' # Example 9: As Example 8, but showing temperature dependence on potential density anomaly.
+#' library(argoFloats)
+#' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+#' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
+#' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
+#' plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sigma0"))
 #'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -305,7 +321,8 @@ setMethod(f="plot",
                               type=NULL, cex=NULL, col=NULL, pch=NULL, bg=NULL,
                               mar=NULL, mgp=NULL,
                               eos="gsw",
-                              TScontrol=list(),
+                              TSControl=NULL,
+                              profileControl=NULL,
                               debug=0,
                               ...)
           {
@@ -607,7 +624,10 @@ setMethod(f="plot",
                                      longitude=longitude)
                   if (is.null(cex))
                       cex <- 0.5
-                  if (is.null(TScontrol$colByCycle)) {
+                  ## FIXME: move this TSControl work the which="TS" code {{
+                  if (is.null(TSControl))
+                      TSControl <- list(colByCycle=NULL)
+                  if (is.null(TSControl$colByCycle)) {
                       if (is.null(col)) {
                           if (which == "TS") {
                               col <- "flags"
@@ -616,14 +636,15 @@ setMethod(f="plot",
                           }
                       }
                   } else {
-                      ## Ignore "col" if TScontrol contains "colByCycle"
-                      colByCycle <- TScontrol$colByCycle
+                      ## Ignore "col" if TSControl contains "colByCycle"
+                      colByCycle <- TSControl$colByCycle
                       cycle <- unlist(x[["cycle", debug=debug]])
                       lengths <- sapply(x[["argos"]], function(cc) length(cc[["pressure"]]))
-                      ## Increase the col length, so e.g. TScontrol=list(colByCycle=1:2) will alternate colours
+                      ## Increase the col length, so e.g. TSControl=list(colByCycle=1:2) will alternate colours
                       colByCycle <- rep(colByCycle, length.out=length(cycle))
                       col <- unlist(lapply(seq_along(cycle), function(i) rep(colByCycle[i], lengths[i])))
                   }
+                  ## }}} FIXME
                   if (is.null(pch))
                       pch <- 20
                   omgp <- par("mgp")
@@ -691,7 +712,20 @@ setMethod(f="plot",
               } else if (which == "profile") {
                   if (x[["type"]] != "argos")
                       stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)
-                  dots <- list(...)
+                  if (is.null(profileControl)) {
+                      profileControl <- list(parameter="temperature", ytype="pressure")
+                  }
+                  if (!is.list(profileControl))
+                      stop("In plot,argoFloats-method(): profileControl must be a list")
+                  if (!"ytype" %in% names(profileControl))
+                      profileControl$ytype <- "pressure"
+                  if (!"parameter" %in% names(profileControl))
+                      profileControl$parameter <- "temperature"
+                  if (length(profileControl) != 2)
+                      stop("In plot,argoFloats-method(): profileControl must contain only, two elements, \"parameter\" and \"ytype\"")
+                  if (!profileControl$ytype %in% c("pressure", "sigma0"))
+                      stop("In plot,argoFloats-method(): profileControl$ytype must be \"pressure\" or \"sigma0\", not \"", profileControl$ytype, "\"")
+                  ## dots <- list(...)
                   N <- length(x[["argos"]])
                   ## The known parameter names include not just the things stored in the
                   ## data slot (of *any* of the profiles), but also some computable things. We
@@ -699,7 +733,7 @@ setMethod(f="plot",
                   ## A core profile will always get the computable things, but bgc profiles
                   ## may lack e.g. salinity and temperature, so all we need to check for is
                   ## salinity, temperature, and pressure.
-                  knownParameters <- unique(unlist(lapply(1:N, function(i) names(x[[i]][["data"]]))))
+                  knownParameters <- unique(unlist(lapply(seq_len(N), function(i) names(x[[i]][["data"]]))))
                   if (all(c("salinity", "temperature", "pressure") %in% knownParameters)) {
                       knownParameters <- c(knownParameters,
                                            "SA", "CT", "sigma0", "sigma1", "sigma2", "sigma3", "sigma4", "sigmaTheta",
@@ -708,70 +742,34 @@ setMethod(f="plot",
                                            "N2")
                   }
                   argoFloatsDebug(debug, "knownParameters: \"", paste(sort(knownParameters), collapse="\", \""), "\".\n", sep="")
-                  #print(sort(knownParameters))
-                  parameter <- dots$parameter
-                  N <- length(x[["argos"]])
-                  if (is.null(parameter))
-                      stop("In plot,argoFloats-method(): Please provide a parameter, one of ", paste(knownParameters, collapse=', '), call.=FALSE)
-                  if (!(parameter %in% knownParameters))
-                      stop("In plot,argoFloats-method(): parameter=\"", parameter, "\" is not in the dataset, or calculable from that dataset; try one of the following: \"", paste(sort(knownParameters), collapse='", "'), "\".", call.=FALSE)
-                  if ((parameter %in% knownParameters)) {
-                      argoFloatsPlotProfile <- function(x, parameter, ...)
-                      {
-                          pressure <- lapply(1:N, function(i) x[[i]][["pressure"]])
-                          variable <- lapply(1:N, function(i) x[[i]][[parameter]])
-                          nn <- unlist(lapply(1:N, function(i) prod(dim(x[[i]][[parameter]]))))
-                          pp <- NULL
-                          vv <- NULL
-                          ## OLD: punit <- NULL
-                          ## OLD: vunit <- NULL
-                          argoFloatsDebug(debug, "number of profiles: ", N, "\n")
-                          for (i in seq_len(N)) {
-                              if (nn[i] > 0) {
-                                  ## OLD: if (is.null(vunit))
-                                  ## OLD:     vunit <- x[[1]][[paste0(parameter, "Unit")]]
-                                  ## OLD: if (is.null(punit))
-                                  ## OLD:     punit <- x[[1]][[paste0("pressureUnit")]]
-                                  pp <- c(pp, NA, pressure[[i]])
-                                  vv <- c(vv, NA, variable[[i]])
-                              }
-                              ## cat(vectorShow(i))
-                              ## cat(vectorShow(length(pp)))
-                              ## cat(vectorShow(length(vv)))
-                          }
-                          ## OLD: o <- new("ctd")
-                          ## OLD: o <- oce::oceSetData(o, "pressure", pp, unit=punit)
-                          ## OLD: o <- oce::oceSetData(o, parameter, vv, unit=vunit)
-                          plot(vv, pp, ylim=rev(range(pp, na.rm=TRUE)),
-                               axes=FALSE,
-                               ylab="", xlab="", # draw axes later, in oceanographic 'profile' locations
-                               cex=cex,
-                               type=if(is.null(type)) "l" else type,
-                               col=if (is.null(col)) par("col") else col,
-                               pch=pch, ...)
-                          box()
-                          axis(2)
-                          axis(3)
-                          mtext(oce::resizableLabel("p"), side=2, line=par("mgp")[1], cex=par("cex"))
-                          mtext(oce::resizableLabel(parameter), side=3, line=par("mgp")[1], cex=par("cex"))
-                          ## OLD: if ("keepNA" %in% names(list(...))) {
-                          ## OLD:     oce::plotProfile(o, xtype=parameter, cex=cex,
-                          ## OLD:                      type=if(is.null(type)) "l" else type,
-                          ## OLD:                      col=if (is.null(col)) par("col") else col,
-                          ## OLD:                      pch=pch, ...)
-                          ## OLD: } else {
-                          ## OLD:     message("DAN 1")
-                          ## OLD:     DANo<<-o
-                          ## OLD:     DANparameter<<-parameter
-                          ## OLD:     oce::plotProfile(o, keepNA=TRUE, xtype=parameter, cex=cex,
-                          ## OLD:                      type=if(is.null(type)) "l" else type,
-                          ## OLD:                      col=if (is.null(col)) par("col") else col,
-                          ## OLD:                      pch=pch, ...)
-                          ## OLD:     message("DAN 2")
-                          ## OLD: }
+                  if (!(profileControl$parameter %in% knownParameters))
+                      stop("In plot,argoFloats-method(): profileControl$parameter=\"", profileControl$parameter, "\" is not in the dataset, or calculable from that dataset; try one of the following: \"", paste(sort(knownParameters), collapse='", "'), "\".", call.=FALSE)
+                  y <- lapply(1:N, function(i) x[[i]][[profileControl$ytype]])
+                  variable <- lapply(1:N, function(i) x[[i]][[profileControl$parameter]])
+                  nn <- unlist(lapply(1:N, function(i) prod(dim(x[[i]][[profileControl$parameter]]))))
+                  Y <- NULL
+                  VARIABLE <- NULL
+                  argoFloatsDebug(debug, "number of profiles: ", N, "\n")
+                  for (i in seq_len(N)) {
+                      if (nn[i] > 0) {
+                          Y <- c(Y, NA, y[[i]])
+                          VARIABLE <- c(VARIABLE, NA, variable[[i]])
                       }
                   }
-                  argoFloatsPlotProfile(x, parameter=parameter)
+                  plot(VARIABLE, Y, ylim=rev(range(Y, na.rm=TRUE)),
+                       axes=FALSE,
+                       ylab="", xlab="", # draw axes later, in oceanographic 'profile' locations
+                       cex=cex,
+                       type=if(is.null(type)) "l" else type,
+                       col=if (is.null(col)) par("col") else col,
+                       pch=pch, ...)
+                  box()
+                  axis(2)
+                  axis(3)
+                  mtext(oce::resizableLabel(if (profileControl$ytype == "pressure") "p" else "sigma0", axis="y"),
+                        side=2, line=par("mgp")[1], cex=par("cex"))
+                  mtext(oce::resizableLabel(profileControl$parameter),
+                        side=3, line=par("mgp")[1], cex=par("cex"))
               } else {
                   stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?\"plot,argoFloats-method\"", call.=FALSE)
               }
