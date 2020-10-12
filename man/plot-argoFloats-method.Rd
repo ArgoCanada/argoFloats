@@ -21,8 +21,9 @@
   mar = NULL,
   mgp = NULL,
   eos = "gsw",
-  TSControl = NULL,
   profileControl = NULL,
+  QCControl = NULL,
+  TSControl = NULL,
   debug = 0,
   ...
 )
@@ -93,6 +94,18 @@ axis labels (see \code{\link[=par]{par()}} for details), or \code{NULL}, which m
 if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
 see \code{\link[oce:plotTS]{oce::plotTS()}}.}
 
+\item{profileControl}{a list that permits particular control of the \code{which="profile"}
+case.  If provided, it must contain elements named \code{parameter} (a character value
+naming the quantity to plot on the x axis) and \code{ytype} (a character value equalling
+either \code{"pressure"} or \code{"sigma0"}).  If not provided, this defaults to
+\code{list(parameter="temperature", ytype="pressure")}.}
+
+\item{QCControl}{a list that permits particular control of the \code{which="QC"}
+case.  If provided, it should contain an element named \code{parameter}, a character
+value naming the quantity for which the quality-control information is
+to be plotted.  If not provided, \code{QCControl} defaults to
+\code{list(parameter="temperature")}.}
+
 \item{TSControl}{a list that permits particular control of the \code{which="TS"}
 case, and is ignored for the other cases.
 If \code{TSControl} is not supplied as an argument,
@@ -102,12 +115,6 @@ Otherwise, if \code{TSControl} contains a
 vector element named \code{colByCycle}, then the \code{col} argument will be ignored,
 and instead individual cycles will be coloured as dictated by successive
 elements in \code{colByCycle}.}
-
-\item{profileControl}{a list that permits particular control of the \code{which="profile"}
-case.  If provided, it must contain elements named \code{parameter} (a character value
-naming the quantity to plot on the x axis) and \code{ytype} (a character value equalling
-either \code{"pressure"} or \code{"sigma0"}).  If not provided, this defaults to
-\code{list(parameter="temperature", ytype="pressure")}.}
 
 \item{debug}{an integer specifying the level of debugging.}
 
@@ -271,7 +278,9 @@ latRect <- c(11,12)
 s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 profiles <- getProfiles(s)
 argos <- readProfiles(profiles)
-plot(argos, which="QC", parameter="temperature")}
+par(mfrow=c(2,1))
+plot(argos, which="QC") # defaults to temperature
+plot(argos, which="QC", QCControl=list(parameter="salinity"))}
 
 # Example 8: Temperature profile of the 131st cycle of float with id 2902204
 library(argoFloats)

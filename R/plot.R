@@ -183,6 +183,18 @@ pinusr <- function(usr)
 #' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
 #' see [oce::plotTS()].
 #'
+#' @param profileControl a list that permits particular control of the `which="profile"`
+#' case.  If provided, it must contain elements named `parameter` (a character value
+#' naming the quantity to plot on the x axis) and `ytype` (a character value equalling 
+#' either `"pressure"` or `"sigma0"`).  If not provided, this defaults to
+#' `list(parameter="temperature", ytype="pressure")`.
+#'
+#' @param QCControl a list that permits particular control of the `which="QC"`
+#' case.  If provided, it should contain an element named `parameter`, a character
+#' value naming the quantity for which the quality-control information is
+#' to be plotted.  If not provided, `QCControl` defaults to
+#' `list(parameter="temperature")`.
+#'
 #' @param TSControl a list that permits particular control of the `which="TS"`
 #' case, and is ignored for the other cases.
 #' If `TSControl` is not supplied as an argument,
@@ -192,12 +204,6 @@ pinusr <- function(usr)
 #' vector element named `colByCycle`, then the `col` argument will be ignored,
 #' and instead individual cycles will be coloured as dictated by successive
 #' elements in `colByCycle`. 
-#'
-#' @param profileControl a list that permits particular control of the `which="profile"`
-#' case.  If provided, it must contain elements named `parameter` (a character value
-#' naming the quantity to plot on the x axis) and `ytype` (a character value equalling 
-#' either `"pressure"` or `"sigma0"`).  If not provided, this defaults to
-#' `list(parameter="temperature", ytype="pressure")`.
 #'
 #' @param debug an integer specifying the level of debugging.
 #'
@@ -281,7 +287,9 @@ pinusr <- function(usr)
 #' s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
 #' profiles <- getProfiles(s)
 #' argos <- readProfiles(profiles)
-#' plot(argos, which="QC", parameter="temperature")}
+#' par(mfrow=c(2,1))
+#' plot(argos, which="QC") # defaults to temperature
+#' plot(argos, which="QC", QCControl=list(parameter="salinity"))}
 #'
 #' # Example 8: Temperature profile of the 131st cycle of float with id 2902204
 #' library(argoFloats)
@@ -321,8 +329,9 @@ setMethod(f="plot",
                               type=NULL, cex=NULL, col=NULL, pch=NULL, bg=NULL,
                               mar=NULL, mgp=NULL,
                               eos="gsw",
-                              TSControl=NULL,
                               profileControl=NULL,
+                              QCControl=NULL,
+                              TSControl=NULL,
                               debug=0,
                               ...)
           {
@@ -330,6 +339,7 @@ setMethod(f="plot",
                   stop("must install.packages(\"oce\") for plot() to work")
               debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
               argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1, style="bold")
+              dots <- list(...)
               if (!inherits(x, "argoFloats"))
                   stop("In plot() : method is only for objects of class \"argoFloats\"", call.=FALSE)
               if (length(which) != 1)
@@ -674,40 +684,49 @@ setMethod(f="plot",
                   nid <- length(unique(ids))
                   if (nid != 1)
                       stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single id", call.=FALSE)
-                  dots <- list(...)
                   knownParameters <- names(x[[1]]@metadata$flags) # FIXME: is it possible that later cycles have different flags?
-                  parameter <- dots$parameter
-                  if (is.null(parameter))
-                      stop("In plot,argoFloats-method(): Please provide a parameter, one of \"", paste(sort(knownParameters), collapse="\", \""), "\"", call.=FALSE)
-                  if (!(parameter %in% knownParameters))
-                      stop("In plot,argoFloats-method(): Parameter '", parameter, "' not found. Try one of: \"", paste(sort(knownParameters), collapse="\", \""), "\"", call.=FALSE)
+                  if (is.null(QCControl)) {
+                      if ("parameter" %in% names(dots)) {
+                          warning("accepting \"parameter\" as a separate argument, but in future, please use QCControl=list(parameter=",
+                                  dots$parameter, ")")
+                          QCControl <- list(parameter=dots$parameter)
+                      } else {
+                          QCControl <- list(parameter="temperature")
+                      }
+                  }
+                  if (!is.list(QCControl))
+                      stop("In plot,argoFloats-method(): QCControl must be a list")
+                  if (!"parameter" %in% names(QCControl))
+                      QCControl$parameter <- "temperature"
+                  if (length(QCControl) != 1)
+                      stop("In plot,argoFloats-method(): QCControl must contain only one element, \"parameter\"")
+                  if (!(QCControl$parameter %in% knownParameters))
+                      stop("In plot,argoFloats-method(): QCControl$parameter '", QCControl$parameter, "' not found. Try one of: \"", paste(sort(knownParameters), collapse="\", \""), "\"", call.=FALSE)
                   qf <- function(x) {
                       # qf returns 100 if data are all "good" = 1 or "probably good" = 2 or "changed" = 5 or "estimated" = 8
-                      flag <- x[[paste0(parameter, "Flag")]]
+                      flag <- x[[paste0(QCControl$parameter, "Flag")]]
                       100 * sum(1 == flag | 2 == flag | 5 == flag | 8 == flag, na.rm=TRUE) / length(flag)
                   }
                   meanf <- function(x)
-                      mean(x[[parameter]], na.rm=TRUE)
+                      mean(x[[QCControl$parameter]], na.rm=TRUE)
                   time <- oce::numberAsPOSIXct(unlist(lapply(x[["argos"]], function(x) x[["time"]])))
-                  for (parameter in parameter) {
-                      q <- unlist(lapply(x[["argos"]], qf))
-                      m <- unlist(lapply(x[["argos"]], meanf))
-                      par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
-                      if (any(is.finite(q))) {
-                          o <- order(time) # cycles are not time-ordered in index files
-                          oce::oce.plot.ts(time[o], q[o], ylab=paste(parameter, "% Good"), drawTimeRange = FALSE, type="l")
-                          points(time[o], q[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
-                          abline(h=50, col="red", lty="dashed")
-                          oce::oce.plot.ts(time[o], m[o], ylab=paste(parameter, "Mean"), drawTimeRange = FALSE, type="l")
-                          points(time[o], m[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
-                      } else {
-                          plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
-                          box()
-                          text(0, 0.5, paste(' No', parameter, "flags available"), pos=4)
-                          plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
-                          box()
-                          text(0, 0.5, paste(' No', parameter, "flags available"), pos=4)
-                      }
+                  q <- unlist(lapply(x[["argos"]], qf))
+                  m <- unlist(lapply(x[["argos"]], meanf))
+                  par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
+                  if (any(is.finite(q))) {
+                      o <- order(time) # cycles are not time-ordered in index files
+                      oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange = FALSE, type="l")
+                      points(time[o], q[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
+                      abline(h=50, col="red", lty="dashed")
+                      oce::oce.plot.ts(time[o], m[o], ylab=paste(QCControl$parameter, "Mean"), drawTimeRange = FALSE, type="l")
+                      points(time[o], m[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
+                  } else {
+                      plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
+                      box()
+                      text(0, 0.5, paste(' No', QCControl$parameter, "flags available"), pos=4)
+                      plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
+                      box()
+                      text(0, 0.5, paste(' No', QCControl$parameter, "flags available"), pos=4)
                   }
               } else if (which == "profile") {
                   if (x[["type"]] != "argos")
@@ -725,7 +744,6 @@ setMethod(f="plot",
                       stop("In plot,argoFloats-method(): profileControl must contain only, two elements, \"parameter\" and \"ytype\"")
                   if (!profileControl$ytype %in% c("pressure", "sigma0"))
                       stop("In plot,argoFloats-method(): profileControl$ytype must be \"pressure\" or \"sigma0\", not \"", profileControl$ytype, "\"")
-                  ## dots <- list(...)
                   N <- length(x[["argos"]])
                   ## The known parameter names include not just the things stored in the
                   ## data slot (of *any* of the profiles), but also some computable things. We
