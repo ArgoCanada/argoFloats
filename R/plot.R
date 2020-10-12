@@ -712,7 +712,7 @@ setMethod(f="plot",
                   time <- oce::numberAsPOSIXct(unlist(lapply(x[["argos"]], function(x) x[["time"]])))
                   q <- unlist(lapply(x[["argos"]], qf))
                   m <- unlist(lapply(x[["argos"]], meanf))
-                  par(mfrow=c(2,1), mar=c(2.5,2.5,1,1))
+                  par(mfrow=c(2,1))
                   if (any(is.finite(q))) {
                       o <- order(time) # cycles are not time-ordered in index files
                       oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange = FALSE, type="l")
