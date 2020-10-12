@@ -17,6 +17,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{=html}
 <!-- HOW TO BUILD AND VIEW THE VIGNETTES.
 1. Edit this file in vignettes/argoFloats.Rmd
 2. Do not bother trying to build vignettes in RStudio. Instead,
@@ -27,8 +28,7 @@ vignette: >
 3. To see the results, type the following in an R console:
       browseVignettes("argoFloats")
 -->
-
-
+```
 ```{r, echo=FALSE}
 knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 ```
@@ -41,33 +41,33 @@ The `argoFloats` package provides tools for downloading and processing Argo prof
 
 # Youtube Videos
 
-As an adjunct to the written documentation, the following videos are provided,
-to introduce concepts and show how to accomplish some every-day tasks.  In some
-cases, sample code is also made available at
-https://github.com/ArgoCanada/argoFloats/tree/develop/videos.
+As an adjunct to the written documentation, the following videos are provided, to introduce concepts and show how to accomplish some every-day tasks. In some cases, sample code is also made available at <https://github.com/ArgoCanada/argoFloats/tree/develop/videos>.
 
-Video Name                                             | Creators                   | Date           | URL
--------------------------------------------------------|----------------------------|----------------|-----------------------------
-argoFloats R 01: Introduction                          | Dan Kelley & Jaimie Harbin | April 9, 2020  | https://youtu.be/xeBoFbb66Nk
-argoFloats R 02: TS plot near Bermuda                  | Jaimie Harbin & Dan Kelley | April 24, 2020 | https://youtu.be/ZoTrVEMG5Qo
-argoFloats R 03: new website                           | Jaimie Harbin & Dan Kelley | April 30, 2020 | https://youtu.be/lOvCrRDTmTs
-argoFloats R 04: subset by ocean or polygon            | Jaimie Harbin & Dan Kelley | May 7, 2020    | https://youtu.be/tcGRB479Udk
-argoFloats R 05: TS diagram, colour-coded by oxygen    | Jaimie Harbin & Dan Kelley | May 14, 2020   | https://youtu.be/Y_SxjcOnW04
-argoFloats R 06: trajectory plot, colour coded by time | Jaimie Harbin & Dan Kelley | May 28, 2020   | https://youtu.be/7BB3UuwjUqo
-argoFloats R 07: maps with bathymetry | Jaimie Harbin & Dan Kelley | June 4, 2020 | https://youtu.be/Lc32MTMCbbI
-argoFloats R 08: Introduction to quality control flags | Jaimie Harbin & Dan Kelley | August 12, 2020 | https://www.youtube.com/watch?v=nN4xs0wCnB4
-argoFloats R 09: Advanced Quality Control | Dan Kelley & Jaimie Harbin | August 27, 2020 | https://youtu.be/dYzEO5S2GBw
-argoFloats R 10: Using adjusted data streams | Dan Kelley & Jaimie Harbin | September 3, 2020 | https://youtu.be/AuauWeUnopc
-
+| Video Name                                             | Creators                   | Date         | URL                            |
+|--------------------------------------------------------|----------------------------|--------------|--------------------------------|
+| argoFloats R 01: Introduction                          | Dan Kelley & Jaimie Harbin | Apr  9, 2020 | <https://youtu.be/xeBoFbb66Nk> |
+| argoFloats R 02: TS plot near Bermuda                  | Jaimie Harbin & Dan Kelley | Apr 24, 2020 | <https://youtu.be/ZoTrVEMG5Qo> |
+| argoFloats R 03: new website                           | Jaimie Harbin & Dan Kelley | Apr 30, 2020 | <https://youtu.be/lOvCrRDTmTs> |
+| argoFloats R 04: subset by ocean or polygon            | Jaimie Harbin & Dan Kelley | May  7, 2020 | <https://youtu.be/tcGRB479Udk> |
+| argoFloats R 05: TS diagram, colour-coded by oxygen    | Jaimie Harbin & Dan Kelley | May 14, 2020 | <https://youtu.be/Y_SxjcOnW04> |
+| argoFloats R 06: trajectory plot, colour coded by time | Jaimie Harbin & Dan Kelley | May 28, 2020 | <https://youtu.be/7BB3UuwjUqo> |
+| argoFloats R 07: maps with bathymetry                  | Jaimie Harbin & Dan Kelley | Jun  4, 2020 | <https://youtu.be/Lc32MTMCbbI> |
+| argoFloats R 08: Introduction to quality control flags | Jaimie Harbin & Dan Kelley | Aug 12, 2020 | <https://youtu.be/nN4xs0wCnB4> |
+| argoFloats R 09: Advanced Quality Control              | Dan Kelley & Jaimie Harbin | Aug 27, 2020 | <https://youtu.be/dYzEO5S2GBw> |
+| argoFloats R 10: Using adjusted data streams           | Dan Kelley & Jaimie Harbin | Sep  3, 2020 | <https://youtu.be/AuauWeUnopc> |
 
 # Preliminary Setup
+
 To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE)` command if you receive a Zero Exit Status Error):
+
 ```{r eval=FALSE}
 devtools::install_github("ArgoCanada/oce", ref='develop')
 devtools::install_github('ArgoCanada/ocedata', ref='develop')
 devtools::install_github('ArgoCanada/argoFloats', ref='develop')
 ```
-Note that the `install_github()` function is provided by the `devtools` package, so the above will fail if that package has not already been installed.  To install it, use
+
+Note that the `install_github()` function is provided by the `devtools` package, so the above will fail if that package has not already been installed. To install it, use
+
 ```{r eval=FALSE}
 install.packages(devtools)
 ```
@@ -78,7 +78,6 @@ Figure 1 illustrates the typical workflow with the package, with descriptions of
 
 ![Figure 1: Work flow of the argoFloats package](flowchart.png)
 
-
 As shown above, the central functions for the argoFloats package are `getIndex()`, `subset()`, `getProfiles()`, and `readProfiles()`.
 
 Some built-in data sets are provided for concreteness of illustration and for testing, but actual work always starts with a call to `getIndex()` to download a full index of float data, which we will demonstrate later in this vignette.
@@ -86,6 +85,7 @@ Some built-in data sets are provided for concreteness of illustration and for te
 To begin to get familiar with how the `argoFloats` package works, we will begin looking at the built in data sets. Built into the `argoFloats` package is the `index`, `indexBgc`, `indexSynthetic`, and `indexDeep` indices, referring to core Argo, BGC-Argo, and a combination, deep Argo respectively. It should be noted that as of September 21, 2020, `indexMerged` no longer exists as the switch to `indexSynthetic` has been made. For the sake of this vignette we will focus on the `index` data set.
 
 The first step is to access the required packages that will be needed during this tutorial, with
+
 ```{r message=FALSE, warning=FALSE}
 library(oce)
 library(ocedata)
@@ -98,12 +98,14 @@ To access the embedded index within `argoFloats`, the following code is used:
 data('index')
 ```
 
-It's now possible to process the downloaded index using the `argoFloats`  specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()` as shown below.
+It's now possible to process the downloaded index using the `argoFloats` specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()` as shown below.
 
 # Overview of Processing Steps
+
 The following subsections use built-in data.
 
 ## Plotting
+
 The specialized `plot()` command within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:
 
 ```{r, fig.cap="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas."}
@@ -111,6 +113,7 @@ plot(index, bathymetry=FALSE)          # also, try using bathymetry=TRUE
 ```
 
 ## Extracting Data
+
 Furthermore, the `[[` command provides a way to extract items from `argoFloats` objects, without getting lost in the details of storage. For example, if the user wanted to extract the `file` within the `index` data set, instead of doing `index@data$index$file`, instead they can simply do `index[['file']]`. (Note that `[[<-` is *not* specialized, since the user is highly discouraged from altering values within `argoFloats` objects).
 
 ## Summarizing
@@ -118,39 +121,39 @@ Furthermore, the `[[` command provides a way to extract items from `argoFloats` 
 Additionally, the `summary()` command displays key features of `argoFloats-class` objects such as the type, server, file, URL etc. See `summary,argoFloats-method()` further details.
 
 ## Printing
+
 Lastly, the `show()` command provides a one-line sketch of `argoFloats-class` objects. This gets used by the `print()` function. For example if the user types in:
+
 ```{r, eval=FALSE}
 index
 ```
+
 The following output occurs:
 
-```
-argoFloats object of type "index" with 953 items
-```
+    argoFloats object of type "index" with 953 items
 
 **Hint:** This command can be particularly useful when doing the `merge()` command, which will be explained in greater detail further down.
 
 It should be noted that the profile elements within `argoFloats` objects are stored as in the form of `argo` objects as defined by the `oce` package. This means that `argoFloats` users can rely on a wide variety of `oce` functions to analyse their data. The full suite of R tools is also available, and the vastness of that suite explains why `argoFloats` is written in R.
 
-
 # Function Details
 
-##  getIndex()
+## getIndex()
+
 Until this point, we have demonstrated how the user can become familiar with embedded indices. As previously described, however, actual work always starts with downloading a full index of float data. As shown by Figure 1, the `getIndex()` command is used to get an index of available Argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.
 
 The `getIndex()` command works by specifying the server, with first trying the USGODAE server \url{ftp://usgodae.org/pub/outgoing/argo} and then the IRREMER server \url{ftp://ftp.ifremer.fr/ifremer/argo} if that does not work. The next step is to specify the file name. The table below can be obtained using `?getIndex()`. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: `"argo"`, `"bgc"` or `"bgcargo"`, or `"synthetic"`. The following table summarizes the contents of the various files indicated by the `filename` argument.
 
-File Name                             | Nickname                | Contents
---------------------------------------|-------------------------|--------------------------------------
-`ar_greylist.txt`                     | -                       | Suspicious/malfunctioning floats
-`ar_index_global_meta.txt.gz`         | -                       | Metadata files
-`ar_index_global_prof.txt.gz`         | `"argo"`                | Argo data
-`ar_index_global_tech.txt.gz`         | -                       | Technical files
-`ar_index_global_traj.txt.gz`         | -                       | Trajectory files
-`argo_bio-profile_index.txt.gz`       | `"bgc"` or `"bgcargo"`  | Biogeochemical data (without S or T)
-`argo_bio-traj_index.txt.gz`          | -                       | Biogeochemical trajectory files
-`argo_synthetic-profile_index.txt.gz` | `"synthetic"`           | Synthetic data, successor to `"merge"`
-
+| File Name                             | Nickname               | Contents                               |
+|---------------------------------------|------------------------|----------------------------------------|
+| `ar_greylist.txt`                     | \-                     | Suspicious/malfunctioning floats       |
+| `ar_index_global_meta.txt.gz`         | \-                     | Metadata files                         |
+| `ar_index_global_prof.txt.gz`         | `"argo"`               | Argo data                              |
+| `ar_index_global_tech.txt.gz`         | \-                     | Technical files                        |
+| `ar_index_global_traj.txt.gz`         | \-                     | Trajectory files                       |
+| `argo_bio-profile_index.txt.gz`       | `"bgc"` or `"bgcargo"` | Biogeochemical data (without S or T)   |
+| `argo_bio-traj_index.txt.gz`          | \-                     | Biogeochemical trajectory files        |
+| `argo_synthetic-profile_index.txt.gz` | `"synthetic"`          | Synthetic data, successor to `"merge"` |
 
 Additionally, the `destdir` argument has a default of `~/data/argo`, where it should be noted that `~` is a short cut for `C:\Users\`. See `?getIndex()` for further description about the additional arguments for this command.
 
@@ -159,11 +162,11 @@ To get the index from the USGODAE server, the following code is used:
 ```{r eval=FALSE}
 ai <- getIndex("argo")
 ```
+
 ```{r echo=FALSE}
 data(index)
 ai <- index
 ```
-
 
 ## subset()
 
@@ -186,7 +189,6 @@ plot(CP, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
 
 **Exercise 1:** Produce the same plot as shown above, however, only include data from 2013.
-
 
 Additionally, a practical use of `rectangle` subset can be shown while analyzing the section data found within the oce package. This data includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
 
@@ -218,15 +220,13 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
      xlab='Temperature (C)', ylab='Depth (dbar)')
 ```
 
-![Figure 5: Temperature profile created using argoFloats readProfiles function ](readProfiles.png)
-
+![Figure 5: Temperature profile created using argoFloats readProfiles function](readProfiles.png)
 
 **Exercise 3:** Using the profile in the previous example, plot a TS diagram.
 
 # Solutions to Exercises
 
 **Exercise 1:** Produce the same plot as shown above, however, only include data from 2013.
-
 
 ```{r, eval=FALSE}
 library(argoFloats)
