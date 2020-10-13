@@ -26,7 +26,7 @@ test_that("plot QC",
           {
               a <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")),
                                   "Of 1 profiles read, 1 has")
-              expect_silent(plot(a, which="QC"))
+              expect_warning(plot(a, which="QC"), "defaulting \"parameter\" to \"temperature\"")
               expect_warning(plot(a, which="QC", parameter="oxygen"), "accepting \"parameter\"")
               expect_silent(plot(a, which="QC", QCControl=list(parameter="oxygen")))
           }
@@ -48,7 +48,7 @@ test_that("plot profile",
           {
               a <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")),
                                   "Of 1 profiles read, 1 has")
-              expect_silent(plot(a, which="profile"))
+              expect_warning(plot(a, which="profile"),"defaulting \"parameter\" to \"temperature\"")
               expect_error(plot(a, which="profile", profileControl=list(parameter="nitrate")),
                            "In plot,argoFloats-method()") # no test on details because regexp has tricky quotes, $ etc
           }

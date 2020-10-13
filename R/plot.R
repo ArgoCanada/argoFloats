@@ -687,10 +687,10 @@ setMethod(f="plot",
                   knownParameters <- names(x[[1]]@metadata$flags) # FIXME: is it possible that later cycles have different flags?
                   if (is.null(QCControl)) {
                       if ("parameter" %in% names(dots)) {
-                          warning("accepting \"parameter\" as a separate argument, but in future, please use QCControl=list(parameter=",
-                                  dots$parameter, ")")
+                          warning("accepting \"parameter\" as a separate argument, but in future, please use QCControl=list(parameter=", dots$parameter, ")")
                           QCControl <- list(parameter=dots$parameter)
                       } else {
+                          warning("In plot,argoFloats-method(): defaulting \"parameter\" to \"temperature\"", call.=FALSE)
                           QCControl <- list(parameter="temperature")
                       }
                   }
@@ -732,7 +732,14 @@ setMethod(f="plot",
                   if (x[["type"]] != "argos")
                       stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)
                   if (is.null(profileControl)) {
-                      profileControl <- list(parameter="temperature", ytype="pressure")
+                      if ("parameter" %in% names(dots)) {
+                          warning("accepting \"parameter\" as a separate argument, but in future, please use profileControl=list(parameter=", dots$parameter, ")")
+                          profileControl <- list(parameter=dots$parameter)
+                      } else {
+                          warning("In plot,argoFloats-method(): defaulting \"parameter\" to \"temperature\"", call.=FALSE)
+                          profileControl <- list(parameter="temperature")
+                      }
+                      profileControl$ytype <- "pressure"
                   }
                   if (!is.list(profileControl))
                       stop("In plot,argoFloats-method(): profileControl must be a list")
