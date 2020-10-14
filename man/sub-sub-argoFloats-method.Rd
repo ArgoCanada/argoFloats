@@ -36,7 +36,7 @@ order listed here.
 \item Otherwise, if \code{i} is \code{"data"} then the \code{data} slot of \code{x} is returned.
 \item Otherwise, if \code{i} is \code{"cycle"} then a character vector of the cycle
 numbers is returned.
-\item Otherwise, if \code{i} is \code{"id"} then a character vector of the id numbers
+\item Otherwise, if \code{i} is \code{"ID"} then a character vector of the ID numbers
 is returned.
 \item Otherwise, the following steps are taken, depending on \code{type}.
 }
@@ -64,14 +64,14 @@ is returned.  The choices are:
 the \code{data} slot is returned.  This is a good way to learn the
 longitude and latitude of the profile, the file name on the server,
 etc.
-\item Otherwise, if \code{i} is \code{"id"} then the return value is developed from the
+\item Otherwise, if \code{i} is \code{"ID"} then the return value is developed from the
 \code{index$file} item within the \code{data} slot of \code{x}, in one of three cases:
 \enumerate{
 \item If \code{j} is not supplied, the return value is a vector holding the
 identifiers (character codes for numbers) for all the data files
 referred to in the index.
 \item Otherwise, if \code{j} is numeric, then the return value is a subset of
-the id codes, as indexed by \code{j}.
+the ID codes, as indexed by \code{j}.
 \item Otherwise, an error is reported.
 }
 \item If \code{i} is \code{"length"}, the number of remote files pointed to by the index

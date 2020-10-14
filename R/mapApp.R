@@ -74,7 +74,7 @@ uiMapApp <- shiny::fluidPage(
         )
     ),
     shiny::fluidRow(
-        shiny::column(2, shiny::textInput("id", "Float ID", value = "")),
+        shiny::column(2, shiny::textInput("ID", "Float ID", value = "")),
         shiny::column(
             2,
             style = "padding-left:0px;",
@@ -136,21 +136,21 @@ serverMapApp <- function(input, output, session) {
     } else {
         i <- argoFloats::getIndex(age = AGE)
         n <- i[["length"]]
-        id <- i[["id"]]
+        ID <- i[["ID"]]
         cycle <- i[["cycle"]]
         lon <- i[["longitude"]]
         lat <- i[["latitude"]]
-        n <- length(id)
+        n <- length(ID)
         iBGC <- argoFloats::getIndex("bgc", age = AGE)
-        idBGC <- unique(iBGC[["id"]])
+        idBGC <- unique(iBGC[["ID"]])
         type <- rep("core", n)
-        type[id %in% idBGC] <- "bgc"
+        type[ID %in% idBGC] <- "bgc"
         type[grepl("849|862|864", i@data$index$profiler_type)] <-
             "deep"
         argo <-
             data.frame(
                 time = i[["date"]],
-                id = id,
+                ID = ID,
                 cycle = cycle,
                 longitude = lon,
                 latitude = lat,
@@ -220,7 +220,7 @@ serverMapApp <- function(input, output, session) {
                         latstring,
                         dist,
                         argo$type[i],
-                        argo$id[i],
+                        argo$ID[i],
                         argo$cycle[i],
                         format(argo$time[i], "%Y-%m-%d %H:%M")
                     )
@@ -354,16 +354,16 @@ serverMapApp <- function(input, output, session) {
                                                                     "R code", size = "l"))
                         })
     
-    shiny::observeEvent(input$id,
+    shiny::observeEvent(input$ID,
                         {
-                            if (0 == nchar(input$id)) {
+                            if (0 == nchar(input$ID)) {
                                 state$focusID <<- NULL
                                 shiny::updateTextInput(session, "focus", value =
                                                            "all")
                             } else {
-                                k <- which(argo$id == input$id)
+                                k <- which(argo$ID == input$ID)
                                 if (length(k)) {
-                                    state$focusID <<- input$id
+                                    state$focusID <<- input$ID
                                     state$xlim <<-
                                         pinlon(extendrange(argo$lon[k], f = 0.15))
                                     state$ylim <<-
@@ -372,14 +372,14 @@ serverMapApp <- function(input, output, session) {
                                         shiny::showNotification(
                                             paste0(
                                                 "Since you entered a float ID (",
-                                                input$id,
+                                                input$ID,
                                                 "), you might want to change Focus to \"Single\""
                                             ),
                                             type = "message",
                                             duration = 10
                                         )
                                 } else {
-                                    shiny::showNotification(paste0("There is no float with ID ", input$id, "."),
+                                    shiny::showNotification(paste0("There is no float with ID ", input$ID, "."),
                                                             type = "error")
                                 }
                             }
@@ -395,7 +395,7 @@ serverMapApp <- function(input, output, session) {
                                         duration = NULL
                                     )
                                 } else {
-                                    k <- argo$id == state$focusID
+                                    k <- argo$ID == state$focusID
                                     ## Extend the range 3X more than the default, because I almost always
                                     ## end up typing "-" a few times to zoom out
                                     state$xlim <<-
@@ -415,7 +415,7 @@ serverMapApp <- function(input, output, session) {
                                 }
                             } else {
                                 # "all"
-                                shiny::updateTextInput(session, "id", value =
+                                shiny::updateTextInput(session, "ID", value =
                                                            "")
                                 state$focusID <<- NULL
                             }
@@ -429,7 +429,7 @@ serverMapApp <- function(input, output, session) {
                                 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
                             if (input$focus == "single" &&
                                 !is.null(state$focusID)) {
-                                keep <- argo$id == state$focusID
+                                keep <- argo$ID == state$focusID
                             } else {
                                 ## Restrict search to the present time window
                                 keep <-
@@ -442,13 +442,13 @@ serverMapApp <- function(input, output, session) {
                                     fac * (x - argo$longitude) ^ 2 + (y - argo$latitude) ^ 2,
                                     1000
                                 ))
-                            state$focusID <<- argo$id[i]
-                            shiny::updateTextInput(session, "id", value =
+                            state$focusID <<- argo$ID[i]
+                            shiny::updateTextInput(session, "ID", value =
                                                        state$focusID)
                             msg <-
                                 sprintf(
                                     "ID %s, cycle %s<br>%s %.3fE %.3fN",
-                                    argo$id[i],
+                                    argo$ID[i],
                                     argo$cycle[i],
                                     format(argo$time[i], "%Y-%m-%d"),
                                     argo$longitude[i],
@@ -687,9 +687,9 @@ serverMapApp <- function(input, output, session) {
                 ## For focusID mode, we do not trim by time or space
                 if (input$focus == "single" &&
                     !is.null(state$focusID)) {
-                    keep <- argo$id == state$focusID
+                    keep <- argo$ID == state$focusID
                 }  else {
-                    keep <- rep(TRUE, length(argo$id))
+                    keep <- rep(TRUE, length(argo$ID))
                 }
                 keep <-
                     keep &
@@ -725,8 +725,8 @@ serverMapApp <- function(input, output, session) {
                             ## Turn off warnings for zero-length arrows
                             owarn <- options("warn")$warn
                             options(warn = -1)
-                            for (ID in unique(lonlat$id)) {
-                                LONLAT <- subset(lonlat, ID == id)
+                            for (ID in unique(lonlat$ID)) {
+                                LONLAT <- subset(lonlat, ID == ID)
                                 ## Sort by time instead of relying on the order in the repository
                                 o <- order(LONLAT$time)
                                 no <- length(o)

@@ -1,9 +1,9 @@
 library(argoFloats)
 library(oce)
 data(index)
-id <- index[["id"]]
+ID <- index[["ID"]]
 cycle <- index[["cycle"]]
-tableSorted <- sort(table(id))
+tableSorted <- sort(table(ID))
 ## isolate the float that has the most cycles
 ID0 <- names(tail(tableSorted, 1))
 index0 <- subset(index, ID=ID0)

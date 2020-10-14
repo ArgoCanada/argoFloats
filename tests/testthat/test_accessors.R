@@ -27,11 +27,11 @@ test_that("accessors work on 'index' data file",
           }
 )
 
-test_that("access float id",
+test_that("access float ID",
           {
-              expect_equal("6901048", index[['id', 953]])
-              expect_equal(c("1901584", "1901584", "1901584"), index[['id', 1:3]])
-              expect_equal(c("1901584", "1901584", "1901584"), head(index[['id']], 3))
+              expect_equal("6901048", index[['ID', 953]])
+              expect_equal(c("1901584", "1901584", "1901584"), index[['ID', 1:3]])
+              expect_equal(c("1901584", "1901584", "1901584"), head(index[['ID']], 3))
           }
 )
 
@@ -59,7 +59,7 @@ test_that("access within cycles",
               expect_equal(dim(longitude), dim(salinity))
               expect_equal(a[["cycle"]], "048")
               expect_equal(a[["cycle", 1]], "048")
-              expect_equal(a[["id", 1]], "4900785")
+              expect_equal(a[["ID", 1]], "4900785")
           }
 )
 

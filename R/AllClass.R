@@ -4,7 +4,7 @@
 #'
 #' The `argoFloats` package provides tools for downloading and processing Argo profile data.
 #' It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
-#' also to sift these profiles based on id, time, geography, variable, institution, and ocean.
+#' also to sift these profiles based on ID, time, geography, variable, institution, and ocean.
 #' Once downloaded, such datasets can be analysed within `argoFloats` or using other R tools
 #' and packages.
 #'
@@ -224,7 +224,7 @@ setMethod(f="initialize",
 #'     2. Otherwise, if `i` is `"data"` then the `data` slot of `x` is returned.
 #'     3. Otherwise, if `i` is `"cycle"` then a character vector of the cycle
 #'        numbers is returned.
-#'     4. Otherwise, if `i` is `"id"` then a character vector of the id numbers
+#'     4. Otherwise, if `i` is `"ID"` then a character vector of the ID numbers
 #'        is returned.
 #'     5. Otherwise, the following steps are taken, depending on `type`.
 #'
@@ -251,13 +251,13 @@ setMethod(f="initialize",
 #'        the `data` slot is returned.  This is a good way to learn the
 #'        longitude and latitude of the profile, the file name on the server,
 #'        etc.
-#'     7. Otherwise, if `i` is `"id"` then the return value is developed from the
+#'     7. Otherwise, if `i` is `"ID"` then the return value is developed from the
 #'        `index$file` item within the `data` slot of `x`, in one of three cases:
 #'         1. If `j` is not supplied, the return value is a vector holding the
 #'            identifiers (character codes for numbers) for all the data files
 #'            referred to in the index.
 #'         2. Otherwise, if `j` is numeric, then the return value is a subset of
-#'            the id codes, as indexed by `j`.
+#'            the ID codes, as indexed by `j`.
 #'         3. Otherwise, an error is reported.
 #'     8. If `i` is `"length"`, the number of remote files pointed to by the index
 #'        is returned.
@@ -357,9 +357,9 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i == "cycle") {
                       cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
-                  } else if (length(i) == 1 && i == "id") {
-                      id <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3}[A-Z]*\\.nc$", "\\1", x@data$index$file)
-                      return(as.vector(if (missing(j)) id else id[j]))
+                  } else if (length(i) == 1 && i == "ID") {
+                      ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3}[A-Z]*\\.nc$", "\\1", x@data$index$file)
+                      return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$index$file))
                   } else if (length(i) == 1 && i == "parameters") {
@@ -374,9 +374,9 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i == "cycle") {
                       cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3})[A-Z]*\\.nc$", "\\1", x[["file"]])
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
-                  } else if (length(i) == 1 && i == "id") {
-                      id <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3}[A-Z]*\\.nc$", "\\1", x[["file"]])
-                      return(as.vector(if (missing(j)) id else id[j]))
+                  } else if (length(i) == 1 && i == "ID") {
+                      ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3}[A-Z]*\\.nc$", "\\1", x[["file"]])
+                      return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
                   } else if (length(i) == 1 && i %in% names(x@data)) {
@@ -410,11 +410,11 @@ setMethod(f="[[",
                       return(length(x@data$argos))
                   } else if (length(i) == 1 && i == "filename") {
                       argoFloatsDebug(debug, "i=\"", i, "\" is detected specifically\n")
-                      id <- unlist(lapply(x@data$argos, function(a) a[['filename']]))
-                      return(as.vector(if (missing(j)) id else id[j]))
-                  } else if (length(i) == 1 && i == "id") {
-                      id <- unlist(lapply(x@data$argos, function(a) a[['id']]))
-                      return(as.vector(if (missing(j)) id else id[j]))
+                      ID <- unlist(lapply(x@data$argos, function(a) a[['filename']]))
+                      return(as.vector(if (missing(j)) ID else ID[j]))
+                  } else if (length(i) == 1 && i == "ID") {
+                      ID <- unlist(lapply(x@data$argos, function(a) a[['id']]))
+                      return(as.vector(if (missing(j)) ID else ID[j]))
                   } else {
                       argoFloatsDebug(debug, "No special argoFloats::[[ case found, so will try oce::[[ on each item within x@data$argos.\n")
                       if (!missing(j)) {

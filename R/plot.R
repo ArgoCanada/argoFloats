@@ -680,9 +680,9 @@ setMethod(f="plot",
               } else if (which == "QC") {
                   if (x[["type"]] != "argos")
                       stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)
-                  ids <- x[["id"]]
-                  nid <- length(unique(ids))
-                  if (nid != 1)
+                  IDs <- x[["ID"]]
+                  nID <- length(unique(IDs))
+                  if (nID != 1)
                       stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single ID", call.=FALSE)
                   knownParameters <- names(x[[1]]@metadata$flags) # FIXME: is it possible that later cycles have different flags?
                   if (is.null(QCControl)) {
