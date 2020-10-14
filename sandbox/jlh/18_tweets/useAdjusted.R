@@ -1,7 +1,7 @@
 if (!interactive()) png("useAdjusted.png", unit="in", width=7, height=4, pointsize=11, res=100)
 library(argoFloats)
 ai <- getIndex(filename = 'synthetic')
-index1 <- subset(ai, id='5903586')
+index1 <- subset(ai, ID='5903586')
 index2 <- subset(index1, cycle='001')
 profiles <- getProfiles(index2)
 raw <- readProfiles(profiles)
