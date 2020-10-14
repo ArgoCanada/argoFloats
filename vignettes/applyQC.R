@@ -3,7 +3,7 @@ par(mfrow=c(1,2), mar=c(3,3,1,1))
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(index)
-index1 <- subset(index, id='1901584')
+index1 <- subset(index, ID='1901584')
 argos <- readProfiles(getProfiles(index1))
 clean <- applyQC(argos)
 par(mfrow=c(1, 2))

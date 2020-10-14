@@ -272,7 +272,7 @@ plot(a, which="TS")
 \dontrun{
 library(argoFloats)
 ais <- getIndex(filename="synthetic")
-sub <- subset(ais, id='2902123')
+sub <- subset(ais, ID='2902123')
 lonRect <- c(56, 66)
 latRect <- c(11,12)
 s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
@@ -282,7 +282,7 @@ par(mfrow=c(2,1))
 plot(argos, which="QC") # defaults to temperature
 plot(argos, which="QC", QCControl=list(parameter="salinity"))}
 
-# Example 8: Temperature profile of the 131st cycle of float with id 2902204
+# Example 8: Temperature profile of the 131st cycle of float with ID 2902204
 library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default

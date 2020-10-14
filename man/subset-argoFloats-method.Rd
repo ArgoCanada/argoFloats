@@ -14,7 +14,7 @@ indices of \code{x@data$index} to keep (example 1).}
 
 \item{...}{the first entry here must be either (a) a list named \code{circle},
 \code{rectangle}, \code{polygon}, \code{parameter}, \code{time}, \code{institution},
-\code{id},\code{ocean},\code{dataMode},\code{cycle}, \code{direction}, or \code{column}.
+\code{ID},\code{ocean},\code{dataMode},\code{cycle}, \code{direction}, or \code{column}.
 (examples 2 through 8, and 10 through 14),
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
@@ -81,7 +81,7 @@ names the institution.  The permitted values are:
 See example 7.
 \item A list named \code{deep} that holds a logical value indicating weather argo floats
 are deep argo (i.e. \code{profiler_type} 849, 862, and 864). See example 8.
-\item A list named \code{id} that holds a character value specifying a float identifier.
+\item A list named \code{ID} that holds a character value specifying a float identifier.
 See example 9.
 \item A list named \code{ocean}, which holds a single character element that names the
 ocean. The permitted values are:
@@ -160,10 +160,10 @@ index6 <- subset(index, time=list(from=from, to=to))
 # Example 7: subset to the Canadian MEDS data
 index7 <- subset(index, institution="ME")
 
-# Example 8: subset to a specific id
+# Example 8: subset to a specific ID
 \dontrun{
 ai <- getIndex(filename='synthetic', destdir = '~/data/argo')
-index9 <- subset(ai, id='1900722') }
+index9 <- subset(ai, ID='1900722') }
 
 # Example 9: subset data to only include deep argo
 \dontrun{
@@ -210,7 +210,7 @@ index13B[['file']]
 # Example 14: subset by column (for argos type)
 \dontrun{
 library(argoFloats)
-index14A <- subset(getIndex(filename='merge'), id="5903889")
+index14A <- subset(getIndex(filename='merge'), ID="5903889")
 index14B <- subset(index14A, cycle='074')
 argos14A <- readProfiles(getProfiles(index14B))
 argos14B <- subset(argos14A, column=1)
@@ -223,7 +223,7 @@ col2=argos14C[['oxygen']][[1]])
 # Example 15: subset by cycle (for argos type) to create TS diagram
 \dontrun{
 data("index")
-index15 <- subset(index, id="1901584")
+index15 <- subset(index, ID="1901584")
 profiles <- getProfiles(index15)
 argos <- readProfiles(profiles)
 plot(subset(argos, cycle='147'), which='TS')

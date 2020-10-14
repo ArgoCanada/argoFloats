@@ -65,7 +65,7 @@
 #' 8. A list named `deep` that holds a logical value indicating weather argo floats
 #' are deep argo (i.e. `profiler_type` 849, 862, and 864). See example 8.
 #'
-#' 9. A list named `id` that holds a character value specifying a float identifier.
+#' 9. A list named `ID` that holds a character value specifying a float identifier.
 #' See example 9.
 #'
 #' 10. A list named `ocean`, which holds a single character element that names the
@@ -110,7 +110,7 @@
 #'
 #' @param ... the first entry here must be either (a) a list named `circle`,
 #' `rectangle`, `polygon`, `parameter`, `time`, `institution`,
-#' `id`,`ocean`,`dataMode`,`cycle`, `direction`, or `column`.
+#' `ID`,`ocean`,`dataMode`,`cycle`, `direction`, or `column`.
 #'  (examples 2 through 8, and 10 through 14),
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
@@ -167,10 +167,10 @@
 #' # Example 7: subset to the Canadian MEDS data
 #' index7 <- subset(index, institution="ME")
 #'
-#' # Example 8: subset to a specific id
+#' # Example 8: subset to a specific ID
 #' \dontrun{
 #' ai <- getIndex(filename='synthetic', destdir = '~/data/argo')
-#' index9 <- subset(ai, id='1900722') }
+#' index9 <- subset(ai, ID='1900722') }
 #'
 #' # Example 9: subset data to only include deep argo
 #' \dontrun{
@@ -217,7 +217,7 @@
 #' # Example 14: subset by column (for argos type)
 #' \dontrun{
 #' library(argoFloats)
-#' index14A <- subset(getIndex(filename='merge'), id="5903889")
+#' index14A <- subset(getIndex(filename='merge'), ID="5903889")
 #' index14B <- subset(index14A, cycle='074')
 #' argos14A <- readProfiles(getProfiles(index14B))
 #' argos14B <- subset(argos14A, column=1)
@@ -230,7 +230,7 @@
 #' # Example 15: subset by cycle (for argos type) to create TS diagram
 #' \dontrun{
 #' data("index")
-#' index15 <- subset(index, id="1901584")
+#' index15 <- subset(index, ID="1901584")
 #' profiles <- getProfiles(index15)
 #' argos <- readProfiles(profiles)
 #' plot(subset(argos, cycle='147'), which='TS')
@@ -375,7 +375,7 @@ setMethod(f="subset",
               if (missing(subset)) {
                   #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
                   if (length(dots) == 0)
-                      stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'id', 'ocean', dataMode', 'cycle', or 'direction'", call.=FALSE)
+                      stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with 'subset' argument, 'circle','rectangle', 'parameter','polygon', 'time', 'institution', 'deep', 'ID', 'ocean', dataMode', 'cycle', or 'direction'", call.=FALSE)
                   if (length(dots) > 1)
                       stop("in subset,argoFloats-method() :\n  cannot give more than one method in the '...' argument", call.=FALSE)
                   N <- length(x@data$index[[1]]) # used in calculating percentages
@@ -526,14 +526,14 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1] == 'id' || dotsNames[1] == "ID") {
-                      argoFloatsDebug(debug, "subsetting by id\n")
-                      if (dotsNames[1] == "ID")
-                          warning("In subset,argoFloats-method : converted subset(x,ID=...) to subset(x,id=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Sep-01.", call.=FALSE)
-                      id <- dots[[1]]
+                  } else if (dotsNames[1] == 'ID' || dotsNames[1] == "id") {
+                      argoFloatsDebug(debug, "subsetting by ID\n")
+                      if (dotsNames[1] == "id")
+                          warning("In subset,argoFloats-method : converted subset(x,id=...) to subset(x,ID=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
+                      ID <- dots[[1]]
                       file <- x@data$index$file
-                      fileid <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", file)
-                      keep <- id == fileid
+                      fileID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", file)
+                      keep <- ID == fileID
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
@@ -600,7 +600,7 @@ setMethod(f="subset",
                       }
                       x@data$index <- x@data$index[keep, ]
                   } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for indices is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'id', 'ocean', 'dataMode', 'cycle', or 'direction'", call.=FALSE)
+                      stop("in subset,argoFloats-method():\n  the only permitted '...' argument for indices is a list named 'circle','rectangle','parameter','polygon', 'time','institution', 'deep', 'ID', 'ocean', 'dataMode', 'cycle', or 'direction'", call.=FALSE)
                   }
                   }
               } else {

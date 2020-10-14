@@ -7,12 +7,12 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 #  browseVignettes('argoFloats')
 
 ## ----echo=FALSE---------------------------------------------------------------
-id <- '1901584'
+ID <- '1901584'
 
 ## ---- warning=FALSE, error=FALSE, message=FALSE, eval=FALSE-------------------
 #  library(argoFloats)
 #  data("index")
-#  index1 <- subset(index, id='1901584')
+#  index1 <- subset(index, ID='1901584')
 #  profiles <- getProfiles(index1)
 #  argos <- readProfiles(profiles)
 #  plot(argos, which='QC', parameter='temperature')
@@ -83,7 +83,7 @@ if (packageVersion("oce") > "1.2.0") {
 ## ----eval=FALSE---------------------------------------------------------------
 #  library(argoFloats)
 #  data('indexSynthetic')
-#  index1 <- subset(indexSynthetic, id='4900845')
+#  index1 <- subset(indexSynthetic, ID='4900845')
 #  profiles <- getProfiles(index1)
 #  argos <- readProfiles(profiles)
 #  plot(argos, which='QC', parameter='temperature')
@@ -91,7 +91,7 @@ if (packageVersion("oce") > "1.2.0") {
 ## ----eval=FALSE---------------------------------------------------------------
 #  library(argoFloats)
 #  data('indexSynthetic')
-#  index1 <- subset(indexSynthetic, id='4900845')
+#  index1 <- subset(indexSynthetic, ID='4900845')
 #  profiles <- getProfiles(index1)
 #  argos <- readProfiles(profiles)
 #  a1 <- argos[[1]]
@@ -101,7 +101,7 @@ if (packageVersion("oce") > "1.2.0") {
 #  library(argoFloats)
 #  # Contrast TS diagrams for raw and flag-handled data
 #  data(indexSynthetic)
-#  index1 <- subset(indexSynthetic, id='4900845')
+#  index1 <- subset(indexSynthetic, ID='4900845')
 #  argos <- readProfiles(getProfiles(index1))
 #  clean <- applyQC(argos)
 #  par(mfrow=c(1, 2))

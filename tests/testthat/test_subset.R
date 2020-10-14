@@ -62,25 +62,25 @@ test_that("subset by institution", {
           expect_equal(indexi[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
-test_that("subset by float id", {
+test_that("subset by float ID", {
           data("index")
           N <- 9
-          indexid <- expect_message(subset(index, id="1901584"),
+          indexID <- expect_message(subset(index, ID="1901584"),
                                     paste("Kept", N, "profiles"))
-          expect_equal(dim(indexid[["index"]]), c(N, 8))
-          expect_equal(indexid[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
-          expect_equal(indexid[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(dim(indexID[["index"]]), c(N, 8))
+          expect_equal(indexID[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          expect_equal(indexID[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
 })
 
 test_that("subset by deep", {
           data("index")
-          indexid <- expect_message(subset(index, deep=TRUE), "Kept 0 profiles \\(0%\\)")
+          indexID <- expect_message(subset(index, deep=TRUE), "Kept 0 profiles \\(0%\\)")
 })
 
 test_that("silencing subset", {
           data("index")
           N <- 0
-          indexid <- expect_error(subset(index, deep=TRUE, quiet=TRUE, " Error: in subset,argoFloats-method() :
+          indexID <- expect_error(subset(index, deep=TRUE, quiet=TRUE, " Error: in subset,argoFloats-method() :
   cannot give more than one method in the '...' argument"))
 })
 
@@ -117,7 +117,7 @@ test_that("subset by column",
               if (canDownload()) {
                   i <- expect_silent(getIndex())
                   N <- 305
-                  s <- expect_message(subset(i, id="5902250"),
+                  s <- expect_message(subset(i, ID="5902250"),
                                       paste("Kept", N, "profiles"))
                   N <- 1
                   s <- expect_message(subset(s, cycle="253"),
@@ -143,7 +143,7 @@ test_that("subset by cycle",
               if (canDownload()) {
                   data("index")
                   N <- 9
-                  index1 <- expect_message(subset(index, id="1901584"),
+                  index1 <- expect_message(subset(index, ID="1901584"),
                                            paste("Kept", N, "profiles"))
                   profiles <- expect_silent(getProfiles(index1))
                   argos <- expect_output(expect_warning(readProfiles(profiles),
@@ -181,7 +181,7 @@ test_that("subset by parameter", {
 test_that("subset stop messages", {
     data("index")
     N <- 9
-    index1 <- expect_message(subset(index, id="1901584"),
+    index1 <- expect_message(subset(index, ID="1901584"),
                              paste("Kept", N, "profiles"))
     argos <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")))
     argos2 <- expect_error(subset(argos, "Error: in subset,argoFloats-method() :

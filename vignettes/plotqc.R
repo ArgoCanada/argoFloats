@@ -2,7 +2,7 @@ if (!interactive()) png("plotqc.png", unit="in", width=7, height=4, pointsize=11
 par((mar=c(3, 2.5, 1, 1)+0.2), mgp=c(2, 0.7, 0))
 library(argoFloats)
 data("index")
-subset <- subset(index, id='1901584')
+subset <- subset(index, ID='1901584')
 profiles <- getProfiles(subset)
 argos <- readProfiles(profiles)
 plot(argos, which='QC', parameter='temperature')

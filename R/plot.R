@@ -185,7 +185,7 @@ pinusr <- function(usr)
 #'
 #' @param profileControl a list that permits particular control of the `which="profile"`
 #' case.  If provided, it must contain elements named `parameter` (a character value
-#' naming the quantity to plot on the x axis) and `ytype` (a character value equalling 
+#' naming the quantity to plot on the x axis) and `ytype` (a character value equalling
 #' either `"pressure"` or `"sigma0"`).  If not provided, this defaults to
 #' `list(parameter="temperature", ytype="pressure")`.
 #'
@@ -281,7 +281,7 @@ pinusr <- function(usr)
 #' \dontrun{
 #' library(argoFloats)
 #' ais <- getIndex(filename="synthetic")
-#' sub <- subset(ais, id='2902123')
+#' sub <- subset(ais, ID='2902123')
 #' lonRect <- c(56, 66)
 #' latRect <- c(11,12)
 #' s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
@@ -291,7 +291,7 @@ pinusr <- function(usr)
 #' plot(argos, which="QC") # defaults to temperature
 #' plot(argos, which="QC", QCControl=list(parameter="salinity"))}
 #'
-#' # Example 8: Temperature profile of the 131st cycle of float with id 2902204
+#' # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
 #' library(argoFloats)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
@@ -683,7 +683,7 @@ setMethod(f="plot",
                   ids <- x[["id"]]
                   nid <- length(unique(ids))
                   if (nid != 1)
-                      stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single id", call.=FALSE)
+                      stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single ID", call.=FALSE)
                   knownParameters <- names(x[[1]]@metadata$flags) # FIXME: is it possible that later cycles have different flags?
                   if (is.null(QCControl)) {
                       if ("parameter" %in% names(dots)) {
