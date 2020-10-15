@@ -105,7 +105,7 @@ test_that("subset by cycle", {
 test_that("subset by direction",
           {
               data(indexBgc)
-              subset1 <- subset(indexBgc, direction='decent')
+              subset1 <- subset(indexBgc, direction='descent')
               subset2 <- subset(indexBgc, direction='ascent')
               expect_equal(subset1[["file"]], "coriolis/6901494/profiles/BD6901494_353D.nc")
               expect_equal(subset2[["file"]][1], "aoml/4900845/profiles/BR4900845_086.nc")

@@ -100,7 +100,7 @@ component that is either blank or the character \code{"D"} (which designates a
 descending profile).  Thus, \code{001} will match both \verb{*_001.nc} and \verb{*_001D.nc}.
 Note this can be used for both \code{"index"} and \code{"argos"} types.
 See example 12.
-\item A character value named \code{direction}, equal to either \code{decent} or \code{ascent},
+\item A character value named \code{direction}, equal to either "descent" or "ascent",
 that selects whether to retain data from the ascent or decent phase.
 See example 13.
 \item An integer value named \code{column}, that selects which column of parameters
@@ -143,11 +143,11 @@ rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
 points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
 polygon(poly$longitude, poly$latitude, border=4)
 
-# Example 5: subset synthetic data containing 'DOXY' parameters
-# Data containing 'DOXY' data
+# Example 5: subset synthetic data containing "DOXY" parameters
+# Data containing "DOXY" data
 data(indexSynthetic)
 index5A <- subset(indexSynthetic, parameter="DOXY")
-# Data containing both 'PSAL' and 'DOWN_IRRADIANCE380' data
+# Data containing both "PSAL" and "DOWN_IRRADIANCE380" data
 data(indexSynthetic)
 index5B <- subset(indexSynthetic, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
 
@@ -162,40 +162,40 @@ index7 <- subset(index, institution="ME")
 
 # Example 8: subset to a specific ID
 \dontrun{
-ai <- getIndex(filename='synthetic', destdir = '~/data/argo')
-index9 <- subset(ai, ID='1900722') }
+ai <- getIndex(filename="synthetic", destdir="~/data/argo")
+index9 <- subset(ai, ID="1900722") }
 
 # Example 9: subset data to only include deep argo
 \dontrun{
-ai <- getIndex(filename=='synthetic', destdir = '~/data/argo')
+ai <- getIndex(filename="synthetic", destdir="~/data/argo")
 index8 <- subset(ai, deep=TRUE) }
 
 # Example 10: subset data by ocean
 \dontrun{
 ai <- getIndex()
 index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
-plot(index10, which='map') # To get a visual
-atlantic <- subset(index10, ocean='A') # Subsetting for Atlantic Ocean
-pacific <- subset(index10, ocean='P')
-points(atlantic[['longitude']], atlantic[['latitude']], pch=20, col=2)
-points(pacific[['longitude']], pacific[['latitude']], pch=20, col=3) }
+plot(index10, which="map")
+atlantic <- subset(index10, ocean="A") # Subsetting for Atlantic Ocean
+pacific <- subset(index10, ocean="P")
+points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2)
+points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3) }
 
 # Example 11: subset by delayed time
 \dontrun{
 data(indexBgc)
-index11 <- subset(index, dataMode='delayed')
+index11 <- subset(index, dataMode="delayed")
 profiles <- getProfiles(index11)
 argos <- readProfiles(profiles)
-oxygen <- unlist(argos[['oxygen']])
-pressure <- unlist(argos[['pressure']])
+oxygen <- unlist(argos[["oxygen"]])
+pressure <- unlist(argos[["pressure"]])
 plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
-ylab='Pressure (dbar)', xlab="Oxygen (umol/kg)")
+     ylab="Pressure (dbar)", xlab="Oxygen (umol/kg)")
 }
 
 # Example 12: subset by cycle
 \dontrun{
 data(index)
-index12 <- subset(index, cycle='124')
+index12 <- subset(index, cycle="124")
 cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")
 }
 
@@ -203,21 +203,21 @@ cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")
 \dontrun{
 library(argoFloats)
 index13A <- subset(getIndex(), deep=TRUE)
-index13B <- subset(deep, direction='decent')
-index13B[['file']]
+index13B <- subset(deep, direction="descent")
+index13B[["file"]]
 }
 
 # Example 14: subset by column (for argos type)
 \dontrun{
 library(argoFloats)
-index14A <- subset(getIndex(filename='merge'), ID="5903889")
-index14B <- subset(index14A, cycle='074')
+index14A <- subset(getIndex(filename="merge"), ID="5903889")
+index14B <- subset(index14A, cycle="074")
 argos14A <- readProfiles(getProfiles(index14B))
 argos14B <- subset(argos14A, column=1)
 argos14C <- subset(argos14A, column=2)
-D <- data.frame(Oxygen = argos14A[['oxygen']],
-col1= argos14B[['oxygen']][[1]],
-col2=argos14C[['oxygen']][[1]])
+D <- data.frame(Oxygen = argos14A[["oxygen"]],
+col1= argos14B[["oxygen"]][[1]],
+col2=argos14C[["oxygen"]][[1]])
 }
 
 # Example 15: subset by cycle (for argos type) to create TS diagram
@@ -226,7 +226,7 @@ data("index")
 index15 <- subset(index, ID="1901584")
 profiles <- getProfiles(index15)
 argos <- readProfiles(profiles)
-plot(subset(argos, cycle='147'), which='TS')
+plot(subset(argos, cycle="147"), which="TS")
 }
 
 

@@ -64,8 +64,8 @@ if (packageVersion("oce") >= "1.3.0") {
     raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
     adj <- useAdjusted(raw)
     par(mfrow=c(1,2), mar=c(5,4,1,2))
-    hist(raw[[1]][['oxygen']], xlab='Raw Oxygen', ylab="Frequency", main=NULL)
-    hist(adj[[1]][['oxygen']], xlab='Adjusted Oxygen', ylab="Frequency", main=NULL)
+    hist(raw[[1]][["oxygen"]], xlab="Raw Oxygen", ylab="Frequency", main=NULL)
+    hist(adj[[1]][["oxygen"]], xlab="Adjusted Oxygen", ylab="Frequency", main=NULL)
 }
 
 }

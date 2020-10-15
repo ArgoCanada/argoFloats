@@ -99,7 +99,7 @@ test_that("test access argos type",
           {
               filename <- system.file("extdata", "D4900785_048.nc", package="argoFloats")
               argos <- expect_silent(readProfiles(filename))
-              expect_equal(argos[['latitude']][[1]], 27.916)
+              expect_equal(argos[["latitude"]][[1]], 27.916)
           }
 )
 

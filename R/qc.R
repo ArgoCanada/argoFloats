@@ -207,17 +207,17 @@ showQCTests <- function(x, style="brief")
     ## Permit both SNAKE_CASE and camelCase names; oce switched to the latter 2020 Jun 24.
     mnames <- names(x@metadata)
     if ("HISTORY_ACTION" %in% mnames)
-        action <- x[['HISTORY_ACTION']]
+        action <- x[["HISTORY_ACTION"]]
     else if ("historyAction" %in% mnames)
-        action <- x[['historyAction']]
+        action <- x[["historyAction"]]
     else {
         cat("historyAction is not present in the metadata for this cycle, so no report can be given")
         return(invisible(NULL))
     }
     if ("HISTORY_QCTEST" %in% mnames) # to handle oce before version 1.3-0
-        tests <- x[['HISTORY_QCTEST']]
+        tests <- x[["HISTORY_QCTEST"]]
     else if ("historyQCTest" %in% mnames)
-        tests <- x[['historyQCTest']]
+        tests <- x[["historyQCTest"]]
     else
         return(invisible(NULL))
     if (is.null(tests))

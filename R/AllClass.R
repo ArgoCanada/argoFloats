@@ -349,7 +349,7 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i %in% names(x@data$index)) {
                       return(if (missing(j)) x@data$index[[i]] else x@data$index[[i]][j])
                   } else if (length(i) == 1 && i == "profile") {
-                      stop("In [[ : the old syntax [['profile']] is no longer converted to [['cycle']]")
+                      stop("In [[ : the old syntax [[\"profile\"]] is no longer converted to [[\"cycle\"]]")
                       ## changed to stop() 2020-10-07
                       ## warning("converted x[[\"profile\"]] to x[[\"cycle\"]] for backwards compatibility;\n  NOTE: this conversion will cease after September, 2020.")
                       ## cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
@@ -404,16 +404,16 @@ setMethod(f="[[",
                       return(if (missing(j)) x@data[[i]] else x@data[[i]][[j]])
                   } else if (length(i) == 1 && i == "cycle") {
                       argoFloatsDebug(debug, "i=\"", i, "\" is detected specifically\n")
-                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3})[A-Z]*\\.nc$", "\\1", unlist(x[['filename']]))
+                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3})[A-Z]*\\.nc$", "\\1", unlist(x[["filename"]]))
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$argos))
                   } else if (length(i) == 1 && i == "filename") {
                       argoFloatsDebug(debug, "i=\"", i, "\" is detected specifically\n")
-                      ID <- unlist(lapply(x@data$argos, function(a) a[['filename']]))
+                      ID <- unlist(lapply(x@data$argos, function(a) a[["filename"]]))
                       return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i == "ID") {
-                      ID <- unlist(lapply(x@data$argos, function(a) a[['id']]))
+                      ID <- unlist(lapply(x@data$argos, function(a) a[["id"]])) # IMPORTANT: oce calls it "id"
                       return(as.vector(if (missing(j)) ID else ID[j]))
                   } else {
                       argoFloatsDebug(debug, "No special argoFloats::[[ case found, so will try oce::[[ on each item within x@data$argos.\n")
