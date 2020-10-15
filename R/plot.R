@@ -791,10 +791,10 @@ setMethod(f="plot",
                   box()
                   axis(2)
                   axis(3)
-                  mtext(oce::resizableLabel(if (profileControl$ytype == "pressure") "p" else "sigma0", axis="y"),
-                        side=2, line=par("mgp")[1], cex=par("cex"))
-                  mtext(oce::resizableLabel(profileControl$parameter),
-                        side=3, line=par("mgp")[1], cex=par("cex"))
+                  ylab <- oce::resizableLabel(if (profileControl$ytype == "pressure") "p" else "sigma0", axis="y")
+                  mtext(ylab, side=2, line=par("mgp")[1], cex=par("cex"))
+                  xlab <- oce::resizableLabel(if (profileControl$parameter == "oxygen") "oxygen umol/kg" else profileControl$parameter, axis="x")
+                  mtext(xlab, side=3, line=par("mgp")[1], cex=par("cex"))
               } else {
                   stop("In plot,argoFloats-method():cannot handle which=\"", which, "\"; see ?\"plot,argoFloats-method\"", call.=FALSE)
               }
