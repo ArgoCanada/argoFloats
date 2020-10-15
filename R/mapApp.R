@@ -104,7 +104,7 @@ uiMapApp <- shiny::fluidPage(
 serverMapApp <- function(input, output, session) {
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages('shiny') for mapApp() to work")
-    AGE <- 7
+    AGE <- 1
     ## State variable: reactive!
     state <- shiny::reactiveValues(
         xlim = c(-180, 180),
