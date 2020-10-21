@@ -100,7 +100,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #'    with the `#` character.
 #' * `data`, a data frame containing the items in the source file.
 #'    The names of these items are determined automatically from
-#'    `"argo"`,`"bgcargo"`, `"synthetic"` files.
+#'    `"core"`,`"bgcargo"`, `"synthetic"` files.
 #'
 #' Some expertise is required in deciding on the value for the
 #' `file` argument to [getIndex()].  As of June 2020, the
@@ -133,6 +133,9 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #' `argo_synthetic-profile_index.txt.gz` \tab `"synthetic"`           \tab Synthetic data, successor to `"merge"`\cr
 #' }
 #'
+#' Note: as of Dec 01,2020 the user will no longer have the option to use `"argo"` as a filename argument. Instead, `"core"` will
+                                        #' be used.
+#' 
 #' The next step after using [getIndex()] is usually to
 #' use [getProfiles()], which downloads or checks for local
 #' copies of the per-profile data files that are listed in an
@@ -198,7 +201,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 ## @importFrom curl curl_download
 ## @importFrom oce processingLogAppend
 #' @export
-getIndex <- function(filename="argo",
+getIndex <- function(filename="core",
                      server="auto",
                      destdir="~/data/argo",
                      age=1,
@@ -254,6 +257,8 @@ getIndex <- function(filename="argo",
     ## Handle nicknames
     filenameOrig <- filename
     if (filename == "argo" || filename == "core") {
+        if (filename == "argo")
+            warning ("in get,argoFloats-method: converted filename=\"argo\" to filename=\"core\" for backwards compatibility.\n NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
         filename <- "ar_index_global_prof.txt.gz"
     } else if (filename == "bgcargo" || filename == "bgc") {
         filename <- "argo_bio-profile_index.txt.gz"

@@ -5,7 +5,7 @@
 \title{Get an Index of Available Argo Float Profiles}
 \usage{
 getIndex(
-  filename = "argo",
+  filename = "core",
   server = "auto",
   destdir = "~/data/argo",
   age = 1,
@@ -101,7 +101,7 @@ download the netcdf files for individual float profiles.
 with the \verb{#} character.
 \item \code{data}, a data frame containing the items in the source file.
 The names of these items are determined automatically from
-\code{"argo"},\code{"bgcargo"}, \code{"synthetic"} files.
+\code{"core"},\code{"bgcargo"}, \code{"synthetic"} files.
 }
 
 Some expertise is required in deciding on the value for the
@@ -134,6 +134,9 @@ because \code{getIndex} searches both servers for index files.
 \code{argo_bio-traj_index.txt.gz}          \tab -                       \tab Bio-trajectory files\cr
 \code{argo_synthetic-profile_index.txt.gz} \tab \code{"synthetic"}           \tab Synthetic data, successor to \code{"merge"}\cr
 }
+
+Note: as of Dec 01,2020 the user will no longer have the option to use \code{"argo"} as a filename argument. Instead, \code{"core"} will
+be used.
 
 The next step after using \code{\link[=getIndex]{getIndex()}} is usually to
 use \code{\link[=getProfiles]{getProfiles()}}, which downloads or checks for local
