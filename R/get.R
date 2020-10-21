@@ -135,7 +135,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #'
 #' Note: as of Dec 01,2020 the user will no longer have the option to use `"argo"` as a filename argument. Instead, `"core"` will
                                         #' be used.
-#' 
+#'
 #' The next step after using [getIndex()] is usually to
 #' use [getProfiles()], which downloads or checks for local
 #' copies of the per-profile data files that are listed in an
@@ -256,9 +256,10 @@ getIndex <- function(filename="core",
         stop("'", destdir, "' is not a directory")
     ## Handle nicknames
     filenameOrig <- filename
+    names <- c("core","argo","bgc","bgcargo","synthetic", "ar_index_global_prof.txt.gz", "argo_bio-profile_index.txt.gz", "argo_synthetic-profile_index.txt.gz")
     if (filename == "argo" || filename == "core") {
         if (filename == "argo")
-            warning ("in get,argoFloats-method: converted filename=\"argo\" to filename=\"core\" for backwards compatibility.\n NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
+            warning ("in get,argoFloats-method:\n converted filename=\"argo\" to filename=\"core\" for backwards compatibility.\n NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
         filename <- "ar_index_global_prof.txt.gz"
     } else if (filename == "bgcargo" || filename == "bgc") {
         filename <- "argo_bio-profile_index.txt.gz"
@@ -267,6 +268,8 @@ getIndex <- function(filename="core",
     } else if (filename == "synthetic") {
         filename <- "argo_synthetic-profile_index.txt.gz"
     }
+    if (!(filename %in% names))
+        stop("In get,argoFloats-method():\n filename type doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\".", call.=FALSE)
     if (filename != filenameOrig)
         argoFloatsDebug(debug, "Converted filename='", filenameOrig, "' to filename='", filename, "'.\n", sep="")
     ## Note: 'url' is a vector; e.g. using server="auto" creates 2 elements in url
