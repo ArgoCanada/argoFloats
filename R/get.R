@@ -125,7 +125,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #' *File Name*                           \tab *Nickname*              \tab *Contents*\cr
 #' `ar_greylist.txt`                     \tab -                       \tab Suspicious/malfunctioning floats\cr
 #' `ar_index_global_meta.txt.gz`         \tab -                       \tab Metadata files\cr
-#' `ar_index_global_prof.txt.gz`         \tab `"argo"`                \tab Argo data\cr
+#' `ar_index_global_prof.txt.gz`         \tab `"argo"` or `"core"`      \tab Argo data\cr
 #' `ar_index_global_tech.txt.gz`         \tab -                       \tab Technical files\cr
 #' `ar_index_global_traj.txt.gz`         \tab -                       \tab Trajectory files\cr
 #' `argo_bio-profile_index.txt.gz`       \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T)\cr
@@ -253,7 +253,7 @@ getIndex <- function(filename="argo",
         stop("'", destdir, "' is not a directory")
     ## Handle nicknames
     filenameOrig <- filename
-    if (filename == "argo") {
+    if (filename == "argo" || filename == "core") {
         filename <- "ar_index_global_prof.txt.gz"
     } else if (filename == "bgcargo" || filename == "bgc") {
         filename <- "argo_bio-profile_index.txt.gz"
