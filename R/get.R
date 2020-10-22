@@ -259,7 +259,7 @@ getIndex <- function(filename="core",
     names <- c("core","argo","bgc","bgcargo","synthetic", "ar_index_global_prof.txt.gz", "argo_bio-profile_index.txt.gz", "argo_synthetic-profile_index.txt.gz")
     if (filename == "argo" || filename == "core") {
         if (filename == "argo")
-            warning ("in get,argoFloats-method:\n converted filename=\"argo\" to filename=\"core\" for backwards compatibility.\n NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
+            warning("converted filename=\"argo\" to filename=\"core\" for backwards compatibility.\n NOTE: this conversion will cease after 2020-Dec-01.")
         filename <- "ar_index_global_prof.txt.gz"
     } else if (filename == "bgcargo" || filename == "bgc") {
         filename <- "argo_bio-profile_index.txt.gz"
@@ -269,7 +269,7 @@ getIndex <- function(filename="core",
         filename <- "argo_synthetic-profile_index.txt.gz"
     }
     if (!(filename %in% names))
-        stop("In get,argoFloats-method():\n filename type doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\".", call.=FALSE)
+        stop("filename=\"", filename, "\" doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\".")
     if (filename != filenameOrig)
         argoFloatsDebug(debug, "Converted filename='", filenameOrig, "' to filename='", filename, "'.\n", sep="")
     ## Note: 'url' is a vector; e.g. using server="auto" creates 2 elements in url

@@ -8,9 +8,8 @@ test_that("getIndex()",
           {
               if (canDownload()) {
                   i <- expect_silent(getIndex(filename="argo_bio-profile_index.txt.gz", destdir=destdir))
-                  i2 <- expect_error(getIndex(filename="dog","In get,argoFloats-method():
- filename type doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\"."))
-              }
+                  i2 <- expect_error(getIndex(filename="dog","filename=\"dog\" doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\"."))
+                  }
           }
 )
 
