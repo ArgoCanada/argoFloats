@@ -75,8 +75,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #' This function gets an index of available Argo float profiles, typically
 #' for later use as the first argument to [getProfiles()]. The work is done
 #' either by downloading information from a data repository or by reusing an existing
-#' index (packaged within an `.rda` file) that was prepared by a recent call to the
-#' This choice is made behind the scenes, controlled by the `age` argument.
+#' index (packaged within an `.rda` file) that is controlled by the `age` argument behind the scenes.
 #'
 #' The first step is to construct a URL for downloading, based on the
 #' `url` and `file` arguments. That URL will be a string ending in `.gz`,

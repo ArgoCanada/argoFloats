@@ -74,8 +74,7 @@ is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 This function gets an index of available Argo float profiles, typically
 for later use as the first argument to \code{\link[=getProfiles]{getProfiles()}}. The work is done
 either by downloading information from a data repository or by reusing an existing
-index (packaged within an \code{.rda} file) that was prepared by a recent call to the
-This choice is made behind the scenes, controlled by the \code{age} argument.
+index (packaged within an \code{.rda} file) that is controlled by the \code{age} argument behind the scenes.
 }
 \details{
 The first step is to construct a URL for downloading, based on the
