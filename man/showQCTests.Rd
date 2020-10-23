@@ -22,7 +22,7 @@ This function returns nothing; its action is in the printing
 of results.
 }
 \description{
-\code{showQCTests} print a summary of the quality-control (QC) tests
+\code{showQCTests} prints a summary of the quality-control (QC) tests
 (if any) that were performed on an Argo profile.  It uses
 \code{\link[=hexToBits]{hexToBits()}} to decode the hexadecimal  values that may
 be stored in \code{historyQCTest}. From there it pairs the determined

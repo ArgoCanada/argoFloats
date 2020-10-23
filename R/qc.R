@@ -5,14 +5,14 @@
 #' This function examines the quality-control (QC) flags within an [`argoFloats-class`]
 #' object that was created by [readProfiles()].  By default, it replaces all suspicious
 #' data with `NA` values, so they will not appear in plots or be considered in calculations.
-#' This is an important early step in processing, because suspicious argo floats commonly
+#' This is an important early step in processing, because suspicious Argo floats commonly
 #' report data that are suspicious based on statistical and physical measures, as
 #' is illustrated in the \dQuote{Examples} section.
 #'
 #' The work is done by using [oce::handleFlags,argo-method()]
 #' on each of the profiles stored within the object. In most cases, only
 #' the object needs to be specified, for the default actions coincide with
-#' common conventions for flags in argo data.
+#' common conventions for flags in Argo data.
 #'
 #' @param x an [`argoFloats-class`] object of type `"argos"`, as created by
 #' [readProfiles()].
@@ -81,7 +81,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 
 #' Show QC test results for an argo object
 #'
-#' `showQCTests` print a summary of the quality-control (QC) tests
+#' `showQCTests` prints a summary of the quality-control (QC) tests
 #' (if any) that were performed on an Argo profile.  It uses
 #' [hexToBits()] to decode the hexadecimal  values that may
 #' be stored in `historyQCTest`. From there it pairs the determined

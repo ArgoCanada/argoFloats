@@ -40,7 +40,7 @@ A copy of \code{x} but with each of the objects within its
 This function examines the quality-control (QC) flags within an \code{\linkS4class{argoFloats}}
 object that was created by \code{\link[=readProfiles]{readProfiles()}}.  By default, it replaces all suspicious
 data with \code{NA} values, so they will not appear in plots or be considered in calculations.
-This is an important early step in processing, because suspicious argo floats commonly
+This is an important early step in processing, because suspicious Argo floats commonly
 report data that are suspicious based on statistical and physical measures, as
 is illustrated in the \dQuote{Examples} section.
 }
@@ -48,7 +48,7 @@ is illustrated in the \dQuote{Examples} section.
 The work is done by using \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}
 on each of the profiles stored within the object. In most cases, only
 the object needs to be specified, for the default actions coincide with
-common conventions for flags in argo data.
+common conventions for flags in Argo data.
 }
 \examples{
 \dontrun{
