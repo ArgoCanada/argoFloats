@@ -268,17 +268,13 @@ library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 plot(a, which="TS")
 
-# Example 7: Temperature QC plot for a float in the Arabian Sea
+# Example 7: Temperature QC plot for 25 cycles of a float in the Arabian Sea
 \dontrun{
 library(argoFloats)
 ais <- getIndex(filename="synthetic")
-sub <- subset(ais, ID='2902123')
-lonRect <- c(56, 66)
-latRect <- c(11,12)
-s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
-profiles <- getProfiles(s)
+sub <- subset(subset(ais, ID='2902123'), 50:75)
+profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
-par(mfrow=c(2,1))
 plot(argos, which="QC") # defaults to temperature
 plot(argos, which="QC", QCControl=list(parameter="salinity"))}
 

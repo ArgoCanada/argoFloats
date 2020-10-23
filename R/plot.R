@@ -277,17 +277,13 @@ pinusr <- function(usr)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' plot(a, which="TS")
 #'
-#' # Example 7: Temperature QC plot for a float in the Arabian Sea
+#' # Example 7: Temperature QC plot for 25 cycles of a float in the Arabian Sea
 #' \dontrun{
 #' library(argoFloats)
 #' ais <- getIndex(filename="synthetic")
-#' sub <- subset(ais, ID='2902123')
-#' lonRect <- c(56, 66)
-#' latRect <- c(11,12)
-#' s <- subset(sub, rectangle=list(longitude=lonRect, latitude=latRect))
-#' profiles <- getProfiles(s)
+#' sub <- subset(subset(ais, ID='2902123'), 50:75)
+#' profiles <- getProfiles(sub)
 #' argos <- readProfiles(profiles)
-#' par(mfrow=c(2,1))
 #' plot(argos, which="QC") # defaults to temperature
 #' plot(argos, which="QC", QCControl=list(parameter="salinity"))}
 #'
@@ -530,7 +526,7 @@ setMethod(f="plot",
                   usrTrimmed[3] <- max(-90, usrTrimmed[3])
                   usrTrimmed[4] <- min(90, usrTrimmed[4])
                   rect(usrTrimmed[1], usrTrimmed[3], usrTrimmed[2], usrTrimmed[4], lwd=1)
-                  ## Construct axes 
+                  ## Construct axes
                   xat <- pretty(usrTrimmed[1:2])
                   if (diff(range(xat)) > 300)
                       xat <- seq(-180, 180, 45)
@@ -547,7 +543,7 @@ setMethod(f="plot",
                       xlabels <- paste(abs(xat), ifelse(xat < 0, "W", ifelse(xat > 0, "E", "")), sep="")
                       ylabels <- paste(abs(yat), ifelse(yat < 0, "S", ifelse(yat > 0, "N", "")), sep="")
                   } else {
-                      stop("In plot() : programming error: \"geographical\" must be 0, 1, or 4", call.=FALSE)
+                      stop("In plot,argoFloats-method() : programming error: \"geographical\" must be 0, 1, or 4", call.=FALSE)
                   }
                   axis(1, at=xat, labels=xlabels, pos=usrTrimmed[3])
                   axis(2, at=yat, labels=ylabels, pos=usrTrimmed[1])
@@ -690,7 +686,6 @@ setMethod(f="plot",
                           warning("accepting \"parameter\" as a separate argument, but in future, please use QCControl=list(parameter=", dots$parameter, ")")
                           QCControl <- list(parameter=dots$parameter)
                       } else {
-                          warning("In plot,argoFloats-method(): defaulting \"parameter\" to \"temperature\"", call.=FALSE)
                           QCControl <- list(parameter="temperature")
                       }
                   }
@@ -712,13 +707,16 @@ setMethod(f="plot",
                   time <- oce::numberAsPOSIXct(unlist(lapply(x[["argos"]], function(x) x[["time"]])))
                   q <- unlist(lapply(x[["argos"]], qf))
                   m <- unlist(lapply(x[["argos"]], meanf))
-                  par(mfrow=c(2,1))
+                  par(mfrow=c(2, 1))
                   if (any(is.finite(q))) {
                       o <- order(time) # cycles are not time-ordered in index files
-                      oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange = FALSE, type="l")
+                      ## Tighten bottom axis spacing, since there's no need to say "Time" there
+                      mar <- c(mgp[1], mgp[1] + 1.5, mgp[2] + 1, mgp[2] + 3/4)
+                      oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange=FALSE, type="l", mar=mar)
                       points(time[o], q[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                       abline(h=50, col="red", lty="dashed")
-                      oce::oce.plot.ts(time[o], m[o], ylab=paste(QCControl$parameter, "Mean"), drawTimeRange = FALSE, type="l")
+                      axis(side=3, at=time[o], labels=x[["cycle"]][o], cex.axis=0.75*par("cex"))
+                      oce::oce.plot.ts(time[o], m[o], ylab=paste(QCControl$parameter, "Mean"), drawTimeRange=FALSE, type="l", mar=mar)
                       points(time[o], m[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                   } else {
                       plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
@@ -736,7 +734,6 @@ setMethod(f="plot",
                           warning("accepting \"parameter\" as a separate argument, but in future, please use profileControl=list(parameter=", dots$parameter, ")")
                           profileControl <- list(parameter=dots$parameter)
                       } else {
-                          warning("In plot,argoFloats-method(): defaulting \"parameter\" to \"temperature\"", call.=FALSE)
                           profileControl <- list(parameter="temperature")
                       }
                       profileControl$ytype <- "pressure"
