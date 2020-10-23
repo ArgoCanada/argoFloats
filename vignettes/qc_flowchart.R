@@ -24,10 +24,10 @@ h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
-textInBox(x0, y0, "What quality-control tests were performed?", col=colText)
+textInBox(x0, y0, "Set low-quality data to NA.", col=colText)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
 y0 <- y0 - dy
-textInBox(x0, y0, "Set low-quality data to NA.", col=colText)
+textInBox(x0, y0, "What quality-control tests were performed?", col=colText)
 x0 <- 0.8
 y0 <- 0.9
 wh <- textInBox(x0, y0, "plot(which=\"QC\") ", family="sans", col=colCode)
@@ -35,8 +35,8 @@ h <- wh$h * 1.2
 xarrow <- x0 + 0.01 # not sure why we need to move it
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
-textInBox(x0, y0, "showQCTests() ", family="sans", col=colCode)
+textInBox(x0, y0, "applyQC()  ", family="sans", col=colCode)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
-textInBox(x0, y0, "applyQC()  ", family="sans", col=colCode)
+textInBox(x0, y0, "showQCTests() ", family="sans", col=colCode)
 if (!interactive()) dev.off()
