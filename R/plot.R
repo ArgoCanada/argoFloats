@@ -101,7 +101,9 @@ pinusr <- function(usr)
 #' [`argoFloats-class`] object created with [readProfiles()].
 #' The top panel shows the percent of data flagged with codes
 #' 1 (meaning good data), 2 (probably good), 5 (changed)
-#' or 8 (estimated).  Thus, low values on the top panel reveal
+#' or 8 (estimated), as a function of time (lower axis) and
+#' cycle number (upper axis, with smaller font).
+#' Thus, low values on the top panel reveal
 #' profiles that are questionable. Note that if all of data at a given time
 #' have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 #' time. The bottom panel shows the mean value of the parameter in question
