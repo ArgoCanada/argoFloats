@@ -185,6 +185,7 @@ quantity of interest.  The function only works if \code{x} is an
 The top panel shows the percent of data flagged with codes
 1 (meaning good data), 2 (probably good), 5 (changed)
 or 8 (estimated), as a function of time (lower axis) and
+(if all cycles are from a single Argo float)
 cycle number (upper axis, with smaller font).
 Thus, low values on the top panel reveal
 profiles that are questionable. Note that if all of data at a given time

@@ -102,6 +102,7 @@ pinusr <- function(usr)
 #' The top panel shows the percent of data flagged with codes
 #' 1 (meaning good data), 2 (probably good), 5 (changed)
 #' or 8 (estimated), as a function of time (lower axis) and
+#' (if all cycles are from a single Argo float)
 #' cycle number (upper axis, with smaller font).
 #' Thus, low values on the top panel reveal
 #' profiles that are questionable. Note that if all of data at a given time
@@ -205,7 +206,7 @@ pinusr <- function(usr)
 #' Otherwise, if `TSControl` contains a
 #' vector element named `colByCycle`, then the `col` argument will be ignored,
 #' and instead individual cycles will be coloured as dictated by successive
-#' elements in `colByCycle`. 
+#' elements in `colByCycle`.
 #'
 #' @param debug an integer specifying the level of debugging.
 #'
@@ -717,7 +718,8 @@ setMethod(f="plot",
                       oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange=FALSE, type="l", mar=mar)
                       points(time[o], q[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                       abline(h=50, col="red", lty="dashed")
-                      axis(side=3, at=time[o], labels=x[["cycle"]][o], cex.axis=0.75*par("cex"))
+                      if (1 == length(unique(x[["ID"]])))
+                          axis(side=3, at=time[o], labels=x[["cycle"]][o], cex.axis=0.75*par("cex"))
                       oce::oce.plot.ts(time[o], m[o], ylab=paste(QCControl$parameter, "Mean"), drawTimeRange=FALSE, type="l", mar=mar)
                       points(time[o], m[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                   } else {
