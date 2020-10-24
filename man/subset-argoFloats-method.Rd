@@ -61,10 +61,9 @@ See example 4.
 specify the names of measured parameters to keep. See section 3.3 of the
 Argo User's Manual, V3.3 (Carval et al. 2019) for a list of parameters.
 See example 5.
-\item A list named \code{time} that has elements \code{from} and \code{to} that are POSIXt
-times that were created with eg. \code{\link[=POSIXct]{POSIXct()}}, with \code{tz="UTC"} to match
-the timezone used in Argo data. Profiles within that time frame will
-be retained. See example 6.
+\item A list named \code{time} that has elements \code{from} and \code{to} that are either
+POSIXt times, or character strings that \code{subset()} will convert to
+POSIXt times using \code{\link[=as.POSIXct]{as.POSIXct()}} with \code{tz="UTC"}. See example 6.
 \item A list named \code{institution}, which holds a single character element that
 names the institution.  The permitted values are:
 \code{"AO"} for AOML, USA;
@@ -153,9 +152,7 @@ index5B <- subset(indexSynthetic, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
 
 # Example 6: subset data for the year 2019
 data(index)
-from <- as.POSIXct("2019-01-01", tz="UTC")
-to <- as.POSIXct("2019-12-31", tz="UTC")
-index6 <- subset(index, time=list(from=from, to=to))
+index6 <- subset(index, time=list(from="2019-01-01", to="2019-12-31"))
 
 # Example 7: subset to the Canadian MEDS data
 index7 <- subset(index, institution="ME")

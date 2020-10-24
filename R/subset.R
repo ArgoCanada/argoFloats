@@ -42,10 +42,9 @@
 #' Argo User's Manual, V3.3 (Carval et al. 2019) for a list of parameters.
 #' See example 5.
 #'
-#' 6. A list named `time` that has elements `from` and `to` that are POSIXt
-#' times that were created with eg. [POSIXct()], with `tz="UTC"` to match
-#' the timezone used in Argo data. Profiles within that time frame will
-#' be retained. See example 6.
+#' 6. A list named `time` that has elements `from` and `to` that are either
+#' POSIXt times, or character strings that `subset()` will convert to
+#' POSIXt times using [as.POSIXct()] with `tz="UTC"`. See example 6.
 #'
 #' 7. A list named `institution`, which holds a single character element that
 #' names the institution.  The permitted values are:
@@ -160,9 +159,7 @@
 #'
 #' # Example 6: subset data for the year 2019
 #' data(index)
-#' from <- as.POSIXct("2019-01-01", tz="UTC")
-#' to <- as.POSIXct("2019-12-31", tz="UTC")
-#' index6 <- subset(index, time=list(from=from, to=to))
+#' index6 <- subset(index, time=list(from="2019-01-01", to="2019-12-31"))
 #'
 #' # Example 7: subset to the Canadian MEDS data
 #' index7 <- subset(index, institution="ME")
@@ -486,14 +483,22 @@ setMethod(f="subset",
                       time <- dots[[1]]
                       if(!is.list(dots[1]))
                           stop("in subset,argoFloats-method():\n  \"time\" must be a list", call.=FALSE)
-                      if (!inherits(time$from, "POSIXt"))
-                          stop("in subset,argoFloats-method():\n  \"time\" must be a list containing POSIXt times", call.=FALSE)
                       if (2 != sum(c("from", "to") %in% names(time)))
                           stop("in subset,argoFloats-method():\n  \"time\" must be a list containing \"to\"and \"from\"", call.=FALSE)
                       if (length(time$from) != 1)
                           stop("from must be of length 1")
                       if (length(time$to) != 1)
                           stop("to must be of length 1")
+                      if (!inherits(time$from, "POSIXt")) {
+                          time$from <- try(as.POSIXct(time$from, tz="UTC"))
+                          if (inherits(time$from, "try-error"))
+                              stop("in subset,argoFloats-method():\n  cannot convert \"time$from\" to a POSIX time", call.=FALSE)
+                      }
+                      if (!inherits(time$to, "POSIXt")) {
+                          time$to <- try(as.POSIXct(time$to, tz="UTC"))
+                          if (inherits(time$to, "try-error"))
+                              stop("in subset,argoFloats-method():\n  cannot convert \"time$to\" to a POSIX time", call.=FALSE)
+                      }
                       if (time$to <= time$from)
                           stop ("in subset,argoFloats-method():\n \"to\" must be greater than \"from\"", call.=FALSE)
                       keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
