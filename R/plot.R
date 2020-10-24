@@ -130,7 +130,8 @@ pinusr <- function(usr)
 #' whether (and how) to indicate water depth; see \dQuote{Details}.
 #'
 #' @param geographical flag indicating the style of axes
-#' for the `which="map"` case.  With
+#' for the `which="map"` case, but only if no projection is called
+#' for in the `mapControl` argument.  With
 #' `geographical=0` (which is the default),
 #' the axis ticks are labelled with signed longitudes and latitudes, measured in
 #' degrees. The signs are dropped with `geographical=1`.
@@ -185,6 +186,22 @@ pinusr <- function(usr)
 #' @param eos a character value indicating the equation of state to use
 #' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
 #' see [oce::plotTS()].
+#'
+#' @param mapControl a list that permits particular control of the `which="map"`
+#' case.  If provided, it may contain elements named `bathymetry` (which
+#' has the same effect as the parameter `bathymetry`) and `projection` (which
+#' may be `FALSE`, meaning to plot longitude and latitude on rectilinear axes,
+#' `TRUE`, meaning to plot with [oce::mapPlot()], using Mollweide projection that
+#' is suitable mainly for world-scaqle views, or a character value that will be
+#' supplied to [oce::mapPlot()].  If a projection is used, then the positions
+#' of the Argo floats are plotted with [oce::mapPoints()], rather than with
+#' [points()], and if the user wishes to locate points with mouse clicks,
+#' then [oce::mapLocator()] must be used instead of [locator()].  If `bathymetry`
+#' is not contained in `mapControl`, it defaults to `FALSE`, and if `projection`
+#' is not supplied, it defaults to `FALSE`.  Note that `mapControl` takes
+#' precedence over the `bathymetry` argument, if both are provided.
+#" Also note that, at present, bathymetry cannot be shown with map projections.
+#' See Example 5D for a case with Molleweide projection.
 #'
 #' @param profileControl a list that permits particular control of the `which="profile"`
 #' case.  If provided, it must contain elements named `parameter` (a character value
@@ -256,7 +273,11 @@ pinusr <- function(usr)
 #' cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
 #' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
 #'
-#' # Example 5D. Customized map, sidestepping this function.
+#' # Example 5D. World view with Molleweide projection (Canada Day, 2020)
+#' jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
+#' plot(jul1, which="map", mapControl=list(projection=TRUE), pch=20, col=4, cex=0.75)
+#'
+#' # Example 5E. Customized map, sidestepping this function.
 #' lon <- as.numeric(rownames(bathy))
 #' lat <- as.numeric(colnames(bathy))
 #' depth <- -bathy # convert from elevation to depth
@@ -328,6 +349,7 @@ setMethod(f="plot",
                               type=NULL, cex=NULL, col=NULL, pch=NULL, bg=NULL,
                               mar=NULL, mgp=NULL,
                               eos="gsw",
+                              mapControl=NULL,
                               profileControl=NULL,
                               QCControl=NULL,
                               TSControl=NULL,
@@ -356,6 +378,28 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
+                  if (is.null(mapControl))
+                      mapControl <- list(bathymetry=bathymetry, projection=FALSE)
+                  if (!"projection" %in% names(mapControl))
+                      mapControl$projection <- FALSE
+                  if (is.logical(mapControl$projection)) {
+                      mapControl$projection <- if (mapControl$projection) "+proj=moll" else "none"
+                  }
+                  if (substr(mapControl$projection, 1, 6) != "+proj=" && mapControl$projection != "none")
+                      stop("In plot,argoFloats-method(): mapControl$projection must start with \"+proj=\"", call.=FALSE)
+                  if (mapControl$projection != "none") {
+                      data("coastlineWorld", package="oce", envir=environment())
+                      coastlineWorld <- get("coastlineWorld")
+                      oce::mapPlot(coastlineWorld, col="tan", projection=mapControl$projection)
+                      oce::mapPoints(unlist(longitude), unlist(latitude),
+                                     cex=if (is.null(cex)) 1 else cex,
+                                     col=if (is.null(col)) "white" else col,
+                                     pch=if (is.null(pch)) 21 else pch,
+                                     bg=if (is.null(bg)) "red" else bg,
+                                     ...)
+                      ## warning("In plot,argoFloats-method(): projected maps do not (yet) show bathymetry", call.=FALSE)
+                      return(invisible(NULL))
+                  }
                   if (is.null(xlim))
                       xlim <- extendrange(longitude)
                   if (is.null(ylim))
@@ -365,12 +409,12 @@ setMethod(f="plot",
                   xlab <- if (is.null(xlab)) "" else xlab
                   ylab <- if (is.null(ylab)) "" else ylab
                   ## Decode bathymetry
-                  if (is.logical(bathymetry)) {
-                      drawBathymetry <- bathymetry
+                  if (is.logical(mapControl$bathymetry)) {
+                      drawBathymetry <- mapControl$bathymetry
                       bathymetry <- list(source="auto", keep=TRUE, contour=FALSE, colormap="auto", palette=TRUE)
-                  } else if (is.list(bathymetry)) {
+                  } else if (is.list(mapControl$bathymetry)) {
                       drawBathymetry <- TRUE
-                      if (!("source" %in% names(bathymetry)))
+                      if (!("source" %in% names(mapControl$bathymetry)))
                           stop("In plot() : \"bathymetry\" is a list, it must contain \"source\", at least", call.=FALSE)
                       if (is.null(bathymetry$keep))
                           bathymetry$keep <- TRUE
@@ -615,9 +659,9 @@ setMethod(f="plot",
               } else if (which == "TS") {
                   argoFloatsDebug(debug, "TS plot\n", sep="")
                   if ((x[["type"]] != "argos"))
-                      stop("In plot,argoFloats-method(): : x must have been created by readProfiles()", call.=FALSE)
+                      stop("In plot,argoFloats-method(): x must have been created by readProfiles()", call.=FALSE)
                   if (!(eos %in% c("gsw", "unesco")))
-                      stop("In plot,argoFloats-method(): \n eos must be \"gsw\" or \"unesco\", not \"", eos, "\"", call.=FALSE)
+                      stop("In plot,argoFloats-method(): eos must be \"gsw\" or \"unesco\", not \"", eos, "\"", call.=FALSE)
                   salinity <- unlist(x[["salinity", debug=debug]])
                   temperature <- unlist(x[["temperature", debug=debug]])
                   pressure <- unlist(x[["pressure", debug=debug]])

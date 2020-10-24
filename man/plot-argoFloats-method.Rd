@@ -21,6 +21,7 @@
   mar = NULL,
   mgp = NULL,
   eos = "gsw",
+  mapControl = NULL,
   profileControl = NULL,
   QCControl = NULL,
   TSControl = NULL,
@@ -38,7 +39,8 @@ choices are \code{"map"}, \code{"profile"}, \code{"QC"} and \code{"TS"}; see \dQ
 whether (and how) to indicate water depth; see \dQuote{Details}.}
 
 \item{geographical}{flag indicating the style of axes
-for the \code{which="map"} case.  With
+for the \code{which="map"} case, but only if no projection is called
+for in the \code{mapControl} argument.  With
 \code{geographical=0} (which is the default),
 the axis ticks are labelled with signed longitudes and latitudes, measured in
 degrees. The signs are dropped with \code{geographical=1}.
@@ -93,6 +95,21 @@ axis labels (see \code{\link[=par]{par()}} for details), or \code{NULL}, which m
 \item{eos}{a character value indicating the equation of state to use
 if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
 see \code{\link[oce:plotTS]{oce::plotTS()}}.}
+
+\item{mapControl}{a list that permits particular control of the \code{which="map"}
+case.  If provided, it may contain elements named \code{bathymetry} (which
+has the same effect as the parameter \code{bathymetry}) and \code{projection} (which
+may be \code{FALSE}, meaning to plot longitude and latitude on rectilinear axes,
+\code{TRUE}, meaning to plot with \code{\link[oce:mapPlot]{oce::mapPlot()}}, using Mollweide projection that
+is suitable mainly for world-scaqle views, or a character value that will be
+supplied to \code{\link[oce:mapPlot]{oce::mapPlot()}}.  If a projection is used, then the positions
+of the Argo floats are plotted with \code{\link[oce:mapPoints]{oce::mapPoints()}}, rather than with
+\code{\link[=points]{points()}}, and if the user wishes to locate points with mouse clicks,
+then \code{\link[oce:mapLocator]{oce::mapLocator()}} must be used instead of \code{\link[=locator]{locator()}}.  If \code{bathymetry}
+is not contained in \code{mapControl}, it defaults to \code{FALSE}, and if \code{projection}
+is not supplied, it defaults to \code{FALSE}.  Note that \code{mapControl} takes
+precedence over the \code{bathymetry} argument, if both are provided.
+See Example 5D for a case with Molleweide projection.}
 
 \item{profileControl}{a list that permits particular control of the \code{which="profile"}
 case.  If provided, it must contain elements named \code{parameter} (a character value
@@ -247,7 +264,11 @@ plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
 plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
 
-# Example 5D. Customized map, sidestepping this function.
+# Example 5D. World view with Molleweide projection (Canada Day, 2020)
+jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
+plot(jul1, which="map", mapControl=list(projection=TRUE), pch=20, col=4, cex=0.75)
+
+# Example 5E. Customized map, sidestepping this function.
 lon <- as.numeric(rownames(bathy))
 lat <- as.numeric(colnames(bathy))
 depth <- -bathy # convert from elevation to depth
