@@ -201,7 +201,7 @@ pinusr <- function(usr)
 #' is not supplied, it defaults to `FALSE`.  Note that `mapControl` takes
 #' precedence over the `bathymetry` argument, if both are provided.
 #" Also note that, at present, bathymetry cannot be shown with map projections.
-#' See Example 5D for a case with Molleweide projection.
+#' See Example 5D for a case with Mollweide projection.
 #'
 #' @param profileControl a list that permits particular control of the `which="profile"`
 #' case.  If provided, it must contain elements named `parameter` (a character value
@@ -273,7 +273,7 @@ pinusr <- function(usr)
 #' cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
 #' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
 #'
-#' # Example 5D. World view with Molleweide projection (Canada Day, 2020)
+#' # Example 5D. World view with Mollweide projection (Canada Day, 2020)
 #' jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
 #' plot(jul1, which="map", mapControl=list(projection=TRUE), pch=20, col=4, cex=0.75)
 #'

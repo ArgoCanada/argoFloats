@@ -109,7 +109,7 @@ then \code{\link[oce:mapLocator]{oce::mapLocator()}} must be used instead of \co
 is not contained in \code{mapControl}, it defaults to \code{FALSE}, and if \code{projection}
 is not supplied, it defaults to \code{FALSE}.  Note that \code{mapControl} takes
 precedence over the \code{bathymetry} argument, if both are provided.
-See Example 5D for a case with Molleweide projection.}
+See Example 5D for a case with Mollweide projection.}
 
 \item{profileControl}{a list that permits particular control of the \code{which="profile"}
 case.  If provided, it must contain elements named \code{parameter} (a character value
@@ -264,7 +264,7 @@ plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
 plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
 
-# Example 5D. World view with Molleweide projection (Canada Day, 2020)
+# Example 5D. World view with Mollweide projection (Canada Day, 2020)
 jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
 plot(jul1, which="map", mapControl=list(projection=TRUE), pch=20, col=4, cex=0.75)
 
