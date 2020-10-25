@@ -390,7 +390,7 @@ setMethod(f="plot",
                   if (mapControl$projection != "none") {
                       data("coastlineWorld", package="oce", envir=environment())
                       coastlineWorld <- get("coastlineWorld")
-                      oce::mapPlot(coastlineWorld, col="tan", projection=mapControl$projection)
+                      oce::mapPlot(coastlineWorld, col="tan", projection=mapControl$projection, drawBox=FALSE)
                       oce::mapPoints(unlist(longitude), unlist(latitude),
                                      cex=if (is.null(cex)) 1 else cex,
                                      col=if (is.null(col)) "white" else col,
