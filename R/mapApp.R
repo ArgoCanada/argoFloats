@@ -20,8 +20,14 @@ uiMapApp <- shiny::fluidPage(
     shiny::fluidRow(
         shiny::column(4, shiny::p("mapApp"), style = "color:blue;"),
         shiny::column(1, shiny::actionButton("help", "Help")),
-        shiny::column(1, shiny::actionButton("code", "Code"))
-    ),
+        shiny::column(1, shiny::actionButton("code", "Code")),
+        shiny::column(4, style = "margin-top: 0px;",
+                      shiny::actionButton("goS", shiny::HTML("&darr;")),
+                      shiny::actionButton("goN", shiny::HTML("&uarr;")),
+                      shiny::actionButton("goW", shiny::HTML("&larr;")),
+                      shiny::actionButton("goE", shiny::HTML("&rarr;")),
+                      shiny::actionButton("zoomIn", "+"),
+                      shiny::actionButton("zoomOut", "-"))),
     shiny::fluidRow(
         shiny::column(2, shiny::textInput(
             "start",
@@ -34,44 +40,30 @@ uiMapApp <- shiny::fluidPage(
             )
         )),
         shiny::column(2,
-                      shiny::textInput(
-                          "end",
-                          "End",
-                          value = sprintf(
-                              "%4d-%02d-%02d",
-                              endTime$year + 1900,
-                              endTime$mon + 1,
-                              endTime$mday
-                          )
-                      )),
+                      shiny::textInput( "end", "End", value = sprintf( "%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday))),
         shiny::column(
-            4,
-            style = "padding-left:0px;",
+            6,
+            style="padding-left:0px;",
             shiny::checkboxGroupInput(
                 "view",
-                label = "View",
-                choices = c(
-                    "Core" = "core",
-                    "Deep" = "deep",
-                    "BGC" = "bgc",
-                    "HiRes" = "hires",
-                    "Topo." = "topo",
-                    "Path" = "path"
-                ),
-                selected = c("core", "deep", "bgc"),
-                inline = TRUE
+                label="View",
+                choices=c("Core"="core", "Deep"="deep",
+                          "BGC"="bgc", "HiRes"="hires",
+                          "Topo."="topo", "Path"="path", "Start"="start", "End"="end"),
+                selected=c("core", "deep", "bgc"),
+                inline=TRUE
             )
         ),
-        shiny::column(
-            4,
-            style = "margin-top: 20px;",
-            shiny::actionButton("goS", shiny::HTML("&darr;")), #"\U21E9"),
-            shiny::actionButton("goN", shiny::HTML("&uarr;")), #"\U21E7"),
-            shiny::actionButton("goW", shiny::HTML("&larr;")), #"\U21E6"),
-            shiny::actionButton("goE", shiny::HTML("&rarr;")), #"\U21E8"),
-            shiny::actionButton("zoomIn", "+"),
-            shiny::actionButton("zoomOut", "-")
-        )
+        ##OLD shiny::column(
+        ##OLD     4,
+        ##OLD     style = "margin-top: 20px;",
+        ##OLD     shiny::actionButton("goS", shiny::HTML("&darr;")), #"\U21E9"),
+        ##OLD     shiny::actionButton("goN", shiny::HTML("&uarr;")), #"\U21E7"),
+        ##OLD     shiny::actionButton("goW", shiny::HTML("&larr;")), #"\U21E6"),
+        ##OLD     shiny::actionButton("goE", shiny::HTML("&rarr;")), #"\U21E8"),
+        ##OLD     shiny::actionButton("zoomIn", "+"),
+        ##OLD     shiny::actionButton("zoomOut", "-")
+        ##OLD )
     ),
     shiny::fluidRow(
         shiny::column(2, shiny::textInput("ID", "Float ID", value = "")),
@@ -219,7 +211,7 @@ serverMapApp <- function(input, output, session) {
                         lonstring,
                         latstring,
                         dist,
-                        argo$type[i],
+                        switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
                         argo$ID[i],
                         argo$cycle[i],
                         format(argo$time[i], "%Y-%m-%d %H:%M")
@@ -738,14 +730,18 @@ serverMapApp <- function(input, output, session) {
                                         lwd = 1,
                                         col = grey(0.3)
                                     )
-                                    arrows(
-                                        LONLAT$lon[no - 1],
-                                        LONLAT$lat[no - 1],
-                                        LONLAT$lon[no],
-                                        LONLAT$lat[no],
-                                        length = 0.15,
-                                        lwd = 1.4
-                                    )
+                                    ##> arrows(
+                                    ##>     LONLAT$lon[no - 1],
+                                    ##>     LONLAT$lat[no - 1],
+                                    ##>     LONLAT$lon[no],
+                                    ##>     LONLAT$lat[no],
+                                    ##>     length = 0.15,
+                                    ##>     lwd = 1.4
+                                    ##> )
+                                    if ("start" %in% input$view)
+                                        points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=3, lwd=3)
+                                    if ("end" %in% input$view)
+                                        points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=3, lwd=3)
                                 }
                             }
                             par(warn = owarn)
