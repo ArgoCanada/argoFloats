@@ -111,19 +111,24 @@ is not supplied, it defaults to \code{FALSE}.  Note that \code{mapControl} takes
 precedence over the \code{bathymetry} argument, if both are provided.
 See Example 5D for a case with Mollweide projection.}
 
-\item{profileControl}{a list that permits particular control of the \code{which="profile"}
-case.  If provided, it must contain elements named \code{parameter} (a character value
-naming the quantity to plot on the x axis) and \code{ytype} (a character value equalling
-either \code{"pressure"} or \code{"sigma0"}).  If not provided, this defaults to
-\code{list(parameter="temperature", ytype="pressure")}.}
+\item{profileControl}{a list that permits control of the \code{which="profile"}
+case.  If provided, it may contain elements named \code{parameter} (a character value
+naming the quantity to plot on the x axis), \code{ytype} (a character value equalling
+either \code{"pressure"} or \code{"sigma0"}) and \code{connect} (a logical value indicating
+whether to skip across \code{NA} values if the \code{type} argument is \code{"l"}, \code{"o"},
+or \code{"b"}).
+If \code{profileControl} is not provided, it defaults to
+\code{list(parameter="temperature", ytype="pressure", connect=TRUE)}. Alternatively,
+if \code{profileControl} is missing any of the three elements, then they are
+given defaults as in the previous sentence.}
 
-\item{QCControl}{a list that permits particular control of the \code{which="QC"}
+\item{QCControl}{a list that permits control of the \code{which="QC"}
 case.  If provided, it should contain an element named \code{parameter}, a character
 value naming the quantity for which the quality-control information is
 to be plotted.  If not provided, \code{QCControl} defaults to
 \code{list(parameter="temperature")}.}
 
-\item{TSControl}{a list that permits particular control of the \code{which="TS"}
+\item{TSControl}{a list that permits control of the \code{which="TS"}
 case, and is ignored for the other cases.
 If \code{TSControl} is not supplied as an argument,
 points will be coloured black if their quality-control flags indicate

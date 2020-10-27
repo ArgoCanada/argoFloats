@@ -203,19 +203,24 @@ pinusr <- function(usr)
 #" Also note that, at present, bathymetry cannot be shown with map projections.
 #' See Example 5D for a case with Mollweide projection.
 #'
-#' @param profileControl a list that permits particular control of the `which="profile"`
-#' case.  If provided, it must contain elements named `parameter` (a character value
-#' naming the quantity to plot on the x axis) and `ytype` (a character value equalling
-#' either `"pressure"` or `"sigma0"`).  If not provided, this defaults to
-#' `list(parameter="temperature", ytype="pressure")`.
+#' @param profileControl a list that permits control of the `which="profile"`
+#' case.  If provided, it may contain elements named `parameter` (a character value
+#' naming the quantity to plot on the x axis), `ytype` (a character value equalling
+#' either `"pressure"` or `"sigma0"`) and `connect` (a logical value indicating
+#' whether to skip across `NA` values if the `type` argument is `"l"`, `"o"`,
+#' or `"b"`).
+#' If `profileControl` is not provided, it defaults to
+#' `list(parameter="temperature", ytype="pressure", connect=TRUE)`. Alternatively,
+#' if `profileControl` is missing any of the three elements, then they are
+#' given defaults as in the previous sentence.
 #'
-#' @param QCControl a list that permits particular control of the `which="QC"`
+#' @param QCControl a list that permits control of the `which="QC"`
 #' case.  If provided, it should contain an element named `parameter`, a character
 #' value naming the quantity for which the quality-control information is
 #' to be plotted.  If not provided, `QCControl` defaults to
 #' `list(parameter="temperature")`.
 #'
-#' @param TSControl a list that permits particular control of the `which="TS"`
+#' @param TSControl a list that permits control of the `which="TS"`
 #' case, and is ignored for the other cases.
 #' If `TSControl` is not supplied as an argument,
 #' points will be coloured black if their quality-control flags indicate
@@ -777,14 +782,17 @@ setMethod(f="plot",
               } else if (which == "profile") {
                   if (x[["type"]] != "argos")
                       stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)
+                  if (is.null(type))
+                      type <- "l"
                   if (is.null(profileControl)) {
                       if ("parameter" %in% names(dots)) {
-                          warning("accepting \"parameter\" as a separate argument, but in future, please use profileControl=list(parameter=", dots$parameter, ")")
+                          warning("accepting \"parameter\" as a separate argument, until 2020-dec-01.  After that, you must use e.g. profileControl=list(parameter=", dots$parameter, ")")
                           profileControl <- list(parameter=dots$parameter)
                       } else {
                           profileControl <- list(parameter="temperature")
                       }
                       profileControl$ytype <- "pressure"
+                      profileControl$connect <- TRUE
                   }
                   if (!is.list(profileControl))
                       stop("In plot,argoFloats-method(): profileControl must be a list")
@@ -792,8 +800,10 @@ setMethod(f="plot",
                       profileControl$ytype <- "pressure"
                   if (!"parameter" %in% names(profileControl))
                       profileControl$parameter <- "temperature"
-                  if (length(profileControl) != 2)
-                      stop("In plot,argoFloats-method(): profileControl must contain only, two elements, \"parameter\" and \"ytype\"")
+                  if (!"connect" %in% names(profileControl))
+                      profileControl$connect <- TRUE
+                  if (length(profileControl) != 3)
+                      stop("In plot,argoFloats-method(): profileControl must contain only three elements, \"parameter\",  \"ytype\" and \"connect\".")
                   if (!profileControl$ytype %in% c("pressure", "sigma0"))
                       stop("In plot,argoFloats-method(): profileControl$ytype must be \"pressure\" or \"sigma0\", not \"", profileControl$ytype, "\"")
                   N <- length(x[["argos"]])
@@ -825,6 +835,11 @@ setMethod(f="plot",
                           Y <- c(Y, NA, y[[i]])
                           VARIABLE <- c(VARIABLE, NA, variable[[i]])
                       }
+                  }
+                  if (type %in% c("l", "o", "b") && profileControl$connect) {
+                      ok <- is.finite(VARIABLE) & is.finite(Y)
+                      VARIABLE <- VARIABLE[ok]
+                      Y <- Y[ok]
                   }
                   plot(VARIABLE, Y, ylim=rev(range(Y, na.rm=TRUE)),
                        axes=FALSE,
