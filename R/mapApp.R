@@ -718,7 +718,8 @@ serverMapApp <- function(input, output, session) {
                             owarn <- options("warn")$warn
                             options(warn = -1)
                             for (ID in unique(lonlat$ID)) {
-                                LONLAT <- subset(lonlat, ID == ID)
+                                LONLAT <- lonlat[lonlat$ID==ID,]
+                                ##cat(file=stderr(), sprintf("ID=%s, n=%d, nsub=%d\n", ID, dim(lonlat)[1], dim(LONLAT)[1]))
                                 ## Sort by time instead of relying on the order in the repository
                                 o <- order(LONLAT$time)
                                 no <- length(o)
@@ -738,10 +739,12 @@ serverMapApp <- function(input, output, session) {
                                     ##>     length = 0.15,
                                     ##>     lwd = 1.4
                                     ##> )
+                                    ## Point size increases for > 10 locations (e.g. a many-point trajectory for a single float,
+                                    ## as opposed to maybe 3 months of data for a set of floats).
                                     if ("start" %in% input$view)
-                                        points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=3, lwd=3)
+                                        points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
                                     if ("end" %in% input$view)
-                                        points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=3, lwd=3)
+                                        points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=if (no > 10) 2 else 1, lwd=1.4)
                                 }
                             }
                             par(warn = owarn)
