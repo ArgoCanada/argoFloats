@@ -120,50 +120,44 @@ serverMapApp <- function(input, output, session) {
     } else {
         topoWorldFine <- topoWorld
     }
-    ## Get data.  Since this is slow, we will cache locally into a file named argo.rda, and use that if
-    ## it is young enough.  The FALSE part of this loop constructs and saves such a file.
-    if (file.exists("argo.rda") &&
-        (as.integer(Sys.time()) - as.integer(file.info("argo.rda")$mtime)) / 86400 < AGE) {
-        load("argo.rda")
-    } else {
-        i <- argoFloats::getIndex(age = AGE)
-        n <- i[["length"]]
-        ID <- i[["ID"]]
-        cycle <- i[["cycle"]]
-        lon <- i[["longitude"]]
-        lat <- i[["latitude"]]
-        n <- length(ID)
-        iBGC <- argoFloats::getIndex("bgc", age = AGE)
-        idBGC <- unique(iBGC[["ID"]])
-        type <- rep("core", n)
-        type[ID %in% idBGC] <- "bgc"
-        type[grepl("849|862|864", i@data$index$profiler_type)] <-
-            "deep"
-        argo <-
-            data.frame(
-                time = i[["date"]],
-                ID = ID,
-                cycle = cycle,
-                longitude = lon,
-                latitude = lat,
-                type = type
-            )
-        argo$longitude <-
-            ifelse(argo$longitude > 180,
-                   argo$longitude - 360,
-                   argo$longitude)
-        n <- length(argo$longitude)
-        ok <- is.finite(argo$time)
-        argo <- argo[ok, ]
-        n <- length(argo$longitude)
-        ok <- is.finite(argo$longitude)
-        argo <- argo[ok, ]
-        n <- length(argo$longitude)
-        n <- length(argo$latitude)
-        ok <- is.finite(argo$latitude)
-        argo <- argo[ok, ]
-        save(argo, file = "argo.rda")
-    }
+    ## Get data. Cache of the index is handled by getIndex().
+    i <- argoFloats::getIndex(age = AGE)
+    n <- i[["length"]]
+    ID <- i[["ID"]]
+    cycle <- i[["cycle"]]
+    lon <- i[["longitude"]]
+    lat <- i[["latitude"]]
+    n <- length(ID)
+    iBGC <- argoFloats::getIndex("bgc", age = AGE)
+    idBGC <- unique(iBGC[["ID"]])
+    type <- rep("core", n)
+    type[ID %in% idBGC] <- "bgc"
+    type[grepl("849|862|864", i@data$index$profiler_type)] <-
+        "deep"
+    argo <-
+        data.frame(
+            time = i[["date"]],
+            ID = ID,
+            cycle = cycle,
+            longitude = lon,
+            latitude = lat,
+            type = type
+        )
+    argo$longitude <-
+        ifelse(argo$longitude > 180,
+               argo$longitude - 360,
+               argo$longitude)
+    n <- length(argo$longitude)
+    ok <- is.finite(argo$time)
+    argo <- argo[ok, ]
+    n <- length(argo$longitude)
+    ok <- is.finite(argo$longitude)
+    argo <- argo[ok, ]
+    n <- length(argo$longitude)
+    n <- length(argo$latitude)
+    ok <- is.finite(argo$latitude)
+    argo <- argo[ok, ]
+    
     ## vector indicating whether to keep any given cycle.
     visible <- rep(TRUE, length(argo$lon))
 
