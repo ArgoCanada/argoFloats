@@ -4,7 +4,14 @@
 \alias{mapApp}
 \title{Interactive app for viewing Argo float positions}
 \usage{
-mapApp()
+mapApp(age = 1, destdir = ".")
+}
+\arguments{
+\item{age}{numeric value indicating the age beyond which the argo
+index will be re-acquired with \code{\link[=getIndex]{getIndex()}}.}
+
+\item{destdir}{character value indicating the directory into which to store the argo
+index acquired with \code{\link[=getIndex]{getIndex()}}.}
 }
 \description{
 The GUI permits specifying a spatial-temporal region of interest, a set
