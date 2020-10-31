@@ -714,9 +714,9 @@ serverMapApp <- function(input, output, session) {
                             lwd = 0.5
                         )
                         if ("path" %in% input$view) {
-                            ## Turn off warnings for zero-length arrows
-                            owarn <- options("warn")$warn
-                            options(warn = -1)
+                            ##> ## Turn off warnings for zero-length arrows
+                            ##> owarn <- options("warn")$warn
+                            ##> options(warn = -1)
                             for (ID in unique(lonlat$ID)) {
                                 LONLAT <- lonlat[lonlat$ID==ID,]
                                 ##cat(file=stderr(), sprintf("ID=%s, n=%d, nsub=%d\n", ID, dim(lonlat)[1], dim(LONLAT)[1]))
@@ -725,12 +725,7 @@ serverMapApp <- function(input, output, session) {
                                 no <- length(o)
                                 if (no > 1) {
                                     LONLAT <- LONLAT[o, ]
-                                    lines(
-                                        LONLAT$lon,
-                                        LONLAT$lat,
-                                        lwd = 1,
-                                        col = grey(0.3)
-                                    )
+                                    lines(LONLAT$lon, LONLAT$lat, lwd=1, col=grey(0.3))
                                     ##> arrows(
                                     ##>     LONLAT$lon[no - 1],
                                     ##>     LONLAT$lat[no - 1],
@@ -747,7 +742,7 @@ serverMapApp <- function(input, output, session) {
                                         points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=if (no > 10) 2 else 1, lwd=1.4)
                                 }
                             }
-                            par(warn = owarn)
+                            ##> par(warn = owarn)
                         }
                     }
                 }

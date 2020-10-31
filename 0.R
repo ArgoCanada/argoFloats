@@ -1,0 +1,7 @@
+library(argoFloats) 
+index <- subset(subset(getIndex("synthetic"), ID="5903586"), cycle="001")
+adjusted <- useAdjusted(readProfiles(getProfiles(index)))
+plot(adjusted, which="profile", profileControl=list(parameter="oxygen"), type="l")
+plot(adjusted, which="profile", profileControl=list(parameter="oxygen"), type="o")
+plot(adjusted, which="profile", profileControl=list(parameter="oxygen"), type="b")
+plot(adjusted, which="profile", profileControl=list(parameter="oxygen"), type="p")
