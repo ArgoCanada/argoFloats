@@ -681,7 +681,7 @@ setMethod(f="plot",
                                      latitude=latitude,
                                      longitude=longitude)
                   if (is.null(cex))
-                      cex <- 0.5
+                      cex <- par("cex")
                   ## FIXME: move this TSControl work the which="TS" code {{
                   if (is.null(TSControl))
                       TSControl <- list(colByCycle=NULL)
