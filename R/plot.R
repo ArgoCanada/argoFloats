@@ -723,7 +723,7 @@ setMethod(f="plot",
                       if (pch == 21)
                           bg <- ifelse(good, "black", "red")
                   }
-                  oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, ...)
+                  oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos, type=type, ...)
                   par(mar=omar, mgp=omgp)
               } else if (which == "QC") {
                   if (x[["type"]] != "argos")

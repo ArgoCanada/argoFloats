@@ -4,7 +4,7 @@
 \alias{mapApp}
 \title{Interactive app for viewing Argo float positions}
 \usage{
-mapApp(age = 1, destdir = ".")
+mapApp(age = 7, destdir = ".")
 }
 \arguments{
 \item{age}{numeric value indicating the age beyond which the argo
