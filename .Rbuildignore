@@ -11,6 +11,7 @@
 ^.*~$
 ^sandbox$
 ^.*_index_.*rda$
+^.*_index.rda$
 ^CODE_OF_CONDUCT.md$
 ^create_data$
 ^exampleTS.R$
