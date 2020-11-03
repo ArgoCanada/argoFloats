@@ -25,12 +25,12 @@ that nicknames are expanded to the full filenames before saving.}
 the name of servers that supply argo data.  If more than
 one value is given, then these are tried sequentially until one
 is found to supply the index file named in the \code{filename} argument.
-As of May 2020, the two servers known to work are
+As of October 2020, the two servers known to work are
 \code{"ftp://usgodae.org/pub/outgoing/argo"} and
 \code{"ftp://ftp.ifremer.fr/ifremer/argo"}.  These may be referred
 to with nicknames \code{"usgodae"} and \code{"ifremer"}.  As a further
 convenience, a third nickname (and the default for this argument)
-is also available: \code{"auto"} is expanded to \code{c("usgodae","ifremer")}.
+is also available: \code{"auto"} is expanded to \code{c("ifremer","usgodae")}.
 Note that if a nickname is not used, the character value(s) in \code{server}
 must start with \code{"ftp://"}.}
 
@@ -118,10 +118,6 @@ Note that the servers also provide files with names similar to those
 given in the table, but ending in \code{.txt}.  These are uncompressed
 equivalents of the \code{.gz} files that offer no advantage and take
 longer to download, so \code{\link[=getIndex]{getIndex()}} is not designed to work with them.
-Finally, note that, as of June 2020,
-the usgodae server does not supply \code{"synthetic"} files, but
-the ifremer server does; this is typically not a concern to users,
-because \code{getIndex} searches both servers for index files.
 \tabular{lll}{
 \emph{File Name}                           \tab \emph{Nickname}              \tab \emph{Contents}\cr
 \code{ar_greylist.txt}                     \tab -                       \tab Suspicious/malfunctioning floats\cr

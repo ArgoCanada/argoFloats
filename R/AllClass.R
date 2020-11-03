@@ -124,11 +124,6 @@ NULL
 ##
 ## @template server_caveat
 ##
-## @section Historical note:
-## This "merged" file from the usgodae server is likely to be removed, when
-## that server changes to the "synthetic" file format that the ifremer server
-## uses (as of May, 2020 and perhaps months previously, since the changeover
-## data was supposed to be Dec, 2019).
 ## @examples
 ## library(argoFloats)
 ## data(indexMerged)
