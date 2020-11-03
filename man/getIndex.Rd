@@ -26,9 +26,9 @@ the name of servers that supply argo data.  If more than
 one value is given, then these are tried sequentially until one
 is found to supply the index file named in the \code{filename} argument.
 As of October 2020, the two servers known to work are
-\code{"ftp://usgodae.org/pub/outgoing/argo"} and
-\code{"ftp://ftp.ifremer.fr/ifremer/argo"}.  These may be referred
-to with nicknames \code{"usgodae"} and \code{"ifremer"}.  As a further
+\code{"ftp://ftp.ifremer.fr/ifremer/argo"} and \code{"ftp://usgodae.org/pub/outgoing/argo"}.
+These may be referred
+to with nicknames \code{"ifremer"}and  \code{"usgodae"}.  As a further
 convenience, a third nickname (and the default for this argument)
 is also available: \code{"auto"} is expanded to \code{c("ifremer","usgodae")}.
 Note that if a nickname is not used, the character value(s) in \code{server}
