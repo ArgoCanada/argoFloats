@@ -509,9 +509,14 @@ getProfiles <- function(index, destdir=NULL, age=365, retries=3, skip=TRUE, quie
         file <- vector("character", length(urls))
         for (i in seq_along(urls)) {
             name <- getProfileFromUrl(urls[i], destdir=destdir, age=age, retries=retries, quiet=quiet, debug=debug-1)
-            if (is.na(name) && !skip)
-                stop("cannot download file '", urls[i], "', which is considered a failure, since skip=FALSE.  This normally results from a stale index file; try using getIndex(age=0) to refresh your index.")
-            file[i] <- name
+            if (is.na(name)) {
+                if (skip) {
+                    warning("cannot download \"", urls[i], "\". Perhaps the index file is stale; try getIndex(age=0) to refresh it.\n")
+                } else {
+                    stop("cannot download \"", urls[i], "\". Perhaps the index file is stale; try getIndex(age=0) to refresh it. Yu may use getProfiles(...,skip=TRUE) to convert this error into a warning.")
+                }
+            }
+            file[i] <- name            # NOTE: this will be NA for a failed download
         }
     }
     res@metadata$destdir <- destdir

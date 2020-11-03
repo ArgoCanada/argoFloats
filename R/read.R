@@ -132,9 +132,9 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", quiet=FALSE, debu
             mustSkip <- is.na(profiles@data$file)
             if (sum(mustSkip)) {
                 if (sum(mustSkip) == 1) {
-                    message("skipping a profile with NA file name, at index ", which(mustSkip))
+                    warning("skipping a profile with NA file name, at index ", which(mustSkip))
                 } else {
-                    message("skipping ", sum(mustSkip), " profiles with NA file names, at indices: ",
+                    warning("skipping ", sum(mustSkip), " profiles with NA file names, at indices: ",
                             paste(which(mustSkip), collapse=" "))
                 }
             }
