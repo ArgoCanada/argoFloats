@@ -149,6 +149,7 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", quiet=FALSE, debu
             if (!quiet)
                 pb <- txtProgressBar(0, n, 0, style=3)
             for (i in seq_len(n)) {
+                Sys.sleep(0.5)
                 res@data$argos[[i]]@metadata$flagScheme <- list(name="argo",
                                                                 mapping=list(not_assessed=0,
                                                                              passed_all_tests=1,
