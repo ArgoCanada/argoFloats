@@ -116,10 +116,6 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #' given in the table, but ending in `.txt`.  These are uncompressed
 #' equivalents of the `.gz` files that offer no advantage and take
 #' longer to download, so [getIndex()] is not designed to work with them.
-##' Finally, note that, as of June 2020,
-##' the usgodae server does not supply `"synthetic"` files, but
-##' the ifremer server does; this is typically not a concern to users,
-##' because `getIndex` searches both servers for index files.
 #' \tabular{lll}{
 #' *File Name*                           \tab *Nickname*              \tab *Contents*\cr
 #' `ar_greylist.txt`                     \tab -                       \tab Suspicious/malfunctioning floats\cr
@@ -152,12 +148,12 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #' the name of servers that supply argo data.  If more than
 #' one value is given, then these are tried sequentially until one
 #' is found to supply the index file named in the `filename` argument.
-#' As of May 2020, the two servers known to work are
+#' As of October 2020, the two servers known to work are
 #' `"ftp://usgodae.org/pub/outgoing/argo"` and
 #' `"ftp://ftp.ifremer.fr/ifremer/argo"`.  These may be referred
 #' to with nicknames `"usgodae"` and `"ifremer"`.  As a further
 #' convenience, a third nickname (and the default for this argument)
-#' is also available: `"auto"` is expanded to `c("usgodae","ifremer")`.
+#' is also available: `"auto"` is expanded to `c("ifremer","usgodae")`.
 #' Note that if a nickname is not used, the character value(s) in `server`
 #' must start with `"ftp://"`.
 #'
@@ -230,17 +226,17 @@ getIndex <- function(filename="core",
     argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     serverOrig <- server
     if (length(server) == 1 && server == "auto") {
-        server <- c("usgodae", "ifremer")
+        server <- c("ifremer","usgodae")
         argoFloatsDebug(debug, "Server 'auto' expanded to c('",
                         paste(server, collapse="', '"), '").\n', sep="")
     }
     for (iserver in seq_along(server)) {
-        if (server[iserver] == "usgodae") {
-            server[iserver] <- "ftp://usgodae.org/pub/outgoing/argo"
-            argoFloatsDebug(debug, "Server 'usgodae' expanded to '", server[iserver], "'.\n", sep="")
-        } else if (server[iserver] == "ifremer") {
+        if (server[iserver] == "ifremer") {
             server[iserver] <- "ftp://ftp.ifremer.fr/ifremer/argo"
             argoFloatsDebug(debug, "Server 'ifremer' expanded to '", server[iserver], "'.\n", sep="")
+        } else if (server[iserver] == "usgodae") {
+            server[iserver] <- "ftp://usgodae.org/pub/outgoing/argo"
+            argoFloatsDebug(debug, "Server 'usgodae' expanded to '", server[iserver], "'.\n", sep="")
         }
     }
 
@@ -329,7 +325,7 @@ getIndex <- function(filename="core",
         ##                          type="message")
         if (!inherits(status, "try-error")) {
             if (failedDownloads > 0)
-                message("Downloaded index from ", server[iurl])
+                message("Downloaded index from ", url[iurl])
             iurlSuccess <- iurl
             break                      # the download worked
         }
