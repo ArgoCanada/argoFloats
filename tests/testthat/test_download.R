@@ -8,7 +8,7 @@ test_that("getIndex()",
           {
               tempFile <- tempfile()
               dir.create(tempFile)
-              i <- expect_silent(getIndex(filename="argo_bio-profile_index.txt.gz", destdir=tempFile))
+              i <- expect_silent(getIndex(filename="argo_bio-profile_index.txt.gz", quiet=TRUE, destdir=tempFile))
               i2 <- expect_error(getIndex(filename="dog","filename=\"dog\" doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\"."))
               unlink(tempFile, recursive = TRUE)
           }

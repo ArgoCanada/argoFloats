@@ -38,9 +38,9 @@ is one year.  Setting \code{age=0} will force a download.}
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
 
-\item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download without showing a progress
-bar. (Problems will still be reported, though.)}
+\item{quiet}{logical value; use \code{TRUE} to show more
+verbose information when downloading files.
+(Problems will still be reported, though.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
@@ -74,7 +74,7 @@ lat0 <- 43.9337
 if (requireNamespace("oce")) {
     dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
     w <- which.min(dist)
-    url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
+    url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
     fileSable <- getProfileFromUrl(url=url)
     argoSable <- read.oce(fileSable)
     plot(argoSable, which=c(1, 4, 6, 5))

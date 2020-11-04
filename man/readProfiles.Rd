@@ -23,9 +23,9 @@ other than this default, or a wrapper to it.}
 which to save downloaded files, in the case that they are
 provided in the \code{profiles} argument.}
 
-\item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download without showing a progress
-bar. (Problems will still be reported, though.)}
+\item{quiet}{logical value; use \code{TRUE} to show more
+verbose information when downloading files.
+(Problems will still be reported, though.)}
 
 \item{debug}{an integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,

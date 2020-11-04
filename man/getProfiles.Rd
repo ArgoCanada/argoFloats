@@ -40,9 +40,9 @@ servers change the names of netcdf files.  However, users
 are commonly working with index files they created with
 \code{\link[=getIndex]{getIndex()}}, so they ought to be up-to-date.}
 
-\item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download without showing a progress
-bar. (Problems will still be reported, though.)}
+\item{quiet}{logical value; use \code{TRUE} to show more
+verbose information when downloading files.
+(Problems will still be reported, though.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
