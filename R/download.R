@@ -10,8 +10,6 @@
 #'
 #' @template destfile
 #'
-#' @template mode
-#'
 #' @template quiet
 #'
 #' @template age
@@ -24,12 +22,12 @@
 #' or `NA`, if there was a problem with the download.
 #'
 ## @importFrom curl curl_download
-#' @importFrom utils capture.output unzip
+#' @importFrom utils unzip
 #'
 #' @export
 #'
 #' @author Dan Kelley
-downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode="wb", quiet=FALSE,
+downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, quiet=FALSE,
                                 age=365, retries=3, debug=0)
 {
     if (!requireNamespace("curl", quietly=TRUE))
@@ -63,9 +61,8 @@ downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, mode=
         } else {
             success <- FALSE
             for (trial in seq_len(1 + retries)) {
-                capture.output({
-                    t <- try(curl::curl_download(url=url, destfile=destination, quiet=quiet, mode=mode), silent=TRUE)
-                })
+                if (!quiet) message(sprintf("Downloading '%s'", url))
+                t <- try(curl::curl_download(url=url, destfile=destination), silent=TRUE)
                 if (inherits(t, "try-error")) {
                     argoFloatsDebug(debug, "failed download from \"", url, "\" ", if (trial < (1+retries)) "(will try again)\n" else "(final attempt)\n", sep="")
                 } else {

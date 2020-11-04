@@ -8,7 +8,6 @@ downloadWithRetries(
   url,
   destdir = "~/data/argo",
   destfile = NULL,
-  mode = "wb",
   quiet = FALSE,
   age = 365,
   retries = 3,
@@ -32,18 +31,9 @@ the other parameters of the function call, so that subsequent calls with
 the same parameters will yield the same result; this is useful
 for caching.}
 
-\item{mode}{character value passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-controlling the mode used in writing the local file. The default
-value, \code{mode="wb"}, means to set the write format to binary. This
-is necessary on Windows machines, which otherwise will alter newline
-characters, ruining file integrity for binary files (such as
-netcdf files). The setting is not required on other machines, but
-it makes sense to use this default in all instances.  See the
-documentation for \code{\link[curl:curl_download]{curl::curl_download()}}.}
-
-\item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download without showing a progress
-bar. (Problems will still be reported, though.)}
+\item{quiet}{logical value; use \code{TRUE} to show more
+verbose information when downloading files.
+(Problems will still be reported, though.)}
 
 \item{age}{a numerical value indicating a time interval, in days.  If the file
 to be downloaded from the server already exists locally, and was created

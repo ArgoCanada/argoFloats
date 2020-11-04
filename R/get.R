@@ -40,7 +40,7 @@
 #' if (requireNamespace("oce")) {
 #'     dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
 #'     w <- which.min(dist)
-#'     url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
+#'     url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
 #'     fileSable <- getProfileFromUrl(url=url)
 #'     argoSable <- read.oce(fileSable)
 #'     plot(argoSable, which=c(1, 4, 6, 5))
@@ -63,7 +63,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
         destfile <- gsub(".*/(.*).nc", "\\1.nc", url)
         argoFloatsDebug(debug,  "inferred destfile=\"", destfile, "\" from url.\n", sep="")
     }
-    res <- downloadWithRetries(url=url, destdir=destdir, destfile=destfile, mode="wb", quiet=quiet,
+    res <- downloadWithRetries(url=url, destdir=destdir, destfile=destfile, quiet=quiet,
                                age=age, retries=retries, debug=debug-1)
     argoFloatsDebug(debug,  "} # getProfileFromUrl()", sep="", "\n", style="bold", unindent=1)
     if (is.na(res)) res else paste0(destdir, "/", destfile)
@@ -313,13 +313,12 @@ getIndex <- function(filename="core",
     iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
     for (iurl in seq_along(url)) {
         argoFloatsDebug(debug, "About to try downloading index file from\n    '", url[iurl], "'.\n", sep="")
+        if (!quiet) message(sprintf("Downloading '%s'", url[iurl]))
         status <- try(curl::curl_download(url=url[iurl],
                                           destfile=destfileTemp,
-                                          quiet=quiet,
                                           mode="wb"))
         ## status <- capture.output(try(curl::curl_download(url=url[iurl],
         ##                                                  destfile=destfileTemp,
-        ##                                                  quiet=quiet,
         ##                                                  mode="wb"),
         ##                              silent=!TRUE),
         ##                          type="message")
