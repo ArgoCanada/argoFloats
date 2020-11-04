@@ -94,14 +94,14 @@ serverMapApp <- function(input, output, session) {
         topoWorldFine <- topoWorld
     }
     ## Get data. Cache of the index is handled by getIndex().
-    i <- argoFloats::getIndex(age=age, destdir=destdir, server=server)
+    i <- argoFloats::getIndex(age=age, destdir=destdir, server="auto")
     n <- i[["length"]]
     ID <- i[["ID"]]
     cycle <- i[["cycle"]]
     lon <- i[["longitude"]]
     lat <- i[["latitude"]]
     n <- length(ID)
-    iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=server)
+    iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server="auto")
     idBGC <- unique(iBGC[["ID"]])
     type <- rep("core", n)
     type[ID %in% idBGC] <- "bgc"
@@ -275,8 +275,8 @@ serverMapApp <- function(input, output, session) {
                                     ## end up typing "-" a few times to zoom out
                                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                                    state$startTime <<- min(argo$time[k]) - 3600 # FIXME: this 1h is a test for #283
-                                    state$endTime <<- max(argo$time[k]) + 3600
+                                    state$startTime <<- min(argo$time[k]) - 86400 # FIXME: this 1h is a test for #283
+                                    state$endTime <<- max(argo$time[k]) + 86400
                                     shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                                     shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
                                 }

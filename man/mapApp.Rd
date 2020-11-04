@@ -14,7 +14,7 @@ index will be re-acquired with \code{\link[=getIndex]{getIndex()}}.}
 index acquired with \code{\link[=getIndex]{getIndex()}}.}
 
 \item{server}{character value, or vector of character values, indicating the name of
-servers that supply argo data.}
+servers that supply argo data acquired with \code{\link[=getIndex]{getIndex()}}}
 }
 \description{
 The GUI permits specifying a spatial-temporal region of interest, a set
