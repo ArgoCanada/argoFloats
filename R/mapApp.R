@@ -275,7 +275,10 @@ serverMapApp <- function(input, output, session) {
                                     ## end up typing "-" a few times to zoom out
                                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                                    state$startTime <<- min(argo$time[k]) - 86400 # FIXME: this 1h is a test for #283
+                                    ## Note: extending time range to avoid problems with day transitions,
+                                    ## which can might cause missing cycles at the start and end; see
+                                    ## https://github.com/ArgoCanada/argoFloats/issues/283.
+                                    state$startTime <<- min(argo$time[k]) - 86400
                                     state$endTime <<- max(argo$time[k]) + 86400
                                     shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                                     shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
