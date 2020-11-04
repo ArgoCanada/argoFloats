@@ -4,7 +4,7 @@
 \alias{mapApp}
 \title{Interactive app for viewing Argo float positions}
 \usage{
-mapApp(age = 7, destdir = ".")
+mapApp(age = 7, destdir = ".", server = "ifremer")
 }
 \arguments{
 \item{age}{numeric value indicating the age beyond which the argo
@@ -12,6 +12,9 @@ index will be re-acquired with \code{\link[=getIndex]{getIndex()}}.}
 
 \item{destdir}{character value indicating the directory into which to store the argo
 index acquired with \code{\link[=getIndex]{getIndex()}}.}
+
+\item{server}{character value, or vector of character values, indicating the name of
+servers that supply argo data.}
 }
 \description{
 The GUI permits specifying a spatial-temporal region of interest, a set
@@ -21,13 +24,9 @@ Help button and to read the popup window that it creates.
 }
 \details{
 This app will use \code{\link[=getIndex]{getIndex()}} to download index files from the Argo server
-the first time it runs, this make take up to a minute or so.  Then it will combine
+the first time it runs, and this make take up to a minute or so.  Then it will combine
 information from the core-Argo and bgc-Argo index tables, cross-indexing so
-it can determine the Argo type for each profile (or cycle).  The results of
-this combination are stored in a local file named \code{argo.rda}, which is then
-used for the functioning of the app.  In the interest of speed, a check is
-made on start up for the existence of this file, and it will be reused if it
-is less than 7 days old.
+it can determine the Argo type for each profile (or cycle).
 
 The \code{hi-res} button will only affect the coastline, not the topography,
 unless there is a local file named \code{topoWorldFine.rda} that contains

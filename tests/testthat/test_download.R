@@ -6,27 +6,27 @@ context("bgc download")
 
 test_that("getIndex()",
           {
-              tmp_file <- tempfile()
-              dir.create(tmp_file)
-              i <- expect_silent(getIndex(filename="argo_bio-profile_index.txt.gz", destdir=tmp_file))
+              tempFile <- tempfile()
+              dir.create(tempFile)
+              i <- expect_silent(getIndex(filename="argo_bio-profile_index.txt.gz", destdir=tempFile))
               i2 <- expect_error(getIndex(filename="dog","filename=\"dog\" doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\"."))
-              unlink(tmp_file, recursive = TRUE)
+              unlink(tempFile, recursive = TRUE)
           }
 )
 
 test_that("getProfiles()",
           {
-              tmp_file <- tempfile()
-              dir.create(tmp_file)
+              tempFile <- tempfile()
+              dir.create(tempFile)
               data(index)
               s <- expect_message(subset(index, 1:3), "Kept 3 profiles \\(0.307%\\)")
-              p <- expect_silent(getProfiles(s, destdir=tmp_file))
+              p <- expect_silent(getProfiles(s, destdir=tempFile))
               expect_equal(p[["cycle"]], c("124", "125", "126"))
               expect_equal(p[["url", 1]], "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_124.nc")
               expect_equal(p[["url"]], c("ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_124.nc","ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_125.nc","ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_126.nc"))
               expect_equal(p[["url", 1:2]], c("ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_124.nc","ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_125.nc"))
               expect_equal(p[["length"]], 3)
-              unlink(tmp_file, recursive = TRUE)
+              unlink(tempFile, recursive = TRUE)
           }
 )
 

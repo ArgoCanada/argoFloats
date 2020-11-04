@@ -543,6 +543,9 @@ serverMapApp <- function(input, output, session) {
 #'
 #' @param destdir character value indicating the directory into which to store the argo
 #' index acquired with [getIndex()].
+#' 
+#' @param server character value, or vector of character values, indicating the name of
+#' servers that supply argo data acquired with [getIndex()]
 #'
 #' @examples
 #'\dontrun{
