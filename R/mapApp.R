@@ -71,6 +71,7 @@ uiMapApp <- shiny::fluidPage(
 serverMapApp <- function(input, output, session) {
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
+    server <- shiny::getShinyOption("server")
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages('shiny') for mapApp() to work")
     ## State variable: reactive!
@@ -93,14 +94,14 @@ serverMapApp <- function(input, output, session) {
         topoWorldFine <- topoWorld
     }
     ## Get data. Cache of the index is handled by getIndex().
-    i <- argoFloats::getIndex(age=age, destdir=destdir)
+    i <- argoFloats::getIndex(age=age, destdir=destdir, server=server)
     n <- i[["length"]]
     ID <- i[["ID"]]
     cycle <- i[["cycle"]]
     lon <- i[["longitude"]]
     lat <- i[["latitude"]]
     n <- length(ID)
-    iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir)
+    iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=server)
     idBGC <- unique(iBGC[["ID"]])
     type <- rep("core", n)
     type[ID %in% idBGC] <- "bgc"
@@ -274,8 +275,8 @@ serverMapApp <- function(input, output, session) {
                                     ## end up typing "-" a few times to zoom out
                                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                                    state$startTime <<- min(argo$time[k])
-                                    state$endTime <<- max(argo$time[k])
+                                    state$startTime <<- min(argo$time[k]) - 3600 # FIXME: this 1h is a test for #283
+                                    state$endTime <<- max(argo$time[k]) + 3600
                                     shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                                     shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
                                 }
@@ -444,8 +445,7 @@ serverMapApp <- function(input, output, session) {
                 polygon(coastline[["longitude"]], coastline[["latitude"]], col="tan")
                 rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
                 ## For focusID mode, we do not trim by time or space
-                if (input$focus == "single" &&
-                    !is.null(state$focusID)) {
+                if (input$focus == "single" && !is.null(state$focusID)) {
                     keep <- argo$ID == state$focusID
                 }  else {
                     keep <- rep(TRUE, length(argo$ID))
@@ -520,13 +520,9 @@ serverMapApp <- function(input, output, session) {
 #' Help button and to read the popup window that it creates.
 #'
 #' This app will use [getIndex()] to download index files from the Argo server
-#' the first time it runs, this make take up to a minute or so.  Then it will combine
+#' the first time it runs, and this make take up to a minute or so.  Then it will combine
 #' information from the core-Argo and bgc-Argo index tables, cross-indexing so
-#' it can determine the Argo type for each profile (or cycle).  The results of
-#' this combination are stored in a local file named `argo.rda`, which is then
-#' used for the functioning of the app.  In the interest of speed, a check is
-#' made on start up for the existence of this file, and it will be reused if it
-#' is less than 7 days old.
+#' it can determine the Argo type for each profile (or cycle).
 #'
 #' The `hi-res` button will only affect the coastline, not the topography,
 #' unless there is a local file named `topoWorldFine.rda` that contains
@@ -556,9 +552,9 @@ serverMapApp <- function(input, output, session) {
 #' @author Dan Kelley
 #' @importFrom shiny shinyApp shinyOptions
 #' @export
-mapApp <- function(age=7, destdir=".")
+mapApp <- function(age=7, destdir=".", server="ifremer")
 {
-    shiny::shinyOptions(age=age, destdir=destdir)
+    shiny::shinyOptions(age=age, destdir=destdir, server=server)
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages(\"shiny\") for this to work")
     print(shiny::shinyApp(ui=uiMapApp, server=serverMapApp))
