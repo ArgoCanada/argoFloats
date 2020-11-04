@@ -2,9 +2,10 @@
 ^.github$
 ^issues$
 ^.travis.yml$
-^appveyor.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^appveyor.yml$
+^argo.rda$
 ^man-roxygen$
 ^man/figures/*R$
 ^docs$
@@ -35,4 +36,5 @@
 ^.*\.json$
 ^doc$
 ^topoWorldFine.rda$
-^argo.rda$
+^tests/testthat/_snaps$
+
