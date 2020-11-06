@@ -61,16 +61,16 @@ As an adjunct to the written documentation, the following videos are provided, t
 To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE)` command if you receive a Zero Exit Status Error):
 
 ```{r eval=FALSE}
-devtools::install_github("ArgoCanada/oce", ref='develop')
-devtools::install_github('ArgoCanada/ocedata', ref='develop')
-devtools::install_github('ArgoCanada/argoFloats', ref='develop')
+remotes::install_github("dankelley/oce", ref='develop')
+remotes::install_github('dankelley/ocedata', ref='develop')
+remotes::install_github('ArgoCanada/argoFloats', ref='develop')
 ```
 
-Note that the `install_github()` function is provided by the `devtools` package, so the above will fail if that package has not already been installed. To install it, use
-
+The above will fail unless the `remotes` package has been installed with
 ```{r eval=FALSE}
-install.packages(devtools)
+install.packages(remotes)
 ```
+at some time in the past.  (This need only be installed once.)
 
 # Work Flow
 
