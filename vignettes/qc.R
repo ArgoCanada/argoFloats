@@ -36,7 +36,7 @@ ID <- '1901584'
 #  plot(clean, which="TS")
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  devtools::install_github("dankelley/oce", ref="develop")
+#  remotes::install_github("dankelley/oce", ref="develop")
 
 ## ----  warning=FALSE, message=FALSE, error=FALSE, fig.cap="*Figure 5.* Comparison of raw and adjusted oxygen profiles for built-in float file `SD5903586_001.nc`."----
 if (packageVersion("oce") > "1.2.0") {
