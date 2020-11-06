@@ -206,12 +206,13 @@
 <a href="#preliminary-setup" class="anchor"></a>Preliminary Setup</h1>
 <p>To set up a computer to use <code>argoFloats</code>, the user should first install the following packages (<em>Hint:</em> you may have to use the <code><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE)</a></code> command if you receive a Zero Exit Status Error):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ArgoCanada/oce"</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'ArgoCanada/ocedata'</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'ArgoCanada/argoFloats'</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span></code></pre></div>
-<p>Note that the <code>install_github()</code> function is provided by the <code>devtools</code> package, so the above will fail if that package has not already been installed. To install it, use</p>
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"dankelley/oce"</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'dankelley/ocedata'</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'ArgoCanada/argoFloats'</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span></code></pre></div>
+<p>The above will fail unless the <code>remotes</code> package has been installed with</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">remotes</span><span class="op">)</span></code></pre></div>
+<p>at some time in the past. (This need only be installed once.)</p>
 </div>
 <div id="work-flow" class="section level1">
 <h1 class="hasAnchor">
