@@ -95,7 +95,7 @@
       <h1 data-toc-skip>Introduction to argoFloats</h1>
                         <h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 class="date">2020-11-06</h4>
+            <h4 class="date">2020-11-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/master/vignettes/argoFloats.Rmd"><code>vignettes/argoFloats.Rmd</code></a></small>
       <div class="hidden name"><code>argoFloats.Rmd</code></div>
@@ -206,9 +206,9 @@
 <a href="#preliminary-setup" class="anchor"></a>Preliminary Setup</h1>
 <p>To set up a computer to use <code>argoFloats</code>, the user should first install the following packages (<em>Hint:</em> you may have to use the <code><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE)</a></code> command if you receive a Zero Exit Status Error):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"dankelley/oce"</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'dankelley/ocedata'</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">'ArgoCanada/argoFloats'</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"dankelley/oce"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"dankelley/ocedata"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"ArgoCanada/argoFloats"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></code></pre></div>
 <p>The above will fail unless the <code>remotes</code> package has been installed with</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">remotes</span><span class="op">)</span></code></pre></div>
@@ -231,8 +231,8 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span></code></pre></div>
 <p>To access the embedded index within <code>argoFloats</code>, the following code is used:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">'index'</span><span class="op">)</span></code></pre></div>
-<p>It’s now possible to process the downloaded index using the <code>argoFloats</code> specialized versions of R “generic” functions, <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>, <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code>, <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>, and <code>show()</code> as shown below.</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"index"</span><span class="op">)</span></code></pre></div>
+<p>It is now possible to process the downloaded index using the <code>argoFloats</code> specialized versions of R “generic” functions, <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>, <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code>, <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>, and <code>show()</code> as shown below.</p>
 </div>
 <div id="overview-of-processing-steps" class="section level1">
 <h1 class="hasAnchor">
@@ -253,7 +253,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 <div id="extracting-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#extracting-data" class="anchor"></a>Extracting Data</h2>
-<p>Furthermore, the <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code> command provides a way to extract items from <code>argoFloats</code> objects, without getting lost in the details of storage. For example, if the user wanted to extract the <code>file</code> within the <code>index</code> data set, instead of doing <code>index@data$index$file</code>, instead they can simply do <code>index[['file']]</code>. (Note that <code>[[&lt;-</code> is <em>not</em> specialized, since the user is highly discouraged from altering values within <code>argoFloats</code> objects).</p>
+<p>Furthermore, the <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code> command provides a way to extract items from <code>argoFloats</code> objects, without getting lost in the details of storage. For example, if the user wanted to extract the <code>file</code> within the <code>index</code> data set, instead of doing <code>index@data$index$file</code>, instead they can simply do <code>index[["file"]]</code>. (Note that <code>[[&lt;-</code> is <em>not</em> specialized, since the user is highly discouraged from altering values within <code>argoFloats</code> objects).</p>
 </div>
 <div id="summarizing" class="section level2">
 <h2 class="hasAnchor">
@@ -366,7 +366,7 @@ Figure 3: 50 km radius and polygon subset of argo floats found off the coast of 
 <p><strong>Exercise 1:</strong> Produce the same plot as shown above, however, only include data from 2013.</p>
 <p>Additionally, a practical use of <code>rectangle</code> subset can be shown while analyzing the section data found within the oce package. This data includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">section</span>, package<span class="op">=</span><span class="st">'oce'</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">section</span>, package<span class="op">=</span><span class="st">"oce"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">section</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="argoFloats_files/figure-html/unnamed-chunk-11-1.png" alt="Figure 4: Line A03 section plot made by oce package." width="672"><p class="caption">
@@ -390,10 +390,10 @@ Figure 4: Line A03 section plot made by oce package.
 <span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">sub</span><span class="op">)</span>
 <span class="va">argos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="va">profiles</span><span class="op">)</span>
 <span class="va">argosClean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/applyQC.html">applyQC</a></span><span class="op">(</span><span class="va">argos</span><span class="op">)</span>
-<span class="va">pressure</span> <span class="op">&lt;-</span> <span class="va">argosClean</span><span class="op">[[</span><span class="st">'argos'</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">'pressure'</span><span class="op">]</span><span class="op">]</span>
-<span class="va">temperature</span> <span class="op">&lt;-</span> <span class="va">argosClean</span><span class="op">[[</span><span class="st">'argos'</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">'temperature'</span><span class="op">]</span><span class="op">]</span>
+<span class="va">pressure</span> <span class="op">&lt;-</span> <span class="va">argosClean</span><span class="op">[[</span><span class="st">"argos"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"pressure"</span><span class="op">]</span><span class="op">]</span>
+<span class="va">temperature</span> <span class="op">&lt;-</span> <span class="va">argosClean</span><span class="op">[[</span><span class="st">"argos"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"temperature"</span><span class="op">]</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">temperature</span>, <span class="va">pressure</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="va">pressure</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,
-     xlab<span class="op">=</span><span class="st">'Temperature (C)'</span>, ylab<span class="op">=</span><span class="st">'Depth (dbar)'</span><span class="op">)</span></code></pre></div>
+     xlab<span class="op">=</span><span class="st">"Temperature (C)"</span>, ylab<span class="op">=</span><span class="st">"Depth (dbar)"</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="readProfiles.png" alt=""><p class="caption">Figure 5: Temperature profile created using argoFloats readProfiles function</p>
 </div>
@@ -425,9 +425,9 @@ Figure 4: Line A03 section plot made by oce package.
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce">oce</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">section</span>, package<span class="op">=</span><span class="st">'oce'</span><span class="op">)</span>
-<span class="va">lat0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">section</span><span class="op">[[</span><span class="st">'latitude'</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="va">lon0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">section</span><span class="op">[[</span><span class="st">'longitude'</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">section</span>, package<span class="op">=</span><span class="st">"oce"</span><span class="op">)</span>
+<span class="va">lat0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">section</span><span class="op">[[</span><span class="st">"latitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="va">lon0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">section</span><span class="op">[[</span><span class="st">"longitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="co"># Subset by rectangle</span>
 <span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"argo"</span><span class="op">)</span>
 <span class="va">latRect</span> <span class="op">&lt;-</span> <span class="va">lat0</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span>
@@ -447,7 +447,7 @@ Figure 4: Line A03 section plot made by oce package.
 <span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">sub</span><span class="op">)</span>
 <span class="va">argos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="va">profiles</span><span class="op">)</span>
 <span class="va">argosClean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/applyQC.html">applyQC</a></span><span class="op">(</span><span class="va">argos</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">'TS'</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"TS"</span><span class="op">)</span></code></pre></div>
 </div>
   </div>
 
