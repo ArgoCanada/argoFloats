@@ -61,9 +61,9 @@ As an adjunct to the written documentation, the following videos are provided, t
 To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE)` command if you receive a Zero Exit Status Error):
 
 ```{r eval=FALSE}
-remotes::install_github("dankelley/oce", ref='develop')
-remotes::install_github('dankelley/ocedata', ref='develop')
-remotes::install_github('ArgoCanada/argoFloats', ref='develop')
+remotes::install_github("dankelley/oce", ref="develop")
+remotes::install_github("dankelley/ocedata", ref="develop")
+remotes::install_github("ArgoCanada/argoFloats", ref="develop")
 ```
 
 The above will fail unless the `remotes` package has been installed with
@@ -95,10 +95,10 @@ library(argoFloats)
 To access the embedded index within `argoFloats`, the following code is used:
 
 ```{r}
-data('index')
+data("index")
 ```
 
-It's now possible to process the downloaded index using the `argoFloats` specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()` as shown below.
+It is now possible to process the downloaded index using the `argoFloats` specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()` as shown below.
 
 # Overview of Processing Steps
 
@@ -114,7 +114,7 @@ plot(index, bathymetry=FALSE)          # also, try using bathymetry=TRUE
 
 ## Extracting Data
 
-Furthermore, the `[[` command provides a way to extract items from `argoFloats` objects, without getting lost in the details of storage. For example, if the user wanted to extract the `file` within the `index` data set, instead of doing `index@data$index$file`, instead they can simply do `index[['file']]`. (Note that `[[<-` is *not* specialized, since the user is highly discouraged from altering values within `argoFloats` objects).
+Furthermore, the `[[` command provides a way to extract items from `argoFloats` objects, without getting lost in the details of storage. For example, if the user wanted to extract the `file` within the `index` data set, instead of doing `index@data$index$file`, instead they can simply do `index[["file"]]`. (Note that `[[<-` is *not* specialized, since the user is highly discouraged from altering values within `argoFloats` objects).
 
 ## Summarizing
 
@@ -192,8 +192,8 @@ plot(CP, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 
 Additionally, a practical use of `rectangle` subset can be shown while analyzing the section data found within the oce package. This data includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
 
-```{r fig.cap="Figure 4: Line A03 section plot made by oce package.", fig.height=4, fig.width=7, fig.align='center', dev.args=list(pointsize=10)}
-data(section, package='oce')
+```{r fig.cap="Figure 4: Line A03 section plot made by oce package.", fig.height=4, fig.width=7, fig.align="center", dev.args=list(pointsize=10)}
+data(section, package="oce")
 plot(section)
 ```
 
@@ -214,10 +214,10 @@ sub <- subset(ai, 1:2) # To subset for profiles
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
 argosClean <- applyQC(argos)
-pressure <- argosClean[['argos']][[1]][['pressure']]
-temperature <- argosClean[['argos']][[1]][['temperature']]
+pressure <- argosClean[["argos"]][[1]][["pressure"]]
+temperature <- argosClean[["argos"]][[1]][["temperature"]]
 plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
-     xlab='Temperature (C)', ylab='Depth (dbar)')
+     xlab="Temperature (C)", ylab="Depth (dbar)")
 ```
 
 ![Figure 5: Temperature profile created using argoFloats readProfiles function](readProfiles.png)
@@ -252,9 +252,9 @@ plot(cp, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```{r, eval=FALSE}
 library(argoFloats)
 library(oce)
-data(section, package='oce')
-lat0 <- median(section[['latitude']])
-lon0 <- median(section[['longitude']])
+data(section, package="oce")
+lat0 <- median(section[["latitude"]])
+lon0 <- median(section[["longitude"]])
 # Subset by rectangle
 ai <- getIndex("argo")
 latRect <- lat0 + c(-2,2)
@@ -277,5 +277,5 @@ sub <- subset(ai, 1:2) # To subset for profiles
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
 argosClean <- applyQC(argos)
-plot(argosClean, which='TS')
+plot(argosClean, which="TS")
 ```
