@@ -279,7 +279,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 <h2 class="hasAnchor">
 <a href="#getindex" class="anchor"></a>getIndex()</h2>
 <p>Until this point, we have demonstrated how the user can become familiar with embedded indices. As previously described, however, actual work always starts with downloading a full index of float data. As shown by Figure 1, the <code><a href="../reference/getIndex.html">getIndex()</a></code> command is used to get an index of available Argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.</p>
-<p>The <code><a href="../reference/getIndex.html">getIndex()</a></code> command works by specifying the server, with first trying the USGODAE server  and then the IRREMER server  if that does not work. The next step is to specify the file name. The table below can be obtained using <code>?getIndex()</code>. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: <code>"argo"</code> or <code>"core"</code>, <code>"bgc"</code> or <code>"bgcargo"</code>, or <code>"synthetic"</code>. The following table summarizes the contents of the various files indicated by the <code>filename</code> argument.</p>
+<p>The <code><a href="../reference/getIndex.html">getIndex()</a></code> command works by specifying the server, with first trying the USGODAE server  and then the IRREMER server  if that does not work. The next step is to specify the file name. The table below can be obtained using <code>?getIndex()</code>. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: <code>"core"</code>, <code>"bgc"</code> or <code>"bgcargo"</code>, or <code>"synthetic"</code>. The following table summarizes the contents of the various files indicated by the <code>filename</code> argument.</p>
 <table class="table">
 <colgroup>
 <col width="37%">
@@ -304,7 +304,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 </tr>
 <tr class="odd">
 <td><code>ar_index_global_prof.txt.gz</code></td>
-<td><code>"argo"</code></td>
+<td><code>"core"</code></td>
 <td>Argo data</td>
 </tr>
 <tr class="even">
@@ -340,7 +340,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 <p>Additionally, the <code>destdir</code> argument has a default of <code>~/data/argo</code>, where it should be noted that <code><a href="https://rdrr.io/r/base/tilde.html">~</a></code> is a short cut for <code>C:\Users\</code>. See <code>?getIndex()</code> for further description about the additional arguments for this command.</p>
 <p>To get the index from the USGODAE server, the following code is used:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"argo"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"core"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="subset" class="section level2">
 <h2 class="hasAnchor">
@@ -406,7 +406,7 @@ Figure 4: Line A03 section plot made by oce package.
 <p><strong>Exercise 1:</strong> Produce the same plot as shown above, however, only include data from 2013.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
-<span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"argo"</span><span class="op">)</span>
+<span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"core"</span><span class="op">)</span>
 <span class="co"># Subsetting by circle</span>
 <span class="va">aiCircle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.5</span>, latitude<span class="op">=</span><span class="fl">27.5</span>, radius<span class="op">=</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Subsetting by polygon</span>
@@ -429,7 +429,7 @@ Figure 4: Line A03 section plot made by oce package.
 <span class="va">lat0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">section</span><span class="op">[[</span><span class="st">"latitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="va">lon0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">section</span><span class="op">[[</span><span class="st">"longitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="co"># Subset by rectangle</span>
-<span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"argo"</span><span class="op">)</span>
+<span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"core"</span><span class="op">)</span>
 <span class="va">latRect</span> <span class="op">&lt;-</span> <span class="va">lat0</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span>
 <span class="va">lonRect</span> <span class="op">&lt;-</span> <span class="va">lon0</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">30</span>,<span class="fl">30</span><span class="op">)</span>
 <span class="va">air</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, rectangle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="va">lonRect</span>, latitude<span class="op">=</span><span class="va">latRect</span><span class="op">)</span><span class="op">)</span>
