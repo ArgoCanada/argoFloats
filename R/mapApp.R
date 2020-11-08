@@ -71,7 +71,8 @@ uiMapApp <- shiny::fluidPage(
 serverMapApp <- function(input, output, session) {
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
-    server <- shiny::getShinyOption("server")
+    argoServer <- shiny::getShinyOption("argoServer")
+    debug <- shiny::getShinyOption("debug")
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages('shiny') for mapApp() to work")
     ## State variable: reactive!
@@ -93,79 +94,74 @@ serverMapApp <- function(input, output, session) {
     } else {
         topoWorldFine <- topoWorld
     }
-    ## Get data. Cache of the index is handled by getIndex().
-    i <- argoFloats::getIndex(age=age, destdir=destdir, server="auto")
-    n <- i[["length"]]
+    ## Get core and bgc data.
+    notificationId <- shiny::showNotification("Getting \"core\" argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
+    i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
+    shiny::removeNotification(notificationId)
+    notificationId <- shiny::showNotification("Getting \"bgc\" argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
+    iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
+    shiny::removeNotification(notificationId)
+    ## Combine core and bgc data.
+    notificationId <- shiny::showNotification("Combining \"core\" and \"bgc\" data.", type="message", duration=NULL)
     ID <- i[["ID"]]
     cycle <- i[["cycle"]]
     lon <- i[["longitude"]]
     lat <- i[["latitude"]]
-    n <- length(ID)
-    iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server="auto")
     idBGC <- unique(iBGC[["ID"]])
+    n <- length(ID)
     type <- rep("core", n)
     type[ID %in% idBGC] <- "bgc"
     type[grepl("849|862|864", i@data$index$profiler_type)] <- "deep"
     argo <- data.frame(time=i[["date"]], ID=ID, cycle=cycle, longitude=lon, latitude=lat, type=type)
     argo$longitude <- ifelse(argo$longitude > 180, argo$longitude - 360, argo$longitude)
-    n <- length(argo$longitude)
     ok <- is.finite(argo$time)
     argo <- argo[ok, ]
-    n <- length(argo$longitude)
     ok <- is.finite(argo$longitude)
     argo <- argo[ok, ]
-    n <- length(argo$longitude)
-    n <- length(argo$latitude)
     ok <- is.finite(argo$latitude)
     argo <- argo[ok, ]
+    visible <- rep(TRUE, length(argo$lon)) # vector indicating whether to keep any given cycle.
+    shiny::removeNotification(notificationId)
 
-    ## vector indicating whether to keep any given cycle.
-    visible <- rep(TRUE, length(argo$lon))
-
-    ## Prevent off-world points
+    ## Functions used to prevent off-world points
     pinlat <- function(lat)
         ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
     pinlon <- function(lon)
         ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
-    ## Show an error instead of a plot
+    ## Function to show an error instead of a plot
     showError <- function(msg)
     {
         plot(0:1, 0:1, xlab="", ylab="", type="n", axes=FALSE)
         text(0.5, 0.5, msg, col=2, font=2)
     }
 
-    output$info <-
-        shiny::renderText({
-            # show location.  If lat range is under 90deg, also show nearest float within 100km
-            x <- input$hover$x
-            y <- input$hover$y
-            lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
-            latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
-            if (diff(range(state$ylim)) < 90 && sum(visible)) {
-                fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
-                dist2 <- ifelse(visible,
-                           fac * (x - argo$longitude) ^ 2 + (y - argo$latitude) ^ 2,
-                           1000)
-                i <- which.min(dist2)
-                dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
-                if (length(dist) && dist < 100) {
-                    sprintf(
-                        "%s %s, %.0f km from %s float with ID %s\n  at cycle %s [%s]",
+    output$info <- shiny::renderText({
+        ## show location.  If lat range is under 90deg, also show nearest float within 100km
+        x <- input$hover$x
+        y <- input$hover$y
+        lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
+        latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
+        if (diff(range(state$ylim)) < 90 && sum(visible)) {
+            fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
+            dist2 <- ifelse(visible, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude) ^ 2, 1000)
+            i <- which.min(dist2)
+            dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
+            if (length(dist) && dist < 100) {
+                sprintf("%s %s, %.0f km from %s float with ID %s\n  at cycle %s [%s]",
                         lonstring,
                         latstring,
                         dist,
                         switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
                         argo$ID[i],
                         argo$cycle[i],
-                        format(argo$time[i], "%Y-%m-%d %H:%M")
-                    )
-                } else {
-                    sprintf("%s %s", lonstring, latstring)
-                }
+                        format(argo$time[i], "%Y-%m-%d %H:%M"))
             } else {
                 sprintf("%s %s", lonstring, latstring)
             }
-        })
+        } else {
+            sprintf("%s %s", lonstring, latstring)
+        }
+    })
 
     shiny::observeEvent(input$goE,
                         {
@@ -513,7 +509,7 @@ serverMapApp <- function(input, output, session) {
             }
         }
     }, height=500, pointsize=18)       # plotMap
-}                                 # server
+}                                      # serverMapApp
 
 #' Interactive app for viewing Argo float positions
 #'
@@ -546,9 +542,15 @@ serverMapApp <- function(input, output, session) {
 #'
 #' @param destdir character value indicating the directory into which to store the argo
 #' index acquired with [getIndex()].
-#' 
+#'
 #' @param server character value, or vector of character values, indicating the name of
-#' servers that supply argo data acquired with [getIndex()]
+#' servers that supply argo data acquired with [getIndex()].  The default value,
+#' `"auto"`, indicates to try a sequence of servers.
+#'
+#' @param debug integer value that controls how much information `mapApp()` prints
+#' to the console as it works.  The default value of 0 leads to a fairly limited
+#' amount of printing, while higher values lead to more information. This information
+#' can be helpful in diagnosing problems or bottlenecks.
 #'
 #' @examples
 #'\dontrun{
@@ -558,9 +560,10 @@ serverMapApp <- function(input, output, session) {
 #' @author Dan Kelley
 #' @importFrom shiny shinyApp shinyOptions
 #' @export
-mapApp <- function(age=7, destdir=".", server="ifremer")
+mapApp <- function(age=7, destdir=".", server="auto", debug=0)
 {
-    shiny::shinyOptions(age=age, destdir=destdir, server=server)
+    debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
+    shiny::shinyOptions(age=age, destdir=destdir, argoServer=server, debug=debug) # rename server to avoid shiny problem
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages(\"shiny\") for this to work")
     print(shiny::shinyApp(ui=uiMapApp, server=serverMapApp))

@@ -278,7 +278,7 @@ getIndex <- function(filename="core",
     } else {
         stop("cannot construct .rda filename (please report an issue)")
     }
-    argoFloatsDebug(debug, "Set destfileRda='", destfileRda, "'.\n", sep="")
+    argoFloatsDebug(debug, "Set destfileRda=\"", destfileRda, "\".\n", sep="")
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
     #res@metadata$filename <- destfileRda
@@ -286,7 +286,9 @@ getIndex <- function(filename="core",
     ## See if we have an .rda file that is sufficiently youthful.
     if (file.exists(destfileRda)) {
         destfileAge <- (as.integer(Sys.time()) - as.integer(file.info(destfileRda)$mtime)) / 86400 # in days
+        argoFloatsDebug(debug, "This destfileRda already exists, and its age is ", round(destfileAge, 3), " days\n", sep="")
         if (destfileAge < age) {
+            argoFloatsDebug(debug, "Using existing destfileRda, since its age is under ", age, " days\n", sep="")
             argoFloatsDebug(debug, "The local .rda file\n    '", destfileRda, "'\n", sep="")
             argoFloatsDebug(debug, "is not being updated from\n    ", url[1], "\n", showTime=FALSE)
             argoFloatsDebug(debug, "because it is only", round(destfileAge, 4), "days old.\n", showTime=FALSE)
@@ -304,11 +306,12 @@ getIndex <- function(filename="core",
             argoFloatsDebug(debug, "} # getIndex()\n", style="bold", showTime=FALSE, unindent=1)
             return(res)
         }
+        argoFloatsDebug(debug, sprintf("Must update destfileRda, since its age exceeds %.2f days\n", age))
     }
     ## We need to download data. We do that to a temporary file, because we will be saving
     ## an .rda file, not the data on the server.
     destfileTemp <- tempfile(pattern="argo", fileext=".gz")
-    argoFloatsDebug(debug, "Allocated the temporary file\n    '", destfileTemp, "'.\n", sep="")
+    argoFloatsDebug(debug, "Allocated temporary file\n    '", destfileTemp, "'.\n", sep="")
     failedDownloads <- 0
     iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
     for (iurl in seq_along(url)) {
@@ -352,16 +355,16 @@ getIndex <- function(filename="core",
    # }
     argoFloatsDebug(debug, "Reading index file contents (can be slow).\n", sep="")
     index <- read.csv(destfileTemp, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE)
-    argoFloatsDebug(debug, "Setting out-of-range latitude and longitude to NA.\n", sep="")
+    argoFloatsDebug(debug, "Setting out-of-range longitude and latitude to NA.\n")
     if ("latitude" %in% names(index)) {
         index$latitude[abs(index$latitude) > 90] <- NA
     } else {
-        stop("this index file is mis-configured; it does not contain a column named \"latitude\"")
+        stop("Misconfigured index file: no \"latitude\" data found")
     }
     if ("longitude" %in% names(index)) {
         index$longitude[abs(index$longitude) > 360] <- NA
     } else {
-        stop("this index file is mis-configured; it does not contain a column named \"longitude\"")
+        stop("Misconfigured index file: no \"longitude\" data found")
     }
     argoFloatsDebug(debug, "Decoding dates.\n", sep="")
     index$date <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")

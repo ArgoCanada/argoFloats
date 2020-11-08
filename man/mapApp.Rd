@@ -4,7 +4,7 @@
 \alias{mapApp}
 \title{Interactive app for viewing Argo float positions}
 \usage{
-mapApp(age = 7, destdir = ".", server = "ifremer")
+mapApp(age = 7, destdir = ".", server = "auto", debug = 0)
 }
 \arguments{
 \item{age}{numeric value indicating the age beyond which the argo
@@ -14,7 +14,13 @@ index will be re-acquired with \code{\link[=getIndex]{getIndex()}}.}
 index acquired with \code{\link[=getIndex]{getIndex()}}.}
 
 \item{server}{character value, or vector of character values, indicating the name of
-servers that supply argo data acquired with \code{\link[=getIndex]{getIndex()}}}
+servers that supply argo data acquired with \code{\link[=getIndex]{getIndex()}}.  The default value,
+\code{"auto"}, indicates to try a sequence of servers.}
+
+\item{debug}{integer value that controls how much information \code{mapApp()} prints
+to the console as it works.  The default value of 0 leads to a fairly limited
+amount of printing, while higher values lead to more information. This information
+can be helpful in diagnosing problems or bottlenecks.}
 }
 \description{
 The GUI permits specifying a spatial-temporal region of interest, a set
