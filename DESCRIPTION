@@ -7,7 +7,7 @@ Authors@R: c(
         comment=c(ORCID="https://orcid.org/0000-0001-7808-5911")),
     person(given="Jaimie", family="Harbin", email="jm810136@dal.ca", role=c("aut"),
         comment=c(ORCID="https://orcid.org/0000-0003-3774-3732")),
-    person(given="Dewey", family="Dunnington", email="dewey.dunnington@gmail.com", role=c("ctb"),
+    person(given="Dewey", family="Dunnington", email="dewey.dunnington@dfo-mpo.gc.ca", role=c("ctb"),
         comment=c(ORCID="http://orcid.org/0000-0002-9415-4582")),
     person(given="Clark", family="Richards", email="clark.richards@dfo-mpo.gc.ca", role=c("ctb"),
         comment=c(ORCID="https://orcid.org/0000-0002-7833-206X")))
