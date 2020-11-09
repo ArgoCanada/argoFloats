@@ -16,5 +16,6 @@ maxPressure <- c(1250 ,1300 ,1300 ,1250 ,1250 ,1300 ,1200 ,1300 ,1300 ,1200 ,130
 latitude <- unlist(argos[["latitude"]])
 longitude <- unlist(argos[["longitude"]])
 cycle <- unlist(argos[["cycle"]])
-df <- data.frame(cycle=cycle, levels=levels, maxPressure=maxPressure, latitude=latitude,longitude=longitude)    
+dataStateIndicator <- unlist(argos[["dataStateIndicator"]])
+df <- data.frame(cycle=cycle, levels=levels, maxPressure=maxPressure, latitude=latitude,longitude=longitude, dataStateIndicator=dataStateIndicator)    
 head(df)
