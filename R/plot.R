@@ -500,10 +500,16 @@ setMethod(f="plot",
                                                              resolution=resolution,
                                                              keep=bathymetry$keep),
                                        silent=FALSE)
-                          argoFloatsDebug(debug, "  grid size", paste(dim(bathy), collapse="x"), "\n")
-                          if (inherits(bathymetry, "try-error"))
-                              warning("could not download bathymetry from NOAA server\n")
-                          argoFloatsDebug(debug, "  bathy span=", min(bathy, na.rm=TRUE), " to ", max(bathy, na.rm=TRUE), "\n", sep="")
+                          if (inherits(bathy, "try-error")) {
+                              warning(
+                                  "could not download bathymetry from NOAA server: ", 
+                                  paste(bathy, collapse = "\n"), "\n"
+                              )
+                              drawBathymetry <- FALSE
+                          } else {
+                            argoFloatsDebug(debug, "  grid size", paste(dim(bathy), collapse="x"), "\n")
+                            argoFloatsDebug(debug, "  bathy span=", min(bathy, na.rm=TRUE), " to ", max(bathy, na.rm=TRUE), "\n", sep="")
+                          }
                       } else if (inherits(bathymetry$source, "bathy")) {
                           argoFloatsDebug(debug, "using supplied bathymetry$source\n", sep="")
                           bathy <- bathymetry$source
@@ -520,7 +526,7 @@ setMethod(f="plot",
                           stop("cannot determine bathymetry data source")
                       }
                       ## Handle colormap
-                      if (!bathymetry$contour && is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
+                      if (!inherits(bathy, "try-error") && !bathymetry$contour && is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
                           argoFloatsDebug(debug, "setting a default colormap for 0m to ", -min(bathy), "m depth\n")
                           bathymetry$colormap <- oce::colormap(zlim=c(0, -min(bathy)),
                                                                col=function(...)
@@ -533,14 +539,14 @@ setMethod(f="plot",
                       ## there is no axis to the left of the palette, so we do not need space for one.
                       ## We recover the stolen space by putting it back at the RHS, where it can be
                       ## useful, especially if a map plot has another plot to its right.
-                      if (!bathymetry$contour && bathymetry$palette) {
+                      if (!inherits(bathy, "try-error") && !bathymetry$contour && bathymetry$palette) {
                           argoFloatsDebug(debug, "drawing a bathymetry palette\n")
                           ## Increase space to right of axis, decreasing equally to the left.
                           textHeight <- par("cin")[2]
                           mai <- c(0, -textHeight, 0, textHeight)
                           oce::drawPalette(colormap=bathymetry$colormap, mai=mai)
                       } else {
-                          argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed\n")
+                          argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed (or failed bathymetry download)\n")
                       }
                   }
                   argoFloatsDebug(debug, "initial xlim=",

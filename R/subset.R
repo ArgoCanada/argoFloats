@@ -167,12 +167,14 @@
 #' # Example 8: subset to a specific ID
 #' \dontrun{
 #' ai <- getIndex(filename="synthetic", destdir="~/data/argo")
-#' index9 <- subset(ai, ID="1900722") }
+#' index9 <- subset(ai, ID="1900722")
+#' }
 #'
 #' # Example 9: subset data to only include deep argo
 #' \dontrun{
 #' ai <- getIndex(filename="synthetic", destdir="~/data/argo")
-#' index8 <- subset(ai, deep=TRUE) }
+#' index8 <- subset(ai, deep=TRUE)
+#' }
 #'
 #' # Example 10: subset data by ocean
 #' \dontrun{
@@ -182,16 +184,17 @@
 #' atlantic <- subset(index10, ocean="A") # Subsetting for Atlantic Ocean
 #' pacific <- subset(index10, ocean="P")
 #' points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2)
-#' points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3) }
+#' points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3)
+#' }
 #'
 #' # Example 11: subset by delayed time
 #' \dontrun{
 #' data(indexBgc)
-#' index11 <- subset(index, dataMode="delayed")
+#' index11 <- subset(indexBgc, dataMode="delayed")
 #' profiles <- getProfiles(index11)
 #' argos <- readProfiles(profiles)
-#' oxygen <- unlist(argos[["oxygen"]])
-#' pressure <- unlist(argos[["pressure"]])
+#' oxygen <- argos[["oxygen"]][[3]]
+#' pressure <- argos[["pressure"]][[3]]
 #' plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 #'      ylab="Pressure (dbar)", xlab="Oxygen (umol/kg)")
 #' }
@@ -207,21 +210,19 @@
 #' \dontrun{
 #' library(argoFloats)
 #' index13A <- subset(getIndex(), deep=TRUE)
-#' index13B <- subset(deep, direction="descent")
-#' index13B[["file"]]
+#' index13B <- subset(index13A, direction="descent")
+#' head(index13B[["file"]])
 #' }
 #'
 #' # Example 14: subset by column (for argos type)
 #' \dontrun{
 #' library(argoFloats)
-#' index14A <- subset(getIndex(filename="merge"), ID="5903889")
+#' index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
 #' index14B <- subset(index14A, cycle="074")
 #' argos14A <- readProfiles(getProfiles(index14B))
 #' argos14B <- subset(argos14A, column=1)
-#' argos14C <- subset(argos14A, column=2)
 #' D <- data.frame(Oxygen = argos14A[["oxygen"]],
-#' col1= argos14B[["oxygen"]][[1]],
-#' col2=argos14C[["oxygen"]][[1]])
+#' col1= argos14B[["oxygen"]][[1]])
 #' }
 #'
 #' # Example 15: subset by cycle (for argos type) to create TS diagram
