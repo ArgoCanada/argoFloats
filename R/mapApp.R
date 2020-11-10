@@ -6,7 +6,7 @@ col <- list(core=7, bgc=3, deep=6)
 
 ## Start and end times, covering 21 days to usually get 2 cycles
 endTime <- as.POSIXlt(Sys.time())
-startTime <- as.POSIXlt(endTime - 21 * 86400)
+startTime <- as.POSIXlt(endTime - 10 * 86400)
 
 
 #' @importFrom grDevices grey
