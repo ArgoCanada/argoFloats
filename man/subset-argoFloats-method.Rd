@@ -35,8 +35,8 @@ may be given in the \code{...} argument, but that \code{\link[=merge,argoFloats-
 be used to merge indices  created by \code{subset}, which effectively creates a
 logical "or" operation.
 B) type \code{"argos"}, as created by \code{\link[=readProfiles]{readProfiles()}}. Note that the only subset
-condition that can be give in the \code{...} argument is \code{column} or \code{cycle} for \code{argos}
-type.
+condition that can be give in the \code{...} argument is \code{column},\code{cycle}, or
+\code{dataStateIndicator} for \code{argos} type.
 }
 \details{
 The possibilities for the \code{...} argument are as follows.
@@ -105,8 +105,14 @@ See example 13.
 \item An integer value named \code{column}, that selects which column of parameters
 to obtain. Note that this type of subset is possible for \code{argos} and \code{index}
 type objects.
+See example 14.
 \item A integer value named \code{debug} that controls whether \code{subset()} prints
 some information to describe what it is doing.
+\item A character value named \code{dataStateIndicator}, equal to either "0A", "1A",
+"2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which \code{dataStateIndicator}
+to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
+understand the processing stage of data.
+See example 16.
 }
 
 In all cases, the notation is that longitude is positive
@@ -226,7 +232,20 @@ argos <- readProfiles(profiles)
 plot(subset(argos, cycle="147"), which="TS")
 }
 
+# Example 16: subset by `dataStateIndicator`
+\dontrun{
+data("index")
+index16 <- subset(index, 1:40)
+argos <- readProfiles(getProfiles(index16))
+argos16A <- subset(argos, dataStateIndicator="2C")
+argos16B <- subset(argos, dataStateIndicator="2B")
+}
 
+}
+\references{
+Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+\url{https://doi.org/10.13155/29825}.
 }
 \author{
 Dan Kelley and Jaimie Harbin
