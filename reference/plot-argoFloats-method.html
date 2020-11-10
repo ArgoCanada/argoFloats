@@ -177,6 +177,7 @@ maps.</p>
   mapControl <span class='op'>=</span> <span class='cn'>NULL</span>,
   profileControl <span class='op'>=</span> <span class='cn'>NULL</span>,
   QCControl <span class='op'>=</span> <span class='cn'>NULL</span>,
+  summaryControl <span class='op'>=</span> <span class='cn'>NULL</span>,
   TSControl <span class='op'>=</span> <span class='cn'>NULL</span>,
   debug <span class='op'>=</span> <span class='fl'>0</span>,
   <span class='va'>...</span>
@@ -192,7 +193,8 @@ maps.</p>
     <tr>
       <th>which</th>
       <td><p>a character value indicating the type of plot. The possible
-choices are <code>"map"</code>, <code>"profile"</code>, <code>"QC"</code> and <code>"TS"</code>; see &#8220;Details&#8221;.</p></td>
+choices are <code>"map"</code>, <code>"profile"</code>, <code>"QC"</code>, <code>"summary"</code> and <code>"TS"</code>;
+see &#8220;Details&#8221;.</p></td>
     </tr>
     <tr>
       <th>bathymetry</th>
@@ -320,6 +322,13 @@ to be plotted.  If not provided, <code>QCControl</code> defaults to
 <code><a href='https://rdrr.io/r/base/list.html'>list(parameter="temperature")</a></code>.</p></td>
     </tr>
     <tr>
+      <th>summaryControl</th>
+      <td><p>a list that permits control of the <code>which="summary"</code>.
+If provided, it should contain an element named <code>items</code>, a character vector
+naming the items to be shown.  If not provided, <code>summaryControl</code> defaults
+to <code>list(items=c("dataStateIndicator", "latitude", "longitude", "length", "deepest")</code>.</p></td>
+    </tr>
+    <tr>
       <th>TSControl</th>
       <td><p>a list that permits control of the <code>which="TS"</code>
 case, and is ignored for the other cases.
@@ -401,6 +410,10 @@ profiles that are questionable. Note that if all of data at a given time
 have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 time. The bottom panel shows the mean value of the parameter in question
 regardless of the flag value. See Example 7.</p></li>
+<li><p>For <code>which="summary"</code>, one or more time-series panels are shown
+in a vertical stack.  If there is only one ID in <code>x</code>, then the cycle
+values are indicated along the top axis of the top panel. The choice
+of panels is set by the <code>summaryControl</code> argument.  See Example 10.</p></li>
 <li><p>For <code>which="TS"</code>,  an overall TS plot is created.  This only works if <code>x</code>
 is an <a href='argoFloats-class.html'>argoFloats</a> object of type <code>"argos"</code>, i.e. if it was
 created by <code><a href='readProfiles.html'>readProfiles()</a></code>. The scales for the plot
@@ -545,6 +558,13 @@ Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3.5</span>,<span class='fl'>3.5</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># mimic the oce::plotProfile() default</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"profile"</span>, profileControl<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>parameter<span class='op'>=</span><span class='st'>"temperature"</span>, ytype<span class='op'>=</span><span class='st'>"sigma0"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-argoFloats-method-4.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># Example 10: Summary plot</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
+<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='getProfiles.html'>getProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span><span class='op'>)</span>, ID<span class='op'>=</span><span class='fl'>1901584</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"summary"</span>,
+  summaryControl<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>items<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"dataStateIndicator"</span>,<span class='st'>"length"</span>,<span class='st'>"longitude"</span>,<span class='st'>"latitude"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>}</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
