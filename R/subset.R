@@ -390,7 +390,7 @@ setMethod(f="subset",
                           stop("in subset,argoFloats-method():\n  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
                       if (!(dataStateIndicator %in% c("0A", "1A", "2B", "2B+", "2C", "2C+", "3B", "3C")))
                           stop("in subset,argoFloats-method():\n  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
-                      keep <- grepl(dataStateIndicator, unlist(argos[['dataStateIndicator']]))
+                      keep <- grepl(dataStateIndicator, unlist(argos[['dataStateIndicator']]), fixed=TRUE)
                       x@data[[1]] <- x@data[[1]][keep]
                   } else {
                       stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"column\", \"cycle\", or \"dataSateIndicator\"", call.=FALSE)
