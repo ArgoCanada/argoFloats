@@ -118,7 +118,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical (BGC) , or deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, and direction. Once downloaded, such data sets can be analysed within <code>argoFloats</code> or using other R tools and packages.</p>
+<p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical (“BGC”) , or deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, column, or dataStateIndicator. Once downloaded, such data sets can be analysed within <code>argoFloats</code> or using other R tools and packages.</p>
 </div>
 <div id="youtube-videos" class="section level1">
 <h1 class="hasAnchor">
@@ -345,7 +345,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 <div id="subset" class="section level2">
 <h2 class="hasAnchor">
 <a href="#subset" class="anchor"></a>subset()</h2>
-<p>As shown by Figure 1, the next step when working with the <code>argoFloats</code> package is to use the <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> function to focus on a subset of profiles. The <code>argoFloats</code> package provides tools to sift through profiles based on ID, time, geography, variable, institution, ocean, dataMode, cycle, direction, and column.</p>
+<p>As shown by Figure 1, the next step when working with the <code>argoFloats</code> package is to use the <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> function to focus on a subset of profiles. The <code>argoFloats</code> package provides tools to sift through profiles based on ID, time, geography, variable, institution, ocean, dataMode, cycle, direction, column, and dataStateIndicator.</p>
 <p>For geographic subsetting, the user has the ability to subset by <code>circle</code>, <code>rectangle</code>, or <code>polygon</code>.</p>
 <p>To subset for specific groups of Argos off the coast of Bahamas, the following code is used:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
