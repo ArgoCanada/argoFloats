@@ -55,8 +55,8 @@ may be given in the ... argument, but that merge,argoFloats-method() can
 be used to merge indices  created by subset, which effectively creates a
 logical &quot;or&quot; operation.
 B) type &quot;argos&quot;, as created by readProfiles(). Note that the only subset
-condition that can be give in the ... argument is column or cycle for argos
-type." />
+condition that can be give in the ... argument is column,cycle, or
+dataStateIndicator for argos type." />
 
 
 
@@ -156,8 +156,8 @@ may be given in the <code>...</code> argument, but that <code><a href='merge,arg
 be used to merge indices  created by <code>subset</code>, which effectively creates a
 logical "or" operation.
 B) type <code>"argos"</code>, as created by <code><a href='readProfiles.html'>readProfiles()</a></code>. Note that the only subset
-condition that can be give in the <code>...</code> argument is <code>column</code> or <code>cycle</code> for <code>argos</code>
-type.</p>
+condition that can be give in the <code>...</code> argument is <code>column</code>,<code>cycle</code>, or
+<code>dataStateIndicator</code> for <code>argos</code> type.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for argoFloats</span>
@@ -259,14 +259,25 @@ that selects whether to retain data from the ascent or decent phase.
 See example 13.</p></li>
 <li><p>An integer value named <code>column</code>, that selects which column of parameters
 to obtain. Note that this type of subset is possible for <code>argos</code> and <code>index</code>
-type objects.</p></li>
+type objects.
+See example 14.</p></li>
 <li><p>A integer value named <code>debug</code> that controls whether <code><a href='https://rdrr.io/r/base/subset.html'>subset()</a></code> prints
 some information to describe what it is doing.</p></li>
+<li><p>A character value named <code>dataStateIndicator</code>, equal to either "0A", "1A",
+"2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which <code>dataStateIndicator</code>
+to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
+understand the processing stage of data.
+See example 16.</p></li>
 </ol>
 
 <p>In all cases, the notation is that longitude is positive
 for degrees East and negative for degrees West, and that latitude
 is positive for degrees North and negative for degrees South.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+<a href='https://doi.org/10.13155/29825'>https://doi.org/10.13155/29825</a>.</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Dan Kelley and Jaimie Harbin</p>
@@ -384,6 +395,14 @@ col2<span class='op'>=</span><span class='va'>argos14C</span><span class='op'>[[
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>argos</span>, cycle<span class='op'>=</span><span class='st'>"147"</span><span class='op'>)</span>, which<span class='op'>=</span><span class='st'>"TS"</span><span class='op'>)</span>
 <span class='op'>}</span>
 
+<span class='co'># Example 16: subset by `dataStateIndicator`</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"index"</span><span class='op'>)</span>
+<span class='va'>index16</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>40</span><span class='op'>)</span>
+<span class='va'>argos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='getProfiles.html'>getProfiles</a></span><span class='op'>(</span><span class='va'>index16</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>argos16A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>argos</span>, dataStateIndicator<span class='op'>=</span><span class='st'>"2C"</span><span class='op'>)</span>
+<span class='va'>argos16B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>argos</span>, dataStateIndicator<span class='op'>=</span><span class='st'>"2B"</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 </div></pre>
   </div>
