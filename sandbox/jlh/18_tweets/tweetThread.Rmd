@@ -19,7 +19,7 @@ argoFloats has an easy-to-follow work flow, to allow users to effectively access
 To get familiar with argoFloats, check out the user website (https://argocanada.github.io/argoFloats/index.html) or the developer website (https://github.com/ArgoCanada/argoFloats) for more advanced R users.
 
 # Tweet 4
-Users can easily sift through data based on geographical region, parameter, time, institution, deep Argo, ID, ocean, mode, cycle, direction, or column. A series of real-time examples exists at our Youtube channel https://www.youtube.com/channel/UCmVBNwRRGx5sRa1skvfOrvA.
+Users can easily sift through data based on geographical region, parameter, time, institution, deep Argo, ID, ocean, mode, cycle, direction, column, or dataStateIndicator. A series of real-time examples exists at our Youtube channel https://www.youtube.com/channel/UCmVBNwRRGx5sRa1skvfOrvA.
 
 # Tweet 5
 For example, the following code demonstrates the workflow to produce a TS plot near Bermuda.

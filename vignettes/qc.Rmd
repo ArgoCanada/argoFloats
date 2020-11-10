@@ -61,6 +61,8 @@ a flag value of 1, 2, 5, or 8 are considered 'good', those given a
 flag value of 9 are missing, and those given flags 3, 4, 6, and 7
 are considered 'bad'.
 
+A useful parameter to familiarize with is the `dataStateIndicator`. This tells the user the the degree of processing the data has passed through and can be helpful to determine the validity of the data. `argoFloats` has incorporated a way to subset by `dataStateIndicator` to allow the user to analyze data with a specific dgree of validity if they wish.
+
 The `argoFloats` package, using the associated `oce` package, has incorporated a 3-step process when
 considering argo QC flags. The process encourages users to
 always analyze the data they are considering, and acknowledges that the user

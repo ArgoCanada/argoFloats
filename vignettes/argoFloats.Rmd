@@ -37,7 +37,7 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 
 # Introduction
 
-The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical (BGC) , or deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, and direction. Once downloaded, such data sets can be analysed within `argoFloats` or using other R tools and packages.
+The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical ("BGC") , or deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, column, or dataStateIndicator. Once downloaded, such data sets can be analysed within `argoFloats` or using other R tools and packages.
 
 # Youtube Videos
 
@@ -170,7 +170,7 @@ ai <- index
 
 ## subset()
 
-As shown by Figure 1, the next step when working with the `argoFloats` package is to use the `subset()` function to focus on a subset of profiles. The `argoFloats` package provides tools to sift through profiles based on ID, time, geography, variable, institution, ocean, dataMode, cycle, direction, and column.
+As shown by Figure 1, the next step when working with the `argoFloats` package is to use the `subset()` function to focus on a subset of profiles. The `argoFloats` package provides tools to sift through profiles based on ID, time, geography, variable, institution, ocean, dataMode, cycle, direction, column, and dataStateIndicator.
 
 For geographic subsetting, the user has the ability to subset by `circle`, `rectangle`, or `polygon`.
 

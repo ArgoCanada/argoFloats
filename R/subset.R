@@ -12,8 +12,8 @@
 #' be used to merge indices  created by `subset`, which effectively creates a
 #' logical "or" operation.
 #' B) type `"argos"`, as created by [readProfiles()]. Note that the only subset
-#' condition that can be give in the `...` argument is `column` or `cycle` for `argos`
-#' type.
+#' condition that can be give in the `...` argument is `column`,`cycle`, or
+#' `dataStateIndicator` for `argos` type.
 #'
 #' The possibilities for the `...` argument are as follows.
 #'
@@ -94,9 +94,16 @@
 #' 14. An integer value named `column`, that selects which column of parameters
 #' to obtain. Note that this type of subset is possible for `argos` and `index`
 #' type objects.
+#' See example 14.
 #'
 #' 15. A integer value named `debug` that controls whether `subset()` prints
 #' some information to describe what it is doing.
+#'
+#' 16. A character value named `dataStateIndicator`, equal to either "0A", "1A",
+#' "2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which `dataStateIndicator`
+#' to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
+#' understand the processing stage of data.
+#' See example 16.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -233,6 +240,19 @@
 #' plot(subset(argos, cycle="147"), which="TS")
 #' }
 #'
+#' # Example 16: subset by `dataStateIndicator`
+#' \dontrun{
+#' data("index")
+#' index16 <- subset(index, 1:40)
+#' argos <- readProfiles(getProfiles(index16))
+#' argos16A <- subset(argos, dataStateIndicator="2C")
+#' argos16B <- subset(argos, dataStateIndicator="2B")
+#' }
+#'
+#' @references
+#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+#' \url{https://doi.org/10.13155/29825}.
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -363,8 +383,17 @@ setMethod(f="subset",
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/length(keep)), "%)")
                       argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                       return(res)
+                  } else if (dotsNames[1]=="dataStateIndicator") {
+                      argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
+                      dataStateIndicator <- dots[[1]]
+                      if (!is.character(dataStateIndicator))
+                          stop("in subset,argoFloats-method():\n  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
+                      if (!(dataStateIndicator %in% c("0A", "1A", "2B", "2B+", "2C", "2C+", "3B", "3C")))
+                          stop("in subset,argoFloats-method():\n  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
+                      keep <- grepl(dataStateIndicator, unlist(argos[['dataStateIndicator']]), fixed=TRUE)
+                      x@data[[1]] <- x@data[[1]][keep]
                   } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"column\" or \"cycle\"", call.=FALSE)
+                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"column\", \"cycle\", or \"dataSateIndicator\"", call.=FALSE)
                   }
               }
               ## Step 2: Now we know the type is either "index" or "profiles".  In either case,

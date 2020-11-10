@@ -3,8 +3,8 @@
 #' A Package for Processing Argo Float Profiles
 #'
 #' The `argoFloats` package provides tools for downloading and processing Argo profile data.
-#' It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
-#' also to sift these profiles based on ID, time, geography, variable, institution, and ocean.
+#' It allows users to focus on core Argo, biogeochemical ("BGC") Argo, or deep Argo profiles, and
+#' also to sift these profiles based on ID, time, geography, variable, institution, and ocean, etc.
 #' Once downloaded, such datasets can be analysed within `argoFloats` or using other R tools
 #' and packages.
 #'
