@@ -110,6 +110,11 @@ pinusr <- function(usr)
 #' time. The bottom panel shows the mean value of the parameter in question
 #' regardless of the flag value. See Example 7.
 #'
+#' * For `which="summary"`, one or more time-series panels are shown
+#' in a vertical stack.  If there is only one ID in `x`, then the cycle
+#' values are indicated along the top axis of the top panel. The choice
+#' of panels is set by the `summaryControl` argument.  See Example 10.
+#'
 #' * For `which="TS"`,  an overall TS plot is created.  This only works if `x`
 #' is an [argoFloats-class] object of type `"argos"`, i.e. if it was
 #' created by [readProfiles()]. The scales for the plot
@@ -124,7 +129,8 @@ pinusr <- function(usr)
 #' @param x an [`argoFloats-class`] object.
 #'
 #' @param which a character value indicating the type of plot. The possible
-#' choices are `"map"`, `"profile"`, `"QC"` and `"TS"`; see \dQuote{Details}.
+#' choices are `"map"`, `"profile"`, `"QC"`, `"summary"` and `"TS"`;
+#' see \dQuote{Details}.
 #'
 #' @param bathymetry an argument used only if `which="map"`, to control
 #' whether (and how) to indicate water depth; see \dQuote{Details}.
@@ -219,6 +225,12 @@ pinusr <- function(usr)
 #' value naming the quantity for which the quality-control information is
 #' to be plotted.  If not provided, `QCControl` defaults to
 #' `list(parameter="temperature")`.
+#'
+#' @param summaryControl a list that permits control of the `which="summary"`.
+#' If provided, it should contain an element named `items`, a character vector
+#' naming the items to be shown.  If not provided, `summaryControl` defaults
+#' to `list(items=c("dataStateIndicator", "latitude", "longitude", "length",
+#' "deepest")`.
 #'
 #' @param TSControl a list that permits control of the `which="TS"`
 #' case, and is ignored for the other cases.
@@ -330,6 +342,13 @@ pinusr <- function(usr)
 #' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 #' plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sigma0"))
 #'
+#' # Example 10: Summary plot
+#'\dontrun{
+#' library(argoFloats)
+#' a <- readProfiles(getProfiles(subset(getIndex(), ID=1901584)))
+#' plot(a, which="summary",
+#'   summaryControl=list(items=c("dataStateIndicator","length","longitude","latitude")))}
+#'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
@@ -357,12 +376,15 @@ setMethod(f="plot",
                               mapControl=NULL,
                               profileControl=NULL,
                               QCControl=NULL,
+                              summaryControl=NULL,
                               TSControl=NULL,
                               debug=0,
                               ...)
           {
               if (!requireNamespace("oce", quietly=TRUE))
                   stop("must install.packages(\"oce\") for plot() to work")
+              marGiven <- !is.null(mar)
+              mgpGiven <- !is.null(mgp)
               debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
               argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1, style="bold")
               dots <- list(...)
@@ -661,6 +683,58 @@ setMethod(f="plot",
                       polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="tan")
                   }
                   par(mar=omar, mgp=omgp)
+              } else if (which == "summary") {
+                  argoFloatsDebug(debug, "summary plot\n", sep="")
+                  if (is.null(summaryControl)) {
+                      summaryControl <- list(items=c("dataStateIndicator", "latitude", "longitude", "length", "deepest"))
+                  }
+                  if (!"items" %in% names(summaryControl))
+                      stop("summaryControl must be a list containing a character vector named \"items\"")
+                  print(summaryControl)
+                  items <- summaryControl$items
+                  nitems <- length(items)
+                  if (nitems) {
+                      par(mfrow=c(nitems, 1))
+                      time <- as.POSIXct(unlist(x[["time"]]), origin="1970-01-01", tz="UTC")
+                      o <- order(time)
+                      for (iitem in seq_len(nitems)) {
+                          if (!marGiven) # top panel needs space for ticks
+                              mar <- if (iitem==1) c(1.7,3,2,1) else c(1.7,3,1.5,1)
+                          if (!mgpGiven)
+                              mgp <- c(2, 0.7, 0)
+                          if (items[iitem] == "dataStateIndicator") {
+                              y <- unlist(x[["dataStateIndicator"]])
+                              if (length(y)) {
+                                  u <- sort(unique(y))
+                                  yy <- seq_along(u)
+                                  oce::oce.plot.ts(range(time), range(yy), ylab="Data State Ind.",
+                                                   drawTimeRange=FALSE, type="n", mar=mar, axes=FALSE, mgp=mgp, xaxs="i")
+                                  abline(h=seq_along(u), col="gray")
+                                  points(time[o], factor(y)[o])
+                                  oce::oce.axis.POSIXct(side=1, drawTimeRange=FALSE)
+                                  box()
+                                  axis(side=2, at=yy, labels=u)
+                              }
+                          } else if (items[iitem] == "length") {
+                              y <- sapply(x[["argos"]], function(a) length(a[["pressure"]]))
+                              oce::oce.plot.ts(time[o], y[o], ylab="Length", drawTimeRange=FALSE, mar=mar, mgp=mgp, type="p", xaxs="i")
+                          } else if (items[iitem] == "longitude") {
+                              y <- x[["longitude"]]
+                              oce::oce.plot.ts(time[o], y[o], ylab="Longitude", drawTimeRange=FALSE, mar=mar, mgp=mgp, type="p", xaxs="i")
+                          } else if (items[iitem] == "latitude") {
+                              y <- x[["latitude"]]
+                              oce::oce.plot.ts(time[o], y[o], ylab="Latitude", drawTimeRange=FALSE, mar=mar, mgp=mgp, type="p", xaxs="i")
+                          } else if (items[iitem] == "deepest") {
+                              y <- sapply(x[["argos"]], function(a) max(a[["pressure"]], na.rm=TRUE))
+                              oce::oce.plot.ts(time[o], y[o], ylab="Max Pres.", drawTimeRange=FALSE, mar=mar, mgp=mgp, type="p", xaxs="i")
+                           }
+                          if (iitem == 1) {
+                              if (1 == length(unique(x[["ID"]])))
+                                  axis(side=3, at=time[o], labels=x[["cycle"]][o],
+                                       cex.axis=max(0.75, 0.75*par("cex")))
+                          }
+                      }
+                  }
               } else if (which == "TS") {
                   argoFloatsDebug(debug, "TS plot\n", sep="")
                   if ((x[["type"]] != "argos"))
@@ -765,7 +839,7 @@ setMethod(f="plot",
                       o <- order(time) # cycles are not time-ordered in index files
                       ## Tighten bottom axis spacing, since there's no need to say "Time" there
                       mar <- c(mgp[1], mgp[1] + 1.5, mgp[2] + 1, mgp[2] + 3/4)
-                      oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange=FALSE, type="l", mar=mar)
+                      oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange=FALSE, type="l", mar=mar, xaxs="i")
                       points(time[o], q[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                       abline(h=50, col="red", lty="dashed")
                       if (1 == length(unique(x[["ID"]])))

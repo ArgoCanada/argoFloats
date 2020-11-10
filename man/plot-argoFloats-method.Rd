@@ -24,6 +24,7 @@
   mapControl = NULL,
   profileControl = NULL,
   QCControl = NULL,
+  summaryControl = NULL,
   TSControl = NULL,
   debug = 0,
   ...
@@ -33,7 +34,8 @@
 \item{x}{an \code{\linkS4class{argoFloats}} object.}
 
 \item{which}{a character value indicating the type of plot. The possible
-choices are \code{"map"}, \code{"profile"}, \code{"QC"} and \code{"TS"}; see \dQuote{Details}.}
+choices are \code{"map"}, \code{"profile"}, \code{"QC"}, \code{"summary"} and \code{"TS"};
+see \dQuote{Details}.}
 
 \item{bathymetry}{an argument used only if \code{which="map"}, to control
 whether (and how) to indicate water depth; see \dQuote{Details}.}
@@ -128,6 +130,11 @@ value naming the quantity for which the quality-control information is
 to be plotted.  If not provided, \code{QCControl} defaults to
 \code{list(parameter="temperature")}.}
 
+\item{summaryControl}{a list that permits control of the \code{which="summary"}.
+If provided, it should contain an element named \code{items}, a character vector
+naming the items to be shown.  If not provided, \code{summaryControl} defaults
+to \verb{list(items=c("dataStateIndicator", "latitude", "longitude", "length", "deepest")}.}
+
 \item{TSControl}{a list that permits control of the \code{which="TS"}
 case, and is ignored for the other cases.
 If \code{TSControl} is not supplied as an argument,
@@ -214,6 +221,10 @@ profiles that are questionable. Note that if all of data at a given time
 have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 time. The bottom panel shows the mean value of the parameter in question
 regardless of the flag value. See Example 7.
+\item For \code{which="summary"}, one or more time-series panels are shown
+in a vertical stack.  If there is only one ID in \code{x}, then the cycle
+values are indicated along the top axis of the top panel. The choice
+of panels is set by the \code{summaryControl} argument.  See Example 10.
 \item For \code{which="TS"},  an overall TS plot is created.  This only works if \code{x}
 is an \linkS4class{argoFloats} object of type \code{"argos"}, i.e. if it was
 created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
@@ -320,6 +331,13 @@ a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sigma0"))
+
+# Example 10: Summary plot
+\dontrun{
+library(argoFloats)
+a <- readProfiles(getProfiles(subset(getIndex(), ID=1901584)))
+plot(a, which="summary",
+  summaryControl=list(items=c("dataStateIndicator","length","longitude","latitude")))}
 
 }
 \references{

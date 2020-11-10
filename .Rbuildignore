@@ -4,6 +4,7 @@
 ^.travis.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^[0-9]*.R$
 ^appveyor.yml$
 ^argo.rda$
 ^man-roxygen$
@@ -39,3 +40,4 @@
 ^tests/testthat/_snaps$
 
 ^\.github$
+^[0-9].R$
