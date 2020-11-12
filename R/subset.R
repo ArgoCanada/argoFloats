@@ -563,6 +563,8 @@ setMethod(f="subset",
                       if (dotsNames[1] == "id")
                           warning("In subset,argoFloats-method : converted subset(x,id=...) to subset(x,ID=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
                       ID <- dots[[1]]
+                      if (!is.character(ID))
+                          stop("in subset,argoFloats-method() : \"ID\" must be character value", call.=FALSE)
                       file <- x@data$index$file
                       fileID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", file)
                       keep <- ID == fileID
@@ -572,8 +574,8 @@ setMethod(f="subset",
                   } else if (dotsNames[1]=="ocean") {
                       argoFloatsDebug(debug, "subsetting by ocean\n")
                       ocean <- dots[[1]]
-                      if(!is.list(dots[1]))
-                          stop("in subset,argoFloats-method():\n  \"ocean\" must be a list")
+                      if (!is.character(ocean))
+                          stop("in subset,argoFloats-method() : \"ocean\" must be character value", call.=FALSE)
                       if (length(ocean) > 1)
                           stop("in subset,argoFloats-method():\n \"ocean\" cannot hold more than one element", call.=FALSE)
                       keep <- grepl(ocean, x@data$index$ocean)
@@ -596,11 +598,11 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1] == "profile" || dotsNames[1] == "cycle") {
-                      argoFloatsDebug(debug, "subsetting by profile\n")
-                      if (dotsNames[1] == "profile")
-                          warning("In subset,argoFloats-method : converted subset(x,profile=...) to subset(x,cycle=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Sep-01.", call.=FALSE)
+                  } else if (dotsNames[1] == "cycle") {
+                      argoFloatsDebug(debug, "subsetting by cycle\n")
                       cycle <- dots[[1]]
+                      if (!is.character(cycle))
+                          stop("in subset,argoFloats-method() : \"cycle\" must be character value", call.=FALSE)
                       if (is.list(dots[1]))
                           cycle <- unlist(cycle)
                       cycle <- as.character(cycle)

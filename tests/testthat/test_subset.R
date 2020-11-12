@@ -96,7 +96,8 @@ test_that("subset by ocean", {
 test_that("subset by cycle", {
           data("index")
           N <- 5
-          indexProfile <- expect_message(subset(index, cycle=124), paste("Kept", N, "profiles"))
+          index1 <- expect_error(subset(index, cycle=124, "Error: in subset,argoFloats-method() : \"cycle\" must be character value"))
+          indexProfile <- expect_message(subset(index, cycle="124"), paste("Kept", N, "profiles"))
           expect_equal(dim(indexProfile[["index"]]), c(N, 8))
           expect_equal(indexProfile[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
           expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
