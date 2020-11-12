@@ -1,0 +1,5 @@
+This video demonstrates how to subset by dataStateIndicator to ensure the highest level of data processing. It then explains how to use the newly developed summary plot to analyze the dataStateindicator, length, longitude, and latitude.
+
+R language,oceanography,Dalhousie University,Argo float,computing,data processing
+
+
