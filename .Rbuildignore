@@ -1,6 +1,7 @@
 ^.git$
 ^.github$
 ^issues$
+^issue[0-9]*.R$
 ^.travis.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
