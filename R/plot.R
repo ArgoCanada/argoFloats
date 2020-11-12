@@ -696,7 +696,7 @@ setMethod(f="plot",
                   }
                   if (!"items" %in% names(summaryControl))
                       stop("summaryControl must be a list containing a character vector named \"items\"")
-                  print(summaryControl)
+                  ## print(summaryControl)
                   items <- summaryControl$items
                   nitems <- length(items)
                   if (nitems) {
@@ -725,10 +725,10 @@ setMethod(f="plot",
                               y <- sapply(x[["argos"]], function(a) length(a[["pressure"]]))
                               oce::oce.plot.ts(time[o], y[o], ylab="Length", drawTimeRange=FALSE, mar=mar, mgp=mgp, type="p", xaxs="i")
                           } else if (items[iitem] == "longitude") {
-                              y <- x[["longitude"]]
+                              y <- sapply(x[["longitude"]], function(a) a[1])
                               oce::oce.plot.ts(time[o], y[o], ylab="Longitude", drawTimeRange=FALSE, mar=mar, mgp=mgp, type="p", xaxs="i")
                           } else if (items[iitem] == "latitude") {
-                              y <- x[["latitude"]]
+                              y <- sapply(x[["latitude"]], function(a) a[1])
                               oce::oce.plot.ts(time[o], y[o], ylab="Latitude", drawTimeRange=FALSE, mar=mar, mgp=mgp, type="p", xaxs="i")
                           } else if (items[iitem] == "deepest") {
                               y <- sapply(x[["argos"]], function(a) max(a[["pressure"]], na.rm=TRUE))
