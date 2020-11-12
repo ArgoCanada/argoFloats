@@ -60,8 +60,7 @@ raw <- readProfiles(getProfiles(i))
 clean <- applyQC(raw)
 par(mfrow=c(1, 2))
 plot(raw, which="TS")
-plot(clean, which="TS")
-}
+plot(clean, which="TS")}
 
 }
 \references{

@@ -77,9 +77,7 @@ if (requireNamespace("oce")) {
     url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
     fileSable <- getProfileFromUrl(url=url)
     argoSable <- read.oce(fileSable)
-    plot(argoSable, which=c(1, 4, 6, 5))
-}
-}
+    plot(argoSable, which=c(1, 4, 6, 5))}}
 
 }
 \author{

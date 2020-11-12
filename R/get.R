@@ -43,9 +43,7 @@
 #'     url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
 #'     fileSable <- getProfileFromUrl(url=url)
 #'     argoSable <- read.oce(fileSable)
-#'     plot(argoSable, which=c(1, 4, 6, 5))
-#' }
-#'}
+#'     plot(argoSable, which=c(1, 4, 6, 5))}}
 #'
 #' @export
 #'
@@ -127,7 +125,6 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #' `argo_bio-traj_index.txt.gz`          \tab -                       \tab Bio-trajectory files\cr
 #' `argo_synthetic-profile_index.txt.gz` \tab `"synthetic"`           \tab Synthetic data, successor to `"merge"`\cr
 #' }
-#'
 #' Note: as of Dec 01,2020 the user will no longer have the option to use `"argo"` as a filename argument. Instead, `"core"` will
                                         #' be used.
 #'

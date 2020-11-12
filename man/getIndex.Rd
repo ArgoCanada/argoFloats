@@ -129,7 +129,6 @@ longer to download, so \code{\link[=getIndex]{getIndex()}} is not designed to wo
 \code{argo_bio-traj_index.txt.gz}          \tab -                       \tab Bio-trajectory files\cr
 \code{argo_synthetic-profile_index.txt.gz} \tab \code{"synthetic"}           \tab Synthetic data, successor to \code{"merge"}\cr
 }
-
 Note: as of Dec 01,2020 the user will no longer have the option to use \code{"argo"} as a filename argument. Instead, \code{"core"} will
 be used.
 

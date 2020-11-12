@@ -52,8 +52,7 @@
 #' clean <- applyQC(raw)
 #' par(mfrow=c(1, 2))
 #' plot(raw, which="TS")
-#' plot(clean, which="TS")
-#' }
+#' plot(clean, which="TS")}
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,

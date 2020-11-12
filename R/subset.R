@@ -174,14 +174,12 @@
 #' # Example 8: subset to a specific ID
 #' \dontrun{
 #' ai <- getIndex(filename="synthetic", destdir="~/data/argo")
-#' index9 <- subset(ai, ID="1900722")
-#' }
+#' index9 <- subset(ai, ID="1900722")}
 #'
 #' # Example 9: subset data to only include deep argo
 #' \dontrun{
 #' ai <- getIndex(filename="synthetic", destdir="~/data/argo")
-#' index8 <- subset(ai, deep=TRUE)
-#' }
+#' index8 <- subset(ai, deep=TRUE)}
 #'
 #' # Example 10: subset data by ocean
 #' \dontrun{
@@ -191,8 +189,7 @@
 #' atlantic <- subset(index10, ocean="A") # Subsetting for Atlantic Ocean
 #' pacific <- subset(index10, ocean="P")
 #' points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2)
-#' points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3)
-#' }
+#' points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3)}
 #'
 #' # Example 11: subset by delayed time
 #' \dontrun{
@@ -203,23 +200,20 @@
 #' oxygen <- argos[["oxygen"]][[3]]
 #' pressure <- argos[["pressure"]][[3]]
 #' plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
-#'      ylab="Pressure (dbar)", xlab="Oxygen (umol/kg)")
-#' }
+#'      ylab="Pressure (dbar)", xlab="Oxygen (umol/kg)")}
 #'
 #' # Example 12: subset by cycle
 #' \dontrun{
 #' data(index)
 #' index12 <- subset(index, cycle="124")
-#' cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")
-#' }
+#' cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")}
 #'
 #' # Example 13: subset by direction
 #' \dontrun{
 #' library(argoFloats)
 #' index13A <- subset(getIndex(), deep=TRUE)
 #' index13B <- subset(index13A, direction="descent")
-#' head(index13B[["file"]])
-#' }
+#' head(index13B[["file"]])}
 #'
 #' # Example 14: subset by column (for argos type)
 #' \dontrun{
@@ -229,8 +223,7 @@
 #' argos14A <- readProfiles(getProfiles(index14B))
 #' argos14B <- subset(argos14A, column=1)
 #' D <- data.frame(Oxygen = argos14A[["oxygen"]],
-#' col1= argos14B[["oxygen"]][[1]])
-#' }
+#' col1= argos14B[["oxygen"]][[1]])}
 #'
 #' # Example 15: subset by cycle (for argos type) to create TS diagram
 #' \dontrun{
@@ -238,8 +231,7 @@
 #' index15 <- subset(index, ID="1901584")
 #' profiles <- getProfiles(index15)
 #' argos <- readProfiles(profiles)
-#' plot(subset(argos, cycle="147"), which="TS")
-#' }
+#' plot(subset(argos, cycle="147"), which="TS")}
 #'
 #' # Example 16: subset by `dataStateIndicator`
 #' \dontrun{
@@ -247,8 +239,7 @@
 #' index16 <- subset(index, 1:40)
 #' argos <- readProfiles(getProfiles(index16))
 #' argos16A <- subset(argos, dataStateIndicator="2C")
-#' argos16B <- subset(argos, dataStateIndicator="2B")
-#' }
+#' argos16B <- subset(argos, dataStateIndicator="2B")}
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
