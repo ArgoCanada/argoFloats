@@ -39,6 +39,4 @@
 ^doc$
 ^topoWorldFine.rda$
 ^tests/testthat/_snaps$
-
 ^\.github$
-^[0-9].R$

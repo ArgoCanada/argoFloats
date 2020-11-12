@@ -17,5 +17,4 @@ doc
 marmap*csv
 docs
 ^[0-9]*.R$
-^issue[0-9]*.R$
 
