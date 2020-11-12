@@ -714,7 +714,7 @@ setMethod(f="plot",
                                   u <- sort(unique(y))
                                   yy <- seq_along(u)
                                   oce::oce.plot.ts(range(time), range(yy), ylab="Data State Ind.",
-                                                   drawTimeRange=FALSE, type="n", mar=mar, axes=FALSE, mgp=mgp, xaxs="i")
+                                                   drawTimeRange=FALSE, type="n", mar=mar, axes=FALSE, mgp=mgp, xaxs="i",  ylim=range(0.8, (max(yy)+0.2)))
                                   abline(h=seq_along(u), col="gray")
                                   points(time[o], factor(y)[o])
                                   oce::oce.axis.POSIXct(side=1, drawTimeRange=FALSE)

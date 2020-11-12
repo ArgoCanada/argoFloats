@@ -377,7 +377,7 @@ setMethod(f="subset",
                       return(res)
                   } else if (dotsNames[1]=="dataStateIndicator") {
                       argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
-                      dataStateIndicator <<- dots[[1]]
+                      dataStateIndicator <- dots[[1]]
                       if (!is.character(dataStateIndicator))
                           stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
                       if (!(dataStateIndicator %in% c("0A", "1A", "2B", "2B+", "2C", "2C+", "3B", "3C")))
