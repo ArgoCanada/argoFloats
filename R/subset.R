@@ -233,7 +233,7 @@
 #' argos <- readProfiles(profiles)
 #' plot(subset(argos, cycle="147"), which="TS")}
 #'
-#' # Example 16: subset by `dataStateIndicator`
+#' # Example 16: subset by dataStateIndicator
 #' \dontrun{
 #' data("index")
 #' index16 <- subset(index, 1:40)
@@ -378,21 +378,21 @@ setMethod(f="subset",
                   } else if (dotsNames[1]=="dataStateIndicator") {
                       argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
                       dataStateIndicator <- dots[[1]]
-                      if (!is.character(dataStateIndicator))
-                          stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
-                      #if (!(dataStateIndicator %in% c("0A", "1A", "2B", "2B+", "2C", "2C+", "3B", "3C")))
-                       #   stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
-                      dsi <- sapply(x[["argos"]], function(a) a[["dataStateIndicator"]][1])
-                      keep <- grepl(dataStateIndicator, dsi , fixed=TRUE)
                       if (is.list(dots[1]))
                           dataStateIndicator <- unlist(dataStateIndicator)
-                      for (i in seq_along(dataStateIndicator)) {
-                          if (i > 1)
-                              keep <- keep | grepl(dataStateIndicator[i], dsi, fixed=TRUE)
+                      ## Reference Table 6, in section 3.6, of
+                      ## Argo Data Management Team. “Argo User’s Manual V3.3.”
+                      ## Ifremer, November 28, 2019. https://doi.org/10.13155/29825.
+                      if (!is.character(dataStateIndicator))
+                          stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value", call.=FALSE)
+                      ## In next, [1] means we take the first element (first profile) of the cycle.
+                      dsi <- sapply(x[["argos"]], function(a) a[["dataStateIndicator"]][1])
+                      keep <- rep(FALSE, length(dsi))
+                      for (dataStateIndicatorThis in dataStateIndicator) {
+                          keep <- keep | grepl(dataStateIndicatorThis, dsi , fixed=TRUE)
+                          ##> message(dataStateIndicatorThis)
+                          ##> print(keep)
                       }
-                      #message(oce::vectorShow(dataStateIndicator))
-                      #message(oce::vectorShow(dim(keep)))
-                      #message(oce::vectorShow(length(keep)))
                       x@data[[1]] <- x@data[[1]][keep]
                   } else {
                       stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"column\", \"cycle\", or \"dataSateIndicator\"", call.=FALSE)

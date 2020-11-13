@@ -229,8 +229,7 @@ pinusr <- function(usr)
 #' @param summaryControl a list that permits control of the `which="summary"`.
 #' If provided, it should contain an element named `items`, a character vector
 #' naming the items to be shown.  If not provided, `summaryControl` defaults
-#' to `list(items=c("dataStateIndicator", "latitude", "longitude", "length",
-#' "deepest")`.
+#' to `list(items=c("dataStateIndicator", "longitude", "latitude", "length", "deepest")`.
 #'
 #' @param TSControl a list that permits control of the `which="TS"`
 #' case, and is ignored for the other cases.
@@ -346,8 +345,7 @@ pinusr <- function(usr)
 #'\dontrun{
 #' library(argoFloats)
 #' a <- readProfiles(getProfiles(subset(getIndex(), ID=1901584)))
-#' plot(a, which="summary",
-#'   summaryControl=list(items=c("dataStateIndicator","length","longitude","latitude")))}
+#' plot(a, which="summary")}
 #'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -691,9 +689,8 @@ setMethod(f="plot",
                   par(mar=omar, mgp=omgp)
               } else if (which == "summary") {
                   argoFloatsDebug(debug, "summary plot\n", sep="")
-                  if (is.null(summaryControl)) {
-                      summaryControl <- list(items=c("dataStateIndicator", "latitude", "longitude", "length", "deepest"))
-                  }
+                  if (is.null(summaryControl))
+                      summaryControl <- list(items=c("dataStateIndicator", "longitude", "latitude", "length", "deepest"))
                   if (!"items" %in% names(summaryControl))
                       stop("summaryControl must be a list containing a character vector named \"items\"")
                   ## print(summaryControl)
@@ -733,7 +730,7 @@ setMethod(f="plot",
                           } else if (items[iitem] == "deepest") {
                               y <- sapply(x[["argos"]], function(a) max(a[["pressure"]], na.rm=TRUE))
                               oce::oce.plot.ts(time[o], y[o], ylab="Max Pres.", drawTimeRange=FALSE, mar=mar, mgp=mgp, type="p", xaxs="i")
-                           }
+                          }
                           if (iitem == 1) {
                               if (1 == length(unique(x[["ID"]])))
                                   axis(side=3, at=time[o], labels=x[["cycle"]][o],

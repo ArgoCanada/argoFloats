@@ -225,7 +225,7 @@ profiles <- getProfiles(index15)
 argos <- readProfiles(profiles)
 plot(subset(argos, cycle="147"), which="TS")}
 
-# Example 16: subset by `dataStateIndicator`
+# Example 16: subset by dataStateIndicator
 \dontrun{
 data("index")
 index16 <- subset(index, 1:40)

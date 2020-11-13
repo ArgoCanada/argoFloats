@@ -133,7 +133,7 @@ to be plotted.  If not provided, \code{QCControl} defaults to
 \item{summaryControl}{a list that permits control of the \code{which="summary"}.
 If provided, it should contain an element named \code{items}, a character vector
 naming the items to be shown.  If not provided, \code{summaryControl} defaults
-to \verb{list(items=c("dataStateIndicator", "latitude", "longitude", "length", "deepest")}.}
+to \verb{list(items=c("dataStateIndicator", "longitude", "latitude", "length", "deepest")}.}
 
 \item{TSControl}{a list that permits control of the \code{which="TS"}
 case, and is ignored for the other cases.
@@ -336,8 +336,7 @@ plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sig
 \dontrun{
 library(argoFloats)
 a <- readProfiles(getProfiles(subset(getIndex(), ID=1901584)))
-plot(a, which="summary",
-  summaryControl=list(items=c("dataStateIndicator","length","longitude","latitude")))}
+plot(a, which="summary")}
 
 }
 \references{
