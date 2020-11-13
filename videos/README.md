@@ -47,5 +47,5 @@
 
  * **argoFloats R 12: dataStateIndicator** (November 13, 2020)
     - Jaimie Harbin and Dan Kelley
-    - Video: TBA
-    - Sample Code: TBA
+    - Video: https://youtu.be/RhLmT5S_XzU
+    - Sample Code: https://github.com/ArgoCanada/argoFloats/blob/develop/videos/12/video12_dataStateIndicator.R

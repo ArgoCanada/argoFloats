@@ -55,6 +55,9 @@ As an adjunct to the written documentation, the following videos are provided, t
 | argoFloats R 08: Introduction to quality control flags | Jaimie Harbin & Dan Kelley | Aug 12, 2020 | <https://youtu.be/nN4xs0wCnB4> |
 | argoFloats R 09: Advanced Quality Control              | Dan Kelley & Jaimie Harbin | Aug 27, 2020 | <https://youtu.be/dYzEO5S2GBw> |
 | argoFloats R 10: Using adjusted data streams           | Dan Kelley & Jaimie Harbin | Sep  3, 2020 | <https://youtu.be/AuauWeUnopc> |
+| argoFloats R 11: mapApp() | Dan Kelley & Jaimie Harbin | Sep 21, 2020 |  https://youtu.be/PEkIBwXLLpE |
+| argoFloats R 12: dataStateIndicator() | Dan Kelley & Jaimie Harbin | Nov 13, 2020 | https://youtu.be/RhLmT5S_XzU |
+
 
 # Preliminary Setup
 
