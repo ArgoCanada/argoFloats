@@ -380,12 +380,16 @@ setMethod(f="subset",
                       dataStateIndicator <- dots[[1]]
                       if (!is.character(dataStateIndicator))
                           stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
-                      if (!(dataStateIndicator %in% c("0A", "1A", "2B", "2B+", "2C", "2C+", "3B", "3C")))
-                          stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
-                      if (length(dataStateIndicator) > 1)
-                          stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be of length 1", call.=FALSE)
+                      #if (!(dataStateIndicator %in% c("0A", "1A", "2B", "2B+", "2C", "2C+", "3B", "3C")))
+                       #   stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\"", call.=FALSE)
                       dsi <- sapply(x[["argos"]], function(a) a[["dataStateIndicator"]][1])
                       keep <- grepl(dataStateIndicator, dsi , fixed=TRUE)
+                      if (is.list(dots[1]))
+                          dataStateIndicator <- unlist(dataStateIndicator)
+                      for (i in seq_along(dataStateIndicator)) {
+                          if (i > 1)
+                              keep <- keep | grepl(dataStateIndicator[i], dsi, fixed=TRUE)
+                      }
                       #message(oce::vectorShow(dataStateIndicator))
                       #message(oce::vectorShow(dim(keep)))
                       #message(oce::vectorShow(length(keep)))

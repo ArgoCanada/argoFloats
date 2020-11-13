@@ -224,3 +224,16 @@ test_that("subset stop messages", {
     
 }
 )
+
+test_that("subset by dataStateIndicator", {
+  if (canDownload()) {
+  data("index")
+  N <- 20
+  index1 <- expect_message(subset(index, 1:20, paste("Kept", N, "profiles")))
+  profiles <- expect_silent(getProfiles(index1))
+  argos <- expect_output(readProfiles(profiles), "|===")
+  argos2 <- expect_silent(subset(argos, dataStateIndicator="2C"))
+  argos3 <- expect_error(subset(argos, dataStateIndicator="J", "Error: in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value of either \"0A\", \"1A\", \"2B\", \"2B+\", \"2C\", \"2C+\", \"3B\", or \"3C\""))
+  #argos4 <- expect_silent(subset(argos, dataStateIndicator=c("2C", "2B")))
+  }}
+)
