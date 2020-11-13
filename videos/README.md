@@ -44,4 +44,8 @@
  * **argoFloats R 11: mapApp()** (September 21, 2020)
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/PEkIBwXLLpE
-   
+
+ * **argoFloats R 12: dataStateIndicator** (November 13, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video: TBA
+    - Sample Code: TBA
