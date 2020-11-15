@@ -319,7 +319,9 @@ given defaults as in the previous sentence.</p></td>
 case.  If provided, it may contain an element named <code>parameter</code>, a character
 value naming the quantity for which the quality-control information is
 to be plotted, and an element named <code>dataStateIndicator</code>, a logical
-value controlling whether to add a panel showing this quantity.
+value controlling whether to add a panel showing this quantity
+(see Reference Table 6 of Carval et al, 2019, for more information
+on the information encoded in <code>dataStateIndicator</code>).
 If not provided, <code>QCControl</code> defaults to
 <code><a href='https://rdrr.io/r/base/list.html'>list(parameter="temperature",dataStateIndicator=FALSE)</a></code>.</p></td>
     </tr>
@@ -327,8 +329,14 @@ If not provided, <code>QCControl</code> defaults to
       <th>summaryControl</th>
       <td><p>a list that permits control of the <code>which="summary"</code>.
 If provided, it should contain an element named <code>items</code>, a character vector
-naming the items to be shown.  If not provided, <code>summaryControl</code> defaults
-to <code>list(items=c("dataStateIndicator", "longitude", "latitude", "length", "deepest")</code>.</p></td>
+naming the items to be shown.  The possible entries in this vector are
+<code>"dataStateIndicator"</code> (see Reference Table 6 of Carval et al, 2019,
+for more information on this quantity)), <code>"length"</code> (the number of levels
+in the profile), <code>"deepest"</code> (the highest pressure recorded),
+<code>"longitude"</code> and <code>"latitude"</code>. If <code>summaryControl</code> is not provided,
+all of these will be shown.  If all the elements of <code>x</code> have the same
+<code>ID</code>, then the top panel will have ticks on its top axis, indicating
+the <code>cycle</code>.</p></td>
     </tr>
     <tr>
       <th>TSControl</th>
