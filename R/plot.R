@@ -224,14 +224,22 @@ pinusr <- function(usr)
 #' case.  If provided, it may contain an element named `parameter`, a character
 #' value naming the quantity for which the quality-control information is
 #' to be plotted, and an element named `dataStateIndicator`, a logical
-#' value controlling whether to add a panel showing this quantity.
+#' value controlling whether to add a panel showing this quantity
+#' (see Reference Table 6 of Carval et al, 2019, for more information
+#' on the information encoded in `dataStateIndicator`).
 #' If not provided, `QCControl` defaults to
 #' `list(parameter="temperature",dataStateIndicator=FALSE)`.
 #'
 #' @param summaryControl a list that permits control of the `which="summary"`.
 #' If provided, it should contain an element named `items`, a character vector
-#' naming the items to be shown.  If not provided, `summaryControl` defaults
-#' to `list(items=c("dataStateIndicator", "longitude", "latitude", "length", "deepest")`.
+#' naming the items to be shown.  The possible entries in this vector are
+#' `"dataStateIndicator"` (see Reference Table 6 of Carval et al, 2019,
+#' for more information on this quantity)), `"length"` (the number of levels
+#' in the profile), `"deepest"` (the highest pressure recorded),
+#' `"longitude"` and `"latitude"`. If `summaryControl` is not provided,
+#' all of these will be shown.  If all the elements of `x` have the same
+#' `ID`, then the top panel will have ticks on its top axis, indicating
+#' the `cycle`.
 #'
 #' @param TSControl a list that permits control of the `which="TS"`
 #' case, and is ignored for the other cases.
