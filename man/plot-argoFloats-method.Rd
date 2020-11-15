@@ -125,10 +125,12 @@ if \code{profileControl} is missing any of the three elements, then they are
 given defaults as in the previous sentence.}
 
 \item{QCControl}{a list that permits control of the \code{which="QC"}
-case.  If provided, it should contain an element named \code{parameter}, a character
+case.  If provided, it may contain an element named \code{parameter}, a character
 value naming the quantity for which the quality-control information is
-to be plotted.  If not provided, \code{QCControl} defaults to
-\code{list(parameter="temperature")}.}
+to be plotted, and an element named \code{dataStateIndicator}, a logical
+value controlling whether to add a panel showing this quantity.
+If not provided, \code{QCControl} defaults to
+\code{list(parameter="temperature",dataStateIndicator=FALSE)}.}
 
 \item{summaryControl}{a list that permits control of the \code{which="summary"}.
 If provided, it should contain an element named \code{items}, a character vector

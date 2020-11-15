@@ -221,10 +221,12 @@ pinusr <- function(usr)
 #' given defaults as in the previous sentence.
 #'
 #' @param QCControl a list that permits control of the `which="QC"`
-#' case.  If provided, it should contain an element named `parameter`, a character
+#' case.  If provided, it may contain an element named `parameter`, a character
 #' value naming the quantity for which the quality-control information is
-#' to be plotted.  If not provided, `QCControl` defaults to
-#' `list(parameter="temperature")`.
+#' to be plotted, and an element named `dataStateIndicator`, a logical
+#' value controlling whether to add a panel showing this quantity.
+#' If not provided, `QCControl` defaults to
+#' `list(parameter="temperature",dataStateIndicator=FALSE)`.
 #'
 #' @param summaryControl a list that permits control of the `which="summary"`.
 #' If provided, it should contain an element named `items`, a character vector
@@ -821,10 +823,16 @@ setMethod(f="plot",
                   }
                   if (!is.list(QCControl))
                       stop("In plot,argoFloats-method(): QCControl must be a list")
+                  if (!all(names(QCControl) %in% c("parameter", "dataStateIndicator")))
+                      stop("QCControl must contain only elements named \"parameter\" and \"dataStateIndicator\", but its elements are named \"", paste(names(QCControl), collapse="\", \""), "\"")
                   if (!"parameter" %in% names(QCControl))
                       QCControl$parameter <- "temperature"
-                  if (length(QCControl) != 1)
-                      stop("In plot,argoFloats-method(): QCControl must contain only one element, \"parameter\"")
+                  if (!"dataStateIndicator" %in% names(QCControl))
+                      QCControl$dataStateIndicator <- FALSE
+                  if (!is.logical(QCControl$dataStateIndicator))
+                      stop("QCControl element 'dataStateIndicator' must be logical")
+                  if (length(QCControl) != 2)
+                      stop("In plot,argoFloats-method(): QCControl must contain only elements named \"parameter\" and \"dataStateIndicator\"")
                   if (!(QCControl$parameter %in% knownParameters))
                       stop("In plot,argoFloats-method(): QCControl$parameter '", QCControl$parameter, "' not found. Try one of: \"", paste(sort(knownParameters), collapse="\", \""), "\"", call.=FALSE)
                   qf <- function(x) {
@@ -837,7 +845,7 @@ setMethod(f="plot",
                   time <- oce::numberAsPOSIXct(unlist(lapply(x[["argos"]], function(x) x[["time"]])))
                   q <- unlist(lapply(x[["argos"]], qf))
                   m <- unlist(lapply(x[["argos"]], meanf))
-                  par(mfrow=c(2, 1))
+                  par(mfrow=c(if (QCControl$dataStateIndicator) 3 else 2, 1))
                   if (any(is.finite(q))) {
                       o <- order(time) # cycles are not time-ordered in index files
                       ## Tighten bottom axis spacing, since there's no need to say "Time" there
@@ -846,7 +854,25 @@ setMethod(f="plot",
                       points(time[o], q[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                       abline(h=50, col="red", lty="dashed")
                       if (1 == length(unique(x[["ID"]])))
-                          axis(side=3, at=time[o], labels=x[["cycle"]][o], cex.axis=0.75*par("cex"))
+                          axis(side=3, at=time[o], labels=x[["cycle"]][o], cex.axis=0.8)
+                      if (QCControl$dataStateIndicator) {
+                          y <- unlist(x[["dataStateIndicator"]])
+                          if (length(y)) {
+                              u <- sort(unique(y))
+                              yy <- seq_along(u)
+                              oce::oce.plot.ts(range(time), range(yy), ylab="Data State Ind.",
+                                               drawTimeRange=FALSE, type="n", mar=mar, axes=FALSE, mgp=mgp, xaxs="i",  ylim=range(0.8, (max(yy)+0.2)))
+                              abline(h=seq_along(u), col="gray")
+                              points(time[o], factor(y)[o])
+                              oce::oce.axis.POSIXct(side=1, drawTimeRange=FALSE)
+                              box()
+                              axis(side=2, at=yy, labels=u)
+                          } else {
+                              plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
+                              box()
+                              text(0.5, 0.5, "x lacks dataStateIndicator")
+                          }
+                      }
                       oce::oce.plot.ts(time[o], m[o], ylab=paste(QCControl$parameter, "Mean"), drawTimeRange=FALSE, type="l", mar=mar)
                       points(time[o], m[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                   } else {

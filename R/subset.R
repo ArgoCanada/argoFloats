@@ -566,9 +566,7 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "subsetting by ID\n")
                       if (dotsNames[1] == "id")
                           warning("In subset,argoFloats-method : converted subset(x,id=...) to subset(x,ID=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
-                      ID <- dots[[1]]
-                      if (!is.character(ID))
-                          stop("in subset,argoFloats-method() : \"ID\" must be character value", call.=FALSE)
+                      ID <- as.character(dots[[1]]) # convert in case it is numeric
                       file <- x@data$index$file
                       fileID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", file)
                       keep <- ID == fileID
