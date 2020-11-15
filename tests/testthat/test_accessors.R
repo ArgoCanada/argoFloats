@@ -24,6 +24,8 @@ test_that("accessors work on 'index' data file",
               expect_equal(index[[1]]$file, index[["file"]][1])
               expect_equal(head(index[["longitude"]], 3), c(-76.231,-76.024,-76.320))
               expect_equal(head(index[["latitude"]], 3), c(27.705, 27.773, 28.064))
+              expect_equal(index[["time"]], index[["date"]])
+              expect_equal(index[["time_update"]], index[["date_update"]])
           }
 )
 

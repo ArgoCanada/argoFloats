@@ -239,7 +239,8 @@ setMethod(f="initialize",
 #'     4. Otherwise, if `i` is the name of an item in the `data` slot, then that item
 #'        is returned.  The choices are:
 #'        `"date"`, `"date_update"`, `"file"`, `"institution"`, `"latitude"`,
-#'        `"longitude"`, `"ocean"`, and `"profiler_type"`.
+#'        `"longitude"`, `"ocean"`, and `"profiler_type"`. Note that `"time"` and
+#'        `"time_update"` may be used as synonyms for `"date"` and `"date_update"`.
 #'     5. Otherwise, if `i=="index"` then that item from the `data` slot of `x` is returned.
 #'        (For the possible names, see the previous item in this sub-list.)
 #'     6. Otherwise, if `i` is an integer, then the `i`-th row of the `index` item in
@@ -359,6 +360,10 @@ setMethod(f="[[",
                       return(length(x@data$index$file))
                   } else if (length(i) == 1 && i == "parameters") {
                       stop("there are no parameters for core Argo index objects. Try BGC, Merged, or Synthetic Argo.", call.=FALSE)
+                  } else if (length(i) == 1 && i == "time") {
+                      return(x@data$index$date)
+                  } else if (length(i) == 1 && i == "time_update") {
+                      return(x@data$index$date_update)
                   } else {
                       stop("cannot interpret i=", paste(i, collapse=","), " for an object of type=\"index\"", call.=FALSE)
                   }

@@ -57,7 +57,8 @@ is returned. The choices are:
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
 is returned.  The choices are:
 \code{"date"}, \code{"date_update"}, \code{"file"}, \code{"institution"}, \code{"latitude"},
-\code{"longitude"}, \code{"ocean"}, and \code{"profiler_type"}.
+\code{"longitude"}, \code{"ocean"}, and \code{"profiler_type"}. Note that \code{"time"} and
+\code{"time_update"} may be used as synonyms for \code{"date"} and \code{"date_update"}.
 \item Otherwise, if \code{i=="index"} then that item from the \code{data} slot of \code{x} is returned.
 (For the possible names, see the previous item in this sub-list.)
 \item Otherwise, if \code{i} is an integer, then the \code{i}-th row of the \code{index} item in
