@@ -316,10 +316,12 @@ given defaults as in the previous sentence.</p></td>
     <tr>
       <th>QCControl</th>
       <td><p>a list that permits control of the <code>which="QC"</code>
-case.  If provided, it should contain an element named <code>parameter</code>, a character
+case.  If provided, it may contain an element named <code>parameter</code>, a character
 value naming the quantity for which the quality-control information is
-to be plotted.  If not provided, <code>QCControl</code> defaults to
-<code><a href='https://rdrr.io/r/base/list.html'>list(parameter="temperature")</a></code>.</p></td>
+to be plotted, and an element named <code>dataStateIndicator</code>, a logical
+value controlling whether to add a panel showing this quantity.
+If not provided, <code>QCControl</code> defaults to
+<code><a href='https://rdrr.io/r/base/list.html'>list(parameter="temperature",dataStateIndicator=FALSE)</a></code>.</p></td>
     </tr>
     <tr>
       <th>summaryControl</th>
