@@ -327,7 +327,8 @@ pinusr <- function(usr)
 #' profiles <- getProfiles(sub)
 #' argos <- readProfiles(profiles)
 #' plot(argos, which="QC") # defaults to temperature
-#' plot(argos, which="QC", QCControl=list(parameter="salinity"))}
+#' plot(argos, which="QC", QCControl=list(parameter="salinity"))
+#' plot(argos, which="QC", QCControl=list(parameter="salinity",dataStateIndicator=TRUE))}
 #'
 #' # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
 #' library(argoFloats)
