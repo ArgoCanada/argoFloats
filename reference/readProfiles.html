@@ -179,9 +179,16 @@ other than this default, or a wrapper to it.</p></td>
     </tr>
     <tr>
       <th>destdir</th>
-      <td><p>a character value that specifies a directory into
-which to save downloaded files, in the case that they are
-provided in the <code>profiles</code> argument.</p></td>
+      <td><p>character value indicating the directory in which to store
+downloaded files. The default value is to compute this using
+<code><a href='argoDefaultDestdir.html'>argoDefaultDestdir()</a></code>, which returns <code>~/data/argo</code> by default,
+although it also provides ways to set other values using
+<code><a href='https://rdrr.io/r/base/options.html'>options()</a></code>.
+Set <code>destdir=NULL</code>
+if <code>destfile</code> is a filename with full path information.
+File clutter is reduced by creating a top-level directory called
+<code>data</code>, with subdirectories for various file types; see
+&#8220;Examples&#8221;.</p></td>
     </tr>
     <tr>
       <th>quiet</th>

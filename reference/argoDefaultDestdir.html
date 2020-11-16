@@ -49,7 +49,7 @@
 <meta property="og:title" content="Get the default Argo cache directory — argoDefaultDestdir" />
 <meta property="og:description" content="By default, files downloaded from the Argo mirror are placed in
 ~/data/argo. You can configure where these files are stored by setting
-options(argoFloat.destdir = &quot;path/to/argo&quot;). To persist this value
+options(argoFloat.destdir=&quot;path/to/argo&quot;). To persist this value
 between sessions you can place this value in your .Rprofile." />
 
 
@@ -143,9 +143,9 @@ between sessions you can place this value in your .Rprofile." />
 
     <div class="ref-description">
     <p>By default, files downloaded from the Argo mirror are placed in
-~/data/argo. You can configure where these files are stored by setting
-<code><a href='https://rdrr.io/r/base/options.html'>options(argoFloat.destdir = "path/to/argo")</a></code>. To persist this value
-between sessions you can place this value in your .Rprofile.</p>
+<code>~/data/argo</code>. You can configure where these files are stored by setting
+<code><a href='https://rdrr.io/r/base/options.html'>options(argoFloat.destdir="path/to/argo")</a></code>. To persist this value
+between sessions you can place this value in your <code>.Rprofile</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>argoDefaultDestdir</span><span class='op'>(</span><span class='op'>)</span>
@@ -157,8 +157,7 @@ between sessions you can place this value in your .Rprofile.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A length-one character vector containing a path
-to the default Argo data directory.</p>
+    <p>A character value containing a path to the default Argo data directory.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>argoDefaultDestdir</span><span class='op'>(</span><span class='op'>)</span>

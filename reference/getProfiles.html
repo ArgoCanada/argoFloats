@@ -174,9 +174,16 @@ by <code><a href='getIndex.html'>getIndex()</a></code>.</p></td>
     </tr>
     <tr>
       <th>destdir</th>
-      <td><p>character value naming the directory into which to store the
-downloaded Argo files, or <code>NULL</code> (the default) to use the value of
-<code>destdir</code> that was provided in the <code><a href='getIndex.html'>getIndex()</a></code> call that created <code>index</code>.</p></td>
+      <td><p>character value indicating the directory in which to store
+downloaded files. The default value is to compute this using
+<code><a href='argoDefaultDestdir.html'>argoDefaultDestdir()</a></code>, which returns <code>~/data/argo</code> by default,
+although it also provides ways to set other values using
+<code><a href='https://rdrr.io/r/base/options.html'>options()</a></code>.
+Set <code>destdir=NULL</code>
+if <code>destfile</code> is a filename with full path information.
+File clutter is reduced by creating a top-level directory called
+<code>data</code>, with subdirectories for various file types; see
+&#8220;Examples&#8221;.</p></td>
     </tr>
     <tr>
       <th>age</th>
