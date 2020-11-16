@@ -420,9 +420,7 @@ getIndex <- function(filename="core",
 #' @param index an [`argoFloats-class`] object of type `"index"`, as created
 #' by [getIndex()].
 #'
-#' @param destdir character value naming the directory into which to store the
-#' downloaded Argo files, or `NULL` (the default) to use the value of
-#' `destdir` that was provided in the [getIndex()] call that created `index`.
+#' @template destdir
 #'
 #' @template age
 #'

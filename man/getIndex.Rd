@@ -35,8 +35,11 @@ Note that if a nickname is not used, the character value(s) in \code{server}
 must start with \code{"ftp://"}.}
 
 \item{destdir}{character value indicating the directory in which to store
-downloaded files. The default value of \code{"."} means to store the
-downloaded file in the present working directory.  Set \code{destdir=NULL}
+downloaded files. The default value is to compute this using
+\code{\link[=argoDefaultDestdir]{argoDefaultDestdir()}}, which returns \verb{~/data/argo} by default,
+although it also provides ways to set other values using
+\code{\link[=options]{options()}}.
+Set \code{destdir=NULL}
 if \code{destfile} is a filename with full path information.
 File clutter is reduced by creating a top-level directory called
 \code{data}, with subdirectories for various file types; see

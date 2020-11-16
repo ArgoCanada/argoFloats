@@ -25,9 +25,7 @@
 #' to [oce::read.argo()].  Only experts should consider anything
 #' other than this default, or a wrapper to it.
 #'
-#' @param destdir a character value that specifies a directory into
-#' which to save downloaded files, in the case that they are
-#' provided in the `profiles` argument.
+#' @template destdir
 #'
 #' @template quiet
 #'

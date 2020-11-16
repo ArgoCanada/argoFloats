@@ -13,14 +13,13 @@ argoDefaultIndexAge()
 argoDefaultProfileAge()
 }
 \value{
-A length-one character vector containing a path
-to the default Argo data directory.
+A character value containing a path to the default Argo data directory.
 }
 \description{
 By default, files downloaded from the Argo mirror are placed in
-~/data/argo. You can configure where these files are stored by setting
-\code{options(argoFloat.destdir = "path/to/argo")}. To persist this value
-between sessions you can place this value in your .Rprofile.
+\verb{~/data/argo}. You can configure where these files are stored by setting
+\code{options(argoFloat.destdir="path/to/argo")}. To persist this value
+between sessions you can place this value in your \code{.Rprofile}.
 }
 \examples{
 argoDefaultDestdir()

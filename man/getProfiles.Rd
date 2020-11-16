@@ -18,9 +18,16 @@ getProfiles(
 \item{index}{an \code{\linkS4class{argoFloats}} object of type \code{"index"}, as created
 by \code{\link[=getIndex]{getIndex()}}.}
 
-\item{destdir}{character value naming the directory into which to store the
-downloaded Argo files, or \code{NULL} (the default) to use the value of
-\code{destdir} that was provided in the \code{\link[=getIndex]{getIndex()}} call that created \code{index}.}
+\item{destdir}{character value indicating the directory in which to store
+downloaded files. The default value is to compute this using
+\code{\link[=argoDefaultDestdir]{argoDefaultDestdir()}}, which returns \verb{~/data/argo} by default,
+although it also provides ways to set other values using
+\code{\link[=options]{options()}}.
+Set \code{destdir=NULL}
+if \code{destfile} is a filename with full path information.
+File clutter is reduced by creating a top-level directory called
+\code{data}, with subdirectories for various file types; see
+\dQuote{Examples}.}
 
 \item{age}{a numerical value indicating a time interval, in days.  If the file
 to be downloaded from the server already exists locally, and was created

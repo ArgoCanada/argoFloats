@@ -537,11 +537,14 @@ serverMapApp <- function(input, output, session) {
 #' unlink(topoFile) # clean up
 #'```
 #'
-#' @param age numeric value indicating the age beyond which the argo
-#' index will be re-acquired with [getIndex()].
+#' @param age numeric value indicating how old a downloaded file
+#' must be (in days), for it to be considered out-of-date.  The
+#' default, [argoDefaultIndexAge()], limits downloads to once per day, as a way
+#' to avoid slowing down a workflow with a download that might take
+#' a minute or so. Note that setting `age=0` will force a new
+#' download, regardless of the age of the local file.
 #'
-#' @param destdir character value indicating the directory into which to store the argo
-#' index acquired with [getIndex()].
+#' @template destdir
 #'
 #' @param server character value, or vector of character values, indicating the name of
 #' servers that supply argo data acquired with [getIndex()].  The default value,
@@ -560,7 +563,7 @@ serverMapApp <- function(input, output, session) {
 #' @author Dan Kelley
 #' @importFrom shiny shinyApp shinyOptions
 #' @export
-mapApp <- function(age=7, destdir=".", server="auto", debug=0)
+mapApp <- function(age=argoDefaultIndexAge(), destdir=argoDefaultDestdir(), server="auto", debug=0)
 {
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
     shiny::shinyOptions(age=age, destdir=destdir, argoServer=server, debug=debug) # rename server to avoid shiny problem

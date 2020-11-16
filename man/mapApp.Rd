@@ -4,14 +4,31 @@
 \alias{mapApp}
 \title{Interactive app for viewing Argo float positions}
 \usage{
-mapApp(age = 7, destdir = ".", server = "auto", debug = 0)
+mapApp(
+  age = argoDefaultIndexAge(),
+  destdir = argoDefaultDestdir(),
+  server = "auto",
+  debug = 0
+)
 }
 \arguments{
-\item{age}{numeric value indicating the age beyond which the argo
-index will be re-acquired with \code{\link[=getIndex]{getIndex()}}.}
+\item{age}{numeric value indicating how old a downloaded file
+must be (in days), for it to be considered out-of-date.  The
+default, \code{\link[=argoDefaultIndexAge]{argoDefaultIndexAge()}}, limits downloads to once per day, as a way
+to avoid slowing down a workflow with a download that might take
+a minute or so. Note that setting \code{age=0} will force a new
+download, regardless of the age of the local file.}
 
-\item{destdir}{character value indicating the directory into which to store the argo
-index acquired with \code{\link[=getIndex]{getIndex()}}.}
+\item{destdir}{character value indicating the directory in which to store
+downloaded files. The default value is to compute this using
+\code{\link[=argoDefaultDestdir]{argoDefaultDestdir()}}, which returns \verb{~/data/argo} by default,
+although it also provides ways to set other values using
+\code{\link[=options]{options()}}.
+Set \code{destdir=NULL}
+if \code{destfile} is a filename with full path information.
+File clutter is reduced by creating a top-level directory called
+\code{data}, with subdirectories for various file types; see
+\dQuote{Examples}.}
 
 \item{server}{character value, or vector of character values, indicating the name of
 servers that supply argo data acquired with \code{\link[=getIndex]{getIndex()}}.  The default value,

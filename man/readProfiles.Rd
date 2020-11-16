@@ -25,9 +25,16 @@ profiles are stored.  If \code{FUN} not provided, then it defaults
 to \code{\link[oce:read.argo]{oce::read.argo()}}.  Only experts should consider anything
 other than this default, or a wrapper to it.}
 
-\item{destdir}{a character value that specifies a directory into
-which to save downloaded files, in the case that they are
-provided in the \code{profiles} argument.}
+\item{destdir}{character value indicating the directory in which to store
+downloaded files. The default value is to compute this using
+\code{\link[=argoDefaultDestdir]{argoDefaultDestdir()}}, which returns \verb{~/data/argo} by default,
+although it also provides ways to set other values using
+\code{\link[=options]{options()}}.
+Set \code{destdir=NULL}
+if \code{destfile} is a filename with full path information.
+File clutter is reduced by creating a top-level directory called
+\code{data}, with subdirectories for various file types; see
+\dQuote{Examples}.}
 
 \item{quiet}{logical value; use \code{TRUE} to show more
 verbose information when downloading files.
