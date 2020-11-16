@@ -7,3 +7,5 @@ table(unlist(argos1[["dataStateIndicator"]]))
 ## Get and test subset
 argos2 <- subset(argos1, dataStateIndicator="2C")
 argos2[["dataStateIndicator"]]
+
+

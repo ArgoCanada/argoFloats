@@ -61,18 +61,23 @@ What about Quality Control (QC), you say? argoFloats offers an easy workflow for
 ![](../../../vignettes/qc_flowchart.png)
 
 # Tweet 11
-The first phase when dealing with QC for Argo data is to plot the quality of the data using the QC plot. This is shown below, where each point is a cycle representing "bad" data in red, and "good" data in black.
+The dataStateIndicator reveals the degree of processing the Argo data has gone through. Using the following code, the user has the ability to select a specific degree of processing data in the Arabian Sea, for example.
+
+![](dataStateIndicatorCode.png)
+
+# Tweet 12
+For further QC analysis of Argo data, the first step is to plot the quality of the data using the QC plot. This is shown below, where each point is a cycle representing "bad" data in red, and "good" data in black.
 
 ![](plotQCCode.png)
 ![](../../../vignettes/plotqc.png)
 
-# Tweet 12
+# Tweet 13
 In the QC plot, the first cycle is considered "bad". Here's how to determine which QC Tests were performed on that cycle:
 
 ![](showQCTestsCode.png)
 ![](showQCTestOutput.png)
 
-# Tweet 13
+# Tweet 14
 
 If you agree with the test failed, you can replace all suspicious data with NA. For example, the following shows the need for QC testing in our previous example ... but there are still some stray points!
 
