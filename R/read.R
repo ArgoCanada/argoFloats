@@ -71,7 +71,7 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, FUN, destdir="~/data/argo", quiet=FALSE, debug=0)
+readProfiles <- function(profiles, FUN, destdir=argoDefaultDestdir(), quiet=FALSE, debug=0)
 {
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for readProfiles() to work")

@@ -7,8 +7,8 @@
 getIndex(
   filename = "core",
   server = "auto",
-  destdir = "~/data/argo",
-  age = 1,
+  destdir = argoDefaultDestdir(),
+  age = argoDefaultIndexAge(),
   quiet = FALSE,
   keep = FALSE,
   debug = 0
@@ -44,7 +44,7 @@ File clutter is reduced by creating a top-level directory called
 
 \item{age}{numeric value indicating how old a downloaded file
 must be (in days), for it to be considered out-of-date.  The
-default, \code{age=1}, limits downloads to once per day, as a way
+default, \code{\link[=argoDefaultIndexAge]{argoDefaultIndexAge()}}, limits downloads to once per day, as a way
 to avoid slowing down a workflow with a download that might take
 a minute or so. Note that setting \code{age=0} will force a new
 download, regardless of the age of the local file, and that

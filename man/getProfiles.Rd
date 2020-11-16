@@ -7,7 +7,7 @@
 getProfiles(
   index,
   destdir = NULL,
-  age = 365,
+  age = argoDefaultProfileAge(),
   retries = 3,
   skip = TRUE,
   quiet = TRUE,
@@ -24,8 +24,8 @@ downloaded Argo files, or \code{NULL} (the default) to use the value of
 
 \item{age}{a numerical value indicating a time interval, in days.  If the file
 to be downloaded from the server already exists locally, and was created
-is less than \code{age} days in the past, it will not be downloaded.  The default
-is one year.  Setting \code{age=0} will force a download.}
+is less than \code{age} days in the past, it will not be downloaded.  The default,
+\code{\link[=argoDefaultProfileAge]{argoDefaultProfileAge()}}, is one year.  Setting \code{age=0} will force a download.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}

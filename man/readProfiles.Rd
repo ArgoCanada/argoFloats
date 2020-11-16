@@ -4,7 +4,13 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(profiles, FUN, destdir = "~/data/argo", quiet = FALSE, debug = 0)
+readProfiles(
+  profiles,
+  FUN,
+  destdir = argoDefaultDestdir(),
+  quiet = FALSE,
+  debug = 0
+)
 }
 \arguments{
 \item{profiles}{either (1) a character vector that holds

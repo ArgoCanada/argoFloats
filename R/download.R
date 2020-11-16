@@ -27,8 +27,8 @@
 #' @export
 #'
 #' @author Dan Kelley
-downloadWithRetries <- function(url, destdir="~/data/argo", destfile=NULL, quiet=FALSE,
-                                age=365, retries=3, debug=0)
+downloadWithRetries <- function(url, destdir=argoDefaultDestdir(), destfile=NULL, quiet=FALSE,
+                                age=argoDefaultProfileAge(), retries=3, debug=0)
 {
     if (!requireNamespace("curl", quietly=TRUE))
         stop("must install.packages(\"curl\") for downloadWithRetries() to work")

@@ -6,9 +6,9 @@
 \usage{
 getProfileFromUrl(
   url = NULL,
-  destdir = "~/data/argo",
+  destdir = argoDefaultDestdir(),
   destfile = NULL,
-  age = 365,
+  age = argoDefaultProfileAge(),
   retries = 3,
   quiet = FALSE,
   debug = 0
@@ -32,8 +32,8 @@ from the value of \code{url}.}
 
 \item{age}{a numerical value indicating a time interval, in days.  If the file
 to be downloaded from the server already exists locally, and was created
-is less than \code{age} days in the past, it will not be downloaded.  The default
-is one year.  Setting \code{age=0} will force a download.}
+is less than \code{age} days in the past, it will not be downloaded.  The default,
+\code{\link[=argoDefaultProfileAge]{argoDefaultProfileAge()}}, is one year.  Setting \code{age=0} will force a download.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
@@ -63,7 +63,7 @@ library(oce)
 
 # Example 1: a particular file
 url <- "ftp://ftp.ifremer.fr/ifremer/argo/dac/nmdis/2901633/profiles/R2901633_071.nc"
-file <- getProfileFromUrl(url=url, destdir="~/data/argo")
+file <- getProfileFromUrl(url=url)
 argo <- read.argo(file)
 plot(argo, which=c(1, 4, 6, 5))
 
