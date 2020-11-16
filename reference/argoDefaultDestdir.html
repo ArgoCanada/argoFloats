@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sample argo file (delayed data) — D4900785_048.nc • argoFloats</title>
+<title>Get the default Argo cache directory — argoDefaultDestdir • argoFloats</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,11 +46,11 @@
 
 
 
-<meta property="og:title" content="Sample argo file (delayed data) — D4900785_048.nc" />
-<meta property="og:description" content="This is netcdf file for cycle 048 of Argo float 4900785, downloaded from
-ftp://usgodae.org/pub/outgoing/argo/dac/aoml/4900785/profiles/D4900785_048.nc
-on 2020 June 24.
-As its filename indicates, it holds &quot;realtime&quot; data." />
+<meta property="og:title" content="Get the default Argo cache directory — argoDefaultDestdir" />
+<meta property="og:description" content="By default, files downloaded from the Argo mirror are placed in
+~/data/argo. You can configure where these files are stored by setting
+options(argoFloat.destdir = &quot;path/to/argo&quot;). To persist this value
+between sessions you can place this value in your .Rprofile." />
 
 
 
@@ -136,80 +136,33 @@ As its filename indicates, it holds &quot;realtime&quot; data." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sample argo file (delayed data)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/extdata.R'><code>R/extdata.R</code></a></small>
-    <div class="hidden name"><code>D4900785_048.nc.Rd</code></div>
+    <h1>Get the default Argo cache directory</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/cache.R'><code>R/cache.R</code></a></small>
+    <div class="hidden name"><code>argoDefaultDestdir.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is netcdf file for cycle 048 of Argo float 4900785, downloaded from
-<a href='ftp://usgodae.org/pub/outgoing/argo/dac/aoml/4900785/profiles/D4900785_048.nc'>ftp://usgodae.org/pub/outgoing/argo/dac/aoml/4900785/profiles/D4900785_048.nc</a>
-on 2020 June 24.
-As its filename indicates, it holds "realtime" data.</p>
+    <p>By default, files downloaded from the Argo mirror are placed in
+~/data/argo. You can configure where these files are stored by setting
+<code><a href='https://rdrr.io/r/base/options.html'>options(argoFloat.destdir = "path/to/argo")</a></code>. To persist this value
+between sessions you can place this value in your .Rprofile.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>argoDefaultDestdir</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'>argoDefaultIndexAge</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'>argoDefaultProfileAge</span><span class='op'>(</span><span class='op'>)</span></pre>
 
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <div class='dont-index'><p>Other raw datasets: 
-<code><a href='SD5903586_001.nc.html'>SD5903586_001.nc</a></code>,
-<code><a href='SR2902204_131.nc.html'>SR2902204_131.nc</a></code></p></div>
+    <p>A length-one character vector containing a path
+to the default Argo data directory.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
-<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"D4900785_048.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; argoFloats summary
-#&gt; ------------------
-#&gt; 
-#&gt; * type:        argos
-#&gt; * contains 1 objects
-#&gt; * hint: access these objects with e.g. x[["argos"]]
-#&gt; * Processing Log
-#&gt;     - 2020-11-16 18:03:18 UTC: `create 'argoFloats' object`
-#&gt;     - 2020-11-16 18:03:18 UTC: `readProfiles(profiles = system.file("extdata", "D4900785_048.nc",     package = "argoFloats"))`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Argo Summary
-#&gt; ------------
-#&gt; 
-#&gt; * Source:              "/Users/runner/work/_temp/Library/argoFloats/extdata/D4900785_048.nc"
-#&gt; * id:                  "4900785"
-#&gt; * Profiles:            1 delayed; 0 adjusted; 0 realtime
-#&gt; * Time:                2008-01-11 12:06:17 
-#&gt; * Data Overview
-#&gt; 
-#&gt;                                              Min.     Mean    Max. Dim. NAs        OriginalName
-#&gt;     latitude [°N]                          27.916   27.916  27.916    1   0            LATITUDE
-#&gt;     longitude [°E]                        -75.896  -75.896 -75.896    1   0           LONGITUDE
-#&gt;     pressure [dbar]                             5      446    1650 75x1   0                PRES
-#&gt;     pressureAdjusted [dbar]                     5      446    1650 75x1   0       PRES_ADJUSTED
-#&gt;     pressureAdjustedError [dbar]              2.4      2.4     2.4 75x1   0 PRES_ADJUSTED_ERROR
-#&gt;     temperature [°C, ITS-90]                3.997   16.337  22.884 75x1   0                TEMP
-#&gt;     temperatureAdjusted [°C, ITS-90]        3.997   16.337  22.884 75x1   0       TEMP_ADJUSTED
-#&gt;     temperatureAdjustedError [°C, ITS-90]   0.002    0.002   0.002 75x1   0 TEMP_ADJUSTED_ERROR
-#&gt;     salinity [PSS-78]                      34.978   36.193  36.759 75x1   0                PSAL
-#&gt;     salinityAdjusted [PSS-78]              34.978   36.194  36.762 75x1   0       PSAL_ADJUSTED
-#&gt;     salinityAdjustedError [PSS-78]           0.01 0.010196 0.01531 75x1   0 PSAL_ADJUSTED_ERROR
-#&gt; 
-#&gt; * Data-quality Flag Scheme
-#&gt; 
-#&gt;     name    "argo"
-#&gt;     mapping list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)
-#&gt; 
-#&gt; * Data-quality Flags
-#&gt; 
-#&gt;     pressure:            "1" 75
-#&gt;     pressureAdjusted:    "1" 75
-#&gt;     temperature:         "1" 75
-#&gt;     temperatureAdjusted: "1" 75
-#&gt;     salinity:            "1" 75
-#&gt;     salinityAdjusted:    "1" 75
-#&gt; 
-#&gt; * Processing Log
-#&gt;     - 2020-11-16 18:03:18 UTC: `create 'argo' object`
-#&gt;     - 2020-11-16 18:03:18 UTC: `FUN(file = profiles[i], debug = debug - 1)`
-#&gt;     - 2020-11-16 18:03:18 UTC: `initializeFlagScheme(object, name="argo", mapping=list(not_assessed=0,passed_all_tests=1,probably_good=2,probably_bad=3,bad=4,averaged=7,interpolated=8,missing=9)), default=c(0,2,3,4,7,8,9)`
-#&gt;     - 2020-11-16 18:03:18 UTC: `override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)`</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'>argoDefaultDestdir</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "~/data/argo"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

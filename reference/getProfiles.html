@@ -157,7 +157,7 @@ by <code><a href='readProfiles.html'>readProfiles()</a></code>.</p>
     <pre class="usage"><span class='fu'>getProfiles</span><span class='op'>(</span>
   <span class='va'>index</span>,
   destdir <span class='op'>=</span> <span class='cn'>NULL</span>,
-  age <span class='op'>=</span> <span class='fl'>365</span>,
+  age <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultProfileAge</a></span><span class='op'>(</span><span class='op'>)</span>,
   retries <span class='op'>=</span> <span class='fl'>3</span>,
   skip <span class='op'>=</span> <span class='cn'>TRUE</span>,
   quiet <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -182,8 +182,8 @@ downloaded Argo files, or <code>NULL</code> (the default) to use the value of
       <th>age</th>
       <td><p>a numerical value indicating a time interval, in days.  If the file
 to be downloaded from the server already exists locally, and was created
-is less than <code>age</code> days in the past, it will not be downloaded.  The default
-is one year.  Setting <code>age=0</code> will force a download.</p></td>
+is less than <code>age</code> days in the past, it will not be downloaded.  The default,
+<code><a href='argoDefaultDestdir.html'>argoDefaultProfileAge()</a></code>, is one year.  Setting <code>age=0</code> will force a download.</p></td>
     </tr>
     <tr>
       <th>retries</th>

@@ -328,12 +328,12 @@ Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 </div><div class='output co'>#&gt; <span class='message'>Kept 3 profiles (0.307%)</span></div><div class='input'>
 <span class='co'># Example 8: subset to a specific ID</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>ai</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span>filename<span class='op'>=</span><span class='st'>"synthetic"</span>, destdir<span class='op'>=</span><span class='st'>"~/data/argo"</span><span class='op'>)</span>
+<span class='va'>ai</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span>filename<span class='op'>=</span><span class='st'>"synthetic"</span><span class='op'>)</span>
 <span class='va'>index9</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>ai</span>, ID<span class='op'>=</span><span class='st'>"1900722"</span><span class='op'>)</span><span class='op'>}</span>
 
 <span class='co'># Example 9: subset data to only include deep argo</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>ai</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span>filename<span class='op'>=</span><span class='st'>"synthetic"</span>, destdir<span class='op'>=</span><span class='st'>"~/data/argo"</span><span class='op'>)</span>
+<span class='va'>ai</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span>filename<span class='op'>=</span><span class='st'>"synthetic"</span><span class='op'>)</span>
 <span class='va'>index8</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>ai</span>, deep<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>}</span>
 
 <span class='co'># Example 10: subset data by ocean</span>
