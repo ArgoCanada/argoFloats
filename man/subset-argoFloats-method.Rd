@@ -165,12 +165,12 @@ index7 <- subset(index, institution="ME")
 
 # Example 8: subset to a specific ID
 \dontrun{
-ai <- getIndex(filename="synthetic", destdir="~/data/argo")
+ai <- getIndex(filename="synthetic")
 index9 <- subset(ai, ID="1900722")}
 
 # Example 9: subset data to only include deep argo
 \dontrun{
-ai <- getIndex(filename="synthetic", destdir="~/data/argo")
+ai <- getIndex(filename="synthetic")
 index8 <- subset(ai, deep=TRUE)}
 
 # Example 10: subset data by ocean

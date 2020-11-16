@@ -29,7 +29,7 @@
 #'
 #' # Example 1: a particular file
 #' url <- "ftp://ftp.ifremer.fr/ifremer/argo/dac/nmdis/2901633/profiles/R2901633_071.nc"
-#' file <- getProfileFromUrl(url=url, destdir="~/data/argo")
+#' file <- getProfileFromUrl(url=url)
 #' argo <- read.argo(file)
 #' plot(argo, which=c(1, 4, 6, 5))
 #'
@@ -48,7 +48,7 @@
 #' @export
 #'
 #' @author Dan Kelley
-getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, age=365, retries=3, quiet=FALSE, debug=0)
+getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=NULL, age=argoDefaultProfileAge(), retries=3, quiet=FALSE, debug=0)
 {
     argoFloatsDebug(debug,  "getProfileFromUrl(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
                     if (missing(destfile)) "(missing)" else destfile, "\", ...) {", sep="", "\n", style="bold", unindent=1)
@@ -158,7 +158,7 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #'
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
-#' default, `age=1`, limits downloads to once per day, as a way
+#' default, [argoDefaultIndexAge()], limits downloads to once per day, as a way
 #' to avoid slowing down a workflow with a download that might take
 #' a minute or so. Note that setting `age=0` will force a new
 #' download, regardless of the age of the local file, and that
@@ -195,8 +195,8 @@ getProfileFromUrl <- function(url=NULL, destdir="~/data/argo", destfile=NULL, ag
 #' @export
 getIndex <- function(filename="core",
                      server="auto",
-                     destdir="~/data/argo",
-                     age=1,
+                     destdir=argoDefaultDestdir(),
+                     age=argoDefaultIndexAge(),
                      quiet=FALSE,
                      keep=FALSE,
                      debug=0)
@@ -455,7 +455,7 @@ getIndex <- function(filename="core",
 ## @importFrom oce processingLogAppend vectorShow
 #'
 #' @export
-getProfiles <- function(index, destdir=NULL, age=365, retries=3, skip=TRUE, quiet=TRUE, debug=0)
+getProfiles <- function(index, destdir=NULL, age=argoDefaultProfileAge(), retries=3, skip=TRUE, quiet=TRUE, debug=0)
 {
     debug <- max(0, min(3, floor(debug+0.5)))
     if (!requireNamespace("oce", quietly=TRUE))

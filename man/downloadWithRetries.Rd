@@ -6,10 +6,10 @@
 \usage{
 downloadWithRetries(
   url,
-  destdir = "~/data/argo",
+  destdir = argoDefaultDestdir(),
   destfile = NULL,
   quiet = FALSE,
-  age = 365,
+  age = argoDefaultProfileAge(),
   retries = 3,
   debug = 0
 )
@@ -37,8 +37,8 @@ verbose information when downloading files.
 
 \item{age}{a numerical value indicating a time interval, in days.  If the file
 to be downloaded from the server already exists locally, and was created
-is less than \code{age} days in the past, it will not be downloaded.  The default
-is one year.  Setting \code{age=0} will force a download.}
+is less than \code{age} days in the past, it will not be downloaded.  The default,
+\code{\link[=argoDefaultProfileAge]{argoDefaultProfileAge()}}, is one year.  Setting \code{age=0} will force a download.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
