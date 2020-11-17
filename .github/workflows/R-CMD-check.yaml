@@ -23,6 +23,19 @@ jobs:
           install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
+      ## A refresh of the cache can be forced by incrementing
+      ## the number at the end of `key`. This should be done whenever
+      ## the following step downloads new files or when the file format
+      ## on the server might have changed.
+      - name: Cache Argo downloads
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.temp }}/argo-cache-dir
+          key: argo-cache-dir-check-1
       - name: Check
+        env:
+          R_ARGOFLOATS_DESTDIR: ${{ runner.temp }}/argo-cache-dir
+          R_ARGOFLOATS_INDEX_AGE: "Inf"
+          R_ARGOFLOATS_PROFILE_AGE: "Inf"
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
         shell: Rscript {0}

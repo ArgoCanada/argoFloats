@@ -41,6 +41,20 @@ jobs:
           remotes::install_cran("covr")
         shell: Rscript {0}
 
+      ## A refresh of the cache can be forced by incrementing
+      ## the number at the end of `key`. This should be done whenever
+      ## the following step downloads new files or when the file format
+      ## on the server might have changed.
+      - name: Cache Argo downloads
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.temp }}/argo-cache-dir
+          key: argo-cache-dir-coverage-1
+
       - name: Test coverage
+        env:
+          R_ARGOFLOATS_DESTDIR: ${{ runner.temp }}/argo-cache-dir
+          R_ARGOFLOATS_INDEX_AGE: "Inf"
+          R_ARGOFLOATS_PROFILE_AGE: "Inf"
         run: covr::codecov()
         shell: Rscript {0}
