@@ -58,7 +58,7 @@ jobs:
           if (!dir.exists(Sys.getenv("R_ARGOFLOATS_DESTDIR"))) {
             dir.create(Sys.getenv("R_ARGOFLOATS_DESTDIR"))
           }
-        shell: Rscript{0}
+        shell: Rscript {0}
 
       - name: Test coverage
         env:
