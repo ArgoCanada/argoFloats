@@ -32,6 +32,14 @@ jobs:
         with:
           path: ${{ runner.temp }}/argo-cache-dir
           key: argo-cache-dir-check-1
+      - name: Ensure Argo cache directory exists
+        env:
+          R_ARGOFLOATS_DESTDIR: ${{ runner.temp }}/argo-cache-dir
+        run: |
+          if (!dir.exists(Sys.getenv("R_ARGOFLOATS_DESTDIR"))) {
+            dir.create(Sys.getenv("R_ARGOFLOATS_DESTDIR"))
+          }
+        shell: Rscript{0}
       - name: Check
         env:
           R_ARGOFLOATS_DESTDIR: ${{ runner.temp }}/argo-cache-dir
