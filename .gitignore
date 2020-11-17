@@ -17,4 +17,4 @@ doc
 marmap*csv
 docs
 ^[0-9]*.R$
-
+.Rprofile

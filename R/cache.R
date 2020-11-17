@@ -32,6 +32,13 @@ argoDefaultProfileAge <- function()
     as.numeric(argoOptionValue("argoFloats.profileAge", "R_ARGOFLOATS_PROFILE_AGE", 365))
 }
 
+#' @rdname argoDefaultDestdir
+#' @export
+hasArgoTestCache <- function() 
+{
+    !is.null(getOption("argoFloats.destdir")) || (Sys.getenv("R_ARGOFLOATS_DESTDIR") != "")
+}
+
 argoOptionValue <- function(option, envVar, default)
 {
     value <- getOption(option, default = NULL)

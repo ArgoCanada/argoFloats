@@ -4,6 +4,7 @@
 \alias{argoDefaultDestdir}
 \alias{argoDefaultIndexAge}
 \alias{argoDefaultProfileAge}
+\alias{hasArgoTestCache}
 \title{Get the default Argo cache directory}
 \usage{
 argoDefaultDestdir()
@@ -11,6 +12,8 @@ argoDefaultDestdir()
 argoDefaultIndexAge()
 
 argoDefaultProfileAge()
+
+hasArgoTestCache()
 }
 \value{
 A character value containing a path to the default Argo data directory.
