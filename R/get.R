@@ -505,7 +505,7 @@ getProfiles <- function(index, destdir=NULL, age=argoDefaultProfileAge(), retrie
                 if (skip) {
                     warning("cannot download \"", urls[i], "\". Perhaps the index file is stale; try getIndex(age=0) to refresh it.\n")
                 } else {
-                    stop("cannot download \"", urls[i], "\". Perhaps the index file is stale; try getIndex(age=0) to refresh it. Yu may use getProfiles(...,skip=TRUE) to convert this error into a warning.")
+                    stop("cannot download \"", urls[i], "\". Perhaps the index file is stale; try getIndex(age=0) to refresh it. You may use getProfiles(...,skip=TRUE) to convert this error into a warning.")
                 }
             }
             file[i] <- name            # NOTE: this will be NA for a failed download
