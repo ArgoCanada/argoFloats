@@ -283,7 +283,7 @@ setMethod(f="subset",
               if (x@metadata$type == "argos") {
                   argoFloatsDebug(debug, "subsetting with type=\"argos\"\n")
                   if (length(dotsNames) == 0)
-                      stop("in subset,argoFloats-method() :\n  must give \"column\" or \"cycle\" argument", call.=FALSE)
+                      stop("in subset,argoFloats-method() :\n  must give \"column\" , \"cycle\", or \"dataStateIndicator\" argument", call.=FALSE)
                   if (dotsNames[1] == "column") {
                       argoFloatsDebug(debug, "subsetting by column ", column, "\n")
                       column <- dots[[1]]
