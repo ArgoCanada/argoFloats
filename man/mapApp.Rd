@@ -64,9 +64,9 @@ unlink(topoFile) # clean up
 }\if{html}{\out{</div>}}
 }
 \examples{
-\dontrun{
- library(argoFloats)
- mapApp()
+if (interactive()) {
+    library(argoFloats)
+    mapApp()
 }
 
 }
