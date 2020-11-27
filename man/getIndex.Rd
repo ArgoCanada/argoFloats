@@ -148,7 +148,8 @@ an object that can be plotted or analysed in other ways.
 library(argoFloats)
 i <- getIndex("synthetic")
 summary(i)
-hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)}
+hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
+}
 
 }
 \author{

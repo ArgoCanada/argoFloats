@@ -65,8 +65,9 @@ unlink(topoFile) # clean up
 }
 \examples{
 \dontrun{
-library(argoFloats)
-mapApp()}
+ library(argoFloats)
+ mapApp()
+}
 
 }
 \author{

@@ -37,13 +37,14 @@
 #' index <- getIndex()
 #' lon0 <- -59.9149
 #' lat0 <- 43.9337
-#' if (requireNamespace("oce")) {
-#'     dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
-#'     w <- which.min(dist)
-#'     url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
-#'     fileSable <- getProfileFromUrl(url=url)
-#'     argoSable <- read.oce(fileSable)
-#'     plot(argoSable, which=c(1, 4, 6, 5))}}
+#' 
+#' dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
+#' w <- which.min(dist)
+#' url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
+#' fileSable <- getProfileFromUrl(url=url)
+#' argoSable <- read.oce(fileSable)
+#' plot(argoSable, which=c(1, 4, 6, 5))
+#' }
 #'
 #' @export
 #'
@@ -185,7 +186,8 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' library(argoFloats)
 #' i <- getIndex("synthetic")
 #' summary(i)
-#' hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)}
+#' hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
+#' }
 #'
 #' @author Dan Kelley
 #'
@@ -445,7 +447,7 @@ getIndex <- function(filename="core",
 #' library(argoFloats)
 #' data(index)
 #' index2 <- subset(index, 1:2)
-#' profiles2 <- getProfiles(index2)
+#' profiles2 <- getProfiles(index2, destdir=argoDefaultDestdir())
 #' # See ?readProfiles for how to read the files now downloaded.}
 #'
 #' @author Dan Kelley
