@@ -557,8 +557,9 @@ serverMapApp <- function(input, output, session) {
 #'
 #' @examples
 #'\dontrun{
-#' library(argoFloats)
-#' mapApp()}
+#'  library(argoFloats)
+#'  mapApp()
+#'}
 #'
 #' @author Dan Kelley
 #' @importFrom shiny shinyApp shinyOptions

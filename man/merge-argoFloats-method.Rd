@@ -31,7 +31,8 @@ R <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
 
 RC <- merge(C, R)
 \dontrun{
-plot(RC, bathymetry=FALSE)}
+plot(RC, bathymetry=FALSE)
+}
 
 }
 \author{
