@@ -135,19 +135,18 @@ test_that("subset by column",
 )
 
 test_that("subset by cycle", {
-          if (canDownload()) {
-              data("index")
-              N <- 9
-              index1 <- expect_message(subset(index, ID="1901584"),
-                                       paste("Kept", N, "profiles"))
-              profiles <- expect_silent(getProfiles(index1))
-              argos <- expect_output(expect_warning(readProfiles(profiles),
-                                                    "Of 9 profiles read, 8 have"), "|===")
-              argos2 <- expect_message(subset(argos, cycle='147'),
-                                       "Kept 1 profiles \\(11.1%\\)")
-              expect_equal(argos2[["cycle"]], "147")
-              expect_equal(unique(argos2[['cycle']]), "147")
-          }
+          skip_if_not(hasArgoTestCache())
+          data("index")
+          N <- 9
+          index1 <- expect_message(subset(index, ID="1901584"),
+                                   paste("Kept", N, "profiles"))
+          profiles <- expect_silent(getProfiles(index1))
+          argos <- expect_output(expect_warning(readProfiles(profiles),
+                                                "Of 9 profiles read, 8 have"), "|===")
+          argos2 <- expect_message(subset(argos, cycle='147'),
+                                   "Kept 1 profiles \\(11.1%\\)")
+          expect_equal(argos2[["cycle"]], "147")
+          expect_equal(unique(argos2[['cycle']]), "147")
 })
 
 test_that("subset by dataMode", {
@@ -198,15 +197,14 @@ test_that("subset stop messages", {
 })
 
 test_that("subset by dataStateIndicator", {
-          if (canDownload()) {
-              data("index")
-              N <- 20
-              index1 <- expect_message(subset(index, 1:20, paste("Kept", N, "profiles")))
-              profiles <- expect_silent(getProfiles(index1))
-              argos <- expect_output(expect_warning(readProfiles(profiles), "Of 20 profiles read, 8 have"), "|===")
-              argos2 <- expect_silent(subset(argos, dataStateIndicator="2C"))
-              expect_equal(11, argos2[["length"]])
-              argos3 <- expect_silent(subset(argos, dataStateIndicator="J"))
-              expect_equal(0, argos3[["length"]])
-          }
+          skip_if_not(hasArgoTestCache())
+          data("index")
+          N <- 20
+          index1 <- expect_message(subset(index, 1:20, paste("Kept", N, "profiles")))
+          profiles <- expect_silent(getProfiles(index1))
+          argos <- expect_output(expect_warning(readProfiles(profiles), "Of 20 profiles read, 8 have"), "|===")
+          argos2 <- expect_silent(subset(argos, dataStateIndicator="2C"))
+          expect_equal(11, argos2[["length"]])
+          argos3 <- expect_silent(subset(argos, dataStateIndicator="J"))
+          expect_equal(0, argos3[["length"]])
 })
