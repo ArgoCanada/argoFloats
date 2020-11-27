@@ -116,7 +116,7 @@ test_that("subset by direction",
 test_that("subset by profile",
           {
               if (canDownload()) {
-                  i <- expect_silent(getIndex())
+                  i <- getIndex()
                   N <- 305
                   s <- expect_message(subset(i, ID="5902250"),
                                       paste("Kept", N, "profiles"))
