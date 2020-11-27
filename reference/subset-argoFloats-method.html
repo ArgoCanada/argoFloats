@@ -55,7 +55,7 @@ may be given in the ... argument, but that merge,argoFloats-method() can
 be used to merge indices  created by subset, which effectively creates a
 logical &quot;or&quot; operation.
 B) type &quot;argos&quot;, as created by readProfiles(). Note that the only subset
-condition that can be give in the ... argument is column,cycle, or
+condition that can be give in the ... argument is profile,cycle, or
 dataStateIndicator for argos type." />
 
 
@@ -156,7 +156,7 @@ may be given in the <code>...</code> argument, but that <code><a href='merge,arg
 be used to merge indices  created by <code>subset</code>, which effectively creates a
 logical "or" operation.
 B) type <code>"argos"</code>, as created by <code><a href='readProfiles.html'>readProfiles()</a></code>. Note that the only subset
-condition that can be give in the <code>...</code> argument is <code>column</code>,<code>cycle</code>, or
+condition that can be give in the <code>...</code> argument is <code>profile</code>,<code>cycle</code>, or
 <code>dataStateIndicator</code> for <code>argos</code> type.</p>
     </div>
 
@@ -179,7 +179,7 @@ indices of <code>x@data$index</code> to keep (example 1).</p></td>
       <th>...</th>
       <td><p>the first entry here must be either (a) a list named <code>circle</code>,
 <code>rectangle</code>, <code>polygon</code>, <code>parameter</code>, <code>time</code>, <code>institution</code>,
-<code>ID</code>,<code>ocean</code>,<code>dataMode</code>,<code>cycle</code>, <code>direction</code>, or <code>column</code>.
+<code>ID</code>,<code>ocean</code>,<code>dataMode</code>,<code>cycle</code>, <code>direction</code>, or <code>profile</code>.
 (examples 2 through 8, and 10 through 14),
 or (b) a logical value named <code>deep</code> (example 9).  Optionally, this entry
 may be followed by second entry named <code>silent</code>, which is a logical
@@ -257,7 +257,7 @@ See example 12.</p></li>
 <li><p>A character value named <code>direction</code>, equal to either "descent" or "ascent",
 that selects whether to retain data from the ascent or decent phase.
 See example 13.</p></li>
-<li><p>An integer value named <code>column</code>, that selects which column of parameters
+<li><p>An integer value named <code>profile</code>, that selects which profiles
 to obtain. Note that this type of subset is possible for <code>argos</code> and <code>index</code>
 type objects.
 See example 14.</p></li>
@@ -370,13 +370,13 @@ Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 <span class='va'>index13B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index13A</span>, direction<span class='op'>=</span><span class='st'>"descent"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>index13B</span><span class='op'>[[</span><span class='st'>"file"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>}</span>
 
-<span class='co'># Example 14: subset by column (for argos type)</span>
+<span class='co'># Example 14: subset by profile (for argos type)</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
 <span class='va'>index14A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span>filename<span class='op'>=</span><span class='st'>"synthetic"</span><span class='op'>)</span>, ID<span class='op'>=</span><span class='st'>"5903889"</span><span class='op'>)</span>
 <span class='va'>index14B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index14A</span>, cycle<span class='op'>=</span><span class='st'>"074"</span><span class='op'>)</span>
 <span class='va'>argos14A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='getProfiles.html'>getProfiles</a></span><span class='op'>(</span><span class='va'>index14B</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>argos14B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>argos14A</span>, column<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>argos14B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>argos14A</span>, profile<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>D</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Oxygen <span class='op'>=</span> <span class='va'>argos14A</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span>,
 col1<span class='op'>=</span> <span class='va'>argos14B</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>}</span>
 
