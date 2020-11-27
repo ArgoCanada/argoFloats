@@ -12,7 +12,7 @@
 #' be used to merge indices  created by `subset`, which effectively creates a
 #' logical "or" operation.
 #' B) type `"argos"`, as created by [readProfiles()]. Note that the only subset
-#' condition that can be give in the `...` argument is `column`,`cycle`, or
+#' condition that can be give in the `...` argument is `profile`,`cycle`, or
 #' `dataStateIndicator` for `argos` type.
 #'
 #' The possibilities for the `...` argument are as follows.
@@ -91,7 +91,7 @@
 #' that selects whether to retain data from the ascent or decent phase.
 #' See example 13.
 #'
-#' 14. An integer value named `column`, that selects which column of parameters
+#' 14. An integer value named `profile`, that selects which profiles
 #' to obtain. Note that this type of subset is possible for `argos` and `index`
 #' type objects.
 #' See example 14.
@@ -116,7 +116,7 @@
 #'
 #' @param ... the first entry here must be either (a) a list named `circle`,
 #' `rectangle`, `polygon`, `parameter`, `time`, `institution`,
-#' `ID`,`ocean`,`dataMode`,`cycle`, `direction`, or `column`.
+#' `ID`,`ocean`,`dataMode`,`cycle`, `direction`, or `profile`.
 #'  (examples 2 through 8, and 10 through 14),
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
@@ -215,13 +215,13 @@
 #' index13B <- subset(index13A, direction="descent")
 #' head(index13B[["file"]])}
 #'
-#' # Example 14: subset by column (for argos type)
+#' # Example 14: subset by profile (for argos type)
 #' \dontrun{
 #' library(argoFloats)
 #' index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
 #' index14B <- subset(index14A, cycle="074")
 #' argos14A <- readProfiles(getProfiles(index14B))
-#' argos14B <- subset(argos14A, column=1)
+#' argos14B <- subset(argos14A, profile=1)
 #' D <- data.frame(Oxygen = argos14A[["oxygen"]],
 #' col1= argos14B[["oxygen"]][[1]])}
 #'
@@ -279,21 +279,21 @@ setMethod(f="subset",
                   stop("in subset,argoFloats-method() :\n  subset doesn't work for type = profiles", call.=FALSE)
               }
               ## Step 1: handle "argo" type first. Note that "subset" is ignored; rather, we insist that either
-              ## "column" or "cycle" be provided.
+              ## "profile" or "cycle" be provided.
               if (x@metadata$type == "argos") {
                   argoFloatsDebug(debug, "subsetting with type=\"argos\"\n")
                   if (length(dotsNames) == 0)
-                      stop("in subset,argoFloats-method() :\n  must give \"column\" , \"cycle\", or \"dataStateIndicator\" argument", call.=FALSE)
-                  if (dotsNames[1] == "column") {
-                      argoFloatsDebug(debug, "subsetting by column ", column, "\n")
-                      column <- dots[[1]]
+                      stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", or \"dataStateIndicator\" argument", call.=FALSE)
+                  if (dotsNames[1] == "profile") {
+                      argoFloatsDebug(debug, "subsetting by profile ", profile, "\n")
+                      profile <- dots[[1]]
                       ## Loop over all objects within the data, and within that loop look at data within the object,
-                      ## and for each of them, if its a vactor subset according to column and if its a matrix
-                      ## subset according to column
+                      ## and for each of them, if its a vactor subset according to profile and if its a matrix
+                      ## subset according to profile
                       res <- x
                       argos <- x[["argos"]]
                       ## Loop over all objects
-                      ##message("column=",paste(column, collapse=" "))
+                      ##message("profile=",paste(profile, collapse=" "))
                       for (iargo in seq_along(argos)) {
                           argo <- argos[[iargo]]
                           ## Handle the metadata slot
@@ -308,24 +308,24 @@ setMethod(f="subset",
                               ## namely "direction", "juldQC", and "positionQC".
                               if (name == "direction" || grepl("QC$", name)) {
                                  ## message("  -- character")
-                                  res@data$argos[[iargo]]@metadata[[name]] <- paste(strsplit(item,"")[[1]][column],collapse="")
+                                  res@data$argos[[iargo]]@metadata[[name]] <- paste(strsplit(item,"")[[1]][profile],collapse="")
                               } else if (is.list(item)) {
                                   ##message("list")
                                   for (l in seq_along(item)) {
                                       ##print(dim(item[[l]]))
                                       D <- dim(item[[l]])
-                                      if (column > D[2])
-                                          stop("in subset,argoFloats-method() :\n cannot access column ", column, " of metadata item \"", name, "\" because its dimension is ", paste(D, collapse=" "), call.=FALSE)
+                                      if (profile > D[2])
+                                          stop("in subset,argoFloats-method() :\n cannot access profile ", profile, " of metadata item \"", name, "\" because its dimension is ", paste(D, collapse=" "), call.=FALSE)
                                       ##cat("BEFORE:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
-                                      res@data$argos[[iargo]]@metadata[[name]][[l]] <- item[[l]][, column, drop=FALSE]
+                                      res@data$argos[[iargo]]@metadata[[name]][[l]] <- item[[l]][, profile, drop=FALSE]
                                       ##cat("AFTER:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
                                   }
                               } else if (is.vector(name)) {
                                   ##message("vector")
-                                  res@data$argos[[iargo]]@metadata[[name]] <- item[column]
+                                  res@data$argos[[iargo]]@metadata[[name]] <- item[profile]
                               } else if (is.matrix(name)) {
                                   ##message("matrix")
-                                  res@data$argos[[iargo]]@metadata[[name]] <- item[, column, drop=FALSE]
+                                  res@data$argos[[iargo]]@metadata[[name]] <- item[, profile, drop=FALSE]
                               } else if (is.array(name)) {
                                   argoFloatsDebug(debug, "name=", name, " has dim ", paste(dim(res@metadata[[name]]), collapse=" "), "\n")
                                   if (length(dim(res@metadata[[name]])) <= 3) {
@@ -342,15 +342,15 @@ setMethod(f="subset",
                               item <- argo@data[[name]]
                               if (is.matrix(item)) {
                                   dim <- dim(item)
-                                  if (column > dim[2])
-                                      stop("in subset,argoFloats-method() :\n  Only have ", dim[2], " columns", call.=FALSE)
-                                  newItem <- item[, column, drop=FALSE]
+                                  if (profile > dim[2])
+                                      stop("in subset,argoFloats-method() :\n  Only have ", dim[2], " profiles", call.=FALSE)
+                                  newItem <- item[, profile, drop=FALSE]
                                   res@data$argos[[iargo]]@data[[name]] <- newItem
                               } else {
                                   length <- length(item)
-                                  if (column > length)
-                                      stop("in subset,argoFloats-method() :\n  Only have ", length, " columns", call.=FALSE)
-                                  newItem <- item[column, drop=FALSE]
+                                  if (profile > length)
+                                      stop("in subset,argoFloats-method() :\n  Only have ", length, " profiles", call.=FALSE)
+                                  newItem <- item[profile, drop=FALSE]
                                   res@data$argos[[iargo]]@data[[name]] <- newItem
                               }
                           }
@@ -395,7 +395,7 @@ setMethod(f="subset",
                       }
                       x@data[[1]] <- x@data[[1]][keep]
                   } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"column\", \"cycle\", or \"dataSateIndicator\"", call.=FALSE)
+                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"profile\", \"cycle\", or \"dataSateIndicator\"", call.=FALSE)
                   }
               }
               ## Step 2: Now we know the type is either "index" or "profiles".  In either case,
