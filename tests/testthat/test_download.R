@@ -33,7 +33,7 @@ test_that("readProfiles()",
               skip_if_not(hasArgoTestCache())
               
               data(index)
-              p <- expect_message(getProfiles(subset(index, 1:4)), "Kept 4 profiles \\(0.409%\\)")
+              p <- expect_message(getProfiles(subset(index, 1:4), destdir=argoDefaultDestdir()), "Kept 4 profiles \\(0.409%\\)")
               a <- expect_output(expect_warning(readProfiles(p), "Of 4 profiles read, 4 have"), "|===")
               expect_equal(4, length(a[["cycle"]]))
               expect_true(is.character(a[["cycle"]]))
@@ -52,9 +52,9 @@ test_that("getProfile() handling of as single out-of-date URL",
               
               data(index)
               s <- expect_message(subset(index, 778), "Kept 1 profiles")
-              p <- expect_silent(getProfiles(s, skip=FALSE))
-              p <- expect_silent(getProfiles(s, skip=TRUE))
-              p <- expect_silent(getProfiles(s)) # default is skip=TRUE
+              p <- expect_silent(getProfiles(s, destdir=argoDefaultDestdir(), skip=FALSE))
+              p <- expect_silent(getProfiles(s, destdir=argoDefaultDestdir(), skip=TRUE))
+              p <- expect_silent(getProfiles(s, destdir=argoDefaultDestdir())) # default is skip=TRUE
           }
 )
 
@@ -64,7 +64,7 @@ test_that("readProfile() handling of an out-of-date URL surrounded by valid URLs
               
               data(index)
               s <- expect_message(subset(index, 778 + seq(-1, 1)), "Kept 3 profiles")
-              p <- expect_silent(getProfiles(s)) # default is skip=TRUE
+              p <- expect_silent(getProfiles(s, destdir=argoDefaultDestdir())) # default is skip=TRUE
               a <- expect_warning(expect_output(readProfiles(p), "|==="), "Of 3 profiles read, 1 has")
               a <- expect_silent(readProfiles(p, quiet=TRUE))
           }

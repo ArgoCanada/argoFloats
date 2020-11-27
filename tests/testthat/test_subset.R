@@ -107,11 +107,11 @@ test_that("subset by direction",
           }
 )
 
-test_that("subset by column",
+test_that("subset by profile",
           {
               skip_if_not(hasArgoTestCache())
             
-              i <- expect_silent(getIndex())
+              i <- getIndex(quiet = TRUE)
               N <- 305
               s <- expect_message(subset(i, ID="5902250"),
                                   paste("Kept", N, "profiles"))
@@ -120,8 +120,8 @@ test_that("subset by column",
                                   paste("Kept", N, "profiles"))
               p <- expect_silent(getProfiles(s))
               a <- expect_output(readProfiles(p), "|===")
-              a1 <- expect_silent(subset(a, column=1))
-              a2 <- expect_silent(subset(a, column=2))
+              a1 <- expect_silent(subset(a, profile=1))
+              a2 <- expect_silent(subset(a, profile=2))
               salinity <- a[["salinity"]][[1]]
               salinity1 <- a1[["salinity"]][[1]]
               salinity2 <- a2[["salinity"]][[1]]
@@ -140,7 +140,7 @@ test_that("subset by cycle", {
           N <- 9
           index1 <- expect_message(subset(index, ID="1901584"),
                                    paste("Kept", N, "profiles"))
-          profiles <- expect_silent(getProfiles(index1))
+          profiles <- expect_silent(getProfiles(index1, destdir=argoDefaultDestdir()))
           argos <- expect_output(expect_warning(readProfiles(profiles),
                                                 "Of 9 profiles read, 8 have"), "|===")
           argos2 <- expect_message(subset(argos, cycle='147'),
@@ -201,7 +201,7 @@ test_that("subset by dataStateIndicator", {
           data("index")
           N <- 20
           index1 <- expect_message(subset(index, 1:20, paste("Kept", N, "profiles")))
-          profiles <- expect_silent(getProfiles(index1))
+          profiles <- expect_silent(getProfiles(index1, destdir=argoDefaultDestdir()))
           argos <- expect_output(expect_warning(readProfiles(profiles), "Of 20 profiles read, 8 have"), "|===")
           argos2 <- expect_silent(subset(argos, dataStateIndicator="2C"))
           expect_equal(11, argos2[["length"]])

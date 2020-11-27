@@ -7,7 +7,7 @@ test_that("applyQC with default 'flag' and 'action' arguments",
               skip_if_not(hasArgoTestCache())
               data(index)
               i <- subset(index, 1:5) # first 5 profiles
-              raw <- expect_output(expect_warning(readProfiles(getProfiles(i)), "^Of 5 profiles read"), "|====")
+              raw <- expect_output(expect_warning(readProfiles(getProfiles(i, argoDefaultDestdir())), "^Of 5 profiles read"), "|====")
               clean <- applyQC(raw)
               for (i in raw[["length"]]) {
                   for (field in c("temperature", "salinity", "pressure")) {
@@ -25,7 +25,7 @@ test_that("showing QC tests", {
     ## DK: this was not used
     ##indexq <- expect_message(subset(index, 1),
     ##                         "Kept 1 profiles \\(0.105%\\)")
-    profiles <- getProfiles(subset)
+    profiles <- getProfiles(subset, destdir=argoDefaultDestdir())
     argos <- expect_output(expect_warning(readProfiles(profiles), "^Of 1 profiles read"), "|===")
     argos1 <- argos[[1]]
     ## this is only a consistency check with values as of 2020-07-17, not a real
