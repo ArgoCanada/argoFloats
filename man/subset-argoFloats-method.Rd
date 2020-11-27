@@ -14,7 +14,7 @@ indices of \code{x@data$index} to keep (example 1).}
 
 \item{...}{the first entry here must be either (a) a list named \code{circle},
 \code{rectangle}, \code{polygon}, \code{parameter}, \code{time}, \code{institution},
-\code{ID},\code{ocean},\code{dataMode},\code{cycle}, \code{direction}, or \code{column}.
+\code{ID},\code{ocean},\code{dataMode},\code{cycle}, \code{direction}, or \code{profile}.
 (examples 2 through 8, and 10 through 14),
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
@@ -35,7 +35,7 @@ may be given in the \code{...} argument, but that \code{\link[=merge,argoFloats-
 be used to merge indices  created by \code{subset}, which effectively creates a
 logical "or" operation.
 B) type \code{"argos"}, as created by \code{\link[=readProfiles]{readProfiles()}}. Note that the only subset
-condition that can be give in the \code{...} argument is \code{column},\code{cycle}, or
+condition that can be give in the \code{...} argument is \code{profile},\code{cycle}, or
 \code{dataStateIndicator} for \code{argos} type.
 }
 \details{
@@ -102,7 +102,7 @@ See example 12.
 \item A character value named \code{direction}, equal to either "descent" or "ascent",
 that selects whether to retain data from the ascent or decent phase.
 See example 13.
-\item An integer value named \code{column}, that selects which column of parameters
+\item An integer value named \code{profile}, that selects which profiles
 to obtain. Note that this type of subset is possible for \code{argos} and \code{index}
 type objects.
 See example 14.
@@ -207,13 +207,13 @@ index13A <- subset(getIndex(), deep=TRUE)
 index13B <- subset(index13A, direction="descent")
 head(index13B[["file"]])}
 
-# Example 14: subset by column (for argos type)
+# Example 14: subset by profile (for argos type)
 \dontrun{
 library(argoFloats)
 index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
 index14B <- subset(index14A, cycle="074")
 argos14A <- readProfiles(getProfiles(index14B))
-argos14B <- subset(argos14A, column=1)
+argos14B <- subset(argos14A, profile=1)
 D <- data.frame(Oxygen = argos14A[["oxygen"]],
 col1= argos14B[["oxygen"]][[1]])}
 
