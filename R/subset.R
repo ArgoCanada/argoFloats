@@ -603,8 +603,9 @@ setMethod(f="subset",
                   } else if (dotsNames[1] == "cycle") {
                       argoFloatsDebug(debug, "subsetting by cycle\n")
                       cycle <- dots[[1]]
-                      if (!is.character(cycle))
-                          stop("in subset,argoFloats-method() : \"cycle\" must be character value", call.=FALSE)
+                      if (!is.character(cycle) & !is.integer(cycle))
+                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or integer", call.=FALSE)
+                      if (is.character(cycle)) {
                       if (is.list(dots[1]))
                           cycle <- unlist(cycle)
                       cycle <- as.character(cycle)
@@ -612,7 +613,7 @@ setMethod(f="subset",
                       xcycle <- x[["cycle"]]
                       ##OLD cycleList <- lapply(x[["cycle"]], function(p) strsplit(p, " ")[[1]])
                       ##OLD keep <- unlist(lapply(cycleList, function(pl) ncycle == sum(cycle %in% pl)))
-                      keep <- grepl(cycle[1], xcycle)
+                      keep <<- grepl(cycle[1], xcycle)
                       for (i in seq_along(cycle)) {
                           if (i > 1)
                               keep <- keep | grepl(cycle[i], xcycle)
@@ -622,6 +623,15 @@ setMethod(f="subset",
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
+                      } else if (is.integer(cycle))
+                          cycle <- as.integer(cycle)
+                              xcycle <- as.numeric(x[["cycle"]])
+                          for (i in cycle){
+                              keep <<- grepl(i, xcycle)
+                              print(keep)
+                          }
+                          #x@data$index <- x@data$index[keep, ]
+                          message("I need to grepl for integer")
                   } else if (dotsNames[1]=="direction") {
                       argoFloatsDebug(debug, "subsetting by direction\n")
                       direction <- dots[[1]]
