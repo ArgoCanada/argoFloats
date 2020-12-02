@@ -613,18 +613,11 @@ setMethod(f="subset",
                       cycle <- as.character(cycle)
                       ncycle <- length(cycle)
                       xcycle <- x[["cycle"]]
-                      ##OLD cycleList <- lapply(x[["cycle"]], function(p) strsplit(p, " ")[[1]])
-                      ##OLD keep <- unlist(lapply(cycleList, function(pl) ncycle == sum(cycle %in% pl)))
-                      keep <<- grepl(cycle[1], xcycle)
+                      keep <- grepl(cycle[1], xcycle)
                       for (i in seq_along(cycle)) {
                           if (i > 1)
                               keep <- keep | grepl(cycle[i], xcycle)
                       }
-                      if (sum(keep) < 1)
-                          warning("In subset,argoFloats-method(..., parameter) : found no profiles with given profile", call.=FALSE)
-                      if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
                       } else if (is.integer(cycle))
                           cycle <- as.integer(cycle)
                       xcycle <- as.numeric(x[["cycle"]])
