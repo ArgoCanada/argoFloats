@@ -91,7 +91,7 @@ See example 10.
 \item A character value named \code{dataMode}, equal to either \code{realtime} or \code{delayed},
 that selects whether to retain real-time data or delayed data.
 See example 11.
-\item An integer value named \code{cycle} that specifies which cycles are to be retained.
+\item An integer or character value named \code{cycle} that specifies which cycles are to be retained.
 This is done by regular-expression matching of the filename, looking between the
 underline character (\code{"_"}) and the suffix (\code{.nc}), but note that the expression
 is made up of a compulsory component comprising 3 or 4 digits, and an optional
@@ -197,8 +197,10 @@ plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 # Example 12: subset by cycle
 \dontrun{
 data(index)
-index12 <- subset(index, cycle="124")
-cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")}
+index12A <- subset(index, cycle="124")
+index12B <- subset(index, cycle=0:2)
+cat("File names with cycle number 124:", paste(index12A[["file"]]), "\n")
+cat("File names with cycle number between 0 and 2:", paste(index12B[["file"]]), "\n")}
 
 # Example 13: subset by direction
 \dontrun{

@@ -90,11 +90,14 @@ test_that("subset by ocean", {
 test_that("subset by cycle", {
           data("index")
           N <- 5
-          index1 <- expect_error(subset(index, cycle=124, "Error: in subset,argoFloats-method() : \"cycle\" must be character value"))
+          index1 <- expect_error(subset(index, cycle=124, "Error: in subset,argoFloats-method() : \"cycle\" must be character value or integer"))
           indexProfile <- expect_message(subset(index, cycle="124"), paste("Kept", N, "profiles"))
           expect_equal(dim(indexProfile[["index"]]), c(N, 8))
           expect_equal(indexProfile[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
           expect_equal(indexProfile[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
+          N <- 50
+          index2 <- expect_message(subset(index, cycle=1:10), paste("Kept", N, "profiles"))
+          
 })
 
 test_that("subset by direction",
@@ -176,9 +179,10 @@ test_that("subset stop messages", {
           argos2 <- expect_error(subset(argos, "Error: in subset,argoFloats-method() : must give 'profile' or 'cycle' argument"))
           argos3 <- expect_error(subset(argos, profile=2,
                                         "Error: in subset,argoFloats-method() : cannot access profile 2 of metadata item 'flags' because its dimension is 335 1 "))
-          argos4 <- expect_message(subset(argos, cycle=131, "Kept 1 profiles (100%)"))
+          argos4 <- expect_message(subset(argos, cycle="131", "Kept 1 profiles (100%)"))
           argos5 <- expect_error(subset(argos, map=1, " Error: in subset,argoFloats-method(): the only permitted '...' argument for argos type is 'profile' or 'cycle'"))
-          argos6 <- expect_error(subset(argos, cycle=1, "Error: In subset,argoFloats-method(): Cycle '1' not found. Try one of: 131"))
+          argos6 <- expect_error(subset(argos, cycle="1", "Error: In subset,argoFloats-method(): Cycle '1' not found. Try one of: 131"))
+          argos7 <- expect_message(subset(argos, cycle=131:140, "Kept 1 profiles (100%)"))
           index2 <- expect_error(subset(index, circle='dog', " Error: in subset,argoFloats-method() : 'circle' must be a list containing 'longitude', 'latitude' and 'radius'"))
           index3 <- expect_error(subset(index, circle=list(longitude=-77.5, latitude=27.5), " Error: in subset,argoFloats-method() : 'circle' must be a list containing 'longitude', 'latitude' and 'radius'"))
           index4 <- expect_error(subset(index, rectangle='dog', " Error: in subset,argoFloats-method(): 'rectangle' must be a list containing 'longitude' and 'latitude'"))

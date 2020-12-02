@@ -78,7 +78,7 @@
 #' that selects whether to retain real-time data or delayed data.
 #' See example 11.
 #'
-#' 12. An integer value named `cycle` that specifies which cycles are to be retained.
+#' 12. An integer or character value named `cycle` that specifies which cycles are to be retained.
 #' This is done by regular-expression matching of the filename, looking between the
 #' underline character (`"_"`) and the suffix (`.nc`), but note that the expression
 #' is made up of a compulsory component comprising 3 or 4 digits, and an optional
@@ -205,8 +205,10 @@
 #' # Example 12: subset by cycle
 #' \dontrun{
 #' data(index)
-#' index12 <- subset(index, cycle="124")
-#' cat("File names with cycle number 124:", paste(index12[["file"]]), "\n")}
+#' index12A <- subset(index, cycle="124")
+#' index12B <- subset(index, cycle=0:2)
+#' cat("File names with cycle number 124:", paste(index12A[["file"]]), "\n")
+#' cat("File names with cycle number between 0 and 2:", paste(index12B[["file"]]), "\n")}
 #'
 #' # Example 13: subset by direction
 #' \dontrun{
@@ -360,6 +362,9 @@ setMethod(f="subset",
                   } else if (dotsNames[1] == "cycle") {
                       argoFloatsDebug(debug, "subsetting by cycle for \"argos\" type\n")
                       cycle <- dots[[1]]
+                      if (!is.character(cycle) & !is.integer(cycle))
+                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or integer", call.=FALSE)
+                      if (is.character(cycle)) {
                       file <- unlist(x[["filename"]])
                       fileCycle <- sapply(x[["data"]][[1]], function(x) x[["cycleNumber"]])
                       ## Insist that the cycles are available
@@ -368,6 +373,10 @@ setMethod(f="subset",
                           if (!(thisCycle %in% fileCycle))
                               stop("In subset,argoFloats-method(): Cycle \"", thisCycle, "\" not found. Try one of: ", paste(fileCycle, collapse=", "), call.=FALSE)
                           keep <- keep | (thisCycle == fileCycle)
+                      }
+                      } else if (is.integer(cycle)) {
+                      xcycle <- as.numeric(x[["cycle"]])
+                      keep <- min(cycle) <= xcycle & xcycle <= max(cycle)
                       }
                       res <- x
                       res@data[[1]] <- x@data[[1]][keep]
@@ -603,20 +612,23 @@ setMethod(f="subset",
                   } else if (dotsNames[1] == "cycle") {
                       argoFloatsDebug(debug, "subsetting by cycle\n")
                       cycle <- dots[[1]]
-                      if (!is.character(cycle))
-                          stop("in subset,argoFloats-method() : \"cycle\" must be character value", call.=FALSE)
+                      if (!is.character(cycle) & !is.integer(cycle))
+                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or integer", call.=FALSE)
+                      if (is.character(cycle)) {
                       if (is.list(dots[1]))
                           cycle <- unlist(cycle)
                       cycle <- as.character(cycle)
                       ncycle <- length(cycle)
                       xcycle <- x[["cycle"]]
-                      ##OLD cycleList <- lapply(x[["cycle"]], function(p) strsplit(p, " ")[[1]])
-                      ##OLD keep <- unlist(lapply(cycleList, function(pl) ncycle == sum(cycle %in% pl)))
                       keep <- grepl(cycle[1], xcycle)
                       for (i in seq_along(cycle)) {
                           if (i > 1)
                               keep <- keep | grepl(cycle[i], xcycle)
                       }
+                      } else if (is.integer(cycle))
+                          cycle <- as.integer(cycle)
+                      xcycle <- as.numeric(x[["cycle"]])
+                      keep <- min(cycle) <= xcycle & xcycle <= max(cycle)
                       if (sum(keep) < 1)
                           warning("In subset,argoFloats-method(..., parameter) : found no profiles with given profile", call.=FALSE)
                       if (!silent)
