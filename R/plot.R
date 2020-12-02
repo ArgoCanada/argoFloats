@@ -272,15 +272,17 @@ pinusr <- function(usr)
 #' # (Slow, so not run by default.)
 #'\dontrun{
 #' index10 <- subset(index, 1:10)
-#' profiles10 <- getProfiles(index10)
+#' profiles10 <- getProfiles(index10, destdir=argoDefaultDestdir())
 #' argos10 <- readProfiles(profiles10)
-#' plot(argos10, which="TS")}
+#' plot(argos10, which="TS")
+#'}
 #'
 #' # Example 4: map with bathymetry
 #' # (Slow, so not run by default.)
 #'\dontrun{
 #' par(mar=c(3, 3, 1, 1))
-#' plot(index, bathymetry=TRUE)}
+#' plot(index, bathymetry=TRUE)
+#'}
 #'
 #' # Example 5: map with fine-grained bathymetry control
 #' # (Slow, so not run by default.)
@@ -328,7 +330,7 @@ pinusr <- function(usr)
 #' plot(a, which="TS")
 #'
 #' # Example 7: Temperature QC plot for 25 cycles of a float in the Arabian Sea
-#' \dontrun{
+#'\dontrun{
 #' library(argoFloats)
 #' ais <- getIndex(filename="synthetic")
 #' sub <- subset(subset(ais, ID='2902123'), 50:75)
@@ -336,7 +338,8 @@ pinusr <- function(usr)
 #' argos <- readProfiles(profiles)
 #' plot(argos, which="QC") # defaults to temperature
 #' plot(argos, which="QC", QCControl=list(parameter="salinity"))
-#' plot(argos, which="QC", QCControl=list(parameter="salinity",dataStateIndicator=TRUE))}
+#' plot(argos, which="QC", QCControl=list(parameter="salinity",dataStateIndicator=TRUE))
+#'}
 #'
 #' # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
 #' library(argoFloats)
@@ -356,7 +359,8 @@ pinusr <- function(usr)
 #'\dontrun{
 #' library(argoFloats)
 #' a <- readProfiles(getProfiles(subset(getIndex(), ID=1901584)))
-#' plot(a, which="summary")}
+#' plot(a, which="summary")
+#'}
 #'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,

@@ -556,9 +556,10 @@ serverMapApp <- function(input, output, session) {
 #' can be helpful in diagnosing problems or bottlenecks.
 #'
 #' @examples
-#'\dontrun{
-#' library(argoFloats)
-#' mapApp()}
+#' if (interactive()) {
+#'     library(argoFloats)
+#'     mapApp()
+#' }
 #'
 #' @author Dan Kelley
 #' @importFrom shiny shinyApp shinyOptions

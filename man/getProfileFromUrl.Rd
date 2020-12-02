@@ -74,13 +74,14 @@ plot(argo, which=c(1, 4, 6, 5))
 index <- getIndex()
 lon0 <- -59.9149
 lat0 <- 43.9337
-if (requireNamespace("oce")) {
-    dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
-    w <- which.min(dist)
-    url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
-    fileSable <- getProfileFromUrl(url=url)
-    argoSable <- read.oce(fileSable)
-    plot(argoSable, which=c(1, 4, 6, 5))}}
+
+dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
+w <- which.min(dist)
+url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
+fileSable <- getProfileFromUrl(url=url)
+argoSable <- read.oce(fileSable)
+plot(argoSable, which=c(1, 4, 6, 5))
+}
 
 }
 \author{
