@@ -362,6 +362,9 @@ setMethod(f="subset",
                   } else if (dotsNames[1] == "cycle") {
                       argoFloatsDebug(debug, "subsetting by cycle for \"argos\" type\n")
                       cycle <- dots[[1]]
+                      if (!is.character(cycle) & !is.integer(cycle))
+                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or integer", call.=FALSE)
+                      if (is.character(cycle)) {
                       file <- unlist(x[["filename"]])
                       fileCycle <- sapply(x[["data"]][[1]], function(x) x[["cycleNumber"]])
                       ## Insist that the cycles are available
@@ -370,6 +373,10 @@ setMethod(f="subset",
                           if (!(thisCycle %in% fileCycle))
                               stop("In subset,argoFloats-method(): Cycle \"", thisCycle, "\" not found. Try one of: ", paste(fileCycle, collapse=", "), call.=FALSE)
                           keep <- keep | (thisCycle == fileCycle)
+                      }
+                      } else if (is.integer(cycle)) {
+                      xcycle <- as.numeric(x[["cycle"]])
+                      keep <- min(cycle) <= xcycle & xcycle <= max(cycle)
                       }
                       res <- x
                       res@data[[1]] <- x@data[[1]][keep]
