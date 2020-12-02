@@ -625,13 +625,13 @@ setMethod(f="subset",
                       x@data$index <- x@data$index[keep, ]
                       } else if (is.integer(cycle))
                           cycle <- as.integer(cycle)
-                              xcycle <- as.numeric(x[["cycle"]])
-                          for (i in cycle){
-                              keep <<- grepl(i, xcycle)
-                              print(keep)
-                          }
-                          #x@data$index <- x@data$index[keep, ]
-                          message("I need to grepl for integer")
+                      xcycle <- as.numeric(x[["cycle"]])
+                      keep <- min(cycle) <= xcycle & xcycle <= max(cycle)
+                      if (sum(keep) < 1)
+                          warning("In subset,argoFloats-method(..., parameter) : found no profiles with given profile", call.=FALSE)
+                      if (!silent)
+                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                      x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="direction") {
                       argoFloatsDebug(debug, "subsetting by direction\n")
                       direction <- dots[[1]]
