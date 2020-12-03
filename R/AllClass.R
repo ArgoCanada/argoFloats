@@ -62,9 +62,9 @@ NULL
 
 #' A sample index of profiles
 #'
-#' This was created by subsetting a global index to the 978 Argo profiles
+#' This was created by subsetting a global index to the Argo profiles
 #' that were within a 200km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 September 10, using the following code.
+#' Bahamas, using the following code.
 #' ```
 #  library(argoFloats)
 #' indexAll <- getIndex()
@@ -86,9 +86,9 @@ NULL
 
 #' A sample index of biogeochemical-Argo profiles
 #'
-#' This was created by subsetting a global index to the 39 BGC Argo profiles
+#' This was created by subsetting a global index to the BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 September 10, using the following code.
+#' Bahamas, using the following code.
 #'```
 #' library(argoFloats)
 #' indexAll <- getIndex("bgc")
@@ -112,9 +112,9 @@ NULL
 
 ## A sample index of merged Argo and biogeochemical-Argo profiles
 ##
-## This was created by subsetting a global index to the 39 BGC Argo profiles
+## This was created by subsetting a global index to the BGC Argo profiles
 ## that were within a 300km radius of Marsh Harbour, Abaco Island,
-## Bahamas, as of 2020 September 10, using the following code.
+## Bahamas, using the following code.
 ##```
 ## library(argoFloats)
 ## indexAll <- getIndex("merged")
@@ -137,9 +137,9 @@ NULL
 
 #' A sample index of synthetic (i.e. combined) Argo and biogeochemical-argo profiles
 #'
-#' This was created by subsetting a global index to the 39 BGC Argo profiles
+#' This was created by subsetting a global index to the BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
-#' Bahamas, as of 2020 September 10, using the following code.
+#' Bahamas, using the following code.
 #'```
 #' library(argoFloats)
 #' indexAll <- getIndex("synthetic")
@@ -166,8 +166,8 @@ NULL
 
 #' A sample index of deep Argo
 #'
-#' This was created by subsetting a global index to the 163 deep Argo profiles
-#' that were within a 800km radius of Antarctica (67S,105E), as of 2020 September 10,
+#' This was created by subsetting a global index to the deep Argo profiles
+#' that were within a 800km radius of Antarctica (67S,105E),
 #' using the following code.
 #'```
 #' library(argoFloats)

@@ -5,9 +5,9 @@
 \alias{index}
 \title{A sample index of profiles}
 \description{
-This was created by subsetting a global index to the 978 Argo profiles
+This was created by subsetting a global index to the Argo profiles
 that were within a 200km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 September 10, using the following code.\preformatted{indexAll <- getIndex()
+Bahamas, using the following code.\preformatted{indexAll <- getIndex()
 index <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=200))
 }
