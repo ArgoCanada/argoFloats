@@ -47,9 +47,9 @@
 
 
 <meta property="og:title" content="A sample index of biogeochemical-Argo profiles — indexBgc" />
-<meta property="og:description" content="This was created by subsetting a global index to the 39 BGC Argo profiles
+<meta property="og:description" content="This was created by subsetting a global index to the BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 September 10, using the following code.library(argoFloats)
+Bahamas, using the following code.library(argoFloats)
 indexAll &amp;lt;- getIndex(&quot;bgc&quot;)
 indexBgc &amp;lt;- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
@@ -146,9 +146,9 @@ indexBgc &amp;lt;- subset(indexAll,
     </div>
 
     <div class="ref-description">
-    <p>This was created by subsetting a global index to the 39 BGC Argo profiles
+    <p>This was created by subsetting a global index to the BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 September 10, using the following code.</p><pre><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
+Bahamas, using the following code.</p><pre><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
 <span class='va'>indexAll</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span><span class='st'>"bgc"</span><span class='op'>)</span>
 <span class='va'>indexBgc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>indexAll</span>,
     circle<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='op'>-</span><span class='fl'>77.06</span>, latitude<span class='op'>=</span><span class='fl'>26.54</span>, radius<span class='op'>=</span><span class='fl'>300</span><span class='op'>)</span><span class='op'>)</span>
@@ -183,9 +183,9 @@ explains why <code><a href='getProfiles.html'>getProfiles()</a></code> skips ove
 #&gt; ------------------
 #&gt; 
 #&gt; * type:        index
-#&gt; * server:      "ftp://usgodae.org/pub/outgoing/argo"
+#&gt; * server:      "ftp://ftp.ifremer.fr/ifremer/argo"
 #&gt; * file:        
-#&gt; * url:         ftp://usgodae.org/pub/outgoing/argo/argo_bio-profile_index.txt.gz
+#&gt; * url:         ftp://ftp.ifremer.fr/ifremer/argo/argo_bio-profile_index.txt.gz
 #&gt; * ftpRoot:     c("ftp://ftp.ifremer.fr/ifremer/argo/dac",
 #&gt;                  "ftp://usgodae.org/pub/outgoing/argo/dac")
 #&gt; * destfileRda: ~/data/argo/argo_bio-profile_index.rda
@@ -193,16 +193,16 @@ explains why <code><a href='getProfiles.html'>getProfiles()</a></code> skips ove
 #&gt;     # Title : Bio-Profile directory file of the Argo Global Data Assembly Center
 #&gt;     # Description : The directory file describes all individual bio-profile files of the argo GDAC ftp site.
 #&gt;     # Project : ARGO
-#&gt;     # Format version : 2.1
-#&gt;     # Date of update : 20200910171616
+#&gt;     # Format version : 2.2
+#&gt;     # Date of update : 20201203152402
 #&gt;     # FTP root number 1 : ftp://ftp.ifremer.fr/ifremer/argo/dac
 #&gt;     # FTP root number 2 : ftp://usgodae.org/pub/outgoing/argo/dac
-#&gt;     # GDAC node : NRL-MRY
-#&gt; * index with 39 rows and column names: "file", "date", "latitude", "longitude", "ocean", "profiler_type", "institution", "parameters", "param_data_mode and "date_update"
+#&gt;     # GDAC node : CORIOLIS
+#&gt; * index with 39 rows and column names: "file", "date", "latitude", "longitude", "ocean", "profiler_type", "institution", "parameters", "parameter_data_mode and "date_update"
 #&gt; * hint: use getProfiles() to download these files from the repository
 #&gt; * Processing Log
-#&gt;     - 2020-09-10 17:27:57 UTC: `create 'argoFloats' object`
-#&gt;     - 2020-09-10 17:28:05 UTC: `getIndex(server="auto", filename='argo_bio-profile_index.txt.gz", age=0)`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>indexBgc</span><span class='op'>[[</span><span class='st'>"parameters"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+#&gt;     - 2020-12-03 15:49:31 UTC: `create 'argoFloats' object`
+#&gt;     - 2020-12-03 15:50:09 UTC: `getIndex(server="auto", filename='argo_bio-profile_index.txt.gz", age=0)`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>indexBgc</span><span class='op'>[[</span><span class='st'>"parameters"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "PRES DOXY"                                                                                                                                                                                                                                                              
 #&gt; [2] "PRES RAW_DOWNWELLING_IRRADIANCE380 RAW_DOWNWELLING_IRRADIANCE412 RAW_DOWNWELLING_IRRADIANCE490 RAW_DOWNWELLING_PAR DOWN_IRRADIANCE380 DOWN_IRRADIANCE412 DOWN_IRRADIANCE490 DOWNWELLING_PAR FLUORESCENCE_CHLA BETA_BACKSCATTERING700 FLUORESCENCE_CDOM CHLA BBP700 CDOM"
 #&gt; [3] "PRES BPHASE_DOXY DOXY TEMP_DOXY"                                                                                                                                                                                                                                        </div></pre>

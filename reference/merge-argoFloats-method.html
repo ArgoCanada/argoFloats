@@ -171,12 +171,12 @@
 
 <span class='co'># Index of floats within 50km of Abaca Island</span>
 <span class='va'>C</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, circle<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='op'>-</span><span class='fl'>77.5</span>, latitude<span class='op'>=</span><span class='fl'>27.5</span>, radius<span class='op'>=</span><span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 101 profiles (10.3%)</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Kept 104 profiles (10.4%)</span></div><div class='input'>
 <span class='co'># Index of floats within a rectangle near Abaca Island</span>
 <span class='va'>lonRect</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>76.5</span>, <span class='op'>-</span><span class='fl'>76</span><span class='op'>)</span>
 <span class='va'>latRect</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>26.5</span>, <span class='fl'>27.5</span><span class='op'>)</span>
 <span class='va'>R</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, rectangle<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='va'>lonRect</span>, latitude<span class='op'>=</span><span class='va'>latRect</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 55 profiles (5.62%)</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Kept 59 profiles (5.91%)</span></div><div class='input'>
 <span class='va'>RC</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/merge.html'>merge</a></span><span class='op'>(</span><span class='va'>C</span>, <span class='va'>R</span><span class='op'>)</span>
 <span class='co'># \dontrun{</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>RC</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
