@@ -121,7 +121,7 @@ test_that("subset by profile",
               N <- 1
               s <- expect_message(subset(s, cycle="253"),
                                   paste("Kept", N, "profiles"))
-              p <- expect_silent(getProfiles(s))
+              p <- expect_output(getProfiles(s), "|===")
               a <- expect_output(readProfiles(p), "|===")
               a1 <- expect_silent(subset(a, profile=1))
               a2 <- expect_silent(subset(a, profile=2))
@@ -143,7 +143,7 @@ test_that("subset by cycle", {
           N <- 9
           index1 <- expect_message(subset(index, ID="1901584"),
                                    paste("Kept", N, "profiles"))
-          profiles <- expect_silent(getProfiles(index1, destdir=argoDefaultDestdir()))
+          profiles <- expect_output(getProfiles(index1, destdir=argoDefaultDestdir()),"|===")
           argos <- expect_output(expect_warning(readProfiles(profiles),
                                                 "Of 9 profiles read, 8 have"), "|===")
           argos2 <- expect_message(subset(argos, cycle='147'),
@@ -205,7 +205,7 @@ test_that("subset by dataStateIndicator", {
           data("index")
           N <- 20
           index1 <- expect_message(subset(index, 1:20, paste("Kept", N, "profiles")))
-          profiles <- expect_silent(getProfiles(index1, destdir=argoDefaultDestdir()))
+          profiles <- expect_output(getProfiles(index1, destdir=argoDefaultDestdir()),"|===")
           argos <- expect_output(expect_warning(readProfiles(profiles), "Of 20 profiles read, 8 have"), "|===")
           argos2 <- expect_silent(subset(argos, dataStateIndicator="2C"))
           expect_equal(11, argos2[["length"]])
