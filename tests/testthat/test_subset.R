@@ -62,6 +62,8 @@ test_that("subset by float ID", {
           N <- 9
           indexID <- expect_message(subset(index, ID="1901584"),
                                     paste("Kept", N, "profiles"))
+          N <- 11
+          index2 <- expect_message(subset(index, ID=c("4900227", "6902772")), paste("Kept", N, "profiles"))
           expect_equal(dim(indexID[["index"]]), c(N, 8))
           expect_equal(indexID[["index"]][["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
           expect_equal(indexID[["file"]][1], "aoml/1901584/profiles/R1901584_124.nc")
