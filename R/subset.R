@@ -610,35 +610,40 @@ setMethod(f="subset",
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1] == "cycle") {
-                      argoFloatsDebug(debug, "subsetting by cycle\n")
+                      argoFloatsDebug(debug, "subsetting by cycle for 'index' type\n")
                       cycle <- dots[[1]]
-                      if (!is.character(cycle) & !is.integer(cycle))
-                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or integer", call.=FALSE)
-                      if (is.character(cycle)) {
-                      if (is.list(dots[1]))
-                          cycle <- unlist(cycle)
-                      cycle <- as.character(cycle)
-                      ncycle <- length(cycle)
+                      if (!is.character(cycle) & !is.numeric(cycle))
+                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
+                      ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
                       xcycle <- x[["cycle"]]
-                      keep <- grepl(cycle[1], xcycle)
-                      for (i in seq_along(cycle)) {
-                          if (i > 1)
-                              keep <- keep | grepl(cycle[i], xcycle)
+                      if (is.character(cycle)) {
+                          argoFloatsDebug(debug, "subsetting by cycle as a character value\n")
+                          ## Here, keep is logical
+                          keep <- rep(FALSE, length(xcycle))
+                          for (thisCycle in cycle)
+                              keep <- keep | grepl(thisCycle, xcycle)
+                          nkeep <- sum(keep)
+                      } else if (is.numeric(cycle)) {
+                          argoFloatsDebug(debug, "subsetting by cycle as a numeric value\n")
+                          ## Here, keep is integer
+                          keep <- NULL
+                          xcycle <- as.integer(gsub("AD","",xcycle)) # change e.g. "123D" to "123"
+                          for (thisCycle in cycle) {
+                              keep <- c(keep, which(thisCycle == xcycle))
+                              ## message("thisCycle=", thisCycle, " keep=", paste(keep, collapse=" "))
+                          }
+                          nkeep <- length(keep)
                       }
-                      } else if (is.integer(cycle))
-                          cycle <- as.integer(cycle)
-                      xcycle <- as.numeric(x[["cycle"]])
-                      keep <- min(cycle) <= xcycle & xcycle <= max(cycle)
-                      if (sum(keep) < 1)
-                          warning("In subset,argoFloats-method(..., parameter) : found no profiles with given profile", call.=FALSE)
+                      if (nkeep < 1)
+                          warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
+                          message("Kept ", nkeep, " profiles (", sprintf("%.3g", 100*nkeep/N), "%)")
+                       x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="direction") {
                       argoFloatsDebug(debug, "subsetting by direction\n")
                       direction <- dots[[1]]
                       if (!is.character(direction))
-                          stop("in subset,argoFloats-method():\n  \"direction\" must be character value of either \"ascent\" or \"decent\"", call.=FALSE)
+                          stop("in subset,argoFloats-method():\n  \"direction\" must be character value of either \"ascent\" or \"descent\"", call.=FALSE)
                       if (direction == "ascent") {
                           keep <- grepl("^.*[^D].nc$", x@data$index$file)
                       } else if (direction == "descent") {
