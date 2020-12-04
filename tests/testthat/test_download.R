@@ -19,6 +19,7 @@ test_that("getProfiles()",
               data(index)
               s <- expect_message(subset(index, 1:3), "Kept 3 profiles")
               p <- getProfiles(s, destdir=tempFile)
+              expect <- expect_output(print(p), "argoFloats object of type \"profiles\" with 3 items")
               expect_equal(p[["cycle"]], c("124", "125", "126"))
               # FIXME(JH): either use grep() to find the filename, or remove these lines
               #expect_equal(p[["url", 1]], "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1901584/profiles/R1901584_124.nc")

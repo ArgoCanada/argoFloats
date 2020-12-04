@@ -1,7 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 library(argoFloats)
-library(testthat)
 
 context("summary")
 
