@@ -576,9 +576,11 @@ setMethod(f="subset",
                       if (dotsNames[1] == "id")
                           warning("In subset,argoFloats-method : converted subset(x,id=...) to subset(x,ID=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
                       ID <- as.character(dots[[1]]) # convert in case it is numeric
+                      xID <- x[["ID"]]
+                      keep <- rep(FALSE, length(xID))
                       file <- x@data$index$file
-                      fileID <- gsub("^[a-z]*/([0-9]*)/profiles/[A-Z]*[0-9]*_[0-9]{3}[A-Z]*.nc$", "\\1", file)
-                      keep <- ID == fileID
+                      for (thisID in ID)
+                          keep <- keep | grepl(thisID, xID)
                       if (!silent)
                           message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                       x@data$index <- x@data$index[keep, ]
