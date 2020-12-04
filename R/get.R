@@ -329,6 +329,8 @@ getIndex <- function(filename="core",
                 message("Downloaded index from ", url[iurl])
             iurlSuccess <- iurl
             break                      # the download worked
+        } else if (any(grepl("application callback", status))) {
+            stop(status)
         }
         if (iurl == length(url))
             message("Can't download index from ", server[iurl])
