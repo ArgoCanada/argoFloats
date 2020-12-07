@@ -103,11 +103,11 @@
 <p>Since argoFloats is in an active phase of development, it is not yet available on CRAN. Still, it is easily installed in R with</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span>
-<span class="fu">install_github</span><span class="op">(</span><span class="st">'ArgoCanada/argoFloats'</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span></code></pre></div>
+<span class="fu">install_github</span><span class="op">(</span><span class="st">"ArgoCanada/argoFloats"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></code></pre></div>
 <p>where, of course, the <code>devtools</code> package must be installed first, if it is not already present on the user’s system. It is also necessary to have reasonably up-to-date versions of the <code>oce</code> and <code>ocedata</code> packages installed. The very latest versions may be installed with</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">install_github</span><span class="op">(</span><span class="st">'dankelley/oce'</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span>
-<span class="fu">install_github</span><span class="op">(</span><span class="st">'dankelley/ocedata'</span>, ref<span class="op">=</span><span class="st">'develop'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">install_github</span><span class="op">(</span><span class="st">"dankelley/oce"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span>
+<span class="fu">install_github</span><span class="op">(</span><span class="st">"dankelley/ocedata"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></code></pre></div>
 <p>Once things are set up as above, it will be possible to use all the features of <code>argoFloats</code>, many of which are illustrated in the documentation for its functions, and in the vignette that is built into the package, both of which are displayed on the <a href="https://argocanada.github.io/argoFloats/index.html">user-oriented website</a>. Note that the vignette also lists youtube videos about the package.</p>
 <p>As a practical example, the code block given below shows how to create a map and a temperature-salinity diagram for Argo float profiles near Abaco Island in the Bahamas. The key steps, many of which are common to most analyses using the package, are as follows.</p>
 <ol>
