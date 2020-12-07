@@ -33,11 +33,11 @@ vignette: >
 knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 ```
 
-**Abstract.** The `argoFloats` package makes it easy to get, read, and analyze core, biogeochemical(bgc), and deep Argo data. Our goal in making this package was to eliminate the gap between the freely available Argo data and the end user.
+**Abstract.** The `argoFloats` package makes it easy identify, download,cache, and analyze oceanographic data collected by Argo profiling floats, while handling quality control. Our goal in making this package was to eliminate the gap between the freely available Argo data and the end user.
 
 # Introduction
 
-The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical ("BGC") , or deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, or dataStateIndicator. Once downloaded, such data sets can be analysed within `argoFloats` or using other R tools and packages.
+The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on Core, Biogeochemical ("BGC") , or Deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, or dataStateIndicator, etc. Once downloaded, such data sets can be analysed within `argoFloats` or using other R tools and packages.
 
 # Youtube Videos
 
@@ -81,7 +81,7 @@ Figure 1 illustrates the typical workflow with the package, with descriptions of
 
 ![Figure 1: Work flow of the argoFloats package](flowchart.png)
 
-As shown above, the central functions for the argoFloats package are `getIndex()`, `subset()`, `getProfiles()`, and `readProfiles()`.
+As shown above, the central functions for the `argoFloats` package are `getIndex()`, `subset()`, `getProfiles()`, and `readProfiles()`.
 
 Some built-in data sets are provided for concreteness of illustration and for testing, but actual work always starts with a call to `getIndex()` to download a full index of float data, which we will demonstrate later in this vignette.
 
@@ -111,7 +111,7 @@ The following subsections use built-in data.
 
 The specialized `plot()` command within the `argoFloats` package provides simple ways to plot aspects of `argoFloats-class` objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:
 
-```{r, fig.cap="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas."}
+```{r, fig.cap="Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Bahamas."}
 plot(index, bathymetry=FALSE)          # also, try using bathymetry=TRUE
 ```
 
@@ -145,7 +145,7 @@ It should be noted that the profile elements within `argoFloats` objects are sto
 
 Until this point, we have demonstrated how the user can become familiar with embedded indices. As previously described, however, actual work always starts with downloading a full index of float data. As shown by Figure 1, the `getIndex()` command is used to get an index of available Argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.
 
-The `getIndex()` command works by specifying the server, with first trying the USGODAE server \url{ftp://usgodae.org/pub/outgoing/argo} and then the IRREMER server \url{ftp://ftp.ifremer.fr/ifremer/argo} if that does not work. The next step is to specify the file name. The table below can be obtained using `?getIndex()`. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: `"core"`, `"bgc"` or `"bgcargo"`, or `"synthetic"`. The following table summarizes the contents of the various files indicated by the `filename` argument.
+The `getIndex()` command works by specifying the server, with first trying the Ifremer server \url{ftp://ftp.ifremer.fr/ifremer/argo} and then the USGODAE server \url{ftp://usgodae.org/pub/outgoing/argo} if that does not work. The next step is to specify the file name. The table below can be obtained using `?getIndex()`. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: `"core"`, `"bgc"` or `"bgcargo"`, or `"synthetic"`. The following table summarizes the contents of the various files indicated by the `filename` argument.
 
 | File Name                             | Nickname               | Contents                               |
 |---------------------------------------|------------------------|----------------------------------------|
@@ -160,7 +160,7 @@ The `getIndex()` command works by specifying the server, with first trying the U
 
 Additionally, the `destdir` argument has a default of `~/data/argo`, where it should be noted that `~` is a short cut for `C:\Users\`. See `?getIndex()` for further description about the additional arguments for this command.
 
-To get the index from the USGODAE server, the following code is used:
+To get the index from the Ifremer server, the following code is used:
 
 ```{r eval=FALSE}
 ai <- getIndex("core")
@@ -177,9 +177,9 @@ As shown by Figure 1, the next step when working with the `argoFloats` package i
 
 For geographic subsetting, the user has the ability to subset by `circle`, `rectangle`, or `polygon`.
 
-To subset for specific groups of Argos off the coast of Bahamas, the following code is used:
+To subset for specific groups of Argo profiling floats off the coast of Bahamas, the following code is used:
 
-```{r, message=FALSE, fig.cap="Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas", warning=FALSE}
+```{r, message=FALSE, fig.cap="Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the coast of Bahamas", warning=FALSE}
 # Subsetting by circle
 aiCircle <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 # Subsetting by polygon
@@ -191,16 +191,35 @@ CP <- merge(aiCircle, aiPoly)
 plot(CP, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
 
-**Exercise 1:** Produce the same plot as shown above, however, only include data from 2013.
+**Exercise 1:** Use the subset by rectangle function to add a rectangle subset onto Figure 3 and subset all of the data to only include samples between 2012 and 2020.
 
-Additionally, a practical use of `rectangle` subset can be shown while analyzing the section data found within the oce package. This data includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:
+**Note**
 
-```{r fig.cap="Figure 4: Line A03 section plot made by oce package.", fig.height=4, fig.width=7, fig.align="center", dev.args=list(pointsize=10)}
+By combining subset by `rectangle` and subset by `time`, it is possible to determine which sampling method would be beneficial for specific scientific questions. For example, Figure 4 shows a comparison between Argo data and CTD section data. This type of plot reveals many pros and cons of each sampling method.
+
+**Exercise 2:** Use the information from Figure 4 to compare Argo and CTD section sampling methods.
+
+```{r fig.cap="Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 152 samples from 2020-09-07 to 2020-12-06 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package", eval=FALSE}
+library(oce)
+library(argoFloats)
+par(mfrow=c(2,1))
 data(section, package="oce")
-plot(section)
+#getIndex()
+ai <- getIndex()
+#subset by rectangtle
+latlim <- c(36.2030, 38.2373)
+lonlim <- c(-73.6727, -8.8263) # from range(section[["longitude"]])
+index1 <- subset(ai, rectangle=list(longitude=lonlim, latitude=latlim))
+#subset by time
+from <- as.POSIXct("2020-09-07", tz="UTC")
+to <- as.POSIXct("2020-12-07", tz="UTC")
+index2 <- subset(index1, time=list(from=from, to=to))
+plot(index2,bathymetry=FALSE, mar=par("mar"),  asp= 1 / cos(mean(range(unlist(index2[["latitude"]]), na.rm=TRUE))*pi/180),  mgp=getOption("oceMgp")
+)
+plot(section, which="map", mar=par("mar"), col="tan")
 ```
 
-**Exercise 2:** Create a rectangle subset for this transect and plot the positions for the year 2017.
+![Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 152 samples from 2020-09-07 to 2020-12-06 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package](01_section_argo.png)
 
 ## getProfiles()
 
@@ -213,14 +232,11 @@ The `readProfiles()` command works with either a list of local netCDF files, or 
 The command can be useful for analyzing individual profiles, for example:
 
 ```{r eval=FALSE}
-sub <- subset(ai, 1:2) # To subset for profiles
-profiles <- getProfiles(sub)
+index1 <- subset(index, 1:2) # To subset for profiles
+profiles <- getProfiles(index1)
 argos <- readProfiles(profiles)
 argosClean <- applyQC(argos)
-pressure <- argosClean[["argos"]][[1]][["pressure"]]
-temperature <- argosClean[["argos"]][[1]][["temperature"]]
-plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
-     xlab="Temperature (C)", ylab="Depth (dbar)")
+plot(argosClean, which="profile")
 ```
 
 ![Figure 5: Temperature profile created using argoFloats readProfiles function](readProfiles.png)
@@ -229,47 +245,33 @@ plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 
 # Solutions to Exercises
 
-**Exercise 1:** Produce the same plot as shown above, however, only include data from 2013.
+**Exercise 1:** Use the subset by rectangle function to add a rectangle subset onto Figure 3 and subset all of the data to only include data between 2012 and 2020.
 
 ```{r, eval=FALSE}
 library(argoFloats)
-ai <- getIndex("core")
-# Subsetting by circle
-aiCircle <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
-# Subsetting by polygon
+ai <- getIndex()
+# Subset by circle
+index1 <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+# Subset by polygon
 lonPoly <- c(-76.5, -76.0, -75.5)
 latPoly <- c(25.5, 26.5, 25.5)
-aiPoly <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
-#Subset by time
-from <- as.POSIXct("2013-01-01", tz="UTC")
-to <- as.POSIXct("2013-12-31", tz="UTC")
-aic <- subset(aiCircle, time=list(from=from, to=to))
-aip <- subset(aiPoly, time=list(from=from, to=to))
-# Plotting the subsets together
-cp <- merge(aic, aip)
-plot(cp, bathymetry=FALSE)             # also, try using bathymetry=TRUE
-```
-
-**Exercise 2:** Create a rectangle subset for this transect and plot the positions for the year 2017.
-
-```{r, eval=FALSE}
-library(argoFloats)
-library(oce)
-data(section, package="oce")
-lat0 <- median(section[["latitude"]])
-lon0 <- median(section[["longitude"]])
+index2 <- subset(ai, polygon=list(longitude=lonPoly, latitude=latPoly))
 # Subset by rectangle
-ai <- getIndex("core")
-latRect <- lat0 + c(-2,2)
-lonRect <- lon0 + c(-30,30)
-air <- subset(ai, rectangle=list(longitude=lonRect, latitude=latRect))
-# Subset the rectangle by time
-from <- as.POSIXct("2017-01-01", tz="UTC")
-to <- as.POSIXct("2017-12-31", tz="UTC")
-aiTime <- subset(air, time=list(from=from, to=to))
-#Plot this subset
-plot(aiTime, bathymetry=FALSE)         # also, try using bathymetry=TRUE
+lonRect <- c(-76.5, -76)
+latRect <- c(27, 28)
+index3 <- subset(ai, rectangle=list(longitude=lonRect, latitude=latRect))
+# Merge the subsets together
+index4 <- merge(index1, index2)
+index5 <- merge(index3, index4) # Note right now can only merge 2 indices together
+# Subset for year 2012-2020
+index6 <- subset(index5, time=list(from="2012-01-01", to="2020-01-01"))
+# Plot data
+plot(index6, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
+
+**Exercise 2:** Use the information from Figure 4 to compare Argo and CTD section sampling methods.
+
+Figure 4 reveals that it takes 3 months (from todays current date, 2020-12-06) of Argo sampling to reproduce a 1 month CTD section cruise. Additionally, it displayed that there are geographical gaps within the Argo data. On the other hand, it should be noted that by extending the latitude range, these gaps are quickly filled in. Additionally, Argo sampling is much more cost effective, and it can allow for collection of more information (ie. nutrients, oxygen, backscattering, etc.) if such thing is desired.
 
 **Exercise 3:** Using the profile in the previous example, plot a TS diagram.
 
