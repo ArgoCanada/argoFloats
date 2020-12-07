@@ -459,6 +459,8 @@ getIndex <- function(filename="core",
 #' @export
 getProfiles <- function(index, destdir=NULL, age=argoDefaultProfileAge(), retries=3, skip=TRUE, quiet=TRUE, debug=0)
 {
+    if (!inherits(index, "argoFloats") || index[["type"]] != "index")
+        stop("'index' must be an object created with getIndex() or subset()")
     debug <- max(0, min(3, floor(debug+0.5)))
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for getProfiles() to work")
