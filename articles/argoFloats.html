@@ -95,7 +95,7 @@
       <h1 data-toc-skip>Introduction to argoFloats</h1>
                         <h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 class="date">2020-12-04</h4>
+            <h4 class="date">2020-12-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/master/vignettes/argoFloats.Rmd"><code>vignettes/argoFloats.Rmd</code></a></small>
       <div class="hidden name"><code>argoFloats.Rmd</code></div>
@@ -114,11 +114,11 @@
 3. To see the results, type the following in an R console:
       browseVignettes("argoFloats")
 -->
-<p><strong>Abstract.</strong> The <code>argoFloats</code> package makes it easy to get, read, and analyze core, biogeochemical(bgc), and deep Argo data. Our goal in making this package was to eliminate the gap between the freely available Argo data and the end user.</p>
+<p><strong>Abstract.</strong> The <code>argoFloats</code> package makes it easy identify, download,cache, and analyze oceanographic data collected by Argo profiling floats, while handling quality control. Our goal in making this package was to eliminate the gap between the freely available Argo data and the end user.</p>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical (“BGC”) , or deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, or dataStateIndicator. Once downloaded, such data sets can be analysed within <code>argoFloats</code> or using other R tools and packages.</p>
+<p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data. It allows users to focus on Core, Biogeochemical (“BGC”) , or Deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, or dataStateIndicator, etc. Once downloaded, such data sets can be analysed within <code>argoFloats</code> or using other R tools and packages.</p>
 </div>
 <div id="youtube-videos" class="section level1">
 <h1 class="hasAnchor">
@@ -233,7 +233,7 @@
 <div class="figure">
 <img src="flowchart.png" alt=""><p class="caption">Figure 1: Work flow of the argoFloats package</p>
 </div>
-<p>As shown above, the central functions for the argoFloats package are <code><a href="../reference/getIndex.html">getIndex()</a></code>, <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code>, <code><a href="../reference/getProfiles.html">getProfiles()</a></code>, and <code><a href="../reference/readProfiles.html">readProfiles()</a></code>.</p>
+<p>As shown above, the central functions for the <code>argoFloats</code> package are <code><a href="../reference/getIndex.html">getIndex()</a></code>, <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code>, <code><a href="../reference/getProfiles.html">getProfiles()</a></code>, and <code><a href="../reference/readProfiles.html">readProfiles()</a></code>.</p>
 <p>Some built-in data sets are provided for concreteness of illustration and for testing, but actual work always starts with a call to <code><a href="../reference/getIndex.html">getIndex()</a></code> to download a full index of float data, which we will demonstrate later in this vignette.</p>
 <p>To begin to get familiar with how the <code>argoFloats</code> package works, we will begin looking at the built in data sets. Built into the <code>argoFloats</code> package is the <code>index</code>, <code>indexBgc</code>, <code>indexSynthetic</code>, and <code>indexDeep</code> indices, referring to core Argo, BGC-Argo, and a combination, deep Argo respectively. It should be noted that as of September 21, 2020, <code>indexMerged</code> no longer exists as the switch to <code>indexSynthetic</code> has been made. For the sake of this vignette we will focus on the <code>index</code> data set.</p>
 <p>The first step is to access the required packages that will be needed during this tutorial, with</p>
@@ -257,8 +257,8 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">index</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
 <div class="figure">
-<img src="argoFloats_files/figure-html/unnamed-chunk-6-1.png" alt="Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas." width="700"><p class="caption">
-Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
+<img src="argoFloats_files/figure-html/unnamed-chunk-6-1.png" alt="Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Bahamas." width="700"><p class="caption">
+Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Bahamas.
 </p>
 </div>
 </div>
@@ -291,7 +291,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 <h2 class="hasAnchor">
 <a href="#getindex" class="anchor"></a>getIndex()</h2>
 <p>Until this point, we have demonstrated how the user can become familiar with embedded indices. As previously described, however, actual work always starts with downloading a full index of float data. As shown by Figure 1, the <code><a href="../reference/getIndex.html">getIndex()</a></code> command is used to get an index of available Argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.</p>
-<p>The <code><a href="../reference/getIndex.html">getIndex()</a></code> command works by specifying the server, with first trying the USGODAE server  and then the IRREMER server  if that does not work. The next step is to specify the file name. The table below can be obtained using <code>?getIndex()</code>. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: <code>"core"</code>, <code>"bgc"</code> or <code>"bgcargo"</code>, or <code>"synthetic"</code>. The following table summarizes the contents of the various files indicated by the <code>filename</code> argument.</p>
+<p>The <code><a href="../reference/getIndex.html">getIndex()</a></code> command works by specifying the server, with first trying the Ifremer server  and then the USGODAE server  if that does not work. The next step is to specify the file name. The table below can be obtained using <code>?getIndex()</code>. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: <code>"core"</code>, <code>"bgc"</code> or <code>"bgcargo"</code>, or <code>"synthetic"</code>. The following table summarizes the contents of the various files indicated by the <code>filename</code> argument.</p>
 <table class="table">
 <colgroup>
 <col width="37%">
@@ -350,7 +350,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 </tbody>
 </table>
 <p>Additionally, the <code>destdir</code> argument has a default of <code>~/data/argo</code>, where it should be noted that <code><a href="https://rdrr.io/r/base/tilde.html">~</a></code> is a short cut for <code>C:\Users\</code>. See <code>?getIndex()</code> for further description about the additional arguments for this command.</p>
-<p>To get the index from the USGODAE server, the following code is used:</p>
+<p>To get the index from the Ifremer server, the following code is used:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"core"</span><span class="op">)</span></code></pre></div>
 </div>
@@ -359,7 +359,7 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 <a href="#subset" class="anchor"></a>subset()</h2>
 <p>As shown by Figure 1, the next step when working with the <code>argoFloats</code> package is to use the <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> function to focus on a subset of profiles. The <code>argoFloats</code> package provides tools to sift through profiles based on ID, time, geography, variable, institution, ocean, dataMode, cycle, direction, profile, and dataStateIndicator.</p>
 <p>For geographic subsetting, the user has the ability to subset by <code>circle</code>, <code>rectangle</code>, or <code>polygon</code>.</p>
-<p>To subset for specific groups of Argos off the coast of Bahamas, the following code is used:</p>
+<p>To subset for specific groups of Argo profiling floats off the coast of Bahamas, the following code is used:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Subsetting by circle</span>
 <span class="va">aiCircle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.5</span>, latitude<span class="op">=</span><span class="fl">27.5</span>, radius<span class="op">=</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span>
@@ -371,21 +371,35 @@ Figure 2: Built in index demonstrating argo floats within 200 km of Bahamas.
 <span class="va">CP</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">aiCircle</span>, <span class="va">aiPoly</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">CP</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>             <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
 <div class="figure">
-<img src="argoFloats_files/figure-html/unnamed-chunk-10-1.png" alt="Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas" width="700"><p class="caption">
-Figure 3: 50 km radius and polygon subset of argo floats found off the coast of Bahamas
+<img src="argoFloats_files/figure-html/unnamed-chunk-10-1.png" alt="Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the coast of Bahamas" width="700"><p class="caption">
+Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the coast of Bahamas
 </p>
 </div>
-<p><strong>Exercise 1:</strong> Produce the same plot as shown above, however, only include data from 2013.</p>
-<p>Additionally, a practical use of <code>rectangle</code> subset can be shown while analyzing the section data found within the oce package. This data includes a westward transect from the Mediterranean outflow region across to North America. To view this data the following code is used:</p>
+<p><strong>Exercise 1:</strong> Use the subset by rectangle function to add a rectangle subset onto Figure 3 and subset all of the data to only include samples between 2012 and 2020.</p>
+<p><strong>Note</strong></p>
+<p>By combining subset by <code>rectangle</code> and subset by <code>time</code>, it is possible to determine which sampling method would be beneficial for specific scientific questions. For example, Figure 4 shows a comparison between Argo data and CTD section data. This type of plot reveals many pros and cons of each sampling method.</p>
+<p><strong>Exercise 2:</strong> Use the information from Figure 4 to compare Argo and CTD section sampling methods.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">section</span>, package<span class="op">=</span><span class="st">"oce"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">section</span><span class="op">)</span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="argoFloats_files/figure-html/unnamed-chunk-11-1.png" alt="Figure 4: Line A03 section plot made by oce package." width="672"><p class="caption">
-Figure 4: Line A03 section plot made by oce package.
-</p>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce">oce</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">section</span>, package<span class="op">=</span><span class="st">"oce"</span><span class="op">)</span>
+<span class="co">#getIndex()</span>
+<span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#subset by rectangtle</span>
+<span class="va">latlim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">36.2030</span>, <span class="fl">38.2373</span><span class="op">)</span>
+<span class="va">lonlim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">73.6727</span>, <span class="op">-</span><span class="fl">8.8263</span><span class="op">)</span> <span class="co"># from range(section[["longitude"]])</span>
+<span class="va">index1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, rectangle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="va">lonlim</span>, latitude<span class="op">=</span><span class="va">latlim</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#subset by time</span>
+<span class="va">from</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="st">"2020-09-07"</span>, tz<span class="op">=</span><span class="st">"UTC"</span><span class="op">)</span>
+<span class="va">to</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="st">"2020-12-07"</span>, tz<span class="op">=</span><span class="st">"UTC"</span><span class="op">)</span>
+<span class="va">index2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">index1</span>, time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>from<span class="op">=</span><span class="va">from</span>, to<span class="op">=</span><span class="va">to</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">index2</span>,bathymetry<span class="op">=</span><span class="cn">FALSE</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">)</span>,  asp<span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html">cos</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">index2</span><span class="op">[[</span><span class="st">"latitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="va">pi</span><span class="op">/</span><span class="fl">180</span><span class="op">)</span>,  mgp<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/options.html">getOption</a></span><span class="op">(</span><span class="st">"oceMgp"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">section</span>, which<span class="op">=</span><span class="st">"map"</span>, mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="st">"mar"</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"tan"</span><span class="op">)</span></code></pre></div>
+<div class="figure">
+<img src="01_section_argo.png" alt=""><p class="caption">Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 152 samples from 2020-09-07 to 2020-12-06 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package</p>
 </div>
-<p><strong>Exercise 2:</strong> Create a rectangle subset for this transect and plot the positions for the year 2017.</p>
 </div>
 <div id="getprofiles" class="section level2">
 <h2 class="hasAnchor">
@@ -398,14 +412,11 @@ Figure 4: Line A03 section plot made by oce package.
 <p>The <code><a href="../reference/readProfiles.html">readProfiles()</a></code> command works with either a list of local netCDF files, or a <code>argoFloats</code> object type <code>profiles</code>, as created by <code><a href="../reference/getProfiles.html">getProfiles()</a></code>.</p>
 <p>The command can be useful for analyzing individual profiles, for example:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span> <span class="co"># To subset for profiles</span>
-<span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">sub</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">index1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">index</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span> <span class="co"># To subset for profiles</span>
+<span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">index1</span><span class="op">)</span>
 <span class="va">argos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="va">profiles</span><span class="op">)</span>
 <span class="va">argosClean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/applyQC.html">applyQC</a></span><span class="op">(</span><span class="va">argos</span><span class="op">)</span>
-<span class="va">pressure</span> <span class="op">&lt;-</span> <span class="va">argosClean</span><span class="op">[[</span><span class="st">"argos"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"pressure"</span><span class="op">]</span><span class="op">]</span>
-<span class="va">temperature</span> <span class="op">&lt;-</span> <span class="va">argosClean</span><span class="op">[[</span><span class="st">"argos"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"temperature"</span><span class="op">]</span><span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">temperature</span>, <span class="va">pressure</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="va">pressure</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,
-     xlab<span class="op">=</span><span class="st">"Temperature (C)"</span>, ylab<span class="op">=</span><span class="st">"Depth (dbar)"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"profile"</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="readProfiles.png" alt=""><p class="caption">Figure 5: Temperature profile created using argoFloats readProfiles function</p>
 </div>
@@ -415,44 +426,31 @@ Figure 4: Line A03 section plot made by oce package.
 <div id="solutions-to-exercises" class="section level1">
 <h1 class="hasAnchor">
 <a href="#solutions-to-exercises" class="anchor"></a>Solutions to Exercises</h1>
-<p><strong>Exercise 1:</strong> Produce the same plot as shown above, however, only include data from 2013.</p>
+<p><strong>Exercise 1:</strong> Use the subset by rectangle function to add a rectangle subset onto Figure 3 and subset all of the data to only include data between 2012 and 2020.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
-<span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"core"</span><span class="op">)</span>
-<span class="co"># Subsetting by circle</span>
-<span class="va">aiCircle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.5</span>, latitude<span class="op">=</span><span class="fl">27.5</span>, radius<span class="op">=</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span>
-<span class="co"># Subsetting by polygon</span>
+<span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co"># Subset by circle</span>
+<span class="va">index1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.5</span>, latitude<span class="op">=</span><span class="fl">27.5</span>, radius<span class="op">=</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span>
+<span class="co"># Subset by polygon</span>
 <span class="va">lonPoly</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">76.5</span>, <span class="op">-</span><span class="fl">76.0</span>, <span class="op">-</span><span class="fl">75.5</span><span class="op">)</span>
 <span class="va">latPoly</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">25.5</span>, <span class="fl">26.5</span>, <span class="fl">25.5</span><span class="op">)</span>
-<span class="va">aiPoly</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, polygon<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="va">lonPoly</span>, latitude<span class="op">=</span><span class="va">latPoly</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#Subset by time</span>
-<span class="va">from</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="st">"2013-01-01"</span>, tz<span class="op">=</span><span class="st">"UTC"</span><span class="op">)</span>
-<span class="va">to</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="st">"2013-12-31"</span>, tz<span class="op">=</span><span class="st">"UTC"</span><span class="op">)</span>
-<span class="va">aic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">aiCircle</span>, time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>from<span class="op">=</span><span class="va">from</span>, to<span class="op">=</span><span class="va">to</span><span class="op">)</span><span class="op">)</span>
-<span class="va">aip</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">aiPoly</span>, time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>from<span class="op">=</span><span class="va">from</span>, to<span class="op">=</span><span class="va">to</span><span class="op">)</span><span class="op">)</span>
-<span class="co"># Plotting the subsets together</span>
-<span class="va">cp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">aic</span>, <span class="va">aip</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">cp</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>             <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
-<p><strong>Exercise 2:</strong> Create a rectangle subset for this transect and plot the positions for the year 2017.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce">oce</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">section</span>, package<span class="op">=</span><span class="st">"oce"</span><span class="op">)</span>
-<span class="va">lat0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">section</span><span class="op">[[</span><span class="st">"latitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="va">lon0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">section</span><span class="op">[[</span><span class="st">"longitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="va">index2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, polygon<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="va">lonPoly</span>, latitude<span class="op">=</span><span class="va">latPoly</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Subset by rectangle</span>
-<span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"core"</span><span class="op">)</span>
-<span class="va">latRect</span> <span class="op">&lt;-</span> <span class="va">lat0</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span>
-<span class="va">lonRect</span> <span class="op">&lt;-</span> <span class="va">lon0</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">30</span>,<span class="fl">30</span><span class="op">)</span>
-<span class="va">air</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, rectangle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="va">lonRect</span>, latitude<span class="op">=</span><span class="va">latRect</span><span class="op">)</span><span class="op">)</span>
-<span class="co"># Subset the rectangle by time</span>
-<span class="va">from</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="st">"2017-01-01"</span>, tz<span class="op">=</span><span class="st">"UTC"</span><span class="op">)</span>
-<span class="va">to</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="st">"2017-12-31"</span>, tz<span class="op">=</span><span class="st">"UTC"</span><span class="op">)</span>
-<span class="va">aiTime</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">air</span>, time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>from<span class="op">=</span><span class="va">from</span>, to<span class="op">=</span><span class="va">to</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#Plot this subset</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">aiTime</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>         <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
+<span class="va">lonRect</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">76.5</span>, <span class="op">-</span><span class="fl">76</span><span class="op">)</span>
+<span class="va">latRect</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">27</span>, <span class="fl">28</span><span class="op">)</span>
+<span class="va">index3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, rectangle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="va">lonRect</span>, latitude<span class="op">=</span><span class="va">latRect</span><span class="op">)</span><span class="op">)</span>
+<span class="co"># Merge the subsets together</span>
+<span class="va">index4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">index1</span>, <span class="va">index2</span><span class="op">)</span>
+<span class="va">index5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">index3</span>, <span class="va">index4</span><span class="op">)</span> <span class="co"># Note right now can only merge 2 indices together</span>
+<span class="co"># Subset for year 2012-2020</span>
+<span class="va">index6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">index5</span>, time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>from<span class="op">=</span><span class="st">"2012-01-01"</span>, to<span class="op">=</span><span class="st">"2020-01-01"</span><span class="op">)</span><span class="op">)</span>
+<span class="co"># Plot data</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">index6</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>             <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
+<p><strong>Exercise 2:</strong> Use the information from Figure 4 to compare Argo and CTD section sampling methods.</p>
+<p>Figure 4 reveals that it takes 3 months (from todays current date, 2020-12-06) of Argo sampling to reproduce a 1 month CTD section cruise. Additionally, it displayed that there are geographical gaps within the Argo data. On the other hand, it should be noted that by extending the latitude range, these gaps are quickly filled in. Additionally, Argo sampling is much more cost effective, and it can allow for collection of more information (ie. nutrients, oxygen, backscattering, etc.) if such thing is desired.</p>
 <p><strong>Exercise 3:</strong> Using the profile in the previous example, plot a TS diagram.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
 <span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"synthetic"</span><span class="op">)</span>
 <span class="va">sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span> <span class="co"># To subset for profiles</span>
