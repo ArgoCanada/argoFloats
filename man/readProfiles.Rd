@@ -71,7 +71,7 @@ with a quality-control code of 0, 3, 4, 6, 7, or 9 (see the
 library(argoFloats)
 data(index)
 index1 <- subset(index, 1)
-profiles <- getProfiles(index1, destdir=argoDefaultDestdir())
+profiles <- getProfiles(index1)
 raw <- readProfiles(profiles)
 clean <- applyQC(raw)
 par(mfrow=c(1, 2))

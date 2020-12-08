@@ -39,14 +39,11 @@ setMethod(f="merge",
                   stop("in merge,argoFloats-method():\n 'x' must be an argoFloats object")
               if ("index" != x[["type"]])
                   stop("in merge,argoFloats-method():\n 'x' was not created with getIndex().", call.=FALSE)
-              destdir <- x[["destdir"]]
               ftpRoot <- x[["ftpRoot"]]
               if (!inherits(y, "argoFloats"))
                   stop("in merge,argoFloats-method():\n 'y' must be an argoFloats object", call.=FALSE)
               if ("index" != y[["type"]])
                   stop("in merge,argoFloats-method():\n 'y' was not created with getIndex().", call.=FALSE)
-              if (destdir != y[["destdir"]])
-                  stop("in merge,argoFloats-method():\n 'x' and 'xy' must have the same destdir.  Use same 'destdir' in getIndex() call.", call.=FALSE)
               if (!all.equal(ftpRoot, y[["ftpRoot"]]))
                   stop("in merge,argoFloats-method():\n 'x' and 'xy' must have the same ftpRoot. Use same 'server' in getIndex() call.", call.=FALSE)
               for (i in seq_along(dots)) {
@@ -55,8 +52,6 @@ setMethod(f="merge",
                       stop("in merge,argoFloats-method():\n argument ", i+2, " is not an argoFloats object", call.=FALSE)
                   if ("index" != dots[[i]][["type"]])
                       stop("in merge,argoFloats-method():\n argument ", i+2, " was not created with getIndex().",call.=FALSE)
-                  if (destdir != dots[[i]][["destdir"]])
-                      stop("in merge,argoFloats-method():\n argument ", i+2, " does not have same destdir as previous arguments. Use same 'destdir' in getIndex() call.", call.=FALSE)
                   if (ftpRoot != dots[[i]][["ftpRoot"]])
                       stop("in merge,argoFloats-method():\n argument ", i+2, " does not have same ftpRoot as previous arguments.  Use same 'server' in getIndex() call.",call.=FALSE)
               }

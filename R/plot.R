@@ -272,7 +272,7 @@ pinusr <- function(usr)
 #' # (Slow, so not run by default.)
 #'\dontrun{
 #' index10 <- subset(index, 1:10)
-#' profiles10 <- getProfiles(index10, destdir=argoDefaultDestdir())
+#' profiles10 <- getProfiles(index10)
 #' argos10 <- readProfiles(profiles10)
 #' plot(argos10, which="TS")
 #'}
