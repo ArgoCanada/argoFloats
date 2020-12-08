@@ -263,7 +263,7 @@ points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
 # (Slow, so not run by default.)
 \dontrun{
 index10 <- subset(index, 1:10)
-profiles10 <- getProfiles(index10, destdir=argoDefaultDestdir())
+profiles10 <- getProfiles(index10)
 argos10 <- readProfiles(profiles10)
 plot(argos10, which="TS")
 }

@@ -25,7 +25,7 @@ test_that("showing QC tests", {
     ## DK: this was not used
     ##indexq <- expect_message(subset(index, 1),
     ##                         "Kept 1 profiles \\(0.105%\\)")
-    profiles <- getProfiles(subset, destdir=argoDefaultDestdir())
+    profiles <- getProfiles(subset)
     argos <- expect_output(expect_warning(readProfiles(profiles), "^Of 1 profiles read"), "|===")
     argos1 <- argos[[1]]
     ## this is only a consistency check with values as of 2020-07-17, not a real

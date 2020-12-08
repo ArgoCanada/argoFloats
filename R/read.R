@@ -46,7 +46,7 @@
 #' library(argoFloats)
 #' data(index)
 #' index1 <- subset(index, 1)
-#' profiles <- getProfiles(index1, destdir=argoDefaultDestdir())
+#' profiles <- getProfiles(index1)
 #' raw <- readProfiles(profiles)
 #' clean <- applyQC(raw)
 #' par(mfrow=c(1, 2))

@@ -442,8 +442,9 @@ getIndex <- function(filename="core",
 #' library(argoFloats)
 #' data(index)
 #' index2 <- subset(index, 1:2)
-#' profiles2 <- getProfiles(index2, destdir=argoDefaultDestdir())
-#' # See ?readProfiles for how to read the files now downloaded.}
+#' profiles2 <- getProfiles(index2)
+#' # See ?readProfiles for how to read the files now downloaded.
+#' }
 #'
 #' @author Dan Kelley
 #'
