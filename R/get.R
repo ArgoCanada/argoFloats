@@ -55,9 +55,6 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
                     if (missing(destfile)) "(missing)" else destfile, "\", ...) {", sep="", "\n", style="bold", unindent=1)
     if (length(url) != 1)
         stop("url must be of length 1, not of length ", length(url))
-    ## If the ID starts with ftp://, then we just download the file directly, ignoring server
-    if (!grepl("^ftp://", url))
-        stop("the url must start with \"ftp://\" -- contact authors if you need this limitation to be lifted")
     if (is.null(destfile)) {
         destfile <- gsub(".*/(.*).nc", "\\1.nc", url)
         argoFloatsDebug(debug,  "inferred destfile=\"", destfile, "\" from url.\n", sep="")
@@ -224,7 +221,9 @@ getIndex <- function(filename="core",
     argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     serverOrig <- server
     if (length(server) == 1 && server == "auto") {
-        server <- c("ifremer","usgodae")
+        # Using an https:// mirror is up to 5 times faster than transferring
+        # over FTP, so use the only public https:// mirror by default.
+        server <- "https://data-argo.ifremer.fr"
         argoFloatsDebug(debug, "Server 'auto' expanded to c('",
                         paste(server, collapse="', '"), '").\n', sep="")
     }
@@ -238,8 +237,8 @@ getIndex <- function(filename="core",
         }
     }
 
-    if (!all(grepl("^ftp://", server)))
-        stop("server must be \"auto\", \"usgodae\", \"ifremer\", or a vector of strings starting with \"ftp://\", but it is ",
+    if (!all(grepl("^[a-z]+://", server)))
+        stop("server must be \"auto\", \"usgodae\", \"ifremer\", or a vector of urls, but it is ",
              if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
              else paste0("\"", server, "\""), "\n", sep="")
     ## Ensure that we can save the file
@@ -491,17 +490,8 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         server <- index[["server"]]
         ## I *thought* the USGODAE and IFREMER servers were once set up differently, with only usgodae having "dac" in the path
         ## name.  That is why the next block was written.  However, as of May 15, 2020, it seems they are set up in the same
-        ## way, so the ifremer case was rewritten to match the usgodae case.  Still, I am keeping this if block, in case I am in
-        ## error.  Note also that we have a place another server type, and it defaults to no "dac" ... but since I have never
-        ## seen a third type, I imagine that part has never been exectuted.
-        if (grepl("usgodae.org", server, ignore.case=TRUE)) {
-            urls <- paste0(server, "/dac/", index[["file"]])
-        } else if (grepl("ifremer.fr", server, ignore.case=TRUE)) {
-            urls <- paste0(server, "/dac/", index[["file"]])
-        } else {
-            urls <- paste0(server, "/", index[["file"]])
-            warning("guessing on URL form (e.g. \"", urls[1], "\"), because server is neither usgodae.org nor ifremer.fr\n", immediate.=TRUE)
-        }
+        ## way, so the ifremer case was rewritten to match the usgodae case.
+        urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
         file <- vector("character", length(urls))
         for (i in seq_along(urls)) {
