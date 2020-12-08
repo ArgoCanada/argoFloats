@@ -6,7 +6,7 @@
 \usage{
 getProfiles(
   index,
-  destdir = NULL,
+  destdir = argoDefaultDestdir(),
   age = argoDefaultProfileAge(),
   retries = 3,
   skip = TRUE,

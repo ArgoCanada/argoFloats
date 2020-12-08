@@ -221,7 +221,6 @@ getIndex <- function(filename="core",
     ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
     ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
     res <- new("argoFloats", type="index")
-    res@metadata$destdir <- destdir
     argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     serverOrig <- server
     if (length(server) == 1 && server == "auto") {
@@ -280,7 +279,6 @@ getIndex <- function(filename="core",
     argoFloatsDebug(debug, "Set destfileRda=\"", destfileRda, "\".\n", sep="")
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
-    #res@metadata$filename <- destfileRda
 
     ## See if we have an .rda file that is sufficiently youthful.
     if (file.exists(destfileRda)) {
@@ -296,9 +294,6 @@ getIndex <- function(filename="core",
             load(destfileRda)
             argoFloatsDebug(debug, "Finished loading '", destfileRda, "'.\n", sep="")
             res@metadata$server <- server[1]
-            #res@metadata$filename <- filename
-            res@metadata$destdir <- destdir
-            res@metadata$destfileRda <- destfileRda
             res@metadata$ftpRoot <- argoFloatsIndex[["ftpRoot"]]
             res@metadata$header <- argoFloatsIndex[["header"]]
             res@data$index <- argoFloatsIndex[["index"]]
@@ -381,8 +376,6 @@ getIndex <- function(filename="core",
     unlink(destfileTemp)
     res@metadata$server <- server[iurlSuccess]
     res@metadata$url <- url[iurlSuccess]
-    #res@metadata$filename <- filename[iurlSuccess]
-    res@metadata$destfileRda <- destfileRda
     res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
     res@metadata$header <- argoFloatsIndex$header
     res@data$index <- argoFloatsIndex$index
@@ -457,7 +450,7 @@ getIndex <- function(filename="core",
 ## @importFrom oce processingLogAppend vectorShow
 #'
 #' @export
-getProfiles <- function(index, destdir=NULL, age=argoDefaultProfileAge(), retries=3, skip=TRUE, quiet=TRUE, debug=0)
+getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProfileAge(), retries=3, skip=TRUE, quiet=TRUE, debug=0)
 {
     if (!inherits(index, "argoFloats") || index[["type"]] != "index")
         stop("'index' must be an object created with getIndex() or subset()")
@@ -478,8 +471,6 @@ getProfiles <- function(index, destdir=NULL, age=argoDefaultProfileAge(), retrie
         stop("'index' must be an object created by getIndex()")
     res <- new("argoFloats", type="profiles")
     n <- length(index[["file"]])
-    if (is.null(destdir))
-        destdir <- index[["destdir"]]
     if (n == 0) {
         warning("In getProfiles() : the index has no files, so there is nothing to 'get'\n", call.=FALSE)
         file <- NULL

@@ -137,9 +137,9 @@ readProfiles <- function(profiles, FUN, destdir=argoDefaultDestdir(), quiet=FALS
                 }
             }
             if (all(mustSkip))
-                stop("No valid files found in the \"", profiles@metadata$destdir, "\" directory. Perhaps getProfiles() was unable to download them, or they were deleted after downloading.")
+                stop("No valid files found in the \"", destdir, "\" directory. Perhaps getProfiles() was unable to download them, or they were deleted after downloading.")
             fileNames <- gsub(".*/(.*).nc", "\\1.nc", profiles@data$file[!mustSkip])
-            fullFileNames <- paste0(profiles@metadata$destdir, "/", fileNames)
+            fullFileNames <- paste0(destdir, "/", fileNames)
             argoFloatsDebug(debug, "reading", length(fullFileNames), "netcdf files ...\n")
             res@data$argos <- lapply(fullFileNames, oce::read.argo, debug=debug-1)
             n <- length(res@data$argos)
