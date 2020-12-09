@@ -149,7 +149,8 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' These may be referred
 #' to with nicknames `"ifremer-https"`, `"ifremer"`and  `"usgodae"`.
 #' Any URL that can be used in [curl::curl_download()] is a valid value provided
-#' that the file structure is identical to the mirrors listed above.
+#' that the file structure is identical to the mirrors listed above. See
+#' [argoDefaultServer()] for how to provide a default value.
 #'
 #' @template destdir
 #'
@@ -192,7 +193,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 ## @importFrom oce processingLogAppend
 #' @export
 getIndex <- function(filename="core",
-                     server=getOption("argoFloats.server", "ifremer-https"),
+                     server=argoDefaultServer(),
                      destdir=argoDefaultDestdir(),
                      age=argoDefaultIndexAge(),
                      quiet=FALSE,
