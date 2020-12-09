@@ -55,9 +55,6 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
                     if (missing(destfile)) "(missing)" else destfile, "\", ...) {", sep="", "\n", style="bold", unindent=1)
     if (length(url) != 1)
         stop("url must be of length 1, not of length ", length(url))
-    ## If the ID starts with ftp://, then we just download the file directly, ignoring server
-    if (!grepl("^ftp://", url))
-        stop("the url must start with \"ftp://\" -- contact authors if you need this limitation to be lifted")
     if (is.null(destfile)) {
         destfile <- gsub(".*/(.*).nc", "\\1.nc", url)
         argoFloatsDebug(debug,  "inferred destfile=\"", destfile, "\" from url.\n", sep="")
@@ -146,14 +143,13 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' the name of servers that supply argo data.  If more than
 #' one value is given, then these are tried sequentially until one
 #' is found to supply the index file named in the `filename` argument.
-#' As of October 2020, the two servers known to work are
-#' `"ftp://ftp.ifremer.fr/ifremer/argo"` and `"ftp://usgodae.org/pub/outgoing/argo"`.
+#' As of December 2020, the three servers known to work are
+#' `"https://data-argo.ifremer.fr"`, `"ftp://ftp.ifremer.fr/ifremer/argo"` and 
+#' `"ftp://usgodae.org/pub/outgoing/argo"`.
 #' These may be referred
-#' to with nicknames `"ifremer"`and  `"usgodae"`.  As a further
-#' convenience, a third nickname (and the default for this argument)
-#' is also available: `"auto"` is expanded to `c("ifremer","usgodae")`.
-#' Note that if a nickname is not used, the character value(s) in `server`
-#' must start with `"ftp://"`.
+#' to with nicknames `"ifremer-https"`, `"ifremer"`and  `"usgodae"`.  
+#' Any URL that can be used in [curl::curl_download()] is a valid value provided 
+#' that the file structure is identical to the mirrors listed above.
 #'
 #' @template destdir
 #'
@@ -196,7 +192,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 ## @importFrom oce processingLogAppend
 #' @export
 getIndex <- function(filename="core",
-                     server="auto",
+                     server=getOption("argoFloats.server", "ifremer-https"),
                      destdir=argoDefaultDestdir(),
                      age=argoDefaultIndexAge(),
                      quiet=FALSE,
@@ -223,23 +219,14 @@ getIndex <- function(filename="core",
     res <- new("argoFloats", type="index")
     argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     serverOrig <- server
-    if (length(server) == 1 && server == "auto") {
-        server <- c("ifremer","usgodae")
-        argoFloatsDebug(debug, "Server 'auto' expanded to c('",
-                        paste(server, collapse="', '"), '").\n', sep="")
-    }
-    for (iserver in seq_along(server)) {
-        if (server[iserver] == "ifremer") {
-            server[iserver] <- "ftp://ftp.ifremer.fr/ifremer/argo"
-            argoFloatsDebug(debug, "Server 'ifremer' expanded to '", server[iserver], "'.\n", sep="")
-        } else if (server[iserver] == "usgodae") {
-            server[iserver] <- "ftp://usgodae.org/pub/outgoing/argo"
-            argoFloatsDebug(debug, "Server 'usgodae' expanded to '", server[iserver], "'.\n", sep="")
-        }
-    }
+    serverNicknames <- c("ifremer-https" = "https://data-argo.ifremer.fr", 
+                         "ifremer" = "ftp://ftp.ifremer.fr/ifremer/argo", 
+                         "usgodae" = "ftp://usgodae.org/pub/outgoing/argo")
+    serverIsNickname <- server %in% names(serverNicknames)
+    server[serverIsNickname] <- serverNicknames[server[serverIsNickname]]
 
-    if (!all(grepl("^ftp://", server)))
-        stop("server must be \"auto\", \"usgodae\", \"ifremer\", or a vector of strings starting with \"ftp://\", but it is ",
+    if (!all(grepl("^[a-z]+://", server)))
+        stop("server must be \"ifremer-https\", \"usgodae\", \"ifremer\", or a vector of urls, but it is ",
              if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
              else paste0("\"", server, "\""), "\n", sep="")
     ## Ensure that we can save the file
@@ -265,7 +252,7 @@ getIndex <- function(filename="core",
         stop("filename=\"", filename, "\" doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\".")
     if (filename != filenameOrig)
         argoFloatsDebug(debug, "Converted filename='", filenameOrig, "' to filename='", filename, "'.\n", sep="")
-    ## Note: 'url' is a vector; e.g. using server="auto" creates 2 elements in url
+    ## Note: 'url' may contain more than one element
     url <- paste(server, filename, sep="/")
     destfile <- paste(destdir, filename, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
@@ -491,17 +478,8 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         server <- index[["server"]]
         ## I *thought* the USGODAE and IFREMER servers were once set up differently, with only usgodae having "dac" in the path
         ## name.  That is why the next block was written.  However, as of May 15, 2020, it seems they are set up in the same
-        ## way, so the ifremer case was rewritten to match the usgodae case.  Still, I am keeping this if block, in case I am in
-        ## error.  Note also that we have a place another server type, and it defaults to no "dac" ... but since I have never
-        ## seen a third type, I imagine that part has never been exectuted.
-        if (grepl("usgodae.org", server, ignore.case=TRUE)) {
-            urls <- paste0(server, "/dac/", index[["file"]])
-        } else if (grepl("ifremer.fr", server, ignore.case=TRUE)) {
-            urls <- paste0(server, "/dac/", index[["file"]])
-        } else {
-            urls <- paste0(server, "/", index[["file"]])
-            warning("guessing on URL form (e.g. \"", urls[1], "\"), because server is neither usgodae.org nor ifremer.fr\n", immediate.=TRUE)
-        }
+        ## way, so the ifremer case was rewritten to match the usgodae case.
+        urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
         file <- vector("character", length(urls))
         for (i in seq_along(urls)) {
