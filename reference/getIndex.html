@@ -150,7 +150,7 @@ index (packaged within an <code>.rda</code> file) that is controlled by the <cod
 
     <pre class="usage"><span class='fu'>getIndex</span><span class='op'>(</span>
   filename <span class='op'>=</span> <span class='st'>"core"</span>,
-  server <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"argoFloats.server"</span>, <span class='st'>"ifremer-https"</span><span class='op'>)</span>,
+  server <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultServer</a></span><span class='op'>(</span><span class='op'>)</span>,
   destdir <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultDestdir</a></span><span class='op'>(</span><span class='op'>)</span>,
   age <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultIndexAge</a></span><span class='op'>(</span><span class='op'>)</span>,
   quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -181,7 +181,8 @@ As of December 2020, the three servers known to work are
 These may be referred
 to with nicknames <code>"ifremer-https"</code>, <code>"ifremer"</code>and  <code>"usgodae"</code>.
 Any URL that can be used in <code><a href='https://jeroen.cran.dev/curl/reference/curl_download.html'>curl::curl_download()</a></code> is a valid value provided
-that the file structure is identical to the mirrors listed above.</p></td>
+that the file structure is identical to the mirrors listed above. See
+<code><a href='argoDefaultDestdir.html'>argoDefaultServer()</a></code> for how to provide a default value.</p></td>
     </tr>
     <tr>
       <th>destdir</th>
@@ -325,7 +326,7 @@ an object that can be plotted or analysed in other ways.</p>
 #&gt; * index with 211102 rows and column names: "file", "date", "latitude", "longitude", "ocean", "profiler_type", "institution", "parameters", "parameter_data_mode and "date_update"
 #&gt; * hint: use getProfiles() to download these files from the repository
 #&gt; * Processing Log
-#&gt;     - 2020-12-09 16:50:18 UTC: `create 'argoFloats' object`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>[[</span><span class='st'>"date"</span><span class='op'>]</span><span class='op'>]</span>, breaks<span class='op'>=</span><span class='st'>"years"</span>, main<span class='op'>=</span><span class='st'>""</span>, xlab<span class='op'>=</span><span class='st'>"Time"</span>, freq<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt;     - 2020-12-09 18:56:50 UTC: `create 'argoFloats' object`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>[[</span><span class='st'>"date"</span><span class='op'>]</span><span class='op'>]</span>, breaks<span class='op'>=</span><span class='st'>"years"</span>, main<span class='op'>=</span><span class='st'>""</span>, xlab<span class='op'>=</span><span class='st'>"Time"</span>, freq<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='getIndex-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 
 </div></pre>
