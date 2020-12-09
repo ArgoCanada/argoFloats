@@ -148,11 +148,8 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' `"ftp://usgodae.org/pub/outgoing/argo"`.
 #' These may be referred
 #' to with nicknames `"ifremer-https"`, `"ifremer"`and  `"usgodae"`.  
-#' As a further convenience, a third nickname (and the default for this argument)
-#' is also available: `"auto"` is expanded to 
-#' `c("ifremer-https", "ifremer","usgodae")`. Any URL that can be used in
-#' [curl::curl_download()] is a valid value provided that the file structure
-#' is identical to the mirrors listed above.
+#' Any URL that can be used in [curl::curl_download()] is a valid value provided 
+#' that the file structure is identical to the mirrors listed above.
 #'
 #' @template destdir
 #'
@@ -195,7 +192,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 ## @importFrom oce processingLogAppend
 #' @export
 getIndex <- function(filename="core",
-                     server="auto",
+                     server=getOption("argoFloats.server", "ifremer-https"),
                      destdir=argoDefaultDestdir(),
                      age=argoDefaultIndexAge(),
                      quiet=FALSE,
@@ -222,11 +219,6 @@ getIndex <- function(filename="core",
     res <- new("argoFloats", type="index")
     argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     serverOrig <- server
-    if (identical(server, "auto")) {
-        server <- c("ifremer-https", "ifremer", "usgodae")
-        argoFloatsDebug(debug, "Server 'auto' expanded to c('",
-                        paste(server, collapse="', '"), '").\n', sep="")
-    }
     serverNicknames <- c("ifremer-https" = "https://data-argo.ifremer.fr", 
                          "ifremer" = "ftp://ftp.ifremer.fr/ifremer/argo", 
                          "usgodae" = "ftp://usgodae.org/pub/outgoing/argo")
@@ -234,7 +226,7 @@ getIndex <- function(filename="core",
     server[serverIsNickname] <- serverNicknames[server[serverIsNickname]]
 
     if (!all(grepl("^[a-z]+://", server)))
-        stop("server must be \"auto\", \"ifremer-https\", \"usgodae\", \"ifremer\", or a vector of urls, but it is ",
+        stop("server must be \"ifremer-https\", \"usgodae\", \"ifremer\", or a vector of urls, but it is ",
              if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
              else paste0("\"", server, "\""), "\n", sep="")
     ## Ensure that we can save the file
@@ -260,7 +252,7 @@ getIndex <- function(filename="core",
         stop("filename=\"", filename, "\" doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\".")
     if (filename != filenameOrig)
         argoFloatsDebug(debug, "Converted filename='", filenameOrig, "' to filename='", filename, "'.\n", sep="")
-    ## Note: 'url' is a vector; e.g. using server="auto" creates 2 elements in url
+    ## Note: 'url' may contain more than one element
     url <- paste(server, filename, sep="/")
     destfile <- paste(destdir, filename, sep="/")
     ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
