@@ -47,7 +47,7 @@ uiMapApp <- shiny::fluidPage(
                                                                                      label="View",
                                                                                      choices=c("Core"="core", "Deep"="deep",
                                                                                                "BGC"="bgc", "HiRes"="hires",
-                                                                                               "Topo."="topo", "Path"="path", "Start"="start", "End"="end"),
+                                                                                               "Topo."="topo", "Path"="path", "Start"="start", "Lines"="lines", "End"="end"),
                                                                                      selected=c("core", "deep", "bgc"),
                                                                                      inline=TRUE))),
                              shiny::fluidRow(shiny::column(2,
@@ -460,7 +460,9 @@ serverMapApp <- function(input, output, session) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <- argo[k,]
+                        if (!"lines" %in% input$view) {
                         points(lonlat$lon, lonlat$lat, pch=21, cex=cex, col="black", bg=col[[view]], lwd=0.5)
+                        }
                         if ("path" %in% input$view) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
