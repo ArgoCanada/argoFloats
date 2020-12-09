@@ -1,6 +1,5 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-
 ##cacheAge <- 5                          # a global variable
 col <- list(core=7, bgc=3, deep=6)
 
@@ -94,15 +93,15 @@ serverMapApp <- function(input, output, session) {
     } else {
         topoWorldFine <- topoWorld
     }
-    ## Get core and bgc data.
+    ## Get core and BGC data.
     notificationId <- shiny::showNotification("Getting \"core\" argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
     i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
     shiny::removeNotification(notificationId)
-    notificationId <- shiny::showNotification("Getting \"bgc\" argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
+    notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
     iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
     shiny::removeNotification(notificationId)
-    ## Combine core and bgc data.
-    notificationId <- shiny::showNotification("Combining \"core\" and \"bgc\" data.", type="message", duration=NULL)
+    ## Combine core and BGC data.
+    notificationId <- shiny::showNotification("Combining \"core\" and \"BGC\" data.", type="message", duration=NULL)
     ID <- i[["ID"]]
     cycle <- i[["cycle"]]
     lon <- i[["longitude"]]
@@ -341,7 +340,7 @@ serverMapApp <- function(input, output, session) {
 
     shiny::observeEvent(input$help,
                         {
-                            msg <- "Enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in yellow, deep in purple, and bgc in green), whether to show coastline and topography in high or low resolution, whether to show topography, and whether to connect points to indicate float paths. <br><br>Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you may change to focus to Single, to see the whole history of that float's trajectory.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, and the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
+                            msg <- "Enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in yellow, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show topography, and whether to connect points to indicate float paths. <br><br>Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you may change to focus to Single, to see the whole history of that float's trajectory.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })                                  # help
 
@@ -505,6 +504,8 @@ serverMapApp <- function(input, output, session) {
                     mtext(paste("Float ID", state$focusID), cex=0.8 * par("cex"), line=0.25)
                 } else {
                     mtext(side=3, sprintf( "%s to %s: %d Argo profiles", format(start, "%Y-%m-%d"), format(end, "%Y-%m-%d"), sum(visible)), line=0.25, cex=0.8 * par("cex"))
+                    if (diff(range(state$ylim)) < 90 && sum(visible)) {
+                        oce::mapScalebar(x="topright") }
                 }
             }
         }
@@ -520,7 +521,7 @@ serverMapApp <- function(input, output, session) {
 #'
 #' This app will use [getIndex()] to download index files from the Argo server
 #' the first time it runs, and this make take up to a minute or so.  Then it will combine
-#' information from the core-Argo and bgc-Argo index tables, cross-indexing so
+#' information from the core-Argo and BGC-Argo index tables, cross-indexing so
 #' it can determine the Argo type for each profile (or cycle).
 #'
 #' The `hi-res` button will only affect the coastline, not the topography,

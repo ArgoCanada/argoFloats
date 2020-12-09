@@ -48,7 +48,7 @@ Help button and to read the popup window that it creates.
 \details{
 This app will use \code{\link[=getIndex]{getIndex()}} to download index files from the Argo server
 the first time it runs, and this make take up to a minute or so.  Then it will combine
-information from the core-Argo and bgc-Argo index tables, cross-indexing so
+information from the core-Argo and BGC-Argo index tables, cross-indexing so
 it can determine the Argo type for each profile (or cycle).
 
 The \code{hi-res} button will only affect the coastline, not the topography,
