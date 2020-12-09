@@ -175,14 +175,16 @@ that nicknames are expanded to the full filenames before saving.</p></td>
 the name of servers that supply argo data.  If more than
 one value is given, then these are tried sequentially until one
 is found to supply the index file named in the <code>filename</code> argument.
-As of October 2020, the two servers known to work are
-<code>"ftp://ftp.ifremer.fr/ifremer/argo"</code> and <code>"ftp://usgodae.org/pub/outgoing/argo"</code>.
+As of December 2020, the three servers known to work are
+<code>"https://data-argo.ifremer.fr"</code>, <code>"ftp://ftp.ifremer.fr/ifremer/argo"</code> and
+<code>"ftp://usgodae.org/pub/outgoing/argo"</code>.
 These may be referred
-to with nicknames <code>"ifremer"</code>and  <code>"usgodae"</code>.  As a further
-convenience, a third nickname (and the default for this argument)
-is also available: <code>"auto"</code> is expanded to <code><a href='https://rdrr.io/r/base/c.html'>c("ifremer","usgodae")</a></code>.
-Note that if a nickname is not used, the character value(s) in <code>server</code>
-must start with <code>"ftp://"</code>.</p></td>
+to with nicknames <code>"ifremer-https"</code>, <code>"ifremer"</code>and  <code>"usgodae"</code>.
+As a further convenience, a third nickname (and the default for this argument)
+is also available: <code>"auto"</code> is expanded to
+<code><a href='https://rdrr.io/r/base/c.html'>c("ifremer-https", "ifremer","usgodae")</a></code>. Any URL that can be used in
+<code><a href='https://jeroen.cran.dev/curl/reference/curl_download.html'>curl::curl_download()</a></code> is a valid value provided that the file structure
+is identical to the mirrors listed above.</p></td>
     </tr>
     <tr>
       <th>destdir</th>
@@ -308,9 +310,9 @@ an object that can be plotted or analysed in other ways.</p>
 #&gt; ------------------
 #&gt; 
 #&gt; * type:        index
-#&gt; * server:      "ftp://ftp.ifremer.fr/ifremer/argo"
+#&gt; * server:      "https://data-argo.ifremer.fr"
 #&gt; * file:        
-#&gt; * url:         ftp://ftp.ifremer.fr/ifremer/argo/argo_synthetic-profile_index.txt.gz
+#&gt; * url:         https://data-argo.ifremer.fr/argo_synthetic-profile_index.txt.gz
 #&gt; * ftpRoot:     c("ftp://ftp.ifremer.fr/ifremer/argo/dac",
 #&gt;                  "ftp://usgodae.org/pub/outgoing/argo/dac")
 #&gt; * destfileRda: 
@@ -326,7 +328,7 @@ an object that can be plotted or analysed in other ways.</p>
 #&gt; * index with 211102 rows and column names: "file", "date", "latitude", "longitude", "ocean", "profiler_type", "institution", "parameters", "parameter_data_mode and "date_update"
 #&gt; * hint: use getProfiles() to download these files from the repository
 #&gt; * Processing Log
-#&gt;     - 2020-12-09 12:36:59 UTC: `create 'argoFloats' object`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>[[</span><span class='st'>"date"</span><span class='op'>]</span><span class='op'>]</span>, breaks<span class='op'>=</span><span class='st'>"years"</span>, main<span class='op'>=</span><span class='st'>""</span>, xlab<span class='op'>=</span><span class='st'>"Time"</span>, freq<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt;     - 2020-12-09 14:07:29 UTC: `create 'argoFloats' object`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>[[</span><span class='st'>"date"</span><span class='op'>]</span><span class='op'>]</span>, breaks<span class='op'>=</span><span class='st'>"years"</span>, main<span class='op'>=</span><span class='st'>""</span>, xlab<span class='op'>=</span><span class='st'>"Time"</span>, freq<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='getIndex-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 
 </div></pre>
