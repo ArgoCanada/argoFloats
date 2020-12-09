@@ -537,7 +537,7 @@ setMethod(f="plot",
                                        silent=FALSE)
                           if (inherits(bathy, "try-error")) {
                               warning(
-                                  "could not download bathymetry from NOAA server: ", 
+                                  "could not download bathymetry from NOAA server: ",
                                   paste(bathy, collapse = "\n"), "\n"
                               )
                               drawBathymetry <- FALSE

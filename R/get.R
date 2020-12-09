@@ -37,7 +37,7 @@
 #' index <- getIndex()
 #' lon0 <- -59.9149
 #' lat0 <- 43.9337
-#' 
+#'
 #' dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
 #' w <- which.min(dist)
 #' url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])

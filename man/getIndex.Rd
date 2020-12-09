@@ -6,7 +6,7 @@
 \usage{
 getIndex(
   filename = "core",
-  server = "auto",
+  server = getOption("argoFloats.server", "ifremer-https"),
   destdir = argoDefaultDestdir(),
   age = argoDefaultIndexAge(),
   quiet = FALSE,
@@ -30,11 +30,8 @@ As of December 2020, the three servers known to work are
 \code{"ftp://usgodae.org/pub/outgoing/argo"}.
 These may be referred
 to with nicknames \code{"ifremer-https"}, \code{"ifremer"}and  \code{"usgodae"}.
-As a further convenience, a third nickname (and the default for this argument)
-is also available: \code{"auto"} is expanded to
-\code{c("ifremer-https", "ifremer","usgodae")}. Any URL that can be used in
-\code{\link[curl:curl_download]{curl::curl_download()}} is a valid value provided that the file structure
-is identical to the mirrors listed above.}
+Any URL that can be used in \code{\link[curl:curl_download]{curl::curl_download()}} is a valid value provided
+that the file structure is identical to the mirrors listed above.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
