@@ -6,7 +6,7 @@
 \usage{
 getIndex(
   filename = "core",
-  server = getOption("argoFloats.server", "ifremer-https"),
+  server = argoDefaultServer(),
   destdir = argoDefaultDestdir(),
   age = argoDefaultIndexAge(),
   quiet = FALSE,
@@ -31,7 +31,8 @@ As of December 2020, the three servers known to work are
 These may be referred
 to with nicknames \code{"ifremer-https"}, \code{"ifremer"}and  \code{"usgodae"}.
 Any URL that can be used in \code{\link[curl:curl_download]{curl::curl_download()}} is a valid value provided
-that the file structure is identical to the mirrors listed above.}
+that the file structure is identical to the mirrors listed above. See
+\code{\link[=argoDefaultServer]{argoDefaultServer()}} for how to provide a default value.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
