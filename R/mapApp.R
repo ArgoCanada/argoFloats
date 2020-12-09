@@ -567,7 +567,7 @@ serverMapApp <- function(input, output, session) {
 #' @author Dan Kelley
 #' @importFrom shiny shinyApp shinyOptions
 #' @export
-mapApp <- function(age=argoDefaultIndexAge(), destdir=argoDefaultDestdir(), server="auto", debug=0)
+mapApp <- function(age=argoDefaultIndexAge(), destdir=argoDefaultDestdir(), server="usgodae", debug=0)
 {
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
     shiny::shinyOptions(age=age, destdir=destdir, argoServer=server, debug=debug) # rename server to avoid shiny problem

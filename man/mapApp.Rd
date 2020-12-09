@@ -7,7 +7,7 @@
 mapApp(
   age = argoDefaultIndexAge(),
   destdir = argoDefaultDestdir(),
-  server = "auto",
+  server = "usgodae",
   debug = 0
 )
 }
