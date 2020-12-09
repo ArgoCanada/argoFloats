@@ -37,7 +37,7 @@
 #' index <- getIndex()
 #' lon0 <- -59.9149
 #' lat0 <- 43.9337
-#' 
+#'
 #' dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
 #' w <- which.min(dist)
 #' url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
@@ -144,11 +144,11 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' one value is given, then these are tried sequentially until one
 #' is found to supply the index file named in the `filename` argument.
 #' As of December 2020, the three servers known to work are
-#' `"https://data-argo.ifremer.fr"`, `"ftp://ftp.ifremer.fr/ifremer/argo"` and 
+#' `"https://data-argo.ifremer.fr"`, `"ftp://ftp.ifremer.fr/ifremer/argo"` and
 #' `"ftp://usgodae.org/pub/outgoing/argo"`.
 #' These may be referred
-#' to with nicknames `"ifremer-https"`, `"ifremer"`and  `"usgodae"`.  
-#' Any URL that can be used in [curl::curl_download()] is a valid value provided 
+#' to with nicknames `"ifremer-https"`, `"ifremer"`and  `"usgodae"`.
+#' Any URL that can be used in [curl::curl_download()] is a valid value provided
 #' that the file structure is identical to the mirrors listed above.
 #'
 #' @template destdir
@@ -219,8 +219,8 @@ getIndex <- function(filename="core",
     res <- new("argoFloats", type="index")
     argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     serverOrig <- server
-    serverNicknames <- c("ifremer-https" = "https://data-argo.ifremer.fr", 
-                         "ifremer" = "ftp://ftp.ifremer.fr/ifremer/argo", 
+    serverNicknames <- c("ifremer-https" = "https://data-argo.ifremer.fr",
+                         "ifremer" = "ftp://ftp.ifremer.fr/ifremer/argo",
                          "usgodae" = "ftp://usgodae.org/pub/outgoing/argo")
     serverIsNickname <- server %in% names(serverNicknames)
     server[serverIsNickname] <- serverNicknames[server[serverIsNickname]]
