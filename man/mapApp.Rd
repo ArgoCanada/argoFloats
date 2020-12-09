@@ -7,7 +7,7 @@
 mapApp(
   age = argoDefaultIndexAge(),
   destdir = argoDefaultDestdir(),
-  server = "usgodae",
+  server = getOption("argoFloats.server", "ifremer-https"),
   debug = 0
 )
 }
@@ -31,8 +31,10 @@ File clutter is reduced by creating a top-level directory called
 \dQuote{Examples}.}
 
 \item{server}{character value, or vector of character values, indicating the name of
-servers that supply argo data acquired with \code{\link[=getIndex]{getIndex()}}.  The default value,
-\code{"auto"}, indicates to try a sequence of servers.}
+servers that supply argo data acquired with \code{\link[=getIndex]{getIndex()}}.  If not supplied,
+the default will be a value set with \code{options("argoFloats.server"=URL)}
+where \code{URL} is an appropriate URL, or \code{"ifremer-https"} if no such option was
+set.}
 
 \item{debug}{integer value that controls how much information \code{mapApp()} prints
 to the console as it works.  The default value of 0 leads to a fairly limited
