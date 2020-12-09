@@ -151,7 +151,7 @@ Help button and to read the popup window that it creates.</p>
     <pre class="usage"><span class='fu'>mapApp</span><span class='op'>(</span>
   age <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultIndexAge</a></span><span class='op'>(</span><span class='op'>)</span>,
   destdir <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultDestdir</a></span><span class='op'>(</span><span class='op'>)</span>,
-  server <span class='op'>=</span> <span class='st'>"usgodae"</span>,
+  server <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"argoFloats.server"</span>, <span class='st'>"ifremer-https"</span><span class='op'>)</span>,
   debug <span class='op'>=</span> <span class='fl'>0</span>
 <span class='op'>)</span></pre>
 
@@ -183,8 +183,10 @@ File clutter is reduced by creating a top-level directory called
     <tr>
       <th>server</th>
       <td><p>character value, or vector of character values, indicating the name of
-servers that supply argo data acquired with <code><a href='getIndex.html'>getIndex()</a></code>.  The default value,
-<code>"auto"</code>, indicates to try a sequence of servers.</p></td>
+servers that supply argo data acquired with <code><a href='getIndex.html'>getIndex()</a></code>.  If not supplied,
+the default will be a value set with <code><a href='https://rdrr.io/r/base/options.html'>options("argoFloats.server"=URL)</a></code>
+where <code>URL</code> is an appropriate URL, or <code>"ifremer-https"</code> if no such option was
+set.</p></td>
     </tr>
     <tr>
       <th>debug</th>
