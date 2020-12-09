@@ -143,14 +143,16 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' the name of servers that supply argo data.  If more than
 #' one value is given, then these are tried sequentially until one
 #' is found to supply the index file named in the `filename` argument.
-#' As of October 2020, the two servers known to work are
-#' `"ftp://ftp.ifremer.fr/ifremer/argo"` and `"ftp://usgodae.org/pub/outgoing/argo"`.
+#' As of December 2020, the three servers known to work are
+#' `"https://data-argo.ifremer.fr"`, `"ftp://ftp.ifremer.fr/ifremer/argo"` and 
+#' `"ftp://usgodae.org/pub/outgoing/argo"`.
 #' These may be referred
-#' to with nicknames `"ifremer"`and  `"usgodae"`.  As a further
-#' convenience, a third nickname (and the default for this argument)
-#' is also available: `"auto"` is expanded to `c("ifremer","usgodae")`.
-#' Note that if a nickname is not used, the character value(s) in `server`
-#' must start with `"ftp://"`.
+#' to with nicknames `"ifremer-https"`, `"ifremer"`and  `"usgodae"`.  
+#' As a further convenience, a third nickname (and the default for this argument)
+#' is also available: `"auto"` is expanded to 
+#' `c("ifremer-https", "ifremer","usgodae")`. Any URL that can be used in
+#' [curl::curl_download()] is a valid value provided that the file structure
+#' is identical to the mirrors listed above.
 #'
 #' @template destdir
 #'
@@ -220,25 +222,19 @@ getIndex <- function(filename="core",
     res <- new("argoFloats", type="index")
     argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     serverOrig <- server
-    if (length(server) == 1 && server == "auto") {
-        # Using an https:// mirror is up to 5 times faster than transferring
-        # over FTP, so use the only public https:// mirror by default.
-        server <- "https://data-argo.ifremer.fr"
+    if (identical(server, "auto")) {
+        server <- c("ifremer-https", "ifremer", "usgodae")
         argoFloatsDebug(debug, "Server 'auto' expanded to c('",
                         paste(server, collapse="', '"), '").\n', sep="")
     }
-    for (iserver in seq_along(server)) {
-        if (server[iserver] == "ifremer") {
-            server[iserver] <- "ftp://ftp.ifremer.fr/ifremer/argo"
-            argoFloatsDebug(debug, "Server 'ifremer' expanded to '", server[iserver], "'.\n", sep="")
-        } else if (server[iserver] == "usgodae") {
-            server[iserver] <- "ftp://usgodae.org/pub/outgoing/argo"
-            argoFloatsDebug(debug, "Server 'usgodae' expanded to '", server[iserver], "'.\n", sep="")
-        }
-    }
+    serverNicknames <- c("ifremer-https" = "https://data-argo.ifremer.fr", 
+                         "ifremer" = "ftp://ftp.ifremer.fr/ifremer/argo", 
+                         "usgodae" = "ftp://usgodae.org/pub/outgoing/argo")
+    serverIsNickname <- server %in% names(serverNicknames)
+    server[serverIsNickname] <- serverNicknames[server[serverIsNickname]]
 
     if (!all(grepl("^[a-z]+://", server)))
-        stop("server must be \"auto\", \"usgodae\", \"ifremer\", or a vector of urls, but it is ",
+        stop("server must be \"auto\", \"ifremer-https\", \"usgodae\", \"ifremer\", or a vector of urls, but it is ",
              if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
              else paste0("\"", server, "\""), "\n", sep="")
     ## Ensure that we can save the file

@@ -25,14 +25,16 @@ that nicknames are expanded to the full filenames before saving.}
 the name of servers that supply argo data.  If more than
 one value is given, then these are tried sequentially until one
 is found to supply the index file named in the \code{filename} argument.
-As of October 2020, the two servers known to work are
-\code{"ftp://ftp.ifremer.fr/ifremer/argo"} and \code{"ftp://usgodae.org/pub/outgoing/argo"}.
+As of December 2020, the three servers known to work are
+\code{"https://data-argo.ifremer.fr"}, \code{"ftp://ftp.ifremer.fr/ifremer/argo"} and
+\code{"ftp://usgodae.org/pub/outgoing/argo"}.
 These may be referred
-to with nicknames \code{"ifremer"}and  \code{"usgodae"}.  As a further
-convenience, a third nickname (and the default for this argument)
-is also available: \code{"auto"} is expanded to \code{c("ifremer","usgodae")}.
-Note that if a nickname is not used, the character value(s) in \code{server}
-must start with \code{"ftp://"}.}
+to with nicknames \code{"ifremer-https"}, \code{"ifremer"}and  \code{"usgodae"}.
+As a further convenience, a third nickname (and the default for this argument)
+is also available: \code{"auto"} is expanded to
+\code{c("ifremer-https", "ifremer","usgodae")}. Any URL that can be used in
+\code{\link[curl:curl_download]{curl::curl_download()}} is a valid value provided that the file structure
+is identical to the mirrors listed above.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
