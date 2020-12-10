@@ -587,11 +587,15 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "initial xlim=",
                                   "c(", paste(xlim, collapse=","), ") and ylim=",
                                   "c(", paste(ylim, collapse=","), ")\n", sep="")
-                  ## Extend to world edge, if we are close (OLD)
-                  #if (xlim[1] < -170) xlim[1] <- -180
-                  #if (xlim[2] >  170) xlim[2] <-  180
-                  #if (ylim[1] < -70) ylim[1] <- -90
-                  #if (ylim[2] >  70) ylim[2] <-  90
+                  ## Extend to world edge, if we are close and scale is large
+                  if (diff(xlim) > 340) {
+                      if (xlim[1] < -170) xlim[1] <- -180
+                      if (xlim[2] >  170) xlim[2] <-  180
+                  }
+                  if (diff(ylim) > 160) {
+                      if (ylim[1] < -70) ylim[1] <- -90
+                      if (ylim[2] >  70) ylim[2] <-  90
+                  }
                   argoFloatsDebug(debug, "after to-world-edge, xlim=",
                                   "c(", paste(xlim, collapse=","), ") and ylim=",
                                   "c(", paste(ylim, collapse=","), ")\n", sep="")
