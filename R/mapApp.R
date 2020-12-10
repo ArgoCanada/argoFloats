@@ -550,8 +550,10 @@ serverMapApp <- function(input, output, session) {
 #' @template destdir
 #'
 #' @param server character value, or vector of character values, indicating the name of
-#' servers that supply argo data acquired with [getIndex()].  The default value,
-#' `"auto"`, indicates to try a sequence of servers.
+#' servers that supply argo data acquired with [getIndex()].  If not supplied,
+#' the default will be a value set with `options("argoFloats.server"=URL)`
+#' where `URL` is an appropriate URL, or `"ifremer-https"` if no such option was
+#' set.
 #'
 #' @param debug integer value that controls how much information `mapApp()` prints
 #' to the console as it works.  The default value of 0 leads to a fairly limited
@@ -567,7 +569,10 @@ serverMapApp <- function(input, output, session) {
 #' @author Dan Kelley
 #' @importFrom shiny shinyApp shinyOptions
 #' @export
-mapApp <- function(age=argoDefaultIndexAge(), destdir=argoDefaultDestdir(), server="usgodae", debug=0)
+mapApp <- function(age=argoDefaultIndexAge(),
+                   destdir=argoDefaultDestdir(),
+                   server=getOption("argoFloats.server", "ifremer-https"),
+                   debug=0)
 {
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
     shiny::shinyOptions(age=age, destdir=destdir, argoServer=server, debug=debug) # rename server to avoid shiny problem

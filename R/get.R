@@ -149,7 +149,8 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' These may be referred
 #' to with nicknames `"ifremer-https"`, `"ifremer"`and  `"usgodae"`.
 #' Any URL that can be used in [curl::curl_download()] is a valid value provided
-#' that the file structure is identical to the mirrors listed above.
+#' that the file structure is identical to the mirrors listed above. See
+#' [argoDefaultServer()] for how to provide a default value.
 #'
 #' @template destdir
 #'
@@ -192,7 +193,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 ## @importFrom oce processingLogAppend
 #' @export
 getIndex <- function(filename="core",
-                     server=getOption("argoFloats.server", "ifremer-https"),
+                     server=argoDefaultServer(),
                      destdir=argoDefaultDestdir(),
                      age=argoDefaultIndexAge(),
                      quiet=FALSE,
@@ -446,12 +447,15 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for getProfiles() to work")
     n <- length(index@data$index)
-    pb <- txtProgressBar(0, n, 0, style = 3)
+    if (!quiet)
+        pb <- txtProgressBar(0, n, 0, style = 3)
     for(i in 1:n) {
         Sys.sleep(0.1)
-        setTxtProgressBar(pb, i)
+        if (!quiet)
+            setTxtProgressBar(pb, i)
     }
-    close(pb)
+    if (!quiet)
+        close(pb)
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
         stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)

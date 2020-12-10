@@ -15,6 +15,22 @@ test_that("default destdir can be changed by option or env var", {
     Sys.setenv(R_ARGOFLOATS_DESTDIR = old_env_var)
 })
 
+test_that("default server can be changed by option or env var", {
+    old_options <- options(argoFloats.server = "http://my.server/")
+    expect_identical(argoDefaultServer(), "http://my.server/")
+    
+    old_env_var <- Sys.getenv("R_ARGOFLOATS_SERVER")
+    Sys.setenv(R_ARGOFLOATS_DESTDIR = "http://my.server/")
+    expect_identical(argoDefaultServer(), "http://my.server/")
+    
+    options(argoFloats.server = NULL)
+    Sys.setenv(R_ARGOFLOATS_DESTDIR = "")
+    expect_identical(argoDefaultServer(), "ifremer-https")
+    
+    options(old_options)
+    Sys.setenv(R_ARGOFLOATS_DESTDIR = old_env_var)
+})
+
 test_that("default index age can be changed by option or env var", {
     old_options <- options(argoFloats.indexAge = 12345)
     expect_identical(argoDefaultIndexAge(), 12345)
