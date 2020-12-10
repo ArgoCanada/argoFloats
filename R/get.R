@@ -447,12 +447,15 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for getProfiles() to work")
     n <- length(index@data$index)
-    pb <- txtProgressBar(0, n, 0, style = 3)
+    if (!quiet)
+        pb <- txtProgressBar(0, n, 0, style = 3)
     for(i in 1:n) {
         Sys.sleep(0.1)
-        setTxtProgressBar(pb, i)
+        if (!quiet)
+            setTxtProgressBar(pb, i)
     }
-    close(pb)
+    if (!quiet)
+        close(pb)
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
         stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
