@@ -45,9 +45,24 @@ uiMapApp <- shiny::fluidPage(
                                                            style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
                                                                                      label="View",
-                                                                                     choices=c("Core"="core", "Deep"="deep",
-                                                                                               "BGC"="bgc", "HiRes"="hires",
-                                                                                               "Topo."="topo", "Path"="path", "Start"="start", "End"="end", "Profiles"="profiles"),
+                                                                                     choiceNames=list(tags$span("Core", style="color:#F5C710; font-weight:bold"),
+                                                                                                      tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
+                                                                                                      tags$span("BGC", style="color:#61D04F; font-weight:bold"),
+                                                                                                      tags$span("HiRes", style="color: black;"),
+                                                                                                      tags$span("Topo", style="color: black;"),
+                                                                                                      tags$span("Path", style="color: black;"),
+                                                                                                      tags$span("Start", style="color: black;"),
+                                                                                                      tags$span("End", style="color: black;"),
+                                                                                                      tags$span("Profiles", style="color: black;")),
+                                                                                     choiceValues=list("core",
+                                                                                                       "deep",
+                                                                                                       "bgc",
+                                                                                                       "hires",
+                                                                                                       "topo",
+                                                                                                       "path",
+                                                                                                       "start",
+                                                                                                       "end",
+                                                                                                       "profiles"),
                                                                                      selected=c("core", "deep", "bgc", "profiles"),
                                                                                      inline=TRUE))),
                              shiny::fluidRow(shiny::column(2,
@@ -421,7 +436,7 @@ serverMapApp <- function(input, output, session) {
             if (0 == sum(c("core", "deep", "bgc") %in% input$view)) {
                 showError("Please select at least 1 type")
             } else {
-                par(mar = c(2.5, 2.5, 2, 1.5))
+                par(mar=c(2.5, 2.5, 2, 1.5))
                 plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
                 topo <- if ("hires" %in% input$view) topoWorldFine else topoWorld
                 if ("topo" %in% input$view) {
