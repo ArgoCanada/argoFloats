@@ -8,6 +8,7 @@ mapApp(
   age = argoDefaultIndexAge(),
   destdir = argoDefaultDestdir(),
   server = getOption("argoFloats.server", "ifremer-https"),
+  colLand = "lightgray",
   debug = 0
 )
 }
@@ -35,6 +36,8 @@ servers that supply argo data acquired with \code{\link[=getIndex]{getIndex()}}.
 the default will be a value set with \code{options("argoFloats.server"=URL)}
 where \code{URL} is an appropriate URL, or \code{"ifremer-https"} if no such option was
 set.}
+
+\item{colLand}{a colour specification for the land.}
 
 \item{debug}{integer value that controls how much information \code{mapApp()} prints
 to the console as it works.  The default value of 0 leads to a fairly limited

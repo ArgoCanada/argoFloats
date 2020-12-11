@@ -71,6 +71,7 @@ serverMapApp <- function(input, output, session) {
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
     argoServer <- shiny::getShinyOption("argoServer")
+    colLand <- shiny::getShinyOption("colLand")
     debug <- shiny::getShinyOption("debug")
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages('shiny') for mapApp() to work")
@@ -440,7 +441,7 @@ serverMapApp <- function(input, output, session) {
                 labels <- paste(abs(at), ifelse(at < 0, "S", ifelse(at > 0, "N", "")), sep="")
                 axis(2, pos=pinlon(usr[1]), at=at, labels=labels, lwd=1)
                 coastline <- if ("hires" %in% input$view) coastlineWorldFine else coastlineWorld
-                polygon(coastline[["longitude"]], coastline[["latitude"]], col="tan")
+                polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
                 rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
                 ## For focusID mode, we do not trim by time or space
                 if (input$focus == "single" && !is.null(state$focusID)) {
@@ -560,6 +561,8 @@ serverMapApp <- function(input, output, session) {
 #' amount of printing, while higher values lead to more information. This information
 #' can be helpful in diagnosing problems or bottlenecks.
 #'
+#' @param colLand a colour specification for the land.
+#'
 #' @examples
 #' if (interactive()) {
 #'     library(argoFloats)
@@ -572,10 +575,15 @@ serverMapApp <- function(input, output, session) {
 mapApp <- function(age=argoDefaultIndexAge(),
                    destdir=argoDefaultDestdir(),
                    server=getOption("argoFloats.server", "ifremer-https"),
+                   colLand="lightgray",
                    debug=0)
 {
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
-    shiny::shinyOptions(age=age, destdir=destdir, argoServer=server, debug=debug) # rename server to avoid shiny problem
+    shiny::shinyOptions(age=age,
+                        destdir=destdir,
+                        argoServer=server, # rename server to avoid shiny problem
+                        colLand=colLand,
+                        debug=debug)
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages(\"shiny\") for this to work")
     print(shiny::shinyApp(ui=uiMapApp, server=serverMapApp))
