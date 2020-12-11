@@ -152,6 +152,7 @@ Help button and to read the popup window that it creates.</p>
   age <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultIndexAge</a></span><span class='op'>(</span><span class='op'>)</span>,
   destdir <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultDestdir</a></span><span class='op'>(</span><span class='op'>)</span>,
   server <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"argoFloats.server"</span>, <span class='st'>"ifremer-https"</span><span class='op'>)</span>,
+  colLand <span class='op'>=</span> <span class='st'>"lightgray"</span>,
   debug <span class='op'>=</span> <span class='fl'>0</span>
 <span class='op'>)</span></pre>
 
@@ -187,6 +188,10 @@ servers that supply argo data acquired with <code><a href='getIndex.html'>getInd
 the default will be a value set with <code><a href='https://rdrr.io/r/base/options.html'>options("argoFloats.server"=URL)</a></code>
 where <code>URL</code> is an appropriate URL, or <code>"ifremer-https"</code> if no such option was
 set.</p></td>
+    </tr>
+    <tr>
+      <th>colLand</th>
+      <td><p>a colour specification for the land.</p></td>
     </tr>
     <tr>
       <th>debug</th>
