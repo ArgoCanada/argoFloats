@@ -189,6 +189,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' @author Dan Kelley
 #'
 #' @importFrom utils read.csv tail
+## @importFrom lubridate fast_strptime
 ## @importFrom curl curl_download
 ## @importFrom oce processingLogAppend
 #' @export
@@ -351,8 +352,70 @@ getIndex <- function(filename="core",
         stop("Misconfigured index file: no \"longitude\" data found")
     }
     argoFloatsDebug(debug, "Decoding dates.\n", sep="")
-    index$date <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")
-    index$date_update <- as.POSIXct(as.character(index$date_update), format="%Y%m%d%H%M%S",tz="UTC")
+
+    ## 2020-12-12: switch from as.POSIXct() to lubridate::fast_strptime(), shaving typically
+    ## 1 second from elapsed times.  See below for some timing tests, and
+    ## https://github.com/ArgoCanada/argoFloats/issues/334 for discussion.
+    ##
+    ##  Note that we are only 'Suggest'ing lubridate in DESCRIPTION (and requiring it here) because otherwise the user will
+    ##  see possibly scary messages about function overriding.
+    ##
+    ##: cat("as.POSIXct() timing:\n")
+    ##: print(system.time(t1 <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")))
+    ##: cat("strptime() timing:\n")
+    ##: print(system.time(t2 <- strptime(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")))
+    ##: cat("ymd_hms() timing:\n")
+    ##: print(system.time(t3 <- lubridate::ymd_hms(as.character(index$date), quiet=TRUE)))
+    ##: cat("lubridate::fast_strptime() timing:\n")
+    ##: print(system.time(t4 <- lubridate::fast_strptime(as.character(index$date), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")))
+    ##: cat("readr::parse_datetime() timing:\n")
+    ##: print(system.time(t5 <- readr::parse_datetime(as.character(index$date), format="%Y%m%d%H%M%S")))
+    ##: cat("tests of matches:\n")
+    ##: cat(" as.POSIXct() same as strptime(): ", all.equal(t1, t2), "\n")
+    ##: cat(" as.POSIXct() same as lubridate::ymd_hms(): ", all.equal(t1, t3), "\n")
+    ##: cat(" as.POSIXct() same as lubridate::fast_strptime(): ", all.equal(t1, t4), "\n")
+    ##: cat(" as.POSIXct() same as readr::parse_datetime(): ", all.equal(t1, t4), "\n")
+    ##
+    ## as.POSIXct() timing:
+    ##    user  system elapsed
+    ##   2.841   0.048   2.913
+    ##   2.793   0.051   2.867
+    ##   2.850   0.041   2.899
+    ## strptime() timing:
+    ##    user  system elapsed
+    ##   2.435   0.008   2.451
+    ##   2.426   0.002   2.429
+    ##   2.440   0.002   2.444
+    ## ymd_hms() timing:
+    ##    user  system elapsed
+    ##   3.383   0.101   3.496
+    ##   3.340   0.102   3.445
+    ##   3.399   0.095   3.499
+    ## lubridate::fast_strptime() timing:
+    ##    user  system elapsed
+    ##   1.894   0.003   1.903
+    ##   1.860   0.002   1.865
+    ##   1.913   0.002   1.918
+    ## readr::parse_datetime() timing:
+    ## Warning: 1667 parsing failures.
+    ##   row col               expected        actual
+    ##  8956  -- date like %Y%m%d%H%M%S 2.0040404e+13
+    ##  8967  -- date like %Y%m%d%H%M%S 2.0040723e+13
+    ##  9025  -- date like %Y%m%d%H%M%S 2.0040423e+13
+    ## 13984  -- date like %Y%m%d%H%M%S 2.0041001e+13
+    ## 14024  -- date like %Y%m%d%H%M%S 2.0040325e+13
+    ## ..... ... ...................... .............
+    ## See problems(...) for more details.
+    ##
+    ##    user  system elapsed
+    ##   3.324   0.083   3.475
+    ##   3.293   0.080   3.433
+    ##   3.067   0.080   3.182
+    if (!requireNamespace("lubridate", quietly=TRUE))
+        stop("must install.packages(\"lubridate\") for getIndex() to work")
+    index$date <- lubridate::fast_strptime(as.character(index$date), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")
+    index$date_update <- lubridate::fast_strptime(as.character(index$date_update), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")
+
     argoFloatsIndex <- list(server=server[iurlSuccess], ftpRoot=ftpRoot, header=header, index=index)
     save(argoFloatsIndex, file=destfileRda)
     if (keep) {

@@ -33,7 +33,7 @@ test_that("getProfiles()",
 test_that("readProfiles()",
           {
               skip_if_not(hasArgoTestCache())
-              
+
               data(index)
               p <- expect_message(getProfiles(subset(index, 1:4)), "Kept 4 profiles")
               a <- expect_output(expect_warning(readProfiles(p), "Of 4 profiles read, 4 have"), "|===")
@@ -48,10 +48,10 @@ test_that("readProfiles()",
           }
 )
 
-test_that("getProfile() handling of as single out-of-date URL",
+test_that("getProfile() with single out-of-date URL",
           {
               skip_if_not(hasArgoTestCache())
-              
+
               data(index)
               s <- expect_message(subset(index, 778), "Kept 1 profiles")
               p <- expect_output(getProfiles(s, skip=FALSE), "|===")
@@ -60,10 +60,10 @@ test_that("getProfile() handling of as single out-of-date URL",
           }
 )
 
-test_that("readProfile() handling of an out-of-date URL surrounded by valid URLs",
+test_that("readProfile() with out-of-date URL surrounded by valid URLs",
           {
               skip_if_not(hasArgoTestCache())
-              
+
               data(index)
               s <- expect_message(subset(index, 778 + seq(-1, 1)), "Kept 3 profiles")
               p <- expect_output(getProfiles(s),"|===") # default is skip=TRUE
@@ -75,7 +75,7 @@ test_that("readProfile() handling of an out-of-date URL surrounded by valid URLs
 test_that("readProfile() handling of nonlocal source file",
           {
               skip_if_not(hasArgoTestCache())
-              
+
               u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_001.nc"
               if (packageVersion("oce") > "1.2.0") {
                   p <- expect_silent(readProfiles(u))
