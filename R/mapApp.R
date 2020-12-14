@@ -110,7 +110,7 @@ serverMapApp <- function(input, output, session) {
         topoWorldFine <- topoWorld
     }
     ## Get core and BGC data.
-    notificationId <- shiny::showNotification("Getting \"core\" argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
+    notificationId <- shiny::showNotification("Getting \"core\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
     i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
     shiny::removeNotification(notificationId)
     notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
