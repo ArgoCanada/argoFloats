@@ -563,13 +563,9 @@ serverMapApp <- function(input, output, session) {
 #' a minute or so. Note that setting `age=0` will force a new
 #' download, regardless of the age of the local file.
 #'
-#' @template destdir
+#' @template server
 #'
-#' @param server character value, or vector of character values, indicating the name of
-#' servers that supply argo data acquired with [getIndex()].  If not supplied,
-#' the default will be a value set with `options("argoFloats.server"=URL)`
-#' where `URL` is an appropriate URL, or `"ifremer-https"` if no such option was
-#' set.
+#' @template destdir
 #'
 #' @param debug integer value that controls how much information `mapApp()` prints
 #' to the console as it works.  The default value of 0 leads to a fairly limited

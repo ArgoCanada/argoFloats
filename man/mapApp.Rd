@@ -21,8 +21,9 @@ a minute or so. Note that setting \code{age=0} will force a new
 download, regardless of the age of the local file.}
 
 \item{server}{character value, or vector of character values, indicating the name of
-servers that supply argo data acquired with \code{\link[=getIndex]{getIndex()}}.  If not supplied,
-the default will be a value set with \code{options("argoFloats.server"=URL)}
+servers that supply argo data to be acquired with \code{\link[=getIndex]{getIndex()}}.  If not supplied,
+the default will be determined with \code{\link[=argoDefaultServer]{argoDefaultServer()}}, which uses
+a value set by \code{options("argoFloats.server"=URL)}
 where \code{URL} is an appropriate URL, or \code{"ifremer-https"} if no such option was
 set.}
 
