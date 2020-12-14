@@ -588,8 +588,8 @@ serverMapApp <- function(input, output, session) {
 #' @importFrom shiny shinyApp shinyOptions
 #' @export
 mapApp <- function(age=argoDefaultIndexAge(),
+                   server=argoDefaultServer(),
                    destdir=argoDefaultDestdir(),
-                   server=getOption("argoFloats.server", "ifremer-https"),
                    colLand="lightgray",
                    debug=0)
 {
