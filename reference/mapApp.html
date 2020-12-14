@@ -150,8 +150,8 @@ Help button and to read the popup window that it creates.</p>
 
     <pre class="usage"><span class='fu'>mapApp</span><span class='op'>(</span>
   age <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultIndexAge</a></span><span class='op'>(</span><span class='op'>)</span>,
+  server <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultServer</a></span><span class='op'>(</span><span class='op'>)</span>,
   destdir <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultDestdir</a></span><span class='op'>(</span><span class='op'>)</span>,
-  server <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"argoFloats.server"</span>, <span class='st'>"ifremer-https"</span><span class='op'>)</span>,
   colLand <span class='op'>=</span> <span class='st'>"lightgray"</span>,
   debug <span class='op'>=</span> <span class='fl'>0</span>
 <span class='op'>)</span></pre>
@@ -169,6 +169,14 @@ a minute or so. Note that setting <code>age=0</code> will force a new
 download, regardless of the age of the local file.</p></td>
     </tr>
     <tr>
+      <th>server</th>
+      <td><p>character value, or vector of character values, indicating the name of
+servers that supply argo data acquired with <code><a href='getIndex.html'>getIndex()</a></code>.  If not supplied,
+the default will be a value set with <code><a href='https://rdrr.io/r/base/options.html'>options("argoFloats.server"=URL)</a></code>
+where <code>URL</code> is an appropriate URL, or <code>"ifremer-https"</code> if no such option was
+set.</p></td>
+    </tr>
+    <tr>
       <th>destdir</th>
       <td><p>character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
@@ -180,14 +188,6 @@ if <code>destfile</code> is a filename with full path information.
 File clutter is reduced by creating a top-level directory called
 <code>data</code>, with subdirectories for various file types; see
 &#8220;Examples&#8221;.</p></td>
-    </tr>
-    <tr>
-      <th>server</th>
-      <td><p>character value, or vector of character values, indicating the name of
-servers that supply argo data acquired with <code><a href='getIndex.html'>getIndex()</a></code>.  If not supplied,
-the default will be a value set with <code><a href='https://rdrr.io/r/base/options.html'>options("argoFloats.server"=URL)</a></code>
-where <code>URL</code> is an appropriate URL, or <code>"ifremer-https"</code> if no such option was
-set.</p></td>
     </tr>
     <tr>
       <th>colLand</th>
