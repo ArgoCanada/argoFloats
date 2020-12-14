@@ -6,8 +6,9 @@
 \usage{
 mapApp(
   age = argoDefaultIndexAge(),
+  server = argoDefaultServer(),
   destdir = argoDefaultDestdir(),
-  server = getOption("argoFloats.server", "ifremer-https"),
+  colLand = "lightgray",
   debug = 0
 )
 }
@@ -18,6 +19,13 @@ default, \code{\link[=argoDefaultIndexAge]{argoDefaultIndexAge()}}, limits downl
 to avoid slowing down a workflow with a download that might take
 a minute or so. Note that setting \code{age=0} will force a new
 download, regardless of the age of the local file.}
+
+\item{server}{character value, or vector of character values, indicating the name of
+servers that supply argo data to be acquired with \code{\link[=getIndex]{getIndex()}}.  If not supplied,
+the default will be determined with \code{\link[=argoDefaultServer]{argoDefaultServer()}}, which uses
+a value set by \code{options("argoFloats.server"=URL)}
+where \code{URL} is an appropriate URL, or \code{"ifremer-https"} if no such option was
+set.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
@@ -30,11 +38,7 @@ File clutter is reduced by creating a top-level directory called
 \code{data}, with subdirectories for various file types; see
 \dQuote{Examples}.}
 
-\item{server}{character value, or vector of character values, indicating the name of
-servers that supply argo data acquired with \code{\link[=getIndex]{getIndex()}}.  If not supplied,
-the default will be a value set with \code{options("argoFloats.server"=URL)}
-where \code{URL} is an appropriate URL, or \code{"ifremer-https"} if no such option was
-set.}
+\item{colLand}{a colour specification for the land.}
 
 \item{debug}{integer value that controls how much information \code{mapApp()} prints
 to the console as it works.  The default value of 0 leads to a fairly limited

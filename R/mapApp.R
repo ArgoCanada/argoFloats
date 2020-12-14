@@ -45,9 +45,24 @@ uiMapApp <- shiny::fluidPage(
                                                            style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
                                                                                      label="View",
-                                                                                     choices=c("Core"="core", "Deep"="deep",
-                                                                                               "BGC"="bgc", "HiRes"="hires",
-                                                                                               "Topo."="topo", "Path"="path", "Start"="start", "End"="end", "Profiles"="profiles"),
+                                                                                     choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
+                                                                                                      shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
+                                                                                                      shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
+                                                                                                      shiny::tags$span("HiRes", style="color: black;"),
+                                                                                                      shiny::tags$span("Topo", style="color: black;"),
+                                                                                                      shiny::tags$span("Path", style="color: black;"),
+                                                                                                      shiny::tags$span("Start", style="color: black;"),
+                                                                                                      shiny::tags$span("End", style="color: black;"),
+                                                                                                      shiny::tags$span("Profiles", style="color: black;")),
+                                                                                     choiceValues=list("core",
+                                                                                                       "deep",
+                                                                                                       "bgc",
+                                                                                                       "hires",
+                                                                                                       "topo",
+                                                                                                       "path",
+                                                                                                       "start",
+                                                                                                       "end",
+                                                                                                       "profiles"),
                                                                                      selected=c("core", "deep", "bgc", "profiles"),
                                                                                      inline=TRUE))),
                              shiny::fluidRow(shiny::column(2,
@@ -71,6 +86,7 @@ serverMapApp <- function(input, output, session) {
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
     argoServer <- shiny::getShinyOption("argoServer")
+    colLand <- shiny::getShinyOption("colLand")
     debug <- shiny::getShinyOption("debug")
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages('shiny') for mapApp() to work")
@@ -94,7 +110,7 @@ serverMapApp <- function(input, output, session) {
         topoWorldFine <- topoWorld
     }
     ## Get core and BGC data.
-    notificationId <- shiny::showNotification("Getting \"core\" argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
+    notificationId <- shiny::showNotification("Getting \"core\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
     i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
     shiny::removeNotification(notificationId)
     notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
@@ -420,7 +436,7 @@ serverMapApp <- function(input, output, session) {
             if (0 == sum(c("core", "deep", "bgc") %in% input$view)) {
                 showError("Please select at least 1 type")
             } else {
-                par(mar = c(2.5, 2.5, 2, 1.5))
+                par(mar=c(2.5, 2.5, 2, 1.5))
                 plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
                 topo <- if ("hires" %in% input$view) topoWorldFine else topoWorld
                 if ("topo" %in% input$view) {
@@ -440,7 +456,7 @@ serverMapApp <- function(input, output, session) {
                 labels <- paste(abs(at), ifelse(at < 0, "S", ifelse(at > 0, "N", "")), sep="")
                 axis(2, pos=pinlon(usr[1]), at=at, labels=labels, lwd=1)
                 coastline <- if ("hires" %in% input$view) coastlineWorldFine else coastlineWorld
-                polygon(coastline[["longitude"]], coastline[["latitude"]], col="tan")
+                polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
                 rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
                 ## For focusID mode, we do not trim by time or space
                 if (input$focus == "single" && !is.null(state$focusID)) {
@@ -547,18 +563,16 @@ serverMapApp <- function(input, output, session) {
 #' a minute or so. Note that setting `age=0` will force a new
 #' download, regardless of the age of the local file.
 #'
-#' @template destdir
+#' @template server
 #'
-#' @param server character value, or vector of character values, indicating the name of
-#' servers that supply argo data acquired with [getIndex()].  If not supplied,
-#' the default will be a value set with `options("argoFloats.server"=URL)`
-#' where `URL` is an appropriate URL, or `"ifremer-https"` if no such option was
-#' set.
+#' @template destdir
 #'
 #' @param debug integer value that controls how much information `mapApp()` prints
 #' to the console as it works.  The default value of 0 leads to a fairly limited
 #' amount of printing, while higher values lead to more information. This information
 #' can be helpful in diagnosing problems or bottlenecks.
+#'
+#' @param colLand a colour specification for the land.
 #'
 #' @examples
 #' if (interactive()) {
@@ -570,12 +584,17 @@ serverMapApp <- function(input, output, session) {
 #' @importFrom shiny shinyApp shinyOptions
 #' @export
 mapApp <- function(age=argoDefaultIndexAge(),
+                   server=argoDefaultServer(),
                    destdir=argoDefaultDestdir(),
-                   server=getOption("argoFloats.server", "ifremer-https"),
+                   colLand="lightgray",
                    debug=0)
 {
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
-    shiny::shinyOptions(age=age, destdir=destdir, argoServer=server, debug=debug) # rename server to avoid shiny problem
+    shiny::shinyOptions(age=age,
+                        destdir=destdir,
+                        argoServer=server, # rename server to avoid shiny problem
+                        colLand=colLand,
+                        debug=debug)
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages(\"shiny\") for this to work")
     print(shiny::shinyApp(ui=uiMapApp, server=serverMapApp))
