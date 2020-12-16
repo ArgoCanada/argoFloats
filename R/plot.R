@@ -422,6 +422,8 @@ setMethod(f="plot",
                   colLand <- mapControl$colLand
                   if (is.null(mapControl))
                       mapControl <- list(bathymetry=bathymetry, projection=FALSE, colLand="lightgray")
+                  if (!"bathymetry" %in% names(mapControl))
+                      mapControl$bathymetry <- TRUE
                   if (!"projection" %in% names(mapControl))
                       mapControl$projection <- FALSE
                   if (is.logical(mapControl$projection)) {
@@ -709,9 +711,13 @@ setMethod(f="plot",
                   }
                   par(mar=omar, mgp=omgp)
                   if (!"colLand" %in% names(mapControl)) {
-                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="lightgray")
+                      data("coastlineWorldFine", package="ocedata", envir=environment())
+                      coastlineWorldFine <- get("coastlineWorldFine")
+                      polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]], col="lightgray")
                   } else {
-                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col=colLand)
+                      data("coastlineWorldFine", package="ocedata", envir=environment())
+                      coastlineWorldFine <- get("coastlineWorldFine")
+                      polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]], col=colLand)
                   }
               } else if (which == "summary") {
                   argoFloatsDebug(debug, "summary plot\n", sep="")
