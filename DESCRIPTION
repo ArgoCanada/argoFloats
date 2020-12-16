@@ -25,5 +25,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 BuildVignettes: true
 VignetteBuilder: knitr
-Remotes: dankelley/oce
+Remotes: dankelley/oce@develop
 
