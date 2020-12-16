@@ -168,7 +168,7 @@ github.com/dankelley/oce, not from CRAN.</p>
     <tr>
       <th>which</th>
       <td><p>a character vector (passed directly to
-<code>preferAdjusted()</code>, or its mimic) naming the items for which
+<code><a href='https://dankelley.github.io/oce/reference/preferAdjusted.html'>preferAdjusted()</a></code>, or its mimic) naming the items for which
 (depending also on the value of <code>fallback</code>) adjusted values
 are to be sought by future calls to <code><a href='[[,argoFloats-method.html'>[[,argoFloats-method</a></code>.
 The short names are used, e.g. <code>which="oxygen"</code> means that
@@ -180,7 +180,7 @@ that has adjusted values.</p></td>
     <tr>
       <th>fallback</th>
       <td><p>a logical value (passed directly to
-<code>preferAdjusted()</code> or its mimic) indicating whether to fall back
+<code><a href='https://dankelley.github.io/oce/reference/preferAdjusted.html'>preferAdjusted()</a></code> or its mimic) indicating whether to fall back
 to unadjusted values for any data field in which the
 adjusted values are all <code>NA</code>.  The default value, <code>TRUE</code>,
 avoids a problem with biogeochemical fields, where adjustment
@@ -198,7 +198,7 @@ should be printed.</p></td>
 
     <p>If the version of <a href='https://CRAN.R-project.org/package=oce'><span class="pkg">oce</span></a> is lower than 1.3.0, <code>useAdjusted()</code>
 reports an error.  Otherwise, it carries out its work by
-applying <code>preferAdjusted()</code> from the <a href='https://CRAN.R-project.org/package=oce'><span class="pkg">oce</span></a> to each
+applying <code><a href='https://dankelley.github.io/oce/reference/preferAdjusted.html'>preferAdjusted()</a></code> from the <a href='https://CRAN.R-project.org/package=oce'><span class="pkg">oce</span></a> to each
 of the Argo objects stored within the <code>data</code> slot of <code>x</code>.</p>
 <p>Although one might guess that adjusted data
 are always be preferable to original data, this is not always
@@ -231,7 +231,13 @@ Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
     <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span>, mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5</span>,<span class='fl'>4</span>,<span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
     <span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>raw</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span>, xlab<span class='op'>=</span><span class='st'>"Raw Oxygen"</span>, ylab<span class='op'>=</span><span class='st'>"Frequency"</span>, main<span class='op'>=</span><span class='cn'>NULL</span><span class='op'>)</span>
     <span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>adj</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span>, xlab<span class='op'>=</span><span class='st'>"Adjusted Oxygen"</span>, ylab<span class='op'>=</span><span class='st'>"Frequency"</span>, main<span class='op'>=</span><span class='cn'>NULL</span><span class='op'>)</span><span class='op'>}</span>
-
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
+#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
+#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
+#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
+#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
+#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
+#&gt; <span class='warning'>    1</span></div><div class='img'><img src='useAdjusted-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
