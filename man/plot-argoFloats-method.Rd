@@ -100,7 +100,7 @@ see \code{\link[oce:plotTS]{oce::plotTS()}}.}
 
 \item{mapControl}{a list that permits particular control of the \code{which="map"}
 case.  If provided, it may contain elements named \code{bathymetry} (which
-has the same effect as the parameter \code{bathymetry}) and \code{projection} (which
+has the same effect as the parameter \code{bathymetry}), \code{colLand} (which indicates the colour of the land), and \code{projection} (which
 may be \code{FALSE}, meaning to plot longitude and latitude on rectilinear axes,
 \code{TRUE}, meaning to plot with \code{\link[oce:mapPlot]{oce::mapPlot()}}, using Mollweide projection that
 is suitable mainly for world-scaqle views, or a character value that will be
@@ -311,7 +311,7 @@ contour(x=lon, y=lat, z=depth, xlab="", ylab="",
 # Show land
 data(coastlineWorldFine, package="ocedata")
 polygon(coastlineWorldFine[["longitude"]],
-        coastlineWorldFine[["latitude"]], col="tan")
+        coastlineWorldFine[["latitude"]], col="lightgray")
 # Indicate float positions.
 points(index[["longitude"]], index[["latitude"]], pch=20)}
 

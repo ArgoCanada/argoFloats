@@ -195,7 +195,7 @@ pinusr <- function(usr)
 #'
 #' @param mapControl a list that permits particular control of the `which="map"`
 #' case.  If provided, it may contain elements named `bathymetry` (which
-#' has the same effect as the parameter `bathymetry`) and `projection` (which
+#' has the same effect as the parameter `bathymetry`), `colLand` (which indicates the colour of the land), and `projection` (which
 #' may be `FALSE`, meaning to plot longitude and latitude on rectilinear axes,
 #' `TRUE`, meaning to plot with [oce::mapPlot()], using Mollweide projection that
 #' is suitable mainly for world-scaqle views, or a character value that will be
@@ -320,7 +320,7 @@ pinusr <- function(usr)
 #' # Show land
 #' data(coastlineWorldFine, package="ocedata")
 #' polygon(coastlineWorldFine[["longitude"]],
-#'         coastlineWorldFine[["latitude"]], col="tan")
+#'         coastlineWorldFine[["latitude"]], col="lightgray")
 #' # Indicate float positions.
 #' points(index[["longitude"]], index[["latitude"]], pch=20)}
 #'
@@ -415,11 +415,13 @@ setMethod(f="plot",
                   mar <- par("mar") #c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
               par(mar=mar, mgp=mgp)
               if (which == "map") {
+                  data("coastlineWorld", package="oce", envir=environment())
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
+                  colLand <- mapControl$colLand
                   if (is.null(mapControl))
-                      mapControl <- list(bathymetry=bathymetry, projection=FALSE)
+                      mapControl <- list(bathymetry=bathymetry, projection=FALSE, colLand="lightgray")
                   if (!"projection" %in% names(mapControl))
                       mapControl$projection <- FALSE
                   if (is.logical(mapControl$projection)) {
@@ -430,7 +432,7 @@ setMethod(f="plot",
                   if (mapControl$projection != "none") {
                       data("coastlineWorld", package="oce", envir=environment())
                       coastlineWorld <- get("coastlineWorld")
-                      oce::mapPlot(coastlineWorld, col="tan", projection=mapControl$projection, drawBox=FALSE)
+                      oce::mapPlot(coastlineWorld, col="lightgray", projection=mapControl$projection, drawBox=FALSE)
                       oce::mapPoints(unlist(longitude), unlist(latitude),
                                      cex=if (is.null(cex)) 1 else cex,
                                      col=if (is.null(col)) "white" else col,
@@ -687,25 +689,30 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "using coastlineWorldFine from ocedata package\n")
                           data("coastlineWorldFine", package="ocedata", envir=environment())
                           coastlineWorldFine <- get("coastlineWorldFine")
-                          polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]], col="tan")
+                          polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]], col="lightgray")
                       } else if (mapSpan < C / 4) {
                           argoFloatsDebug(debug, "using coastlineWorldMedium from ocedata package\n")
                           data("coastlineWorldMedium", package="ocedata", envir=environment())
                           coastlineWorldMedium <- get("coastlineWorldMedium")
-                          polygon(coastlineWorldMedium[["longitude"]], coastlineWorldMedium[["latitude"]], col="tan")
+                          polygon(coastlineWorldMedium[["longitude"]], coastlineWorldMedium[["latitude"]], col="lightgray")
                       } else {
                           argoFloatsDebug(debug, "using coastlineWorld from oce package, since the span is large\n")
                           data("coastlineWorld", package="oce", envir=environment())
                           coastlineWorld <- get("coastlineWorld")
-                          polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="tan")
+                          polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="lightgray")
                       }
                   } else {
                       argoFloatsDebug(debug, "using coastlineWorld from oce package, since the ocedata package is not installedi\n")
                       data("coastlineWorld", package="ocedata", envir=environment())
                       coastlineWorld <- get("coastlineWorld")
-                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="tan")
+                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="lightgray")
                   }
                   par(mar=omar, mgp=omgp)
+                  if (!"colLand" %in% names(mapControl)) {
+                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="lightgray")
+                  } else {
+                      polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col=colLand)
+                  }
               } else if (which == "summary") {
                   argoFloatsDebug(debug, "summary plot\n", sep="")
                   if (is.null(summaryControl))
