@@ -332,14 +332,18 @@ getIndex <- function(filename="core",
     header <- first[hash]
     lastHash <- tail(hash, 1)
     names <- strsplit(first[1 + lastHash], ",")[[1]]
-   #if (grepl("merge", filename)) {
-   #     names <- c("file", "date", "latitude", "longitude", "ocean",
-   #                "profiler_type", "institution", "parameters",
-   #                "param_data_mode", "date_update")
-   #     argoFloatsDebug(debug, "Skipping (flawed) header in the merged file.\n", sep="")
-   # }
+    ##if (grepl("merge", filename)) {
+    ##     names <- c("file", "date", "latitude", "longitude", "ocean",
+    ##                "profiler_type", "institution", "parameters",
+    ##                "param_data_mode", "date_update")
+    ##     argoFloatsDebug(debug, "Skipping (flawed) header in the merged file.\n", sep="")
+    ## }
     argoFloatsDebug(debug, "Reading index file contents (can be slow).\n", sep="")
-    index <- read.csv(destfileTemp, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE)
+    ##    print(system.time(
+    index <- read.csv(destfileTemp, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE, colClasses="character")
+    ##))
+    index$latitude <- as.numeric(index$latitude)
+    index$longitude <- as.numeric(index$longitude)
     argoFloatsDebug(debug, "Setting out-of-range longitude and latitude to NA.\n")
     if ("latitude" %in% names(index)) {
         index$latitude[abs(index$latitude) > 90] <- NA
