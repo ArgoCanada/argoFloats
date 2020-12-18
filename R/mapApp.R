@@ -83,10 +83,12 @@ uiMapApp <- shiny::fluidPage(
                                                                                      label="Select the action for the float trajectory",
                                                                                      choiceNames=list(shiny::tags$span("Path", style="color: black;"),
                                                                                                       shiny::tags$span("Start", style="color: black;"),
-                                                                                                      shiny::tags$span("End", style="color: black;")),
+                                                                                                      shiny::tags$span("End", style="color: black;"),
+                                                                                                      shiny::tags$span("Without Profiles", style="color: black;")),
                                                                                      choiceValues=list("path",
                                                                                                        "start",
-                                                                                                       "end"),
+                                                                                                       "end",
+                                                                                                       "lines"),
                                                                                      inline=TRUE)))),
 
 
