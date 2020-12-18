@@ -72,7 +72,6 @@ uiMapApp <- shiny::fluidPage(
                                                          choiceValues=list("start",
                                                                            "end",
                                                                            "path"),
-                                                         selected=c("path"),
                                                          inline=TRUE)),
 
                                                          ),
