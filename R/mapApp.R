@@ -49,15 +49,15 @@ uiMapApp <- shiny::fluidPage(
                                                                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
                                                                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
                                                                                                       shiny::tags$span("HiRes", style="color: black;"),
-                                                                                                      shiny::tags$span("Topo", style="color: black;"),
-                                                                                                      shiny::tags$span("Profiles", style="color: black;")),
+                                                                                                      shiny::tags$span("Topo", style="color: black;")
+                                                                                                     ),
                                                                                      choiceValues=list("core",
                                                                                                        "deep",
                                                                                                        "bgc",
                                                                                                        "hires",
-                                                                                                       "topo",
-                                                                                                       "profiles"),
-                                                                                     selected=c("core", "deep", "bgc", "profiles"),
+                                                                                                       "topo"
+                                                                                                       ),
+                                                                                     selected=c("core", "deep", "bgc"),
                                                                                      inline=TRUE))),
 
                              shiny::mainPanel(tabsetPanel(type="tab",
@@ -67,23 +67,8 @@ uiMapApp <- shiny::fluidPage(
 
                              shiny::fluidRow(shiny::column(6,
                                                            conditionalPanel(condition="input.tabselected==2",
-                                                           style="padding-left:0px;",
-                                                           shiny::checkboxGroupInput("action",
-                                                                                     label="Select the action for the float trajectory",
-                                                                                     choiceNames=list(shiny::tags$span("Path", style="color: black;"),
-                                                                                                      shiny::tags$span("Start", style="color: black;"),
-                                                                                                      shiny::tags$span("End", style="color: black;")),
-                                                                                     choiceValues=list("path",
-                                                                                                       "start",
-                                                                                                       "end"),
-                                                                                     selected=c("path"),
-                                                                                     inline=TRUE)))),
-
-
-                             shiny::fluidRow(shiny::column(2,
-                                                           conditionalPanel(condition="input.tabselected==2",
                                                            shiny::textInput("ID", "Float ID", value=""))),
-                                             shiny::column(2,
+                                             shiny::column(6,
                                                            conditionalPanel(condition="input.tabselected==2",
                                                            style="padding-left:0px;",
                                                            shiny::selectInput("focus",
@@ -92,6 +77,30 @@ uiMapApp <- shiny::fluidPage(
                                                                               selected="all"))),
                                              shiny::column(8,
                                                            shiny::verbatimTextOutput("info"))),
+
+                             shiny::fluidRow(shiny::column(6,
+                                                           conditionalPanel(condition="input.tabselected==2",
+                                                           style="padding-left:0px;",
+                                                           shiny::checkboxGroupInput("display",
+                                                                                     label="Path display",
+                                                                                     choiceNames=list(shiny::tags$span("With Profiles", style="color: black;"),
+                                                                                                      shiny::tags$span("Without Profiles", style="color: black;")),
+                                                                                     choiceValues=list("path",
+                                                                                                       "lines"),
+                                                                                     selected=c("path"),
+                                                                                     inline=TRUE)))),
+
+                             shiny::fluidRow(shiny::column(6,
+                                                           conditionalPanel(condition="input.tabselected==2",
+                                                           style="padding-left:0px;",
+                                                           shiny::checkboxGroupInput("action",
+                                                                                     label="Display start or end position",
+                                                                                     choiceNames=list(shiny::tags$span("Start", style="color: black;"),
+                                                                                                      shiny::tags$span("End", style="color: black;")),
+                                                                                     choiceValues=list("start",
+                                                                                                       "end"),
+                                                                                     inline=TRUE)))),
+
                              ## using withSpinner does not work here
                              shiny::fluidRow(shiny::plotOutput("plotMap",
                                                                hover=shiny::hoverOpts("hover"),
@@ -99,7 +108,7 @@ uiMapApp <- shiny::fluidPage(
                                                                brush=shiny::brushOpts("brush", delay=2000, resetOnNew=TRUE))))
 
 ## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
-serverMapApp <- function(input, output, session) {
+lines <- function(input, output, session) {
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
     argoServer <- shiny::getShinyOption("argoServer")
@@ -493,10 +502,8 @@ serverMapApp <- function(input, output, session) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <- argo[k,]
-                        if ("profiles" %in% input$view) {
                         points(lonlat$lon, lonlat$lat, pch=21, cex=cex, col="black", bg=col[[view]], lwd=0.5)
-                        }
-                        if ("path" %in% input$action) {
+                        if ("path" %in% input$display) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
                             ##> options(warn = -1)
