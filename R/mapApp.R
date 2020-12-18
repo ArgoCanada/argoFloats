@@ -50,29 +50,46 @@ uiMapApp <- shiny::fluidPage(
                                                                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
                                                                                                       shiny::tags$span("HiRes", style="color: black;"),
                                                                                                       shiny::tags$span("Topo", style="color: black;"),
-                                                                                                      shiny::tags$span("Path", style="color: black;"),
-                                                                                                      shiny::tags$span("Start", style="color: black;"),
-                                                                                                      shiny::tags$span("End", style="color: black;"),
                                                                                                       shiny::tags$span("Profiles", style="color: black;")),
                                                                                      choiceValues=list("core",
                                                                                                        "deep",
                                                                                                        "bgc",
                                                                                                        "hires",
                                                                                                        "topo",
-                                                                                                       "path",
-                                                                                                       "start",
-                                                                                                       "end",
                                                                                                        "profiles"),
                                                                                      selected=c("core", "deep", "bgc", "profiles"),
                                                                                      inline=TRUE))),
+
+                             shiny::mainPanel(tabsetPanel(type="tab",
+                                                          tabPanel("Main", value=1),
+                                                          tabPanel("Trajectory", value=2),
+                                                          id="tabselected")),
+
+                             shiny::fluidRow(shiny::column(6,
+                                                           conditionalPanel(condition="input.tabselected==2",
+                                                           style="padding-left:0px;",
+                                                           shiny::checkboxGroupInput("action",
+                                                                                     label="Select the action for the float trajectory",
+                                                                                     choiceNames=list(shiny::tags$span("Path", style="color: black;"),
+                                                                                                      shiny::tags$span("Start", style="color: black;"),
+                                                                                                      shiny::tags$span("End", style="color: black;")),
+                                                                                     choiceValues=list("path",
+                                                                                                       "start",
+                                                                                                       "end"),
+                                                                                     selected=c("path"),
+                                                                                     inline=TRUE)))),
+
+
                              shiny::fluidRow(shiny::column(2,
-                                                           shiny::textInput("ID", "Float ID", value="")),
+                                                           conditionalPanel(condition="input.tabselected==2",
+                                                           shiny::textInput("ID", "Float ID", value=""))),
                                              shiny::column(2,
+                                                           conditionalPanel(condition="input.tabselected==2",
                                                            style="padding-left:0px;",
                                                            shiny::selectInput("focus",
                                                                               "Focus",
                                                                               choices=c("All"="all", "Single"="single"),
-                                                                              selected="all")),
+                                                                              selected="all"))),
                                              shiny::column(8,
                                                            shiny::verbatimTextOutput("info"))),
                              ## using withSpinner does not work here
@@ -479,7 +496,7 @@ serverMapApp <- function(input, output, session) {
                         if ("profiles" %in% input$view) {
                         points(lonlat$lon, lonlat$lat, pch=21, cex=cex, col="black", bg=col[[view]], lwd=0.5)
                         }
-                        if ("path" %in% input$view) {
+                        if ("path" %in% input$action) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
                             ##> options(warn = -1)
@@ -502,9 +519,9 @@ serverMapApp <- function(input, output, session) {
                                     ##> )
                                     ## Point size increases for > 10 locations (e.g. a many-point trajectory for a single float,
                                     ## as opposed to maybe 3 months of data for a set of floats).
-                                    if ("start" %in% input$view)
+                                    if ("start" %in% input$action)
                                         points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
-                                    if ("end" %in% input$view)
+                                    if ("end" %in% input$action)
                                         points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=if (no > 10) 2 else 1, lwd=1.4)
                                 }
                             }
