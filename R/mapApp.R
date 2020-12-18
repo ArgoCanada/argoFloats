@@ -67,6 +67,19 @@ uiMapApp <- shiny::fluidPage(
 
                              shiny::fluidRow(shiny::column(6,
                                                            conditionalPanel(condition="input.tabselected==2",
+                                                           shiny::textInput("ID", "Float ID", value=""))),
+                                             shiny::column(6,
+                                                           conditionalPanel(condition="input.tabselected==2",
+                                                           style="padding-left:0px;",
+                                                           shiny::selectInput("focus",
+                                                                              "Focus",
+                                                                              choices=c("All"="all", "Single"="single"),
+                                                                              selected="all"))),
+                                             shiny::column(8,
+                                                           shiny::verbatimTextOutput("info"))),
+
+                             shiny::fluidRow(shiny::column(6,
+                                                           conditionalPanel(condition="input.tabselected==2",
                                                            style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("action",
                                                                                      label="Select the action for the float trajectory",
@@ -80,18 +93,6 @@ uiMapApp <- shiny::fluidPage(
                                                                                      inline=TRUE)))),
 
 
-                             shiny::fluidRow(shiny::column(2,
-                                                           conditionalPanel(condition="input.tabselected==2",
-                                                           shiny::textInput("ID", "Float ID", value=""))),
-                                             shiny::column(2,
-                                                           conditionalPanel(condition="input.tabselected==2",
-                                                           style="padding-left:0px;",
-                                                           shiny::selectInput("focus",
-                                                                              "Focus",
-                                                                              choices=c("All"="all", "Single"="single"),
-                                                                              selected="all"))),
-                                             shiny::column(8,
-                                                           shiny::verbatimTextOutput("info"))),
                              ## using withSpinner does not work here
                              shiny::fluidRow(shiny::plotOutput("plotMap",
                                                                hover=shiny::hoverOpts("hover"),
