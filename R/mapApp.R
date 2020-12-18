@@ -49,15 +49,13 @@ uiMapApp <- shiny::fluidPage(
                                                                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
                                                                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
                                                                                                       shiny::tags$span("HiRes", style="color: black;"),
-                                                                                                      shiny::tags$span("Topo", style="color: black;"),
-                                                                                                      shiny::tags$span("Profiles", style="color: black;")),
+                                                                                                      shiny::tags$span("Topo", style="color: black;")),
                                                                                      choiceValues=list("core",
                                                                                                        "deep",
                                                                                                        "bgc",
                                                                                                        "hires",
-                                                                                                       "topo",
-                                                                                                       "profiles"),
-                                                                                     selected=c("core", "deep", "bgc", "profiles"),
+                                                                                                       "topo"),
+                                                                                     selected=c("core", "deep", "bgc"),
                                                                                      inline=TRUE))),
 
                              shiny::mainPanel(tabsetPanel(type="tab",
@@ -89,7 +87,6 @@ uiMapApp <- shiny::fluidPage(
                                                                                      choiceValues=list("path",
                                                                                                        "start",
                                                                                                        "end"),
-                                                                                     selected=c("path"),
                                                                                      inline=TRUE)))),
 
 
@@ -494,9 +491,7 @@ serverMapApp <- function(input, output, session) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <- argo[k,]
-                        if ("profiles" %in% input$view) {
                         points(lonlat$lon, lonlat$lat, pch=21, cex=cex, col="black", bg=col[[view]], lwd=0.5)
-                        }
                         if ("path" %in% input$action) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
