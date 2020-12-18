@@ -500,22 +500,12 @@ serverMapApp <- function(input, output, session) {
                             ##> options(warn = -1)
                             for (ID in unique(lonlat$ID)) {
                                 LONLAT <- lonlat[lonlat$ID==ID,]
-                                ##cat(file=stderr(), sprintf("ID=%s, n=%d, nsub=%d\n", ID, dim(lonlat)[1], dim(LONLAT)[1]))
                                 ## Sort by time instead of relying on the order in the repository
-                                o <- order(LONLAT$time)
-                                no <- length(o)
+                                o <<- order(LONLAT$time)
+                                no <<- length(o)
                                 if (no > 1) {
-                                    LONLAT <- LONLAT[o, ]
+                                    LONLAT <<- LONLAT[o, ]
                                     lines(LONLAT$lon, LONLAT$lat, lwd=1, col=grey(0.3))
-                                    ##> arrows(
-                                    ##>     LONLAT$lon[no - 1],
-                                    ##>     LONLAT$lat[no - 1],
-                                    ##>     LONLAT$lon[no],
-                                    ##>     LONLAT$lat[no],
-                                    ##>     length = 0.15,
-                                    ##>     lwd = 1.4
-                                    ##> )
-                                    ## Point size increases for > 10 locations (e.g. a many-point trajectory for a single float,
                                     ## as opposed to maybe 3 months of data for a set of floats).
                                     if ("start" %in% input$action)
                                         points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
@@ -524,6 +514,9 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                             ##> par(warn = owarn)
+                        }
+                        if ("lines" %in% input$action) {
+                            message("jaimie")
                         }
                     }
                 }
