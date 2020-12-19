@@ -440,6 +440,7 @@ setMethod(f="plot",
                                      col=if (is.null(col)) "white" else col,
                                      pch=if (is.null(pch)) 21 else pch,
                                      bg=if (is.null(bg)) "red" else bg,
+                                     type=if (is.null(type)) "p" else type,
                                      ...)
                       ## warning("In plot,argoFloats-method(): projected maps do not (yet) show bathymetry", call.=FALSE)
                       return(invisible(NULL))
@@ -540,10 +541,8 @@ setMethod(f="plot",
                                                              keep=bathymetry$keep),
                                        silent=FALSE)
                           if (inherits(bathy, "try-error")) {
-                              warning(
-                                  "could not download bathymetry from NOAA server: ",
-                                  paste(bathy, collapse = "\n"), "\n"
-                              )
+                              warning("could not download bathymetry from NOAA server: ",
+                                  paste(bathy, collapse = "\n"), "\n")
                               drawBathymetry <- FALSE
                           } else {
                             argoFloatsDebug(debug, "  grid size", paste(dim(bathy), collapse="x"), "\n")
@@ -673,6 +672,7 @@ setMethod(f="plot",
                          col=if (is.null(col)) "white" else col,
                          pch=if (is.null(pch)) 21 else pch,
                          bg=if (is.null(bg)) "red" else bg,
+                         type=if (is.null(type)) "p" else type,
                          ...)
                   ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
                   ## on just the distance spanned in the north-south direction.
