@@ -1,7 +1,7 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 ##cacheAge <- 5                          # a global variable
-col <- list(core=7, bgc=3, deep=6)
+col <- list(core=1, bgc=3, deep=6)
 
 ## Start and end times, covering 21 days to usually get 2 cycles
 endTime <- as.POSIXlt(Sys.time())
@@ -45,7 +45,7 @@ uiMapApp <- shiny::fluidPage(
                                                            style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
                                                                                      label="View",
-                                                                                     choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
+                                                                                     choiceNames=list(shiny::tags$span("Core", style="color: black; font-weight:bold"),
                                                                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
                                                                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
                                                                                                       shiny::tags$span("HiRes", style="color: black;"),
@@ -58,16 +58,16 @@ uiMapApp <- shiny::fluidPage(
                                                                                      selected=c("core", "deep", "bgc"),
                                                                                      inline=TRUE))),
 
-                             shiny::mainPanel(tabsetPanel(type="tab",
-                                                          tabPanel("Main", value=1),
-                                                          tabPanel("Trajectory", value=2),
+                             shiny::mainPanel(shiny::tabsetPanel(type="tab",
+                                                          shiny::tabPanel("Main", value=1),
+                                                          shiny::tabPanel("Trajectory", value=2),
                                                           id="tabselected")),
 
                              shiny::fluidRow(shiny::column(6,
-                                                           conditionalPanel(condition="input.tabselected==2",
+                                                           shiny::conditionalPanel(condition="input.tabselected==2",
                                                            shiny::textInput("ID", "Float ID", value=""))),
                                              shiny::column(6,
-                                                           conditionalPanel(condition="input.tabselected==2",
+                                                           shiny::conditionalPanel(condition="input.tabselected==2",
                                                            style="padding-left:0px;",
                                                            shiny::selectInput("focus",
                                                                               "Focus",
@@ -77,7 +77,7 @@ uiMapApp <- shiny::fluidPage(
                                                            shiny::verbatimTextOutput("info"))),
 
                              shiny::fluidRow(shiny::column(6,
-                                                           conditionalPanel(condition="input.tabselected==2",
+                                                           shiny::conditionalPanel(condition="input.tabselected==2",
                                                            style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("action",
                                                                                      label="Select the action for the float trajectory",
@@ -373,7 +373,7 @@ serverMapApp <- function(input, output, session) {
 
     shiny::observeEvent(input$help,
                         {
-                            msg <- HTML("This GUI has two tabs, the Main and the Trajectory tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in yellow, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, and whether to show topography. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the Trajectory tab, you can click path to look at the path of floats (with or without profile locations included).You also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
+                            msg <- HTML("This GUI has two tabs, the Main and the Trajectory tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, and whether to show topography. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory</b> tab, you can click path to look at the path of floats (with or without profile locations included).You also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })                                  # help
 
