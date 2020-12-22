@@ -506,7 +506,7 @@ serverMapApp <- function(input, output, session) {
                                 no <- length(o)
                                 if (no > 1) {
                                     LONLAT <<- LONLAT[o, ]
-                                    lines(LONLAT$lon, LONLAT$lat, lwd=1, col=grey(0.3))
+                                    lines(LONLAT$lon, LONLAT$lat, lwd=1, col=col[[view]])
                                     ## as opposed to maybe 3 months of data for a set of floats).
                                     if ("start" %in% input$action)
                                         points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
