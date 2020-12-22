@@ -514,7 +514,6 @@ serverMapApp <- function(input, output, session) {
                                         points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=if (no > 10) 2 else 1, lwd=1.4)
                                 }
                             }
-                            ##> par(warn = owarn)
                         }
                     }
                 }
