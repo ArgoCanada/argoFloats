@@ -1,0 +1,52 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Using profiling to determine if we should use "save" or "load" for getIndex()
+author: Jaimie Harbin
+
+The `profvis` package is used to display the timing of `profiling`. This is helpful for us when deciding if we should save, or re-read every time we use `getIndex()`.
+
+To get started, download the `profvis` package:
+
+```{r, eval=FALSE}
+install.packages("profvis")
+library(profvis)
+```
+
+Then, go to the "Profile" tab at the top of the R session, and click "Start Profiling".
+
+In the Console, then type `ai <- getIndex(age=0)`. When the action is complete, press Profile>Stop Profiling. The output is a Frame Graph, as shown below.
+
+![[Profvis Output](01.png)
+
+Do the same procedure, but for `ai <- getIndex()` Note, each laptop (and different times of day) will result in different results.
+
+You then have the ability to hold your mouse over each "box" ie. `getIndex()`, `read.csv`, `save`, `load`, etc. to display the amount of time to compute the action (shown below)
+
+![Computation time](02.png)
+
+For JH at 1230h on 2020-12-23, the following are the computation times.
+
+**For getIndex(age=0)**
+Total time for `getIndex(age=0)` was ~32 seconds. Of that, save was ~12 seconds (shown below), and read.csv was 13.8 seconds. This means, if we were to remove the "save" portion of the action, it would take approximately 32-12=20 seconds.
+
+!["save" time for getIndex(age=0)](03.png)
+
+**For getIndex()**
+The total time for `getIndex()` was ~7 seconds, with the "load" action being 100% of that (ie. ~7 seconds, shown below).
+
+!["load" time for getIndex()](04.png)
+
+
+These results tell us that for my computation the options are are follows:
+
+If we keep "save", we have a one time computation of ~32 seconds, with the rest of the time we use the `getIndex()` function being ~7 seconds. If we remove "save" we have our computation time EACH time being ~32-12=20 seconds.
+
+For Dan at approximately 1030h this morning,
+
+**For `getIndex(age=0)`, his total computation time was 24 seconds, with approximately 10 seconds being "save".
+** For `getIndex()`, his total computation time, (ie. load time) was 4 seconds.
+
+In his case, if we keep "save", we have a one time computation of ~24 seconds, with the rest of the time we use the `getIndex()` function being ~4 seconds. If we remove "save" we have our computation time EACH time being ~24-4=20 seconds.
