@@ -17,7 +17,7 @@ library(profvis)
 
 Then, go to the "Profile" tab at the top of the R session, and click "Start Profiling".
 
-In the Console, then type `ai <- getIndex(age=0)`. When the action is complete, press Profile>Stop Profiling. The output is a Frame Graph, as shown in Figure 1.
+In the Console, then type `ai <- getIndex(age=0)`. When the action is complete, press Profile>Stop Profiling. The output is a Flame Graph, as shown in Figure 1.
 
 ![[Profvis Output](01.png)
 
