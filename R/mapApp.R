@@ -1,7 +1,7 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 ##cacheAge <- 5                          # a global variable
-col <- list(core=7, bgc=3, deep=6)
+col <- list(core=1, bgc=3, deep=6)
 
 ## Start and end times, covering 21 days to usually get 2 cycles
 endTime <- as.POSIXlt(Sys.time())
@@ -45,36 +45,53 @@ uiMapApp <- shiny::fluidPage(
                                                            style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
                                                                                      label="View",
-                                                                                     choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
+                                                                                     choiceNames=list(shiny::tags$span("Core", style="color: black; font-weight:bold"),
                                                                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
                                                                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
                                                                                                       shiny::tags$span("HiRes", style="color: black;"),
-                                                                                                      shiny::tags$span("Topo", style="color: black;"),
-                                                                                                      shiny::tags$span("Path", style="color: black;"),
-                                                                                                      shiny::tags$span("Start", style="color: black;"),
-                                                                                                      shiny::tags$span("End", style="color: black;"),
-                                                                                                      shiny::tags$span("Profiles", style="color: black;")),
+                                                                                                      shiny::tags$span("Topo", style="color: black;")),
                                                                                      choiceValues=list("core",
                                                                                                        "deep",
                                                                                                        "bgc",
                                                                                                        "hires",
-                                                                                                       "topo",
-                                                                                                       "path",
-                                                                                                       "start",
-                                                                                                       "end",
-                                                                                                       "profiles"),
-                                                                                     selected=c("core", "deep", "bgc", "profiles"),
+                                                                                                       "topo"),
+                                                                                     selected=c("core", "deep", "bgc"),
                                                                                      inline=TRUE))),
-                             shiny::fluidRow(shiny::column(2,
-                                                           shiny::textInput("ID", "Float ID", value="")),
-                                             shiny::column(2,
+
+                             shiny::mainPanel(shiny::tabsetPanel(type="tab",
+                                                          shiny::tabPanel("Main", value=1),
+                                                          shiny::tabPanel("Trajectory", value=2),
+                                                          id="tabselected")),
+
+                             shiny::fluidRow(shiny::column(6,
+                                                           shiny::conditionalPanel(condition="input.tabselected==2",
+                                                           shiny::textInput("ID", "Float ID", value=""))),
+                                             shiny::column(6,
+                                                           shiny::conditionalPanel(condition="input.tabselected==2",
                                                            style="padding-left:0px;",
                                                            shiny::selectInput("focus",
                                                                               "Focus",
                                                                               choices=c("All"="all", "Single"="single"),
-                                                                              selected="all")),
+                                                                              selected="all"))),
                                              shiny::column(8,
                                                            shiny::verbatimTextOutput("info"))),
+
+                             shiny::fluidRow(shiny::column(6,
+                                                           shiny::conditionalPanel(condition="input.tabselected==2",
+                                                           style="padding-left:0px;",
+                                                           shiny::checkboxGroupInput("action",
+                                                                                     label="Select the action for the float trajectory",
+                                                                                     choiceNames=list(shiny::tags$span("Path", style="color: black;"),
+                                                                                                      shiny::tags$span("Start", style="color: black;"),
+                                                                                                      shiny::tags$span("End", style="color: black;"),
+                                                                                                      shiny::tags$span("Without Profiles", style="color: black;")),
+                                                                                     choiceValues=list("path",
+                                                                                                       "start",
+                                                                                                       "end",
+                                                                                                       "lines"),
+                                                                                     inline=TRUE)))),
+
+
                              ## using withSpinner does not work here
                              shiny::fluidRow(shiny::plotOutput("plotMap",
                                                                hover=shiny::hoverOpts("hover"),
@@ -356,7 +373,7 @@ serverMapApp <- function(input, output, session) {
 
     shiny::observeEvent(input$help,
                         {
-                            msg <- "Enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in yellow, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show topography, and whether to connect points to indicate float paths. <br><br>Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you may change to focus to Single, to see the whole history of that float's trajectory.<br><br>If the focus is on a single trajectory, click on Start to see the earliest position of that particular float, End to see the most recent position of the float, or unlick Profiles to view the overall trajectory without Argo position points.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
+                            msg <- HTML("This GUI has two tabs, the Main and the Trajectory tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, and whether to show topography. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can click path to look at the path of floats (with or without profile locations included).You also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })                                  # help
 
@@ -476,39 +493,27 @@ serverMapApp <- function(input, output, session) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <- argo[k,]
-                        if ("profiles" %in% input$view) {
-                        points(lonlat$lon, lonlat$lat, pch=21, cex=cex, col="black", bg=col[[view]], lwd=0.5)
-                        }
-                        if ("path" %in% input$view) {
+                        if (!"lines" %in% input$action)
+                            points(lonlat$lon, lonlat$lat, pch=21, cex=cex, col="black", bg=col[[view]], lwd=0.5)
+                        if ("path" %in% input$action) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
                             ##> options(warn = -1)
                             for (ID in unique(lonlat$ID)) {
                                 LONLAT <- lonlat[lonlat$ID==ID,]
-                                ##cat(file=stderr(), sprintf("ID=%s, n=%d, nsub=%d\n", ID, dim(lonlat)[1], dim(LONLAT)[1]))
                                 ## Sort by time instead of relying on the order in the repository
-                                o <- order(LONLAT$time)
-                                no <- length(o)
+                                o <<- order(LONLAT$time)
+                                no <<- length(o)
                                 if (no > 1) {
-                                    LONLAT <- LONLAT[o, ]
+                                    LONLAT <<- LONLAT[o, ]
                                     lines(LONLAT$lon, LONLAT$lat, lwd=1, col=grey(0.3))
-                                    ##> arrows(
-                                    ##>     LONLAT$lon[no - 1],
-                                    ##>     LONLAT$lat[no - 1],
-                                    ##>     LONLAT$lon[no],
-                                    ##>     LONLAT$lat[no],
-                                    ##>     length = 0.15,
-                                    ##>     lwd = 1.4
-                                    ##> )
-                                    ## Point size increases for > 10 locations (e.g. a many-point trajectory for a single float,
                                     ## as opposed to maybe 3 months of data for a set of floats).
-                                    if ("start" %in% input$view)
+                                    if ("start" %in% input$action)
                                         points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
-                                    if ("end" %in% input$view)
+                                    if ("end" %in% input$action)
                                         points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=if (no > 10) 2 else 1, lwd=1.4)
                                 }
                             }
-                            ##> par(warn = owarn)
                         }
                     }
                 }
