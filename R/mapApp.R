@@ -61,6 +61,7 @@ uiMapApp <- shiny::fluidPage(
                              shiny::mainPanel(shiny::tabsetPanel(type="tab",
                                                           shiny::tabPanel("Main", value=1),
                                                           shiny::tabPanel("Trajectory", value=2),
+                                                          shiny::tabPanel("Settings", value=3),
                                                           id="tabselected")),
 
                              shiny::fluidRow(shiny::column(6,
@@ -90,13 +91,27 @@ uiMapApp <- shiny::fluidPage(
                                                                                                        "end",
                                                                                                        "lines"),
                                                                                      inline=TRUE)))),
+                             shiny::conditionalPanel(condition="input.tabselected==3",
+                                                     mainPanel(h4("Input your display preferences and return to the Main and Trajectory tab to view the changes")),
+                                                     sidebarPanel(
+                                                                                   "Input your symbol setting preferences",
+                                                                                   style="padding-left:0px",
+                                                                                   shiny::textInput("scolour", "Symbol Colour"),
+                                                                                   shiny::textInput("symbol", "Symbol Type"),
+                                                                                   #shiny::textInput("lcolour", "Line colour"),
+                                                                                   shiny::textInput("size", "Symbol Size"),
+                                                                                   "Input your path preferences",
+                                                                                     shiny::textInput("width", "Path Width"),
+                                                                                     shiny::textInput("lcolour", "Line Width")
+                                                                                   )),
 
 
                              ## using withSpinner does not work here
-                             shiny::fluidRow(shiny::plotOutput("plotMap",
-                                                               hover=shiny::hoverOpts("hover"),
-                                                               dblclick=shiny::dblclickOpts("dblclick"),
-                                                               brush=shiny::brushOpts("brush", delay=2000, resetOnNew=TRUE))))
+                             shiny::conditionalPanel("input.tabselected!=3",
+                                                     shiny::fluidRow(shiny::plotOutput("plotMap",
+                                                                                       hover=shiny::hoverOpts("hover"),
+                                                                                       dblclick=shiny::dblclickOpts("dblclick"),
+                                                                                       brush=shiny::brushOpts("brush", delay=2000, resetOnNew=TRUE)))))
 
 ## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 serverMapApp <- function(input, output, session) {
@@ -373,7 +388,7 @@ serverMapApp <- function(input, output, session) {
 
     shiny::observeEvent(input$help,
                         {
-                            msg <- shiny::HTML("This GUI has two tabs, the Main and the Trajectory tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, and whether to show topography. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can click path to look at the path of floats (with or without profile locations included).You also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
+                            msg <- shiny::HTML("This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, and whether to show topography. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can click path to look at the path of floats (with or without profile locations included).You also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to change display parameters, such as symbol colour, width, and type as well as path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })                                  # help
 
