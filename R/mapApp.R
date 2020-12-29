@@ -92,18 +92,23 @@ uiMapApp <- shiny::fluidPage(
                                                                                                        "lines"),
                                                                                      inline=TRUE)))),
                              shiny::conditionalPanel(condition="input.tabselected==3",
-                                                     mainPanel(h4("Input your display preferences and return to the Main and Trajectory tab to view the changes")),
-                                                     sidebarPanel(
-                                                                                   "Input your symbol setting preferences",
-                                                                                   style="padding-left:0px",
-                                                                                   shiny::textInput("scolour", "Symbol Colour"),
-                                                                                   shiny::textInput("symbol", "Symbol Type"),
-                                                                                   #shiny::textInput("lcolour", "Line colour"),
-                                                                                   shiny::textInput("size", "Symbol Size"),
-                                                                                   "Input your path preferences",
-                                                                                     shiny::textInput("width", "Path Width"),
-                                                                                     shiny::textInput("lcolour", "Line Width")
-                                                                                   )),
+                                                     shiny::fluidRow(shiny::column(2,
+                                                                                   "Core Argo",
+                                                                                   shiny::textInput("Ccolour", "Symbol Colour"),
+                                                                                   shiny::textInput("Csymbol", "Symbol Type"),
+                                                                                   shiny::textInput("Csize", "Symbol Size")
+                                                                                   ),
+                                                                     shiny::column(2, "BGC Argo",
+                                                                                   shiny::textInput("Bcolour", "Symbol Colour"),
+                                                                                   shiny::textInput("Bsymbol", "Symbol Type"),
+                                                                                   shiny::textInput("Bsize", "Symbol Size")),
+                                                                     shiny::column(2, "Deep Argo",
+                                                                                   shiny::textInput("Dcolour", "Symbol Colour"),
+                                                                                   shiny::textInput("Dsymbol", "Symbol Type"),
+                                                                                   shiny::textInput("Dsize", "Symbol Size")),
+                                                                     shiny::column(2, "Path",
+                                                                                   shiny::textInput("Pcolour", "Path Colour"),
+                                                                                   shiny::textInput("Pwidth", "Path Width")))),
 
 
                              ## using withSpinner does not work here
