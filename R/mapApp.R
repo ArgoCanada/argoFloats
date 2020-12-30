@@ -2,7 +2,6 @@
 
 ##cacheAge <- 5                          # a global variable
 col <- list(core=1, bgc=3, deep=6)
-
 ## Start and end times, covering 21 days to usually get 2 cycles
 endTime <- as.POSIXlt(Sys.time())
 startTime <- as.POSIXlt(endTime - 10 * 86400)
@@ -132,8 +131,11 @@ serverMapApp <- function(input, output, session) {
                                    ylim=c(-90, 90),
                                    startTime=startTime,
                                    endTime=endTime,
-                                   focusID=NULL)
-    ## Depending on whether 'hires' selected, 'coastline' wil be one of the following two version:
+                                   focusID=NULL,
+                                   Ccol=1,
+                                   Bcol=3,
+                                   Dcol=6)
+    ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
     data("coastlineWorldFine", package="ocedata", envir=environment())
@@ -512,9 +514,31 @@ serverMapApp <- function(input, output, session) {
                     if (view %in% input$view) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
-                        lonlat <- argo[k,]
+                        lonlat <<- argo[k,]
+                shiny::observeEvent(input$Ccolour,
+                                    { if (0 == nchar(input$Ccolour))
+                                        state$Ccol <<- 1
+                                    else (state$Ccol <<- input$Ccolour)
+                                        print(state$Ccol)
+                                    })
+                shiny::observeEvent(input$Bcolour,
+                                    { if (0 == nchar(input$Bcolour))
+                                        state$Bcol <<- 3
+                                    else (state$Bcol <<- input$Bcolour)
+                                        #print(state$Bcol)
+                                    })
+                shiny::observeEvent(input$Dcolour,
+                                    { if (0 == nchar(input$Dcolour))
+                                        state$Dcol <<- 6
+                                    else (state$Dcol <<- input$Dcolour)
+                                        #print(state$Dcol)
+                                    colSettings <- list(core=state$Ccol, bgc=state$Bcol, deep=state$Dcol)
+                                    #print(colSettings) # colSettings are the correct numbers but are printing out 3 times and colSettings[[view]] are not
+                                    })
+                #FIXME: Couldn't I just do colSettings[[view]]
                         if (!"lines" %in% input$action)
                             points(lonlat$lon, lonlat$lat, pch=21, cex=cex, col="black", bg=col[[view]], lwd=0.5)
+                        #print(col[[view]])
                         if ("path" %in% input$action) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
