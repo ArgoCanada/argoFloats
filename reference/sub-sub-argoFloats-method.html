@@ -277,15 +277,15 @@ a level.<strong>&gt;&gt;&gt; EMXIF</strong></p></li>
 </div><div class='output co'>#&gt; [1] "https://data-argo.ifremer.fr/dac/124"
 #&gt; [2] "https://data-argo.ifremer.fr/dac/125"</div><div class='input'><span class='co'># File names and geographical locations of first 5 items in index</span>
 <span class='va'>index5</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 5 profiles (0.501%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>file<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span><span class='op'>(</span><span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='va'>index5</span><span class='op'>[[</span><span class='st'>"file"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>,
+</div><div class='output co'>#&gt; <span class='message'>Kept 5 profiles (0.496%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>file<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span><span class='op'>(</span><span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='va'>index5</span><span class='op'>[[</span><span class='st'>"file"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>,
            lon<span class='op'>=</span><span class='va'>index5</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>,
            lat<span class='op'>=</span><span class='va'>index5</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;              file     lon    lat
-#&gt; 1 R1901584_124.nc -76.231 27.705
-#&gt; 2 R1901584_124.nc -76.024 27.773
-#&gt; 3 R1901584_124.nc -76.320 28.064
-#&gt; 4 R1901584_124.nc -76.520 28.101
-#&gt; 5 R1901584_124.nc -77.108 27.794</div><div class='input'>
+#&gt; 1 D1901584_124.nc -76.231 27.705
+#&gt; 2 D1901584_124.nc -76.024 27.773
+#&gt; 3 D1901584_124.nc -76.320 28.064
+#&gt; 4 D1901584_124.nc -76.520 28.101
+#&gt; 5 D1901584_124.nc -77.108 27.794</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

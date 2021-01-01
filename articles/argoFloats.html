@@ -94,7 +94,7 @@
       <h1 data-toc-skip>Introduction to argoFloats</h1>
                         <h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 class="date">2020-12-22</h4>
+            <h4 class="date">2021-01-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/master/vignettes/argoFloats.Rmd"><code>vignettes/argoFloats.Rmd</code></a></small>
       <div class="hidden name"><code>argoFloats.Rmd</code></div>
@@ -237,7 +237,7 @@
 <p>To begin to get familiar with how the <code>argoFloats</code> package works, we will begin looking at the built in data sets. Built into the <code>argoFloats</code> package is the <code>index</code>, <code>indexBgc</code>, <code>indexSynthetic</code>, and <code>indexDeep</code> indices, referring to core Argo, BGC-Argo, and a combination, deep Argo respectively. It should be noted that as of September 21, 2020, <code>indexMerged</code> no longer exists as the switch to <code>indexSynthetic</code> has been made. For the sake of this vignette we will focus on the <code>index</code> data set.</p>
 <p>The first step is to access the required packages that will be needed during this tutorial, with</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce">oce</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/">oce</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/ocedata">ocedata</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span></code></pre></div>
 <p>To access the embedded index within <code>argoFloats</code>, the following code is used:</p>
@@ -379,7 +379,7 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <p>By combining subset by <code>rectangle</code> and subset by <code>time</code>, it is possible to determine which sampling method would be beneficial for specific scientific questions. For example, Figure 4 shows a comparison between Argo data and CTD section data. This type of plot reveals many pros and cons of each sampling method.</p>
 <p><strong>Exercise 2:</strong> Use the information from Figure 4 to compare Argo and CTD section sampling methods.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce">oce</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/">oce</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">section</span>, package<span class="op">=</span><span class="st">"oce"</span><span class="op">)</span>

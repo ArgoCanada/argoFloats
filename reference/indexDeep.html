@@ -174,6 +174,7 @@ explains why <code><a href='getProfiles.html'>getProfiles()</a></code> skips ove
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other datasets provided with argoFloats: 
+<code><a href='indexBgc.html'>indexBgc</a></code>,
 <code><a href='indexSynthetic.html'>indexSynthetic</a></code>,
 <code><a href='index.html'>index</a></code></p></div>
 
@@ -188,24 +189,25 @@ explains why <code><a href='getProfiles.html'>getProfiles()</a></code> skips ove
 #&gt; * type:        index
 #&gt; * server:      "https://data-argo.ifremer.fr"
 #&gt; * file:        
-#&gt; * url:         ftp://usgodae.org/pub/outgoing/argo/ar_index_global_prof.txt.gz
-#&gt; * ftpRoot:      ""
+#&gt; * url:         https://data-argo.ifremer.fr/ar_index_global_prof.txt.gz
+#&gt; * ftpRoot:     c("ftp://ftp.ifremer.fr/ifremer/argo/dac",
+#&gt;                  "ftp://usgodae.org/pub/outgoing/argo/dac")
 #&gt; * destfileRda: 
 #&gt; * header:
 #&gt;     # Title : Profile directory file of the Argo Global Data Assembly Center
 #&gt;     # Description : The directory file describes all individual profile files of the argo GDAC ftp site.
 #&gt;     # Project : ARGO
-#&gt;     # Format version : 2.1
-#&gt;     # Date of update : 20200910124616
+#&gt;     # Format version : 2.0
+#&gt;     # Date of update : 20201231182423
 #&gt;     # FTP root number 1 : ftp://ftp.ifremer.fr/ifremer/argo/dac
 #&gt;     # FTP root number 2 : ftp://usgodae.org/pub/outgoing/argo/dac
-#&gt;     # GDAC node : NRL-MRY
-#&gt; * index with 174 rows and column names: "file", "date", "latitude", "longitude", "ocean", "profiler_type", "institution and "date_update"
+#&gt;     # GDAC node : CORIOLIS
+#&gt; * index with 205 rows and column names: "file", "date", "latitude", "longitude", "ocean", "profiler_type", "institution and "date_update"
 #&gt; * hint: use getProfiles() to download these files from the repository
 #&gt; * Processing Log
 #&gt; 
-#&gt;     - 2020-09-10 13:00:35 UTC: `create 'argoFloats' object`
-#&gt;     - 2020-09-10 13:01:49 UTC: `getIndex(server="auto", filename='ar_index_global_prof.txt.gz", age=0)`</div></pre>
+#&gt;     - 2020-12-31 18:51:35 UTC: `create 'argoFloats' object`
+#&gt;     - 2020-12-31 18:52:22 UTC: `getIndex(server="ifremer-https", filename='ar_index_global_prof.txt.gz", age=0)`</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
