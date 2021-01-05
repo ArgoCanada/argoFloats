@@ -45,7 +45,7 @@ downloadWithRetries <- function(url, destdir=argoDefaultDestdir(), destfile=NULL
                     style="bold", sep="", unindent=1)
     argoFloatsDebug(debug, "    destfile='", paste(destfile, collapse="', '"), "',\n",
                     style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    mode='", mode, "'", ", quiet=", quiet, ", retries=", retries, ") {\n",
+    argoFloatsDebug(debug, "    quiet=", quiet, ", retries=", retries, ") {\n",
                     style="bold", sep="", unindent=1)
     n <- length(url)
     if (length(destfile) != n)

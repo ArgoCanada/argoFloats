@@ -9,8 +9,8 @@ test_that("show", {
         data("index")
         expect_output(show(index), "argoFloats object of type \"index\"")
         index1 <- expect_message(subset(index,1:5,"Kept 5 profiles (0.511%)"))
-        file <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
-        a <- expect_warning(readProfiles(file), "Of 1 profiles read")
+        a <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")), "Of 1 profiles read")
+        expect_output(show(a), "argoFloats object of type \"argos\" with 1 items")
         expect_output(print(a), "argoFloats object of type \"argos\" with 1 items")
     })
 

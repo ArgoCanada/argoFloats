@@ -1,5 +1,4 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
-## The tests relating to data dimensions will need to be altered if the dataset is altered.
 
 library(argoFloats)
 
@@ -8,22 +7,8 @@ data(index)
 
 test_that("accessors work on 'index' data file",
           {
-              expect_equal(index[[1]], structure(list(file="aoml/1901584/profiles/R1901584_124.nc",
-                                                      date=structure(1438611452, class=c("POSIXct", "POSIXt"), tzone="UTC"),
-                                                      latitude=27.705,
-                                                      longitude=-76.231,
-                                                      ocean="A",
-                                                      profiler_type=851L,
-                                                      institution="AO",
-                                                      date_update=structure(1570484144, class=c("POSIXct", "POSIXt"), tzone="UTC")),
-                                                 row.names=110814L,
-                                                 class="data.frame"))
-    
-              expect_equal(index[["file", 1]], "aoml/1901584/profiles/R1901584_124.nc")
-              expect_equal(index[["file", 1:2]], c("aoml/1901584/profiles/R1901584_124.nc", "aoml/1901584/profiles/R1901584_125.nc"))
-              expect_equal(index[[1]]$file, index[["file"]][1])
-              expect_equal(head(index[["longitude"]], 3), c(-76.231,-76.024,-76.320))
-              expect_equal(head(index[["latitude"]], 3), c(27.705, 27.773, 28.064))
+              expect_equal(ncol(index@data$index), 8)
+              expect_equal(ncol(index[["index"]]), 8)
               expect_equal(index[["time"]], index[["date"]])
               expect_equal(index[["time_update"]], index[["date_update"]])
           }
@@ -31,20 +16,22 @@ test_that("accessors work on 'index' data file",
 
 test_that("access float ID",
           {
-              #expect_equal("6901048", index[['ID', 953]])
-              expect_equal(c("1901584", "1901584", "1901584"), index[['ID', 1:3]])
-              expect_equal(c("1901584", "1901584", "1901584"), head(index[['ID']], 3))
+              expect_equal(gsub(".*/[RD](.*)_.*.nc$", "\\1", index@data$index$file[1:3]), index[["ID", 1:3]])
+          }
+)
+
+test_that("access float cycle",
+          {
+              expect_equal(gsub(".*_(.*).nc$", "\\1", index@data$index$file[1:3]), index[["cycle", 1:3]])
           }
 )
 
 test_that("access float cycle number/ profile",
           {
-              expect_equal(c("124", "125", "126"), index[["cycle", 1:3]])
-              expect_equal(c("124", "125", "126"), head(index[["cycle"]], 3))
               filename <- system.file("extdata", "D4900785_048.nc", package="argoFloats")
               argos <- expect_silent(readProfiles(filename))
               expect_equal(argos[["cycle"]], "048")
-              expect_equal(argos[['cycle',1]], "048")
+              expect_equal(argos[["cycle",1]], "048")
           }
 )
 
@@ -93,7 +80,7 @@ test_that("access length",
               #expect_equal(index[["length"]], 978)
               filename <- system.file("extdata", "D4900785_048.nc", package="argoFloats")
               argos <- expect_silent(readProfiles(filename))
-              expect_equal(argos[['length']], 1)
+              expect_equal(argos[["length"]], 1)
           }
 )
 
@@ -109,7 +96,7 @@ test_that("test error messages",
           {
               data("index")
               expect_error(index[["parameters"]], "there are no parameters for core Argo index objects. Try BGC, Merged, or Synthetic Argo.")
-              expect_error(index[['dog']], "cannot interpret i=dog for an object of type=\"index\"")
+              expect_error(index[["dog"]], "cannot interpret i=dog for an object of type=\"index\"")
           }
 )
 
