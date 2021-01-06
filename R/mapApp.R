@@ -66,6 +66,7 @@ uiMapApp <- shiny::fluidPage(
                                                                                              shiny::tabPanel("BGC", value=5),
                                                                                              shiny::tabPanel("Deep", value=6),
                                                                                              shiny::tabPanel("Path", value=7),
+                                                                                             selected=TRUE,
                                                                                              id="settab")),
                                                           id="tabselected")),
 
@@ -98,23 +99,23 @@ uiMapApp <- shiny::fluidPage(
                                                                                      inline=TRUE)))),
 # FIX ME: I need to make it so this does not show up on the main screen
 
-                            # shiny::conditionalPanel(condition="input.settab==4",
-                             #                        shiny::column(2, "Core Argo",
-                              #                                     shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
-                               #                                    shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=20, step=1),
-                                #                                   shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=1, step=0.1))),
+                             shiny::conditionalPanel(condition="input.settab==4",
+                                                     shiny::column(2, "Core Argo",
+                                                                   shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black"),
+                                                                   shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1),
+                                                                   shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.5, step=0.05))),
 
                              shiny::conditionalPanel(condition="input.settab==5",
                                                      shiny::column(2, "BGC Argo",
                                                                    shiny::selectInput("Bcolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
-                                                                   shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=20, step=1),
-                                                                   shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=1, step=0.1))),
+                                                                   shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
+                                                                   shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.75, step=0.05))),
 
                              shiny::conditionalPanel(condition="input.settab==6",
                                                      shiny::column(2, "Deep Argo",
                                                                    shiny::selectInput("Dcolour", "Symbol Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="purple")),
-                             shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=20, step=1),
-                             shiny::sliderInput("Dsize", "Symbol Size", min=0,max=1, value=1, step=0.1)),
+                             shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
+                             shiny::sliderInput("Dsize", "Symbol Size", min=0,max=1, value=0.75, step=0.05)),
                              shiny::conditionalPanel(condition="input.settab==7",
                                                                      shiny::column(2, "Path",
                                                                                   shiny::selectInput("Pcolour", "Path Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black"),
@@ -318,6 +319,8 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                         })
+    #shiny::observeEvent(input$Ccolour,
+                        #message("the core symbol= ",input$Csymbol," the bgc symbol= ", input$Bsymbol, " the deep symbol= ", input$Dsymbol))
 
     shiny::observeEvent(input$focus,
                         {
@@ -524,23 +527,14 @@ serverMapApp <- function(input, output, session) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <<- argo[k,]
-                shiny::observeEvent(input$Bcolour,
-                                    { if (0 == nchar(input$Bcolour))
-                                        state$Bcol <<- 3
-                                    else (state$Bcol <<- input$Bcolour)
-                                        #print(state$Bcol)
-                                    })
-                shiny::observeEvent(input$Dcolour,
-                                    { if (0 == nchar(input$Dcolour))
-                                        state$Dcol <<- 6
-                                    else (state$Dcol <<- input$Dcolour)
-                                        #print(state$Dcol)
-                                    colSettings <- list(core=state$Ccol, bgc=state$Bcol, deep=state$Dcol)
-                                    #print(colSettings) # colSettings are the correct numbers but are printing out 3 times and colSettings[[view]] are not
-                                    })
+                        colSettings <- list(core=input$Ccolour, bgc=input$Bcolour, deep=input$Dcolour)
+                        symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
+                        sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
+                        #message("the symbSettings are", symbSettings)
+                        #message("the colSettings are", colSettings)
                 #FIXME: Couldn't I just do colSettings[[view]]
                         if (!"lines" %in% input$action)
-                            points(lonlat$lon, lonlat$lat, pch=21, cex=cex, col="black", bg=col[[view]], lwd=0.5)
+                            points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                         #print(col[[view]])
                         if ("path" %in% input$action) {
                             ##> ## Turn off warnings for zero-length arrows
@@ -552,8 +546,9 @@ serverMapApp <- function(input, output, session) {
                                 o <- order(LONLAT$time)
                                 no <- length(o)
                                 if (no > 1) {
+                                    pathWidth <- list(core=input$Pcolour, bgc=input$Pcolour, deep=input$Pcolour)
                                     LONLAT <<- LONLAT[o, ]
-                                    lines(LONLAT$lon, LONLAT$lat, lwd=1, col=col[[view]])
+                                    lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=col[[view]])
                                     ## as opposed to maybe 3 months of data for a set of floats).
                                     if ("start" %in% input$action)
                                         points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
