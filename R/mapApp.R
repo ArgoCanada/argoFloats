@@ -98,7 +98,7 @@ uiMapApp <- shiny::fluidPage(
                                                                                      inline=TRUE)))),
 # FIX ME: I need to make it so this does not show up on the main screen
 
-                             shiny::conditionalPanel(condition="input.settab==4",
+                             shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
                                                      shiny::column(2,
                                                                    shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black"),
                                                                    shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1),
@@ -106,7 +106,7 @@ uiMapApp <- shiny::fluidPage(
                                                                    shiny::selectInput("CPcolour", "Path Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black"),
                                                                    shiny::sliderInput("CPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
-                             shiny::conditionalPanel(condition="input.settab==5",
+                             shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
                                                      shiny::column(2,
                                                                    shiny::selectInput("Bcolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
                                                                    shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
@@ -114,7 +114,7 @@ uiMapApp <- shiny::fluidPage(
                                                                    shiny::selectInput("BPcolour", "Path Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
                                                                    shiny::sliderInput("BPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
-                             shiny::conditionalPanel(condition="input.settab==6",
+                             shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
                                                      shiny::column(2,
                                                                    shiny::selectInput("Dcolour", "Symbol Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="purple"),
                              shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
