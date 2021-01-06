@@ -60,7 +60,13 @@ uiMapApp <- shiny::fluidPage(
                              shiny::mainPanel(shiny::tabsetPanel(type="tab",
                                                           shiny::tabPanel("Main", value=1),
                                                           shiny::tabPanel("Trajectory", value=2),
-                                                          shiny::tabPanel("Settings", value=3),
+                                                          shiny::tabPanel("Settings", value=3,
+                                                                          shiny::tabsetPanel(
+                                                                          shiny::tabPanel("Core", value=4),
+                                                                          shiny::tabPanel("BGC", value=5),
+                                                                          shiny::tabPanel("Deep", value=6),
+                                                                          shiny::tabPanel("Path", value=7),
+                                                                          id="settab")),
                                                           id="tabselected")),
 
                              shiny::fluidRow(shiny::column(6,
@@ -90,24 +96,29 @@ uiMapApp <- shiny::fluidPage(
                                                                                                        "end",
                                                                                                        "lines"),
                                                                                      inline=TRUE)))),
-                             shiny::conditionalPanel(condition="input.tabselected==3",
+
+                             shiny::conditionalPanel(condition="input.settab==4",
                                                      shiny::fluidRow(shiny::column(2,
                                                                                    "Core Argo",
-                                                                                   shiny::textInput("Ccolour", "Symbol Colour"),
-                                                                                   shiny::textInput("Csymbol", "Symbol Type"),
-                                                                                   shiny::textInput("Csize", "Symbol Size")
-                                                                                   ),
-                                                                     shiny::column(2, "BGC Argo",
-                                                                                   shiny::textInput("Bcolour", "Symbol Colour"),
-                                                                                   shiny::textInput("Bsymbol", "Symbol Type"),
-                                                                                   shiny::textInput("Bsize", "Symbol Size")),
-                                                                     shiny::column(2, "Deep Argo",
-                                                                                   shiny::textInput("Dcolour", "Symbol Colour"),
-                                                                                   shiny::textInput("Dsymbol", "Symbol Type"),
-                                                                                   shiny::textInput("Dsize", "Symbol Size")),
+                                                                                   shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black")),
+                                                                     shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=20, step=1),
+                                                                     shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=1, step=0.1), inline=TRUE)),
+
+                             shiny::conditionalPanel(condition="input.settab==5",
+                                                     shiny::column(2, "BGC Argo",
+                                                                   shiny::selectInput("Bcolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
+                                                                   shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=20, step=1),
+                                                                   shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=1, step=0.1))),
+
+                             shiny::conditionalPanel(condition="input.settab==6",
+                                                     shiny::column(2, "Deep Argo",
+                                                                   shiny::selectInput("Dcolour", "Symbol Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="purple")),
+                             shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=20, step=1),
+                             shiny::sliderInput("Dsize", "Symbol Size", min=0,max=1, value=1, step=0.1)),
+                             shiny::conditionalPanel(condition="input.settab==7",
                                                                      shiny::column(2, "Path",
-                                                                                   shiny::textInput("Pcolour", "Path Colour"),
-                                                                                   shiny::textInput("Pwidth", "Path Width")))),
+                                                                                  shiny::selectInput("Pcolour", "Path Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black"),
+                                                                                   shiny::sliderInput("Pwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
 
                              ## using withSpinner does not work here
@@ -131,10 +142,8 @@ serverMapApp <- function(input, output, session) {
                                    ylim=c(-90, 90),
                                    startTime=startTime,
                                    endTime=endTime,
-                                   focusID=NULL,
-                                   Ccol=1,
-                                   Bcol=3,
-                                   Dcol=6)
+                                   focusID=NULL
+                                   )
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
@@ -515,12 +524,6 @@ serverMapApp <- function(input, output, session) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <<- argo[k,]
-                shiny::observeEvent(input$Ccolour,
-                                    { if (0 == nchar(input$Ccolour))
-                                        state$Ccol <<- 1
-                                    else (state$Ccol <<- input$Ccolour)
-                                        print(state$Ccol)
-                                    })
                 shiny::observeEvent(input$Bcolour,
                                     { if (0 == nchar(input$Bcolour))
                                         state$Bcol <<- 3
