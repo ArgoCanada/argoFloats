@@ -62,11 +62,11 @@ uiMapApp <- shiny::fluidPage(
                                                           shiny::tabPanel("Trajectory", value=2),
                                                           shiny::tabPanel("Settings", value=3,
                                                                           shiny::tabsetPanel(
-                                                                          shiny::tabPanel("Core", value=4),
-                                                                          shiny::tabPanel("BGC", value=5),
-                                                                          shiny::tabPanel("Deep", value=6),
-                                                                          shiny::tabPanel("Path", value=7),
-                                                                          id="settab")),
+                                                                                             shiny::tabPanel("Core", value=4),
+                                                                                             shiny::tabPanel("BGC", value=5),
+                                                                                             shiny::tabPanel("Deep", value=6),
+                                                                                             shiny::tabPanel("Path", value=7),
+                                                                                             id="settab")),
                                                           id="tabselected")),
 
                              shiny::fluidRow(shiny::column(6,
@@ -96,13 +96,13 @@ uiMapApp <- shiny::fluidPage(
                                                                                                        "end",
                                                                                                        "lines"),
                                                                                      inline=TRUE)))),
+# FIX ME: I need to make it so this does not show up on the main screen
 
-                             shiny::conditionalPanel(condition="input.settab==4",
-                                                     shiny::fluidRow(shiny::column(2,
-                                                                                   "Core Argo",
-                                                                                   shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black")),
-                                                                     shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=20, step=1),
-                                                                     shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=1, step=0.1), inline=TRUE)),
+                            # shiny::conditionalPanel(condition="input.settab==4",
+                             #                        shiny::column(2, "Core Argo",
+                              #                                     shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
+                               #                                    shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=20, step=1),
+                                #                                   shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=1, step=0.1))),
 
                              shiny::conditionalPanel(condition="input.settab==5",
                                                      shiny::column(2, "BGC Argo",
