@@ -1,16 +1,16 @@
-## Demo alteration of QC flags
 ## NOTE that we copy the file!!!
 
 library(ncdf4)
 library(argoFloats)
 file <- system.file("extdata", "D4900785_048.nc", package="argoFloats")
 ## MUST copy the file, to avoid overwriting important original data!
-base <- gsub(".*/", "", file)
+base <- gsub(".*/(.*).nc", "\\1", file)
 tmp <- paste0(base, "_edited.nc")
-system(paste("cp", file, tmp))
+cmd <- paste("cp", file, tmp)
+system(cmd)
 
 n <- nc_open(tmp, write=TRUE)
-expect <- system(paste("ncdump -h", tmp), intern=TRUE)
+## expect <- system(paste("ncdump -h", tmp), intern=TRUE)
 var <- n$var
 stopifnot(length(var) == n$nvar)
 ## "ncdump -h file" labels atts as "global attributes"
@@ -30,6 +30,7 @@ fT <- strsplit(TEMP_QC, "")[[1]]
 fT[badIndices] <- "4"
 TEMP_QC_new <- paste(fT, collapse="")
 
+cat("TEMP_QC  new: ", TEMP_QC_new, "\n", sep="")
 cat("PSAL_QC  new: ", PSAL_QC_new, "\n", sep="")
 
 ncvar_put(n, "TEMP_QC", TEMP_QC_new)
@@ -37,12 +38,11 @@ ncvar_put(n, "PSAL_QC", PSAL_QC_new)
 nc_sync(n)
 nc_close(n)
 
-
 orig <- readProfiles(file)
 test <- readProfiles(tmp)
 stopifnot(test[["salinityFlag"]][[1]][badIndices] == 4)
 
-df <- data.frame(orig=orig[["salinityFlag"]][[1]], test=test[["salinityFlag"]][[1]])
+## df <- data.frame(orig=orig[["salinityFlag"]][[1]], test=test[["salinityFlag"]][[1]])
 
 if (!interactive()) pdf("12_edit.pdf")
 par(mfrow=c(1,2))

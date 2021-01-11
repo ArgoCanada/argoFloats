@@ -161,6 +161,7 @@ serverMapApp <- function(input, output, session) {
     ## Get core and BGC data.
     notificationId <- shiny::showNotification("Getting \"core\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
     i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
+    argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n") 
     shiny::removeNotification(notificationId)
     notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
     iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
@@ -175,6 +176,8 @@ serverMapApp <- function(input, output, session) {
     n <- length(ID)
     type <- rep("core", n)
     type[ID %in% idBGC] <- "bgc"
+    cat("before grepl() call\n")
+    DAN<<-i
     type[grepl("849|862|864", i@data$index$profiler_type)] <- "deep"
     argo <- data.frame(time=i[["date"]], ID=ID, cycle=cycle, longitude=lon, latitude=lat, type=type)
     argo$longitude <- ifelse(argo$longitude > 180, argo$longitude - 360, argo$longitude)

@@ -33,14 +33,15 @@ test_that("readProfiles()",
           }
 )
 
-test_that("getProfile() with single out-of-date URL",
-          {
-              skip_if_not(hasArgoTestCache())
-              data(index)
-              s <- expect_message(subset(index, 778), "Kept 1 profiles")
-              p <- expect_output(getProfiles(s, skip=FALSE), "|===")
-              p <- expect_output(getProfiles(s, skip=TRUE), "|===")
-              p <- expect_output(getProfiles(s),"|===") # default is skip=TRUE
-          }
-)
+##> ## Comment this out because servers change, so we cannot predict success or failure
+##> test_that("getProfile() with single out-of-date URL",
+##>           {
+##>               skip_if_not(hasArgoTestCache())
+##>               data(index)
+##>               s <- expect_message(subset(index, 778), "Kept 1 profiles")
+##>               p <- expect_output(getProfiles(s, skip=FALSE), "|===")
+##>               p <- expect_output(getProfiles(s, skip=TRUE), "|===")
+##>               p <- expect_output(getProfiles(s),"|===") # default is skip=TRUE
+##>           }
+##> )
 
