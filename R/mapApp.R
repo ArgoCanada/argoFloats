@@ -526,7 +526,7 @@ serverMapApp <- function(input, output, session) {
                     if (view %in% input$view) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
-                        lonlat <<- argo[k,]
+                        lonlat <- argo[k,]
                         colSettings <- list(core=input$Ccolour, bgc=input$Bcolour, deep=input$Dcolour)
                         symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
                         sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
