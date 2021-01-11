@@ -2,7 +2,6 @@
 
 ##cacheAge <- 5                          # a global variable
 col <- list(core=1, bgc=3, deep=6)
-
 ## Start and end times, covering 21 days to usually get 2 cycles
 endTime <- as.POSIXlt(Sys.time())
 startTime <- as.POSIXlt(endTime - 10 * 86400)
@@ -61,6 +60,13 @@ uiMapApp <- shiny::fluidPage(
                              shiny::mainPanel(shiny::tabsetPanel(type="tab",
                                                           shiny::tabPanel("Main", value=1),
                                                           shiny::tabPanel("Trajectory", value=2),
+                                                          shiny::tabPanel("Settings", value=3,
+                                                                          shiny::tabsetPanel(
+                                                                                             shiny::tabPanel("Core", value=4),
+                                                                                             shiny::tabPanel("BGC", value=5),
+                                                                                             shiny::tabPanel("Deep", value=6),
+                                                                                             selected=TRUE,
+                                                                                             id="settab")),
                                                           id="tabselected")),
 
                              shiny::fluidRow(shiny::column(6,
@@ -90,13 +96,38 @@ uiMapApp <- shiny::fluidPage(
                                                                                                        "end",
                                                                                                        "lines"),
                                                                                      inline=TRUE)))),
+# FIX ME: I need to make it so this does not show up on the main screen
 
+                             shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
+                                                     shiny::column(2,
+                                                                   shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black"),
+                                                                   shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1),
+                                                                   shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.5, step=0.05),
+                                                                   shiny::selectInput("CPcolour", "Path Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black"),
+                                                                   shiny::sliderInput("CPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
+
+                             shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
+                                                     shiny::column(2,
+                                                                   shiny::selectInput("Bcolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
+                                                                   shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
+                                                                   shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.75, step=0.05),
+                                                                   shiny::selectInput("BPcolour", "Path Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
+                                                                   shiny::sliderInput("BPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
+
+                             shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
+                                                     shiny::column(2,
+                                                                   shiny::selectInput("Dcolour", "Symbol Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="purple"),
+                             shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
+                             shiny::sliderInput("Dsize", "Symbol Size", min=0,max=1, value=0.75, step=0.05),
+                             shiny::selectInput("DPcolour", "Path Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="purple"),
+                             shiny::sliderInput("DPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
                              ## using withSpinner does not work here
-                             shiny::fluidRow(shiny::plotOutput("plotMap",
-                                                               hover=shiny::hoverOpts("hover"),
-                                                               dblclick=shiny::dblclickOpts("dblclick"),
-                                                               brush=shiny::brushOpts("brush", delay=2000, resetOnNew=TRUE))))
+                             shiny::conditionalPanel("input.tabselected!=3",
+                                                     shiny::fluidRow(shiny::plotOutput("plotMap",
+                                                                                       hover=shiny::hoverOpts("hover"),
+                                                                                       dblclick=shiny::dblclickOpts("dblclick"),
+                                                                                       brush=shiny::brushOpts("brush", delay=2000, resetOnNew=TRUE)))))
 
 ## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 serverMapApp <- function(input, output, session) {
@@ -112,8 +143,9 @@ serverMapApp <- function(input, output, session) {
                                    ylim=c(-90, 90),
                                    startTime=startTime,
                                    endTime=endTime,
-                                   focusID=NULL)
-    ## Depending on whether 'hires' selected, 'coastline' wil be one of the following two version:
+                                   focusID=NULL
+                                   )
+    ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
     data("coastlineWorldFine", package="ocedata", envir=environment())
@@ -287,6 +319,8 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                         })
+    #shiny::observeEvent(input$Ccolour,
+                        #message("the core symbol= ",input$Csymbol," the bgc symbol= ", input$Bsymbol, " the deep symbol= ", input$Dsymbol))
 
     shiny::observeEvent(input$focus,
                         {
@@ -373,7 +407,7 @@ serverMapApp <- function(input, output, session) {
 
     shiny::observeEvent(input$help,
                         {
-                            msg <- shiny::HTML("This GUI has two tabs, the Main and the Trajectory tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, and whether to show topography. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can click path to look at the path of floats (with or without profile locations included).You also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
+                            msg <- shiny::HTML("This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, and whether to show topography. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can click path to look at the path of floats (with or without profile locations included).You also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })                                  # help
 
@@ -493,8 +527,15 @@ serverMapApp <- function(input, output, session) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <- argo[k,]
+                        colSettings <- list(core=input$Ccolour, bgc=input$Bcolour, deep=input$Dcolour)
+                        symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
+                        sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
+                        #message("the symbSettings are", symbSettings)
+                        #message("the colSettings are", colSettings)
+                #FIXME: Couldn't I just do colSettings[[view]]
                         if (!"lines" %in% input$action)
-                            points(lonlat$lon, lonlat$lat, pch=21, cex=cex, col="black", bg=col[[view]], lwd=0.5)
+                            points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
+                        #print(col[[view]])
                         if ("path" %in% input$action) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
@@ -505,8 +546,10 @@ serverMapApp <- function(input, output, session) {
                                 o <- order(LONLAT$time)
                                 no <- length(o)
                                 if (no > 1) {
+                                    pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
+                                    pathColour <- list(core=input$CPcolour, bgc=input$BPcolour, deep=input$DPcolour)
                                     LONLAT <<- LONLAT[o, ]
-                                    lines(LONLAT$lon, LONLAT$lat, lwd=1, col=col[[view]])
+                                    lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
                                     ## as opposed to maybe 3 months of data for a set of floats).
                                     if ("start" %in% input$action)
                                         points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
