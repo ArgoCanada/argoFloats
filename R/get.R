@@ -1,21 +1,20 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-indexCacheEnv <- new.env(parent=emptyenv())
-indexIsCached <- function(name, debug=0)
+argoFloatsCacheEnv <- new.env(parent=emptyenv())
+argoFloatsIsCached <- function(name, debug=0)
 {
-    argoFloatsDebug(debug, "in indexIsCached()\n")
-    name %in% names(indexCacheEnv)
+    argoFloatsDebug(debug, "in argoFloatsIsCached()\n")
+    name %in% names(argoFloatsCacheEnv)
 }
-indexGetFromCache <- function(name, debug=0)
+argoFloatsGetFromCache <- function(name, debug=0)
 {
-    argoFloatsDebug(debug, "in indexGetFromCache()\n")
-    indexCacheEnv[[name]]
-    invisible(NULL)
+    argoFloatsDebug(debug, "in argoFloatsGetFromCache()\n")
+    argoFloatsCacheEnv[[name]]
 }
-indexStoreInCache <- function(name, value, debug=0)
+argoFloatsStoreInCache <- function(name, value, debug=0)
 {
-    argoFloatsDebug(debug, "in indexStoreInCache()\n")
-    indexCacheEnv[[name]] <- value
+    argoFloatsDebug(debug, "in argoFloatsStoreInCache()\n")
+    argoFloatsCacheEnv[[name]] <- value
     invisible(NULL)
 }
 
@@ -287,9 +286,9 @@ getIndex <- function(filename="core",
     argoFloatsDebug(debug, "Set destfileRda=\"", destfileRda, "\".\n", sep="")
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
-    if (indexIsCached(filenameOrig, debug=debug)) {
+    if (argoFloatsIsCached(filenameOrig, debug=debug)) {
         argoFloatsDebug(debug, "using an index that is cached in memory for this R session\n")
-        return(indexGetFromCache(filenameOrig, debug=debug))
+        return(argoFloatsGetFromCache(filenameOrig, debug=debug))
     }
     ## See if we have an .rda file that is sufficiently youthful.
     if (file.exists(destfileRda)) {
@@ -309,7 +308,7 @@ getIndex <- function(filename="core",
             res@metadata$header <- argoFloatsIndex[["header"]]
             res@data$index <- argoFloatsIndex[["index"]]
             argoFloatsDebug(debug, "storing this index in memory for this R session\n")
-            indexStoreInCache(filenameOrig, res, debug=debug)
+            argoFloatsStoreInCache(filenameOrig, res, debug=debug)
             argoFloatsDebug(debug, "} # getIndex()\n", style="bold", showTime=FALSE, unindent=1)
             return(res)
         }
@@ -465,9 +464,9 @@ getIndex <- function(filename="core",
                                                         else paste("c(\"", paste(serverOrig, collapse="\", \""), "\"), ", sep=""),
                                                         "filename=\'", filename, "\", age=", age, ")", sep=""))
     argoFloatsDebug(debug, "storing newly-read index in memory for this R session\n")
-    indexStoreInCache(filenameOrig, res, debug=debug)
     argoFloatsDebug(debug, "} # getIndex()\n", style="bold", unindent=1)
-    indexStoreInCache(filenameOrig, res)
+    argoFloatsStoreInCache(filenameOrig, res, debug=debug)
+    res
 }
 
 
