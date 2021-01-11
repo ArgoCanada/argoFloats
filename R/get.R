@@ -1,5 +1,23 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
+argoFloatsCacheEnv <- new.env(parent=emptyenv())
+argoFloatsIsCached <- function(name, debug=0)
+{
+    argoFloatsDebug(debug, "in argoFloatsIsCached()\n")
+    name %in% names(argoFloatsCacheEnv)
+}
+argoFloatsGetFromCache <- function(name, debug=0)
+{
+    argoFloatsDebug(debug, "in argoFloatsGetFromCache()\n")
+    argoFloatsCacheEnv[[name]]
+}
+argoFloatsStoreInCache <- function(name, value, debug=0)
+{
+    argoFloatsDebug(debug, "in argoFloatsStoreInCache()\n")
+    argoFloatsCacheEnv[[name]] <- value
+    invisible(NULL)
+}
+
 #' Get Data for an Argo Float Profile
 #'
 #' @param url character value giving the URL for a netcdf file containing an
@@ -268,7 +286,10 @@ getIndex <- function(filename="core",
     argoFloatsDebug(debug, "Set destfileRda=\"", destfileRda, "\".\n", sep="")
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
-
+    if (argoFloatsIsCached(filenameOrig, debug=debug)) {
+        argoFloatsDebug(debug, "using an index that is cached in memory for this R session\n")
+        return(argoFloatsGetFromCache(filenameOrig, debug=debug))
+    }
     ## See if we have an .rda file that is sufficiently youthful.
     if (file.exists(destfileRda)) {
         destfileAge <- (as.integer(Sys.time()) - as.integer(file.info(destfileRda)$mtime)) / 86400 # in days
@@ -286,6 +307,8 @@ getIndex <- function(filename="core",
             res@metadata$ftpRoot <- argoFloatsIndex[["ftpRoot"]]
             res@metadata$header <- argoFloatsIndex[["header"]]
             res@data$index <- argoFloatsIndex[["index"]]
+            argoFloatsDebug(debug, "storing this index in memory for this R session\n")
+            argoFloatsStoreInCache(filenameOrig, res, debug=debug)
             argoFloatsDebug(debug, "} # getIndex()\n", style="bold", showTime=FALSE, unindent=1)
             return(res)
         }
@@ -324,6 +347,7 @@ getIndex <- function(filename="core",
     }
     if (0 == iurlSuccess)
         stop("Could not download index from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
+
     argoFloatsDebug(debug, "About to read the header at the start of the index file.\n", sep="")
     first <- readLines(destfileTemp, 100)
     ## Typically, length(ftpRoot) is 2
@@ -439,7 +463,9 @@ getIndex <- function(filename="core",
                                                         if (length(serverOrig) == 1) paste("\"", serverOrig, "\", ", sep="")
                                                         else paste("c(\"", paste(serverOrig, collapse="\", \""), "\"), ", sep=""),
                                                         "filename=\'", filename, "\", age=", age, ")", sep=""))
+    argoFloatsDebug(debug, "storing newly-read index in memory for this R session\n")
     argoFloatsDebug(debug, "} # getIndex()\n", style="bold", unindent=1)
+    argoFloatsStoreInCache(filenameOrig, res, debug=debug)
     res
 }
 

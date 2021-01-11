@@ -155,28 +155,41 @@ serverMapApp <- function(input, output, session) {
     } else {
         topoWorldFine <- topoWorld
     }
-    ## Get core and BGC data.
-    notificationId <- shiny::showNotification("Getting \"core\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
-    i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
-    shiny::removeNotification(notificationId)
-    notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
-    iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
-    shiny::removeNotification(notificationId)
-    ## Combine core and BGC data.
-    notificationId <- shiny::showNotification("Combining \"core\" and \"BGC\" data.", type="message", duration=NULL)
-    ID <- i[["ID"]]
-    cycle <- i[["cycle"]]
-    lon <- i[["longitude"]]
-    lat <- i[["latitude"]]
-    idBGC <- unique(iBGC[["ID"]])
-    n <- length(ID)
-    type <- rep("core", n)
-    type[ID %in% idBGC] <- "bgc"
-    type[grepl("849|862|864", i@data$index$profiler_type)] <- "deep"
-    argo <- data.frame(time=i[["date"]], ID=ID, cycle=cycle, longitude=lon, latitude=lat, type=type)
-    argo$longitude <- ifelse(argo$longitude > 180, argo$longitude - 360, argo$longitude)
-    ok <- is.finite(argo$time)
-    argo <- argo[ok, ]
+    if (argoFloatsIsCached("argo")) {
+        notificationId <- shiny::showNotification("Using argo data that were cached temporarily in R-session memory\n")
+        argo <- argoFloatsGetFromCache("argo", debug=debug)
+    } else {
+        ## Get core and BGC data.
+        notificationId <- shiny::showNotification("Getting \"core\" Argo index, either by downloading new data or using data in \"destdir\".  This may take a minute or two.", type="message", duration=NULL)
+        i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
+        argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n") 
+        shiny::removeNotification(notificationId)
+        notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
+        iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
+        shiny::removeNotification(notificationId)
+        ## Combine core and BGC data.
+        notificationId <- shiny::showNotification("Combining \"core\" and \"BGC\" data.", type="message", duration=NULL)
+        ID <- i[["ID"]]
+        cycle <- i[["cycle"]]
+        lon <- i[["longitude"]]
+        lat <- i[["latitude"]]
+        idBGC <- unique(iBGC[["ID"]])
+        n <- length(ID)
+        type <- rep("core", n)
+        type[ID %in% idBGC] <- "bgc"
+        ##> ## This method took 0.44s (DE 2021-01-11), whereas the next one
+        ##> ## took 0.027s.
+        ##> type[grepl("849|862|864", i@data$index$profiler_type)] <- "deep"
+        type[("849" == i@data$index$profiler_type)] <- "deep"
+        type[("862" == i@data$index$profiler_type)] <- "deep"
+        type[("864" == i@data$index$profiler_type)] <- "deep"
+        argo <- data.frame(time=i[["date"]], ID=ID, cycle=cycle, longitude=lon, latitude=lat, type=type)
+        argo$longitude <- ifelse(argo$longitude > 180, argo$longitude - 360, argo$longitude)
+        ok <- is.finite(argo$time)
+        argo <- argo[ok, ]
+        argoFloatsStoreInCache("argo", argo, debug=debug)
+    }
+
     ok <- is.finite(argo$longitude)
     argo <- argo[ok, ]
     ok <- is.finite(argo$latitude)
