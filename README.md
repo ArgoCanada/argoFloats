@@ -8,6 +8,7 @@ analyzing collections of oceanographic Argo float datasets.  Its developers are
 * Dan Kelley, Dalhousie University
 * Jaimie Harbin, Bedford Institute of Oceanography and Dalhousie University
 * Clark Richards, Bedford Institute of Oceanography
+* Dewey Dunnington, Bedford Institute of Oceanography
 
 Since argoFloats is in an active phase of development, it is not yet
 available on CRAN.  Still, it is easily installed in R with
