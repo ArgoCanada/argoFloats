@@ -344,6 +344,7 @@ pinusr <- function(usr)
 #' # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
 #' library(argoFloats)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+#' par(mfrow=c(1, 1))
 #' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 #' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 #' plot(a, which="profile")
