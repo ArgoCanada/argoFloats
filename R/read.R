@@ -144,10 +144,10 @@ readProfiles <- function(profiles, FUN, destdir=argoDefaultDestdir(), quiet=FALS
             res@data$argos <- lapply(fullFileNames, oce::read.argo, debug=debug-1)
             n <- length(res@data$argos)
             argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles (over-rides oce defaults).\n")
-            if (!quiet)
+            useProgressBar <- !quiet && interactive()
+            if (useProgressBar)
                 pb <- txtProgressBar(0, n, 0, style=3)
             for (i in seq_len(n)) {
-                Sys.sleep(0.01)
                 res@data$argos[[i]]@metadata$flagScheme <- list(name="argo",
                                                                 mapping=list(not_assessed=0,
                                                                              passed_all_tests=1,
@@ -162,10 +162,10 @@ readProfiles <- function(profiles, FUN, destdir=argoDefaultDestdir(), quiet=FALS
                                                                 default=c(0, 3, 4, 9))
                 res@data$argos[[i]]@processingLog <- oce::processingLogAppend(res@data$argos[[i]]@processingLog,
                                                                               "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
-                if (!quiet)
+                if (useProgressBar)
                     setTxtProgressBar(pb, i)
             }
-            if (!quiet)
+            if (useProgressBar)
                 close(pb)
         } else {
             stop("'profiles' must be a character vector or an object created by getProfiles()")

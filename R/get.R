@@ -540,15 +540,6 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for getProfiles() to work")
     n <- length(index@data$index)
-    if (!quiet)
-        pb <- txtProgressBar(0, n, 0, style = 3)
-    for(i in 1:n) {
-        Sys.sleep(0.1)
-        if (!quiet)
-            setTxtProgressBar(pb, i)
-    }
-    if (!quiet)
-        close(pb)
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
         stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
@@ -579,6 +570,9 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
         file <- vector("character", length(urls))
+        useProgressBar <- !quiet && interactive()
+        if (useProgressBar)
+            pb <- txtProgressBar(0, n, 0, style = 3)
         for (i in seq_along(urls)) {
             name <- getProfileFromUrl(urls[i], destdir=destdir, age=age, retries=retries, quiet=quiet, debug=debug-1)
             if (is.na(name)) {
@@ -589,7 +583,11 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
                 }
             }
             file[i] <- name            # NOTE: this will be NA for a failed download
+            if (useProgressBar)
+                setTxtProgressBar(pb, i)
         }
+        if (useProgressBar)
+            close(pb)
     }
     res@metadata$destdir <- destdir
     res@data$url <- urls
