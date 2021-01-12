@@ -23,10 +23,10 @@ uiMapApp <- shiny::fluidPage(
                                              shiny::actionButton("goE", shiny::HTML("&rarr;")),
                                              shiny::actionButton("zoomIn", "+"),
                                              shiny::actionButton("zoomOut", "-")),
-                             fluidRow(
-                                      div(style="display: inline-block;vertical-align:top; width: 150px;",textInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), width="70%")),
-                                      div(style="display: inline-block;vertical-align:top; width: 100px;",HTML("<br>")),
-                                      div(style="display: inline-block;vertical-align:top; width: 150px;",textInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), width="70%"))),
+                             shiny::fluidRow(
+                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",shiny::textInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), width="70%")),
+                                      shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
+                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",shiny::textInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), width="70%"))),
 
                              shiny::fluidRow(style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
@@ -60,10 +60,10 @@ uiMapApp <- shiny::fluidPage(
                              #FIXME: start here
 
                              shiny::fluidRow(shiny::conditionalPanel(condition="input.tabselected==2",
-                                                                     div(style="display: inline-block;vertical-align:top; width: 150px;",
+                                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
                                                                          shiny::textInput("ID", "Float ID", value="", width="75%")),
-                                                                     div(style="display: inline-block;vertical-align:top; width: 100px;",HTML("<br>")),
-                                                                     div(style="display: inline-block;vertical-align:top; width: 150px;",
+                                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
+                                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
                                                                          shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"),
                                                                                             selected="all", width="75%")),
                                                           shiny::verbatimTextOutput("info"))),
