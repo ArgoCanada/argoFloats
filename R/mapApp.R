@@ -24,22 +24,18 @@ uiMapApp <- shiny::fluidPage(
                                                            shiny::actionButton("goE", shiny::HTML("&rarr;")),
                                                            shiny::actionButton("zoomIn", "+"),
                                                            shiny::actionButton("zoomOut", "-"))),
-                             shiny::fluidRow(shiny::column(2,
-                                                           shiny::textInput("start",
-                                                                            "Start",
-                                                                            value=sprintf("%4d-%02d-%02d",
-                                                                                          startTime$year + 1900,
-                                                                                          startTime$mon + 1,
-                                                                                          startTime$mday), width="20%"),
-                                                           shiny::textInput("end",
-                                                                            "End",
-                                                                            value=sprintf( "%4d-%02d-%02d",
-                                                                                          endTime$year + 1900,
-                                                                                          endTime$mon + 1, endTime$mday), width="20%")),
-                                             shiny::column(6,
+                                        # FIXME: I am here
+                             fluidRow(
+                                      div(style="display: inline-block;vertical-align:top; width: 150px;",textInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), width="70%")),
+                                      div(style="display: inline-block;vertical-align:top; width: 100px;",HTML("<br>")),
+                                      div(style="display: inline-block;vertical-align:top; width: 150px;",textInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), width="70%"))),
+
+
+                             # FIXME: finished here
+                             shiny::fluidRow(shiny::column(6,
                                                            style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
-                                                                                     label="View",
+                                                                                     label="",
                                                                                      choiceNames=list(shiny::tags$span("Core", style="color: black; font-weight:bold"),
                                                                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
                                                                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
