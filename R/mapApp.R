@@ -13,27 +13,22 @@ uiMapApp <- shiny::fluidPage(
                              shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
                              shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
                              style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
-                             shiny::fluidRow(shiny::column(4,
-                                                           shiny::p("mapApp"), style="color:blue;"),
-                                             shiny::column(6,
-                                                           shiny::actionButton("help", "Help"),
-                                                           shiny::actionButton("code", "Code"),
-                                                           shiny::actionButton("goW", shiny::HTML("&larr;")),
-                                                           shiny::actionButton("goN", shiny::HTML("&uarr;")),
-                                                           shiny::actionButton("goS", shiny::HTML("&darr;")),
-                                                           shiny::actionButton("goE", shiny::HTML("&rarr;")),
-                                                           shiny::actionButton("zoomIn", "+"),
-                                                           shiny::actionButton("zoomOut", "-"))),
-                                        # FIXME: I am here
+                             shiny::fluidRow(shiny::p("mapApp"), style="color:blue;"),
+                             shiny::fluidRow(
+                                             shiny::actionButton("help", "Help"),
+                                             shiny::actionButton("code", "Code"),
+                                             shiny::actionButton("goW", shiny::HTML("&larr;")),
+                                             shiny::actionButton("goN", shiny::HTML("&uarr;")),
+                                             shiny::actionButton("goS", shiny::HTML("&darr;")),
+                                             shiny::actionButton("goE", shiny::HTML("&rarr;")),
+                                             shiny::actionButton("zoomIn", "+"),
+                                             shiny::actionButton("zoomOut", "-")),
                              fluidRow(
                                       div(style="display: inline-block;vertical-align:top; width: 150px;",textInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), width="70%")),
                                       div(style="display: inline-block;vertical-align:top; width: 100px;",HTML("<br>")),
                                       div(style="display: inline-block;vertical-align:top; width: 150px;",textInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), width="70%"))),
 
-
-                             # FIXME: finished here
-                             shiny::fluidRow(shiny::column(6,
-                                                           style="padding-left:0px;",
+                             shiny::fluidRow(style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
                                                                                      label="",
                                                                                      choiceNames=list(shiny::tags$span("Core", style="color: black; font-weight:bold"),
@@ -47,7 +42,7 @@ uiMapApp <- shiny::fluidPage(
                                                                                                        "hires",
                                                                                                        "topo"),
                                                                                      selected=c("core", "deep", "bgc"),
-                                                                                     inline=TRUE))),
+                                                                                     inline=TRUE)),
 
                              shiny::mainPanel(shiny::tabsetPanel(type="tab",
                                                           shiny::tabPanel("Main", value=1),
@@ -61,17 +56,18 @@ uiMapApp <- shiny::fluidPage(
                                                                                              id="settab")),
                                                           id="tabselected")),
 
-                             shiny::fluidRow(shiny::column(6,
-                                                           shiny::conditionalPanel(condition="input.tabselected==2",
-                                                           shiny::textInput("ID", "Float ID", value="", width="20%"))),
-                                             shiny::column(6,
-                                                           shiny::conditionalPanel(condition="input.tabselected==2",
-                                                           shiny::selectInput("focus",
-                                                                              "Focus",
-                                                                              choices=c("All"="all", "Single"="single"),
-                                                                              selected="all", width="20%"))),
-                                             shiny::column(8,
-                                                           shiny::verbatimTextOutput("info"))),
+                             #FIXME: start here
+
+                             shiny::fluidRow(shiny::conditionalPanel(condition="input.tabselected==2",
+                                                                     div(style="display: inline-block;vertical-align:top; width: 150px;",
+                                                                         shiny::textInput("ID", "Float ID", value="", width="75%")),
+                                                                     div(style="display: inline-block;vertical-align:top; width: 100px;",HTML("<br>")),
+                                                                     div(style="display: inline-block;vertical-align:top; width: 150px;",
+                                                                         shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"),
+                                                                                            selected="all", width="75%")),
+                                                          shiny::verbatimTextOutput("info"))),
+
+                             #FIXME: end here
 
                              shiny::fluidRow(shiny::column(6,
                                                            shiny::conditionalPanel(condition="input.tabselected==2",
