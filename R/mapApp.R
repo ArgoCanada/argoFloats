@@ -57,8 +57,6 @@ uiMapApp <- shiny::fluidPage(
                                                                                              id="settab")),
                                                           id="tabselected")),
 
-                             #FIXME: start here
-
                              shiny::fluidRow(shiny::conditionalPanel(condition="input.tabselected==2",
                                                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
                                                                          shiny::textInput("ID", "Float ID", value="", width="75%")),
@@ -67,8 +65,6 @@ uiMapApp <- shiny::fluidPage(
                                                                          shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"),
                                                                                             selected="all", width="75%")),
                                                           shiny::verbatimTextOutput("info"))),
-
-                             #FIXME: end here
 
                              shiny::fluidRow(shiny::column(6,
                                                            shiny::conditionalPanel(condition="input.tabselected==2",
