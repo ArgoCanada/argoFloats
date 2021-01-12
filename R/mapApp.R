@@ -13,45 +13,37 @@ uiMapApp <- shiny::fluidPage(
                              shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
                              shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
                              style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
-                             shiny::fluidRow(shiny::column(4,
-                                                           shiny::p("mapApp"), style="color:blue;"),
-                                             shiny::column(6,
-                                                           shiny::actionButton("help", "Help"),
-                                                           shiny::actionButton("code", "Code"),
-                                                           shiny::actionButton("goW", shiny::HTML("&larr;")),
-                                                           shiny::actionButton("goN", shiny::HTML("&uarr;")),
-                                                           shiny::actionButton("goS", shiny::HTML("&darr;")),
-                                                           shiny::actionButton("goE", shiny::HTML("&rarr;")),
-                                                           shiny::actionButton("zoomIn", "+"),
-                                                           shiny::actionButton("zoomOut", "-"))),
-                             shiny::fluidRow(shiny::column(2,
-                                                           shiny::textInput("start",
-                                                                            "Start",
-                                                                            value=sprintf("%4d-%02d-%02d",
-                                                                                          startTime$year + 1900,
-                                                                                          startTime$mon + 1,
-                                                                                          startTime$mday), width="20%"),
-                                                           shiny::textInput("end",
-                                                                            "End",
-                                                                            value=sprintf( "%4d-%02d-%02d",
-                                                                                          endTime$year + 1900,
-                                                                                          endTime$mon + 1, endTime$mday), width="20%")),
-                                             shiny::column(6,
-                                                           style="padding-left:0px;",
+                             shiny::fluidRow(shiny::p("mapApp"), style="color:blue;"),
+                             shiny::fluidRow(
+                                             shiny::actionButton("help", "Help"),
+                                             shiny::actionButton("code", "Code"),
+                                             shiny::actionButton("goW", shiny::HTML("&larr;")),
+                                             shiny::actionButton("goN", shiny::HTML("&uarr;")),
+                                             shiny::actionButton("goS", shiny::HTML("&darr;")),
+                                             shiny::actionButton("goE", shiny::HTML("&rarr;")),
+                                             shiny::actionButton("zoomIn", "+"),
+                                             shiny::actionButton("zoomOut", "-")),
+                             fluidRow(
+                                      div(style="display: inline-block;vertical-align:top; width: 150px;",textInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), width="70%")),
+                                      div(style="display: inline-block;vertical-align:top; width: 100px;",HTML("<br>")),
+                                      div(style="display: inline-block;vertical-align:top; width: 150px;",textInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), width="70%"))),
+
+                             shiny::fluidRow(style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
                                                                                      label="View",
                                                                                      choiceNames=list(shiny::tags$span("Core", style="color: black; font-weight:bold"),
                                                                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
                                                                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
                                                                                                       shiny::tags$span("HiRes", style="color: black;"),
-                                                                                                      shiny::tags$span("Topo", style="color: black;")),
+                                                                                                      shiny::tags$span("Topo", style="color: black;"),
+                                                                                                      shiny::tags$span("Path", style="color:black;")),
                                                                                      choiceValues=list("core",
                                                                                                        "deep",
                                                                                                        "bgc",
                                                                                                        "hires",
-                                                                                                       "topo"),
+                                                                                                       "topo", "path"),
                                                                                      selected=c("core", "deep", "bgc"),
-                                                                                     inline=TRUE))),
+                                                                                     inline=TRUE)),
 
                              shiny::mainPanel(shiny::tabsetPanel(type="tab",
                                                           shiny::tabPanel("Main", value=1),
@@ -65,29 +57,28 @@ uiMapApp <- shiny::fluidPage(
                                                                                              id="settab")),
                                                           id="tabselected")),
 
-                             shiny::fluidRow(shiny::column(6,
-                                                           shiny::conditionalPanel(condition="input.tabselected==2",
-                                                           shiny::textInput("ID", "Float ID", value="", width="20%"))),
-                                             shiny::column(6,
-                                                           shiny::conditionalPanel(condition="input.tabselected==2",
-                                                           shiny::selectInput("focus",
-                                                                              "Focus",
-                                                                              choices=c("All"="all", "Single"="single"),
-                                                                              selected="all", width="20%"))),
-                                             shiny::column(8,
-                                                           shiny::verbatimTextOutput("info"))),
+                             #FIXME: start here
+
+                             shiny::fluidRow(shiny::conditionalPanel(condition="input.tabselected==2",
+                                                                     div(style="display: inline-block;vertical-align:top; width: 150px;",
+                                                                         shiny::textInput("ID", "Float ID", value="", width="75%")),
+                                                                     div(style="display: inline-block;vertical-align:top; width: 100px;",HTML("<br>")),
+                                                                     div(style="display: inline-block;vertical-align:top; width: 150px;",
+                                                                         shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"),
+                                                                                            selected="all", width="75%")),
+                                                          shiny::verbatimTextOutput("info"))),
+
+                             #FIXME: end here
 
                              shiny::fluidRow(shiny::column(6,
                                                            shiny::conditionalPanel(condition="input.tabselected==2",
                                                            style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("action",
                                                                                      label="",
-                                                                                     choiceNames=list(shiny::tags$span("Path", style="color: black;"),
-                                                                                                      shiny::tags$span("Start", style="color: black;"),
+                                                                                     choiceNames=list(shiny::tags$span("Start", style="color: black;"),
                                                                                                       shiny::tags$span("End", style="color: black;"),
                                                                                                       shiny::tags$span("Without Profiles", style="color: black;")),
-                                                                                     choiceValues=list("path",
-                                                                                                       "start",
+                                                                                     choiceValues=list( "start",
                                                                                                        "end",
                                                                                                        "lines"),
                                                                                      inline=TRUE)))),
@@ -415,7 +406,7 @@ serverMapApp <- function(input, output, session) {
 
     shiny::observeEvent(input$help,
                         {
-                            msg <- shiny::HTML("This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, and whether to show topography. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can click path to look at the path of floats (with or without profile locations included).You also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
+                            msg <- shiny::HTML("This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show topography, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })                                  # help
 
@@ -544,7 +535,7 @@ serverMapApp <- function(input, output, session) {
                         if (!"lines" %in% input$action)
                             points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                         #print(col[[view]])
-                        if ("path" %in% input$action) {
+                        if ("path" %in% input$view) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
                             ##> options(warn = -1)
