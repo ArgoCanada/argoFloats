@@ -58,7 +58,7 @@
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
-#' \url{https://doi.org/10.13155/29825}.
+#' \doi{10.13155/29825}
 #'
 #' @export
 #' @author Dan Kelley
@@ -171,7 +171,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
-#' \url{https://doi.org/10.13155/29825}.
+#' \doi{10.13155/29825}
 #'
 #' @export
 #' @author Jaimie Harbin and Dan Kelley
