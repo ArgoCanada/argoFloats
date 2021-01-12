@@ -24,7 +24,7 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 ^videos$
-^marmap_coord.*\.csv$
+marmap_coord.*csv
 ^cran-comments\.md$
 ^NEWS\.md$
 ^exampleTS\.png$
@@ -41,3 +41,4 @@
 ^tests/testthat/_snaps$
 ^\.github$
 .gitCOMMIT_EDITMSG
+
