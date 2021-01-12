@@ -288,13 +288,13 @@ pinusr <- function(usr)
 #' # (Slow, so not run by default.)
 #'\dontrun{
 #' par(mar=c(2, 2, 1, 1))
-#' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2, keep=TRUE)
+#' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2)
 #'
 #' # Example 5A. Simple contour version, using marmap::getNOAA.bathy().
 #' plot(index, bathymetry=list(source=bathy, contour=TRUE))
 #'
 #' # Example 5B. Simple contour version, using oce::read.topo().
-#' data(topoWorld) # very coarse, read by oce::read.topo()
+#' data(topoWorld, package="oce") # very coarse, read by oce::read.topo()
 #' plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 #'
 #' # Example 5C. Simple colour version.
