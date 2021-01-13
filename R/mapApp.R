@@ -1,7 +1,7 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 ##cacheAge <- 5                          # a global variable
-col <- list(core=1, bgc=3, deep=6)
+col <- list(core=7, bgc=3, deep=6)
 ## Start and end times, covering 21 days to usually get 2 cycles
 endTime <- as.POSIXlt(Sys.time())
 startTime <- as.POSIXlt(endTime - 10 * 86400)
@@ -31,7 +31,7 @@ uiMapApp <- shiny::fluidPage(
                              shiny::fluidRow(style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
                                                                                      label="View",
-                                                                                     choiceNames=list(shiny::tags$span("Core", style="color: black; font-weight:bold"),
+                                                                                     choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
                                                                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
                                                                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
                                                                                                       shiny::tags$span("HiRes", style="color: black;"),
@@ -82,26 +82,26 @@ uiMapApp <- shiny::fluidPage(
 
                              shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
                                                      shiny::column(2,
-                                                                   shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black"),
+                                                                   shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8"), selected="7"),
                                                                    shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1),
                                                                    shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.5, step=0.05),
-                                                                   shiny::selectInput("CPcolour", "Path Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="black"),
+                                                                   shiny::selectInput("CPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8"), selected="7"),
                                                                    shiny::sliderInput("CPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
                              shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
                                                      shiny::column(2,
-                                                                   shiny::selectInput("Bcolour", "Symbol Colour", choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
+                                                                   shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1", "2", "3", "4", "5", "6", "7", "8"), selected="3"),
                                                                    shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
                                                                    shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.75, step=0.05),
-                                                                   shiny::selectInput("BPcolour", "Path Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="green"),
+                                                                   shiny::selectInput("BPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8"), selected="3"),
                                                                    shiny::sliderInput("BPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
                              shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
                                                      shiny::column(2,
-                                                                   shiny::selectInput("Dcolour", "Symbol Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="purple"),
+                                                                   shiny::selectInput("Dcolour", "Symbol Colour",choices=c("1","2","3","4","5","6","7","8"), selected="6"),
                              shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
                              shiny::sliderInput("Dsize", "Symbol Size", min=0,max=1, value=0.75, step=0.05),
-                             shiny::selectInput("DPcolour", "Path Colour",choices=c("black", "red", "green", "blue","lightblue","purple","yellow","gray", "white"), selected="purple"),
+                             shiny::selectInput("DPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8"), selected="6"),
                              shiny::sliderInput("DPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
                              ## using withSpinner does not work here
