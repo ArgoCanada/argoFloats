@@ -678,8 +678,8 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "indicating bathymetry with contours\n")
                           contour(as.numeric(rownames(bathy)),
                                   as.numeric(colnames(bathy)),
-                                  -bathy,
-                                  breaks=c(100, 200, 500, seq(1e3, 10e3, 1e3)),
+                                  bathy,
+                                  levels=c(100, 200, 500, seq(1e3, 10e3, 1e3)),
                                   labels=c("100m", "200m", "500m", paste(1:10, "km", sep="")),
                                   labcex=0.9, add=TRUE)
                       } else {
