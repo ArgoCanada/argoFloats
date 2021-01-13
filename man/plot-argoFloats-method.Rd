@@ -279,14 +279,14 @@ plot(index, bathymetry=TRUE)
 # (Slow, so not run by default.)
 \dontrun{
 par(mar=c(2, 2, 1, 1))
-topoFile <- oce::download.topo(-82, -71, 23, 30, 2, destdir=tmpDir)
+topoFile <- oce::download.topo(-82, -71, 23, 30, 2)
 topo <- oce::read.topo(topoFile)
 
-# Example 5A. Simple contour version, using marmap::getNOAA.bathy().
+# Example 5A. Simple contour version.
 plot(index, bathymetry=list(source=topo, contour=TRUE))
 
-# Example 5B. Simple contour version, using oce::read.topo().
-data(topoWorld, package="oce") # very coarse, read by oce::read.topo()
+# Example 5B. Simple contour version, using coarse dataset (ok on basin-scale).
+data(topoWorld, package="oce")
 plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 
 # Example 5C. Simple colour version.
