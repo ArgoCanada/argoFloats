@@ -188,18 +188,14 @@ that shows water depth. There are three possible values for \code{bathymetry}:
 \enumerate{
 \item \code{FALSE}, meaning not to draw bathymetry;
 \item \code{TRUE} (the default), meaning to draw bathymetry using
-data downloaded with \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}, as in Example 4;
+data downloaded with \code{\link[oce:download.topo]{oce::download.topo()}}, as in Example 4;
 \item A list with items controlling both the bathymetry data and its
 representation in the plot, as in Example 5.  Those items are:
 \enumerate{
-\item \code{source}, a mandatory value that is one of
+\item \code{source}, a mandatory value that is either
 (a) the string \code{"auto"} (the default) to use
-\code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to download the data,
-(b) a value returned by \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}, or
-(c) a value returned by \code{\link[oce:read.topo]{oce::read.topo()}}.
-\item \code{keep}, an optional logical value (with \code{TRUE} as the default) that is passed to
-\code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to indicate whether to keep a local file of bathymetry,
-as a way to avoid intermittent problems with the NOAA server;
+\code{\link[oce:download.topo]{oce::download.topo()}} to download the data
+or (b) a value returned by \code{\link[oce:read.topo]{oce::read.topo()}}.
 \item \code{contour}, an optional logical value (with \code{FALSE} as the default) indicating
 (as in Examples 5A and 5B) whether to represent bathymetry with contours
 (with depths of 100m, 200m, 500m shown, along with 1km, 2km up to 10km),

@@ -66,27 +66,29 @@ pinusr <- function(usr)
 #' that shows water depth. There are three possible values for `bathymetry`:
 #'     1. `FALSE`, meaning not to draw bathymetry;
 #'     2. `TRUE` (the default), meaning to draw bathymetry using
-#'        data downloaded with [marmap::getNOAA.bathy()], as in Example 4;
+##old        data downloaded with [marmap::getNOAA.bathy()], as in Example 4;
+#'        data downloaded with [oce::download.topo()], as in Example 4;
 #'     3. A list with items controlling both the bathymetry data and its
 #'        representation in the plot, as in Example 5.  Those items are:
 #'
-#'         1. `source`, a mandatory value that is one of
+#'         1. `source`, a mandatory value that is either
 #'            (a) the string `"auto"` (the default) to use
-#'            [marmap::getNOAA.bathy()] to download the data,
-#'            (b) a value returned by [marmap::getNOAA.bathy()], or
-#'            (c) a value returned by [oce::read.topo()].
-#'         2. `keep`, an optional logical value (with `TRUE` as the default) that is passed to
-#'            [marmap::getNOAA.bathy()] to indicate whether to keep a local file of bathymetry,
-#'            as a way to avoid intermittent problems with the NOAA server;
-#'         3. `contour`, an optional logical value (with `FALSE` as the default) indicating
+##old            [marmap::getNOAA.bathy()] to download the data,
+#'            [oce::download.topo()] to download the data
+#'            or (b) a value returned by [oce::read.topo()].
+##old            (c) a value returned by [marmap::getNOAA.bathy()].
+##old         2. `keep`, an optional logical value (with `TRUE` as the default) that is passed to
+##old            [marmap::getNOAA.bathy()] to indicate whether to keep a local file of bathymetry,
+##old            as a way to avoid intermittent problems with the NOAA server;
+#'         2. `contour`, an optional logical value (with `FALSE` as the default) indicating
 #'            (as in Examples 5A and 5B) whether to represent bathymetry with contours
 #'            (with depths of 100m, 200m, 500m shown, along with 1km, 2km up to 10km),
 #'            as opposed to an image;
-#'         4. `colormap`, ignored if `contour` is `TRUE`,
+#'         3. `colormap`, ignored if `contour` is `TRUE`,
 #'            an optional value that is either the string `"auto"` (the default)
 #'            for a form of GEBCO colors (as in Example 5C) computed with [oce::oceColorsGebco()], or a value
 #'            computed with [oce::colormap()] applied to the bathymetry data; and
-#'         5. `palette`, ignored if `contour` is `TRUE`,
+#'         4. `palette`, ignored if `contour` is `TRUE`,
 #'            an optional logical value (with `TRUE` as the default)
 #'            indicating (again, as in Example 5C) whether to draw a depth-color palette to the right of the plot.
 #'
@@ -375,7 +377,7 @@ pinusr <- function(usr)
 #' @importFrom grDevices extendrange gray rgb
 #' @importFrom utils data
 ## @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
-## @importFrom marmap getNOAA.bathy
+##old @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method
 #' @author Dan Kelley and Jaimie Harbin
@@ -460,13 +462,13 @@ setMethod(f="plot",
                   ## Decode bathymetry
                   if (is.logical(mapControl$bathymetry)) {
                       drawBathymetry <- mapControl$bathymetry
-                      bathymetry <- list(source="auto", keep=TRUE, contour=FALSE, colormap="auto", palette=TRUE)
+                      bathymetry <- list(source="auto", contour=FALSE, colormap="auto", palette=TRUE)
                   } else if (is.list(mapControl$bathymetry)) {
                       drawBathymetry <- TRUE
                       if (!("source" %in% names(mapControl$bathymetry)))
                           stop("In plot() : \"bathymetry\" is a list, it must contain \"source\", at least", call.=FALSE)
                       if (is.null(bathymetry$keep))
-                          bathymetry$keep <- TRUE
+                          warning("bathymetry$keep is ignored, since oce::download.topo() is now used to download data\n")
                       if (is.null(bathymetry$contour))
                           bathymetry$contour <- FALSE
                       if (is.null(bathymetry$colormap))
@@ -474,10 +476,10 @@ setMethod(f="plot",
                       if (is.null(bathymetry$palette))
                           bathymetry$palette <- TRUE
                   } else {
-                      stop("In plot() : \"bathymetry\" must be logical, an object created by marmap::getNOAA.bathy() or oce::read.topo(), or a list", call.=FALSE)
+                      stop("In plot() : \"bathymetry\" must be either a logical or a list value", call.=FALSE)
                   }
-                  if (!is.logical(bathymetry$keep))
-                      stop("In plot() : \"bathymetry$keep\" must be a logical value", call.=FALSE)
+                  ##old if (!is.logical(bathymetry$keep))
+                  ##old     stop("In plot() : \"bathymetry$keep\" must be a logical value", call.=FALSE)
                   if (!is.logical(bathymetry$palette))
                       stop("In plot() : \"bathymetry$palette\" must be a logical value", call.=FALSE)
                   argoFloatsDebug(debug, "drawBathymetry calculated to be ", drawBathymetry, "\n", sep="")
@@ -485,8 +487,8 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "asp=", asp, "\n", sep="")
                   if (drawBathymetry) {
                       argoFloatsDebug(debug, "handling bathymetry\n", sep="")
-                      if (!requireNamespace("marmap", quietly=TRUE))
-                          stop("must install.packages(\"marmap\") to plot with bathymetry")
+                      if (!requireNamespace("oce", quietly=TRUE))
+                          stop("must install.packages(\"oce\") to plot with bathymetry")
                       ## Handle bathymetry file downloading (or the use of a supplied value)
                       bathy <- NULL
                       if (is.character(bathymetry$source) && bathymetry$source == "auto") {
@@ -537,12 +539,18 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "  minlat=", round(usr[3]-Dlat, 3), "\n", sep="")
                           argoFloatsDebug(debug, "  maxlat=", round(usr[4]+Dlat, 3), "\n", sep="")
                           ## Round to 4 digits to prevent crazy filenames for no good reason
-                          bathy <- try(marmap::getNOAA.bathy(max(-180, round(usr[1]-Dlon, 3)),
-                                                             min(+180, round(usr[2]+Dlon, 3)),
-                                                             max(-90, round(usr[3]-Dlat, 3)),
-                                                             min(+90, round(usr[4]+Dlat, 3)),
-                                                             resolution=resolution,
-                                                             keep=bathymetry$keep),
+                          ##OLD bathy <- try(marmap::getNOAA.bathy(max(-180, round(usr[1]-Dlon, 3)),
+                          ##OLD                                    min(+180, round(usr[2]+Dlon, 3)),
+                          ##OLD                                    max(-90, round(usr[3]-Dlat, 3)),
+                          ##OLD                                    min(+90, round(usr[4]+Dlat, 3)),
+                          ##OLD                                    resolution=resolution,
+                          ##OLD                                    keep=bathymetry$keep),
+                          ##OLD              silent=FALSE)
+                          bathy <- try(oce::download.topo(max(-180, round(usr[1]-Dlon, 3)),
+                                                          min(+180, round(usr[2]+Dlon, 3)),
+                                                          max(-90, round(usr[3]-Dlat, 3)),
+                                                          min(+90, round(usr[4]+Dlat, 3)),
+                                                          resolution=resolution),
                                        silent=FALSE)
                           if (inherits(bathy, "try-error")) {
                               warning("could not download bathymetry from NOAA server: ",
