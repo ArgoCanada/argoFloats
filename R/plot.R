@@ -288,35 +288,37 @@ pinusr <- function(usr)
 #' # (Slow, so not run by default.)
 #'\dontrun{
 #' par(mar=c(2, 2, 1, 1))
-#' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2)
+## bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2)
+## tmpDir <- tempdir() # temporary directory, removed in a moment
+#' topoFile <- oce::download.topo(-82, -71, 23, 30, 2, destdir=tmpDir)
+#' topo <- oce::read.topo(topoFile)
+## unlink(tmpDir)
 #'
 #' # Example 5A. Simple contour version, using marmap::getNOAA.bathy().
-#' plot(index, bathymetry=list(source=bathy, contour=TRUE))
+#' plot(index, bathymetry=list(source=topo, contour=TRUE))
 #'
 #' # Example 5B. Simple contour version, using oce::read.topo().
 #' data(topoWorld, package="oce") # very coarse, read by oce::read.topo()
 #' plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 #'
 #' # Example 5C. Simple colour version.
-#' cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
-#' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
+#' plot(index, bathymetry=list(source=topo))
 #'
 #' # Example 5D. World view with Mollweide projection (Canada Day, 2020)
 #' jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
 #' plot(jul1, which="map", mapControl=list(projection=TRUE), pch=20, col=4, cex=0.75)
 #'
 #' # Example 5E. Customized map, sidestepping this function.
-#' lon <- as.numeric(rownames(bathy))
-#' lat <- as.numeric(colnames(bathy))
-#' depth <- -bathy # convert from elevation to depth
+#' lon <- topo[["longitude"]]
+#' lat <- topo[["latitude"]]
 #' asp <- 1/cos(pi/180*mean(lat))
 #' # Limit plot region to float region.
 #' xlim <- range(index[["longitude"]])
 #' ylim <- range(index[["latitude"]])
 #' # Colourize 1km, 2km, etc, isobaths.
-#' contour(x=lon, y=lat, z=depth, xlab="", ylab="",
+#' contour(x=lon, y=lat, z=z, xlab="", ylab="",
 #'         xlim=xlim, ylim=ylim, asp=asp,
-#'         col=1:6, lwd=3, levels=1000*1:6, drawlabels=FALSE)
+#'         col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 #' # Show land
 #' data(coastlineWorldFine, package="ocedata")
 #' polygon(coastlineWorldFine[["longitude"]],
