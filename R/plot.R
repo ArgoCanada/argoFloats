@@ -493,7 +493,7 @@ setMethod(f="plot",
                       bathy <- NULL
                       if (is.character(bathymetry$source) && bathymetry$source == "auto") {
                           argoFloatsDebug(debug, "must either download bathymetry or use existing file\n", sep="")
-                          argoFloatsDebug(debug, "  before using plot.window(), mar=c(", paste(round(mar, 4), collapse=", "), ")\n", sep="")
+                          argoFloatsDebug(debug, "before using plot.window(), mar=c(", paste(round(mar, 4), collapse=", "), ")\n", sep="")
                           ## Do plot calculations so we will know usr, needed to determine
                           ## range of longitude and latitude for downloading. Note that we
                           ## need to set mar temporarily, to match what will later be used
@@ -506,9 +506,9 @@ setMethod(f="plot",
                           if (!bathymetry$contour && bathymetry$palette) {
                               tmpmar <- par("mar")
                               par(mar=tmpmar + c(0, 0, 0, 2.75))
-                              argoFloatsDebug(debug, "  temporarily set par(mar=c(", paste(par("mar"), collapse=", "), ")) to allow for the palette\n", sep="")
+                              argoFloatsDebug(debug, "temporarily set par(mar=c(", paste(par("mar"), collapse=", "), ")) to allow for the palette\n", sep="")
                           }
-                          argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
+                          argoFloatsDebug(debug, "using plot.window() to determine area for bathymetry download, with\n",
                                           "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
                                           "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
                                           "    xlim=c(", paste(ylim, collapse=","), ")\n",
@@ -523,7 +523,7 @@ setMethod(f="plot",
                               par(mar=tmpmar)
                           }
                           usr <- par("usr")
-                          argoFloatsDebug(debug, "  after using plot.window(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
+                          argoFloatsDebug(debug, "after using plot.window(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
                           latitudeSpan <- usr[4] - usr[3]
                           Dlon <- (usr[2] - usr[1]) / 20
                           Dlat <- (usr[4] - usr[3]) / 20
@@ -531,13 +531,13 @@ setMethod(f="plot",
                           ##                      ifelse(latitudeSpan < 20, 2,
                           ##                             ifelse(latitudeSpan < 90, 8, 60)))
                           resolution <- as.integer(round(1 + 60 * latitudeSpan / 400))
-                          argoFloatsDebug(debug, "  Dlat=", round(Dlat, 4), "\n", sep="")
-                          argoFloatsDebug(debug, "  Dlon=", round(Dlon, 4), "\n", sep="")
-                          argoFloatsDebug(debug, "  resolution=", resolution, "\n", sep="")
-                          argoFloatsDebug(debug, "  minlon=", round(usr[1]-Dlon, 3), "\n", sep="")
-                          argoFloatsDebug(debug, "  maxlon=", round(usr[2]+Dlon, 3), "\n", sep="")
-                          argoFloatsDebug(debug, "  minlat=", round(usr[3]-Dlat, 3), "\n", sep="")
-                          argoFloatsDebug(debug, "  maxlat=", round(usr[4]+Dlat, 3), "\n", sep="")
+                          argoFloatsDebug(debug, "Dlat=", round(Dlat, 4), "\n", sep="")
+                          argoFloatsDebug(debug, "Dlon=", round(Dlon, 4), "\n", sep="")
+                          argoFloatsDebug(debug, "resolution=", resolution, "\n", sep="")
+                          argoFloatsDebug(debug, "minlon=", round(usr[1]-Dlon, 3), "\n", sep="")
+                          argoFloatsDebug(debug, "maxlon=", round(usr[2]+Dlon, 3), "\n", sep="")
+                          argoFloatsDebug(debug, "minlat=", round(usr[3]-Dlat, 3), "\n", sep="")
+                          argoFloatsDebug(debug, "maxlat=", round(usr[4]+Dlat, 3), "\n", sep="")
                           ## Round to 4 digits to prevent crazy filenames for no good reason
                           ##OLD bathy <- try(marmap::getNOAA.bathy(max(-180, round(usr[1]-Dlon, 3)),
                           ##OLD                                    min(+180, round(usr[2]+Dlon, 3)),
@@ -546,19 +546,27 @@ setMethod(f="plot",
                           ##OLD                                    resolution=resolution,
                           ##OLD                                    keep=bathymetry$keep),
                           ##OLD              silent=FALSE)
-                          bathy <- try(oce::download.topo(max(-180, round(usr[1]-Dlon, 3)),
-                                                          min(+180, round(usr[2]+Dlon, 3)),
-                                                          max(-90, round(usr[3]-Dlat, 3)),
-                                                          min(+90, round(usr[4]+Dlat, 3)),
-                                                          resolution=resolution),
-                                       silent=FALSE)
-                          if (inherits(bathy, "try-error")) {
-                              warning("could not download bathymetry from NOAA server: ",
-                                  paste(bathy, collapse = "\n"), "\n")
+                          argoFloatsDebug(debug, "about to call oce::download.topo and the oce::read.topo\n")
+                          topo <- try(oce::read.topo(oce::download.topo(max(-180, round(usr[1]-Dlon, 3)),
+                                                                        min(+180, round(usr[2]+Dlon, 3)),
+                                                                        max(-90, round(usr[3]-Dlat, 3)),
+                                                                        min(+90, round(usr[4]+Dlat, 3)),
+                                                                        resolution=resolution, debug=debug)),
+                                      silent=FALSE)
+                          bathy <- -topo[["z"]]
+                          if (inherits(topo, "try-error")) {
+                              warning("could not download bathymetry from NOAA server\n")
                               drawBathymetry <- FALSE
                           } else {
-                            argoFloatsDebug(debug, "  grid size", paste(dim(bathy), collapse="x"), "\n")
-                            argoFloatsDebug(debug, "  bathy span=", min(bathy, na.rm=TRUE), " to ", max(bathy, na.rm=TRUE), "\n", sep="")
+                              dimBathy <- dim(bathy)
+                              argoFloatsDebug(debug, "grid size", paste(dimBathy, collapse="x"), "\n")
+                              bathy <- as.integer(bathy)
+                              dim(bathy) <- dimBathy
+                              rownames(bathy) <- topo[["longitude"]]
+                              colnames(bathy) <- topo[["latitude"]]
+                              class(bathy) <- "bathy"
+                              ## argoFloatsDebug(debug, "  bathy span=", paste(range(bathy[["z"]], na.rm=TRUE),
+                              ##                                               collapse=" to "), "\n", sep="")
                           }
                       } else if (inherits(bathymetry$source, "bathy")) {
                           argoFloatsDebug(debug, "using supplied bathymetry$source\n", sep="")
@@ -568,7 +576,8 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "using oce-style topo object (converted to NOAA bathy)\n", sep="")
                           ##browser()
                           dim <- dim(bathymetry$source[["z"]])
-                          bathy <- matrix(as.integer(bathymetry$source[["z"]]), nrow=dim[1], ncol=dim[2])
+                          ## Note the negative sign, to get depth.
+                          bathy <- matrix(-as.integer(bathymetry$source[["z"]]), nrow=dim[1], ncol=dim[2])
                           rownames(bathy) <- bathymetry$source[["longitude"]]
                           colnames(bathy) <- bathymetry$source[["latitude"]]
                           class(bathy) <- "bathy"
@@ -577,10 +586,12 @@ setMethod(f="plot",
                       }
                       ## Handle colormap
                       if (!inherits(bathy, "try-error") && !bathymetry$contour && is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
-                          argoFloatsDebug(debug, "setting a default colormap for 0m to ", -min(bathy), "m depth\n")
-                          bathymetry$colormap <- oce::colormap(zlim=c(0, -min(bathy)),
-                                                               col=function(...)
-                                                                   rev(oce::oceColorsGebco(...)))
+                          argoFloatsDebug(debug, "bathy class: \"", class(bathy), "\"\n", sep="")
+                          deepest <- max(bathy, na.rm=TRUE)
+                          argoFloatsDebug(debug, "bathy range: ", paste(range(bathy, na.rm=TRUE), collapse=" to "), "\n")
+                          argoFloatsDebug(debug, "setting a default colormap for ", deepest, "m to 0m depth\n", sep="")
+                          bathymetry$colormap <- oce::colormap(zlim=c(0, deepest),
+                                                               col=function(n) rev(oce::oceColorsGebco(n)))
                       } else {
                           argoFloatsDebug(debug, "using supplied bathymetry$colormap\n")
                       }
@@ -675,7 +686,7 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "indicating bathymetry with an image\n")
                           oce::imagep(as.numeric(rownames(bathy)),
                                       as.numeric(colnames(bathy)),
-                                      -bathy, colormap=bathymetry$colormap, add=TRUE)
+                                      bathy, colormap=bathymetry$colormap, add=TRUE)
                       }
                       rect(usrTrimmed[1], usrTrimmed[3], usrTrimmed[2], usrTrimmed[4], lwd=1)
                   }
