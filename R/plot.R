@@ -288,17 +288,18 @@ pinusr <- function(usr)
 #' # (Slow, so not run by default.)
 #'\dontrun{
 #' par(mar=c(2, 2, 1, 1))
-## bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2)
-## tmpDir <- tempdir() # temporary directory, removed in a moment
-#' topoFile <- oce::download.topo(-82, -71, 23, 30, 2, destdir=tmpDir)
+##older bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2)
+##old tmpDir <- tempdir() # temporary directory, removed in a moment
+##old topoFile <- oce::download.topo(-82, -71, 23, 30, 2, destdir=tmpDir)
+#' topoFile <- oce::download.topo(-82, -71, 23, 30, 2)
 #' topo <- oce::read.topo(topoFile)
-## unlink(tmpDir)
+##old unlink(tmpDir)
 #'
-#' # Example 5A. Simple contour version, using marmap::getNOAA.bathy().
+#' # Example 5A. Simple contour version.
 #' plot(index, bathymetry=list(source=topo, contour=TRUE))
 #'
-#' # Example 5B. Simple contour version, using oce::read.topo().
-#' data(topoWorld, package="oce") # very coarse, read by oce::read.topo()
+#' # Example 5B. Simple contour version, using coarse dataset (ok on basin-scale).
+#' data(topoWorld, package="oce")
 #' plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 #'
 #' # Example 5C. Simple colour version.
@@ -473,7 +474,7 @@ setMethod(f="plot",
                       if (is.null(bathymetry$palette))
                           bathymetry$palette <- TRUE
                   } else {
-                      stop("In plot() : \"bathymetry\" must be logical, an object created by marmap::getNOAA.bathy(), or a list", call.=FALSE)
+                      stop("In plot() : \"bathymetry\" must be logical, an object created by marmap::getNOAA.bathy() or oce::read.topo(), or a list", call.=FALSE)
                   }
                   if (!is.logical(bathymetry$keep))
                       stop("In plot() : \"bathymetry$keep\" must be a logical value", call.=FALSE)
