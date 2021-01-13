@@ -267,7 +267,7 @@ plot(argos10, which="TS")
 # Example 4: map with bathymetry
 # (Slow, so not run by default.)
 \dontrun{
-par(mar=c(3, 3, 1, 1))
+par(mar=c(3, 3, 1, 2))
 plot(index, bathymetry=TRUE)
 }
 
@@ -300,7 +300,7 @@ asp <- 1/cos(pi/180*mean(lat))
 xlim <- range(index[["longitude"]])
 ylim <- range(index[["latitude"]])
 # Colourize 1km, 2km, etc, isobaths.
-contour(x=lon, y=lat, z=z, xlab="", ylab="",
+contour(x=lon, y=lat, z=topo[["z"]], xlab="", ylab="",
         xlim=xlim, ylim=ylim, asp=asp,
         col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 # Show land

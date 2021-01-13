@@ -282,7 +282,7 @@ pinusr <- function(usr)
 #' # Example 4: map with bathymetry
 #' # (Slow, so not run by default.)
 #'\dontrun{
-#' par(mar=c(3, 3, 1, 1))
+#' par(mar=c(3, 3, 1, 2))
 #' plot(index, bathymetry=TRUE)
 #'}
 #'
@@ -319,7 +319,7 @@ pinusr <- function(usr)
 #' xlim <- range(index[["longitude"]])
 #' ylim <- range(index[["latitude"]])
 #' # Colourize 1km, 2km, etc, isobaths.
-#' contour(x=lon, y=lat, z=z, xlab="", ylab="",
+#' contour(x=lon, y=lat, z=topo[["z"]], xlab="", ylab="",
 #'         xlim=xlim, ylim=ylim, asp=asp,
 #'         col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 #' # Show land
@@ -467,8 +467,8 @@ setMethod(f="plot",
                       drawBathymetry <- TRUE
                       if (!("source" %in% names(mapControl$bathymetry)))
                           stop("In plot() : \"bathymetry\" is a list, it must contain \"source\", at least", call.=FALSE)
-                      if (is.null(bathymetry$keep))
-                          warning("bathymetry$keep is ignored, since oce::download.topo() is now used to download data\n")
+                      if ("keep" %in% names(bathymetry))
+                          warning("bathymetry$keep (an old argument) is no longer used\n")
                       if (is.null(bathymetry$contour))
                           bathymetry$contour <- FALSE
                       if (is.null(bathymetry$colormap))
@@ -744,6 +744,8 @@ setMethod(f="plot",
                   }
               } else if (which == "summary") {
                   argoFloatsDebug(debug, "summary plot\n", sep="")
+                  if (x[["length"]] < 2)
+                      stop("In plot,argoFloats-method() : cannot draw a summary plot with only one float cycle", call.=FALSE)
                   if (is.null(summaryControl))
                       summaryControl <- list(items=c("dataStateIndicator", "longitude", "latitude", "length", "deepest"))
                   if (!"items" %in% names(summaryControl))
@@ -756,12 +758,14 @@ setMethod(f="plot",
                       time <- as.POSIXct(unlist(x[["time"]]), origin="1970-01-01", tz="UTC")
                       o <- order(time)
                       for (iitem in seq_len(nitems)) {
+                          argoFloatsDebug(debug, "items[", iitem, "]=\"", items[iitem], "\"\n", sep="")
                           if (!marGiven) # top panel needs space for ticks
                               mar <- if (iitem==1) c(1.7,3,2,1) else c(1.7,3,1.5,1)
                           if (!mgpGiven)
                               mgp <- c(2, 0.7, 0)
                           if (items[iitem] == "dataStateIndicator") {
                               y <- unlist(x[["dataStateIndicator"]])
+                              argoFloatsDebug(debug, oce::vectorShow(y))
                               if (length(y)) {
                                   u <- sort(unique(y))
                                   yy <- seq_along(u)
