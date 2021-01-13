@@ -24,9 +24,9 @@ uiMapApp <- shiny::fluidPage(
                                              shiny::actionButton("zoomIn", "+"),
                                              shiny::actionButton("zoomOut", "-")),
                              shiny::fluidRow(
-                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",shiny::textInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), width="70%")),
+                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
                                       shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",shiny::textInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), width="70%"))),
+                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
 
                              shiny::fluidRow(style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
