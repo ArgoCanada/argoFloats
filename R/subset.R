@@ -22,7 +22,7 @@
 #' 2. A list named `circle` with numeric elements named `longitude`,
 #' `latitude` and `radius`.  The first two give the center of
 #' the subset region, and the third gives the radius of
-#' that region, in kilometers. See example 2.
+#' that region, in kilometers. See example 2A and 2B.
 #'
 #' 3. A list named `rectangle`, which has elements named
 #' `longitude` and `latitude`, two-element numeric vectors
@@ -135,8 +135,17 @@
 #' index1 <- subset(index, 1:3)
 #' cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
 #'
-#' # Example 2: subset to a circle near Abaca Island
+#' # Example 2A: subset to a circle near Abaca Island
 #' index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+#'
+#' # Exampe 2B: subset a 300 km radius around Panama using "maps" package
+#' \dontrun{
+#' library("maps")
+#' data(world.cities)
+#' ai <- getIndex()
+#' panama <- subset(world.cities, name=="Panama")
+#' index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
+#'}
 #'
 #' # Example 3: subset to a rectangle near Abaca Island
 #' lonRect <- c(-76.5, -76)
