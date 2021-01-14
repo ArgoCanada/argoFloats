@@ -127,7 +127,8 @@ serverMapApp <- function(input, output, session) {
                                    ylim=c(-90, 90),
                                    startTime=startTime,
                                    endTime=endTime,
-                                   focusID=NULL
+                                   focusID=NULL,
+                                   drawDepthContours=FALSE
                                    )
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
@@ -411,41 +412,39 @@ serverMapApp <- function(input, output, session) {
     shiny::observeEvent(input$keypressTrigger,
                         {
                             key <- intToUtf8(input$keypress)
-                            if (key == "n") {
-                                dy <- diff(state$ylim) # present latitude span
+                            if (key == "n") { # go north
+                                dy <- diff(state$ylim)
                                 state$ylim <<- pinlat(state$ylim + dy / 4)
-                            } else if (key == "s") {
-                                dy <- diff(state$ylim) # present latitude span
+                            } else if (key == "s") { # go south
+                                dy <- diff(state$ylim)
                                 state$ylim <<- pinlat(state$ylim - dy / 4)
-                            } else if (key == "e") {
-                                dx <- diff(state$xlim) # present latitude span
+                            } else if (key == "e") { # go east
+                                dx <- diff(state$xlim)
                                 state$xlim <<- pinlon(state$xlim + dx / 4)
-                            } else if (key == "w") {
-                                dx <- diff(state$xlim) # present latitude span
+                            } else if (key == "w") { # go west
+                                dx <- diff(state$xlim)
                                 state$xlim <<- pinlon(state$xlim - dx / 4)
-                            } else if (key == "f") {
-                                # forward in time
+                            } else if (key == "f") { # forward in time
                                 interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
                                 state$startTime <<- state$startTime + interval
                                 state$endTime <<- state$endTime + interval
                                 shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                                 shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-                            } else if (key == "b") {
-                                # backward in time
+                            } else if (key == "b") { # backward in time
                                 interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
                                 state$startTime <<- state$startTime - interval
                                 state$endTime <<- state$endTime - interval
                                 shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                                 shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-                            } else if (key == "i") {
-                                # zoom in
+                            } else if (key == "c") { # Toggle depth contours
+                                state$drawDepthContours <<- !state$drawDepthContours
+                            } else if (key == "i") { # zoom in
                                 state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
                                 state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
-                            } else if (key == "o") {
+                            } else if (key == "o") { # zoom out
                                 state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
                                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
-                            } else if (key == "r") {
-                                # reset to start
+                            } else if (key == "r") { # reset to start
                                 state$xlim <<- c(-180, 180)
                                 state$ylim <<- c(-90, 90)
                                 state$startTime <<- startTime
@@ -453,7 +452,7 @@ serverMapApp <- function(input, output, session) {
                                 state$focusID <<- NULL
                                 shiny::updateSelectInput(session, "focus", selected="all")
                                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
-                            } else if (key == "?") {
+                            } else if (key == "?") { # show help on keystrokes
                                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                                                                     shiny::HTML("<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
                                                                                 <li> '<b>o</b>': zoom <b>o</b>ut</li>
@@ -462,7 +461,8 @@ serverMapApp <- function(input, output, session) {
                                                                                 <li> '<b>s</b>': go <b>s</b>outh</li>
                                                                                 <li> '<b>w</b>': go <b>w</b>est</li>
                                                                                 <li> '<b>f</b>': go <b>f</b>orward in time</li>
-                                                                                <li> '<b>b</b>': go <b>b</b>ackward in time </li>
+                                                                                <li> '<b>b</b>': go <b>b</b>ackward in time</li>
+                                                                                <li> '<b>c</b>': toggle depth <b>c</b>ontours</li>
                                                                                 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
                                                                                 <li> '<b>?</b>': display this message</li> </ul>"), easyClose=TRUE))
                             }
@@ -489,6 +489,9 @@ serverMapApp <- function(input, output, session) {
                 topo <- if ("hires" %in% input$view) topoWorldFine else topoWorld
                 if ("topo" %in% input$view) {
                     image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
+                }
+                if (state$drawDepthContours) {
+                    contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]], levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
                 }
                 usr <- par("usr")
                 usr[1] <- pinlon(usr[1])
