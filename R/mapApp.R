@@ -1,5 +1,8 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
+appName <- "mapApp"
+appVersion <- "0.1"
+
 ##cacheAge <- 5                          # a global variable
 col <- list(core=7, bgc=3, deep=6)
 ## Start and end times, covering 21 days to usually get 2 cycles
@@ -13,8 +16,8 @@ uiMapApp <- shiny::fluidPage(
                              shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
                              shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
                              style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
-                             shiny::fluidRow(shiny::p("mapApp"), style="color:blue;"),
-                             shiny::fluidRow(
+                             ##shiny::fluidRow(shiny::p("mapApp"), style="color:blue;"),
+                             shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
                                              shiny::actionButton("help", "Help"),
                                              shiny::actionButton("code", "Code"),
                                              shiny::actionButton("goW", shiny::HTML("&larr;")),
@@ -23,9 +26,9 @@ uiMapApp <- shiny::fluidPage(
                                              shiny::actionButton("goE", shiny::HTML("&rarr;")),
                                              shiny::actionButton("zoomIn", "+"),
                                              shiny::actionButton("zoomOut", "-"),
-                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
-                                      shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
+                                      shiny::div(style="display: inline-block; vertical-align:center; width: 10em; margin: 0; padding: 0;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
+                                      ##shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
+                                      shiny::div(style="display: inline-block;vertical-align:top; width: 10em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
 
                              shiny::fluidRow(style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
