@@ -94,7 +94,7 @@ uiMapApp <- shiny::fluidPage(
                                                      shiny::column(2,
                                                                    shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1", "2", "3", "4", "5", "6", "7", "8"), selected="3"),
                                                                    shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
-                                                                   shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.75, step=0.05),
+                                                                   shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05),
                                                                    shiny::selectInput("BPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8"), selected="3"),
                                                                    shiny::sliderInput("BPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
@@ -102,7 +102,7 @@ uiMapApp <- shiny::fluidPage(
                                                      shiny::column(2,
                                                                    shiny::selectInput("Dcolour", "Symbol Colour",choices=c("1","2","3","4","5","6","7","8"), selected="6"),
                              shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
-                             shiny::sliderInput("Dsize", "Symbol Size", min=0,max=1, value=0.75, step=0.05),
+                             shiny::sliderInput("Dsize", "Symbol Size", min=0,max=1, value=0.5, step=0.05),
                              shiny::selectInput("DPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8"), selected="6"),
                              shiny::sliderInput("DPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
@@ -529,7 +529,6 @@ serverMapApp <- function(input, output, session) {
                         sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
                         #message("the symbSettings are", symbSettings)
                         #message("the colSettings are", colSettings)
-                #FIXME: Couldn't I just do colSettings[[view]]
                         if (!"lines" %in% input$action)
                             points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                         #print(col[[view]])
