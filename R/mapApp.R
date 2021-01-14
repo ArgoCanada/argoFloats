@@ -26,7 +26,7 @@ uiMapApp <- shiny::fluidPage(
                                              shiny::actionButton("goE", shiny::HTML("&rarr;")),
                                              shiny::actionButton("zoomIn", "+"),
                                              shiny::actionButton("zoomOut", "-"),
-                                      shiny::div(style="display: inline-block; vertical-align:center; width: 10em; margin: 0; padding: 0;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
+                                      shiny::div(style="display: inline-block; vertical-align:center; width: 10em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
                                       ##shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
                                       shiny::div(style="display: inline-block;vertical-align:top; width: 10em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
 
