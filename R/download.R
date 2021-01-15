@@ -44,6 +44,10 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
     
     urlDownload <- url[!skipDownload]
     destinationDownload <- destination[!skipDownload]
+    successDownload <- rep(FALSE, length(urlDownload))
+    
+    if (length(urlDownload) == 0)
+        return(destination)
     
     useProgressBar <- !quiet && interactive()
     if (useProgressBar)
@@ -56,15 +60,14 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
             t <- try(curl::curl_download(url=urlDownload[i], destfile=destinationDownload[i]), silent=TRUE)
             if (inherits(t, "try-error") && any(grepl("application callback", t))) {
                 stop(t)
-            } else {
-                success <- TRUE
+            } else if (!inherits(t, "try-error")) {
+                successDownload[i] <- TRUE
                 break
             }
         }
-        if (!success) {
+        if (!successDownload[i]) {
             if (!quiet)
                 message("failed download '", urlDownload[i], "'\n  after ", retries, " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
-            destinationDownload[i] <- NA_character_
         }
         if (useProgressBar)
             setTxtProgressBar(pb, i)
@@ -74,7 +77,7 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
         close(pb)
     
     # collect failed downloads set destination to NA where this occurred
-    failedDownloads <- destinationDownload[is.na(destinationDownload)]
+    failedDownloads <- destinationDownload[!successDownload]
     destination[destination %in% failedDownloads] <- NA_character_
     
     # return vector of filenames downloaded
