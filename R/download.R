@@ -154,8 +154,12 @@ downloadAsyncSuccess <- function(url, dest, pb, mutableSuccess) {
     
     function(res) {
         if (res$status_code < 400) {
+            # much faster than write()!
+            con <- file(dest, "wb")
+            on.exit(close(con))
+            writeBin(res$content, con)
+            
             mutableSuccess[[dest]] <- TRUE
-            write(res$content, dest)
         }
         
         downloadAsyncUpdateProgress(pb, mutableSuccess)
