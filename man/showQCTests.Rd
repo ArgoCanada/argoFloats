@@ -2,7 +2,7 @@
 % Please edit documentation in R/qc.R
 \name{showQCTests}
 \alias{showQCTests}
-\title{Show QC test results for an argo object}
+\title{Show real-time QC test results for an argo object}
 \usage{
 showQCTests(x, style = "brief")
 }
@@ -23,12 +23,13 @@ of results.
 }
 \description{
 \code{showQCTests} prints a summary of the quality-control (QC) tests
-(if any) that were performed on an Argo profile.  It uses
+(if any) that were performed on an Argo profile in real-time (\strong{Caution}: any tests completed and/or failed on delayed
+mode data are not recorded).  It uses
 \code{\link[=hexToBits]{hexToBits()}} to decode the hexadecimal  values that may
 be stored in \code{historyQCTest}. From there it pairs the determined
 test values with the appropriate actions, QC Tests performed or QC
 Tests failed, found in \code{historyAction} within the \code{metadata} slot
-of an individual argo profile, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
+of an individual Argo profile, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
 or indirectly with \code{\link[=readProfiles]{readProfiles()}}, the latter being illustrated in the
 \dQuote{Examples} section below.  The \dQuote{Details}
 section provides an explanation of how \code{showQCTests} works
