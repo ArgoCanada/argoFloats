@@ -37,49 +37,67 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
         return(character(0))
     
     destination <- paste0(destdir, "/", destfile)
+    success <- rep(FALSE, length(destination))
     
     destinationInfo <- file.info(destination)
     destinationAge <- (as.integer(Sys.time()) - as.integer(destinationInfo$mtime)) / 86400 # in days
     skipDownload <- file.exists(destination) & (destinationAge < age)
+    success[skipDownload] <- TRUE
     
     urlDownload <- url[!skipDownload]
     destinationDownload <- destination[!skipDownload]
-    successDownload <- rep(FALSE, length(urlDownload))
+
+    for (trial in seq_len(1 + retries)) {
+        if (!quiet && (trial > 1))
+            message("Retrying ", length(urlDownload), " failed download(s)")
+        else if (!quiet)
+            message("Downloading ", length(urlDownload), " file(s)")
+        
+        successDownload <- tryDownloadSequential(urlDownload, destinationDownload, quiet=quiet)
+        
+        success[destination %in% destinationDownload[successDownload]] <- TRUE
+        urlDownload <- urlDownload[!successDownload]
+        destinationDownload <- urlDownload[!successDownload]
+    }
     
+    if (!all(success)) {
+        urlFailed <- paste0("'", url[!success], "'", collapse="\n")
+        
+        message("failed downloads:",
+                urlFailed, 
+                "\n  after ", retries + 1, 
+                " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
+        destination[!success] <- NA_character_
+    }
+   
+    destination
+}
+
+
+tryDownloadSequential <- function(urlDownload, destinationDownload, quiet) {
     if (length(urlDownload) == 0)
-        return(destination)
+        return(logical(0))
     
     useProgressBar <- !quiet && interactive()
-    if (useProgressBar)
+    if (useProgressBar) {
         pb <- txtProgressBar(0, length(urlDownload), 0, style = 3)
+        on.exit(close(pb))
+    }
+    
+    successDownload <- rep(FALSE, length(urlDownload))
     
     for (i in seq_along(urlDownload)) {
-        success <- FALSE
-        for (trial in seq_len(1 + retries)) {
-            if (!quiet) message(sprintf("Downloading '%s'", urlDownload[i]))
-            t <- try(curl::curl_download(url=urlDownload[i], destfile=destinationDownload[i]), silent=TRUE)
-            if (inherits(t, "try-error") && any(grepl("application callback", t))) {
-                stop(t)
-            } else if (!inherits(t, "try-error")) {
-                successDownload[i] <- TRUE
-                break
-            }
+        t <- try(curl::curl_download(url=urlDownload[i], destfile=destinationDownload[i]), silent=TRUE)
+        if (inherits(t, "try-error") && any(grepl("application callback", t))) {
+            stop(t)
+        } else if (!inherits(t, "try-error")) {
+            successDownload[i] <- TRUE
         }
-        if (!successDownload[i]) {
-            if (!quiet)
-                message("failed download '", urlDownload[i], "'\n  after ", retries, " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
-        }
+        
         if (useProgressBar)
             setTxtProgressBar(pb, i)
     }
     
-    if (useProgressBar)
-        close(pb)
-    
-    # collect failed downloads set destination to NA where this occurred
-    failedDownloads <- destinationDownload[!successDownload]
-    destination[destination %in% failedDownloads] <- NA_character_
-    
-    # return vector of filenames downloaded
-    destination
+    successDownload
 }
+
