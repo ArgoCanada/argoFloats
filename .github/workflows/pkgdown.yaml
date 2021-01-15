@@ -17,6 +17,9 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
 
       - uses: r-lib/actions/setup-pandoc@v1
+      
+      - name: Install gfortran (required for development oce on MacOS)
+        run: brew install gfortran
 
       - name: Query dependencies
         run: |
