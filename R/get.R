@@ -569,7 +569,8 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         ## way, so the ifremer case was rewritten to match the usgodae case.
         urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
-        file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls), quiet=quiet, debug=debug-1)
+        file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls), 
+                                    quiet=quiet, async=TRUE, debug=debug-1)
     }
     res@metadata$destdir <- destdir
     res@data$url <- urls
