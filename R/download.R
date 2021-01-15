@@ -67,7 +67,7 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
             break
         
         urlDownload <- urlDownload[!successDownload]
-        destinationDownload <- urlDownload[!successDownload]
+        destinationDownload <- destinationDownload[!successDownload]
     }
     
     if (!all(success)) {
@@ -149,6 +149,7 @@ tryDownloadAsync <- function(urlDownload, destinationDownload, quiet) {
 downloadAsyncSuccess <- function(url, dest, pb, mutableSuccess) {
     force(url)
     force(dest)
+    force(pb)
     force(mutableSuccess)
     
     function(res) {

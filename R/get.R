@@ -570,7 +570,7 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
         file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls), 
-                                    quiet=quiet, async=TRUE, debug=debug-1)
+                                    quiet=quiet, age=age, async=TRUE, debug=debug-1)
     }
     res@metadata$destdir <- destdir
     res@data$url <- urls
