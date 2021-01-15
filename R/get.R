@@ -549,7 +549,7 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
     n <- length(index[["file"]])
     if (n == 0) {
         warning("In getProfiles() : the index has no files, so there is nothing to 'get'\n", call.=FALSE)
-        file <- NULL
+        file <- character(0)
     } else {
         file <- rep("", n)
         argoFloatsDebug(debug, oce::vectorShow(index[["ftpRoot"]]))
@@ -569,25 +569,7 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         ## way, so the ifremer case was rewritten to match the usgodae case.
         urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
-        file <- vector("character", length(urls))
-        useProgressBar <- !quiet && interactive()
-        if (useProgressBar)
-            pb <- txtProgressBar(0, n, 0, style = 3)
-        for (i in seq_along(urls)) {
-            name <- getProfileFromUrl(urls[i], destdir=destdir, age=age, retries=retries, quiet=quiet, debug=debug-1)
-            if (is.na(name)) {
-                if (skip) {
-                    warning("cannot download \"", urls[i], "\". Perhaps the index file is stale; try getIndex(age=0) to refresh it.\n")
-                } else {
-                    stop("cannot download \"", urls[i], "\". Perhaps the index file is stale; try getIndex(age=0) to refresh it. You may use getProfiles(...,skip=TRUE) to convert this error into a warning.")
-                }
-            }
-            file[i] <- name            # NOTE: this will be NA for a failed download
-            if (useProgressBar)
-                setTxtProgressBar(pb, i)
-        }
-        if (useProgressBar)
-            close(pb)
+        file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls), quiet=quiet, debug=debug-1)
     }
     res@metadata$destdir <- destdir
     res@data$url <- urls
