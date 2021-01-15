@@ -18,6 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@v1
+      - name:  Ensure gfortran exists on macOS
+        if: runner.os == 'macOS'
+        run: |
+          # conflicts with gfortran from r-lib/actions when linking gcc
+          rm '/usr/local/bin/gfortran'
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
