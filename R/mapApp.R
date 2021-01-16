@@ -9,9 +9,14 @@ col <- list(core=7, bgc=3, deep=6)
 endTime <- as.POSIXlt(Sys.time())
 startTime <- as.POSIXlt(endTime - 10 * 86400)
 
+##> fileLog <- file("log.dat", open="a")
 
-#' @importFrom grDevices grey
+pi180 <- pi / 180                      # degree/radian conversion factor
+
+
 #' @importFrom graphics arrows image lines mtext
+#' @importFrom grDevices grey
+#' @importFrom utils write.table
 uiMapApp <- shiny::fluidPage(
                              shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
                              shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
@@ -26,9 +31,9 @@ uiMapApp <- shiny::fluidPage(
                                              shiny::actionButton("goE", shiny::HTML("&rarr;")),
                                              shiny::actionButton("zoomIn", "+"),
                                              shiny::actionButton("zoomOut", "-"),
-                                      shiny::div(style="display: inline-block; vertical-align:center; width: 10em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
+                                      shiny::div(style="display: inline-block; vertical-align:center; width: 11em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
                                       ##shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-                                      shiny::div(style="display: inline-block;vertical-align:top; width: 10em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
+                                      shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
 
                              shiny::fluidRow(style="padding-left:0px;",
                                                            shiny::checkboxGroupInput("view",
@@ -59,7 +64,7 @@ uiMapApp <- shiny::fluidPage(
                                                                                              id="settab")),
                                                           id="tabselected")),
 
-                             shiny::fluidRow(shiny::conditionalPanel(condition="input.tabselected==2",
+                             shiny::fluidRow(shiny::conditionalPanel(condition="input.tabselected==1 || input.tabselected==2",
                                                                      shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
                                                                          shiny::textInput("ID", "Float ID", value="", width="75%")),
                                                                      shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
@@ -204,12 +209,12 @@ serverMapApp <- function(input, output, session) {
         lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
         latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
-            fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
-            dist2 <- ifelse(visible, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude) ^ 2, 1000)
+            fac <- cos(y * pi180)      # account for meridional convergence
+            dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
             i <- which.min(dist2)
             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
             if (length(dist) && dist < 100) {
-                sprintf("%s %s, %.0f km from %s float with ID %s\n  at cycle %s [%s]",
+                sprintf("%s %s, %.0f km from %s float %s cycle %s, at %s",
                         lonstring,
                         latstring,
                         dist,
@@ -361,7 +366,11 @@ serverMapApp <- function(input, output, session) {
                                 ## Restrict search to the present time window
                                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
                             }
-                            i <- which.min(ifelse( keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
+                            i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
+                            doubleclicked$ID <- c(doubleclicked$ID, argo$ID[i])
+                            doubleclicked$cycle <- c(doubleclicked$cycle, argo$cycle[i])
+                            message(paste(doubleclicked$ID, collapse=" "))
+                            message(paste(doubleclicked$cycle, collapse=" "))
                             state$focusID <<- argo$ID[i]
                             shiny::updateTextInput(session, "ID", value=state$focusID)
                             msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
@@ -444,6 +453,20 @@ serverMapApp <- function(input, output, session) {
                             } else if (key == "o") { # zoom out
                                 state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
                                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+                            } else if (key == "0") { # append nearest float to 'log.dat'
+                                ## May later call this 'm' for mark, or 'l' for log.
+                                x <- input$hover$x
+                                y <- input$hover$y
+                                fac <- cos(y * pi180)      # account for meridional convergence
+                                dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
+                                i <- which.min(dist2)
+                                dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
+                                if (length(dist) && dist < 100) {
+                                    ID <- argo$ID[i]
+                                    cycle <- argo$cycle[i]
+                                    write.table(cbind(as.character(ID),cycle), file="log.dat", row.names=FALSE, col.names=FALSE, append=TRUE)
+                                    message("Saved float ID/cycle to log.dat")
+                                }
                             } else if (key == "r") { # reset to start
                                 state$xlim <<- c(-180, 180)
                                 state$ylim <<- c(-90, 90)
@@ -464,6 +487,7 @@ serverMapApp <- function(input, output, session) {
                                                                                 <li> '<b>b</b>': go <b>b</b>ackward in time</li>
                                                                                 <li> '<b>c</b>': toggle depth <b>c</b>ontours</li>
                                                                                 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
+                                                                                <li> '<b>0</b>': undocumented provisional feature in development by DEK</li>
                                                                                 <li> '<b>?</b>': display this message</li> </ul>"), easyClose=TRUE))
                             }
                         })                                  # keypressTrigger
