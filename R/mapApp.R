@@ -31,48 +31,24 @@ uiMapApp <- shiny::fluidPage(
                                              shiny::actionButton("goE", shiny::HTML("&rarr;")),
                                              shiny::actionButton("zoomIn", "+"),
                                              shiny::actionButton("zoomOut", "-"),
-                                      shiny::div(style="display: inline-block; vertical-align:center; width: 11em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
-                                      ##shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-                                      shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
-
-                             shiny::fluidRow(style="padding-left:0px;",
-                                                           shiny::checkboxGroupInput("view",
-                                                                                     label="View",
-                                                                                     choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
-                                                                                                      shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
-                                                                                                      shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
-                                                                                                      shiny::tags$span("HiRes", style="color: black;"),
-                                                                                                      shiny::tags$span("Topo", style="color: black;"),
-                                                                                                      shiny::tags$span("Path", style="color:black;")),
-                                                                                     choiceValues=list("core",
-                                                                                                       "deep",
-                                                                                                       "bgc",
-                                                                                                       "hires",
-                                                                                                       "topo", "path"),
-                                                                                     selected=c("core", "deep", "bgc"),
-                                                                                     inline=TRUE)),
-
+                                             shiny::div(style="display: inline-block; vertical-align:center; width: 11em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
+                                             ##shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
+                                             shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
+                             shiny::fluidRow(shiny::uiOutput(outputId="UIview")),
+                             shiny::fluidRow(shiny::column(2, shiny::uiOutput(outputId="UIID")),
+                                             shiny::column(3, shiny::uiOutput(outputId="UIfocus")),
+                                             shiny::column(7, shiny::uiOutput(outputId="UIinfo"))),
                              shiny::mainPanel(shiny::tabsetPanel(type="tab",
-                                                          shiny::tabPanel("Main", value=1),
-                                                          shiny::tabPanel("Trajectory", value=2),
-                                                          shiny::tabPanel("Settings", value=3,
-                                                                          shiny::tabsetPanel(
-                                                                                             shiny::tabPanel("Core", value=4),
-                                                                                             shiny::tabPanel("BGC", value=5),
-                                                                                             shiny::tabPanel("Deep", value=6),
-                                                                                             selected=TRUE,
-                                                                                             id="settab")),
-                                                          id="tabselected")),
-
-                             shiny::fluidRow(shiny::conditionalPanel(condition="input.tabselected==1 || input.tabselected==2",
-                                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-                                                                         shiny::textInput("ID", "Float ID", value="", width="75%")),
-                                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-                                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-                                                                         shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"),
-                                                                                            selected="all", width="75%")),
-                                                          shiny::verbatimTextOutput("info"))),
-
+                                                                 shiny::tabPanel("Main", value=1),
+                                                                 shiny::tabPanel("Trajectory", value=2),
+                                                                 shiny::tabPanel("Settings", value=3,
+                                                                                 shiny::tabsetPanel(shiny::tabPanel("Core", value=4),
+                                                                                                    shiny::tabPanel("BGC", value=5),
+                                                                                                    shiny::tabPanel("Deep", value=6),
+                                                                                                    selected=TRUE,
+                                                                                                    id="settab")),
+                                                                 id="tabselected")),
+                             ##? shiny::fluidRow(shiny::verbatimTextOutput("info")),
                              shiny::fluidRow(shiny::column(6,
                                                            shiny::conditionalPanel(condition="input.tabselected==2",
                                                            style="padding-left:0px;",
@@ -133,8 +109,8 @@ serverMapApp <- function(input, output, session) {
                                    startTime=startTime,
                                    endTime=endTime,
                                    focusID=NULL,
-                                   drawDepthContours=FALSE
-                                   )
+                                   drawDepthContours=FALSE,
+                                   dataLoaded=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
@@ -155,7 +131,7 @@ serverMapApp <- function(input, output, session) {
         ## Get core and BGC data.
         notificationId <- shiny::showNotification("Getting \"core\" Argo index, either by downloading new data or using data in \"destdir\".  This may take a minute or two.", type="message", duration=NULL)
         i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
-        argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n") 
+        argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n")
         shiny::removeNotification(notificationId)
         notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
         iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
@@ -181,6 +157,7 @@ serverMapApp <- function(input, output, session) {
         ok <- is.finite(argo$time)
         argo <- argo[ok, ]
         argoFloatsStoreInCache("argo", argo, debug=debug)
+        state$dataLoaded <- TRUE
     }
 
     ok <- is.finite(argo$longitude)
@@ -201,6 +178,40 @@ serverMapApp <- function(input, output, session) {
         plot(0:1, 0:1, xlab="", ylab="", type="n", axes=FALSE)
         text(0.5, 0.5, msg, col=2, font=2)
     }
+
+    output$UIview <- shiny::renderUI({
+        if (state$dataLoaded && input$tabselected %in% c(1, 2)) {
+            shiny::checkboxGroupInput("view",
+                                      label="View",
+                                      choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
+                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
+                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
+                                                       shiny::tags$span("HiRes", style="color: black;"),
+                                                       shiny::tags$span("Topo", style="color: black;"),
+                                                       shiny::tags$span("Path", style="color:black;")),
+                                      choiceValues=list("core", "deep", "bgc", "hires", "topo", "path"),
+                                      selected=c("core", "deep", "bgc"),
+                                      inline=TRUE)
+        }
+    })
+
+    output$UIID <- shiny::renderUI({
+        if (state$dataLoaded && input$tabselected %in% c(1, 2)) {
+            shiny::textInput("ID", "Float ID", value="", width="8em")
+        }
+    })
+
+    output$UIfocus <- shiny::renderUI({
+        if (state$dataLoaded && input$tabselected %in% c(1, 2)) {
+            shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"), selected="all")
+        }
+    })
+
+    output$UIinfo <- shiny::renderUI({
+        if (state$dataLoaded) {
+            shiny::fluidRow(shiny::verbatimTextOutput("info"))
+        }
+    })
 
     output$info <- shiny::renderText({
         ## show location.  If lat range is under 90deg, also show nearest float within 100km
@@ -233,45 +244,37 @@ serverMapApp <- function(input, output, session) {
     shiny::observeEvent(input$goE,
                         {
                             dx <- diff(state$xlim) # present longitude span
-                            state$xlim <<-
-                                pinlat(state$xlim + dx / 4)
+                            state$xlim <<- pinlat(state$xlim + dx / 4)
                         })
 
     shiny::observeEvent(input$goW,
                         {
                             dx <- diff(state$xlim) # present longitude span
-                            state$xlim <<-
-                                pinlat(state$xlim - dx / 4)
+                            state$xlim <<- pinlat(state$xlim - dx / 4)
                         })
 
     shiny::observeEvent(input$goS,
                         {
                             dy <- diff(state$ylim) # present latitude span
-                            state$ylim <<-
-                                pinlat(state$ylim - dy / 4)
+                            state$ylim <<- pinlat(state$ylim - dy / 4)
                         })
 
     shiny::observeEvent(input$goN,
                         {
                             dy <- diff(state$ylim) # present latitude span
-                            state$ylim <<-
-                                pinlat(state$ylim + dy / 4)
+                            state$ylim <<- pinlat(state$ylim + dy / 4)
                         })
 
     shiny::observeEvent(input$zoomIn,
                         {
-                            state$xlim <<-
-                                pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
-                            state$ylim <<-
-                                pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
+                            state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
+                            state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
                         })
 
     shiny::observeEvent(input$zoomOut,
                         {
-                            state$xlim <<-
-                                pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
-                            state$ylim <<-
-                                pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+                            state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
+                            state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
                         })
 
     shiny::observeEvent(input$code,
@@ -367,10 +370,6 @@ serverMapApp <- function(input, output, session) {
                                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
                             }
                             i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
-                            doubleclicked$ID <- c(doubleclicked$ID, argo$ID[i])
-                            doubleclicked$cycle <- c(doubleclicked$cycle, argo$cycle[i])
-                            message(paste(doubleclicked$ID, collapse=" "))
-                            message(paste(doubleclicked$cycle, collapse=" "))
                             state$focusID <<- argo$ID[i]
                             shiny::updateTextInput(session, "ID", value=state$focusID)
                             msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
@@ -421,6 +420,8 @@ serverMapApp <- function(input, output, session) {
     shiny::observeEvent(input$keypressTrigger,
                         {
                             key <- intToUtf8(input$keypress)
+                            message(input$keypress)
+                            message(key)
                             if (key == "n") { # go north
                                 dy <- diff(state$ylim)
                                 state$ylim <<- pinlat(state$ylim + dy / 4)
