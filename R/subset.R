@@ -425,7 +425,7 @@ setMethod(f="subset",
                       for (i in seq_along(x[["argos"]])) {
                           historyList <- x[["historyAction"]][[i]][1,]
                       }
-                      historyList <- lapply(x[["historyAction"]], function(h) x[["historyAction"]][[i]][1,])
+                      historyList <- lapply(x[["historyAction"]], function(h) x[["historyAction"]][[i]])
                       keep <- grepl("IP", historyList)
                       x@data[[1]] <- x@data[[1]][keep]
                   } else {
