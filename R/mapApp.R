@@ -9,6 +9,7 @@ col <- list(core=7, bgc=3, deep=6)
 endTime <- as.POSIXlt(Sys.time())
 startTime <- as.POSIXlt(endTime - 10 * 86400)
 
+
 ##> fileLog <- file("log.dat", open="a")
 
 pi180 <- pi / 180                      # degree/radian conversion factor
@@ -96,6 +97,7 @@ uiMapApp <- shiny::fluidPage(
 
 ## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 serverMapApp <- function(input, output, session) {
+    lastHoverMessage <- "" # used with 'p' keystroke
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
     argoServer <- shiny::getShinyOption("argoServer")
@@ -110,7 +112,8 @@ serverMapApp <- function(input, output, session) {
                                    endTime=endTime,
                                    focusID=NULL,
                                    drawDepthContours=FALSE,
-                                   dataLoaded=FALSE)
+                                   dataLoaded=FALSE,
+                                   hoverIsPasted=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
@@ -203,7 +206,7 @@ serverMapApp <- function(input, output, session) {
 
     output$UIfocus <- shiny::renderUI({
         if (state$dataLoaded && input$tabselected %in% c(1, 2)) {
-            shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"), selected="all")
+            shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"), selected="all", width="10em")
         }
     })
 
@@ -215,30 +218,35 @@ serverMapApp <- function(input, output, session) {
 
     output$info <- shiny::renderText({
         ## show location.  If lat range is under 90deg, also show nearest float within 100km
+        if (state$hoverIsPasted)
+            return(lastHoverMessage)
         x <- input$hover$x
         y <- input$hover$y
         lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
         latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
+        rval <- ""
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
             fac <- cos(y * pi180)      # account for meridional convergence
             dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
             i <- which.min(dist2)
             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
             if (length(dist) && dist < 100) {
-                sprintf("%s %s, %.0f km from %s float %s cycle %s, at %s",
-                        lonstring,
-                        latstring,
-                        dist,
-                        switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
-                        argo$ID[i],
-                        argo$cycle[i],
-                        format(argo$time[i], "%Y-%m-%d %H:%M"))
+                rval <- sprintf("%s %s, %.0f km from %s float %s cycle %s, at %s",
+                                lonstring,
+                                latstring,
+                                dist,
+                                switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
+                                argo$ID[i],
+                                argo$cycle[i],
+                                format(argo$time[i], "%Y-%m-%d %H:%M"))
             } else {
-                sprintf("%s %s", lonstring, latstring)
+                rval <- sprintf("%s %s", lonstring, latstring)
             }
         } else {
-            sprintf("%s %s", lonstring, latstring)
+            rval <- sprintf("%s %s", lonstring, latstring)
         }
+        lastHoverMessage <<- rval
+        rval
     })
 
     shiny::observeEvent(input$goE,
@@ -454,6 +462,8 @@ serverMapApp <- function(input, output, session) {
                             } else if (key == "o") { # zoom out
                                 state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
                                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+                            } else if (key == "p") { # paste hover message
+                                state$hoverIsPasted <<- !state$hoverIsPasted
                             } else if (key == "0") { # append nearest float to 'log.dat'
                                 ## May later call this 'm' for mark, or 'l' for log.
                                 x <- input$hover$x
@@ -465,6 +475,8 @@ serverMapApp <- function(input, output, session) {
                                 if (length(dist) && dist < 100) {
                                     ID <- argo$ID[i]
                                     cycle <- argo$cycle[i]
+                                    ##markedPoints$ID <- c(markdedPoints$ID, argo$ID[i])
+                                    ##markedPoints$cycle <- c(markdedPoints$cycle, argo$cycle[i])
                                     write.table(cbind(as.character(ID),cycle), file="log.dat", row.names=FALSE, col.names=FALSE, append=TRUE)
                                     message("Saved float ID/cycle to log.dat")
                                 }
