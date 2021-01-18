@@ -105,6 +105,11 @@
 #' understand the processing stage of data.
 #' See example 16.
 #'
+#' 17. A character value named `historyAction`, equal to either "CF", "CR", "CV",
+#' "DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
+#' V3.3 (Carvel et al. 2019) for the description of each acronym.
+#' See example 17.
+#'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
 #' is positive for degrees North and negative for degrees South.
@@ -250,7 +255,11 @@
 #' index16 <- subset(index, 1:40)
 #' argos <- readProfiles(getProfiles(index16))
 #' argos16A <- subset(argos, dataStateIndicator="2C")
-#' argos16B <- subset(argos, dataStateIndicator="2B")}
+#' argos16B <- subset(argos, dataStateIndicator="2B")
+#'
+#' # Example 17: subset by historyAction
+#' data("index")
+#' index17 <- subset(index, historyAction="IP")}
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -294,7 +303,7 @@ setMethod(f="subset",
               if (x@metadata$type == "argos") {
                   argoFloatsDebug(debug, "subsetting with type=\"argos\"\n")
                   if (length(dotsNames) == 0)
-                      stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", or \"dataStateIndicator\" argument", call.=FALSE)
+                      stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", \"dataStateIndicator\", or \"historyAction\" argument", call.=FALSE)
                   if (dotsNames[1] == "profile") {
                       argoFloatsDebug(debug, "subsetting by profile ", profile, "\n")
                       profile <- dots[[1]]
@@ -412,8 +421,15 @@ setMethod(f="subset",
                           ##> print(keep)
                       }
                       x@data[[1]] <- x@data[[1]][keep]
+                  } else if (dotsNames[1] =="historyAction") {
+                      for (i in seq_along(x[["argos"]])) {
+                          historyList <- x[["historyAction"]][[i]][1,]
+                      }
+                      historyList <- lapply(x[["historyAction"]], function(h) x[["historyAction"]][[i]][1,])
+                      keep <- grepl("IP", historyList)
+                      x@data[[1]] <- x@data[[1]][keep]
                   } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"profile\", \"cycle\", or \"dataSateIndicator\"", call.=FALSE)
+                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"profile\", \"cycle\", \"dataSateIndicator\", or \"historyAction\"", call.=FALSE)
                   }
               }
               ## Step 2: Now we know the type is either "index" or "profiles".  In either case,

@@ -113,6 +113,10 @@ some information to describe what it is doing.
 to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
 understand the processing stage of data.
 See example 16.
+\item A character value named \code{historyAction}, equal to either "CF", "CR", "CV",
+"DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
+V3.3 (Carvel et al. 2019) for the description of each acronym.
+See example 17.
 }
 
 In all cases, the notation is that longitude is positive
@@ -242,7 +246,11 @@ data("index")
 index16 <- subset(index, 1:40)
 argos <- readProfiles(getProfiles(index16))
 argos16A <- subset(argos, dataStateIndicator="2C")
-argos16B <- subset(argos, dataStateIndicator="2B")}
+argos16B <- subset(argos, dataStateIndicator="2B")
+
+# Example 17: subset by historyAction
+data("index")
+index17 <- subset(index, historyAction="IP")}
 
 }
 \references{
