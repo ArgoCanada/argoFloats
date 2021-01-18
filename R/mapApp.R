@@ -112,7 +112,6 @@ serverMapApp <- function(input, output, session) {
                                    endTime=endTime,
                                    focusID=NULL,
                                    drawDepthContours=FALSE,
-                                   dataLoaded=FALSE,
                                    hoverIsPasted=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
@@ -160,7 +159,6 @@ serverMapApp <- function(input, output, session) {
         ok <- is.finite(argo$time)
         argo <- argo[ok, ]
         argoFloatsStoreInCache("argo", argo, debug=debug)
-        state$dataLoaded <- TRUE
     }
 
     ok <- is.finite(argo$longitude)
@@ -183,7 +181,7 @@ serverMapApp <- function(input, output, session) {
     }
 
     output$UIview <- shiny::renderUI({
-        if (state$dataLoaded && input$tabselected %in% c(1, 2)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
             shiny::checkboxGroupInput("view",
                                       label="View",
                                       choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
@@ -199,19 +197,19 @@ serverMapApp <- function(input, output, session) {
     })
 
     output$UIID <- shiny::renderUI({
-        if (state$dataLoaded && input$tabselected %in% c(1, 2)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
             shiny::textInput("ID", "Float ID", value="", width="8em")
         }
     })
 
     output$UIfocus <- shiny::renderUI({
-        if (state$dataLoaded && input$tabselected %in% c(1, 2)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
             shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"), selected="all", width="10em")
         }
     })
 
     output$UIinfo <- shiny::renderUI({
-        if (state$dataLoaded) {
+        if (argoFloatsIsCached("argo")) {
             shiny::fluidRow(shiny::verbatimTextOutput("info"))
         }
     })
@@ -518,9 +516,7 @@ serverMapApp <- function(input, output, session) {
                     state$ylim <<- c(input$brush$ymin, input$brush$ymax)
                 }
             }
-            if (0 == sum(c("core", "deep", "bgc") %in% input$view)) {
-                showError("Please select at least 1 type")
-            } else {
+            if (sum(c("core", "deep", "bgc") %in% input$view) > 0) {
                 par(mar=c(2.5, 2.5, 2, 1.5))
                 plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
                 topo <- if ("hires" %in% input$view) topoWorldFine else topoWorld
