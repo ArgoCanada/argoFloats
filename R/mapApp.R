@@ -428,8 +428,8 @@ serverMapApp <- function(input, output, session) {
     shiny::observeEvent(input$keypressTrigger,
                         {
                             key <- intToUtf8(input$keypress)
-                            message(input$keypress)
-                            message(key)
+                            #message(input$keypress)
+                            #message(key)
                             if (key == "n") { # go north
                                 dy <- diff(state$ylim)
                                 state$ylim <<- pinlat(state$ylim + dy / 4)
@@ -464,22 +464,22 @@ serverMapApp <- function(input, output, session) {
                                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
                             } else if (key == "p") { # paste hover message
                                 state$hoverIsPasted <<- !state$hoverIsPasted
-                            } else if (key == "0") { # append nearest float to 'log.dat'
-                                ## May later call this 'm' for mark, or 'l' for log.
-                                x <- input$hover$x
-                                y <- input$hover$y
-                                fac <- cos(y * pi180)      # account for meridional convergence
-                                dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
-                                i <- which.min(dist2)
-                                dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
-                                if (length(dist) && dist < 100) {
-                                    ID <- argo$ID[i]
-                                    cycle <- argo$cycle[i]
-                                    ##markedPoints$ID <- c(markdedPoints$ID, argo$ID[i])
-                                    ##markedPoints$cycle <- c(markdedPoints$cycle, argo$cycle[i])
-                                    write.table(cbind(as.character(ID),cycle), file="log.dat", row.names=FALSE, col.names=FALSE, append=TRUE)
-                                    message("Saved float ID/cycle to log.dat")
-                                }
+#                            } else if (key == "0") { # append nearest float to 'log.dat'
+#                                ## May later call this 'm' for mark, or 'l' for log.
+#                                x <- input$hover$x
+#                                y <- input$hover$y
+#                                fac <- cos(y * pi180)      # account for meridional convergence
+#                                dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
+#                                i <- which.min(dist2)
+#                                dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
+#                                if (length(dist) && dist < 100) {
+#                                    ID <- argo$ID[i]
+#                                    cycle <- argo$cycle[i]
+#                                    ##markedPoints$ID <- c(markdedPoints$ID, argo$ID[i])
+#                                    ##markedPoints$cycle <- c(markdedPoints$cycle, argo$cycle[i])
+#                                    write.table(cbind(as.character(ID),cycle), file="log.dat", row.names=FALSE, col.names=FALSE, append=TRUE)
+#                                    message("Saved float ID/cycle to log.dat")
+#                                }
                             } else if (key == "r") { # reset to start
                                 state$xlim <<- c(-180, 180)
                                 state$ylim <<- c(-90, 90)
