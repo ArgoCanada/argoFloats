@@ -498,7 +498,7 @@ serverMapApp <- function(input, output, session) {
                                                                                 <li> '<b>b</b>': go <b>b</b>ackward in time</li>
                                                                                 <li> '<b>c</b>': toggle depth <b>c</b>ontours</li>
                                                                                 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
-                                                                                <li> '<b>0</b>': undocumented provisional feature in development by DEK</li>
+                                                                                <li> '<b>p</b>': paste most recent hover message</li>
                                                                                 <li> '<b>?</b>': display this message</li> </ul>"), easyClose=TRUE))
                             }
                         })                                  # keypressTrigger
