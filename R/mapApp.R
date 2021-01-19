@@ -111,7 +111,6 @@ serverMapApp <- function(input, output, session) {
                                    startTime=startTime,
                                    endTime=endTime,
                                    focusID=NULL,
-                                   drawDepthContours=FALSE,
                                    hoverIsPasted=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
@@ -189,8 +188,9 @@ serverMapApp <- function(input, output, session) {
                                                        shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
                                                        shiny::tags$span("HiRes", style="color: black;"),
                                                        shiny::tags$span("Topo", style="color: black;"),
-                                                       shiny::tags$span("Path", style="color:black;")),
-                                      choiceValues=list("core", "deep", "bgc", "hires", "topo", "path"),
+                                                       shiny::tags$span("Path", style="color:black;"),
+                                                       shiny::tags$span("Contour", style="color:black;")),
+                                      choiceValues=list("core", "deep", "bgc", "hires", "topo", "path", "contour"),
                                       selected=c("core", "deep", "bgc"),
                                       inline=TRUE)
         }
@@ -419,7 +419,7 @@ serverMapApp <- function(input, output, session) {
 
     shiny::observeEvent(input$help,
                         {
-                            msg <- shiny::HTML("This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show topography, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
+                            msg <- shiny::HTML("This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })                                  # help
 
@@ -452,8 +452,6 @@ serverMapApp <- function(input, output, session) {
                                 state$endTime <<- state$endTime - interval
                                 shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                                 shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-                            } else if (key == "c") { # Toggle depth contours
-                                state$drawDepthContours <<- !state$drawDepthContours
                             } else if (key == "i") { # zoom in
                                 state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
                                 state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
@@ -496,7 +494,6 @@ serverMapApp <- function(input, output, session) {
                                                                                 <li> '<b>w</b>': go <b>w</b>est</li>
                                                                                 <li> '<b>f</b>': go <b>f</b>orward in time</li>
                                                                                 <li> '<b>b</b>': go <b>b</b>ackward in time</li>
-                                                                                <li> '<b>c</b>': toggle depth <b>c</b>ontours</li>
                                                                                 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
                                                                                 <li> '<b>p</b>': paste most recent hover message</li>
                                                                                 <li> '<b>?</b>': display this message</li> </ul>"), easyClose=TRUE))
@@ -522,9 +519,6 @@ serverMapApp <- function(input, output, session) {
                 topo <- if ("hires" %in% input$view) topoWorldFine else topoWorld
                 if ("topo" %in% input$view) {
                     image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
-                }
-                if (state$drawDepthContours) {
-                    contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]], levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
                 }
                 usr <- par("usr")
                 usr[1] <- pinlon(usr[1])
@@ -590,6 +584,10 @@ serverMapApp <- function(input, output, session) {
                                 }
                             }
                         }
+                        if ("contour" %in% input$view){
+                    contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]], levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
+                        }
+
                     }
                 }
                 ## }}}
