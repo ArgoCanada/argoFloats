@@ -10,8 +10,14 @@ endTime <- as.POSIXlt(Sys.time())
 startTime <- as.POSIXlt(endTime - 10 * 86400)
 
 
-#' @importFrom grDevices grey
+##> fileLog <- file("log.dat", open="a")
+
+pi180 <- pi / 180                      # degree/radian conversion factor
+
+
 #' @importFrom graphics arrows image lines mtext
+#' @importFrom grDevices grey
+#' @importFrom utils write.table
 uiMapApp <- shiny::fluidPage(
                              shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
                              shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
@@ -26,48 +32,24 @@ uiMapApp <- shiny::fluidPage(
                                              shiny::actionButton("goE", shiny::HTML("&rarr;")),
                                              shiny::actionButton("zoomIn", "+"),
                                              shiny::actionButton("zoomOut", "-"),
-                                      shiny::div(style="display: inline-block; vertical-align:center; width: 10em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
-                                      ##shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-                                      shiny::div(style="display: inline-block;vertical-align:top; width: 10em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
-
-                             shiny::fluidRow(style="padding-left:0px;",
-                                                           shiny::checkboxGroupInput("view",
-                                                                                     label="View",
-                                                                                     choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
-                                                                                                      shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
-                                                                                                      shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
-                                                                                                      shiny::tags$span("HiRes", style="color: black;"),
-                                                                                                      shiny::tags$span("Topo", style="color: black;"),
-                                                                                                      shiny::tags$span("Path", style="color:black;")),
-                                                                                     choiceValues=list("core",
-                                                                                                       "deep",
-                                                                                                       "bgc",
-                                                                                                       "hires",
-                                                                                                       "topo", "path"),
-                                                                                     selected=c("core", "deep", "bgc"),
-                                                                                     inline=TRUE)),
-
+                                             shiny::div(style="display: inline-block; vertical-align:center; width: 11em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
+                                             ##shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
+                                             shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
+                             shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
+                                             shiny::column(2, shiny::uiOutput(outputId="UIID")),
+                                             shiny::column(3, shiny::uiOutput(outputId="UIfocus"))),
+                             shiny::fluidRow(shiny::uiOutput(outputId="UIinfo")),
                              shiny::mainPanel(shiny::tabsetPanel(type="tab",
-                                                          shiny::tabPanel("Main", value=1),
-                                                          shiny::tabPanel("Trajectory", value=2),
-                                                          shiny::tabPanel("Settings", value=3,
-                                                                          shiny::tabsetPanel(
-                                                                                             shiny::tabPanel("Core", value=4),
-                                                                                             shiny::tabPanel("BGC", value=5),
-                                                                                             shiny::tabPanel("Deep", value=6),
-                                                                                             selected=TRUE,
-                                                                                             id="settab")),
-                                                          id="tabselected")),
-
-                             shiny::fluidRow(shiny::conditionalPanel(condition="input.tabselected==2",
-                                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-                                                                         shiny::textInput("ID", "Float ID", value="", width="75%")),
-                                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-                                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-                                                                         shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"),
-                                                                                            selected="all", width="75%")),
-                                                          shiny::verbatimTextOutput("info"))),
-
+                                                                 shiny::tabPanel("Main", value=1),
+                                                                 shiny::tabPanel("Trajectory", value=2),
+                                                                 shiny::tabPanel("Settings", value=3,
+                                                                                 shiny::tabsetPanel(shiny::tabPanel("Core", value=4),
+                                                                                                    shiny::tabPanel("BGC", value=5),
+                                                                                                    shiny::tabPanel("Deep", value=6),
+                                                                                                    selected=TRUE,
+                                                                                                    id="settab")),
+                                                                 id="tabselected")),
+                             ##? shiny::fluidRow(shiny::verbatimTextOutput("info")),
                              shiny::fluidRow(shiny::column(6,
                                                            shiny::conditionalPanel(condition="input.tabselected==2",
                                                            style="padding-left:0px;",
@@ -115,6 +97,7 @@ uiMapApp <- shiny::fluidPage(
 
 ## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 serverMapApp <- function(input, output, session) {
+    lastHoverMessage <- "" # used with 'p' keystroke
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
     argoServer <- shiny::getShinyOption("argoServer")
@@ -128,8 +111,8 @@ serverMapApp <- function(input, output, session) {
                                    startTime=startTime,
                                    endTime=endTime,
                                    focusID=NULL,
-                                   drawDepthContours=FALSE
-                                   )
+                                   drawDepthContours=FALSE,
+                                   hoverIsPasted=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
@@ -150,7 +133,7 @@ serverMapApp <- function(input, output, session) {
         ## Get core and BGC data.
         notificationId <- shiny::showNotification("Getting \"core\" Argo index, either by downloading new data or using data in \"destdir\".  This may take a minute or two.", type="message", duration=NULL)
         i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
-        argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n") 
+        argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n")
         shiny::removeNotification(notificationId)
         notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
         iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
@@ -197,76 +180,107 @@ serverMapApp <- function(input, output, session) {
         text(0.5, 0.5, msg, col=2, font=2)
     }
 
+    output$UIview <- shiny::renderUI({
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
+            shiny::checkboxGroupInput("view",
+                                      label="View",
+                                      choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
+                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
+                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
+                                                       shiny::tags$span("HiRes", style="color: black;"),
+                                                       shiny::tags$span("Topo", style="color: black;"),
+                                                       shiny::tags$span("Path", style="color:black;")),
+                                      choiceValues=list("core", "deep", "bgc", "hires", "topo", "path"),
+                                      selected=c("core", "deep", "bgc"),
+                                      inline=TRUE)
+        }
+    })
+
+    output$UIID <- shiny::renderUI({
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
+            shiny::textInput("ID", "Float ID", value="", width="8em")
+        }
+    })
+
+    output$UIfocus <- shiny::renderUI({
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
+            shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"), selected="all", width="10em")
+        }
+    })
+
+    output$UIinfo <- shiny::renderUI({
+        if (argoFloatsIsCached("argo")) {
+            shiny::fluidRow(shiny::verbatimTextOutput("info"))
+        }
+    })
+
     output$info <- shiny::renderText({
         ## show location.  If lat range is under 90deg, also show nearest float within 100km
+        if (state$hoverIsPasted)
+            return(lastHoverMessage)
         x <- input$hover$x
         y <- input$hover$y
         lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
         latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
+        rval <- ""
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
-            fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
-            dist2 <- ifelse(visible, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude) ^ 2, 1000)
+            fac <- cos(y * pi180)      # account for meridional convergence
+            dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
             i <- which.min(dist2)
             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
             if (length(dist) && dist < 100) {
-                sprintf("%s %s, %.0f km from %s float with ID %s\n  at cycle %s [%s]",
-                        lonstring,
-                        latstring,
-                        dist,
-                        switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
-                        argo$ID[i],
-                        argo$cycle[i],
-                        format(argo$time[i], "%Y-%m-%d %H:%M"))
+                rval <- sprintf("%s %s, %.0f km from %s float %s cycle %s, at %s",
+                                lonstring,
+                                latstring,
+                                dist,
+                                switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
+                                argo$ID[i],
+                                argo$cycle[i],
+                                format(argo$time[i], "%Y-%m-%d %H:%M"))
             } else {
-                sprintf("%s %s", lonstring, latstring)
+                rval <- sprintf("%s %s", lonstring, latstring)
             }
         } else {
-            sprintf("%s %s", lonstring, latstring)
+            rval <- sprintf("%s %s", lonstring, latstring)
         }
+        lastHoverMessage <<- rval
+        rval
     })
 
     shiny::observeEvent(input$goE,
                         {
                             dx <- diff(state$xlim) # present longitude span
-                            state$xlim <<-
-                                pinlat(state$xlim + dx / 4)
+                            state$xlim <<- pinlat(state$xlim + dx / 4)
                         })
 
     shiny::observeEvent(input$goW,
                         {
                             dx <- diff(state$xlim) # present longitude span
-                            state$xlim <<-
-                                pinlat(state$xlim - dx / 4)
+                            state$xlim <<- pinlat(state$xlim - dx / 4)
                         })
 
     shiny::observeEvent(input$goS,
                         {
                             dy <- diff(state$ylim) # present latitude span
-                            state$ylim <<-
-                                pinlat(state$ylim - dy / 4)
+                            state$ylim <<- pinlat(state$ylim - dy / 4)
                         })
 
     shiny::observeEvent(input$goN,
                         {
                             dy <- diff(state$ylim) # present latitude span
-                            state$ylim <<-
-                                pinlat(state$ylim + dy / 4)
+                            state$ylim <<- pinlat(state$ylim + dy / 4)
                         })
 
     shiny::observeEvent(input$zoomIn,
                         {
-                            state$xlim <<-
-                                pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
-                            state$ylim <<-
-                                pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
+                            state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
+                            state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
                         })
 
     shiny::observeEvent(input$zoomOut,
                         {
-                            state$xlim <<-
-                                pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
-                            state$ylim <<-
-                                pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+                            state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
+                            state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
                         })
 
     shiny::observeEvent(input$code,
@@ -361,7 +375,7 @@ serverMapApp <- function(input, output, session) {
                                 ## Restrict search to the present time window
                                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
                             }
-                            i <- which.min(ifelse( keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
+                            i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
                             state$focusID <<- argo$ID[i]
                             shiny::updateTextInput(session, "ID", value=state$focusID)
                             msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
@@ -412,6 +426,8 @@ serverMapApp <- function(input, output, session) {
     shiny::observeEvent(input$keypressTrigger,
                         {
                             key <- intToUtf8(input$keypress)
+                            #message(input$keypress)
+                            #message(key)
                             if (key == "n") { # go north
                                 dy <- diff(state$ylim)
                                 state$ylim <<- pinlat(state$ylim + dy / 4)
@@ -444,6 +460,24 @@ serverMapApp <- function(input, output, session) {
                             } else if (key == "o") { # zoom out
                                 state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
                                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+                            } else if (key == "p") { # paste hover message
+                                state$hoverIsPasted <<- !state$hoverIsPasted
+#                            } else if (key == "0") { # append nearest float to 'log.dat'
+#                                ## May later call this 'm' for mark, or 'l' for log.
+#                                x <- input$hover$x
+#                                y <- input$hover$y
+#                                fac <- cos(y * pi180)      # account for meridional convergence
+#                                dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
+#                                i <- which.min(dist2)
+#                                dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
+#                                if (length(dist) && dist < 100) {
+#                                    ID <- argo$ID[i]
+#                                    cycle <- argo$cycle[i]
+#                                    ##markedPoints$ID <- c(markdedPoints$ID, argo$ID[i])
+#                                    ##markedPoints$cycle <- c(markdedPoints$cycle, argo$cycle[i])
+#                                    write.table(cbind(as.character(ID),cycle), file="log.dat", row.names=FALSE, col.names=FALSE, append=TRUE)
+#                                    message("Saved float ID/cycle to log.dat")
+#                                }
                             } else if (key == "r") { # reset to start
                                 state$xlim <<- c(-180, 180)
                                 state$ylim <<- c(-90, 90)
@@ -464,6 +498,7 @@ serverMapApp <- function(input, output, session) {
                                                                                 <li> '<b>b</b>': go <b>b</b>ackward in time</li>
                                                                                 <li> '<b>c</b>': toggle depth <b>c</b>ontours</li>
                                                                                 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
+                                                                                <li> '<b>0</b>': undocumented provisional feature in development by DEK</li>
                                                                                 <li> '<b>?</b>': display this message</li> </ul>"), easyClose=TRUE))
                             }
                         })                                  # keypressTrigger
@@ -481,9 +516,7 @@ serverMapApp <- function(input, output, session) {
                     state$ylim <<- c(input$brush$ymin, input$brush$ymax)
                 }
             }
-            if (0 == sum(c("core", "deep", "bgc") %in% input$view)) {
-                showError("Please select at least 1 type")
-            } else {
+            if (sum(c("core", "deep", "bgc") %in% input$view) > 0) {
                 par(mar=c(2.5, 2.5, 2, 1.5))
                 plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
                 topo <- if ("hires" %in% input$view) topoWorldFine else topoWorld
