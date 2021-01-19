@@ -23,10 +23,10 @@ jobs:
         run: |
           ln -s `which gfortran-10` /usr/local/bin/gfortran
           gfortran --version || true
-          ls /usr/local/Cellar/gcc
+          ls /usr/local/Cellar/gcc | tail -n 1
           
           sudo mkdir -p /usr/local/gfortran
-          sudo cp -r /usr/local/Cellar/gcc/10.2.0/lib/gcc/10 /usr/local/gfortran/lib
+          sudo cp -r /usr/local/Cellar/gcc/`ls /usr/local/Cellar/gcc | tail -n 1`/lib/gcc/10 /usr/local/gfortran/lib
           sudo chmod 755 /usr/local/gfortran
           sudo chmod 755 /usr/local/gfortran/lib
           
