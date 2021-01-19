@@ -19,9 +19,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@v1
       - name: Link gfortran for devel oce 
-        run: |
-          mkdir ~/.R
-          echo 'FC=gfortran-8' > ~/.R/Makevars
+        run: ln -s `which gfortran-8` gfortran
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
