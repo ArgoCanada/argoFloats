@@ -18,8 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@v1
+      # another approach is would be to use ~/.R/Makevars and set FC/FLIBS
       - name: Link gfortran for devel oce 
-        run: ln -s `which gfortran-10` /usr/local/bin/gfortran
+        run: |
+          ln -s `which gfortran-10` /usr/local/bin/gfortran
+          sudo mkdir -p /usr/local/gfortran
+          sudo ln -s /usr/local/Cellar/gcc/10.1.0/lib/gcc/10 /usr/local/gfortran/lib
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
