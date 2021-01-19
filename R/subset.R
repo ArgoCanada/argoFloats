@@ -378,30 +378,35 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                       return(res)
                   } else if (dotsNames[1] == "cycle") {
-                      argoFloatsDebug(debug, "subsetting by cycle for \"argos\" type\n")
+                      argoFloatsDebug(debug, "subsetting by cycle for 'index' type\n")
                       cycle <- dots[[1]]
-                      if (!is.character(cycle) & !is.integer(cycle))
-                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or integer", call.=FALSE)
+                      if (!is.character(cycle) & !is.numeric(cycle))
+                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
+                      ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
+                      xcycle <- x[["cycle"]]
                       if (is.character(cycle)) {
-                      file <- unlist(x[["filename"]])
-                      fileCycle <- sapply(x[["data"]][[1]], function(x) x[["cycleNumber"]])
-                      ## Insist that the cycles are available
-                      keep <- rep(FALSE, length(fileCycle))
-                      for (thisCycle in cycle) {
-                          if (!(thisCycle %in% fileCycle))
-                              stop("In subset,argoFloats-method(): Cycle \"", thisCycle, "\" not found. Try one of: ", paste(fileCycle, collapse=", "), call.=FALSE)
-                          keep <- keep | (thisCycle == fileCycle)
+                          argoFloatsDebug(debug, "subsetting by cycle as a character value\n")
+                          ## Here, keep is logical
+                          keep <- rep(FALSE, length(xcycle))
+                          for (thisCycle in cycle)
+                              keep <- keep | grepl(thisCycle, xcycle)
+                          nkeep <- sum(keep)
+                      } else if (is.numeric(cycle)) {
+                          argoFloatsDebug(debug, "subsetting by cycle as a numeric value\n")
+                          ## Here, keep is integer
+                          keep <- NULL
+                          xcycle <- as.integer(gsub("AD","",xcycle)) # change e.g. "123D" to "123"
+                          for (thisCycle in cycle) {
+                              keep <- c(keep, which(thisCycle == xcycle))
+                              ## message("thisCycle=", thisCycle, " keep=", paste(keep, collapse=" "))
+                          }
+                          nkeep <- length(keep)
                       }
-                      } else if (is.integer(cycle)) {
-                      xcycle <- as.numeric(x[["cycle"]])
-                      keep <- min(cycle) <= xcycle & xcycle <= max(cycle)
-                      }
-                      res <- x
-                      res@data[[1]] <- x@data[[1]][keep]
+                      if (nkeep < 1)
+                          warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/length(keep)), "%)")
-                      argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
-                      return(res)
+                          message("Kept ", nkeep, " profiles ")
+                      x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="dataStateIndicator") {
                       argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
                       dataStateIndicator <- dots[[1]]

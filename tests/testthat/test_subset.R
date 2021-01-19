@@ -144,10 +144,9 @@ test_that("subset stop messages", {
           expect_error(subset(argos, "Error: in subset,argoFloats-method() : must give 'profile' or 'cycle' argument"))
           expect_error(subset(argos, profile=2,
                               "Error: in subset,argoFloats-method() : cannot access profile 2 of metadata item 'flags' because its dimension is 335 1 "))
-          expect_message(subset(argos, cycle="131", "Kept 1 profiles (100%)"))
+          argos2 <- expect_message(subset(argos, cycle=131), "Kept 1 profiles")
           expect_error(subset(argos, map=1, " Error: in subset,argoFloats-method(): the only permitted '...' argument for argos type is 'profile' or 'cycle'"))
           expect_error(subset(argos, cycle="1", "Error: In subset,argoFloats-method(): Cycle '1' not found. Try one of: 131"))
-          expect_message(subset(argos, cycle=131:140, "Kept 1 profiles (100%)"))
           expect_error(subset(index, circle='dog', " Error: in subset,argoFloats-method() : 'circle' must be a list containing 'longitude', 'latitude' and 'radius'"))
           expect_error(subset(index, circle=list(longitude=-77.5, latitude=27.5), " Error: in subset,argoFloats-method() : 'circle' must be a list containing 'longitude', 'latitude' and 'radius'"))
           expect_error(subset(index, rectangle='dog', " Error: in subset,argoFloats-method(): 'rectangle' must be a list containing 'longitude' and 'latitude'"))
