@@ -21,7 +21,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
       
       - name: Link gfortran for devel oce 
-        run: ln -s `which gfortran-8` gfortran
+        run: ln -s `which gfortran-10` /usr/local/bin/gfortran
       
       - name: Query dependencies
         run: |
