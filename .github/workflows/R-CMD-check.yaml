@@ -24,6 +24,10 @@ jobs:
           ln -s `which gfortran-10` /usr/local/bin/gfortran
           sudo mkdir -p /usr/local/gfortran
           sudo ln -s /usr/local/Cellar/gcc/10.1.0/lib/gcc/10 /usr/local/gfortran/lib
+          
+          gfortran --version || true
+          ls /usr/local/gfortran/lib || true
+          
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
