@@ -560,8 +560,11 @@ serverMapApp <- function(input, output, session) {
                         #message("the symbSettings are", symbSettings)
                         #message("the colSettings are", colSettings)
                         if (!"lines" %in% input$action)
-                            points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
-                        #print(col[[view]])
+                            if (symbSettings[[view]] == 21) {
+                                points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], bg=colSettings[[view]], lwd=0.5)
+                            } else {
+                                points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
+                            }
                         if ("path" %in% input$view) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
