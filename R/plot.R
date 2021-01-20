@@ -605,7 +605,8 @@ setMethod(f="plot",
                           ## Increase space to right of axis, decreasing equally to the left.
                           textHeight <- par("cin")[2]
                           mai <- c(0, -textHeight, 0, textHeight)
-                          oce::drawPalette(colormap=bathymetry$colormap, mai=mai)
+                          oce::drawPalette(colormap=bathymetry$colormap, mai=mai,
+                                           cex=if (is.null(cex)) 1 else cex)
                       } else {
                           argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed (or failed bathymetry download)\n")
                       }
