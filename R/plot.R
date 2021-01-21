@@ -812,8 +812,6 @@ setMethod(f="plot",
                                      pressure=pressure,
                                      latitude=latitude,
                                      longitude=longitude)
-                  if (is.null(cex))
-                      cex <- par("cex")
                   ## FIXME: move this TSControl work the which="TS" code {{
                   if (is.null(TSControl))
                       TSControl <- list(colByCycle=NULL)
@@ -835,8 +833,14 @@ setMethod(f="plot",
                       col <- unlist(lapply(seq_along(cycle), function(i) rep(colByCycle[i], lengths[i])))
                   }
                   ## }}} FIXME
-                  if (is.null(pch))
+                  if (is.null(cex)) {
+                      cex <- 0.3 * par("cex")
+                      argoFloatsDebug(debug, "TS plot defaulting to cex=", cex, "\n")
+                  }
+                  if (is.null(pch)) {
                       pch <- 20
+                      argoFloatsDebug(debug, "TS plot defaulting to pch=", pch, "\n")
+                  }
                   omgp <- par("mgp")
                   if (is.null(mgp))
                       mgp <- c(2, 0.7, 0)
@@ -855,7 +859,12 @@ setMethod(f="plot",
                       if (pch == 21)
                           bg <- ifelse(good, "black", "red")
                   }
-                  oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos,
+                  oce::plotTS(ctd,
+                              cex=cex,
+                              bg=bg,
+                              col=col,
+                              pch=pch,
+                              mar=mar, mgp=mgp, eos=eos,
                               type=if (is.null(type)) "p" else type, ...)
                   par(mar=omar, mgp=omgp)
               } else if (which == "QC") {
@@ -998,13 +1007,21 @@ setMethod(f="plot",
                       VARIABLE <- VARIABLE[ok]
                       Y <- Y[ok]
                   }
+                  if (is.null(cex)) {
+                      cex <- 0.3 * par("cex")
+                      argoFloatsDebug(debug, "Profile plot defaulting to cex=", cex, "\n")
+                  }
+                  if (is.null(pch)) {
+                      pch <- 20
+                      argoFloatsDebug(debug, "Profile plot defaulting to pch=", pch, "\n")
+                  }
                   plot(VARIABLE, Y, ylim=rev(range(Y, na.rm=TRUE)),
                        axes=FALSE,
                        ylab="", xlab="", # draw axes later, in oceanographic 'profile' locations
                        cex=cex,
                        type=if(is.null(type)) "l" else type,
                        col=if (is.null(col)) par("col") else col,
-                       pch=if (is.null(pch)) "." else pch,
+                       pch=pch,
                        ...)
                   box()
                   axis(2)
