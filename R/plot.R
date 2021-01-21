@@ -162,11 +162,9 @@ pinusr <- function(usr)
 #'
 #' @param ylab as `xlab`, but for the vertical axis.
 #'
-#' @param type a character value that controls line type, as for [par()].  If
-#' not specified, a choice is made automatically based on the value of `which`,
-#' e.g. if `which` is `"map"`, points will be plotted (as if `type="p"` had been
-#' given), but if `which` is `"profile"` then lines will be plotted (as if
-#' `type="l"` had been given).
+#' @param type a character value that controls the line type, with `"p"` for
+#' unconnected points, `"l"` for line segments between undrawn points, etc.;
+#' see the docs for [par()], If `type` not specified, it defaults to `"p"`.
 #'
 #' @param cex a character expansion factor for plot symbols, or `NULL`, to get an
 #' value that depends on the value of `which`.
@@ -179,7 +177,7 @@ pinusr <- function(usr)
 #' values that distinguish between the interior of the symbol and the
 #' border, e.g. for `pch=21`.
 #'
-#' @param pch an integer or code indicating the type of plot symbol, or `NULL`,
+#' @param pch an integer or character value indicating the type of plot symbol, or `NULL`,
 #' to get a value that depends on the value of `which`.
 #' (See [par()] for more on specifying `pch`.)
 #'
@@ -218,7 +216,7 @@ pinusr <- function(usr)
 #' whether to skip across `NA` values if the `type` argument is `"l"`, `"o"`,
 #' or `"b"`).
 #' If `profileControl` is not provided, it defaults to
-#' `list(parameter="temperature", ytype="pressure", connect=TRUE)`. Alternatively,
+#' `list(parameter="temperature", ytype="pressure", connect=FALSE)`. Alternatively,
 #' if `profileControl` is missing any of the three elements, then they are
 #' given defaults as in the previous sentence.
 #'
@@ -511,7 +509,7 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "using plot.window() to determine area for bathymetry download, with\n",
                                           "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
                                           "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
-                                          "    xlim=c(", paste(ylim, collapse=","), ")\n",
+                                          "    xlim=c(", paste(xlim, collapse=","), ")\n",
                                           "    ylim=c(", paste(ylim, collapse=","), ")\n",
                                           "    asp=", asp, "\n", sep="")
                           plot.window(xlim=xlim, ylim=ylim,
@@ -525,39 +523,38 @@ setMethod(f="plot",
                           usr <- par("usr")
                           argoFloatsDebug(debug, "after using plot.window(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
                           latitudeSpan <- usr[4] - usr[3]
-                          Dlon <- (usr[2] - usr[1]) / 20
-                          Dlat <- (usr[4] - usr[3]) / 20
+                          longitudeSpan <- usr[2] - usr[1]
+                          Dlon <- 0.05 * longitudeSpan
+                          Dlat <- 0.05 * latitudeSpan
+                          argoFloatsDebug(debug, "Dlon=", Dlon, " (5% of longitude span, which is ", longitudeSpan, ")\n", sep="")
+                          argoFloatsDebug(debug, "Dlat=", Dlat, " (5% of latitude span, which is ", latitudeSpan, ")\n", sep="")
                           ## resolution <- ifelse(latitudeSpan < 5, 1,
                           ##                      ifelse(latitudeSpan < 20, 2,
                           ##                             ifelse(latitudeSpan < 90, 8, 60)))
                           resolution <- as.integer(round(1 + 60 * latitudeSpan / 400))
-                          argoFloatsDebug(debug, "Dlat=", round(Dlat, 4), "\n", sep="")
-                          argoFloatsDebug(debug, "Dlon=", round(Dlon, 4), "\n", sep="")
+                          if (resolution < 1)
+                              stop("calculated resolution (=", resolution, ") cannot be under 1 minute")
                           argoFloatsDebug(debug, "resolution=", resolution, "\n", sep="")
-                          argoFloatsDebug(debug, "minlon=", round(usr[1]-Dlon, 3), "\n", sep="")
-                          argoFloatsDebug(debug, "maxlon=", round(usr[2]+Dlon, 3), "\n", sep="")
-                          argoFloatsDebug(debug, "minlat=", round(usr[3]-Dlat, 3), "\n", sep="")
-                          argoFloatsDebug(debug, "maxlat=", round(usr[4]+Dlat, 3), "\n", sep="")
-                          ## Round to 4 digits to prevent crazy filenames for no good reason
-                          ##OLD bathy <- try(marmap::getNOAA.bathy(max(-180, round(usr[1]-Dlon, 3)),
-                          ##OLD                                    min(+180, round(usr[2]+Dlon, 3)),
-                          ##OLD                                    max(-90, round(usr[3]-Dlat, 3)),
-                          ##OLD                                    min(+90, round(usr[4]+Dlat, 3)),
-                          ##OLD                                    resolution=resolution,
-                          ##OLD                                    keep=bathymetry$keep),
-                          ##OLD              silent=FALSE)
-                          argoFloatsDebug(debug, "about to call oce::download.topo and the oce::read.topo\n")
-                          topo <- try(oce::read.topo(oce::download.topo(max(-180, round(usr[1]-Dlon, 3)),
-                                                                        min(+180, round(usr[2]+Dlon, 3)),
-                                                                        max(-90, round(usr[3]-Dlat, 3)),
-                                                                        min(+90, round(usr[4]+Dlat, 3)),
-                                                                        resolution=resolution, debug=debug)),
+                          ## Notice the use of 0.1 and 1 digit in lon and lat, which means
+                          ## we are enlarging the field by 10km in both lon and lat.
+                          west <- round(usr[1]-Dlon, 1)
+                          east <- round(usr[2]+Dlon, 1)
+                          south <- round(usr[3]-Dlat, 1)
+                          north <- round(usr[4]+Dlat, 1)
+                          argoFloatsDebug(debug, "will get topo in domain west=", west, ", east=", east,
+                                          ", south=", south, ", north=", north, "\n")
+                          topo <- try(oce::read.topo(oce::download.topo(west=west,
+                                                                        east=east,
+                                                                        south=south,
+                                                                        north=north,
+                                                                        resolution=resolution,
+                                                                        debug=debug)),
                                       silent=FALSE)
-                          bathy <- -topo[["z"]]
                           if (inherits(topo, "try-error")) {
                               warning("could not download bathymetry from NOAA server\n")
                               drawBathymetry <- FALSE
                           } else {
+                              bathy <- -topo[["z"]]
                               dimBathy <- dim(bathy)
                               argoFloatsDebug(debug, "grid size", paste(dimBathy, collapse="x"), "\n")
                               bathy <- as.integer(bathy)
@@ -574,7 +571,6 @@ setMethod(f="plot",
                       } else if (inherits(bathymetry$source, "oce") &&
                                  inherits(bathymetry$source, "topo")) {
                           argoFloatsDebug(debug, "using oce-style topo object (converted to NOAA bathy)\n", sep="")
-                          ##browser()
                           dim <- dim(bathymetry$source[["z"]])
                           ## Note the negative sign, to get depth.
                           bathy <- matrix(-as.integer(bathymetry$source[["z"]]), nrow=dim[1], ncol=dim[2])
@@ -584,23 +580,22 @@ setMethod(f="plot",
                       } else {
                           stop("cannot determine bathymetry data source")
                       }
+                      argoFloatsDebug(debug, "drawBathymetry = ", drawBathymetry, " (after trying to get bathymetry)\n", sep="")
                       ## Handle colormap
-                      if (!inherits(bathy, "try-error") && !bathymetry$contour && is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
+                      if (drawBathymetry && !inherits(bathy, "try-error") && !bathymetry$contour && is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
                           argoFloatsDebug(debug, "bathy class: \"", class(bathy), "\"\n", sep="")
                           deepest <- max(bathy, na.rm=TRUE)
                           argoFloatsDebug(debug, "bathy range: ", paste(range(bathy, na.rm=TRUE), collapse=" to "), "\n")
                           argoFloatsDebug(debug, "setting a default colormap for ", deepest, "m to 0m depth\n", sep="")
                           bathymetry$colormap <- oce::colormap(zlim=c(0, deepest),
                                                                col=function(n) rev(oce::oceColorsGebco(n)))
-                      } else {
-                          argoFloatsDebug(debug, "using supplied bathymetry$colormap\n")
                       }
                       ## Handle optional drawing of the palette. Note space for one line of text is removed
                       ## from the LHS of the palette and added to the RHS.  This is because we know that
                       ## there is no axis to the left of the palette, so we do not need space for one.
                       ## We recover the stolen space by putting it back at the RHS, where it can be
                       ## useful, especially if a map plot has another plot to its right.
-                      if (!inherits(bathy, "try-error") && !bathymetry$contour && bathymetry$palette) {
+                      if (drawBathymetry && !inherits(bathy, "try-error") && !bathymetry$contour && bathymetry$palette) {
                           argoFloatsDebug(debug, "drawing a bathymetry palette\n")
                           ## Increase space to right of axis, decreasing equally to the left.
                           textHeight <- par("cin")[2]
@@ -945,7 +940,7 @@ setMethod(f="plot",
                   if (x[["type"]] != "argos")
                       stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)
                   if (is.null(type))
-                      type <- "l"
+                      type <- "p"
                   if (is.null(profileControl)) {
                       if ("parameter" %in% names(dots)) {
                           warning("accepting \"parameter\" as a separate argument, until 2020-dec-01.  After that, you must use e.g. profileControl=list(parameter=", dots$parameter, ")")
@@ -954,7 +949,7 @@ setMethod(f="plot",
                           profileControl <- list(parameter="temperature")
                       }
                       profileControl$ytype <- "pressure"
-                      profileControl$connect <- TRUE
+                      profileControl$connect <- FALSE
                   }
                   if (!is.list(profileControl))
                       stop("In plot,argoFloats-method(): profileControl must be a list")
@@ -1009,7 +1004,8 @@ setMethod(f="plot",
                        cex=cex,
                        type=if(is.null(type)) "l" else type,
                        col=if (is.null(col)) par("col") else col,
-                       pch=pch, ...)
+                       pch=if (is.null(pch)) "." else pch,
+                       ...)
                   box()
                   axis(2)
                   axis(3)

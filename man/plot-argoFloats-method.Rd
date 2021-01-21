@@ -65,11 +65,9 @@ depending on the value of \code{which}. Note that \code{xlab} is not obeyed if
 
 \item{ylab}{as \code{xlab}, but for the vertical axis.}
 
-\item{type}{a character value that controls line type, as for \code{\link[=par]{par()}}.  If
-not specified, a choice is made automatically based on the value of \code{which},
-e.g. if \code{which} is \code{"map"}, points will be plotted (as if \code{type="p"} had been
-given), but if \code{which} is \code{"profile"} then lines will be plotted (as if
-\code{type="l"} had been given).}
+\item{type}{a character value that controls the line type, with \code{"p"} for
+unconnected points, \code{"l"} for line segments between undrawn points, etc.;
+see the docs for \code{\link[=par]{par()}}, If \code{type} not specified, it defaults to \code{"p"}.}
 
 \item{cex}{a character expansion factor for plot symbols, or \code{NULL}, to get an
 value that depends on the value of \code{which}.}
@@ -78,7 +76,7 @@ value that depends on the value of \code{which}.}
 that depends on the value of \code{which} (see \dQuote{Details}).  If \code{which="TS"}, then the
 \code{TSControl} argument takes precedence over \code{col}.}
 
-\item{pch}{an integer or code indicating the type of plot symbol, or \code{NULL},
+\item{pch}{an integer or character value indicating the type of plot symbol, or \code{NULL},
 to get a value that depends on the value of \code{which}.
 (See \code{\link[=par]{par()}} for more on specifying \code{pch}.)}
 
@@ -120,7 +118,7 @@ either \code{"pressure"} or \code{"sigma0"}) and \code{connect} (a logical value
 whether to skip across \code{NA} values if the \code{type} argument is \code{"l"}, \code{"o"},
 or \code{"b"}).
 If \code{profileControl} is not provided, it defaults to
-\code{list(parameter="temperature", ytype="pressure", connect=TRUE)}. Alternatively,
+\code{list(parameter="temperature", ytype="pressure", connect=FALSE)}. Alternatively,
 if \code{profileControl} is missing any of the three elements, then they are
 given defaults as in the previous sentence.}
 
