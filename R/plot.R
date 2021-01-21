@@ -1,12 +1,14 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-## Utility functions to trim lat and lon.
-pinlat <- function(lat)
-    ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
-pinlon <- function(lon)
-    ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
-pinusr <- function(usr)
-    c(pinlon(usr[1]), pinlon(usr[2]), pinlat(usr[3]), pinlat(usr[4]))
+colDefaults <- list(core="7", bgc="#05f076", deep="6")
+
+##OLD ## Utility functions to trim lat and lon.
+##OLD pinlat <- function(lat)
+##OLD     ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
+##OLD pinlon <- function(lon)
+##OLD     ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
+##OLD pinusr <- function(usr)
+##OLD     c(pinlon(usr[1]), pinlon(usr[2]), pinlat(usr[3]), pinlat(usr[4]))
 
 ## issue259 argoFloatsMapAxes <- function(axes=TRUE, box=TRUE, geographical=0)
 ## issue259 {
@@ -423,6 +425,13 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
+                  n <- x[["length"]]
+                  ## Find type of each cycle, for colour-coding
+                  cycleType <- rep("core", n)
+                  cycleType[("849" == x@data$index$profiler_cycleType)] <- "deep"
+                  cycleType[("862" == x@data$index$profiler_cycleType)] <- "deep"
+                  cycleType[("864" == x@data$index$profiler_cycleType)] <- "deep"
+                  cycleType[!is.na(x@data$index$parameters)] <- "Bgc"
                   colLand <- mapControl$colLand
                   if (is.null(mapControl))
                       mapControl <- list(bathymetry=bathymetry, projection=FALSE, colLand="lightgray")

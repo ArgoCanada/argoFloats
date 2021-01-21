@@ -54,7 +54,7 @@ setMethod(f="summary",
                           if (ndata>1) " rows " else " row ",
                           "and column names: \"",
                           paste(head(colnames, -1), collapse="\", \""),
-                          " and \"", tail(colnames, 1), "\"", "\n", sep="")
+                          "\" and \"", tail(colnames, 1), "\"\n", sep="")
                   } else {
                       cat("* index: (none)\n", sep="")
                   }
