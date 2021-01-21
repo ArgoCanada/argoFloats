@@ -834,7 +834,7 @@ setMethod(f="plot",
                   }
                   ## }}} FIXME
                   if (is.null(cex)) {
-                      cex <- 0.3 * par("cex")
+                      cex <- par("cex")
                       argoFloatsDebug(debug, "TS plot defaulting to cex=", cex, "\n")
                   }
                   if (is.null(pch)) {
@@ -1008,7 +1008,7 @@ setMethod(f="plot",
                       Y <- Y[ok]
                   }
                   if (is.null(cex)) {
-                      cex <- 0.3 * par("cex")
+                      cex <- par("cex")
                       argoFloatsDebug(debug, "Profile plot defaulting to cex=", cex, "\n")
                   }
                   if (is.null(pch)) {
