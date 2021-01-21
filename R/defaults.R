@@ -4,10 +4,10 @@
 #'
 #' By default, files downloaded from the Argo mirror are placed in
 #' `~/data/argo`. You can configure where these files are stored by setting
-#' `options(argoFloat.destdir="path/to/argo")`. To persist this value
+#' `options(argoFloats.destdir="path/to/argo")`. To persist this value
 #' between sessions you can place this value in your `.Rprofile`. Similarly,
 #' the default value for `server` in [getIndex()] is `"ifremer-https"`, which
-#' can be configured by setting `options(argoFloat.server = "https://...")`.
+#' can be configured by setting `options(argoFloats.server = "https://...")`.
 #'
 #' @return A character value containing a path to the default Argo data directory.
 #' @export
