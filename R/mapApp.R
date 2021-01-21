@@ -3,9 +3,9 @@
 appName <- "mapApp"
 appVersion <- "0.1"
 
-##cacheAge <- 5                          # a global variable
-col <- list(core=7, bgc=3, deep=6)
-## Start and end times, covering 21 days to usually get 2 cycles
+colDefaults <- list(core="7", bgc="#05f076", deep="6")
+
+## Default start and end times
 endTime <- as.POSIXlt(Sys.time())
 startTime <- as.POSIXlt(endTime - 10 * 86400)
 
@@ -66,15 +66,15 @@ uiMapApp <- shiny::fluidPage(
 
                              shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
                                                      shiny::column(2,
-                                                                   shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8"), selected="7"),
+                                                                   shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default"), # default used to be 7
                                                                    shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1),
                                                                    shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.5, step=0.05),
-                                                                   shiny::selectInput("CPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8"), selected="7"),
+                                                                   shiny::selectInput("CPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default"),
                                                                    shiny::sliderInput("CPwidth", "Path Width", min=0, max=1, value=1, step=0.1))),
 
                              shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
                                                      shiny::column(2,
-                                                                   shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1", "2", "3", "4", "5", "6", "7", "8"), selected="3"),
+                                                                   shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1", "2", "3", "4", "5", "6", "7", "8", "default"), selected="default"), # default used to be 3
                                                                    shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
                                                                    shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05),
                                                                    shiny::selectInput("BPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8"), selected="3"),
@@ -82,7 +82,7 @@ uiMapApp <- shiny::fluidPage(
 
                              shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
                                                      shiny::column(2,
-                                                                   shiny::selectInput("Dcolour", "Symbol Colour",choices=c("1","2","3","4","5","6","7","8"), selected="6"),
+                                                                   shiny::selectInput("Dcolour", "Symbol Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default"), # default used to be 6
                              shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1),
                              shiny::sliderInput("Dsize", "Symbol Size", min=0,max=1, value=0.5, step=0.05),
                              shiny::selectInput("DPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8"), selected="6"),
@@ -545,7 +545,7 @@ serverMapApp <- function(input, output, session) {
                 keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
                 keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
                 keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
-                cex <- 0.75
+                cex <- 0.8
                 ## Draw points, optionally connecting paths (and indicating start points)
                 ## {{{
                 visible <<- rep(FALSE, length(argo$lon))
@@ -554,7 +554,9 @@ serverMapApp <- function(input, output, session) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <- argo[k,]
-                        colSettings <- list(core=input$Ccolour, bgc=input$Bcolour, deep=input$Dcolour)
+                        colSettings <- list(core=if (input$Ccolour == "default") colDefaults$core else input$Ccolour,
+                                            bgc=if (input$Bcolour == "default") colDefaults$bgc else input$Bcolour,
+                                            deep=if (input$Dcolour == "default") colDefaults$deep else input$Dcolour)
                         symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
                         sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
                         #message("the symbSettings are", symbSettings)
