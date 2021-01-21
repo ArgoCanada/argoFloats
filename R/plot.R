@@ -695,13 +695,29 @@ setMethod(f="plot",
                       }
                       rect(usrTrimmed[1], usrTrimmed[3], usrTrimmed[2], usrTrimmed[4], lwd=1)
                   }
-                  points(unlist(longitude), unlist(latitude),
-                         cex=if (is.null(cex)) 1 else cex,
-                         col=if (is.null(col)) "white" else col,
-                         pch=if (is.null(pch)) 21 else pch,
-                         bg=if (is.null(bg)) "red" else bg,
-                         type=if (is.null(type)) "p" else type,
-                         ...)
+                  if (is.null(col)) {
+                      col <- rep("", n)
+                      col[cycleType == "core"] <- colDefaults$core
+                      col[cycleType == "Bgc"] <- colDefaults$bgc
+                      col[cycleType == "deep"] <- colDefaults$deep
+                  }
+                  if (is.null(pch))
+                      pch <- 21
+                  if (length(pch) == 1 && pch == 21) {
+                      points(unlist(longitude), unlist(latitude),
+                             cex=if (is.null(cex)) 1 else cex,
+                             pch=pch,
+                             bg=col,
+                             type=if (is.null(type)) "p" else type,
+                             ...)
+                  } else {
+                      points(unlist(longitude), unlist(latitude),
+                             cex=if (is.null(cex)) 1 else cex,
+                             pch=pch,
+                             col=col,
+                             type=if (is.null(type)) "p" else type,
+                             ...)
+                  }
                   ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
                   ## on just the distance spanned in the north-south direction.
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)

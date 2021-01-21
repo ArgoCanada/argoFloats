@@ -19,6 +19,7 @@ test_that("test merging core and Bgc data",
               M <- merge(index, indexBgc)
               expect_equal(sum(is.na(M[["parameters"]])), index[["length"]])
               expect_equal(sum(!is.na(M[["parameters"]])), indexBgc[["length"]])
+              expect_silent(plot(M, which="map", bathymetry=FALSE))
           }
 )
 
