@@ -144,11 +144,12 @@
 
     <pre class="usage"><span class='fu'>downloadWithRetries</span><span class='op'>(</span>
   <span class='va'>url</span>,
-  destdir <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultDestdir</a></span><span class='op'>(</span><span class='op'>)</span>,
-  destfile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>destdir</span>,
+  <span class='va'>destfile</span>,
   quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
   age <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultProfileAge</a></span><span class='op'>(</span><span class='op'>)</span>,
   retries <span class='op'>=</span> <span class='fl'>3</span>,
+  async <span class='op'>=</span> <span class='cn'>FALSE</span>,
   debug <span class='op'>=</span> <span class='fl'>0</span>
 <span class='op'>)</span></pre>
 
@@ -197,6 +198,11 @@ is less than <code>age</code> days in the past, it will not be downloaded.  The 
       <th>retries</th>
       <td><p>integer telling how many times to retry a download,
 if the first attempt fails.</p></td>
+    </tr>
+    <tr>
+      <th>async</th>
+      <td><p>Use <code>TRUE</code> to perform requests asynchronously. This is much
+faster for many small files (e.g., Argo profile NetCDF files).</p></td>
     </tr>
     <tr>
       <th>debug</th>

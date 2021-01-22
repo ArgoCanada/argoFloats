@@ -236,11 +236,9 @@ depending on the value of <code>which</code>. Note that <code>xlab</code> is not
     </tr>
     <tr>
       <th>type</th>
-      <td><p>a character value that controls line type, as for <code><a href='https://rdrr.io/r/graphics/par.html'>par()</a></code>.  If
-not specified, a choice is made automatically based on the value of <code>which</code>,
-e.g. if <code>which</code> is <code>"map"</code>, points will be plotted (as if <code>type="p"</code> had been
-given), but if <code>which</code> is <code>"profile"</code> then lines will be plotted (as if
-<code>type="l"</code> had been given).</p></td>
+      <td><p>a character value that controls the line type, with <code>"p"</code> for
+unconnected points, <code>"l"</code> for line segments between undrawn points, etc.;
+see the docs for <code><a href='https://rdrr.io/r/graphics/par.html'>par()</a></code>, If <code>type</code> not specified, it defaults to <code>"p"</code>.</p></td>
     </tr>
     <tr>
       <th>cex</th>
@@ -255,7 +253,7 @@ that depends on the value of <code>which</code> (see &#8220;Details&#8221;).  If
     </tr>
     <tr>
       <th>pch</th>
-      <td><p>an integer or code indicating the type of plot symbol, or <code>NULL</code>,
+      <td><p>an integer or character value indicating the type of plot symbol, or <code>NULL</code>,
 to get a value that depends on the value of <code>which</code>.
 (See <code><a href='https://rdrr.io/r/graphics/par.html'>par()</a></code> for more on specifying <code>pch</code>.)</p></td>
     </tr>
@@ -309,7 +307,7 @@ either <code>"pressure"</code> or <code>"sigma0"</code>) and <code>connect</code
 whether to skip across <code>NA</code> values if the <code>type</code> argument is <code>"l"</code>, <code>"o"</code>,
 or <code>"b"</code>).
 If <code>profileControl</code> is not provided, it defaults to
-<code><a href='https://rdrr.io/r/base/list.html'>list(parameter="temperature", ytype="pressure", connect=TRUE)</a></code>. Alternatively,
+<code><a href='https://rdrr.io/r/base/list.html'>list(parameter="temperature", ytype="pressure", connect=FALSE)</a></code>. Alternatively,
 if <code>profileControl</code> is missing any of the three elements, then they are
 given defaults as in the previous sentence.</p></td>
     </tr>
@@ -475,7 +473,10 @@ doi: <a href='https://doi.org/10.13155/29825'>10.13155/29825</a></p></li>
 <span class='co'># \dontrun{</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-3.png' alt='' width='672' height='672' /></div><div class='input'><span class='co'># }</span>
+</div><div class='output co'>#&gt; Error in .local(.Object, ...) : HTTP error code : 404
+#&gt; 
+#&gt; Error in .rasterObjectFromFile(x, band = band, objecttype = "RasterLayer",  : 
+#&gt;   Cannot create a RasterLayer object from this file. (file does not exist)</div><div class='output co'>#&gt; <span class='warning'>Warning: could not download bathymetry from NOAA server</span></div><div class='img'><img src='plot-argoFloats-method-3.png' alt='' width='672' height='672' /></div><div class='input'><span class='co'># }</span>
 
 <span class='co'># Example 5: map with fine-grained bathymetry control</span>
 <span class='co'># (Slow, so not run by default.)</span>

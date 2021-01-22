@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Show QC test results for an argo object — showQCTests • argoFloats</title>
+<title>Show real-time QC test results for an argo object — showQCTests • argoFloats</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,14 +46,15 @@
 
 
 
-<meta property="og:title" content="Show QC test results for an argo object — showQCTests" />
+<meta property="og:title" content="Show real-time QC test results for an argo object — showQCTests" />
 <meta property="og:description" content="showQCTests prints a summary of the quality-control (QC) tests
-(if any) that were performed on an Argo profile.  It uses
+(if any) that were performed on an Argo profile in real-time (Caution: any tests completed and/or failed on delayed
+mode data are not recorded).  It uses
 hexToBits() to decode the hexadecimal  values that may
 be stored in historyQCTest. From there it pairs the determined
 test values with the appropriate actions, QC Tests performed or QC
 Tests failed, found in historyAction within the metadata slot
-of an individual argo profile, as read directly with oce::read.argo()
+of an individual Argo profile, as read directly with oce::read.argo()
 or indirectly with readProfiles(), the latter being illustrated in the
 &amp;#8220;Examples&amp;#8221; section below.  The &amp;#8220;Details&amp;#8221;
 section provides an explanation of how showQCTests works
@@ -143,19 +144,20 @@ at a low level, as an adjunct to the Argo documentation." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Show QC test results for an argo object</h1>
+    <h1>Show real-time QC test results for an argo object</h1>
     <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/qc.R'><code>R/qc.R</code></a></small>
     <div class="hidden name"><code>showQCTests.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><code>showQCTests</code> prints a summary of the quality-control (QC) tests
-(if any) that were performed on an Argo profile.  It uses
+(if any) that were performed on an Argo profile in real-time (<strong>Caution</strong>: any tests completed and/or failed on delayed
+mode data are not recorded).  It uses
 <code><a href='hexToBits.html'>hexToBits()</a></code> to decode the hexadecimal  values that may
 be stored in <code>historyQCTest</code>. From there it pairs the determined
 test values with the appropriate actions, QC Tests performed or QC
 Tests failed, found in <code>historyAction</code> within the <code>metadata</code> slot
-of an individual argo profile, as read directly with <code><a href='https://dankelley.github.io/oce/reference/read.argo.html'>oce::read.argo()</a></code>
+of an individual Argo profile, as read directly with <code><a href='https://dankelley.github.io/oce/reference/read.argo.html'>oce::read.argo()</a></code>
 or indirectly with <code><a href='readProfiles.html'>readProfiles()</a></code>, the latter being illustrated in the
 &#8220;Examples&#8221; section below.  The &#8220;Details&#8221;
 section provides an explanation of how <code>showQCTests</code> works
