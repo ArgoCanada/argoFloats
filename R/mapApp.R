@@ -582,8 +582,10 @@ serverMapApp <- function(input, output, session) {
                                 o <- order(LONLAT$time)
                                 no <- length(o)
                                 if (no > 1) {
+                                    pathColour <- list(core=if (input$Ccolour == "default") colDefaults$core else input$CPcolour,
+                                            bgc=if (input$Bcolour == "default") colDefaults$bgc else input$BPcolour,
+                                            deep=if (input$Dcolour == "default") colDefaults$deep else input$DPcolour)
                                     pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
-                                    pathColour <- list(core=input$CPcolour, bgc=input$BPcolour, deep=input$DPcolour)
                                     LONLAT <<- LONLAT[o, ]
                                     lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
                                     ## as opposed to maybe 3 months of data for a set of floats).
