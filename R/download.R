@@ -17,78 +17,167 @@
 #' @template retries
 #'
 #' @template debug
+#' 
+#' @param async Use `TRUE` to perform requests asynchronously. This is much
+#'   faster for many small files (e.g., Argo profile NetCDF files).
 #'
 #' @return A character value indicating the full pathname to the downloaded file,
 #' or `NA`, if there was a problem with the download.
 #'
 ## @importFrom curl curl_download
-#' @importFrom utils unzip
 #'
 #' @export
 #'
 #' @author Dan Kelley
-downloadWithRetries <- function(url, destdir=argoDefaultDestdir(), destfile=NULL, quiet=FALSE,
-                                age=argoDefaultProfileAge(), retries=3, debug=0)
+downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
+                                age=argoDefaultProfileAge(), retries=3, async=FALSE, 
+                                debug=0)
 {
-    if (!requireNamespace("curl", quietly=TRUE))
-        stop("must install.packages(\"curl\") for downloadWithRetries() to work")
-    if (missing(url))
-        stop("must specify url")
-    if (length(destdir) > 1)
-        stop("destdir must be of length 1")
     retries <- max(1, as.integer(retries))
-    argoFloatsDebug(debug, "downloadWithRetries(\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    url='", paste(url, collapse="', '"), "',\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    destdir='", destdir, "',\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    destfile='", paste(destfile, collapse="', '"), "',\n",
-                    style="bold", sep="", unindent=1)
-    argoFloatsDebug(debug, "    quiet=", quiet, ", retries=", retries, ") {\n",
-                    style="bold", sep="", unindent=1)
-    n <- length(url)
-    if (length(destfile) != n)
-        stop("length(url)=", n, " must equal length(destfile)=", length(destfile))
-    for (i in 1:n) {
-        destination <- paste0(destdir, "/", destfile[i])
-        if (file.exists(destination)) {
-            destinationAge <- (as.integer(Sys.time()) - as.integer(file.info(destination)$mtime)) / 86400 # in days
-            argoFloatsDebug(debug, "destinationAge=", destinationAge, "\n", sep="")
-        }
-        if (file.exists(destination) && destinationAge < age) {
-            argoFloatsDebug(debug, "Skipping \"", destination, "\" because it already exists and its age, ", destinationAge, "d, is under specified age=", age, "d\n", sep="")
-        } else {
-            success <- FALSE
-            for (trial in seq_len(1 + retries)) {
-                if (!quiet) message(sprintf("Downloading '%s'", url))
-                t <- try(curl::curl_download(url=url, destfile=destination), silent=TRUE)
-                if (inherits(t, "try-error") && any(grepl("application callback", t))) {
-                    stop(t)
-                } else if (inherits(t, "try-error")) {
-                    argoFloatsDebug(debug, "failed download from \"", url, "\" ", if (trial < (1+retries)) "(will try again)\n" else "(final attempt)\n", sep="")
-                } else {
-                    argoFloatsDebug(debug, "successful download from \"", url, "\"\n", sep="")
-                    success <- TRUE
-                    break
-                }
-            }
-            if (!success) {
-                if (!quiet)
-                    message("failed download '", url, "'\n  after ", retries, " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
-                return(NA)
-            }
-            if (1 == length(grep(".zip$", destfile[i]))) {
-                destinationClean <- gsub(".zip$", "", destination[i])
-                unzip(destination[i], exdir=destinationClean)
-                destination[i] <- destinationClean
-                argoFloatsDebug(debug, "  Downloaded and unzipped into '", destination[i], "'\n", sep="")
-            } else {
-                argoFloatsDebug(debug, "  Downloaded file stored as '", destination[i], "'\n", sep="")
-            }
-        }
+    if (length(destfile) != length(url))
+        stop("length(url)=", length(destfile), " must equal length(destfile)=", length(destfile))
+    
+    if (length(url) == 0)
+        return(character(0))
+    
+    destination <- paste0(destdir, "/", destfile)
+    success <- rep(FALSE, length(destination))
+    
+    destinationInfo <- file.info(destination)
+    destinationAge <- (as.integer(Sys.time()) - as.integer(destinationInfo$mtime)) / 86400 # in days
+    skipDownload <- file.exists(destination) & (destinationAge < age)
+    success[skipDownload] <- TRUE
+    
+    urlDownload <- url[!skipDownload]
+    destinationDownload <- destination[!skipDownload]
+
+    for (trial in seq_len(1 + retries)) {
+        if (!quiet && (trial > 1))
+            message("Retrying ", length(urlDownload), " failed download(s)")
+        else if (!quiet)
+            message("Downloading ", length(urlDownload), " file(s)")
+        
+        if (async)
+            successDownload <- tryDownloadAsync(urlDownload, destinationDownload, quiet=quiet)
+        else
+            successDownload <- tryDownloadSequential(urlDownload, destinationDownload, quiet=quiet)
+        
+        success[destination %in% destinationDownload[successDownload]] <- TRUE
+        if (all(successDownload))
+            break
+        
+        urlDownload <- urlDownload[!successDownload]
+        destinationDownload <- destinationDownload[!successDownload]
     }
-    argoFloatsDebug(debug, "} # downloadWithRetries()\n", style="bold", unindent=1)
+    
+    if (!all(success)) {
+        urlFailed <- paste0("'", url[!success], "'", collapse="\n")
+        
+        message("Failed downloads:\n",
+                urlFailed, 
+                "\n  after ", retries + 1, 
+                " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
+        destination[!success] <- NA_character_
+    }
+   
     destination
 }
 
+
+tryDownloadSequential <- function(urlDownload, destinationDownload, quiet) {
+    if (length(urlDownload) == 0)
+        return(logical(0))
+    
+    useProgressBar <- !quiet && interactive()
+    if (useProgressBar) {
+        pb <- txtProgressBar(0, length(urlDownload), 0, style = 3)
+        on.exit(close(pb))
+    }
+    
+    successDownload <- rep(FALSE, length(urlDownload))
+    
+    for (i in seq_along(urlDownload)) {
+        t <- try(curl::curl_download(url=urlDownload[i], destfile=destinationDownload[i]), silent=TRUE)
+        if (inherits(t, "try-error") && any(grepl("application callback", t))) {
+            stop(t)
+        } else if (!inherits(t, "try-error")) {
+            successDownload[i] <- TRUE
+        }
+        
+        if (useProgressBar)
+            setTxtProgressBar(pb, i)
+    }
+    
+    successDownload
+}
+
+tryDownloadAsync <- function(urlDownload, destinationDownload, quiet) {
+    if (length(urlDownload) == 0)
+        return(logical(0))
+    
+    pool <- curl::new_pool()
+    
+    # need an object with reference semantics in which success and progress 
+    # state can be shared among requests
+    mutableSuccess <- new.env(parent=emptyenv())
+    mutableSuccess[["__progress"]] <- 0
+    
+    useProgressBar <- !quiet && interactive()
+    if (useProgressBar) {
+        pb <- txtProgressBar(0, length(urlDownload), 0, style = 3)
+        on.exit(close(pb))
+    } else {
+        pb <- NULL
+    }
+    
+    # set up the requests
+    for (i in seq_along(urlDownload)) {
+        mutableSuccess[[destinationDownload[i]]] <- FALSE
+        curl::curl_fetch_multi(urlDownload[i], 
+                               done=downloadAsyncSuccess(urlDownload[i], destinationDownload[i], pb, mutableSuccess),
+                               fail=downloadAsyncFailure(pb, mutableSuccess),
+                               pool=pool)
+    }
+    
+    # run the requests
+    curl::multi_run(pool=pool)
+    
+    # return the success value recorded in mutableSuccess
+    vapply(destinationDownload, function(dest) mutableSuccess[[dest]], logical(1))
+}
+
+downloadAsyncSuccess <- function(url, dest, pb, mutableSuccess) {
+    force(url)
+    force(dest)
+    force(pb)
+    force(mutableSuccess)
+    
+    function(res) {
+        if (res$status_code < 400) {
+            # much faster than write()!
+            con <- file(dest, "wb")
+            on.exit(close(con))
+            writeBin(res$content, con)
+            
+            mutableSuccess[[dest]] <- TRUE
+        }
+        
+        downloadAsyncUpdateProgress(pb, mutableSuccess)
+    }
+}
+
+downloadAsyncFailure <- function(pb, mutableSuccess) {
+    force(pb)
+    force(mutableSuccess)
+    
+    function(message) {
+        downloadAsyncUpdateProgress(pb, mutableSuccess)
+    }
+}
+
+downloadAsyncUpdateProgress <- function(pb, mutableSuccess) {
+    if (!is.null(pb)) {
+        setTxtProgressBar(pb, mutableSuccess[["__progress"]])
+        mutableSuccess[["__progress"]] <- mutableSuccess[["__progress"]] + 1
+    }
+}

@@ -47,7 +47,6 @@ setMethod(f="merge",
               if (!all.equal(ftpRoot, y[["ftpRoot"]]))
                   stop("in merge,argoFloats-method():\n 'x' and 'xy' must have the same ftpRoot. Use same 'server' in getIndex() call.", call.=FALSE)
               for (i in seq_along(dots)) {
-                  message('i=',i)
                   if (!inherits(dots[[i]], "argoFloats"))
                       stop("in merge,argoFloats-method():\n argument ", i+2, " is not an argoFloats object", call.=FALSE)
                   if ("index" != dots[[i]][["type"]])
@@ -57,10 +56,28 @@ setMethod(f="merge",
               }
               ## OK, all data are okay, so we can construct the return value
               res <- x
-              res@data$index <- rbind(x@data$index, y@data$index)
+              ## Ensure that we have the two extra columns that Bgc data have, viz.
+              ## "parameters" and "parameter_data_mode"
+              X <- x@data$index
+              if (!"parameters" %in% names(X))
+                  X$parameters <- NA
+              if (!"parameter_data_mode" %in% names(X))
+                  X$parameter_data_mode <- NA
+              Y <- y@data$index
+              if (!"parameters" %in% names(Y))
+                  Y$parameters <- NA
+              if (!"parameter_data_mode" %in% names(Y))
+                  Y$parameter_data_mode <- NA
+              INDEX <- rbind(X, Y)
               for (i in seq_along(dots)) {
-                  res@data$index <- rbind(x@data$index, dots[[i]]@data$index)
+                  D <- dots[[i]]@data$index
+                  if (!"parameters" %in% names(D))
+                      D$parameters <- NA
+                  if (!"parameter_data_mode" %in% names(D))
+                      D$parameter_data_mode <- NA
+                  INDEX <- rbind(INDEX, D)
               }
+              res@data$index <- INDEX
               res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
               res
           }

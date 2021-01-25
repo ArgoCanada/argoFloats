@@ -41,4 +41,5 @@ marmap_coord.*csv
 ^tests/testthat/_snaps$
 ^\.github$
 .gitCOMMIT_EDITMSG
+^log.dat$
 

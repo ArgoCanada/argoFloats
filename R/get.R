@@ -540,15 +540,6 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for getProfiles() to work")
     n <- length(index@data$index)
-    if (!quiet)
-        pb <- txtProgressBar(0, n, 0, style = 3)
-    for(i in 1:n) {
-        Sys.sleep(0.1)
-        if (!quiet)
-            setTxtProgressBar(pb, i)
-    }
-    if (!quiet)
-        close(pb)
     argoFloatsDebug(debug,  "getProfiles() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
         stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
@@ -558,7 +549,7 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
     n <- length(index[["file"]])
     if (n == 0) {
         warning("In getProfiles() : the index has no files, so there is nothing to 'get'\n", call.=FALSE)
-        file <- NULL
+        file <- character(0)
     } else {
         file <- rep("", n)
         argoFloatsDebug(debug, oce::vectorShow(index[["ftpRoot"]]))
@@ -578,18 +569,8 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         ## way, so the ifremer case was rewritten to match the usgodae case.
         urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
-        file <- vector("character", length(urls))
-        for (i in seq_along(urls)) {
-            name <- getProfileFromUrl(urls[i], destdir=destdir, age=age, retries=retries, quiet=quiet, debug=debug-1)
-            if (is.na(name)) {
-                if (skip) {
-                    warning("cannot download \"", urls[i], "\". Perhaps the index file is stale; try getIndex(age=0) to refresh it.\n")
-                } else {
-                    stop("cannot download \"", urls[i], "\". Perhaps the index file is stale; try getIndex(age=0) to refresh it. You may use getProfiles(...,skip=TRUE) to convert this error into a warning.")
-                }
-            }
-            file[i] <- name            # NOTE: this will be NA for a failed download
-        }
+        file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls), 
+                                    quiet=quiet, age=age, async=TRUE, debug=debug-1)
     }
     res@metadata$destdir <- destdir
     res@data$url <- urls

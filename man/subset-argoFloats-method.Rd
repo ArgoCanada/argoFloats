@@ -45,7 +45,7 @@ The possibilities for the \code{...} argument are as follows.
 \item A list named \code{circle} with numeric elements named \code{longitude},
 \code{latitude} and \code{radius}.  The first two give the center of
 the subset region, and the third gives the radius of
-that region, in kilometers. See example 2.
+that region, in kilometers. See example 2A and 2B.
 \item A list named \code{rectangle}, which has elements named
 \code{longitude} and \code{latitude}, two-element numeric vectors
 giving the western and eastern, and southern and northern
@@ -113,6 +113,10 @@ some information to describe what it is doing.
 to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
 understand the processing stage of data.
 See example 16.
+\item A character value named \code{historyAction}, equal to either "CF", "CR", "CV",
+"DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
+V3.3 (Carvel et al. 2019) for the description of each acronym.
+See example 17.
 }
 
 In all cases, the notation is that longitude is positive
@@ -127,8 +131,17 @@ data(index)
 index1 <- subset(index, 1:3)
 cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
 
-# Example 2: subset to a circle near Abaca Island
+# Example 2A: subset to a circle near Abaca Island
 index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+
+# Exampe 2B: subset a 300 km radius around Panama using "maps" package
+\dontrun{
+library("maps")
+data(world.cities)
+ai <- getIndex()
+panama <- subset(world.cities, name=="Panama")
+index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
+}
 
 # Example 3: subset to a rectangle near Abaca Island
 lonRect <- c(-76.5, -76)
@@ -233,13 +246,17 @@ data("index")
 index16 <- subset(index, 1:40)
 argos <- readProfiles(getProfiles(index16))
 argos16A <- subset(argos, dataStateIndicator="2C")
-argos16B <- subset(argos, dataStateIndicator="2B")}
+argos16B <- subset(argos, dataStateIndicator="2B")
+
+# Example 17: subset by historyAction
+data("index")
+index17 <- subset(index, historyAction="IP")}
 
 }
 \references{
 Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
-\url{https://doi.org/10.13155/29825}.
+\doi{10.13155/29825}.
 }
 \author{
 Dan Kelley and Jaimie Harbin

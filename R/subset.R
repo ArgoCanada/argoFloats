@@ -22,7 +22,7 @@
 #' 2. A list named `circle` with numeric elements named `longitude`,
 #' `latitude` and `radius`.  The first two give the center of
 #' the subset region, and the third gives the radius of
-#' that region, in kilometers. See example 2.
+#' that region, in kilometers. See example 2A and 2B.
 #'
 #' 3. A list named `rectangle`, which has elements named
 #' `longitude` and `latitude`, two-element numeric vectors
@@ -105,6 +105,11 @@
 #' understand the processing stage of data.
 #' See example 16.
 #'
+#' 17. A character value named `historyAction`, equal to either "CF", "CR", "CV",
+#' "DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
+#' V3.3 (Carvel et al. 2019) for the description of each acronym.
+#' See example 17.
+#'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
 #' is positive for degrees North and negative for degrees South.
@@ -135,8 +140,17 @@
 #' index1 <- subset(index, 1:3)
 #' cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
 #'
-#' # Example 2: subset to a circle near Abaca Island
+#' # Example 2A: subset to a circle near Abaca Island
 #' index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+#'
+#' # Exampe 2B: subset a 300 km radius around Panama using "maps" package
+#' \dontrun{
+#' library("maps")
+#' data(world.cities)
+#' ai <- getIndex()
+#' panama <- subset(world.cities, name=="Panama")
+#' index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
+#'}
 #'
 #' # Example 3: subset to a rectangle near Abaca Island
 #' lonRect <- c(-76.5, -76)
@@ -241,12 +255,16 @@
 #' index16 <- subset(index, 1:40)
 #' argos <- readProfiles(getProfiles(index16))
 #' argos16A <- subset(argos, dataStateIndicator="2C")
-#' argos16B <- subset(argos, dataStateIndicator="2B")}
+#' argos16B <- subset(argos, dataStateIndicator="2B")
+#'
+#' # Example 17: subset by historyAction
+#' data("index")
+#' index17 <- subset(index, historyAction="IP")}
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
-#' \url{https://doi.org/10.13155/29825}.
+#' \doi{10.13155/29825}.
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
@@ -285,7 +303,7 @@ setMethod(f="subset",
               if (x@metadata$type == "argos") {
                   argoFloatsDebug(debug, "subsetting with type=\"argos\"\n")
                   if (length(dotsNames) == 0)
-                      stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", or \"dataStateIndicator\" argument", call.=FALSE)
+                      stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", \"dataStateIndicator\", or \"historyAction\" argument", call.=FALSE)
                   if (dotsNames[1] == "profile") {
                       argoFloatsDebug(debug, "subsetting by profile ", profile, "\n")
                       profile <- dots[[1]]
@@ -360,30 +378,35 @@ setMethod(f="subset",
                       argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                       return(res)
                   } else if (dotsNames[1] == "cycle") {
-                      argoFloatsDebug(debug, "subsetting by cycle for \"argos\" type\n")
+                      argoFloatsDebug(debug, "subsetting by cycle for 'index' type\n")
                       cycle <- dots[[1]]
-                      if (!is.character(cycle) & !is.integer(cycle))
-                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or integer", call.=FALSE)
+                      if (!is.character(cycle) & !is.numeric(cycle))
+                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
+                      ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
+                      xcycle <- x[["cycle"]]
                       if (is.character(cycle)) {
-                      file <- unlist(x[["filename"]])
-                      fileCycle <- sapply(x[["data"]][[1]], function(x) x[["cycleNumber"]])
-                      ## Insist that the cycles are available
-                      keep <- rep(FALSE, length(fileCycle))
-                      for (thisCycle in cycle) {
-                          if (!(thisCycle %in% fileCycle))
-                              stop("In subset,argoFloats-method(): Cycle \"", thisCycle, "\" not found. Try one of: ", paste(fileCycle, collapse=", "), call.=FALSE)
-                          keep <- keep | (thisCycle == fileCycle)
+                          argoFloatsDebug(debug, "subsetting by cycle as a character value\n")
+                          ## Here, keep is logical
+                          keep <- rep(FALSE, length(xcycle))
+                          for (thisCycle in cycle)
+                              keep <- keep | grepl(thisCycle, xcycle)
+                          nkeep <- sum(keep)
+                      } else if (is.numeric(cycle)) {
+                          argoFloatsDebug(debug, "subsetting by cycle as a numeric value\n")
+                          ## Here, keep is integer
+                          keep <- NULL
+                          xcycle <- as.integer(gsub("AD","",xcycle)) # change e.g. "123D" to "123"
+                          for (thisCycle in cycle) {
+                              keep <- c(keep, which(thisCycle == xcycle))
+                              ## message("thisCycle=", thisCycle, " keep=", paste(keep, collapse=" "))
+                          }
+                          nkeep <- length(keep)
                       }
-                      } else if (is.integer(cycle)) {
-                      xcycle <- as.numeric(x[["cycle"]])
-                      keep <- min(cycle) <= xcycle & xcycle <= max(cycle)
-                      }
-                      res <- x
-                      res@data[[1]] <- x@data[[1]][keep]
+                      if (nkeep < 1)
+                          warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
                       if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/length(keep)), "%)")
-                      argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
-                      return(res)
+                          message("Kept ", nkeep, " profiles ")
+                      x@data$index <- x@data$index[keep, ]
                   } else if (dotsNames[1]=="dataStateIndicator") {
                       argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
                       dataStateIndicator <- dots[[1]]
@@ -403,8 +426,15 @@ setMethod(f="subset",
                           ##> print(keep)
                       }
                       x@data[[1]] <- x@data[[1]][keep]
+                  } else if (dotsNames[1] =="historyAction") {
+                      for (i in seq_along(x[["argos"]])) {
+                          historyList <- x[["historyAction"]][[i]][1,]
+                      }
+                      historyList <- lapply(x[["historyAction"]], function(h) x[["historyAction"]][[i]])
+                      keep <- grepl("IP", historyList)
+                      x@data[[1]] <- x@data[[1]][keep]
                   } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"profile\", \"cycle\", or \"dataSateIndicator\"", call.=FALSE)
+                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"profile\", \"cycle\", \"dataSateIndicator\", or \"historyAction\"", call.=FALSE)
                   }
               }
               ## Step 2: Now we know the type is either "index" or "profiles".  In either case,

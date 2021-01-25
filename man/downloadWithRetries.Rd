@@ -6,11 +6,12 @@
 \usage{
 downloadWithRetries(
   url,
-  destdir = argoDefaultDestdir(),
-  destfile = NULL,
+  destdir,
+  destfile,
   quiet = FALSE,
   age = argoDefaultProfileAge(),
   retries = 3,
+  async = FALSE,
   debug = 0
 )
 }
@@ -45,6 +46,9 @@ is less than \code{age} days in the past, it will not be downloaded.  The defaul
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
+
+\item{async}{Use \code{TRUE} to perform requests asynchronously. This is much
+faster for many small files (e.g., Argo profile NetCDF files).}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions

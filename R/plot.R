@@ -1,12 +1,14 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-## Utility functions to trim lat and lon.
-pinlat <- function(lat)
-    ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
-pinlon <- function(lon)
-    ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
-pinusr <- function(usr)
-    c(pinlon(usr[1]), pinlon(usr[2]), pinlat(usr[3]), pinlat(usr[4]))
+colDefaults <- list(core="7", bgc="#05f076", deep="6")
+
+##OLD ## Utility functions to trim lat and lon.
+##OLD pinlat <- function(lat)
+##OLD     ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
+##OLD pinlon <- function(lon)
+##OLD     ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
+##OLD pinusr <- function(usr)
+##OLD     c(pinlon(usr[1]), pinlon(usr[2]), pinlat(usr[3]), pinlat(usr[4]))
 
 ## issue259 argoFloatsMapAxes <- function(axes=TRUE, box=TRUE, geographical=0)
 ## issue259 {
@@ -66,27 +68,29 @@ pinusr <- function(usr)
 #' that shows water depth. There are three possible values for `bathymetry`:
 #'     1. `FALSE`, meaning not to draw bathymetry;
 #'     2. `TRUE` (the default), meaning to draw bathymetry using
-#'        data downloaded with [marmap::getNOAA.bathy()], as in Example 4;
+##old        data downloaded with [marmap::getNOAA.bathy()], as in Example 4;
+#'        data downloaded with [oce::download.topo()], as in Example 4;
 #'     3. A list with items controlling both the bathymetry data and its
 #'        representation in the plot, as in Example 5.  Those items are:
 #'
-#'         1. `source`, a mandatory value that is one of
+#'         1. `source`, a mandatory value that is either
 #'            (a) the string `"auto"` (the default) to use
-#'            [marmap::getNOAA.bathy()] to download the data,
-#'            (b) a value returned by [marmap::getNOAA.bathy()], or
-#'            (c) a value returned by [oce::read.topo()].
-#'         2. `keep`, an optional logical value (with `TRUE` as the default) that is passed to
-#'            [marmap::getNOAA.bathy()] to indicate whether to keep a local file of bathymetry,
-#'            as a way to avoid intermittent problems with the NOAA server;
-#'         3. `contour`, an optional logical value (with `FALSE` as the default) indicating
+##old            [marmap::getNOAA.bathy()] to download the data,
+#'            [oce::download.topo()] to download the data
+#'            or (b) a value returned by [oce::read.topo()].
+##old            (c) a value returned by [marmap::getNOAA.bathy()].
+##old         2. `keep`, an optional logical value (with `TRUE` as the default) that is passed to
+##old            [marmap::getNOAA.bathy()] to indicate whether to keep a local file of bathymetry,
+##old            as a way to avoid intermittent problems with the NOAA server;
+#'         2. `contour`, an optional logical value (with `FALSE` as the default) indicating
 #'            (as in Examples 5A and 5B) whether to represent bathymetry with contours
 #'            (with depths of 100m, 200m, 500m shown, along with 1km, 2km up to 10km),
 #'            as opposed to an image;
-#'         4. `colormap`, ignored if `contour` is `TRUE`,
+#'         3. `colormap`, ignored if `contour` is `TRUE`,
 #'            an optional value that is either the string `"auto"` (the default)
 #'            for a form of GEBCO colors (as in Example 5C) computed with [oce::oceColorsGebco()], or a value
 #'            computed with [oce::colormap()] applied to the bathymetry data; and
-#'         5. `palette`, ignored if `contour` is `TRUE`,
+#'         4. `palette`, ignored if `contour` is `TRUE`,
 #'            an optional logical value (with `TRUE` as the default)
 #'            indicating (again, as in Example 5C) whether to draw a depth-color palette to the right of the plot.
 #'
@@ -160,11 +164,9 @@ pinusr <- function(usr)
 #'
 #' @param ylab as `xlab`, but for the vertical axis.
 #'
-#' @param type a character value that controls line type, as for [par()].  If
-#' not specified, a choice is made automatically based on the value of `which`,
-#' e.g. if `which` is `"map"`, points will be plotted (as if `type="p"` had been
-#' given), but if `which` is `"profile"` then lines will be plotted (as if
-#' `type="l"` had been given).
+#' @param type a character value that controls the line type, with `"p"` for
+#' unconnected points, `"l"` for line segments between undrawn points, etc.;
+#' see the docs for [par()], If `type` not specified, it defaults to `"p"`.
 #'
 #' @param cex a character expansion factor for plot symbols, or `NULL`, to get an
 #' value that depends on the value of `which`.
@@ -177,7 +179,7 @@ pinusr <- function(usr)
 #' values that distinguish between the interior of the symbol and the
 #' border, e.g. for `pch=21`.
 #'
-#' @param pch an integer or code indicating the type of plot symbol, or `NULL`,
+#' @param pch an integer or character value indicating the type of plot symbol, or `NULL`,
 #' to get a value that depends on the value of `which`.
 #' (See [par()] for more on specifying `pch`.)
 #'
@@ -216,7 +218,7 @@ pinusr <- function(usr)
 #' whether to skip across `NA` values if the `type` argument is `"l"`, `"o"`,
 #' or `"b"`).
 #' If `profileControl` is not provided, it defaults to
-#' `list(parameter="temperature", ytype="pressure", connect=TRUE)`. Alternatively,
+#' `list(parameter="temperature", ytype="pressure", connect=FALSE)`. Alternatively,
 #' if `profileControl` is missing any of the three elements, then they are
 #' given defaults as in the previous sentence.
 #'
@@ -280,7 +282,7 @@ pinusr <- function(usr)
 #' # Example 4: map with bathymetry
 #' # (Slow, so not run by default.)
 #'\dontrun{
-#' par(mar=c(3, 3, 1, 1))
+#' par(mar=c(3, 3, 1, 2))
 #' plot(index, bathymetry=TRUE)
 #'}
 #'
@@ -288,35 +290,38 @@ pinusr <- function(usr)
 #' # (Slow, so not run by default.)
 #'\dontrun{
 #' par(mar=c(2, 2, 1, 1))
-#' bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2)
+##older bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2)
+##old tmpDir <- tempdir() # temporary directory, removed in a moment
+##old topoFile <- oce::download.topo(-82, -71, 23, 30, 2, destdir=tmpDir)
+#' topoFile <- oce::download.topo(-82, -71, 23, 30, 2)
+#' topo <- oce::read.topo(topoFile)
+##old unlink(tmpDir)
 #'
-#' # Example 5A. Simple contour version, using marmap::getNOAA.bathy().
-#' plot(index, bathymetry=list(source=bathy, contour=TRUE))
+#' # Example 5A. Simple contour version.
+#' plot(index, bathymetry=list(source=topo, contour=TRUE))
 #'
-#' # Example 5B. Simple contour version, using oce::read.topo().
-#' data(topoWorld, package="oce") # very coarse, read by oce::read.topo()
+#' # Example 5B. Simple contour version, using coarse dataset (ok on basin-scale).
+#' data(topoWorld, package="oce")
 #' plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 #'
 #' # Example 5C. Simple colour version.
-#' cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
-#' plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
+#' plot(index, bathymetry=list(source=topo))
 #'
 #' # Example 5D. World view with Mollweide projection (Canada Day, 2020)
 #' jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
 #' plot(jul1, which="map", mapControl=list(projection=TRUE), pch=20, col=4, cex=0.75)
 #'
 #' # Example 5E. Customized map, sidestepping this function.
-#' lon <- as.numeric(rownames(bathy))
-#' lat <- as.numeric(colnames(bathy))
-#' depth <- -bathy # convert from elevation to depth
+#' lon <- topo[["longitude"]]
+#' lat <- topo[["latitude"]]
 #' asp <- 1/cos(pi/180*mean(lat))
 #' # Limit plot region to float region.
 #' xlim <- range(index[["longitude"]])
 #' ylim <- range(index[["latitude"]])
 #' # Colourize 1km, 2km, etc, isobaths.
-#' contour(x=lon, y=lat, z=depth, xlab="", ylab="",
+#' contour(x=lon, y=lat, z=topo[["z"]], xlab="", ylab="",
 #'         xlim=xlim, ylim=ylim, asp=asp,
-#'         col=1:6, lwd=3, levels=1000*1:6, drawlabels=FALSE)
+#'         col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 #' # Show land
 #' data(coastlineWorldFine, package="ocedata")
 #' polygon(coastlineWorldFine[["longitude"]],
@@ -344,6 +349,7 @@ pinusr <- function(usr)
 #' # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
 #' library(argoFloats)
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+#' par(mfrow=c(1, 1))
 #' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 #' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 #' plot(a, which="profile")
@@ -365,13 +371,13 @@ pinusr <- function(usr)
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
-#' \url{https://doi.org/10.13155/29825}.
+#' \doi{10.13155/29825}
 #'
 #' @importFrom graphics abline axis box contour par plot.window points polygon rect text
 #' @importFrom grDevices extendrange gray rgb
 #' @importFrom utils data
 ## @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
-## @importFrom marmap getNOAA.bathy
+##old @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method
 #' @author Dan Kelley and Jaimie Harbin
@@ -419,6 +425,13 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "map plot\n", sep="")
                   longitude <- x[["longitude", debug=debug]]
                   latitude <- x[["latitude", debug=debug]]
+                  n <- x[["length"]]
+                  ## Find type of each cycle, for colour-coding
+                  cycleType <- rep("core", n)
+                  cycleType[("849" == x@data$index$profiler_cycleType)] <- "deep"
+                  cycleType[("862" == x@data$index$profiler_cycleType)] <- "deep"
+                  cycleType[("864" == x@data$index$profiler_cycleType)] <- "deep"
+                  cycleType[!is.na(x@data$index$parameters)] <- "Bgc"
                   colLand <- mapControl$colLand
                   if (is.null(mapControl))
                       mapControl <- list(bathymetry=bathymetry, projection=FALSE, colLand="lightgray")
@@ -456,13 +469,13 @@ setMethod(f="plot",
                   ## Decode bathymetry
                   if (is.logical(mapControl$bathymetry)) {
                       drawBathymetry <- mapControl$bathymetry
-                      bathymetry <- list(source="auto", keep=TRUE, contour=FALSE, colormap="auto", palette=TRUE)
+                      bathymetry <- list(source="auto", contour=FALSE, colormap="auto", palette=TRUE)
                   } else if (is.list(mapControl$bathymetry)) {
                       drawBathymetry <- TRUE
                       if (!("source" %in% names(mapControl$bathymetry)))
                           stop("In plot() : \"bathymetry\" is a list, it must contain \"source\", at least", call.=FALSE)
-                      if (is.null(bathymetry$keep))
-                          bathymetry$keep <- TRUE
+                      if ("keep" %in% names(bathymetry))
+                          warning("bathymetry$keep (an old argument) is no longer used\n")
                       if (is.null(bathymetry$contour))
                           bathymetry$contour <- FALSE
                       if (is.null(bathymetry$colormap))
@@ -470,10 +483,10 @@ setMethod(f="plot",
                       if (is.null(bathymetry$palette))
                           bathymetry$palette <- TRUE
                   } else {
-                      stop("In plot() : \"bathymetry\" must be logical, an object created by marmap::getNOAA.bathy(), or a list", call.=FALSE)
+                      stop("In plot() : \"bathymetry\" must be either a logical or a list value", call.=FALSE)
                   }
-                  if (!is.logical(bathymetry$keep))
-                      stop("In plot() : \"bathymetry$keep\" must be a logical value", call.=FALSE)
+                  ##old if (!is.logical(bathymetry$keep))
+                  ##old     stop("In plot() : \"bathymetry$keep\" must be a logical value", call.=FALSE)
                   if (!is.logical(bathymetry$palette))
                       stop("In plot() : \"bathymetry$palette\" must be a logical value", call.=FALSE)
                   argoFloatsDebug(debug, "drawBathymetry calculated to be ", drawBathymetry, "\n", sep="")
@@ -481,13 +494,13 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "asp=", asp, "\n", sep="")
                   if (drawBathymetry) {
                       argoFloatsDebug(debug, "handling bathymetry\n", sep="")
-                      if (!requireNamespace("marmap", quietly=TRUE))
-                          stop("must install.packages(\"marmap\") to plot with bathymetry")
+                      if (!requireNamespace("oce", quietly=TRUE))
+                          stop("must install.packages(\"oce\") to plot with bathymetry")
                       ## Handle bathymetry file downloading (or the use of a supplied value)
                       bathy <- NULL
                       if (is.character(bathymetry$source) && bathymetry$source == "auto") {
                           argoFloatsDebug(debug, "must either download bathymetry or use existing file\n", sep="")
-                          argoFloatsDebug(debug, "  before using plot.window(), mar=c(", paste(round(mar, 4), collapse=", "), ")\n", sep="")
+                          argoFloatsDebug(debug, "before using plot.window(), mar=c(", paste(round(mar, 4), collapse=", "), ")\n", sep="")
                           ## Do plot calculations so we will know usr, needed to determine
                           ## range of longitude and latitude for downloading. Note that we
                           ## need to set mar temporarily, to match what will later be used
@@ -500,12 +513,12 @@ setMethod(f="plot",
                           if (!bathymetry$contour && bathymetry$palette) {
                               tmpmar <- par("mar")
                               par(mar=tmpmar + c(0, 0, 0, 2.75))
-                              argoFloatsDebug(debug, "  temporarily set par(mar=c(", paste(par("mar"), collapse=", "), ")) to allow for the palette\n", sep="")
+                              argoFloatsDebug(debug, "temporarily set par(mar=c(", paste(par("mar"), collapse=", "), ")) to allow for the palette\n", sep="")
                           }
-                          argoFloatsDebug(debug, "  using plot.window() to determine area for bathymetry download, with\n",
+                          argoFloatsDebug(debug, "using plot.window() to determine area for bathymetry download, with\n",
                                           "    extendrange(longitude)=c(", paste(extendrange(longitude), collapse=","), ")\n",
                                           "    extendrange(latitude)=c(", paste(extendrange(latitude), collapse=","), ")\n",
-                                          "    xlim=c(", paste(ylim, collapse=","), ")\n",
+                                          "    xlim=c(", paste(xlim, collapse=","), ")\n",
                                           "    ylim=c(", paste(ylim, collapse=","), ")\n",
                                           "    asp=", asp, "\n", sep="")
                           plot.window(xlim=xlim, ylim=ylim,
@@ -517,36 +530,49 @@ setMethod(f="plot",
                               par(mar=tmpmar)
                           }
                           usr <- par("usr")
-                          argoFloatsDebug(debug, "  after using plot.window(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
+                          argoFloatsDebug(debug, "after using plot.window(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
                           latitudeSpan <- usr[4] - usr[3]
-                          Dlon <- (usr[2] - usr[1]) / 20
-                          Dlat <- (usr[4] - usr[3]) / 20
+                          longitudeSpan <- usr[2] - usr[1]
+                          Dlon <- 0.05 * longitudeSpan
+                          Dlat <- 0.05 * latitudeSpan
+                          argoFloatsDebug(debug, "Dlon=", Dlon, " (5% of longitude span, which is ", longitudeSpan, ")\n", sep="")
+                          argoFloatsDebug(debug, "Dlat=", Dlat, " (5% of latitude span, which is ", latitudeSpan, ")\n", sep="")
                           ## resolution <- ifelse(latitudeSpan < 5, 1,
                           ##                      ifelse(latitudeSpan < 20, 2,
                           ##                             ifelse(latitudeSpan < 90, 8, 60)))
                           resolution <- as.integer(round(1 + 60 * latitudeSpan / 400))
-                          argoFloatsDebug(debug, "  Dlat=", round(Dlat, 4), "\n", sep="")
-                          argoFloatsDebug(debug, "  Dlon=", round(Dlon, 4), "\n", sep="")
-                          argoFloatsDebug(debug, "  resolution=", resolution, "\n", sep="")
-                          argoFloatsDebug(debug, "  minlon=", round(usr[1]-Dlon, 3), "\n", sep="")
-                          argoFloatsDebug(debug, "  maxlon=", round(usr[2]+Dlon, 3), "\n", sep="")
-                          argoFloatsDebug(debug, "  minlat=", round(usr[3]-Dlat, 3), "\n", sep="")
-                          argoFloatsDebug(debug, "  maxlat=", round(usr[4]+Dlat, 3), "\n", sep="")
-                          ## Round to 4 digits to prevent crazy filenames for no good reason
-                          bathy <- try(marmap::getNOAA.bathy(max(-180, round(usr[1]-Dlon, 3)),
-                                                             min(+180, round(usr[2]+Dlon, 3)),
-                                                             max(-90, round(usr[3]-Dlat, 3)),
-                                                             min(+90, round(usr[4]+Dlat, 3)),
-                                                             resolution=resolution,
-                                                             keep=bathymetry$keep),
-                                       silent=FALSE)
-                          if (inherits(bathy, "try-error")) {
-                              warning("could not download bathymetry from NOAA server: ",
-                                  paste(bathy, collapse = "\n"), "\n")
+                          if (resolution < 1)
+                              stop("calculated resolution (=", resolution, ") cannot be under 1 minute")
+                          argoFloatsDebug(debug, "resolution=", resolution, "\n", sep="")
+                          ## Notice the use of 0.1 and 1 digit in lon and lat, which means
+                          ## we are enlarging the field by 10km in both lon and lat.
+                          west <- round(usr[1]-Dlon, 1)
+                          east <- round(usr[2]+Dlon, 1)
+                          south <- round(usr[3]-Dlat, 1)
+                          north <- round(usr[4]+Dlat, 1)
+                          argoFloatsDebug(debug, "will get topo in domain west=", west, ", east=", east,
+                                          ", south=", south, ", north=", north, "\n")
+                          topo <- try(oce::read.topo(oce::download.topo(west=west,
+                                                                        east=east,
+                                                                        south=south,
+                                                                        north=north,
+                                                                        resolution=resolution,
+                                                                        debug=debug)),
+                                      silent=FALSE)
+                          if (inherits(topo, "try-error")) {
+                              warning("could not download bathymetry from NOAA server\n")
                               drawBathymetry <- FALSE
                           } else {
-                            argoFloatsDebug(debug, "  grid size", paste(dim(bathy), collapse="x"), "\n")
-                            argoFloatsDebug(debug, "  bathy span=", min(bathy, na.rm=TRUE), " to ", max(bathy, na.rm=TRUE), "\n", sep="")
+                              bathy <- -topo[["z"]]
+                              dimBathy <- dim(bathy)
+                              argoFloatsDebug(debug, "grid size", paste(dimBathy, collapse="x"), "\n")
+                              bathy <- as.integer(bathy)
+                              dim(bathy) <- dimBathy
+                              rownames(bathy) <- topo[["longitude"]]
+                              colnames(bathy) <- topo[["latitude"]]
+                              class(bathy) <- "bathy"
+                              ## argoFloatsDebug(debug, "  bathy span=", paste(range(bathy[["z"]], na.rm=TRUE),
+                              ##                                               collapse=" to "), "\n", sep="")
                           }
                       } else if (inherits(bathymetry$source, "bathy")) {
                           argoFloatsDebug(debug, "using supplied bathymetry$source\n", sep="")
@@ -554,35 +580,37 @@ setMethod(f="plot",
                       } else if (inherits(bathymetry$source, "oce") &&
                                  inherits(bathymetry$source, "topo")) {
                           argoFloatsDebug(debug, "using oce-style topo object (converted to NOAA bathy)\n", sep="")
-                          ##browser()
                           dim <- dim(bathymetry$source[["z"]])
-                          bathy <- matrix(as.integer(bathymetry$source[["z"]]), nrow=dim[1], ncol=dim[2])
+                          ## Note the negative sign, to get depth.
+                          bathy <- matrix(-as.integer(bathymetry$source[["z"]]), nrow=dim[1], ncol=dim[2])
                           rownames(bathy) <- bathymetry$source[["longitude"]]
                           colnames(bathy) <- bathymetry$source[["latitude"]]
                           class(bathy) <- "bathy"
                       } else {
                           stop("cannot determine bathymetry data source")
                       }
+                      argoFloatsDebug(debug, "drawBathymetry = ", drawBathymetry, " (after trying to get bathymetry)\n", sep="")
                       ## Handle colormap
-                      if (!inherits(bathy, "try-error") && !bathymetry$contour && is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
-                          argoFloatsDebug(debug, "setting a default colormap for 0m to ", -min(bathy), "m depth\n")
-                          bathymetry$colormap <- oce::colormap(zlim=c(0, -min(bathy)),
-                                                               col=function(...)
-                                                                   rev(oce::oceColorsGebco(...)))
-                      } else {
-                          argoFloatsDebug(debug, "using supplied bathymetry$colormap\n")
+                      if (drawBathymetry && !inherits(bathy, "try-error") && !bathymetry$contour && is.character(bathymetry$colormap) && length(bathymetry$colormap) == 1 && bathymetry$colormap == "auto") {
+                          argoFloatsDebug(debug, "bathy class: \"", class(bathy), "\"\n", sep="")
+                          deepest <- max(bathy, na.rm=TRUE)
+                          argoFloatsDebug(debug, "bathy range: ", paste(range(bathy, na.rm=TRUE), collapse=" to "), "\n")
+                          argoFloatsDebug(debug, "setting a default colormap for ", deepest, "m to 0m depth\n", sep="")
+                          bathymetry$colormap <- oce::colormap(zlim=c(0, deepest),
+                                                               col=function(n) rev(oce::oceColorsGebco(n)))
                       }
                       ## Handle optional drawing of the palette. Note space for one line of text is removed
                       ## from the LHS of the palette and added to the RHS.  This is because we know that
                       ## there is no axis to the left of the palette, so we do not need space for one.
                       ## We recover the stolen space by putting it back at the RHS, where it can be
                       ## useful, especially if a map plot has another plot to its right.
-                      if (!inherits(bathy, "try-error") && !bathymetry$contour && bathymetry$palette) {
+                      if (drawBathymetry && !inherits(bathy, "try-error") && !bathymetry$contour && bathymetry$palette) {
                           argoFloatsDebug(debug, "drawing a bathymetry palette\n")
                           ## Increase space to right of axis, decreasing equally to the left.
                           textHeight <- par("cin")[2]
                           mai <- c(0, -textHeight, 0, textHeight)
-                          oce::drawPalette(colormap=bathymetry$colormap, mai=mai)
+                          oce::drawPalette(colormap=bathymetry$colormap, mai=mai,
+                                           cex=if (is.null(cex)) 1 else cex)
                       } else {
                           argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed (or failed bathymetry download)\n")
                       }
@@ -655,25 +683,41 @@ setMethod(f="plot",
                           argoFloatsDebug(debug, "indicating bathymetry with contours\n")
                           contour(as.numeric(rownames(bathy)),
                                   as.numeric(colnames(bathy)),
-                                  -bathy,
-                                  breaks=c(100, 200, 500, seq(1e3, 10e3, 1e3)),
+                                  bathy,
+                                  levels=c(100, 200, 500, seq(1e3, 10e3, 1e3)),
                                   labels=c("100m", "200m", "500m", paste(1:10, "km", sep="")),
                                   labcex=0.9, add=TRUE)
                       } else {
                           argoFloatsDebug(debug, "indicating bathymetry with an image\n")
                           oce::imagep(as.numeric(rownames(bathy)),
                                       as.numeric(colnames(bathy)),
-                                      -bathy, colormap=bathymetry$colormap, add=TRUE)
+                                      bathy, colormap=bathymetry$colormap, add=TRUE)
                       }
                       rect(usrTrimmed[1], usrTrimmed[3], usrTrimmed[2], usrTrimmed[4], lwd=1)
                   }
-                  points(unlist(longitude), unlist(latitude),
-                         cex=if (is.null(cex)) 1 else cex,
-                         col=if (is.null(col)) "white" else col,
-                         pch=if (is.null(pch)) 21 else pch,
-                         bg=if (is.null(bg)) "red" else bg,
-                         type=if (is.null(type)) "p" else type,
-                         ...)
+                  if (is.null(col)) {
+                      col <- rep("", n)
+                      col[cycleType == "core"] <- colDefaults$core
+                      col[cycleType == "Bgc"] <- colDefaults$bgc
+                      col[cycleType == "deep"] <- colDefaults$deep
+                  }
+                  if (is.null(pch))
+                      pch <- 21
+                  if (length(pch) == 1 && pch == 21) {
+                      points(unlist(longitude), unlist(latitude),
+                             cex=if (is.null(cex)) 1 else cex,
+                             pch=pch,
+                             bg=col,
+                             type=if (is.null(type)) "p" else type,
+                             ...)
+                  } else {
+                      points(unlist(longitude), unlist(latitude),
+                             cex=if (is.null(cex)) 1 else cex,
+                             pch=pch,
+                             col=col,
+                             type=if (is.null(type)) "p" else type,
+                             ...)
+                  }
                   ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
                   ## on just the distance spanned in the north-south direction.
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
@@ -721,6 +765,8 @@ setMethod(f="plot",
                   }
               } else if (which == "summary") {
                   argoFloatsDebug(debug, "summary plot\n", sep="")
+                  if (x[["length"]] < 2)
+                      stop("In plot,argoFloats-method() : cannot draw a summary plot with only one float cycle", call.=FALSE)
                   if (is.null(summaryControl))
                       summaryControl <- list(items=c("dataStateIndicator", "longitude", "latitude", "length", "deepest"))
                   if (!"items" %in% names(summaryControl))
@@ -733,12 +779,14 @@ setMethod(f="plot",
                       time <- as.POSIXct(unlist(x[["time"]]), origin="1970-01-01", tz="UTC")
                       o <- order(time)
                       for (iitem in seq_len(nitems)) {
+                          argoFloatsDebug(debug, "items[", iitem, "]=\"", items[iitem], "\"\n", sep="")
                           if (!marGiven) # top panel needs space for ticks
                               mar <- if (iitem==1) c(1.7,3,2,1) else c(1.7,3,1.5,1)
                           if (!mgpGiven)
                               mgp <- c(2, 0.7, 0)
                           if (items[iitem] == "dataStateIndicator") {
                               y <- unlist(x[["dataStateIndicator"]])
+                              argoFloatsDebug(debug, oce::vectorShow(y))
                               if (length(y)) {
                                   u <- sort(unique(y))
                                   yy <- seq_along(u)
@@ -789,8 +837,6 @@ setMethod(f="plot",
                                      pressure=pressure,
                                      latitude=latitude,
                                      longitude=longitude)
-                  if (is.null(cex))
-                      cex <- par("cex")
                   ## FIXME: move this TSControl work the which="TS" code {{
                   if (is.null(TSControl))
                       TSControl <- list(colByCycle=NULL)
@@ -812,8 +858,14 @@ setMethod(f="plot",
                       col <- unlist(lapply(seq_along(cycle), function(i) rep(colByCycle[i], lengths[i])))
                   }
                   ## }}} FIXME
-                  if (is.null(pch))
+                  if (is.null(cex)) {
+                      cex <- par("cex")
+                      argoFloatsDebug(debug, "TS plot defaulting to cex=", cex, "\n")
+                  }
+                  if (is.null(pch)) {
                       pch <- 20
+                      argoFloatsDebug(debug, "TS plot defaulting to pch=", pch, "\n")
+                  }
                   omgp <- par("mgp")
                   if (is.null(mgp))
                       mgp <- c(2, 0.7, 0)
@@ -832,7 +884,12 @@ setMethod(f="plot",
                       if (pch == 21)
                           bg <- ifelse(good, "black", "red")
                   }
-                  oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch, mar=mar, mgp=mgp, eos=eos,
+                  oce::plotTS(ctd,
+                              cex=cex,
+                              bg=bg,
+                              col=col,
+                              pch=pch,
+                              mar=mar, mgp=mgp, eos=eos,
                               type=if (is.null(type)) "p" else type, ...)
                   par(mar=omar, mgp=omgp)
               } else if (which == "QC") {
@@ -917,7 +974,7 @@ setMethod(f="plot",
                   if (x[["type"]] != "argos")
                       stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)
                   if (is.null(type))
-                      type <- "l"
+                      type <- "p"
                   if (is.null(profileControl)) {
                       if ("parameter" %in% names(dots)) {
                           warning("accepting \"parameter\" as a separate argument, until 2020-dec-01.  After that, you must use e.g. profileControl=list(parameter=", dots$parameter, ")")
@@ -926,7 +983,7 @@ setMethod(f="plot",
                           profileControl <- list(parameter="temperature")
                       }
                       profileControl$ytype <- "pressure"
-                      profileControl$connect <- TRUE
+                      profileControl$connect <- FALSE
                   }
                   if (!is.list(profileControl))
                       stop("In plot,argoFloats-method(): profileControl must be a list")
@@ -975,13 +1032,22 @@ setMethod(f="plot",
                       VARIABLE <- VARIABLE[ok]
                       Y <- Y[ok]
                   }
+                  if (is.null(cex)) {
+                      cex <- par("cex")
+                      argoFloatsDebug(debug, "Profile plot defaulting to cex=", cex, "\n")
+                  }
+                  if (is.null(pch)) {
+                      pch <- 20
+                      argoFloatsDebug(debug, "Profile plot defaulting to pch=", pch, "\n")
+                  }
                   plot(VARIABLE, Y, ylim=rev(range(Y, na.rm=TRUE)),
                        axes=FALSE,
                        ylab="", xlab="", # draw axes later, in oceanographic 'profile' locations
                        cex=cex,
                        type=if(is.null(type)) "l" else type,
                        col=if (is.null(col)) par("col") else col,
-                       pch=pch, ...)
+                       pch=pch,
+                       ...)
                   box()
                   axis(2)
                   axis(3)

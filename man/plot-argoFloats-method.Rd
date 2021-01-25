@@ -65,11 +65,9 @@ depending on the value of \code{which}. Note that \code{xlab} is not obeyed if
 
 \item{ylab}{as \code{xlab}, but for the vertical axis.}
 
-\item{type}{a character value that controls line type, as for \code{\link[=par]{par()}}.  If
-not specified, a choice is made automatically based on the value of \code{which},
-e.g. if \code{which} is \code{"map"}, points will be plotted (as if \code{type="p"} had been
-given), but if \code{which} is \code{"profile"} then lines will be plotted (as if
-\code{type="l"} had been given).}
+\item{type}{a character value that controls the line type, with \code{"p"} for
+unconnected points, \code{"l"} for line segments between undrawn points, etc.;
+see the docs for \code{\link[=par]{par()}}, If \code{type} not specified, it defaults to \code{"p"}.}
 
 \item{cex}{a character expansion factor for plot symbols, or \code{NULL}, to get an
 value that depends on the value of \code{which}.}
@@ -78,7 +76,7 @@ value that depends on the value of \code{which}.}
 that depends on the value of \code{which} (see \dQuote{Details}).  If \code{which="TS"}, then the
 \code{TSControl} argument takes precedence over \code{col}.}
 
-\item{pch}{an integer or code indicating the type of plot symbol, or \code{NULL},
+\item{pch}{an integer or character value indicating the type of plot symbol, or \code{NULL},
 to get a value that depends on the value of \code{which}.
 (See \code{\link[=par]{par()}} for more on specifying \code{pch}.)}
 
@@ -120,7 +118,7 @@ either \code{"pressure"} or \code{"sigma0"}) and \code{connect} (a logical value
 whether to skip across \code{NA} values if the \code{type} argument is \code{"l"}, \code{"o"},
 or \code{"b"}).
 If \code{profileControl} is not provided, it defaults to
-\code{list(parameter="temperature", ytype="pressure", connect=TRUE)}. Alternatively,
+\code{list(parameter="temperature", ytype="pressure", connect=FALSE)}. Alternatively,
 if \code{profileControl} is missing any of the three elements, then they are
 given defaults as in the previous sentence.}
 
@@ -188,18 +186,14 @@ that shows water depth. There are three possible values for \code{bathymetry}:
 \enumerate{
 \item \code{FALSE}, meaning not to draw bathymetry;
 \item \code{TRUE} (the default), meaning to draw bathymetry using
-data downloaded with \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}, as in Example 4;
+data downloaded with \code{\link[oce:download.topo]{oce::download.topo()}}, as in Example 4;
 \item A list with items controlling both the bathymetry data and its
 representation in the plot, as in Example 5.  Those items are:
 \enumerate{
-\item \code{source}, a mandatory value that is one of
+\item \code{source}, a mandatory value that is either
 (a) the string \code{"auto"} (the default) to use
-\code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to download the data,
-(b) a value returned by \code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}}, or
-(c) a value returned by \code{\link[oce:read.topo]{oce::read.topo()}}.
-\item \code{keep}, an optional logical value (with \code{TRUE} as the default) that is passed to
-\code{\link[marmap:getNOAA.bathy]{marmap::getNOAA.bathy()}} to indicate whether to keep a local file of bathymetry,
-as a way to avoid intermittent problems with the NOAA server;
+\code{\link[oce:download.topo]{oce::download.topo()}} to download the data
+or (b) a value returned by \code{\link[oce:read.topo]{oce::read.topo()}}.
 \item \code{contour}, an optional logical value (with \code{FALSE} as the default) indicating
 (as in Examples 5A and 5B) whether to represent bathymetry with contours
 (with depths of 100m, 200m, 500m shown, along with 1km, 2km up to 10km),
@@ -271,7 +265,7 @@ plot(argos10, which="TS")
 # Example 4: map with bathymetry
 # (Slow, so not run by default.)
 \dontrun{
-par(mar=c(3, 3, 1, 1))
+par(mar=c(3, 3, 1, 2))
 plot(index, bathymetry=TRUE)
 }
 
@@ -279,35 +273,34 @@ plot(index, bathymetry=TRUE)
 # (Slow, so not run by default.)
 \dontrun{
 par(mar=c(2, 2, 1, 1))
-bathy <- marmap::getNOAA.bathy(-82, -71, 23, 30, 2)
+topoFile <- oce::download.topo(-82, -71, 23, 30, 2)
+topo <- oce::read.topo(topoFile)
 
-# Example 5A. Simple contour version, using marmap::getNOAA.bathy().
-plot(index, bathymetry=list(source=bathy, contour=TRUE))
+# Example 5A. Simple contour version.
+plot(index, bathymetry=list(source=topo, contour=TRUE))
 
-# Example 5B. Simple contour version, using oce::read.topo().
-data(topoWorld, package="oce") # very coarse, read by oce::read.topo()
+# Example 5B. Simple contour version, using coarse dataset (ok on basin-scale).
+data(topoWorld, package="oce")
 plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 
 # Example 5C. Simple colour version.
-cm <- oce::colormap(zlim=c(0, -min(bathy)), col=function(...) rev(oce::oceColorsGebco(...)))
-plot(index, bathymetry=list(source=bathy, keep=TRUE, colormap=cm, palette=TRUE))
+plot(index, bathymetry=list(source=topo))
 
 # Example 5D. World view with Mollweide projection (Canada Day, 2020)
 jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
 plot(jul1, which="map", mapControl=list(projection=TRUE), pch=20, col=4, cex=0.75)
 
 # Example 5E. Customized map, sidestepping this function.
-lon <- as.numeric(rownames(bathy))
-lat <- as.numeric(colnames(bathy))
-depth <- -bathy # convert from elevation to depth
+lon <- topo[["longitude"]]
+lat <- topo[["latitude"]]
 asp <- 1/cos(pi/180*mean(lat))
 # Limit plot region to float region.
 xlim <- range(index[["longitude"]])
 ylim <- range(index[["latitude"]])
 # Colourize 1km, 2km, etc, isobaths.
-contour(x=lon, y=lat, z=depth, xlab="", ylab="",
+contour(x=lon, y=lat, z=topo[["z"]], xlab="", ylab="",
         xlim=xlim, ylim=ylim, asp=asp,
-        col=1:6, lwd=3, levels=1000*1:6, drawlabels=FALSE)
+        col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 # Show land
 data(coastlineWorldFine, package="ocedata")
 polygon(coastlineWorldFine[["longitude"]],
@@ -335,6 +328,7 @@ plot(argos, which="QC", QCControl=list(parameter="salinity",dataStateIndicator=T
 # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
 library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+par(mfrow=c(1, 1))
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 plot(a, which="profile")
@@ -358,7 +352,7 @@ plot(a, which="summary")
 \enumerate{
 \item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
-\url{https://doi.org/10.13155/29825}.
+\doi{10.13155/29825}
 }
 }
 \author{

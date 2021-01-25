@@ -24,10 +24,10 @@ A character value containing a path to the default Argo data directory.
 \description{
 By default, files downloaded from the Argo mirror are placed in
 \verb{~/data/argo}. You can configure where these files are stored by setting
-\code{options(argoFloat.destdir="path/to/argo")}. To persist this value
+\code{options(argoFloats.destdir="path/to/argo")}. To persist this value
 between sessions you can place this value in your \code{.Rprofile}. Similarly,
 the default value for \code{server} in \code{\link[=getIndex]{getIndex()}} is \code{"ifremer-https"}, which
-can be configured by setting \code{options(argoFloat.server = "https://...")}.
+can be configured by setting \code{options(argoFloats.server = "https://...")}.
 }
 \examples{
 argoDefaultDestdir()
