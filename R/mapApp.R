@@ -339,7 +339,7 @@ serverMapApp <- function(input, output, session) {
                             if (input$focus == "single") {
                                 if (is.null(state$focusID)) {
                                     shiny::showNotification(
-                                        "Double-click on a point or type an ID in the 'Flost ID' box, to single out a focus float",
+                                        "Double-click on a point or type an ID in the 'Float ID' box, to single out a focus float",
                                         type = "error",
                                         duration = NULL
                                     )
