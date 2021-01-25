@@ -6,7 +6,7 @@ appVersion <- "0.1"
 colDefaults <- list(core="7", bgc="#05f076", deep="6")
 
 ## Default start and end times
-endTime <- as.POSIXlt(Sys.time())
+endTime <- as.POSIXlt(Sys.time(), tz="UTC")
 startTime <- as.POSIXlt(endTime - 10 * 86400)
 
 
@@ -32,7 +32,8 @@ uiMapApp <- shiny::fluidPage(
                                              shiny::actionButton("goE", shiny::HTML("&rarr;")),
                                              shiny::actionButton("zoomIn", "+"),
                                              shiny::actionButton("zoomOut", "-"),
-                                             shiny::div(style="display: inline-block; vertical-align:center; width: 11em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
+                                             shiny::div(style="display: inline-block; vertical-align:center; width: 11em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start",
+                                                                                                                                                                         value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd", width="70%")),
                                              ##shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
                                              shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd", width="70%"))),
                              shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
@@ -97,6 +98,7 @@ uiMapApp <- shiny::fluidPage(
 
 ## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 serverMapApp <- function(input, output, session) {
+    message("the start time is=", startTime, "the end time is", endTime)
     lastHoverMessage <- "" # used with 'p' keystroke
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
@@ -350,12 +352,16 @@ serverMapApp <- function(input, output, session) {
                                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
                                     ## Note: extending time range to avoid problems with day transitions,
-                                    ## which can might cause missing cycles at the start and end; see
+                                    ## which might cause missing cycles at the start and end; see
                                     ## https://github.com/ArgoCanada/argoFloats/issues/283.
-                                    state$startTime <<- min(argo$time[k]) - 86400
-                                    state$endTime <<- max(argo$time[k]) + 86400
-                                    shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
-                                    shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
+                                    state$startTime <<- min(argo$time[k])
+                                    state$endTime <<- max(argo$time[k])
+                                    message("setting box")
+                                    message("state$startTime=", state$startTime, " state$endTime= ", state$endTime)
+                                    shiny::updateTextInput(session, "start",
+                                                           value=format(state$startTime, "%Y-%m-%d"))
+                                    shiny::updateTextInput(session, "end",
+                                                           value=format(state$endTime, "%Y-%m-%d"))
                                 }
                             } else {
                                 # "all"
@@ -373,6 +379,7 @@ serverMapApp <- function(input, output, session) {
                                 keep <- argo$ID == state$focusID
                             } else {
                                 ## Restrict search to the present time window
+                                message(" for subsetting state$startTime= ", state$startTime, " state$endTime= ", state$endTime)
                                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
                             }
                             i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
@@ -501,10 +508,8 @@ serverMapApp <- function(input, output, session) {
                         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
-        start <- state$startTime
-        end <- state$endTime
-        if (start > end) {
-            showError(paste0("Start must precede End , but got Start=", format(start, "%Y-%m-%d"), " and End=", format(end, "%Y-%m-%d.")))
+        if (state$startTime > state$endTime) {
+            showError(paste0("Start must precede End , but got Start=", format(state$startTime, "%Y-%m-%d"), " and End=", format(state$endTime, "%Y-%m-%d.")))
         } else {
             if (!is.null(input$brush)) {
                 ## Require a minimum size, to avoid mixups with minor click-slide
@@ -604,7 +609,10 @@ serverMapApp <- function(input, output, session) {
                     !is.null(state$focusID)) {
                     mtext(paste("Float ID", state$focusID), cex=0.8 * par("cex"), line=0.25)
                 } else {
-                    mtext(side=3, sprintf( "%s to %s: %d Argo profiles", format(start, "%Y-%m-%d"), format(end, "%Y-%m-%d"), sum(visible)), line=0.25, cex=0.8 * par("cex"))
+                    message(" The margin text")
+                    message(state$startTime)
+                    message(state$endTime)
+                    mtext(side=3, sprintf( "%s to %s: %d Argo profiles", format(state$startTime, "%Y-%m-%d"), format(state$endTime, "%Y-%m-%d"), sum(visible)), line=0.25, cex=0.8 * par("cex"))
                     if (diff(range(state$ylim)) < 90 && sum(visible)) {
                         oce::mapScalebar(x="topright") }
                 }
