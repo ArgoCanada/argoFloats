@@ -68,6 +68,11 @@ uiMapApp <- shiny::fluidPage(
                                                      shiny::fluidRow(
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
         shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
+                             shiny::conditionalPanel("input.Csymbol== 21",
+                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",
+                                                                shiny::selectInput("Cborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))),
+
+
                 shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
         shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
@@ -86,6 +91,9 @@ shiny::fluidRow(
                                                      shiny::fluidRow(
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
         shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
+                             shiny::conditionalPanel("input.Bsymbol== 21",
+                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",
+                                                                shiny::selectInput("Bborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
         shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
@@ -104,6 +112,9 @@ shiny::fluidRow(
                                                      shiny::fluidRow(
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
         shiny::selectInput("Dcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
+                             shiny::conditionalPanel("input.Dsymbol== 21",
+                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",
+                                                                shiny::selectInput("Dborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
         shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
@@ -592,12 +603,13 @@ serverMapApp <- function(input, output, session) {
                                             bgc=if (input$Bcolour == "default") colDefaults$bgc else input$Bcolour,
                                             deep=if (input$Dcolour == "default") colDefaults$deep else input$Dcolour)
                         symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
+                        borderSettings <- list(core=input$Cborder, bgc=input$Bborder, deep=input$Dborder)
                         sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
                         #message("the symbSettings are", symbSettings)
                         #message("the colSettings are", colSettings)
                         if (!"lines" %in% input$action)
                             if (symbSettings[[view]] == 21) {
-                                points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], bg=colSettings[[view]], lwd=0.5)
+                                points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], bg=colSettings[[view]], col=borderSettings[[view]], lwd=0.5)
                             } else {
                                 points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                             }
