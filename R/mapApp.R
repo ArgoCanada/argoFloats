@@ -655,9 +655,6 @@ serverMapApp <- function(input, output, session) {
                             format(state$endTime, "%Y-%m-%d", tz="UTC")),
                         side=3, cex=0.8 * par("cex"), line=0.25)
                 } else {
-                    message(" The margin text")
-                    message(state$startTime)
-                    message(state$endTime)
                     mtext(sprintf("%s to %s: %d Argo profiles",
                             format(state$startTime, "%Y-%m-%d", tz="UTC"),
                             format(state$endTime, "%Y-%m-%d", tz="UTC"),
