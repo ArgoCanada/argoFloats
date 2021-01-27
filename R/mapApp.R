@@ -650,12 +650,20 @@ serverMapApp <- function(input, output, session) {
                 ## Write a margin comment
                 if (input$focus == "single" &&
                     !is.null(state$focusID)) {
-                    mtext(paste("Float ID", state$focusID), cex=0.8 * par("cex"), line=0.25)
+                    mtext(sprintf("Float %s: %s to %s",
+                            state$focusID,
+                            format(state$startTime, "%Y-%m-%d", tz="UTC"),
+                            format(state$endTime, "%Y-%m-%d", tz="UTC")),
+                        side=3, cex=0.8 * par("cex"), line=0.25)
                 } else {
                     message(" The margin text")
                     message(state$startTime)
                     message(state$endTime)
-                    mtext(side=3, sprintf( "%s to %s: %d Argo profiles", format(state$startTime, "%Y-%m-%d"), format(state$endTime, "%Y-%m-%d"), sum(visible)), line=0.25, cex=0.8 * par("cex"))
+                    mtext(sprintf("%s to %s: %d Argo profiles",
+                            format(state$startTime, "%Y-%m-%d", tz="UTC"),
+                            format(state$endTime, "%Y-%m-%d", tz="UTC"),
+                            sum(visible)),
+                        side=3, line=0.25, cex=0.8 * par("cex"))
                     if (diff(range(state$ylim)) < 90 && sum(visible)) {
                         oce::mapScalebar(x="topright") }
                 }
