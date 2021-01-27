@@ -69,7 +69,7 @@ uiMapApp <- shiny::fluidPage(
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
         shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
                              shiny::conditionalPanel("input.Csymbol== 21",
-                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",
+                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                                                                 shiny::selectInput("Cborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))),
 
 
@@ -92,7 +92,7 @@ shiny::fluidRow(
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
         shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
                              shiny::conditionalPanel("input.Bsymbol== 21",
-                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",
+                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                                                                 shiny::selectInput("Bborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
@@ -113,7 +113,7 @@ shiny::fluidRow(
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
         shiny::selectInput("Dcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
                              shiny::conditionalPanel("input.Dsymbol== 21",
-                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 11em;",
+                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                                                                 shiny::selectInput("Dborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
     shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
@@ -138,7 +138,6 @@ shiny::fluidRow(
 
 ## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 serverMapApp <- function(input, output, session) {
-    message("the start time is=", startTime, "the end time is", endTime)
     lastHoverMessage <- "" # used with 'p' keystroke
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
