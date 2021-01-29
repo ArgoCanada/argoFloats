@@ -418,7 +418,6 @@ serverMapApp <- function(input, output, session) {
                                 keep <- argo$ID == state$focusID
                             } else {
                                 ## Restrict search to the present time window
-                                #message(" for subsetting state$startTime= ", state$startTime, " state$endTime= ", state$endTime)
                                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
                             }
                             i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))

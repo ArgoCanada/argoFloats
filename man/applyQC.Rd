@@ -10,18 +10,21 @@ applyQC(x, flags = NULL, actions = NULL, debug = 0)
 \item{x}{an \code{\linkS4class{argoFloats}} object of type \code{"argos"}, as created by
 \code{\link[=readProfiles]{readProfiles()}}.}
 
-\item{flags}{a vector of integers that are the quality-control flag
-values for data that are to be set to \code{NA} in the returned result.
-The default, \code{NULL}, means to use the flags set up by \code{\link[=readProfiles]{readProfiles()}}
-which, unless specified otherwise in the call to that function, are
-set up to regard as suspicious any data entries that are flagged
-with QC codes of
-0 (for data that have not yet been assessed),
-3 (for "probably bad" data),
-4 (for "bad" data),
-6 (an unused flag),
-7 (an unused flag), or
-9 (for "missing" data).  See Sections 3.2.1 and 3.2.2 of Carval et al. (2019) for
+\item{flags}{A list specifying flag values upon which actions will be taken. This can take two forms.
+
+In the first form, the list has named elements each containing a vector of integers. For example, salinities flagged with values of 1 or 3:9 would be specified by flags=list(salinity=c(1,3:9)). Several data items can be specified, e.g. flags=list(salinity=c(1,3:9), temperature=c(1,3:9)) indicates that the actions are to take place for both salinity and temperature.
+
+In the second form, flags is a list holding a single unnamed vector, and this means to apply the actions to all the data entries. For example, flags=list(c(1,3:9)) means to apply not just to salinity and temperature, but to everything within the data slot.
+
+If flags is NULL then flags=list(c(0,3,4,6,7,9)) is used by default where:
+0 = data that have not yet been assessed,
+3 = "probably bad" data,
+4 = for "bad" data,
+6 = an unused flag,
+7 = an unused flag, or
+9 = "missing" data.
+
+See Sections 3.2.1 and 3.2.2 of Carval et al. (2019) for
 more information on these QC code values.}
 
 \item{actions}{the actions to perform. The default, \code{NULL}, means to
