@@ -23,19 +23,7 @@ uiMapApp <- shiny::fluidPage(
                              shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
                              style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
                              ##shiny::fluidRow(shiny::p("mapApp"), style="color:blue;"),
-                             shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
-                                             shiny::actionButton("help", "Help"),
-                                             shiny::actionButton("code", "Code"),
-                                             shiny::actionButton("goW", shiny::HTML("&larr;")),
-                                             shiny::actionButton("goN", shiny::HTML("&uarr;")),
-                                             shiny::actionButton("goS", shiny::HTML("&darr;")),
-                                             shiny::actionButton("goE", shiny::HTML("&rarr;")),
-                                             shiny::actionButton("zoomIn", "+"),
-                                             shiny::actionButton("zoomOut", "-"),
-                                             shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start",
-                                                                                                                                                                         value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd")),
-                                             ##shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-                                             shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd"))),
+                             shiny::fluidRow(shiny::uiOutput(outputId="UIdirection")),
                              shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
                                              shiny::column(2, shiny::uiOutput(outputId="UIID")),
                                              shiny::column(3, shiny::uiOutput(outputId="UIfocus"))),
@@ -236,6 +224,21 @@ serverMapApp <- function(input, output, session) {
                                       inline=TRUE)
         }
     })
+
+    output$UIdirection <- shiny::renderUI({
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
+                             shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
+                                             shiny::actionButton("help", "Help"),
+                                             shiny::actionButton("code", "Code"),
+                                             shiny::actionButton("goW", shiny::HTML("&larr;")),
+                                             shiny::actionButton("goN", shiny::HTML("&uarr;")),
+                                             shiny::actionButton("goS", shiny::HTML("&darr;")),
+                                             shiny::actionButton("goE", shiny::HTML("&rarr;")),
+                                             shiny::actionButton("zoomIn", "+"),
+                                             shiny::actionButton("zoomOut", "-"),
+                                             shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start",
+                                                                                                                                                                         value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd")))
+        }})
 
     output$UIID <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
