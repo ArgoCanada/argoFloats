@@ -748,7 +748,7 @@ setMethod(f="plot",
                           polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="lightgray")
                       }
                   } else {
-                      argoFloatsDebug(debug, "using coastlineWorld from oce package, since the ocedata package is not installedi\n")
+                      argoFloatsDebug(debug, "using coastlineWorld from oce package, since the ocedata package is not installed\n")
                       data("coastlineWorld", package="ocedata", envir=environment())
                       coastlineWorld <- get("coastlineWorld")
                       polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col="lightgray")
