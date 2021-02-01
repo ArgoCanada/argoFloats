@@ -23,7 +23,7 @@ uiMapApp <- shiny::fluidPage(
                              shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
                              style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
                              ##shiny::fluidRow(shiny::p("mapApp"), style="color:blue;"),
-                             shiny::fluidRow(shiny::uiOutput(outputId="UIdirection")),
+                             shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
                              shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
                                              shiny::column(2, shiny::uiOutput(outputId="UIID")),
                                              shiny::column(3, shiny::uiOutput(outputId="UIfocus"))),
@@ -39,18 +39,8 @@ uiMapApp <- shiny::fluidPage(
                                                                                                     id="settab")),
                                                                  id="tabselected")),
                              ##? shiny::fluidRow(shiny::verbatimTextOutput("info")),
-                             shiny::fluidRow(shiny::column(6,
-                                                           shiny::conditionalPanel(condition="input.tabselected==2",
-                                                           style="padding-left:0px;",
-                                                           shiny::checkboxGroupInput("action",
-                                                                                     label="",
-                                                                                     choiceNames=list(shiny::tags$span("Start", style="color: black;"),
-                                                                                                      shiny::tags$span("End", style="color: black;"),
-                                                                                                      shiny::tags$span("Without Profiles", style="color: black;")),
-                                                                                     choiceValues=list( "start",
-                                                                                                       "end",
-                                                                                                       "lines"),
-                                                                                     inline=TRUE)))),
+
+                             shiny::fluidRow(shiny::uiOutput(outputId="UItrajectory")),
 
                              shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
                                                      shiny::fluidRow(
@@ -225,7 +215,7 @@ serverMapApp <- function(input, output, session) {
         }
     })
 
-    output$UIdirection <- shiny::renderUI({
+    output$UIwidget <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
                              shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
                                              shiny::actionButton("help", "Help"),
@@ -239,6 +229,22 @@ serverMapApp <- function(input, output, session) {
                                              shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start",
                                                                                                                                                                          value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd")))
         }})
+
+    output$UItrajectory <- shiny::renderUI({
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(2)) {
+                             shiny::fluidRow(shiny::column(6,
+                                                           style="padding-left:0px;",
+                                                           shiny::checkboxGroupInput("action",
+                                                                                     label="",
+                                                                                     choiceNames=list(shiny::tags$span("Start", style="color: black;"),
+                                                                                                      shiny::tags$span("End", style="color: black;"),
+                                                                                                      shiny::tags$span("Without Profiles", style="color: black;")),
+                                                                                     choiceValues=list( "start",
+                                                                                                       "end",
+                                                                                                       "lines"),
+                                                                                     inline=TRUE)))
+        }
+    })
 
     output$UIID <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
