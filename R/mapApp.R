@@ -44,68 +44,45 @@ uiMapApp <- shiny::fluidPage(
 
                              shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
                                                      shiny::fluidRow(
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-        shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
-                             shiny::conditionalPanel("input.Csymbol== 21",
+        shiny::column(2, shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
+
+
+        shiny::column(2, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+    shiny::column(2, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+                             shiny::column(2, shiny::conditionalPanel("input.Csymbol== 21",
                                                      shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                                                                shiny::selectInput("Cborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))),
-
-
-                shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-        shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-                shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-    shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
-
+                                                                shiny::selectInput("Cborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))
 ),
 shiny::fluidRow(
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-       shiny::selectInput("CPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default")),
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-        shiny::sliderInput("CPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
+       shiny::column(2, shiny::selectInput("CPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default")), selected="default"),
+        shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
 
                              shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
                                                      shiny::fluidRow(
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-        shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
-                             shiny::conditionalPanel("input.Bsymbol== 21",
+        shiny::column(2, shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
+        shiny::column(2, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+    shiny::column(2, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+                             shiny::column(2,shiny::conditionalPanel("input.Bsymbol== 21",
                                                      shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                                                                shiny::selectInput("Bborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))),
-                shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-        shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-                shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-    shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
-
+                                                                shiny::selectInput("Bborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))
 ),
 shiny::fluidRow(
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-       shiny::selectInput("BPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default")),
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-        shiny::sliderInput("BPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
+       shiny::column(2, shiny::selectInput("BPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default")),
+        shiny::column(2, shiny::sliderInput("BPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
 
                              shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
                                                      shiny::fluidRow(
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-        shiny::selectInput("Dcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
-                             shiny::conditionalPanel("input.Dsymbol== 21",
+        shiny::column(2, shiny::selectInput("Dcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
+        shiny::column(2, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+    shiny::column(2, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+                             shiny::column(2, shiny::conditionalPanel("input.Dsymbol== 21",
                                                      shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                                                                shiny::selectInput("Dborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))),
-                shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-        shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-                shiny::div(style="display: inline-block;vertical-align:top; width: 100px;",shiny::HTML("<br>")),
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-    shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+                                                                shiny::selectInput("Dborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))
 
 ),
 shiny::fluidRow(
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-       shiny::selectInput("DPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default")),
-    shiny::div(style="display: inline-block;vertical-align:top; width: 150px;",
-        shiny::sliderInput("DPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
+       shiny::column(2, shiny::selectInput("DPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default")),
+        shiny::column(2, shiny::sliderInput("DPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
 
                              ## using withSpinner does not work here
                              shiny::conditionalPanel("input.tabselected!=3",
