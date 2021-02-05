@@ -703,7 +703,7 @@ serverMapApp <- function(input, output, session) {
 #'     mapApp()
 #' }
 #'
-#' @author Dan Kelley
+#' @author Dan Kelley and Jaimie Harbin
 #' @importFrom shiny shinyApp shinyOptions
 #' @export
 mapApp <- function(age=argoDefaultIndexAge(),
