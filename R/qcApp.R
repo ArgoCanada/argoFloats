@@ -91,7 +91,7 @@ QCAppserver <- shinyServer(function(input,output){
 
 })
 
-#' Interactive app for analying Argo QC
+#' Interactive app for analyzing Argo QC
 #'
 #' The GUI permits user to analyze QC of Argo data. As of 2020-02-05, this was still in early stages of development.
 #'
