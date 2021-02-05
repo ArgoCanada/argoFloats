@@ -77,5 +77,5 @@ if (interactive()) {
 
 }
 \author{
-Dan Kelley
+Dan Kelley and Jaimie Harbin
 }
