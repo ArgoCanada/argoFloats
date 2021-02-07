@@ -105,10 +105,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span>
 <span class="fu">install_github</span><span class="op">(</span><span class="st">"ArgoCanada/argoFloats"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></code></pre></div>
-<p>where, of course, the <code>devtools</code> package must be installed first, if it is not already present on the user’s system. It is also necessary to have reasonably up-to-date versions of the <code>oce</code> and <code>ocedata</code> packages installed. The very latest versions may be installed with</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">install_github</span><span class="op">(</span><span class="st">"dankelley/oce"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span>
-<span class="fu">install_github</span><span class="op">(</span><span class="st">"dankelley/ocedata"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></code></pre></div>
+<p>where, of course, the <code>devtools</code> package must be installed first, if it is not already present on the user’s system.</p>
 <p>Once things are set up as above, it will be possible to use all the features of <code>argoFloats</code>, many of which are illustrated in the documentation for its functions, and in the vignette that is built into the package, both of which are displayed on the <a href="https://argocanada.github.io/argoFloats/index.html">user-oriented website</a>. Note that the vignette also lists youtube videos about the package.</p>
 <p>As a practical example, the code block given below shows how to create a map and a temperature-salinity diagram for Argo float profiles near Abaco Island in the Bahamas. The key steps, many of which are common to most analyses using the package, are as follows.</p>
 <ol>
@@ -121,7 +118,7 @@
 <li><p><code>plot</code> is used again, to make a temperature-salinity diagram.</p></li>
 </ol>
 <p>With this in mind, readers ought to find it easy to read the following code. A reasonable next step would be to try altering the code, perhaps to explore another region or to see whether the QC step is actually necessary.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/">oce</a></span><span class="op">)</span>
 <span class="co">## 1. Get worldwide float-profile index, saving to ~/data/argo by default.</span>
