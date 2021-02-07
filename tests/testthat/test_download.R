@@ -1,5 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
-library(argoFloats)
+data("index")
+
 context("bgc download")
 
 test_that("getIndex()",
@@ -16,7 +17,6 @@ test_that("getProfiles()",
           {
               tempFile <- tempfile()
               dir.create(tempFile)
-              data(index)
               s <- expect_message(subset(index, 1:3), "Kept 3 profiles")
               p <- getProfiles(s, destdir=tempFile)
               expect <- expect_output(print(p), "argoFloats object of type \"profiles\" with 3 items")
