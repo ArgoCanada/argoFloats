@@ -23,18 +23,18 @@ jobs:
       # ~/.R/Makevars doesn't appear to work in this context; nor does
       # ln -s with the library directory. This part of the action is
       # temporary and should be removed when CRAN oce can be used
-      - name: Link gfortran for devel oce 
-        run: |
-          ln -s `which gfortran-10` /usr/local/bin/gfortran
-          gfortran --version || true
-          ls /usr/local/Cellar/gcc | tail -n 1
-          
-          sudo mkdir -p /usr/local/gfortran
-          sudo cp -r /usr/local/Cellar/gcc/`ls /usr/local/Cellar/gcc | tail -n 1`/lib/gcc/10 /usr/local/gfortran/lib
-          sudo chmod 755 /usr/local/gfortran
-          sudo chmod 755 /usr/local/gfortran/lib
-          
-          ls /usr/local/gfortran/lib || true
+      #DEK# - name: Link gfortran for devel oce 
+      #DEK#   run: |
+      #DEK#     ln -s `which gfortran-10` /usr/local/bin/gfortran
+      #DEK#     gfortran --version || true
+      #DEK#     ls /usr/local/Cellar/gcc | tail -n 1
+      #DEK#     
+      #DEK#     sudo mkdir -p /usr/local/gfortran
+      #DEK#     sudo cp -r /usr/local/Cellar/gcc/`ls /usr/local/Cellar/gcc | tail -n 1`/lib/gcc/10 /usr/local/gfortran/lib
+      #DEK#     sudo chmod 755 /usr/local/gfortran
+      #DEK#     sudo chmod 755 /usr/local/gfortran/lib
+      #DEK#     
+      #DEK#     ls /usr/local/gfortran/lib || true
           
       - name: Install dependencies
         run: |
