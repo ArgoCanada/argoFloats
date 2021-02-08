@@ -1,57 +1,27 @@
 library(shiny)
 
 uiQCApp <- fluidPage(
-
-                shiny::tabsetPanel(type="tab",
-                                   shiny::tabPanel("Main", value=1),
-                                   shiny::tabPanel("Single Float", value=2),
-                                   id="tabselected"),
-                shiny::fluidRow(
-                                shiny::uiOutput(outputId="UIwidget")),
-
-                shiny::fluidRow(
-                                shiny::uiOutput(outputId="UIfocus")),
-
-                shiny::fluidRow(shiny::uiOutput(outputId="UIsingleQC")),
-                shiny::fluidRow(shiny::uiOutput(outputId="UIplot"))
-
+                shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
+                shiny::fluidRow(shiny::uiOutput(outputId="UIview")),
+                shiny::fluidRow(shiny::uiOutput(outputId="UIsingleQC"))
 )
 
 QCAppserver <- shinyServer(function(input,output){
 
 
-                          output$UIfocus <- shiny::renderUI({
-                              if (input$tabselected %in% c(2)) {
-                                  shiny::fluidRow(
-                                                  shiny::column(2, shiny::textInput("ID", "Float ID", value="", width="11em")),
-                                                  shiny::column(2, shiny::textInput("cycle", "Cycle", value="", width="11em")))
-                              }
-                          })
 
                           output$UIwidget <- shiny::renderUI({
-                              if (input$tabselected %in% c(1, 2)) {
                                   shiny::fluidRow(shiny::column(2,shiny::span(shiny::HTML(paste("<b style=\"color:black; margin-left:1em;\">  ","qcApp 0.1","</b>")))),
                                                   shiny::column(2, shiny::actionButton("help", "Help")),
-                                                  shiny::column(2, shiny::actionButton("code", "Code")))}})
-
-                          output$UIsingleQC <- shiny::renderUI({
-                              if (input$tabselected %in% c(2)) {
-                                  shiny::checkboxGroupInput("qc",
-                                                            label="Single float QC",
-                                                            choiceNames=list(shiny::tags$span("applyQC", style="color:black;"),
-                                                                             shiny::tags$span("showQCTests", style="color:black;"),
-                                                                             shiny::tags$span("Diagnostics", style="color:black;")),
-                                                            choiceValues=list("applyQC","showQCTests", "diagnostics"),
-                                                            inline=TRUE)
-                              }
+                                                  shiny::column(2, shiny::actionButton("code", "Code")))
                           })
 
-                          output$UIplot <- shiny::renderUI({
+
+                          output$UIview <- shiny::renderUI({
                               ## NOTE: The type and colorBy are the same as oceanglider
-                              if (input$tabselected %in% c(1)) {
 
                                   shiny::fluidRow(
-                                                  shiny::column(2, shiny::selectInput("focus", "Focus",choices=c("All", "Single"), selected=c("All"))),
+                                                  shiny::column(2, shiny::selectInput("focus", "focus",choices=c("All", "Single"), selected=c("All"))),
                                                   shiny::column(2, shiny::selectInput("type", "Plot Type",choices=c("TS <T>"="TS",
                           "C(t)"="conductivity time-series",
                           "p(t) <P>"="pressure time-series",
@@ -88,7 +58,21 @@ QCAppserver <- shinyServer(function(input,output){
                           "(none)"="(none)"),
                 selected="(none)")))}
 
-                          })
+                          )
+
+                          output$UIsingleQC <- shiny::renderUI({
+                                  shiny::fluidRow(
+                                                  shiny::column(2, shiny::textInput("ID", "Float ID", value="", width="11em")),
+                                                  shiny::column(2, shiny::textInput("cycle", "Cycle", value="", width="11em")),
+                                                  shiny::column(2, shiny::checkboxGroupInput("qc",
+                                                                                             label="Single float QC",
+                                                                                             choiceNames=list(shiny::tags$span("applyQC", style="color:black;"),
+                                                                                                              shiny::tags$span("showQCTests", style="color:black;"),
+                                                                                                              shiny::tags$span("Diagnostics", style="color:black;")),
+                                                                                             choiceValues=list("applyQC","showQCTests", "diagnostics"),
+                                                                                             inline=TRUE)))
+                              }
+                          )
 
 })
 
