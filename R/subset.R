@@ -299,6 +299,31 @@ setMethod(f="subset",
         ## Step 1: handle "argo" type first. Note that "subset" is ignored; rather, we insist that either
         ## "profile" or "cycle" be provided.
         if (x@metadata$type == "argos") {
+            if (!missing(subset)) {
+                N <- x[["length"]]
+                if (is.logical(subset)) {
+                    if (length(subset) != x[["length"]])
+                        stop("in subset,argoFloats-method() :\n  'subset' length (", length(subset), ") must match x length (", x[["length"]], ")",
+                            call.=FALSE)
+                    keep <- which(subset)
+                } else if (is.numeric(subset)) {
+                    if (!all(subset > 0))
+                        stop("in subset,argoFloats-method() :\n  'subset' must consist only of positive integers",
+                            call.=FALSE)
+                    if (any(subset > x[["length"]]))
+                        stop("in subset,argoFloats-method() :\n  'subset' must not contain indices beyond range of `x` (in this case, ", x[["length"]], ")",
+                            call.=FALSE)
+                    keep <- subset
+                } else {
+                    stop("in subset,argoFloats-method() :\n  'subset' must either be a logical vector or a list of indices",
+                        call.=FALSE)
+                }
+                res <- x
+                res@data$argos <- x@data$argos[keep]
+                if (!silent)
+                    message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                return(res)
+            }
             argoFloatsDebug(debug, "subsetting with type=\"argos\"\n")
             if (length(dotsNames) == 0)
                 stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", \"dataStateIndicator\", or \"historyAction\" argument", call.=FALSE)
