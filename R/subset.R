@@ -4,16 +4,17 @@
 
 #' Subset an argoFloats Object
 #'
-#' Return a subset of an [`argoFloats-class`] for two object types:
-#' A) type `"index"`, as created by [getIndex()], either by specifying indices
-#' to keep (using the `subset` argument) or by specifying a way to determine
-#' those indices (using the `...` argument). Note that only one subset condition
-#' may be given in the `...` argument, but that [merge,argoFloats-method()] can
-#' be used to merge indices  created by `subset`, which effectively creates a
-#' logical "or" operation.
-#' B) type `"argos"`, as created by [readProfiles()]. Note that the only subset
-#' condition that can be give in the `...` argument is `profile`,`cycle`, or
-#' `dataStateIndicator` for `argos` type.
+#' Return a subset of an [`argoFloats-class`] object.  This applies
+#' only to objects of type `"index"`, as created with [getIndex()] or `subset()`
+#' acting on such a value, or of type `"argos"`, as created with [readProfiles()].
+#' (It cannot be used on objects of type `"profiles"`, as created with [getProfiles()].)
+#' There are two ways to use `subset()`.  **Method 1.** supply
+#' the `subset` argument.  This may be a logical vector indicating
+#' which entries to keep (by analogy to the base-R `subset()`
+#' function) or it may be an integer vector holding the indices of entries to
+#' be retained. **Method 2.** do not supply `subset`.  In this
+#' case, the action is determined by the third (`...`)
+#' argument; see \sQuote{Details}.
 #'
 #' The possibilities for the `...` argument are as follows.
 #'
@@ -61,7 +62,7 @@
 #' `"NM"` for NMDIS, China.
 #' See example 7.
 #'
-#' 8. A list named `deep` that holds a logical value indicating weather argo floats
+#' 8. A list named `deep` that holds a logical value indicating whether argo floats
 #' are deep argo (i.e. `profiler_type` 849, 862, and 864). See example 8.
 #'
 #' 9. A list named `ID` that holds a character value specifying a float identifier.
@@ -91,21 +92,19 @@
 #' that selects whether to retain data from the ascent or decent phase.
 #' See example 13.
 #'
-#' 14. An integer value named `profile`, that selects which profiles
+#' 14. An integer value named `cycle`, that selects which cycles
 #' to obtain. Note that this type of subset is possible for `argos` and `index`
 #' type objects.
 #' See example 14.
+#' **FIXME: Is this right? The code seems to only permit for `"argos"` type.**
 #'
-#' 15. A integer value named `debug` that controls whether `subset()` prints
-#' some information to describe what it is doing.
-#'
-#' 16. A character value named `dataStateIndicator`, equal to either "0A", "1A",
+#' 15. A character value named `dataStateIndicator`, equal to either "0A", "1A",
 #' "2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which `dataStateIndicator`
 #' to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
 #' understand the processing stage of data.
 #' See example 16.
 #'
-#' 17. A character value named `historyAction`, equal to either "CF", "CR", "CV",
+#' 16. A character value named `historyAction`, equal to either "CF", "CR", "CV",
 #' "DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
 #' V3.3 (Carvel et al. 2019) for the description of each acronym.
 #' See example 17.
@@ -273,437 +272,436 @@
 ## @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
 #' @export
 setMethod(f="subset",
-          signature="argoFloats",
-          definition=function(x, subset=NULL, ...) {
-              ## subsetString <- paste(deparse(substitute(subset)), collapse=" ")
-              dots <- list(...)
-              dotsNames <- names(dots)
-              ## Clear the "debug" and "silent" entries from dots, because later we insist that length(dots) be 1.
-              debug <- 0
-              if ("debug" %in% dotsNames) {
-                  debug <- dots$debug
-                  dots$debug <- NULL
-                  dotsNames <- names(dots)
-              }
-              silent <- 0
-              if ("silent" %in% dotsNames) {
-                  silent <- dots$silent
-                  dots$silent <- NULL
-                  dotsNames <- names(dots)
-              }
-              ## All done with manipulating dots now.
-
-              argoFloatsDebug(debug, "subset,argoFloats-method() {\n", style="bold", sep="", unindent=1)
-              ## message("type =", x@metadata$type)
-              if (x@metadata$type == "profiles") {
-                  stop("in subset,argoFloats-method() :\n  subset doesn't work for type = profiles", call.=FALSE)
-              }
-              ## Step 1: handle "argo" type first. Note that "subset" is ignored; rather, we insist that either
-              ## "profile" or "cycle" be provided.
-              if (x@metadata$type == "argos") {
-                  argoFloatsDebug(debug, "subsetting with type=\"argos\"\n")
-                  if (length(dotsNames) == 0)
-                      stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", \"dataStateIndicator\", or \"historyAction\" argument", call.=FALSE)
-                  if (dotsNames[1] == "profile") {
-                      argoFloatsDebug(debug, "subsetting by profile ", profile, "\n")
-                      profile <- dots[[1]]
-                      ## Loop over all objects within the data, and within that loop look at data within the object,
-                      ## and for each of them, if its a vactor subset according to profile and if its a matrix
-                      ## subset according to profile
-                      res <- x
-                      argos <- x[["argos"]]
-                      ## Loop over all objects
-                      ##message("profile=",paste(profile, collapse=" "))
-                      for (iargo in seq_along(argos)) {
-                          argo <- argos[[iargo]]
-                          ## Handle the metadata slot
-                          for (name in names(argo@metadata)) {
-                              ##message("name=",name)
-                              argoFloatsDebug(debug, "subsetting metadata item named \"", name, "\"\n", sep="")
-                              ## Pass some things through directly.
-                              if (name %in% c("units", "filename", "flagScheme", "dataNamesOriginal"))
-                                  next
-                              item <- argo@metadata[[name]]
-                              ## Handle things that are encoded as characters in a string,
-                              ## namely "direction", "juldQC", and "positionQC".
-                              if (name == "direction" || grepl("QC$", name)) {
-                                 ## message("  -- character")
-                                  res@data$argos[[iargo]]@metadata[[name]] <- paste(strsplit(item,"")[[1]][profile],collapse="")
-                              } else if (is.list(item)) {
-                                  ##message("list")
-                                  for (l in seq_along(item)) {
-                                      ##print(dim(item[[l]]))
-                                      D <- dim(item[[l]])
-                                      if (profile > D[2])
-                                          stop("in subset,argoFloats-method() :\n cannot access profile ", profile, " of metadata item \"", name, "\" because its dimension is ", paste(D, collapse=" "), call.=FALSE)
-                                      ##cat("BEFORE:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
-                                      res@data$argos[[iargo]]@metadata[[name]][[l]] <- item[[l]][, profile, drop=FALSE]
-                                      ##cat("AFTER:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
-                                  }
-                              } else if (is.vector(name)) {
-                                  ##message("vector")
-                                  res@data$argos[[iargo]]@metadata[[name]] <- item[profile]
-                              } else if (is.matrix(name)) {
-                                  ##message("matrix")
-                                  res@data$argos[[iargo]]@metadata[[name]] <- item[, profile, drop=FALSE]
-                              } else if (is.array(name)) {
-                                  argoFloatsDebug(debug, "name=", name, " has dim ", paste(dim(res@metadata[[name]]), collapse=" "), "\n")
-                                  if (length(dim(res@metadata[[name]])) <= 3) {
-                                      res@metadata[[name]] <- item[, , keep, drop=FALSE]
-                                  } else {
-                                      warning("not subsetting \"", name, "\" in metadata, because it is an array of rank > 3")
-                                  }
-                              } else {
-                                  stop("cannot subset metadata item named \"", name, "\" because it is not a length-one string, a vector, or a matrix")
-                              }
-                          }
-                          ## Handle the data slot
-                          for (name in names(argo@data)) {
-                              item <- argo@data[[name]]
-                              if (is.matrix(item)) {
-                                  dim <- dim(item)
-                                  if (profile > dim[2])
-                                      stop("in subset,argoFloats-method() :\n  Only have ", dim[2], " profiles", call.=FALSE)
-                                  newItem <- item[, profile, drop=FALSE]
-                                  res@data$argos[[iargo]]@data[[name]] <- newItem
-                              } else {
-                                  length <- length(item)
-                                  if (profile > length)
-                                      stop("in subset,argoFloats-method() :\n  Only have ", length, " profiles", call.=FALSE)
-                                  newItem <- item[profile, drop=FALSE]
-                                  res@data$argos[[iargo]]@data[[name]] <- newItem
-                              }
-                          }
-                      }
-                      argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
-                      return(res)
-                  } else if (dotsNames[1] == "cycle") {
-                      argoFloatsDebug(debug, "subsetting by cycle for 'index' type\n")
-                      cycle <- dots[[1]]
-                      if (!is.character(cycle) & !is.numeric(cycle))
-                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
-                      ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
-                      xcycle <- x[["cycle"]]
-                      if (is.character(cycle)) {
-                          argoFloatsDebug(debug, "subsetting by cycle as a character value\n")
-                          ## Here, keep is logical
-                          keep <- rep(FALSE, length(xcycle))
-                          for (thisCycle in cycle)
-                              keep <- keep | grepl(thisCycle, xcycle)
-                          nkeep <- sum(keep)
-                      } else if (is.numeric(cycle)) {
-                          argoFloatsDebug(debug, "subsetting by cycle as a numeric value\n")
-                          ## Here, keep is integer
-                          keep <- NULL
-                          xcycle <- as.integer(gsub("AD","",xcycle)) # change e.g. "123D" to "123"
-                          for (thisCycle in cycle) {
-                              keep <- c(keep, which(thisCycle == xcycle))
-                              ## message("thisCycle=", thisCycle, " keep=", paste(keep, collapse=" "))
-                          }
-                          nkeep <- length(keep)
-                      }
-                      if (nkeep < 1)
-                          warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
-                      if (!silent)
-                          message("Kept ", nkeep, " profiles ")
-                      x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=="dataStateIndicator") {
-                      argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
-                      dataStateIndicator <- dots[[1]]
-                      if (is.list(dots[1]))
-                          dataStateIndicator <- unlist(dataStateIndicator)
-                      ## Reference Table 6, in section 3.6, of
-                      ## Argo Data Management Team. “Argo User’s Manual V3.3.”
-                      ## Ifremer, November 28, 2019. https://doi.org/10.13155/29825.
-                      if (!is.character(dataStateIndicator))
-                          stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value", call.=FALSE)
-                      ## In next, [1] means we take the first element (first profile) of the cycle.
-                      dsi <- sapply(x[["argos"]], function(a) a[["dataStateIndicator"]][1])
-                      keep <- rep(FALSE, length(dsi))
-                      for (dataStateIndicatorThis in dataStateIndicator) {
-                          keep <- keep | grepl(dataStateIndicatorThis, dsi , fixed=TRUE)
-                          ##> message(dataStateIndicatorThis)
-                          ##> print(keep)
-                      }
-                      x@data[[1]] <- x@data[[1]][keep]
-                  } else if (dotsNames[1] =="historyAction") {
-                      for (i in seq_along(x[["argos"]])) {
-                          historyList <- x[["historyAction"]][[i]][1,]
-                      }
-                      historyList <- lapply(x[["historyAction"]], function(h) x[["historyAction"]][[i]])
-                      keep <- grepl("IP", historyList)
-                      x@data[[1]] <- x@data[[1]][keep]
-                  } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"profile\", \"cycle\", \"dataSateIndicator\", or \"historyAction\"", call.=FALSE)
-                  }
-              }
-              ## Step 2: Now we know the type is either "index" or "profiles".  In either case,
-              ## "subset" can be provided, so we check for its existence first.
-              if (missing(subset)) {
-                  #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
-                  if (length(dots) == 0)
-                      stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with \"subset\" argument, \"circle\",\"rectangle\", \"parameter\",\"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", dataMode\", \"cycle\", or \"direction\"", call.=FALSE)
-                  if (length(dots) > 1)
-                      stop("in subset,argoFloats-method() :\n  cannot give more than one method in the \"...\" argument", call.=FALSE)
-                  N <- length(x@data$index[[1]]) # used in calculating percentages
-                  if (x@metadata$type == "index") {
-                      argoFloatsDebug(debug, "subsetting with type=\"index\"\n")
-                  if (dotsNames[1] == "circle") {
-                      argoFloatsDebug(debug, "subsetting by circle\n")
-                      circle <- dots[[1]]
-                      if (!is.list(dots[1]))
-                          stop("in subset,argoFloats-method() :\n  \"circle\" must be a list containing \"longitude\", \"latitude\" and \"radius\".", call.=FALSE)
-                      if (3 != sum(c("longitude", "latitude", "radius") %in% sort(names(circle))))
-                          stop("in subset,argoFloats-method() :\n  \"circle\" must be a list containing \"longitude\", \"latitude\" and \"radius\"", call.=FALSE)
-                      if (!requireNamespace("oce", quietly=TRUE))
-                          stop("must install.packages(\"oce\") to subset by circle")
-                      dist <- oce::geodDist(x[["longitude"]], x[["latitude"]], circle$longitude, circle$latitude)
-                      keep <- dist < circle$radius
-                      keep[is.na(keep)] <- FALSE
-                      x@data$index <- x@data$index[keep, ]
-                      if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                  } else if (dotsNames[1] == "rectangle") {
-                      argoFloatsDebug(debug, "subsetting by rectangle\n")
-                      rectangle <- dots[[1]]
-                      if (!is.list(dots[1]))
-                          stop("in subset,argoFloats-method():\n  \"rectangle\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
-                      if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
-                          stop("in subset,argoFloats-method():\n  \"rectangle\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
-                      keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
-                      keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[["latitude"]] <= rectangle$latitude[2]
-                      ok <- is.finite(keeplon) & is.finite(keeplat)
-                      keeplon[!ok] <- FALSE
-                      keeplat[!ok] <- FALSE
-                      keep <- keeplon & keeplat
-                      x@data$index <- x@data$index[keep, ]
-                      if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                  } else if (dotsNames[1]=="parameter") {
-                      argoFloatsDebug(debug, "subsetting by parameter\n")
-                      parameter <- dots[[1]]
-                      if (is.list(dots[1]))
-                          parameters <- unlist(parameter)
-                      nparameters <- length(parameters)
-                      parametersList <- lapply(x[["parameters"]], function(p) strsplit(p, " ")[[1]])
-                      keep <- unlist(lapply(parametersList, function(pl) nparameters == sum(parameters %in% pl)))
-                      #if (sum(keep) < 1)
-                          #warning("in subset,argoFloats-method(..., parameter):\n  found no profiles with given parameter", call.=FALSE)
-                      if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=="polygon") {
-                      argoFloatsDebug(debug, "subsetting by polygon\n")
-                      if (!requireNamespace("sf", quietly=TRUE))
-                          stop("must install.packages(\"sf\") for subset() by polygon to work")
-                      polygon <- dots[[1]]
-                      if(!is.list(dots[1]))
-                          stop("in subset,argoFloats-method():\n  \"polygon\" must be a list", call.=FALSE)
-                      if (length(polygon) != 2)
-                          stop("in subset,argoFloats-method():\n  \"polygon\" must be a list of two elements", call.=FALSE)
-                      if (2 != sum(c("longitude", "latitude") %in% names(polygon)))
-                          stop("in subset,argoFloats-method():\n  \"polygon\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
-                      plat <- polygon$latitude
-                      plon <- polygon$longitude
-                      if (length(plat) != length(plon))
-                          stop("lengths of polygon$longitude and polygon$latitude must match, but they are ",
-                               length(plat), " and ", length(plon))
-                      if ((head(plon, 1) != tail(plon, 1)) || head(plat, 1) != tail(plat, 1)) {
-                                        #warning("In subset,argoFloats-method(): Closing the polygon, since the first and last points did not match.\n", call.=FALSE)
-                          plon <- c(plon, plon[1])
-                          plat <- c(plat, plat[1])
-                      }
-                      alon <- x[["longitude"]]
-                      alat <- x[["latitude"]]
-                      ## We need the *index* of points to keep, and not just a lon-lat subset of
-                      ## points.  It is not too difficult to get the index with the sp
-                      ## package, but the only solution I could come up with using the sf
-                      ## package is to tack 1,2,3,etc onto the lon-lat points as a third
-                      ## dimension, so that after we select for the points inside, we can skim
-                      ## that third dimension and that gives us the keep value that we need. There
-                      ## may be a more straightforward way, but my (admittedly shallow) reading
-                      ## of the sf function list did not uncover anything promising, and my
-                      ## tests show that this scheme works.
-                      ##
-                      ## See https://github.com/ArgoCanada/argoFloats/issues/86
-                      ok <- is.finite(alon) & is.finite(alat)
-                      if (!requireNamespace("sf", quietly=TRUE))
-                          stop("must install sf package for subset(...,polygon,...) to this to work")
-                      Polygon <- sf::st_polygon(list(outer=cbind(plon, plat, rep(0, length(plon)))))
-                      ## DOES NOT WORK (REQUIRES OTHER SOFTWARE??): Polygon <- sf::st_make_valid(Polygon)
-                      if (!is.finite(sf::st_is_valid(Polygon))) {
-                          errorMessage <- sf::st_is_valid(Polygon, reason=TRUE)
-                          stop(paste0("Error in subset,argoFloats-method():\n  polygon is invalid, because of ", errorMessage), call.=FALSE)
-                      }
-                      ## multipoint does not permit NA values, so we set them to zero and remove them later
-                      Points <- sf::st_multipoint(cbind(ifelse(ok, alon, 0),
-                                                        ifelse(ok, alat, 0),
-                                                        seq_along(alon)))
-                      if (!sf::st_is_valid(Points)) {
-                          errorMessage <- sf::st_is_valid(Points, reason=TRUE)
-                          stop(paste0("Error in subset,argoFloats-method():\n  \"Points\" is invalid, because of ", errorMessage), call.=FALSE)
-                      }
-                      Intersection <- sf::st_intersection(Points, Polygon)
-                      keep <- Intersection[,3]
-                      if (!silent)
-                          message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=="time") {
-                      argoFloatsDebug(debug, "subsetting by time\n")
-                      time <- dots[[1]]
-                      if(!is.list(dots[1]))
-                          stop("in subset,argoFloats-method():\n  \"time\" must be a list", call.=FALSE)
-                      if (2 != sum(c("from", "to") %in% names(time)))
-                          stop("in subset,argoFloats-method():\n  \"time\" must be a list containing \"to\"and \"from\"", call.=FALSE)
-                      if (length(time$from) != 1)
-                          stop("from must be of length 1")
-                      if (length(time$to) != 1)
-                          stop("to must be of length 1")
-                      if (!inherits(time$from, "POSIXt")) {
-                          time$from <- try(as.POSIXct(time$from, tz="UTC"))
-                          if (inherits(time$from, "try-error"))
-                              stop("in subset,argoFloats-method():\n  cannot convert \"time$from\" to a POSIX time", call.=FALSE)
-                      }
-                      if (!inherits(time$to, "POSIXt")) {
-                          time$to <- try(as.POSIXct(time$to, tz="UTC"))
-                          if (inherits(time$to, "try-error"))
-                              stop("in subset,argoFloats-method():\n  cannot convert \"time$to\" to a POSIX time", call.=FALSE)
-                      }
-                      if (time$to <= time$from)
-                          stop ("in subset,argoFloats-method():\n \"to\" must be greater than \"from\"", call.=FALSE)
-                      keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
-                      keep[is.na(keep)] <- FALSE
-                      if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
-                  } else if(dotsNames[1]=="institution") {
-                      argoFloatsDebug(debug, "subsetting by institution\n")
-                      institution <- dots[[1]]
-                      if(!is.list(dots[1]))
-                          stop("in subset,argoFloats-method():\n  \"institution\" must be a list")
-                      if (length(institution) > 1)
-                          stop("\"institution\" cannot hold more than one element")
-                      keep <- grepl(institution, x@data$index$institution)
-                      keep[is.na(keep)] <- FALSE
-                      if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1] == "deep") {
-                      argoFloatsDebug(debug, "subsetting by deep\n")
-                      deep <- dots[[1]]
-                      if (!is.logical(deep))
-                          stop("in subset,argoFloats-method():\n deep must be a logical vector indicating TRUE or FALSE", call.=FALSE)
-                      if (deep) {
-                          keep <- grep("849|862|864", x@data$index$profiler_type)
-                      } else {
-                          keep <- grep("849|862|864", x@data$index$profiler_type, invert=TRUE)
-                      }
-                      if (!silent)
-                          message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1] == "ID" || dotsNames[1] == "id") {
-                      argoFloatsDebug(debug, "subsetting by ID\n")
-                      if (dotsNames[1] == "id")
-                          warning("In subset,argoFloats-method : converted subset(x,id=...) to subset(x,ID=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
-                      ID <- as.character(dots[[1]]) # convert in case it is numeric
-                      xID <- x[["ID"]]
-                      keep <- rep(FALSE, length(xID))
-                      file <- x@data$index$file
-                      for (thisID in ID)
-                          keep <- keep | grepl(thisID, xID)
-                      if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=="ocean") {
-                      argoFloatsDebug(debug, "subsetting by ocean\n")
-                      ocean <- dots[[1]]
-                      if (!is.character(ocean))
-                          stop("in subset,argoFloats-method() : \"ocean\" must be character value", call.=FALSE)
-                      if (length(ocean) > 1)
-                          stop("in subset,argoFloats-method():\n \"ocean\" cannot hold more than one element", call.=FALSE)
-                      keep <- grepl(ocean, x@data$index$ocean)
-                      keep[is.na(keep)] <- FALSE
-                      if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=="dataMode") {
-                      argoFloatsDebug(debug, "subsetting by dataMode\n")
-                      dataMode <- dots[[1]]
-                      if (!is.character(dataMode))
-                          stop("in subset,argoFloats-method():\n  \"dataMode\" must be character value",call.=FALSE)
-                      if (dataMode == "delayed") {
-                          keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}D.*$", x[["file"]])
-                      } else if (dataMode == "realtime") {
-                          keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}R.*$", x[["file"]])
-                      } else {
-                          stop("in subset,argoFloats-method():\n  \"dataMode\" must be either \"realtime\" or \"delayed\", not \"", dataMode, "\"", call.=FALSE)
-                      }
-                      if (!silent)
-                          message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
-                      x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1] == "cycle") {
-                      argoFloatsDebug(debug, "subsetting by cycle for 'index' type\n")
-                      cycle <- dots[[1]]
-                      if (!is.character(cycle) & !is.numeric(cycle))
-                          stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
-                      ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
-                      xcycle <- x[["cycle"]]
-                      if (is.character(cycle)) {
-                          argoFloatsDebug(debug, "subsetting by cycle as a character value\n")
-                          ## Here, keep is logical
-                          keep <- rep(FALSE, length(xcycle))
-                          for (thisCycle in cycle)
-                              keep <- keep | grepl(thisCycle, xcycle)
-                          nkeep <- sum(keep)
-                      } else if (is.numeric(cycle)) {
-                          argoFloatsDebug(debug, "subsetting by cycle as a numeric value\n")
-                          ## Here, keep is integer
-                          keep <- NULL
-                          xcycle <- as.integer(gsub("AD","",xcycle)) # change e.g. "123D" to "123"
-                          for (thisCycle in cycle) {
-                              keep <- c(keep, which(thisCycle == xcycle))
-                              ## message("thisCycle=", thisCycle, " keep=", paste(keep, collapse=" "))
-                          }
-                          nkeep <- length(keep)
-                      }
-                      if (nkeep < 1)
-                          warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
-                      if (!silent)
-                          message("Kept ", nkeep, " profiles (", sprintf("%.3g", 100*nkeep/N), "%)")
-                       x@data$index <- x@data$index[keep, ]
-                  } else if (dotsNames[1]=="direction") {
-                      argoFloatsDebug(debug, "subsetting by direction\n")
-                      direction <- dots[[1]]
-                      if (!is.character(direction))
-                          stop("in subset,argoFloats-method():\n  \"direction\" must be character value of either \"ascent\" or \"descent\"", call.=FALSE)
-                      if (direction == "ascent") {
-                          keep <- grepl("^.*[^D].nc$", x@data$index$file)
-                      } else if (direction == "descent") {
-                          keep <- grepl("^.*D.nc$", x@data$index$file)
-                      } else {
-                          stop("in subset,argoFloats-method():\n  \"direction\" must be either \"ascent\" or \"descent\", not \"", direction, "\"", call.=FALSE)
-                      }
-                      x@data$index <- x@data$index[keep, ]
-                  } else {
-                      stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for indices is a list named \"circle\",\"rectangle\",\"parameter\",\"polygon\", \"time\",\"institution\", \"deep\", \"ID\", \"ocean\", \"dataMode\", \"cycle\", or \"direction\"", call.=FALSE)
-                  }
-                  }
-              } else {
-                  if (length(dotsNames) != 0)
-                      stop("in subset,argoFloats-method():\n  cannot give both \"subset\" and \"...\" arguments", call.=FALSE)
-                  if (x@metadata$type == "index") {
-                      if (!silent) {
-                          if (is.logical(subset)) # this simplifies the percentage count for the method
-                              subset <- which(subset)
-                          message("Kept ", length(subset), " profiles (", sprintf("%.3g", 100.0*length(subset)/dim(x@data$index)[1]), "%)")
-                      }
-                      x@data$index <- x@data$index[subset, ]
-                  } else {
-                      stop("in subset,argoFloats-method():\n  method not coded except for type=\"index\"", call.=FALSE)
-                  }
-              }
-              x
-          }
-          )
+    signature="argoFloats",
+    definition=function(x, subset=NULL, ...)
+    {
+        if (x@metadata$type == "profiles")
+            stop("in subset,argoFloats-method() :\n  subset doesn't work for type = profiles", call.=FALSE)
+        ## subsetString <- paste(deparse(substitute(subset)), collapse=" ")
+        dots <- list(...)
+        dotsNames <- names(dots)
+        ## Clear the "debug" and "silent" entries from dots, because later we insist that length(dots) be 1.
+        debug <- 0
+        if ("debug" %in% dotsNames) {
+            debug <- dots$debug
+            dots$debug <- NULL
+            dotsNames <- names(dots)
+        }
+        silent <- 0
+        if ("silent" %in% dotsNames) {
+            silent <- dots$silent
+            dots$silent <- NULL
+            dotsNames <- names(dots)
+        }
+        ## All done with manipulating dots now.
+        argoFloatsDebug(debug, "subset,argoFloats-method() {\n", style="bold", sep="", unindent=1)
+        ## message("type =", x@metadata$type)
+        ## Step 1: handle "argo" type first. Note that "subset" is ignored; rather, we insist that either
+        ## "profile" or "cycle" be provided.
+        if (x@metadata$type == "argos") {
+            argoFloatsDebug(debug, "subsetting with type=\"argos\"\n")
+            if (length(dotsNames) == 0)
+                stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", \"dataStateIndicator\", or \"historyAction\" argument", call.=FALSE)
+            if (dotsNames[1] == "profile") {
+                argoFloatsDebug(debug, "subsetting by profile ", profile, "\n")
+                profile <- dots[[1]]
+                ## Loop over all objects within the data, and within that loop look at data within the object,
+                ## and for each of them, if its a vactor subset according to profile and if its a matrix
+                ## subset according to profile
+                res <- x
+                argos <- x[["argos"]]
+                ## Loop over all objects
+                ##message("profile=",paste(profile, collapse=" "))
+                for (iargo in seq_along(argos)) {
+                    argo <- argos[[iargo]]
+                    ## Handle the metadata slot
+                    for (name in names(argo@metadata)) {
+                        ##message("name=",name)
+                        argoFloatsDebug(debug, "subsetting metadata item named \"", name, "\"\n", sep="")
+                        ## Pass some things through directly.
+                        if (name %in% c("units", "filename", "flagScheme", "dataNamesOriginal"))
+                            next
+                        item <- argo@metadata[[name]]
+                        ## Handle things that are encoded as characters in a string,
+                        ## namely "direction", "juldQC", and "positionQC".
+                        if (name == "direction" || grepl("QC$", name)) {
+                            ## message("  -- character")
+                            res@data$argos[[iargo]]@metadata[[name]] <- paste(strsplit(item,"")[[1]][profile],collapse="")
+                        } else if (is.list(item)) {
+                            ##message("list")
+                            for (l in seq_along(item)) {
+                                ##print(dim(item[[l]]))
+                                D <- dim(item[[l]])
+                                if (profile > D[2])
+                                    stop("in subset,argoFloats-method() :\n cannot access profile ", profile, " of metadata item \"", name, "\" because its dimension is ", paste(D, collapse=" "), call.=FALSE)
+                                ##cat("BEFORE:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
+                                res@data$argos[[iargo]]@metadata[[name]][[l]] <- item[[l]][, profile, drop=FALSE]
+                                ##cat("AFTER:\n");print(dim(res@data$argos[[iargo]]@metadata[[name]][[l]]))
+                            }
+                        } else if (is.vector(name)) {
+                            ##message("vector")
+                            res@data$argos[[iargo]]@metadata[[name]] <- item[profile]
+                        } else if (is.matrix(name)) {
+                            ##message("matrix")
+                            res@data$argos[[iargo]]@metadata[[name]] <- item[, profile, drop=FALSE]
+                        } else if (is.array(name)) {
+                            argoFloatsDebug(debug, "name=", name, " has dim ", paste(dim(res@metadata[[name]]), collapse=" "), "\n")
+                            if (length(dim(res@metadata[[name]])) <= 3) {
+                                res@metadata[[name]] <- item[, , keep, drop=FALSE]
+                            } else {
+                                warning("not subsetting \"", name, "\" in metadata, because it is an array of rank > 3")
+                            }
+                        } else {
+                            stop("cannot subset metadata item named \"", name, "\" because it is not a length-one string, a vector, or a matrix")
+                        }
+                    }
+                    ## Handle the data slot
+                    for (name in names(argo@data)) {
+                        item <- argo@data[[name]]
+                        if (is.matrix(item)) {
+                            dim <- dim(item)
+                            if (profile > dim[2])
+                                stop("in subset,argoFloats-method() :\n  Only have ", dim[2], " profiles", call.=FALSE)
+                            newItem <- item[, profile, drop=FALSE]
+                            res@data$argos[[iargo]]@data[[name]] <- newItem
+                        } else {
+                            length <- length(item)
+                            if (profile > length)
+                                stop("in subset,argoFloats-method() :\n  Only have ", length, " profiles", call.=FALSE)
+                            newItem <- item[profile, drop=FALSE]
+                            res@data$argos[[iargo]]@data[[name]] <- newItem
+                        }
+                    }
+                }
+                argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
+                return(res)
+            } else if (dotsNames[1] == "cycle") {
+                argoFloatsDebug(debug, "subsetting by cycle for 'index' type\n")
+                cycle <- dots[[1]]
+                if (!is.character(cycle) & !is.numeric(cycle))
+                    stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
+                ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
+                xcycle <- x[["cycle"]]
+                if (is.character(cycle)) {
+                    argoFloatsDebug(debug, "subsetting by cycle as a character value\n")
+                    ## Here, keep is logical
+                    keep <- rep(FALSE, length(xcycle))
+                    for (thisCycle in cycle)
+                        keep <- keep | grepl(thisCycle, xcycle)
+                    nkeep <- sum(keep)
+                } else if (is.numeric(cycle)) {
+                    argoFloatsDebug(debug, "subsetting by cycle as a numeric value\n")
+                    ## Here, keep is integer
+                    keep <- NULL
+                    xcycle <- as.integer(gsub("AD","",xcycle)) # change e.g. "123D" to "123"
+                    for (thisCycle in cycle) {
+                        keep <- c(keep, which(thisCycle == xcycle))
+                        ## message("thisCycle=", thisCycle, " keep=", paste(keep, collapse=" "))
+                    }
+                    nkeep <- length(keep)
+                }
+                if (nkeep < 1)
+                    warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
+                if (!silent)
+                    message("Kept ", nkeep, " profiles ")
+                x@data$index <- x@data$index[keep, ]
+            } else if (dotsNames[1]=="dataStateIndicator") {
+                argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
+                dataStateIndicator <- dots[[1]]
+                if (is.list(dots[1]))
+                    dataStateIndicator <- unlist(dataStateIndicator)
+                ## Reference Table 6, in section 3.6, of
+                ## Argo Data Management Team. “Argo User’s Manual V3.3.”
+                ## Ifremer, November 28, 2019. https://doi.org/10.13155/29825.
+                if (!is.character(dataStateIndicator))
+                    stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value", call.=FALSE)
+                ## In next, [1] means we take the first element (first profile) of the cycle.
+                dsi <- sapply(x[["argos"]], function(a) a[["dataStateIndicator"]][1])
+                keep <- rep(FALSE, length(dsi))
+                for (dataStateIndicatorThis in dataStateIndicator) {
+                    keep <- keep | grepl(dataStateIndicatorThis, dsi , fixed=TRUE)
+                    ##> message(dataStateIndicatorThis)
+                    ##> print(keep)
+                }
+                x@data[[1]] <- x@data[[1]][keep]
+            } else if (dotsNames[1] =="historyAction") {
+                for (i in seq_along(x[["argos"]])) {
+                    historyList <- x[["historyAction"]][[i]][1,]
+                }
+                historyList <- lapply(x[["historyAction"]], function(h) x[["historyAction"]][[i]])
+                keep <- grepl("IP", historyList)
+                x@data[[1]] <- x@data[[1]][keep]
+            } else {
+                stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"profile\", \"cycle\", \"dataSateIndicator\", or \"historyAction\"", call.=FALSE)
+            }
+        }
+        ## Step 2: Now we know the type is either "index" or "profiles".  In either case,
+        ## "subset" can be provided, so we check for its existence first.
+        if (missing(subset)) {
+            #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
+            if (length(dots) == 0)
+                stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with \"subset\" argument, \"circle\",\"rectangle\", \"parameter\",\"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", dataMode\", \"cycle\", or \"direction\"", call.=FALSE)
+            if (length(dots) > 1)
+                stop("in subset,argoFloats-method() :\n  cannot give more than one method in the \"...\" argument", call.=FALSE)
+            N <- length(x@data$index[[1]]) # used in calculating percentages
+            if (x@metadata$type == "index") {
+                argoFloatsDebug(debug, "subsetting with type=\"index\"\n")
+                if (dotsNames[1] == "circle") {
+                    argoFloatsDebug(debug, "subsetting by circle\n")
+                    circle <- dots[[1]]
+                    if (!is.list(dots[1]))
+                        stop("in subset,argoFloats-method() :\n  \"circle\" must be a list containing \"longitude\", \"latitude\" and \"radius\".", call.=FALSE)
+                    if (3 != sum(c("longitude", "latitude", "radius") %in% sort(names(circle))))
+                        stop("in subset,argoFloats-method() :\n  \"circle\" must be a list containing \"longitude\", \"latitude\" and \"radius\"", call.=FALSE)
+                    if (!requireNamespace("oce", quietly=TRUE))
+                        stop("must install.packages(\"oce\") to subset by circle")
+                    dist <- oce::geodDist(x[["longitude"]], x[["latitude"]], circle$longitude, circle$latitude)
+                    keep <- dist < circle$radius
+                    keep[is.na(keep)] <- FALSE
+                    x@data$index <- x@data$index[keep, ]
+                    if (!silent)
+                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                } else if (dotsNames[1] == "rectangle") {
+                    argoFloatsDebug(debug, "subsetting by rectangle\n")
+                    rectangle <- dots[[1]]
+                    if (!is.list(dots[1]))
+                        stop("in subset,argoFloats-method():\n  \"rectangle\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
+                    if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
+                        stop("in subset,argoFloats-method():\n  \"rectangle\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
+                    keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
+                    keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[["latitude"]] <= rectangle$latitude[2]
+                    ok <- is.finite(keeplon) & is.finite(keeplat)
+                    keeplon[!ok] <- FALSE
+                    keeplat[!ok] <- FALSE
+                    keep <- keeplon & keeplat
+                    x@data$index <- x@data$index[keep, ]
+                    if (!silent)
+                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                } else if (dotsNames[1]=="parameter") {
+                    argoFloatsDebug(debug, "subsetting by parameter\n")
+                    parameter <- dots[[1]]
+                    if (is.list(dots[1]))
+                        parameters <- unlist(parameter)
+                    nparameters <- length(parameters)
+                    parametersList <- lapply(x[["parameters"]], function(p) strsplit(p, " ")[[1]])
+                    keep <- unlist(lapply(parametersList, function(pl) nparameters == sum(parameters %in% pl)))
+                    #if (sum(keep) < 1)
+                    #warning("in subset,argoFloats-method(..., parameter):\n  found no profiles with given parameter", call.=FALSE)
+                    if (!silent)
+                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1]=="polygon") {
+                    argoFloatsDebug(debug, "subsetting by polygon\n")
+                    if (!requireNamespace("sf", quietly=TRUE))
+                        stop("must install.packages(\"sf\") for subset() by polygon to work")
+                    polygon <- dots[[1]]
+                    if(!is.list(dots[1]))
+                        stop("in subset,argoFloats-method():\n  \"polygon\" must be a list", call.=FALSE)
+                    if (length(polygon) != 2)
+                        stop("in subset,argoFloats-method():\n  \"polygon\" must be a list of two elements", call.=FALSE)
+                    if (2 != sum(c("longitude", "latitude") %in% names(polygon)))
+                        stop("in subset,argoFloats-method():\n  \"polygon\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
+                    plat <- polygon$latitude
+                    plon <- polygon$longitude
+                    if (length(plat) != length(plon))
+                        stop("lengths of polygon$longitude and polygon$latitude must match, but they are ",
+                            length(plat), " and ", length(plon))
+                    if ((head(plon, 1) != tail(plon, 1)) || head(plat, 1) != tail(plat, 1)) {
+                        #warning("In subset,argoFloats-method(): Closing the polygon, since the first and last points did not match.\n", call.=FALSE)
+                        plon <- c(plon, plon[1])
+                        plat <- c(plat, plat[1])
+                    }
+                    alon <- x[["longitude"]]
+                    alat <- x[["latitude"]]
+                    ## We need the *index* of points to keep, and not just a lon-lat subset of
+                    ## points.  It is not too difficult to get the index with the sp
+                    ## package, but the only solution I could come up with using the sf
+                    ## package is to tack 1,2,3,etc onto the lon-lat points as a third
+                    ## dimension, so that after we select for the points inside, we can skim
+                    ## that third dimension and that gives us the keep value that we need. There
+                    ## may be a more straightforward way, but my (admittedly shallow) reading
+                    ## of the sf function list did not uncover anything promising, and my
+                    ## tests show that this scheme works.
+                    ##
+                    ## See https://github.com/ArgoCanada/argoFloats/issues/86
+                    ok <- is.finite(alon) & is.finite(alat)
+                    if (!requireNamespace("sf", quietly=TRUE))
+                        stop("must install sf package for subset(...,polygon,...) to this to work")
+                    Polygon <- sf::st_polygon(list(outer=cbind(plon, plat, rep(0, length(plon)))))
+                    ## DOES NOT WORK (REQUIRES OTHER SOFTWARE??): Polygon <- sf::st_make_valid(Polygon)
+                    if (!is.finite(sf::st_is_valid(Polygon))) {
+                        errorMessage <- sf::st_is_valid(Polygon, reason=TRUE)
+                        stop(paste0("Error in subset,argoFloats-method():\n  polygon is invalid, because of ", errorMessage), call.=FALSE)
+                    }
+                    ## multipoint does not permit NA values, so we set them to zero and remove them later
+                    Points <- sf::st_multipoint(cbind(ifelse(ok, alon, 0),
+                            ifelse(ok, alat, 0),
+                            seq_along(alon)))
+                    if (!sf::st_is_valid(Points)) {
+                        errorMessage <- sf::st_is_valid(Points, reason=TRUE)
+                        stop(paste0("Error in subset,argoFloats-method():\n  \"Points\" is invalid, because of ", errorMessage), call.=FALSE)
+                    }
+                    Intersection <- sf::st_intersection(Points, Polygon)
+                    keep <- Intersection[,3]
+                    if (!silent)
+                        message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1]=="time") {
+                    argoFloatsDebug(debug, "subsetting by time\n")
+                    time <- dots[[1]]
+                    if(!is.list(dots[1]))
+                        stop("in subset,argoFloats-method():\n  \"time\" must be a list", call.=FALSE)
+                    if (2 != sum(c("from", "to") %in% names(time)))
+                        stop("in subset,argoFloats-method():\n  \"time\" must be a list containing \"to\"and \"from\"", call.=FALSE)
+                    if (length(time$from) != 1)
+                        stop("from must be of length 1")
+                    if (length(time$to) != 1)
+                        stop("to must be of length 1")
+                    if (!inherits(time$from, "POSIXt")) {
+                        time$from <- try(as.POSIXct(time$from, tz="UTC"))
+                        if (inherits(time$from, "try-error"))
+                            stop("in subset,argoFloats-method():\n  cannot convert \"time$from\" to a POSIX time", call.=FALSE)
+                    }
+                    if (!inherits(time$to, "POSIXt")) {
+                        time$to <- try(as.POSIXct(time$to, tz="UTC"))
+                        if (inherits(time$to, "try-error"))
+                            stop("in subset,argoFloats-method():\n  cannot convert \"time$to\" to a POSIX time", call.=FALSE)
+                    }
+                    if (time$to <= time$from)
+                        stop ("in subset,argoFloats-method():\n \"to\" must be greater than \"from\"", call.=FALSE)
+                    keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
+                    keep[is.na(keep)] <- FALSE
+                    if (!silent)
+                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if(dotsNames[1]=="institution") {
+                    argoFloatsDebug(debug, "subsetting by institution\n")
+                    institution <- dots[[1]]
+                    if(!is.list(dots[1]))
+                        stop("in subset,argoFloats-method():\n  \"institution\" must be a list")
+                    if (length(institution) > 1)
+                        stop("\"institution\" cannot hold more than one element")
+                    keep <- grepl(institution, x@data$index$institution)
+                    keep[is.na(keep)] <- FALSE
+                    if (!silent)
+                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1] == "deep") {
+                    argoFloatsDebug(debug, "subsetting by deep\n")
+                    deep <- dots[[1]]
+                    if (!is.logical(deep))
+                        stop("in subset,argoFloats-method():\n deep must be a logical vector indicating TRUE or FALSE", call.=FALSE)
+                    if (deep) {
+                        keep <- grep("849|862|864", x@data$index$profiler_type)
+                    } else {
+                        keep <- grep("849|862|864", x@data$index$profiler_type, invert=TRUE)
+                    }
+                    if (!silent)
+                        message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1] == "ID" || dotsNames[1] == "id") {
+                    argoFloatsDebug(debug, "subsetting by ID\n")
+                    if (dotsNames[1] == "id")
+                        warning("In subset,argoFloats-method : converted subset(x,id=...) to subset(x,ID=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
+                    ID <- as.character(dots[[1]]) # convert in case it is numeric
+                    xID <- x[["ID"]]
+                    keep <- rep(FALSE, length(xID))
+                    file <- x@data$index$file
+                    for (thisID in ID)
+                        keep <- keep | grepl(thisID, xID)
+                    if (!silent)
+                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1]=="ocean") {
+                    argoFloatsDebug(debug, "subsetting by ocean\n")
+                    ocean <- dots[[1]]
+                    if (!is.character(ocean))
+                        stop("in subset,argoFloats-method() : \"ocean\" must be character value", call.=FALSE)
+                    if (length(ocean) > 1)
+                        stop("in subset,argoFloats-method():\n \"ocean\" cannot hold more than one element", call.=FALSE)
+                    keep <- grepl(ocean, x@data$index$ocean)
+                    keep[is.na(keep)] <- FALSE
+                    if (!silent)
+                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1]=="dataMode") {
+                    argoFloatsDebug(debug, "subsetting by dataMode\n")
+                    dataMode <- dots[[1]]
+                    if (!is.character(dataMode))
+                        stop("in subset,argoFloats-method():\n  \"dataMode\" must be character value",call.=FALSE)
+                    if (dataMode == "delayed") {
+                        keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}D.*$", x[["file"]])
+                    } else if (dataMode == "realtime") {
+                        keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}R.*$", x[["file"]])
+                    } else {
+                        stop("in subset,argoFloats-method():\n  \"dataMode\" must be either \"realtime\" or \"delayed\", not \"", dataMode, "\"", call.=FALSE)
+                    }
+                    if (!silent)
+                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1] == "cycle") {
+                    argoFloatsDebug(debug, "subsetting by cycle for 'index' type\n")
+                    cycle <- dots[[1]]
+                    if (!is.character(cycle) & !is.numeric(cycle))
+                        stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
+                    ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
+                    xcycle <- x[["cycle"]]
+                    if (is.character(cycle)) {
+                        argoFloatsDebug(debug, "subsetting by cycle as a character value\n")
+                        ## Here, keep is logical
+                        keep <- rep(FALSE, length(xcycle))
+                        for (thisCycle in cycle)
+                            keep <- keep | grepl(thisCycle, xcycle)
+                        nkeep <- sum(keep)
+                    } else if (is.numeric(cycle)) {
+                        argoFloatsDebug(debug, "subsetting by cycle as a numeric value\n")
+                        ## Here, keep is integer
+                        keep <- NULL
+                        xcycle <- as.integer(gsub("AD","",xcycle)) # change e.g. "123D" to "123"
+                        for (thisCycle in cycle) {
+                            keep <- c(keep, which(thisCycle == xcycle))
+                            ## message("thisCycle=", thisCycle, " keep=", paste(keep, collapse=" "))
+                        }
+                        nkeep <- length(keep)
+                    }
+                    if (nkeep < 1)
+                        warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
+                    if (!silent)
+                        message("Kept ", nkeep, " profiles (", sprintf("%.3g", 100*nkeep/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1]=="direction") {
+                    argoFloatsDebug(debug, "subsetting by direction\n")
+                    direction <- dots[[1]]
+                    if (!is.character(direction))
+                        stop("in subset,argoFloats-method():\n  \"direction\" must be character value of either \"ascent\" or \"descent\"", call.=FALSE)
+                    if (direction == "ascent") {
+                        keep <- grepl("^.*[^D].nc$", x@data$index$file)
+                    } else if (direction == "descent") {
+                        keep <- grepl("^.*D.nc$", x@data$index$file)
+                    } else {
+                        stop("in subset,argoFloats-method():\n  \"direction\" must be either \"ascent\" or \"descent\", not \"", direction, "\"", call.=FALSE)
+                    }
+                    x@data$index <- x@data$index[keep, ]
+                } else {
+                    stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for indices is a list named \"circle\",\"rectangle\",\"parameter\",\"polygon\", \"time\",\"institution\", \"deep\", \"ID\", \"ocean\", \"dataMode\", \"cycle\", or \"direction\"", call.=FALSE)
+                }
+            }
+        } else {
+            ## subset is not missing
+            if (length(dotsNames) != 0)
+                stop("in subset,argoFloats-method():\n  cannot give both \"subset\" and \"...\" arguments", call.=FALSE)
+            if (x@metadata$type == "index") {
+                if (!silent) {
+                    if (is.logical(subset)) # this simplifies the percentage count for the method
+                        subset <- which(subset)
+                    message("Kept ", length(subset), " profiles (", sprintf("%.3g", 100.0*length(subset)/dim(x@data$index)[1]), "%)")
+                }
+                x@data$index <- x@data$index[subset, ]
+            } else {
+                stop("in subset,argoFloats-method():\n  method not coded except for type=\"index\"", call.=FALSE)
+            }
+        }
+        x
+    })
 
 
