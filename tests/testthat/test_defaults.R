@@ -1,3 +1,5 @@
+## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+context("test defaults")
 
 test_that("default destdir can be changed by option or env var", {
     old_options <- options(argoFloats.destdir = "custom/argo/path")
