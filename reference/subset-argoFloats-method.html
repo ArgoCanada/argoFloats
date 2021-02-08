@@ -47,16 +47,17 @@
 
 
 <meta property="og:title" content="Subset an argoFloats Object — subset,argoFloats-method" />
-<meta property="og:description" content="Return a subset of an argoFloats for two object types:
-A) type &quot;index&quot;, as created by getIndex(), either by specifying indices
-to keep (using the subset argument) or by specifying a way to determine
-those indices (using the ... argument). Note that only one subset condition
-may be given in the ... argument, but that merge,argoFloats-method() can
-be used to merge indices  created by subset, which effectively creates a
-logical &quot;or&quot; operation.
-B) type &quot;argos&quot;, as created by readProfiles(). Note that the only subset
-condition that can be give in the ... argument is profile,cycle, or
-dataStateIndicator for argos type." />
+<meta property="og:description" content="Return a subset of an argoFloats object.  This applies
+only to objects of type &quot;index&quot;, as created with getIndex() or subset()
+acting on such a value, or of type &quot;argos&quot;, as created with readProfiles().
+(It cannot be used on objects of type &quot;profiles&quot;, as created with getProfiles().)
+There are two ways to use subset().  Method 1. supply
+the subset argument.  This may be a logical vector indicating
+which entries to keep (by analogy to the base-R subset()
+function) or it may be an integer vector holding the indices of entries to
+be retained. Method 2. do not supply subset.  In this
+case, the action is determined by the third (...)
+argument; see &amp;#8216;Details&amp;#8217;." />
 
 
 
@@ -148,16 +149,17 @@ dataStateIndicator for argos type." />
     </div>
 
     <div class="ref-description">
-    <p>Return a subset of an <code><a href='argoFloats-class.html'>argoFloats</a></code> for two object types:
-A) type <code>"index"</code>, as created by <code><a href='getIndex.html'>getIndex()</a></code>, either by specifying indices
-to keep (using the <code>subset</code> argument) or by specifying a way to determine
-those indices (using the <code>...</code> argument). Note that only one subset condition
-may be given in the <code>...</code> argument, but that <code><a href='merge,argoFloats-method.html'>merge,argoFloats-method()</a></code> can
-be used to merge indices  created by <code>subset</code>, which effectively creates a
-logical "or" operation.
-B) type <code>"argos"</code>, as created by <code><a href='readProfiles.html'>readProfiles()</a></code>. Note that the only subset
-condition that can be give in the <code>...</code> argument is <code>profile</code>,<code>cycle</code>, or
-<code>dataStateIndicator</code> for <code>argos</code> type.</p>
+    <p>Return a subset of an <code><a href='argoFloats-class.html'>argoFloats</a></code> object.  This applies
+only to objects of type <code>"index"</code>, as created with <code><a href='getIndex.html'>getIndex()</a></code> or <code><a href='https://rdrr.io/r/base/subset.html'>subset()</a></code>
+acting on such a value, or of type <code>"argos"</code>, as created with <code><a href='readProfiles.html'>readProfiles()</a></code>.
+(It cannot be used on objects of type <code>"profiles"</code>, as created with <code><a href='getProfiles.html'>getProfiles()</a></code>.)
+There are two ways to use <code><a href='https://rdrr.io/r/base/subset.html'>subset()</a></code>.  <strong>Method 1.</strong> supply
+the <code>subset</code> argument.  This may be a logical vector indicating
+which entries to keep (by analogy to the base-R <code><a href='https://rdrr.io/r/base/subset.html'>subset()</a></code>
+function) or it may be an integer vector holding the indices of entries to
+be retained. <strong>Method 2.</strong> do not supply <code>subset</code>.  In this
+case, the action is determined by the third (<code>...</code>)
+argument; see &#8216;Details&#8217;.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for argoFloats</span>
@@ -233,7 +235,7 @@ names the institution.  The permitted values are:
 <code>"ME"</code> for MEDS, Canada; and
 <code>"NM"</code> for NMDIS, China.
 See example 7.</p></li>
-<li><p>A list named <code>deep</code> that holds a logical value indicating weather argo floats
+<li><p>A list named <code>deep</code> that holds a logical value indicating whether argo floats
 are deep argo (i.e. <code>profiler_type</code> 849, 862, and 864). See example 8.</p></li>
 <li><p>A list named <code>ID</code> that holds a character value specifying a float identifier.
 See example 9.</p></li>
@@ -257,12 +259,11 @@ See example 12.</p></li>
 <li><p>A character value named <code>direction</code>, equal to either "descent" or "ascent",
 that selects whether to retain data from the ascent or decent phase.
 See example 13.</p></li>
-<li><p>An integer value named <code>profile</code>, that selects which profiles
+<li><p>An integer value named <code>cycle</code>, that selects which cycles
 to obtain. Note that this type of subset is possible for <code>argos</code> and <code>index</code>
 type objects.
-See example 14.</p></li>
-<li><p>A integer value named <code>debug</code> that controls whether <code><a href='https://rdrr.io/r/base/subset.html'>subset()</a></code> prints
-some information to describe what it is doing.</p></li>
+See example 14.
+<strong>FIXME: Is this right? The code seems to only permit for <code>"argos"</code> type.</strong></p></li>
 <li><p>A character value named <code>dataStateIndicator</code>, equal to either "0A", "1A",
 "2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which <code>dataStateIndicator</code>
 to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
