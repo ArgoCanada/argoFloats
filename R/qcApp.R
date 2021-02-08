@@ -12,6 +12,7 @@ QCAppserver <- shinyServer(function(input,output){
 
                           output$UIwidget <- shiny::renderUI({
                                   shiny::fluidRow(shiny::column(2,shiny::span(shiny::HTML(paste("<b style=\"color:black; margin-left:1em;\">  ","qcApp 0.1","</b>")))),
+                                                  shiny::column(2, shiny::actionButton("load", "Load")),
                                                   shiny::column(2, shiny::actionButton("help", "Help")),
                                                   shiny::column(2, shiny::actionButton("code", "Code")))
                           })
