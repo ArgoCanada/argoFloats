@@ -51,7 +51,8 @@ QCAppserver <- shinyServer(function(input,output){
                               if (input$tabselected %in% c(1)) {
 
                                   shiny::fluidRow(
-                                                  shiny::column(3, shiny::selectInput("type", "Plot Type",choices=c("TS <T>"="TS",
+                                                  shiny::column(2, shiny::selectInput("focus", "Focus",choices=c("All", "Single"), selected=c("All"))),
+                                                  shiny::column(2, shiny::selectInput("type", "Plot Type",choices=c("TS <T>"="TS",
                           "C(t)"="conductivity time-series",
                           "p(t) <P>"="pressure time-series",
                           "S(t) <S>"="salinity time-series",
@@ -69,7 +70,7 @@ QCAppserver <- shinyServer(function(input,output){
                           "hist(T)"="temperature histogram"),
                 selected="pressure time-series")),
 
-                                  shiny::column(3, shiny::selectInput(inputId="colorBy",
+                                  shiny::column(2, shiny::selectInput(inputId="colorBy",
                 label="Color by",
                 choices=c("distance"="distance",
                           "latitude"="latitude",
