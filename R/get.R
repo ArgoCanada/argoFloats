@@ -256,10 +256,8 @@ getIndex <- function(filename="core",
         stop("'", destdir, "' is not a directory")
     ## Handle nicknames
     filenameOrig <- filename
-    names <- c("core","argo","bgc","bgcargo","synthetic", "ar_index_global_prof.txt.gz", "argo_bio-profile_index.txt.gz", "argo_synthetic-profile_index.txt.gz")
-    if (filename == "argo" || filename == "core") {
-        if (filename == "argo")
-            warning("converted filename=\"argo\" to filename=\"core\" for backwards compatibility.\n NOTE: this conversion will cease after 2020-Dec-01.")
+    names <- c("core","bgc","bgcargo","synthetic", "ar_index_global_prof.txt.gz", "argo_bio-profile_index.txt.gz", "argo_synthetic-profile_index.txt.gz")
+    if (filename == "core") {
         filename <- "ar_index_global_prof.txt.gz"
     } else if (filename == "bgcargo" || filename == "bgc") {
         filename <- "argo_bio-profile_index.txt.gz"
@@ -269,7 +267,7 @@ getIndex <- function(filename="core",
         filename <- "argo_synthetic-profile_index.txt.gz"
     }
     if (!(filename %in% names))
-        stop("filename=\"", filename, "\" doesn't exist. Try one of these: \"argo\", \"core\", \"bgc\", \"bgcargo\", or \"synthetic\".")
+        stop("filename=\"", filename, "\" doesn't exist. Try one of these: \"core\", \"bgc\", \"bgcargo\",\"synthetic\",\"ar_index_global_prof.txt.gz\", \"argo_bio-profile_index.txt.gz\", or \"argo_synthetic-profile_index.txt.gz\".")
     if (filename != filenameOrig)
         argoFloatsDebug(debug, "Converted filename='", filenameOrig, "' to filename='", filename, "'.\n", sep="")
     ## Note: 'url' may contain more than one element

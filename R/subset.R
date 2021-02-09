@@ -624,10 +624,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
-                } else if (dotsNames[1] == "ID" || dotsNames[1] == "id") {
+                } else if (dotsNames[1] == "ID") {
                     argoFloatsDebug(debug, "subsetting by ID\n")
-                    if (dotsNames[1] == "id")
-                        warning("In subset,argoFloats-method : converted subset(x,id=...) to subset(x,ID=...) for backwards compatibility\n  NOTE: this conversion will cease after 2020-Dec-01.", call.=FALSE)
                     ID <- as.character(dots[[1]]) # convert in case it is numeric
                     xID <- x[["ID"]]
                     keep <- rep(FALSE, length(xID))
