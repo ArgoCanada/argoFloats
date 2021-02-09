@@ -457,7 +457,7 @@ setMethod(f="subset",
                 keep <- grepl("IP", historyList)
                 x@data[[1]] <- x@data[[1]][keep]
             } else {
-                stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for argos type is \"profile\", \"cycle\", \"dataSateIndicator\", or \"historyAction\"", call.=FALSE)
+                stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an argos-type object. The only valid choices are \"profile\", \"cycle\", \"dataSateIndicator\" and \"historyAction\".", call.=FALSE)
             }
         }
         ## Step 2: Now we know the type is either "index" or "profiles".  In either case,
@@ -706,7 +706,7 @@ setMethod(f="subset",
                     }
                     x@data$index <- x@data$index[keep, ]
                 } else {
-                    stop("in subset,argoFloats-method():\n  the only permitted \"...\" argument for indices is a list named \"circle\",\"rectangle\",\"parameter\",\"polygon\", \"time\",\"institution\", \"deep\", \"ID\", \"ocean\", \"dataMode\", \"cycle\", or \"direction\"", call.=FALSE)
+                    stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an index-type object. The only valid choices are \"circle\", \"rectangle\", \"parameter\", \"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", \"dataMode\", \"cycle\" and \"direction\".", call.=FALSE)
                 }
             }
         } else {
