@@ -27,16 +27,17 @@ See \dQuote{Details} and \dQuote{Examples}.}
 An \code{\linkS4class{argoFloats}} object.
 }
 \description{
-Return a subset of an \code{\linkS4class{argoFloats}} for two object types:
-A) type \code{"index"}, as created by \code{\link[=getIndex]{getIndex()}}, either by specifying indices
-to keep (using the \code{subset} argument) or by specifying a way to determine
-those indices (using the \code{...} argument). Note that only one subset condition
-may be given in the \code{...} argument, but that \code{\link[=merge,argoFloats-method]{merge,argoFloats-method()}} can
-be used to merge indices  created by \code{subset}, which effectively creates a
-logical "or" operation.
-B) type \code{"argos"}, as created by \code{\link[=readProfiles]{readProfiles()}}. Note that the only subset
-condition that can be give in the \code{...} argument is \code{profile},\code{cycle}, or
-\code{dataStateIndicator} for \code{argos} type.
+Return a subset of an \code{\linkS4class{argoFloats}} object.  This applies
+only to objects of type \code{"index"}, as created with \code{\link[=getIndex]{getIndex()}} or \code{subset()}
+acting on such a value, or of type \code{"argos"}, as created with \code{\link[=readProfiles]{readProfiles()}}.
+(It cannot be used on objects of type \code{"profiles"}, as created with \code{\link[=getProfiles]{getProfiles()}}.)
+There are two ways to use \code{subset()}.  \strong{Method 1.} supply
+the \code{subset} argument.  This may be a logical vector indicating
+which entries to keep (by analogy to the base-R \code{subset()}
+function) or it may be an integer vector holding the indices of entries to
+be retained. \strong{Method 2.} do not supply \code{subset}.  In this
+case, the action is determined by the third (\code{...})
+argument; see \sQuote{Details}.
 }
 \details{
 The possibilities for the \code{...} argument are as follows.
@@ -78,7 +79,7 @@ names the institution.  The permitted values are:
 \code{"ME"} for MEDS, Canada; and
 \code{"NM"} for NMDIS, China.
 See example 7.
-\item A list named \code{deep} that holds a logical value indicating weather argo floats
+\item A list named \code{deep} that holds a logical value indicating whether argo floats
 are deep argo (i.e. \code{profiler_type} 849, 862, and 864). See example 8.
 \item A list named \code{ID} that holds a character value specifying a float identifier.
 See example 9.
@@ -102,12 +103,11 @@ See example 12.
 \item A character value named \code{direction}, equal to either "descent" or "ascent",
 that selects whether to retain data from the ascent or decent phase.
 See example 13.
-\item An integer value named \code{profile}, that selects which profiles
+\item An integer value named \code{cycle}, that selects which cycles
 to obtain. Note that this type of subset is possible for \code{argos} and \code{index}
 type objects.
 See example 14.
-\item A integer value named \code{debug} that controls whether \code{subset()} prints
-some information to describe what it is doing.
+\strong{FIXME: Is this right? The code seems to only permit for \code{"argos"} type.}
 \item A character value named \code{dataStateIndicator}, equal to either "0A", "1A",
 "2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which \code{dataStateIndicator}
 to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to

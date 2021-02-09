@@ -197,6 +197,7 @@ serverMapApp <- function(input, output, session) {
                              shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
                                              shiny::actionButton("help", "Help"),
                                              shiny::actionButton("code", "Code"),
+                                             shiny::actionButton("save", "Save"),
                                              shiny::actionButton("goW", shiny::HTML("&larr;")),
                                              shiny::actionButton("goN", shiny::HTML("&uarr;")),
                                              shiny::actionButton("goS", shiny::HTML("&darr;")),
@@ -204,7 +205,9 @@ serverMapApp <- function(input, output, session) {
                                              shiny::actionButton("zoomIn", "+"),
                                              shiny::actionButton("zoomOut", "-"),
                                              shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start",
-                                                                                                                                                                         value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd")))
+                                                                                                                                                                         value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd")),
+                              shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd"))
+                             )
         }})
 
     output$UItrajectory <- shiny::renderUI({
@@ -247,6 +250,8 @@ serverMapApp <- function(input, output, session) {
             return(lastHoverMessage)
         x <- input$hover$x
         y <- input$hover$y
+        if (is.null(x))
+            return("Hover mouse in plot to see locations; click-slide to select regions.")
         lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
         latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
         rval <- ""
@@ -316,8 +321,8 @@ serverMapApp <- function(input, output, session) {
                             msg <- paste(msg, "# Download (or use cached) index from one of two international servers.<br>")
                             msg <- paste(msg, "index <- getIndex()<br>")
                             msg <- paste(msg, "# Subset by time.<br>")
-                            msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d"), "\", tz=\"UTC\")<br>", sep="")
-                            msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d"), "\", tz=\"UTC\")<br>", sep="")
+                            msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
+                            msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
                             msg <- paste(msg, "subset1 <- subset(index, time=list(from=from, to=to))<br>")
                             msg <- paste(msg, "# Subset by space.<br>", sep="")
                             lonRect <- state$xlim
@@ -450,9 +455,22 @@ serverMapApp <- function(input, output, session) {
 
     shiny::observeEvent(input$help,
                         {
-                            msg <- shiny::HTML("This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
+                            msg <- shiny::HTML("This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. The \"Save\" button saves an rda file containing a subset of index, which can later be used in the qcApp() for further analysis.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })                                  # help
+    
+    shiny::observeEvent(input$save,
+                        {
+                            rda <- paste0("mapApp_", format(Sys.time(), format="%Y%m%dT%H%m", tz="UTC"), ".rda")
+                            index1 <- getIndex()
+                            from <- as.POSIXct(format(state$startTime, "%Y-%m-%d", tz="UTC"))
+                            to <- as.POSIXct(format(state$endTime, "%Y-%m-%d", tz="UTC"))
+                            index2 <- subset(index1, time=list(from=from, to=to))
+                            longitude <- state$xlim
+                            latitude <- state$ylim
+                            index3 <- subset(index2, rectangle=list(longitude=longitude, latitude=latitude))
+                            save(index3, file=rda)
+                        })
 
     shiny::observeEvent(input$keypressTrigger,
                         {
