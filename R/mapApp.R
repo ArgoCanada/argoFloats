@@ -320,8 +320,8 @@ serverMapApp <- function(input, output, session) {
                             msg <- paste(msg, "# Download (or use cached) index from one of two international servers.<br>")
                             msg <- paste(msg, "index <- getIndex()<br>")
                             msg <- paste(msg, "# Subset by time.<br>")
-                            msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d"), "\", tz=\"UTC\")<br>", sep="")
-                            msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d"), "\", tz=\"UTC\")<br>", sep="")
+                            msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
+                            msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
                             msg <- paste(msg, "subset1 <- subset(index, time=list(from=from, to=to))<br>")
                             msg <- paste(msg, "# Subset by space.<br>", sep="")
                             lonRect <- state$xlim
