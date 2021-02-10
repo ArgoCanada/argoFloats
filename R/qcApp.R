@@ -29,7 +29,6 @@ QCAppserver <- shinyServer(function(input,output){
                           "S(t) <S>"="salinity time-series",
                           "spiciness(t)"="spiciness time-series",
                           "T(t)"="temperature time-series",
-                          "tSincePowerOn(t)"="tSincePowerOn time-series",
                           "C(p)"="conductivity profile",
                           "density(p)"="density profile",
                           "S(p)"="salinity profile",
@@ -80,6 +79,67 @@ QCAppserver <- shinyServer(function(input,output){
                                                   load(rda)
                                                   argos <<- readProfiles(getProfiles(index3))
                         })
+
+                          shiny::observeEvent(input$help,
+                        {
+                            msg <- shiny::HTML("This GUI is used to analyze QC of Argo profiles.<br><br>The Load button is used to load and read the previously saved rda file of a subset of index from mapApp().The Code button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>The Plot type determines which plot should be displayed, with the option to color code by a variety of parameters. If the user changes the focus to Single, the user has the option to input the float ID and cycle of interest, with the option to perform a variety of QC. ")
+                            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+                        })
+                          
+                          shiny::observeEvent(input$code,
+                        {
+                            msg <- shiny::HTML("FIXME:: This still needs to me coded in")
+                            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+                        })
+
+shiny::observeEvent(input$type,
+                    {
+                        if(input$type =="pressure time-series") {
+                            message("we are at pressure time-series")
+                        }
+                        if(input$type =="TS") {
+                            message("we are at TS")
+                        }
+                        if(input$type =="conductivity time-series") {
+                            message("we are at conductivity time-series")
+                        }
+                        if(input$type =="salinity time-series") {
+                            message("we are at salinity time-series")
+                        }
+                        if(input$type =="spiciness time-series") {
+                            message("we are at spiciness time-series")
+                        }
+                        if(input$type =="temperature time-series") {
+                            message("we are at temperature time-series")
+                        }
+                        if(input$type =="conductivity profile") {
+                            message("we are at conductivity profile")
+                        }
+                        if(input$type =="density profile") {
+                            message("we are at density profile")
+                        }
+                        if(input$type =="salinity profile") {
+                            message("we are at salinity profile")
+                        }
+                        if(input$type =="spiciness profile") {
+                            message("we are at spiciness profile")
+                        }
+                        if(input$type =="temperature profile") {
+                            message("we are at temperature profile")
+                        }
+                        if(input$type =="conductivity histogram") {
+                            message("we are at conductivity histogram")
+                        }
+                        if(input$type =="pressure histogram") {
+                            message("we are at pressure histogram")
+                        }
+                        if(input$type =="salinity histogram") {
+                            message("we are at salinity histogram")
+                        }
+                        if(input$type =="temperature histogram") {
+                            message("we are at temperature histogram")
+                        }
+                    })
 
 
 })
