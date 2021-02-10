@@ -10,13 +10,16 @@ uiQCApp <- fluidPage(
 
 QCAppserver <- shinyServer(function(input,output){
 
+                               if (!exists("argos")) {
+                                   notificationId <- shiny::showNotification("You must first save an rda file from mapApp() before using qcApp", type="message", duration=NULL)
+                               }
 
 
                           output$UIwidget <- shiny::renderUI({
                                   shiny::fluidRow(shiny::column(2,shiny::span(shiny::HTML(paste("<b style=\"color:black; margin-left:1em;\">  ","qcApp 0.1","</b>")))),
-                                                  shiny::column(2, shiny::actionButton("load", "Load")),
                                                   shiny::column(2, shiny::actionButton("help", "Help")),
-                                                  shiny::column(2, shiny::actionButton("code", "Code")))
+                                                  shiny::column(2, shiny::actionButton("code", "Code")),
+                                                  shiny::column(2, shiny::actionButton("undo", "Undo")))
                           })
 
 
@@ -26,11 +29,11 @@ QCAppserver <- shinyServer(function(input,output){
                                   shiny::fluidRow(
                                                   shiny::column(2, shiny::selectInput("focus", "focus",choices=c("All", "Single"), selected=c("All"))),
                                                   shiny::column(2, shiny::selectInput("type", "Plot Type",choices=c("TS <T>"="TS",
-                          "C(t)"="conductivity time-series",
-                          "p(t) <P>"="pressure time-series",
-                          "S(t) <S>"="salinity time-series",
-                          "spiciness(t)"="spiciness time-series",
-                          "T(t)"="temperature time-series",
+                          #"C(t)"="conductivity time-series",
+                          #"p(t) <P>"="pressure time-series",
+                          #"S(t) <S>"="salinity time-series",
+                          #"spiciness(t)"="spiciness time-series",
+                          #"T(t)"="temperature time-series",
                          # "C(p)"="conductivity profile",
                           "density(p)"="density profile",
                           "S(p)"="salinity profile",
@@ -75,20 +78,20 @@ QCAppserver <- shinyServer(function(input,output){
                                                                                              inline=TRUE)))
                               }
                           )
-                          shiny::observeEvent(input$load,
-                                              {
-                                                  ## FIXME: Right now the rda is saving to the R directory. I'd like to make this go to the argoFloats directory
-                                                  load(rda)
-                                                  argos <<- readProfiles(getProfiles(index3))
-                        })
 
                           shiny::observeEvent(input$help,
                         {
-                            msg <- shiny::HTML("This GUI is used to analyze QC of Argo profiles.<br><br>The Load button is used to load and read the previously saved rda file of a subset of index from mapApp().The Code button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>The Plot type determines which plot should be displayed, with the option to color code by a variety of parameters. If the user changes the focus to Single, the user has the option to input the float ID and cycle of interest, with the option to perform a variety of QC. ")
+                            msg <- shiny::HTML("This GUI is used to analyze QC of Argo profiles.<br><br>The Code button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>The Plot type determines which plot should be displayed, with the option to color code by a variety of parameters. If the user changes the focus to Single, the user has the option to input the float ID and cycle of interest, with the option to perform a variety of QC. ")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })
-                          
+
                           shiny::observeEvent(input$code,
+                        {
+                            msg <- shiny::HTML("FIXME:: This still needs to me coded in")
+                            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+                        })
+
+                          shiny::observeEvent(input$undo,
                         {
                             msg <- shiny::HTML("FIXME:: This still needs to me coded in")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
@@ -96,25 +99,26 @@ QCAppserver <- shinyServer(function(input,output){
 output$plotMap <- shiny::renderPlot({
     colHistMean <- "forestgreen"
     colHist3SD <- "red"
-                        if(input$type =="pressure time-series") {
-                            message("we are at pressure time-series")
-                        }
+    
+                        #if(input$type =="pressure time-series") {
+                        #    message("we are at pressure time-series")
+
+                        #}
                         if(input$type =="TS") {
-                            message("we are at TS")
                             plot(argos, which="TS")
                         }
-                        if(input$type =="conductivity time-series") {
-                            message("we are at conductivity time-series")
-                        }
-                        if(input$type =="salinity time-series") {
-                            message("we are at salinity time-series")
-                        }
-                        if(input$type =="spiciness time-series") {
-                            message("we are at spiciness time-series")
-                        }
-                        if(input$type =="temperature time-series") {
-                            message("we are at temperature time-series")
-                        }
+                        # if(input$type =="conductivity time-series") {
+                        #    message("we are at conductivity time-series")
+                        # }
+                        #if(input$type =="salinity time-series") {
+                        #    message("we are at salinity time-series")
+                        #}
+                        #if(input$type =="spiciness time-series") {
+                        #    message("we are at spiciness time-series")
+                        #}
+                        #if(input$type =="temperature time-series") {
+                        #    message("we are at temperature time-series")
+                        #}
                        # if(input$type =="conductivity profile") {
                        #     message("we are at conductivity profile")
                        # }
@@ -165,8 +169,9 @@ output$plotMap <- shiny::renderPlot({
                                   at=CTmean + CTsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         }
-                    })
 
+
+                    })
 
 })
 
