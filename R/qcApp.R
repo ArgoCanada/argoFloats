@@ -61,7 +61,14 @@ QCAppserver <- shinyServer(function(input,output){
                           "tSincePowerOn"="tSincePowerOn",
                           "spiciness"="spiciness0",
                           "(none)"="(none)"),
-                selected="(none)")))}
+                selected="(none)")),
+                                                  shiny::column(2, shiny::checkboxInput("applyQC", "applyQC"))
+
+                                                  
+                                                  
+                                                  
+                                                  
+                                                  )}
 
                           )
 
@@ -72,10 +79,9 @@ QCAppserver <- shinyServer(function(input,output){
                                                   shiny::column(2, shiny::textInput("cycle", "Cycle", value="", width="11em")),
                                                   shiny::column(2, shiny::checkboxGroupInput("qc",
                                                                                              label="Single float QC",
-                                                                                             choiceNames=list(shiny::tags$span("applyQC", style="color:black;"),
-                                                                                                              shiny::tags$span("showQCTests", style="color:black;"),
+                                                                                             choiceNames=list(shiny::tags$span("showQCTests", style="color:black;"),
                                                                                                               shiny::tags$span("Diagnostics", style="color:black;")),
-                                                                                             choiceValues=list("applyQC","showQCTests", "diagnostics"),
+                                                                                             choiceValues=list("showQCTests", "diagnostics"),
                                                                                              inline=TRUE)))
                           } }
                           )
@@ -102,15 +108,12 @@ QCAppserver <- shinyServer(function(input,output){
 
 shiny::observeEvent(input$qc,
                     {
-                        if (input$qc == "applyQC") {
-                            msg <- shiny::HTML("FIXME:: This still needs to me coded in")
-                            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
-                        }
                         if (input$qc =="showQCTests"){
                             msg <- shiny::HTML("FIXME:: This still needs to me coded in")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         }
                     })
+
 
 output$plotMap <- shiny::renderPlot({
     colHistMean <- "forestgreen"
