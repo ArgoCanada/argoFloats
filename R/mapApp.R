@@ -461,7 +461,7 @@ serverMapApp <- function(input, output, session) {
     
     shiny::observeEvent(input$save,
                         {
-                            rda <- paste0("mapApp_", format(Sys.time(), format="%Y%m%dT%H%m", tz="UTC"), ".rda")
+                            rda <<- paste0("mapApp_", format(Sys.time(), format="%Y%m%dT%H%m", tz="UTC"), ".rda")
                             index1 <- getIndex()
                             from <- as.POSIXct(format(state$startTime, "%Y-%m-%d", tz="UTC"))
                             to <- as.POSIXct(format(state$endTime, "%Y-%m-%d", tz="UTC"))

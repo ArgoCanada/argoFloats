@@ -74,6 +74,13 @@ QCAppserver <- shinyServer(function(input,output){
                                                                                              inline=TRUE)))
                               }
                           )
+                          shiny::observeEvent(input$load,
+                                              {
+                                                  ## FIXME: Right now the rda is saving to the R directory. I'd like to make this go to the argoFloats directory
+                                                  load(rda)
+                                                  argos <<- readProfiles(getProfiles(index3))
+                        })
+
 
 })
 
