@@ -66,6 +66,7 @@ QCAppserver <- shinyServer(function(input,output){
                           )
 
                           output$UIsingleQC <- shiny::renderUI({
+                                 if (input$focus %in% c("Single")) {
                                   shiny::fluidRow(
                                                   shiny::column(2, shiny::textInput("ID", "Float ID", value="", width="11em")),
                                                   shiny::column(2, shiny::textInput("cycle", "Cycle", value="", width="11em")),
@@ -76,7 +77,7 @@ QCAppserver <- shinyServer(function(input,output){
                                                                                                               shiny::tags$span("Diagnostics", style="color:black;")),
                                                                                              choiceValues=list("applyQC","showQCTests", "diagnostics"),
                                                                                              inline=TRUE)))
-                              }
+                          } }
                           )
 
                           shiny::observeEvent(input$help,
