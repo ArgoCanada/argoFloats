@@ -96,6 +96,21 @@ QCAppserver <- shinyServer(function(input,output){
                             msg <- shiny::HTML("FIXME:: This still needs to me coded in")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })
+
+
+
+shiny::observeEvent(input$qc,
+                    {
+                        if (input$qc == "applyQC") {
+                            msg <- shiny::HTML("FIXME:: This still needs to me coded in")
+                            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+                        }
+                        if (input$qc =="showQCTests"){
+                            msg <- shiny::HTML("FIXME:: This still needs to me coded in")
+                            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+                        }
+                    })
+
 output$plotMap <- shiny::renderPlot({
     colHistMean <- "forestgreen"
     colHist3SD <- "red"
@@ -172,6 +187,7 @@ output$plotMap <- shiny::renderPlot({
 
 
                     })
+
 
 })
 
