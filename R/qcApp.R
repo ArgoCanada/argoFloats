@@ -3,7 +3,9 @@ library(shiny)
 uiQCApp <- fluidPage(
                 shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
                 shiny::fluidRow(shiny::uiOutput(outputId="UIview")),
-                shiny::fluidRow(shiny::uiOutput(outputId="UIsingleQC"))
+                shiny::fluidRow(shiny::uiOutput(outputId="UIsingleQC")),
+                shiny::fluidRow(shiny::plotOutput(outputId="plotMap"))
+
 )
 
 QCAppserver <- shinyServer(function(input,output){
@@ -29,7 +31,7 @@ QCAppserver <- shinyServer(function(input,output){
                           "S(t) <S>"="salinity time-series",
                           "spiciness(t)"="spiciness time-series",
                           "T(t)"="temperature time-series",
-                          "C(p)"="conductivity profile",
+                         # "C(p)"="conductivity profile",
                           "density(p)"="density profile",
                           "S(p)"="salinity profile",
                           "spiciness(p)"="spiciness profile",
@@ -38,7 +40,7 @@ QCAppserver <- shinyServer(function(input,output){
                           "hist(p)"="pressure histogram",
                           "hist(S)"="salinity histogram",
                           "hist(T)"="temperature histogram"),
-                selected="pressure time-series")),
+                selected="TS")),
 
                                   shiny::column(2, shiny::selectInput(inputId="colorBy",
                 label="Color by",
@@ -91,14 +93,13 @@ QCAppserver <- shinyServer(function(input,output){
                             msg <- shiny::HTML("FIXME:: This still needs to me coded in")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })
-
-shiny::observeEvent(input$type,
-                    {
+output$plotMap <- shiny::renderPlot({
                         if(input$type =="pressure time-series") {
                             message("we are at pressure time-series")
                         }
                         if(input$type =="TS") {
                             message("we are at TS")
+                            plot(argos, which="TS")
                         }
                         if(input$type =="conductivity time-series") {
                             message("we are at conductivity time-series")
@@ -112,20 +113,24 @@ shiny::observeEvent(input$type,
                         if(input$type =="temperature time-series") {
                             message("we are at temperature time-series")
                         }
-                        if(input$type =="conductivity profile") {
-                            message("we are at conductivity profile")
-                        }
+                       # if(input$type =="conductivity profile") {
+                       #     message("we are at conductivity profile")
+                       # }
                         if(input$type =="density profile") {
                             message("we are at density profile")
+                            plot(argos, which="profile", profileControl=list(parameter="sigma0"))
                         }
                         if(input$type =="salinity profile") {
                             message("we are at salinity profile")
+                            plot(argos, which="profile", profileControl=list(parameter="SA"))
                         }
                         if(input$type =="spiciness profile") {
                             message("we are at spiciness profile")
+                            plot(argos, which="profile", profileControl=list(parameter="spice"))
                         }
                         if(input$type =="temperature profile") {
                             message("we are at temperature profile")
+                            plot(argos, which="profile", profileControl=list(parameter="temperature"))
                         }
                         if(input$type =="conductivity histogram") {
                             message("we are at conductivity histogram")
