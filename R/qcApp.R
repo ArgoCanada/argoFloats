@@ -36,7 +36,7 @@ QCAppserver <- shinyServer(function(input,output){
                           "S(p)"="salinity profile",
                           "spiciness(p)"="spiciness profile",
                           "T(p)"="temperature profile",
-                          "hist(C)"="conductivity histogram",
+                          #"hist(C)"="conductivity histogram",
                           "hist(p)"="pressure histogram",
                           "hist(S)"="salinity histogram",
                           "hist(T)"="temperature histogram"),
@@ -94,6 +94,8 @@ QCAppserver <- shinyServer(function(input,output){
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
                         })
 output$plotMap <- shiny::renderPlot({
+    colHistMean <- "forestgreen"
+    colHist3SD <- "red"
                         if(input$type =="pressure time-series") {
                             message("we are at pressure time-series")
                         }
@@ -117,32 +119,51 @@ output$plotMap <- shiny::renderPlot({
                        #     message("we are at conductivity profile")
                        # }
                         if(input$type =="density profile") {
-                            message("we are at density profile")
                             plot(argos, which="profile", profileControl=list(parameter="sigma0"))
                         }
                         if(input$type =="salinity profile") {
-                            message("we are at salinity profile")
                             plot(argos, which="profile", profileControl=list(parameter="SA"))
                         }
                         if(input$type =="spiciness profile") {
-                            message("we are at spiciness profile")
                             plot(argos, which="profile", profileControl=list(parameter="spice"))
                         }
                         if(input$type =="temperature profile") {
-                            message("we are at temperature profile")
                             plot(argos, which="profile", profileControl=list(parameter="temperature"))
                         }
-                        if(input$type =="conductivity histogram") {
-                            message("we are at conductivity histogram")
-                        }
+                        #if(input$type =="conductivity histogram") {
+                         #   message("we are at conductivity histogram")
+                       # }
                         if(input$type =="pressure histogram") {
-                            message("we are at pressure histogram")
+                            p <- unlist(argos[["pressure"]])
+                            pmean <<- mean(p, na.rm=TRUE)
+                            psd <<- sd(p, na.rm=TRUE)
+                            mean(p, na.rm=TRUE)
+                            hist(p, breaks=100, main="Histogram of unflagged values", xlab="Pressure [dbar]")
+                            abline(v=pmean + psd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=pmean + psd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         }
-                        if(input$type =="salinity histogram") {
-                            message("we are at salinity histogram")
+                        if (input$type =="salinity histogram") {
+                            SA <<- unlist(argos[["SA"]])
+                            SAmean <<- mean(SA, na.rm=TRUE)
+                            SAsd <<- sd(SA, na.rm=TRUE)
+                            hist(SA, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
+                            abline(v=SAmean + SAsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=SAmean + SAsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+
                         }
                         if(input$type =="temperature histogram") {
-                            message("we are at temperature histogram")
+                            CT <<- unlist(argos[["CT"]])
+                            CTmean <<- mean(CT, na.rm=TRUE)
+                            CTsd <<- sd(CT, na.rm=TRUE)
+                            hist(CT, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
+                            abline(v=CTmean + CTsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=CTmean + CTsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         }
                     })
 
