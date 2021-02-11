@@ -157,27 +157,27 @@ output$plotMap <- shiny::renderPlot({
                        # if(input$type =="conductivity profile") {
                        #     message("we are at conductivity profile")
                        # }
-                        if (input$type =="density profile" && input$appyQC == FALSE) {
+                        if (input$type =="density profile" && input$applyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="sigma0"))
-                        } else if (input$type =="density profile" && input$appyQC == TRUE) {
+                        } else if (input$type =="density profile" && input$applyQC == TRUE) {
                             plot(clean, which="profile", profileControl=list(parameter="sigma0"))
                         }
 
-                        if(input$type =="salinity profile" && input$appyQC == FALSE) {
+                        if(input$type =="salinity profile" && input$applyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="SA"))
-                        } else if (input$type =="salinity profile" && input$appyQC == TRUE) {
+                        } else if (input$type =="salinity profile" && input$applyQC == TRUE) {
                             plot(clean, which="profile", profileControl=list(parameter="SA"))
                         }
 
-                        if (input$type =="spiciness profile" && input$appyQC == FALSE) {
+                        if (input$type =="spiciness profile" && input$applyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="spice"))
-                        } else if (input$type =="spiciness profile" && input$appyQC == TRUE) {
+                        } else if (input$type =="spiciness profile" && input$applyQC == TRUE) {
                             plot(clean, which="profile", profileControl=list(parameter="spice"))
                         }
 
-                        if (input$type =="temperature profile" && input$appyQC == FALSE) {
+                        if (input$type =="temperature profile" && input$applyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="temperature"))
-                        } else if (input$type =="temperature profile" && input$appyQC == TRUE) {
+                        } else if (input$type =="temperature profile" && input$applyQC == TRUE) {
                             plot(clean, which="profile", profileControl=list(parameter="temperature"))
                         }
 
