@@ -14,6 +14,12 @@ QCAppserver <- shinyServer(function(input,output){
                                    notificationId <- shiny::showNotification("You must first save an rda file from mapApp() before using qcApp", type="message", duration=NULL)
                                }
 
+                          shiny::observeEvent(input$applyQC,
+                                              {
+                                                  if (input$applyQC == TRUE)
+                                                  clean <<- applyQC(argos)
+                                              })
+
 
                           output$UIwidget <- shiny::renderUI({
                                   shiny::fluidRow(shiny::column(2,shiny::span(shiny::HTML(paste("<b style=\"color:black; margin-left:1em;\">  ","qcApp 0.1","</b>")))),
@@ -62,12 +68,7 @@ QCAppserver <- shinyServer(function(input,output){
                           "spiciness"="spiciness0",
                           "(none)"="(none)"),
                 selected="(none)")),
-                                                  shiny::column(2, shiny::checkboxInput("applyQC", "applyQC"))
-
-                                                  
-                                                  
-                                                  
-                                                  
+                                                  shiny::column(2, shiny::checkboxInput("applyQC", "applyQC", value=FALSE))
                                                   )}
 
                           )
@@ -85,6 +86,20 @@ QCAppserver <- shinyServer(function(input,output){
                                                                                              inline=TRUE)))
                           } }
                           )
+
+                          shiny::observeEvent(input$ID,
+                                              {
+                                                  msg <- shiny::HTML("FIXME:: This still needs to me coded in")
+                                                  shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+
+                                              })
+
+                          shiny::observeEvent(input$cycle,
+                                              {
+                                                  aCycle <- subset(argos, cycle=input$cycle)
+
+                                              })
+
 
                           shiny::observeEvent(input$help,
                         {
@@ -123,9 +138,10 @@ output$plotMap <- shiny::renderPlot({
                         #    message("we are at pressure time-series")
 
                         #}
-                        if(input$type =="TS") {
+                        if (input$type =="TS" && input$applyQC == FALSE) {
                             plot(argos, which="TS")
-                        }
+                        } else if (input$type =="TS" && input$applyQC == TRUE) {
+                            plot(clean, which="TS") }
                         # if(input$type =="conductivity time-series") {
                         #    message("we are at conductivity time-series")
                         # }
@@ -141,33 +157,57 @@ output$plotMap <- shiny::renderPlot({
                        # if(input$type =="conductivity profile") {
                        #     message("we are at conductivity profile")
                        # }
-                        if(input$type =="density profile") {
+                        if (input$type =="density profile" && input$appyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="sigma0"))
+                        } else if (input$type =="density profile" && input$appyQC == TRUE) {
+                            plot(clean, which="profile", profileControl=list(parameter="sigma0"))
                         }
-                        if(input$type =="salinity profile") {
+
+                        if(input$type =="salinity profile" && input$appyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="SA"))
+                        } else if (input$type =="salinity profile" && input$appyQC == TRUE) {
+                            plot(clean, which="profile", profileControl=list(parameter="SA"))
                         }
-                        if(input$type =="spiciness profile") {
+
+                        if (input$type =="spiciness profile" && input$appyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="spice"))
+                        } else if (input$type =="spiciness profile" && input$appyQC == TRUE) {
+                            plot(clean, which="profile", profileControl=list(parameter="spice"))
                         }
-                        if(input$type =="temperature profile") {
+
+                        if (input$type =="temperature profile" && input$appyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="temperature"))
+                        } else if (input$type =="temperature profile" && input$appyQC == TRUE) {
+                            plot(clean, which="profile", profileControl=list(parameter="temperature"))
                         }
+
                         #if(input$type =="conductivity histogram") {
                          #   message("we are at conductivity histogram")
                        # }
-                        if(input$type =="pressure histogram") {
+                        if (input$type =="pressure histogram" && input$applyQC == FALSE) {
                             p <- unlist(argos[["pressure"]])
-                            pmean <<- mean(p, na.rm=TRUE)
-                            psd <<- sd(p, na.rm=TRUE)
+                            pmean <- mean(p, na.rm=TRUE)
+                            psd <- sd(p, na.rm=TRUE)
                             mean(p, na.rm=TRUE)
                             hist(p, breaks=100, main="Histogram of unflagged values", xlab="Pressure [dbar]")
                             abline(v=pmean + psd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=pmean + psd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        }
-                        if (input$type =="salinity histogram") {
+                        } else if (input$type =="pressure histogram" && input$applyQC == TRUE) {
+                            pc <- unlist(clean[["pressure"]])
+                            pcmean <- mean(pc, na.rm=TRUE)
+                            pcsd <- sd(pc, na.rm=TRUE)
+                            mean(pc, na.rm=TRUE)
+                            hist(pc, breaks=100, main="Histogram of unflagged values", xlab="Pressure [dbar]")
+                            abline(v=pcmean + pcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=pcmean + pcsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2) }
+
+
+
+                        if (input$type =="salinity histogram" && input$applyQC == FALSE) {
                             SA <<- unlist(argos[["SA"]])
                             SAmean <<- mean(SA, na.rm=TRUE)
                             SAsd <<- sd(SA, na.rm=TRUE)
@@ -176,9 +216,19 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=SAmean + SAsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-
+                        } else if (input$type =="salinity histogram" && input$applyQC == TRUE) {
+                            SAc <<- unlist(clean[["SA"]])
+                            SAcmean <<- mean(SAc, na.rm=TRUE)
+                            SAcsd <<- sd(SAc, na.rm=TRUE)
+                            ##FIXME: is this unflagged values?
+                            hist(SAc, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
+                            abline(v=SAcmean + SAcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=SAcmean + SAcsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         }
-                        if(input$type =="temperature histogram") {
+
+                        if (input$type =="temperature histogram" && input$applyQC == FALSE) {
                             CT <<- unlist(argos[["CT"]])
                             CTmean <<- mean(CT, na.rm=TRUE)
                             CTsd <<- sd(CT, na.rm=TRUE)
@@ -186,6 +236,15 @@ output$plotMap <- shiny::renderPlot({
                             abline(v=CTmean + CTsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=CTmean + CTsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type =="temperature histogram" && input$applyQC == TRUE) {
+                            CTc <<- unlist(clean[["CT"]])
+                            CTcmean <<- mean(CTc, na.rm=TRUE)
+                            CTcsd <<- sd(CTc, na.rm=TRUE)
+                            hist(CTc, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
+                            abline(v=CTcmean + CTcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=CTcmean + CTcsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         }
 
