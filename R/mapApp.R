@@ -9,90 +9,94 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 endTime <- as.POSIXlt(Sys.time(), tz="UTC")
 startTime <- as.POSIXlt(endTime - 10 * 86400)
 
-
-##> fileLog <- file("log.dat", open="a")
-
 pi180 <- pi / 180                      # degree/radian conversion factor
+
+keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
+<li> '<b>o</b>': zoom <b>o</b>ut</li>
+<li> '<b>n</b>': go <b>n</b>orth</li>
+<li> '<b>e</b>': go <b>e</b>ast</li>
+<li> '<b>s</b>': go <b>s</b>outh</li>
+<li> '<b>w</b>': go <b>w</b>est</li>
+<li> '<b>f</b>': go <b>f</b>orward in time</li>
+<li> '<b>b</b>': go <b>b</b>ackward in time</li>
+<li> '<b>r</b>': <b>r</b>eset to initial state</li>
+<li> '<b>p</b>': paste most recent hover message</li>
+<li> '<b>?</b>': display this message</li> </ul>"
+
+overallHelp <- "This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. The \"Save\" button saves an rda file containing a subset of index, which can later be used in the qcApp() for further analysis.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
 
 
 #' @importFrom graphics arrows image lines mtext
 #' @importFrom grDevices grey
 #' @importFrom utils write.table
 uiMapApp <- shiny::fluidPage(
-                             shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
-                             shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
-                             style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
-                             ##shiny::fluidRow(shiny::p("mapApp"), style="color:blue;"),
-                             shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
-                             shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
-                                             shiny::column(2, shiny::uiOutput(outputId="UIID")),
-                                             shiny::column(3, shiny::uiOutput(outputId="UIfocus"))),
-                             shiny::fluidRow(shiny::uiOutput(outputId="UIinfo")),
-                             shiny::mainPanel(shiny::tabsetPanel(type="tab",
-                                                                 shiny::tabPanel("Main", value=1),
-                                                                 shiny::tabPanel("Trajectory", value=2),
-                                                                 shiny::tabPanel("Settings", value=3,
-                                                                                 shiny::tabsetPanel(shiny::tabPanel("Core", value=4),
-                                                                                                    shiny::tabPanel("BGC", value=5),
-                                                                                                    shiny::tabPanel("Deep", value=6),
-                                                                                                    selected=TRUE,
-                                                                                                    id="settab")),
-                                                                 id="tabselected")),
-                             ##? shiny::fluidRow(shiny::verbatimTextOutput("info")),
+    shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
+    shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
+    style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
+    shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
+    shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
+        shiny::column(2, shiny::uiOutput(outputId="UIID")),
+        shiny::column(3, shiny::uiOutput(outputId="UIfocus"))),
+    shiny::fluidRow(shiny::uiOutput(outputId="UIinfo")),
+    shiny::mainPanel(shiny::tabsetPanel(type="tab",
+            shiny::tabPanel("Main", value=1),
+            shiny::tabPanel("Trajectory", value=2),
+            shiny::tabPanel("Settings", value=3,
+                shiny::tabsetPanel(shiny::tabPanel("Core", value=4),
+                    shiny::tabPanel("BGC", value=5),
+                    shiny::tabPanel("Deep", value=6),
+                    selected=TRUE,
+                    id="settab")),
+            id="tabselected")),
+    shiny::fluidRow(shiny::uiOutput(outputId="UItrajectory")),
+    shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
+        shiny::fluidRow(
+            shiny::column(2, shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
+            shiny::column(2, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+            shiny::column(2, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+            shiny::column(2, shiny::conditionalPanel("input.Csymbol== 21",
+                    shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                        shiny::selectInput("Cborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))
+            ),
+        shiny::fluidRow(
+            shiny::column(2, shiny::selectInput("CPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default")), selected="default"),
+            shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
 
-                             shiny::fluidRow(shiny::uiOutput(outputId="UItrajectory")),
+    shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
+        shiny::fluidRow(
+            shiny::column(2, shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
+            shiny::column(2, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+            shiny::column(2, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+            shiny::column(2,shiny::conditionalPanel("input.Bsymbol== 21",
+                    shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                        shiny::selectInput("Bborder", "Border Colour",
+                            choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))),
+        shiny::fluidRow(
+            shiny::column(2, shiny::selectInput("BPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default")),
+            shiny::column(2, shiny::sliderInput("BPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
+    shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
+        shiny::fluidRow(
+            shiny::column(2, shiny::selectInput("Dcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
+            shiny::column(2, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+            shiny::column(2, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+            shiny::column(2, shiny::conditionalPanel("input.Dsymbol== 21",
+                    shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                        shiny::selectInput("Dborder", "Border Colour",
+                            choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))),
+        shiny::fluidRow(
+            shiny::column(2, shiny::selectInput("DPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default")),
+            shiny::column(2, shiny::sliderInput("DPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
 
-                             shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
-                                                     shiny::fluidRow(
-        shiny::column(2, shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
-
-
-        shiny::column(2, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-    shiny::column(2, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
-                             shiny::column(2, shiny::conditionalPanel("input.Csymbol== 21",
-                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                                                                shiny::selectInput("Cborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))
-),
-shiny::fluidRow(
-       shiny::column(2, shiny::selectInput("CPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default")), selected="default"),
-        shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
-
-                             shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
-                                                     shiny::fluidRow(
-        shiny::column(2, shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
-        shiny::column(2, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-    shiny::column(2, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
-                             shiny::column(2,shiny::conditionalPanel("input.Bsymbol== 21",
-                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                                                                shiny::selectInput("Bborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))
-),
-shiny::fluidRow(
-       shiny::column(2, shiny::selectInput("BPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default")),
-        shiny::column(2, shiny::sliderInput("BPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
-
-                             shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
-                                                     shiny::fluidRow(
-        shiny::column(2, shiny::selectInput("Dcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
-        shiny::column(2, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-    shiny::column(2, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
-                             shiny::column(2, shiny::conditionalPanel("input.Dsymbol== 21",
-                                                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                                                                shiny::selectInput("Dborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))
-
-),
-shiny::fluidRow(
-       shiny::column(2, shiny::selectInput("DPcolour", "Path Colour",choices=c("1","2","3","4","5","6","7","8","default"), selected="default")),
-        shiny::column(2, shiny::sliderInput("DPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
-
-                             ## using withSpinner does not work here
-                             shiny::conditionalPanel("input.tabselected!=3",
-                                                     shiny::fluidRow(shiny::plotOutput("plotMap",
-                                                                                       hover=shiny::hoverOpts("hover"),
-                                                                                       dblclick=shiny::dblclickOpts("dblclick"),
-                                                                                       brush=shiny::brushOpts("brush", delay=2000, resetOnNew=TRUE)))))
+    ## using withSpinner does not work here
+    shiny::conditionalPanel("input.tabselected!=3",
+        shiny::fluidRow(shiny::plotOutput("plotMap",
+                hover=shiny::hoverOpts("hover"),
+                dblclick=shiny::dblclickOpts("dblclick"),
+                brush=shiny::brushOpts("brush", delay=2000, resetOnNew=TRUE)))))
 
 ## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
-serverMapApp <- function(input, output, session) {
+serverMapApp <- function(input, output, session)
+{
     lastHoverMessage <- "" # used with 'p' keystroke
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
@@ -103,11 +107,11 @@ serverMapApp <- function(input, output, session) {
         stop("must install.packages('shiny') for mapApp() to work")
     ## State variable: reactive!
     state <- shiny::reactiveValues(xlim=c(-180, 180),
-                                   ylim=c(-90, 90),
-                                   startTime=startTime,
-                                   endTime=endTime,
-                                   focusID=NULL,
-                                   hoverIsPasted=FALSE)
+        ylim=c(-90, 90),
+        startTime=startTime,
+        endTime=endTime,
+        focusID=NULL,
+        hoverIsPasted=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
@@ -178,51 +182,49 @@ serverMapApp <- function(input, output, session) {
     output$UIview <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
             shiny::checkboxGroupInput("view",
-                                      label="View",
-                                      choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
-                                                       shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
-                                                       shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
-                                                       shiny::tags$span("HiRes", style="color: black;"),
-                                                       shiny::tags$span("Topo", style="color: black;"),
-                                                       shiny::tags$span("Path", style="color:black;"),
-                                                       shiny::tags$span("Contour", style="color:black;")),
-                                      choiceValues=list("core", "deep", "bgc", "hires", "topo", "path", "contour"),
-                                      selected=c("core", "deep", "bgc"),
-                                      inline=TRUE)
+                label="View",
+                choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
+                    shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
+                    shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
+                    shiny::tags$span("HiRes", style="color: black;"),
+                    shiny::tags$span("Topo", style="color: black;"),
+                    shiny::tags$span("Path", style="color:black;"),
+                    shiny::tags$span("Contour", style="color:black;")),
+                choiceValues=list("core", "deep", "bgc", "hires", "topo", "path", "contour"),
+                selected=c("core", "deep", "bgc"),
+                inline=TRUE)
         }
     })
 
     output$UIwidget <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
-                             shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
-                                             shiny::actionButton("help", "Help"),
-                                             shiny::actionButton("code", "Code"),
-                                             shiny::actionButton("save", "Save"),
-                                             shiny::actionButton("goW", shiny::HTML("&larr;")),
-                                             shiny::actionButton("goN", shiny::HTML("&uarr;")),
-                                             shiny::actionButton("goS", shiny::HTML("&darr;")),
-                                             shiny::actionButton("goE", shiny::HTML("&rarr;")),
-                                             shiny::actionButton("zoomIn", "+"),
-                                             shiny::actionButton("zoomOut", "-"),
-                                             shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start",
-                                                                                                                                                                         value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd")),
-                              shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd"))
-                             )
-        }})
+            shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
+                shiny::actionButton("help", "Help"),
+                shiny::actionButton("code", "Code"),
+                shiny::actionButton("save", "Save"),
+                shiny::actionButton("goW", shiny::HTML("&larr;")),
+                shiny::actionButton("goN", shiny::HTML("&uarr;")),
+                shiny::actionButton("goS", shiny::HTML("&darr;")),
+                shiny::actionButton("goE", shiny::HTML("&rarr;")),
+                shiny::actionButton("zoomIn", "+"),
+                shiny::actionButton("zoomOut", "-"),
+                shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start",
+                        value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd")),
+                shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd")))
+        }
+    })
 
     output$UItrajectory <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(2)) {
-                             shiny::fluidRow(shiny::column(6,
-                                                           style="padding-left:0px;",
-                                                           shiny::checkboxGroupInput("action",
-                                                                                     label="",
-                                                                                     choiceNames=list(shiny::tags$span("Start", style="color: black;"),
-                                                                                                      shiny::tags$span("End", style="color: black;"),
-                                                                                                      shiny::tags$span("Without Profiles", style="color: black;")),
-                                                                                     choiceValues=list( "start",
-                                                                                                       "end",
-                                                                                                       "lines"),
-                                                                                     inline=TRUE)))
+            shiny::fluidRow(shiny::column(6,
+                    style="padding-left:0px;",
+                    shiny::checkboxGroupInput("action",
+                        label="",
+                        choiceNames=list(shiny::tags$span("Start", style="color: black;"),
+                            shiny::tags$span("End", style="color: black;"),
+                            shiny::tags$span("Without Profiles", style="color: black;")),
+                        choiceValues=list( "start", "end", "lines"),
+                        inline=TRUE)))
         }
     })
 
@@ -262,13 +264,13 @@ serverMapApp <- function(input, output, session) {
             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
             if (length(dist) && dist < 100) {
                 rval <- sprintf("%s %s, %.0f km from %s float %s cycle %s, at %s",
-                                lonstring,
-                                latstring,
-                                dist,
-                                switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
-                                argo$ID[i],
-                                argo$cycle[i],
-                                format(argo$time[i], "%Y-%m-%d %H:%M"))
+                    lonstring,
+                    latstring,
+                    dist,
+                    switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
+                    argo$ID[i],
+                    argo$cycle[i],
+                    format(argo$time[i], "%Y-%m-%d %H:%M"))
             } else {
                 rval <- sprintf("%s %s", lonstring, latstring)
             }
@@ -280,274 +282,247 @@ serverMapApp <- function(input, output, session) {
     })
 
     shiny::observeEvent(input$goE,
-                        {
-                            dx <- diff(state$xlim) # present longitude span
-                            state$xlim <<- pinlat(state$xlim + dx / 4)
-                        })
+        {
+            dx <- diff(state$xlim) # present longitude span
+            state$xlim <<- pinlat(state$xlim + dx / 4)
+        })
 
     shiny::observeEvent(input$goW,
-                        {
-                            dx <- diff(state$xlim) # present longitude span
-                            state$xlim <<- pinlat(state$xlim - dx / 4)
-                        })
+        {
+            dx <- diff(state$xlim) # present longitude span
+            state$xlim <<- pinlat(state$xlim - dx / 4)
+        })
 
     shiny::observeEvent(input$goS,
-                        {
-                            dy <- diff(state$ylim) # present latitude span
-                            state$ylim <<- pinlat(state$ylim - dy / 4)
-                        })
+        {
+            dy <- diff(state$ylim) # present latitude span
+            state$ylim <<- pinlat(state$ylim - dy / 4)
+        })
 
     shiny::observeEvent(input$goN,
-                        {
-                            dy <- diff(state$ylim) # present latitude span
-                            state$ylim <<- pinlat(state$ylim + dy / 4)
-                        })
+        {
+            dy <- diff(state$ylim) # present latitude span
+            state$ylim <<- pinlat(state$ylim + dy / 4)
+        })
 
     shiny::observeEvent(input$zoomIn,
-                        {
-                            state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
-                            state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
-                        })
+        {
+            state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
+            state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
+        })
 
     shiny::observeEvent(input$zoomOut,
-                        {
-                            state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
-                            state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
-                        })
+        {
+            state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
+            state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+        })
 
     shiny::observeEvent(input$code,
-                        {
-                            msg <- "library(argoFloats)<br>"
-                            msg <- paste(msg, "# Download (or use cached) index from one of two international servers.<br>")
-                            msg <- paste(msg, "index <- getIndex()<br>")
-                            msg <- paste(msg, "# Subset by time.<br>")
-                            msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
-                            msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
-                            msg <- paste(msg, "subset1 <- subset(index, time=list(from=from, to=to))<br>")
-                            msg <- paste(msg, "# Subset by space.<br>", sep="")
-                            lonRect <- state$xlim
-                            latRect <- state$ylim
-                            msg <- paste(msg, sprintf("rect <- list(longitude=c(%.4f,%.4f), latitude=c(%.4f,%.4f))<br>",
-                                                      lonRect[1], lonRect[2], latRect[1], latRect[2]))
-                            msg <- paste(msg, "subset2 <- subset(subset1, rectangle=rect)<br>")
-                            msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
-                            msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
-                            msg <- paste(msg, "# The following shows how to make a TS plot for these profiles. This<br>")
-                            msg <- paste(msg, "# involves downloading, which will be slow for a large number of<br>")
-                            msg <- paste(msg, "# profiles, so the steps are placed in an unexecuted block.<br>")
-                            msg <- paste(msg, "if (FALSE) {<br>")
-                            msg <- paste(msg, "&nbsp;&nbsp; profiles <- getProfiles(subset2)<br>")
-                            msg <- paste(msg, "&nbsp;&nbsp; argos <- readProfiles(profiles)<br>")
-                            msg <- paste( msg, "&nbsp;&nbsp; plot(applyQC(argos), which=\"TS\", TScontrol=list(colByCycle=1:8))<br>")
-                            msg <- paste(msg, "}<br>")
-                            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="R code", size="l"))
-                        })
+        {
+            msg <- "library(argoFloats)<br>"
+            msg <- paste(msg, "# Download (or use cached) index from one of two international servers.<br>")
+            msg <- paste(msg, "index <- getIndex()<br>")
+            msg <- paste(msg, "# Subset by time.<br>")
+            msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
+            msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
+            msg <- paste(msg, "subset1 <- subset(index, time=list(from=from, to=to))<br>")
+            msg <- paste(msg, "# Subset by space.<br>", sep="")
+            lonRect <- state$xlim
+            latRect <- state$ylim
+            msg <- paste(msg, sprintf("rect <- list(longitude=c(%.4f,%.4f), latitude=c(%.4f,%.4f))<br>",
+                    lonRect[1], lonRect[2], latRect[1], latRect[2]))
+            msg <- paste(msg, "subset2 <- subset(subset1, rectangle=rect)<br>")
+            msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
+            msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
+            msg <- paste(msg, "# The following shows how to make a TS plot for these profiles. This<br>")
+            msg <- paste(msg, "# involves downloading, which will be slow for a large number of<br>")
+            msg <- paste(msg, "# profiles, so the steps are placed in an unexecuted block.<br>")
+            msg <- paste(msg, "if (FALSE) {<br>")
+            msg <- paste(msg, "&nbsp;&nbsp; profiles <- getProfiles(subset2)<br>")
+            msg <- paste(msg, "&nbsp;&nbsp; argos <- readProfiles(profiles)<br>")
+            msg <- paste( msg, "&nbsp;&nbsp; plot(applyQC(argos), which=\"TS\", TScontrol=list(colByCycle=1:8))<br>")
+            msg <- paste(msg, "}<br>")
+            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="R code", size="l"))
+        })
 
     shiny::observeEvent(input$ID,
-                        {
-                            if (0 == nchar(input$ID)) {
-                                state$focusID <<- NULL
-                                shiny::updateTextInput(session, "focus", value="all")
-                            } else {
-                                k <- which(argo$ID == input$ID)
-                                if (length(k)) {
-                                    state$focusID <<- input$ID
-                                    state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
-                                    state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                                    if (input$focus == "all")
-                                        shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
-                                                                type="message", duration=10
-                                        )
-                                } else {
-                                    shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
-                                }
-                            }
-                        })
+        {
+            if (0 == nchar(input$ID)) {
+                state$focusID <<- NULL
+                shiny::updateTextInput(session, "focus", value="all")
+            } else {
+                k <- which(argo$ID == input$ID)
+                if (length(k)) {
+                    state$focusID <<- input$ID
+                    state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
+                    state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
+                    if (input$focus == "all")
+                        shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
+                            type="message", duration=10
+                            )
+                } else {
+                    shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
+                }
+            }
+        })
     #shiny::observeEvent(input$Ccolour,
-                        #message("the core symbol= ",input$Csymbol," the bgc symbol= ", input$Bsymbol, " the deep symbol= ", input$Dsymbol))
+    #message("the core symbol= ",input$Csymbol," the bgc symbol= ", input$Bsymbol, " the deep symbol= ", input$Dsymbol))
 
     shiny::observeEvent(input$focus,
-                        {
-                            if (input$focus == "single") {
-                                if (is.null(state$focusID)) {
-                                    shiny::showNotification(
-                                        "Double-click on a point or type an ID in the 'Float ID' box, to single out a focus float",
-                                        type = "error",
-                                        duration = NULL
-                                    )
-                                } else {
-                                    k <- argo$ID == state$focusID
-                                    ## Extend the range 3X more than the default, because I almost always
-                                    ## end up typing "-" a few times to zoom out
-                                    state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
-                                    state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                                    ## Note: extending time range to avoid problems with day transitions,
-                                    ## which might cause missing cycles at the start and end; see
-                                    ## https://github.com/ArgoCanada/argoFloats/issues/283.
-                                    state$startTime <<- min(argo$time[k])
-                                    state$endTime <<- max(argo$time[k])
-                                    message("setting box")
-                                    message("state$startTime=", state$startTime, " state$endTime= ", state$endTime)
-                                    shiny::updateTextInput(session, "start",
-                                                           value=format(state$startTime, "%Y-%m-%d"))
-                                    shiny::updateTextInput(session, "end",
-                                                           value=format(state$endTime, "%Y-%m-%d"))
-                                }
-                            } else {
-                                # "all"
-                                shiny::updateTextInput(session, "ID", value="")
-                                state$focusID <<- NULL
-                            }
-                        })
+        {
+            if (input$focus == "single") {
+                if (is.null(state$focusID)) {
+                    shiny::showNotification(
+                        "Double-click on a point or type an ID in the 'Float ID' box, to single out a focus float",
+                        type = "error",
+                        duration = NULL)
+                } else {
+                    k <- argo$ID == state$focusID
+                    ## Extend the range 3X more than the default, because I almost always
+                    ## end up typing "-" a few times to zoom out
+                    state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
+                    state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
+                    ## Note: extending time range to avoid problems with day transitions,
+                    ## which might cause missing cycles at the start and end; see
+                    ## https://github.com/ArgoCanada/argoFloats/issues/283.
+                    state$startTime <<- min(argo$time[k])
+                    state$endTime <<- max(argo$time[k])
+                    message("setting box")
+                    message("state$startTime=", state$startTime, " state$endTime= ", state$endTime)
+                    shiny::updateTextInput(session, "start",
+                        value=format(state$startTime, "%Y-%m-%d"))
+                    shiny::updateTextInput(session, "end",
+                        value=format(state$endTime, "%Y-%m-%d"))
+                }
+            } else {
+                # "all"
+                shiny::updateTextInput(session, "ID", value="")
+                state$focusID <<- NULL
+            }
+        })
 
     shiny::observeEvent(input$dblclick,
-                        {
-                            x <- input$dblclick$x
-                            y <- input$dblclick$y
-                            fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
-                            if (input$focus == "single" && !is.null(state$focusID)) {
-                                keep <- argo$ID == state$focusID
-                            } else {
-                                ## Restrict search to the present time window
-                                keep <- state$startTime <= argo$time & argo$time <= state$endTime
-                            }
-                            i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
-                            state$focusID <<- argo$ID[i]
-                            shiny::updateTextInput(session, "ID", value=state$focusID)
-                            msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
-                                           argo$ID[i],
-                                           argo$cycle[i],
-                                           format(argo$time[i], "%Y-%m-%d"),
-                                           argo$longitude[i],
-                                           argo$latitude[i])
-                            shiny::showNotification(shiny::HTML(msg), duration=NULL)
-                        })
+        {
+            x <- input$dblclick$x
+            y <- input$dblclick$y
+            fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
+            if (input$focus == "single" && !is.null(state$focusID)) {
+                keep <- argo$ID == state$focusID
+            } else {
+                ## Restrict search to the present time window
+                keep <- state$startTime <= argo$time & argo$time <= state$endTime
+            }
+            i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
+            state$focusID <<- argo$ID[i]
+            shiny::updateTextInput(session, "ID", value=state$focusID)
+            msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
+                argo$ID[i],
+                argo$cycle[i],
+                format(argo$time[i], "%Y-%m-%d"),
+                argo$longitude[i],
+                argo$latitude[i])
+            shiny::showNotification(shiny::HTML(msg), duration=NULL)
+        })
 
     shiny::observeEvent(input$start,
-                        {
-                            if (0 == nchar(input$start)) {
-                                state$startTime <<- min(argo$time, na.rm=TRUE)
-                            } else {
-                                t <- try(as.POSIXct(input$start, tz="UTC"), silent=TRUE)
-                                if (inherits(t, "try-error")) {
-                                    shiny::showNotification(paste0("Start time \"",
-                                                                   input$start,
-                                                                   "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type="error")
-                                } else {
-                                    state$startTime <<- t
-                                }
-                            }
-                        })
+        {
+            if (0 == nchar(input$start)) {
+                state$startTime <<- min(argo$time, na.rm=TRUE)
+            } else {
+                t <- try(as.POSIXct(input$start, tz="UTC"), silent=TRUE)
+                if (inherits(t, "try-error")) {
+                    shiny::showNotification(paste0("Start time \"",
+                            input$start,
+                            "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type="error")
+                } else {
+                    state$startTime <<- t
+                }
+            }
+        })
 
     shiny::observeEvent(input$end,
-                        {
-                            if (0 == nchar(input$end)) {
-                                state$endTime <<- max(argo$time, na.rm = TRUE)
-                            } else {
-                                t <- try(as.POSIXct(input$end, tz = "UTC"), silent = TRUE)
-                                if (inherits(t, "try-error")) {
-                                    shiny::showNotification(paste0( "End time \"", input$end, "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type = "error")
-                                } else {
-                                    state$endTime <<- t
-                                }
-                            }
-                        })
+        {
+            if (0 == nchar(input$end)) {
+                state$endTime <<- max(argo$time, na.rm = TRUE)
+            } else {
+                t <- try(as.POSIXct(input$end, tz = "UTC"), silent = TRUE)
+                if (inherits(t, "try-error")) {
+                    shiny::showNotification(paste0( "End time \"", input$end, "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type = "error")
+                } else {
+                    state$endTime <<- t
+                }
+            }
+        })
 
     shiny::observeEvent(input$help,
-                        {
-                            msg <- shiny::HTML("This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. The \"Save\" button saves an rda file containing a subset of index, which can later be used in the qcApp() for further analysis.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.")
-                            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
-                        })                                  # help
-    
+        {
+            msg <- shiny::HTML(overallHelp)
+            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+        })
+
     shiny::observeEvent(input$save,
-                        {
-                            rda <- paste0("mapApp_", format(Sys.time(), format="%Y%m%dT%H%m", tz="UTC"), ".rda")
-                            index1 <- getIndex()
-                            from <- as.POSIXct(format(state$startTime, "%Y-%m-%d", tz="UTC"))
-                            to <- as.POSIXct(format(state$endTime, "%Y-%m-%d", tz="UTC"))
-                            index2 <- subset(index1, time=list(from=from, to=to))
-                            longitude <- state$xlim
-                            latitude <- state$ylim
-                            index3 <- subset(index2, rectangle=list(longitude=longitude, latitude=latitude))
-                            save(index3, file=rda)
-                        })
+        {
+            rda <- paste0("mapApp_", format(Sys.time(), format="%Y%m%dT%H%m", tz="UTC"), ".rda")
+            index1 <- getIndex()
+            from <- as.POSIXct(format(state$startTime, "%Y-%m-%d", tz="UTC"))
+            to <- as.POSIXct(format(state$endTime, "%Y-%m-%d", tz="UTC"))
+            index2 <- subset(index1, time=list(from=from, to=to))
+            longitude <- state$xlim
+            latitude <- state$ylim
+            index3 <- subset(index2, rectangle=list(longitude=longitude, latitude=latitude))
+            save(index3, file=rda)
+        })
 
     shiny::observeEvent(input$keypressTrigger,
-                        {
-                            key <- intToUtf8(input$keypress)
-                            #message(input$keypress)
-                            #message(key)
-                            if (key == "n") { # go north
-                                dy <- diff(state$ylim)
-                                state$ylim <<- pinlat(state$ylim + dy / 4)
-                            } else if (key == "s") { # go south
-                                dy <- diff(state$ylim)
-                                state$ylim <<- pinlat(state$ylim - dy / 4)
-                            } else if (key == "e") { # go east
-                                dx <- diff(state$xlim)
-                                state$xlim <<- pinlon(state$xlim + dx / 4)
-                            } else if (key == "w") { # go west
-                                dx <- diff(state$xlim)
-                                state$xlim <<- pinlon(state$xlim - dx / 4)
-                            } else if (key == "f") { # forward in time
-                                interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
-                                state$startTime <<- state$startTime + interval
-                                state$endTime <<- state$endTime + interval
-                                shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
-                                shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-                            } else if (key == "b") { # backward in time
-                                interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
-                                state$startTime <<- state$startTime - interval
-                                state$endTime <<- state$endTime - interval
-                                shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
-                                shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-                            } else if (key == "i") { # zoom in
-                                state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
-                                state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
-                            } else if (key == "o") { # zoom out
-                                state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
-                                state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
-                            } else if (key == "p") { # paste hover message
-                                state$hoverIsPasted <<- !state$hoverIsPasted
-#                            } else if (key == "0") { # append nearest float to 'log.dat'
-#                                ## May later call this 'm' for mark, or 'l' for log.
-#                                x <- input$hover$x
-#                                y <- input$hover$y
-#                                fac <- cos(y * pi180)      # account for meridional convergence
-#                                dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
-#                                i <- which.min(dist2)
-#                                dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
-#                                if (length(dist) && dist < 100) {
-#                                    ID <- argo$ID[i]
-#                                    cycle <- argo$cycle[i]
-#                                    ##markedPoints$ID <- c(markdedPoints$ID, argo$ID[i])
-#                                    ##markedPoints$cycle <- c(markdedPoints$cycle, argo$cycle[i])
-#                                    write.table(cbind(as.character(ID),cycle), file="log.dat", row.names=FALSE, col.names=FALSE, append=TRUE)
-#                                    message("Saved float ID/cycle to log.dat")
-#                                }
-                            } else if (key == "r") { # reset to start
-                                state$xlim <<- c(-180, 180)
-                                state$ylim <<- c(-90, 90)
-                                state$startTime <<- startTime
-                                state$endTime <<- endTime
-                                state$focusID <<- NULL
-                                shiny::updateSelectInput(session, "focus", selected="all")
-                                shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
-                            } else if (key == "?") { # show help on keystrokes
-                                shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
-                                                                    shiny::HTML("<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
-                                                                                <li> '<b>o</b>': zoom <b>o</b>ut</li>
-                                                                                <li> '<b>n</b>': go <b>n</b>orth</li>
-                                                                                <li> '<b>e</b>': go <b>e</b>ast</li>
-                                                                                <li> '<b>s</b>': go <b>s</b>outh</li>
-                                                                                <li> '<b>w</b>': go <b>w</b>est</li>
-                                                                                <li> '<b>f</b>': go <b>f</b>orward in time</li>
-                                                                                <li> '<b>b</b>': go <b>b</b>ackward in time</li>
-                                                                                <li> '<b>r</b>': <b>r</b>eset to initial state</li>
-                                                                                <li> '<b>p</b>': paste most recent hover message</li>
-                                                                                <li> '<b>?</b>': display this message</li> </ul>"), easyClose=TRUE))
-                            }
-                        })                                  # keypressTrigger
+        {
+            key <- intToUtf8(input$keypress)
+            #message(input$keypress)
+            #message(key)
+            if (key == "n") { # go north
+                dy <- diff(state$ylim)
+                state$ylim <<- pinlat(state$ylim + dy / 4)
+            } else if (key == "s") { # go south
+                dy <- diff(state$ylim)
+                state$ylim <<- pinlat(state$ylim - dy / 4)
+            } else if (key == "e") { # go east
+                dx <- diff(state$xlim)
+                state$xlim <<- pinlon(state$xlim + dx / 4)
+            } else if (key == "w") { # go west
+                dx <- diff(state$xlim)
+                state$xlim <<- pinlon(state$xlim - dx / 4)
+            } else if (key == "f") { # forward in time
+                interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
+                state$startTime <<- state$startTime + interval
+                state$endTime <<- state$endTime + interval
+                shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
+                shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
+            } else if (key == "b") { # backward in time
+                interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
+                state$startTime <<- state$startTime - interval
+                state$endTime <<- state$endTime - interval
+                shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
+                shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
+            } else if (key == "i") { # zoom in
+                state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
+                state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
+            } else if (key == "o") { # zoom out
+                state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
+                state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+            } else if (key == "p") { # paste hover message
+                state$hoverIsPasted <<- !state$hoverIsPasted
+            } else if (key == "r") { # reset to start
+                state$xlim <<- c(-180, 180)
+                state$ylim <<- c(-90, 90)
+                state$startTime <<- startTime
+                state$endTime <<- endTime
+                state$focusID <<- NULL
+                shiny::updateSelectInput(session, "focus", selected="all")
+                shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
+            } else if (key == "?") { # show help on keystrokes
+                shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
+                        shiny::HTML(keyPressHelp), easyClose=TRUE))
+            }
+        })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
         if (state$startTime > state$endTime) {
@@ -602,8 +577,8 @@ serverMapApp <- function(input, output, session) {
                         visible <<- visible | k
                         lonlat <- argo[k,]
                         colSettings <- list(core=if (input$Ccolour == "default") colDefaults$core else input$Ccolour,
-                                            bgc=if (input$Bcolour == "default") colDefaults$bgc else input$Bcolour,
-                                            deep=if (input$Dcolour == "default") colDefaults$deep else input$Dcolour)
+                            bgc=if (input$Bcolour == "default") colDefaults$bgc else input$Bcolour,
+                            deep=if (input$Dcolour == "default") colDefaults$deep else input$Dcolour)
                         symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
                         borderSettings <- list(core=input$Cborder, bgc=input$Bborder, deep=input$Dborder)
                         sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
@@ -626,8 +601,8 @@ serverMapApp <- function(input, output, session) {
                                 no <- length(o)
                                 if (no > 1) {
                                     pathColour <- list(core=if (input$Ccolour == "default") colDefaults$core else input$CPcolour,
-                                            bgc=if (input$Bcolour == "default") colDefaults$bgc else input$BPcolour,
-                                            deep=if (input$Dcolour == "default") colDefaults$deep else input$DPcolour)
+                                        bgc=if (input$Bcolour == "default") colDefaults$bgc else input$BPcolour,
+                                        deep=if (input$Dcolour == "default") colDefaults$deep else input$DPcolour)
                                     pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
                                     LONLAT <<- LONLAT[o, ]
                                     lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
@@ -640,9 +615,8 @@ serverMapApp <- function(input, output, session) {
                             }
                         }
                         if ("contour" %in% input$view){
-                    contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]], levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
+                            contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]], levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
                         }
-
                     }
                 }
                 ## }}}
@@ -725,20 +699,21 @@ serverMapApp <- function(input, output, session) {
 #' @importFrom shiny shinyApp shinyOptions
 #' @export
 mapApp <- function(age=argoDefaultIndexAge(),
-                   server=argoDefaultServer(),
-                   destdir=argoDefaultDestdir(),
-                   colLand="lightgray",
-                   debug=0)
+    server=argoDefaultServer(),
+    destdir=argoDefaultDestdir(),
+    colLand="lightgray",
+    debug=0)
 {
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
     shiny::shinyOptions(age=age,
-                        destdir=destdir,
-                        argoServer=server, # rename server to avoid shiny problem
-                        colLand=colLand,
-                        debug=debug)
+        destdir=destdir,
+        argoServer=server, # rename server to avoid shiny problem
+        colLand=colLand,
+        debug=debug)
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages(\"shiny\") for this to work")
     print(shiny::shinyApp(ui=uiMapApp, server=serverMapApp))
 }
 
 #shiny::shinyApp(ui, server)
+
