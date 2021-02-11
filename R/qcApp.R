@@ -94,11 +94,6 @@ QCAppserver <- shinyServer(function(input,output){
 
                                               })
 
-                          shiny::observeEvent(input$cycle,
-                                              {
-                                                  aCycle <- subset(argos, cycle=input$cycle)
-
-                                              })
 
 
                           shiny::observeEvent(input$help,
@@ -133,8 +128,17 @@ shiny::observeEvent(input$qc,
 output$plotMap <- shiny::renderPlot({
     colHistMean <- "forestgreen"
     colHist3SD <- "red"
-    
-                        #if(input$type =="pressure time-series") {
+    ##FIXME: Should I use an update function to update if there is a subset of cycle?
+                         # shiny::observeEvent(input$cycle,
+                         #                     {
+                         #                         if (0 != nchar(input$cycle)) {
+                         #                         argos <<- subset(argos, cycle=input$cycle)
+                         #                     } else if (0 == nchar(input$cycle)) {
+                         #                         load(rda)
+                         #                         argos <<- readProfiles(getProfiles(index3))}
+                         #                     })
+
+                        #if (input$type =="pressure time-series") {
                         #    message("we are at pressure time-series")
 
                         #}
@@ -142,19 +146,19 @@ output$plotMap <- shiny::renderPlot({
                             plot(argos, which="TS")
                         } else if (input$type =="TS" && input$applyQC == TRUE) {
                             plot(clean, which="TS") }
-                        # if(input$type =="conductivity time-series") {
+                        # if (input$type =="conductivity time-series") {
                         #    message("we are at conductivity time-series")
                         # }
-                        #if(input$type =="salinity time-series") {
+                        #if (input$type =="salinity time-series") {
                         #    message("we are at salinity time-series")
                         #}
-                        #if(input$type =="spiciness time-series") {
+                        #if (input$type =="spiciness time-series") {
                         #    message("we are at spiciness time-series")
                         #}
-                        #if(input$type =="temperature time-series") {
+                        #if (input$type =="temperature time-series") {
                         #    message("we are at temperature time-series")
                         #}
-                       # if(input$type =="conductivity profile") {
+                       # if (input$type =="conductivity profile") {
                        #     message("we are at conductivity profile")
                        # }
                         if (input$type =="density profile" && input$applyQC == FALSE) {
@@ -181,7 +185,7 @@ output$plotMap <- shiny::renderPlot({
                             plot(clean, which="profile", profileControl=list(parameter="temperature"))
                         }
 
-                        #if(input$type =="conductivity histogram") {
+                        #if (input$type =="conductivity histogram") {
                          #   message("we are at conductivity histogram")
                        # }
                         if (input$type =="pressure histogram" && input$applyQC == FALSE) {
@@ -208,18 +212,18 @@ output$plotMap <- shiny::renderPlot({
 
 
                         if (input$type =="salinity histogram" && input$applyQC == FALSE) {
-                            SA <<- unlist(argos[["SA"]])
-                            SAmean <<- mean(SA, na.rm=TRUE)
-                            SAsd <<- sd(SA, na.rm=TRUE)
+                            SA <- unlist(argos[["SA"]])
+                            SAmean <- mean(SA, na.rm=TRUE)
+                            SAsd <- sd(SA, na.rm=TRUE)
                             hist(SA, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
                             abline(v=SAmean + SAsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=SAmean + SAsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         } else if (input$type =="salinity histogram" && input$applyQC == TRUE) {
-                            SAc <<- unlist(clean[["SA"]])
-                            SAcmean <<- mean(SAc, na.rm=TRUE)
-                            SAcsd <<- sd(SAc, na.rm=TRUE)
+                            SAc <- unlist(clean[["SA"]])
+                            SAcmean <- mean(SAc, na.rm=TRUE)
+                            SAcsd <- sd(SAc, na.rm=TRUE)
                             ##FIXME: is this unflagged values?
                             hist(SAc, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
                             abline(v=SAcmean + SAcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
@@ -229,18 +233,18 @@ output$plotMap <- shiny::renderPlot({
                         }
 
                         if (input$type =="temperature histogram" && input$applyQC == FALSE) {
-                            CT <<- unlist(argos[["CT"]])
-                            CTmean <<- mean(CT, na.rm=TRUE)
-                            CTsd <<- sd(CT, na.rm=TRUE)
+                            CT <- unlist(argos[["CT"]])
+                            CTmean <- mean(CT, na.rm=TRUE)
+                            CTsd <- sd(CT, na.rm=TRUE)
                             hist(CT, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
                             abline(v=CTmean + CTsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=CTmean + CTsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         } else if (input$type =="temperature histogram" && input$applyQC == TRUE) {
-                            CTc <<- unlist(clean[["CT"]])
-                            CTcmean <<- mean(CTc, na.rm=TRUE)
-                            CTcsd <<- sd(CTc, na.rm=TRUE)
+                            CTc <- unlist(clean[["CT"]])
+                            CTcmean <- mean(CTc, na.rm=TRUE)
+                            CTcsd <- sd(CTc, na.rm=TRUE)
                             hist(CTc, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
                             abline(v=CTcmean + CTcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
