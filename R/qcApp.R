@@ -89,10 +89,16 @@ QCAppserver <- shinyServer(function(input,output){
 
                           shiny::observeEvent(input$ID,
                                               {
-                                                  msg <- shiny::HTML("FIXME:: This still needs to me coded in")
-                                                  shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
-
-                                              })
+                                                  if (0 == nchar(input$ID)) {
+                                                      msg <- shiny::HTML("FIXME:: This still needs to me coded in (float ID)")
+                                                  } else if (0 != nchar(input$ID)) {
+                                                      ##FIXME: This subset is not quite right, I see it being problematic with "argos")
+                                                      argosP <- subset(argos, profile=1)
+                                                      xID <- argosP[["ID"]]
+                                                      keep <- grepl(input$ID, xID)
+                                                      argosP@data$argos <- argosP@data$argos[keep]
+                                                      message("the filename is", (argosP[['filename']]))
+                                              }})
 
 
 
