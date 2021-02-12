@@ -354,7 +354,7 @@ setMethod(f="[[",
                       cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "ID") {
-                      ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3}[A-Z]*\\.nc$", "\\1", x@data$index$file)
+                      ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3,4}[A-Z]*\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$index$file))
