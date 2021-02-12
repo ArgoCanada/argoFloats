@@ -125,7 +125,7 @@ shiny::observeEvent(input$qc,
                         if (input$qc =="showQCTests"){
                                         #FIXME: Need to get output message to print in app
                             output$showQCTests <- renderPrint({
-                                message("The result are: ", showQCTests(argos[[1]]))
+                                message(showQCTests(argos[[1]]))
                             })
 
                            # shiny::showNotification(paste0("The results are", showQCTests(argos[[1]])),
