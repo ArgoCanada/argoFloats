@@ -4,6 +4,7 @@ uiQCApp <- fluidPage(
                 shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
                 shiny::fluidRow(shiny::uiOutput(outputId="UIview")),
                 shiny::fluidRow(shiny::uiOutput(outputId="UIsingleQC")),
+                shiny::fluidRow(shiny::textOutput("showQCTests")),
                 shiny::fluidRow(shiny::plotOutput(outputId="plotMap"))
 
 )
@@ -123,11 +124,14 @@ shiny::observeEvent(input$qc,
                     {
                         if (input$qc =="showQCTests"){
                                         #FIXME: Need to get output message to print in app
+                            output$showQCTests <- renderPrint({
+                                message("The result are: ", showQCTests(argos[[1]]))
+                            })
 
-                            shiny::showNotification(paste0("The results are", showQCTests(argos[[1]])),
-                                                    type="message", duration= NULL
-                            )
-                            shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
+                           # shiny::showNotification(paste0("The results are", showQCTests(argos[[1]])),
+                            #                        type="message", duration= NULL
+                            #)
+                            #shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
 
                         }
                     })
