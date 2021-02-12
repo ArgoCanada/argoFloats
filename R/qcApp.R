@@ -23,6 +23,7 @@ QCAppserver <- shinyServer(function(input,output){
 
                           output$UIwidget <- shiny::renderUI({
                                   shiny::fluidRow(shiny::column(2,shiny::span(shiny::HTML(paste("<b style=\"color:black; margin-left:1em;\">  ","qcApp 0.1","</b>")))),
+                                                  shiny::column(2, shiny::actionButton("read", "Read")),
                                                   shiny::column(2, shiny::actionButton("help", "Help")),
                                                   shiny::column(2, shiny::actionButton("code", "Code")),
                                                   shiny::column(2, shiny::actionButton("undo", "Undo")))
@@ -92,20 +93,24 @@ QCAppserver <- shinyServer(function(input,output){
                                                   if (0 == nchar(input$ID)) {
                                                       msg <- shiny::HTML("FIXME:: This still needs to me coded in (float ID)")
                                                   } else if (0 != nchar(input$ID)) {
-                                                      ##FIXME: This subset is not quite right, I see it being problematic with "argos")
-                                                      argosP <- subset(argos, profile=1)
-                                                      xID <- argosP[["ID"]]
+                                                      xID <- index3[["ID"]]
                                                       keep <- grepl(input$ID, xID)
-                                                      argosP@data$argos <- argosP@data$argos[keep]
-                                                      message("the filename is", (argosP[['filename']]))
+                                                      index3@data$index <- index3@data$index[keep,]
+                                                      message("the filename is", index3[["file"]])
                                               }})
 
 
 
                           shiny::observeEvent(input$help,
                         {
-                            msg <- shiny::HTML("This GUI is used to analyze QC of Argo profiles.<br><br>The Code button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>The Plot type determines which plot should be displayed, with the option to color code by a variety of parameters. If the user changes the focus to Single, the user has the option to input the float ID and cycle of interest, with the option to perform a variety of QC. ")
+                            msg <- shiny::HTML("This GUI is used to analyze QC of Argo profiles.<br><br>The Read button is first used to read profiles from an rda previously saved in mapApp(). The Code button brings up a window showing R code that isolates to the view shown and demonstrates some further operations.<br><br>The Plot type determines which plot should be displayed, with the option to color code by a variety of parameters. If the user changes the focus to Single, the user has the option to input the float ID and cycle of interest, with the option to perform a variety of QC. ")
                             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+                        })
+                          shiny::observeEvent(input$read,
+                        {
+                            load(rda)
+                            argos <<- readProfiles(getProfiles(index3))
+
                         })
 
                           shiny::observeEvent(input$code,
@@ -125,8 +130,8 @@ QCAppserver <- shinyServer(function(input,output){
 shiny::observeEvent(input$qc,
                     {
                         if (input$qc =="showQCTests"){
-                            msg <- shiny::HTML("FIXME:: This still needs to me coded in")
-                            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+                            #FIXME: This isn't working yet because of the need to do [1] in argos type. Working on getting index type
+                            msg <- shiny::HTML("The QC tests are as follows ", showQCTests(argosP[[1]]))
                         }
                     })
 
