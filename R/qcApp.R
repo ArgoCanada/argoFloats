@@ -36,17 +36,10 @@ QCAppserver <- shinyServer(function(input,output){
                                   shiny::fluidRow(
                                                   shiny::column(2, shiny::selectInput("focus", "focus",choices=c("All", "Single"), selected=c("All"))),
                                                   shiny::column(2, shiny::selectInput("type", "Plot Type",choices=c("TS <T>"="TS",
-                          #"C(t)"="conductivity time-series",
-                          #"p(t) <P>"="pressure time-series",
-                          #"S(t) <S>"="salinity time-series",
-                          #"spiciness(t)"="spiciness time-series",
-                          #"T(t)"="temperature time-series",
-                         # "C(p)"="conductivity profile",
                           "density(p)"="density profile",
                           "S(p)"="salinity profile",
                           "spiciness(p)"="spiciness profile",
                           "T(p)"="temperature profile",
-                          #"hist(C)"="conductivity histogram",
                           "hist(p)"="pressure histogram",
                           "hist(S)"="salinity histogram",
                           "hist(T)"="temperature histogram"),
@@ -96,7 +89,6 @@ QCAppserver <- shinyServer(function(input,output){
                                                       xID <- index3[["ID"]]
                                                       keep <- grepl(input$ID, xID)
                                                       index3@data$index <- index3@data$index[keep,]
-                                                      message("the filename is", index3[["file"]])
                                               }})
 
 
@@ -130,8 +122,13 @@ QCAppserver <- shinyServer(function(input,output){
 shiny::observeEvent(input$qc,
                     {
                         if (input$qc =="showQCTests"){
-                            #FIXME: This isn't working yet because of the need to do [1] in argos type. Working on getting index type
-                            msg <- shiny::HTML("The QC tests are as follows ", showQCTests(argosP[[1]]))
+                                        #FIXME: Need to get output message to print in app
+
+                            shiny::showNotification(paste0("The results are", showQCTests(argos[[1]])),
+                                                    type="message", duration= NULL
+                            )
+                            shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
+
                         }
                     })
 
@@ -139,39 +136,13 @@ shiny::observeEvent(input$qc,
 output$plotMap <- shiny::renderPlot({
     colHistMean <- "forestgreen"
     colHist3SD <- "red"
-    ##FIXME: Should I use an update function to update if there is a subset of cycle?
-                         # shiny::observeEvent(input$cycle,
-                         #                     {
-                         #                         if (0 != nchar(input$cycle)) {
-                         #                         argos <<- subset(argos, cycle=input$cycle)
-                         #                     } else if (0 == nchar(input$cycle)) {
-                         #                         load(rda)
-                         #                         argos <<- readProfiles(getProfiles(index3))}
-                         #                     })
 
-                        #if (input$type =="pressure time-series") {
-                        #    message("we are at pressure time-series")
-
-                        #}
                         if (input$type =="TS" && input$applyQC == FALSE) {
                             plot(argos, which="TS")
+
                         } else if (input$type =="TS" && input$applyQC == TRUE) {
                             plot(clean, which="TS") }
-                        # if (input$type =="conductivity time-series") {
-                        #    message("we are at conductivity time-series")
-                        # }
-                        #if (input$type =="salinity time-series") {
-                        #    message("we are at salinity time-series")
-                        #}
-                        #if (input$type =="spiciness time-series") {
-                        #    message("we are at spiciness time-series")
-                        #}
-                        #if (input$type =="temperature time-series") {
-                        #    message("we are at temperature time-series")
-                        #}
-                       # if (input$type =="conductivity profile") {
-                       #     message("we are at conductivity profile")
-                       # }
+
                         if (input$type =="density profile" && input$applyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="sigma0"))
                         } else if (input$type =="density profile" && input$applyQC == TRUE) {
@@ -196,9 +167,6 @@ output$plotMap <- shiny::renderPlot({
                             plot(clean, which="profile", profileControl=list(parameter="temperature"))
                         }
 
-                        #if (input$type =="conductivity histogram") {
-                         #   message("we are at conductivity histogram")
-                       # }
                         if (input$type =="pressure histogram" && input$applyQC == FALSE) {
                             p <- unlist(argos[["pressure"]])
                             pmean <- mean(p, na.rm=TRUE)
