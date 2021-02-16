@@ -172,44 +172,44 @@ output$plotMap <- shiny::renderPlot({
 
                         if (input$type =="density profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="sigma0"))
-                        } else if (input$type =="density profile" && input$applyQC == FALSE && input$focus == "Single") {
+                        } else if (input$type =="density profile" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
                             plot(aid, which="profile", profileControl=list(parameter="sigma0"))
                         } else if (input$type =="density profile" && input$applyQC == TRUE && input$focus == "All") {
                             plot(clean, which="profile", profileControl=list(parameter="sigma0"))
-                        } else if (input$type == "density profile" && input$applyQC == TRUE && input$focus =="Single") {
+                        } else if (input$type == "density profile" && input$applyQC == TRUE &&  0 != nchar(input$ID)) {
                             plot(cid, which="profile", profileControl=list(parameter="sigma0"))
                         }
                         if (input$type =="salinity profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="SA"))
-                        } else if (input$type =="salinity profile" && input$applyQC == FALSE && input$focus == "Single") {
+                        } else if (input$type =="salinity profile" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
                             plot(aid, which="profile", profileControl=list(parameter="SA"))
                         } else if (input$type =="salinity profile" && input$applyQC == TRUE && input$focus == "All") {
                             plot(clean, which="profile", profileControl=list(parameter="SA"))
-                        } else if (input$type == "salinity profile" && input$applyQC == TRUE && input$focus =="Single") {
+                        } else if (input$type == "salinity profile" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
                             plot(cid, which="profile", profileControl=list(parameter="SA"))
                         }
 
                         if (input$type =="spiciness profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="spice"))
-                        } else if (input$type =="spiciness profile" && input$applyQC == FALSE && input$focus == "Single") {
+                        } else if (input$type =="spiciness profile" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
                             plot(aid, which="profile", profileControl=list(parameter="spice"))
                         } else if (input$type =="spiciness profile" && input$applyQC == TRUE && input$focus == "All") {
                             plot(clean, which="profile", profileControl=list(parameter="spice"))
-                        } else if (input$type == "spiciness profile" && input$applyQC == TRUE && input$focus =="Single") {
-                            plot(cid, which="profile", profileControl=list(parameter="SA"))
+                        } else if (input$type == "spiciness profile" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+                            plot(cid, which="profile", profileControl=list(parameter="spice"))
                         }
 
                         if (input$type =="temperature profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="temperature"))
-                        } else if (input$type =="temperature profile" && input$applyQC == FALSE && input$focus == "Single") {
-                            plot(aid, which="profile", profileControl=list(parameter="spice"))
+                        } else if (input$type =="temperature profile" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+                            plot(aid, which="profile", profileControl=list(parameter="temperature"))
                         } else if (input$type =="temperature profile" && input$applyQC == TRUE && input$focus == "All") {
                             plot(clean, which="profile", profileControl=list(parameter="temperature"))
-                        } else if (input$type == "temperature profile" && input$applyQC == TRUE && input$focus =="Single") {
-                            plot(cid, which="profile", profileControl=list(parameter="SA"))
+                        } else if (input$type == "temperature profile" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+                            plot(cid, which="profile", profileControl=list(parameter="temperature"))
                         }
 
-                        if (input$type =="pressure histogram" && input$applyQC == FALSE) {
+                        if (input$type =="pressure histogram" && input$applyQC == FALSE && input$focus == "All") {
                             p <- unlist(argos[["pressure"]])
                             pmean <- mean(p, na.rm=TRUE)
                             psd <- sd(p, na.rm=TRUE)
@@ -219,7 +219,7 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=pmean + psd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        } else if (input$type =="pressure histogram" && input$applyQC == TRUE) {
+                        } else if (input$type =="pressure histogram" && input$applyQC == TRUE && input$focus == "All") {
                             pc <- unlist(clean[["pressure"]])
                             pcmean <- mean(pc, na.rm=TRUE)
                             pcsd <- sd(pc, na.rm=TRUE)
