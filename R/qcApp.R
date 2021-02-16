@@ -132,16 +132,9 @@ QCAppserver <- shinyServer(function(input,output){
 shiny::observeEvent(input$qc,
                     {
                         if (input$qc =="showQCTests"){
-                                        #FIXME: Need to get output message to print in app
                             output$showQCTests <- renderPrint({
                                 message(showQCTests(argos[[1]]))
                             })
-
-                           # shiny::showNotification(paste0("The results are", showQCTests(argos[[1]])),
-                            #                        type="message", duration= NULL
-                            #)
-                            #shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
-
                         }
                     })
 
@@ -219,6 +212,16 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=pmean + psd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type =="pressure histogram" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+                            p <- unlist(aid[["pressure"]])
+                            pmean <- mean(p, na.rm=TRUE)
+                            psd <- sd(p, na.rm=TRUE)
+                            mean(p, na.rm=TRUE)
+                            hist(p, breaks=100, main="Histogram of unflagged values", xlab="Pressure [dbar]")
+                            abline(v=pmean + psd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=pmean + psd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         } else if (input$type =="pressure histogram" && input$applyQC == TRUE && input$focus == "All") {
                             pc <- unlist(clean[["pressure"]])
                             pcmean <- mean(pc, na.rm=TRUE)
@@ -228,11 +231,22 @@ output$plotMap <- shiny::renderPlot({
                             abline(v=pcmean + pcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=pcmean + pcsd * c(-3, 0, 3),
-                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2) }
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type == "pressure histogram" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+                            pc <- unlist(cid[["pressure"]])
+                            pcmean <- mean(pc, na.rm=TRUE)
+                            pcsd <- sd(pc, na.rm=TRUE)
+                            mean(pc, na.rm=TRUE)
+                            hist(pc, breaks=100, main="Histogram of unflagged values", xlab="Pressure [dbar]")
+                            abline(v=pcmean + pcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=pcmean + pcsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        }
 
 
 
-                        if (input$type =="salinity histogram" && input$applyQC == FALSE) {
+                        if (input$type =="salinity histogram" && input$applyQC == FALSE && input$focus == "All") {
                             SA <- unlist(argos[["SA"]])
                             SAmean <- mean(SA, na.rm=TRUE)
                             SAsd <- sd(SA, na.rm=TRUE)
@@ -241,19 +255,38 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=SAmean + SAsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        } else if (input$type =="salinity histogram" && input$applyQC == TRUE) {
-                            SAc <- unlist(clean[["SA"]])
-                            SAcmean <- mean(SAc, na.rm=TRUE)
-                            SAcsd <- sd(SAc, na.rm=TRUE)
-                            ##FIXME: is this unflagged values?
-                            hist(SAc, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
-                            abline(v=SAcmean + SAcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                        } else if (input$type =="salinity histogram" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+                            SA <- unlist(aid[["SA"]])
+                            SAmean <- mean(SA, na.rm=TRUE)
+                            SAsd <- sd(SA, na.rm=TRUE)
+                            hist(SA, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
+                            abline(v=SAmean + SAsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
-                                  at=SAcmean + SAcsd * c(-3, 0, 3),
+                                  at=SAmean + SAsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type =="salinity histogram" && input$applyQC == TRUE && input$focus == "All") {
+                            SA <- unlist(clean[["SA"]])
+                            SAmean <- mean(SA, na.rm=TRUE)
+                            SAsd <- sd(SA, na.rm=TRUE)
+                            ## FIXME: is this unflagged?
+                            hist(SA, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
+                            abline(v=SAmean + SAsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=SAmean + SAsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type == "salinity histogram" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+                            SA <- unlist(cid[["SA"]])
+                            SAmean <- mean(SA, na.rm=TRUE)
+                            SAsd <- sd(SA, na.rm=TRUE)
+                            ## FIXME: is this unflagged?
+                            hist(SA, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
+                            abline(v=SAmean + SAsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=SAmean + SAsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         }
 
-                        if (input$type =="temperature histogram" && input$applyQC == FALSE) {
+                        if (input$type =="temperature histogram" && input$applyQC == FALSE && input$focus == "All") {
                             CT <- unlist(argos[["CT"]])
                             CTmean <- mean(CT, na.rm=TRUE)
                             CTsd <- sd(CT, na.rm=TRUE)
@@ -262,8 +295,26 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=CTmean + CTsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        } else if (input$type =="temperature histogram" && input$applyQC == TRUE) {
+                        } else if (input$type =="temperature histogram" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+                            CT <- unlist(aid[["CT"]])
+                            CTmean <- mean(CT, na.rm=TRUE)
+                            CTsd <- sd(CT, na.rm=TRUE)
+                            hist(CT, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
+                            abline(v=CTmean + CTsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=CTmean + CTsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type =="temperature histogram" && input$applyQC == TRUE && input$focus == "All") {
                             CTc <- unlist(clean[["CT"]])
+                            CTcmean <- mean(CTc, na.rm=TRUE)
+                            CTcsd <- sd(CTc, na.rm=TRUE)
+                            hist(CTc, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
+                            abline(v=CTcmean + CTcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=CTcmean + CTcsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type == "temperature histogram" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+                            CTc <- unlist(cid[["CT"]])
                             CTcmean <- mean(CTc, na.rm=TRUE)
                             CTcsd <- sd(CTc, na.rm=TRUE)
                             hist(CTc, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
