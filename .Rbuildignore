@@ -1,4 +1,5 @@
 ^.Rplots.pdf$
+^mapApp.*rda$
 ^.git$
 ^.github$
 ^issues$

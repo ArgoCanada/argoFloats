@@ -354,7 +354,7 @@ setMethod(f="[[",
                       cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "ID") {
-                      ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3}[A-Z]*\\.nc$", "\\1", x@data$index$file)
+                      ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3,4}[A-Z]*\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$index$file))
@@ -372,10 +372,10 @@ setMethod(f="[[",
                   if (is.numeric(i) && missing(j)) {
                       return(x@data$file[[i]])
                   } else if (length(i) == 1 && i == "cycle") {
-                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3})[A-Z]*\\.nc$", "\\1", x[["file"]])
+                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4})[A-Z]*\\.nc$", "\\1", x[["file"]])
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "ID") {
-                      ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3}[A-Z]*\\.nc$", "\\1", x[["file"]])
+                      ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3,4}[A-Z]*\\.nc$", "\\1", x[["file"]])
                       return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i %in% names(x@metadata)) {
                       return(x@metadata[[i]])
@@ -404,7 +404,7 @@ setMethod(f="[[",
                       return(if (missing(j)) x@data[[i]] else x@data[[i]][[j]])
                   } else if (length(i) == 1 && i == "cycle") {
                       argoFloatsDebug(debug, "i=\"", i, "\" is detected specifically\n")
-                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3})[A-Z]*\\.nc$", "\\1", unlist(x[["filename"]]))
+                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4})[A-Z]*\\.nc$", "\\1", unlist(x[["filename"]]))
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$argos))
@@ -413,7 +413,7 @@ setMethod(f="[[",
                       ID <- unlist(lapply(x@data$argos, function(a) a[["filename"]]))
                       return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i == "ID") {
-                      ID <- unlist(lapply(x@data$argos, function(a) a[["id"]])) # IMPORTANT: oce calls it "id"
+                      ID <- unlist(lapply(x@data$argos, function(a) a[["id"]][1])) # IMPORTANT: oce calls it "id"
                       return(as.vector(if (missing(j)) ID else ID[j]))
                   } else {
                       argoFloatsDebug(debug, "No special argoFloats::[[ case found, so will try oce::[[ on each item within x@data$argos.\n")
