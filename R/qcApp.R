@@ -147,7 +147,8 @@ output$qcPlot <- shiny::renderPlot(
                                            plot(argoD, which="QC", QCControl=list(parameter="temperature"))
                                    }})
 
-
+#' @importFrom stats sd
+#' @importFrom graphics hist
 output$plotMap <- shiny::renderPlot({
 
         colHistMean <- "forestgreen"

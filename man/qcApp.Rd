@@ -2,7 +2,7 @@
 % Please edit documentation in R/qcApp.R
 \name{qcApp}
 \alias{qcApp}
-\title{Interactive app for analying Argo QC}
+\title{Interactive app for analyzing Argo QC}
 \usage{
 qcApp(debug = 0)
 }
