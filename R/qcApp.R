@@ -5,7 +5,7 @@ uiQCApp <- fluidPage(
                 shiny::fluidRow(shiny::uiOutput(outputId="UIview")),
                 shiny::fluidRow(shiny::uiOutput(outputId="UIsingleQC")),
                 shiny::fluidRow(shiny::textOutput("showQCTests")),
-                shiny::fluidRow(shiny::plotOutput(outputId="plotMap")),
+                shiny::fluidRow(shiny::plotOutput(outputId="plotMap", dblclick=shiny::dblclickOpts("dblclick"))),
                 shiny::fluidRow(shiny::plotOutput(outputId="qcPlot"))
 
 )
@@ -88,9 +88,10 @@ QCAppserver <- shinyServer(function(input,output){
                                                   if (0 == nchar(input$ID)) {
                                                       msg <- shiny::HTML("FIXME:: This still needs to me coded in (float ID)")
                                                   } else if (0 != nchar(input$ID)) {
-                                                      xID <- index3[["ID"]]
-                                                      keep <- grepl(input$ID, xID)
-                                                      index3@data$index <- index3@data$index[keep,]
+                                                      iid <<- subset(index3, ID=input$ID)
+                                                      aid <<- readProfiles(getProfiles(iid))
+                                                      cid <<- applyQC(aid)
+
                                               }})
 
                           shiny::observeEvent(input$cycle,
@@ -155,22 +156,30 @@ output$qcPlot <- shiny::renderPlot(
 
 
 output$plotMap <- shiny::renderPlot({
-    colHistMean <- "forestgreen"
-    colHist3SD <- "red"
 
-                        if (input$type =="TS" && input$applyQC == FALSE) {
-                            plot(argos, which="TS")
+        colHistMean <- "forestgreen"
+        colHist3SD <- "red"
 
-                        } else if (input$type =="TS" && input$applyQC == TRUE) {
-                            plot(clean, which="TS") }
+        if (input$type =="TS" && input$applyQC == FALSE && input$focus =="All") {
+            plot(argos, which="TS") }
+        else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+            plot(aid, which="TS")
+        } else if (input$type =="TS" && input$applyQC == TRUE && input$focus =="All") {
+            plot(clean, which="TS")
+        } else if (input$type == "TS" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+            plot(cid, which="TS")
+        }
 
-                        if (input$type =="density profile" && input$applyQC == FALSE) {
+                        if (input$type =="density profile" && input$applyQC == FALSE && input$focus =="All") {
                             plot(argos, which="profile", profileControl=list(parameter="sigma0"))
-                        } else if (input$type =="density profile" && input$applyQC == TRUE) {
+                        } else if (input$type =="density profile" && input$applyQC == FALSE && input$focus == "Single") {
+                            plot(aid, which="profile", profileControl=list(parameter="sigma0"))
+                        } else if (input$type =="density profile" && input$applyQC == TRUE && input$focus =="All") {
                             plot(clean, which="profile", profileControl=list(parameter="sigma0"))
+                        } else if (input$type == "density profile" && input$applyQC == TRUE && input$focus =="Single") {
+                            plot(cid, which="profile", profileControl=list(parameter="sigma0"))
                         }
-
-                        if(input$type =="salinity profile" && input$applyQC == FALSE) {
+                        if (input$type =="salinity profile" && input$applyQC == FALSE) {
                             plot(argos, which="profile", profileControl=list(parameter="SA"))
                         } else if (input$type =="salinity profile" && input$applyQC == TRUE) {
                             plot(clean, which="profile", profileControl=list(parameter="SA"))
@@ -255,6 +264,13 @@ output$plotMap <- shiny::renderPlot({
 
                     })
 
+# Creating double-click
+
+  shiny::observeEvent(input$dblclick,
+                        {
+                            msg <- sprintf("FIXME: double click not coded in yet")
+                            shiny::showNotification(shiny::HTML(msg), duration=NULL)
+                        })
 
 })
 
