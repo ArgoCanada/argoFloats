@@ -461,17 +461,17 @@ serverMapApp <- function(input, output, session)
         })
 
     shiny::observeEvent(input$save,
-        {
-            rda <- paste0("mapApp_", format(Sys.time(), format="%Y%m%dT%H%m", tz="UTC"), ".rda")
-            index1 <- getIndex()
-            from <- as.POSIXct(format(state$startTime, "%Y-%m-%d", tz="UTC"))
-            to <- as.POSIXct(format(state$endTime, "%Y-%m-%d", tz="UTC"))
-            index2 <- subset(index1, time=list(from=from, to=to))
-            longitude <- state$xlim
-            latitude <- state$ylim
-            index3 <- subset(index2, rectangle=list(longitude=longitude, latitude=latitude))
-            save(index3, file=rda)
-        })
+                        {
+                            rda <<- paste0("mapApp_", format(Sys.time(), format="%Y%m%dT%H%m", tz="UTC"), ".rda")
+                            index1 <- getIndex()
+                            from <- as.POSIXct(format(state$startTime, "%Y-%m-%d", tz="UTC"))
+                            to <- as.POSIXct(format(state$endTime, "%Y-%m-%d", tz="UTC"))
+                            index2 <- subset(index1, time=list(from=from, to=to))
+                            longitude <- state$xlim
+                            latitude <- state$ylim
+                            index3 <<- subset(index2, rectangle=list(longitude=longitude, latitude=latitude))
+                            save(index3, file=rda)
+                        })
 
     shiny::observeEvent(input$keypressTrigger,
         {
