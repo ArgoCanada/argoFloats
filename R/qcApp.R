@@ -5,7 +5,8 @@ uiQCApp <- fluidPage(
                 shiny::fluidRow(shiny::uiOutput(outputId="UIview")),
                 shiny::fluidRow(shiny::uiOutput(outputId="UIsingleQC")),
                 shiny::fluidRow(shiny::textOutput("showQCTests")),
-                shiny::fluidRow(shiny::plotOutput(outputId="plotMap"))
+                shiny::fluidRow(shiny::plotOutput(outputId="plotMap")),
+                shiny::fluidRow(shiny::plotOutput(outputId="qcPlot"))
 
 )
 
@@ -135,6 +136,15 @@ shiny::observeEvent(input$qc,
 
                         }
                     })
+
+output$qcPlot <- shiny::renderPlot(
+
+                                   {
+                                       if (input$qc =="diagnostics") {
+                                           i <- subset(index3, ID=input$ID)
+                                           argoD <- readProfiles(getProfiles(i))
+                                           plot(argoD, which="QC", QCControl=list(parameter="temperature"))
+                                   }})
 
 
 output$plotMap <- shiny::renderPlot({
