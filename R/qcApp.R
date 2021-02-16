@@ -93,7 +93,14 @@ QCAppserver <- shinyServer(function(input,output){
                                                       index3@data$index <- index3@data$index[keep,]
                                               }})
 
-
+                          shiny::observeEvent(input$cycle,
+                                              {
+                                                  if (0 == nchar(input$cycle)) {
+                                                      msg <- shiny::HTML("FIXME:: This still needs to me coded in (float ID)")
+                                                  } else if (0 != nchar(input$cycle)) {
+                                                      ic <- subset(index3, cycle=input$cycle)
+                                                      message("ic filename is", ic[["file"]])
+                                                  }})
 
                           shiny::observeEvent(input$help,
                         {
