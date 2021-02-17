@@ -36,7 +36,7 @@ QCAppserver <- shinyServer(function(input,output){
                               ## NOTE: The type and colorBy are the same as oceanglider
 
                                   shiny::fluidRow(
-                                                  shiny::column(2, shiny::selectInput("focus", "focus",choices=c("All", "Single"), selected=c("All"))),
+                                                  shiny::column(2, shiny::selectInput("focus", "Focus",choices=c("All", "Single"), selected=c("All"))),
                                                   shiny::column(2, shiny::selectInput("type", "Plot Type",choices=c("TS <T>"="TS",
                           "density(p)"="density profile",
                           "S(p)"="salinity profile",
@@ -331,7 +331,10 @@ output$plotMap <- shiny::renderPlot({
 
   shiny::observeEvent(input$dblclick,
                         {
-                            msg <- sprintf("FIXME: double click not coded in yet")
+                            ##FIXME: Right now, message gives salinity and temperature. Need to make it recognize when a point is there
+                            x <- input$dblclick$x
+                            y <- input$dblclick$y
+                            msg <- sprintf("Salinity = %.3f g/kg, Temperature =  %.3f degC", x,y)
                             shiny::showNotification(shiny::HTML(msg), duration=NULL)
                         })
 
