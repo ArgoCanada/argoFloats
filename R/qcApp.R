@@ -19,7 +19,7 @@ QCAppserver <- shinyServer(function(input,output){
                           shiny::observeEvent(input$applyQC,
                                               {
                                                   if (input$applyQC == TRUE)
-                                                  clean <- applyQC(argos)
+                                                  clean <<- applyQC(argos)
                                               })
 
 
@@ -88,9 +88,9 @@ QCAppserver <- shinyServer(function(input,output){
                                                   if (0 == nchar(input$ID)) {
                                                       msg <- shiny::HTML("FIXME:: This still needs to me coded in (float ID)")
                                                   } else if (0 != nchar(input$ID)) {
-                                                      iid <- subset(index3, ID=input$ID)
-                                                      aid <- readProfiles(getProfiles(iid))
-                                                      cid <- applyQC(aid)
+                                                      iid <<- subset(index3, ID=input$ID)
+                                                      aid <<- readProfiles(getProfiles(iid))
+                                                      cid <<- applyQC(aid)
 
                                               }})
 
@@ -110,7 +110,7 @@ QCAppserver <- shinyServer(function(input,output){
                           shiny::observeEvent(input$read,
                         {
                             load(rda)
-                            argos <- readProfiles(getProfiles(index3))
+                            argos <<- readProfiles(getProfiles(index3))
 
                         })
 
@@ -130,7 +130,7 @@ QCAppserver <- shinyServer(function(input,output){
 
 shiny::observeEvent(input$qc,
                     {
-                        if (input$qc =="showQCTests"){
+                        if (input$qc %in%"showQCTests"){
                             output$showQCTests <- renderPrint({
                                 message(showQCTests(argos[[1]]))
                             })
@@ -140,7 +140,7 @@ shiny::observeEvent(input$qc,
 output$qcPlot <- shiny::renderPlot(
 
                                    {
-                                       if (input$qc =="diagnostics") {
+                                       if (input$qc %in% "diagnostics") {
                                            i <- subset(index3, ID=input$ID)
                                            argoD <- readProfiles(getProfiles(i))
                                            plot(argoD, which="QC", QCControl=list(parameter="temperature"))
