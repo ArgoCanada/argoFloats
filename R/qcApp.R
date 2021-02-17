@@ -19,7 +19,7 @@ QCAppserver <- shinyServer(function(input,output){
                           shiny::observeEvent(input$applyQC,
                                               {
                                                   if (input$applyQC == TRUE)
-                                                  clean <<- applyQC(argos)
+                                                  clean <- applyQC(argos)
                                               })
 
 
@@ -88,9 +88,9 @@ QCAppserver <- shinyServer(function(input,output){
                                                   if (0 == nchar(input$ID)) {
                                                       msg <- shiny::HTML("FIXME:: This still needs to me coded in (float ID)")
                                                   } else if (0 != nchar(input$ID)) {
-                                                      iid <<- subset(index3, ID=input$ID)
-                                                      aid <<- readProfiles(getProfiles(iid))
-                                                      cid <<- applyQC(aid)
+                                                      iid <- subset(index3, ID=input$ID)
+                                                      aid <- readProfiles(getProfiles(iid))
+                                                      cid <- applyQC(aid)
 
                                               }})
 
@@ -100,7 +100,6 @@ QCAppserver <- shinyServer(function(input,output){
                                                       msg <- shiny::HTML("FIXME:: This still needs to me coded in (float ID)")
                                                   } else if (0 != nchar(input$cycle)) {
                                                       ic <- subset(index3, cycle=input$cycle)
-                                                      message("ic filename is", ic[["file"]])
                                                   }})
 
                           shiny::observeEvent(input$help,
@@ -111,7 +110,7 @@ QCAppserver <- shinyServer(function(input,output){
                           shiny::observeEvent(input$read,
                         {
                             load(rda)
-                            argos <<- readProfiles(getProfiles(index3))
+                            argos <- readProfiles(getProfiles(index3))
 
                         })
 
