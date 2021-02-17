@@ -228,36 +228,41 @@ showQCTests <- function(x, style="brief")
     if (is.null(tests))
         return(invisible(NULL))
     ## Match strings within 'action' to find the tests that were performed
-    perf <- tests[1, which(action == "QCP$")]
-    ## Match strings within 'action' to find the tests that failed
-    fail <- tests[1, which(action == "QCF$")]
-    ## Add zeros on left of 'fail', if needed to match length of 'perf'
-    failFull <- paste0(paste(rep("0",nchar(perf)-nchar(fail)),collapse=""), fail, sep="")
-    ##DEBUG cat(oce::vectorShow(perf))
-    ##DEBUG cat(oce::vectorShow(fail))
-    ##DEBUG cat(oce::vectorShow(failFull))
-    perfIndices <- which(1==hexToBits(perf))
-    failIndices <- -1 + which(1==hexToBits(failFull))
-    if (style == "brief") {
-        cat("Tests performed: ", paste(QCTests[perfIndices], collapse=" "), "\n", sep="")
-        if (length(failIndices)) {
-            for (i in failIndices)
-                cat(sprintf("    Failed test %2d (%s)\n", QCTests[i], names(QCTests)[i]))
+    nrows <- nrow(tests)
+    indent <- ""
+    for (irow in seq_len(nrows)) {
+        if (nrows > 1) {
+            cat("Profile", irow, "of", nrows, "profiles\n")
+            indent <- "    "
+        }
+        perf <- tests[irow, which(action[irow,] == "QCP$")]
+        ## Match strings within 'action' to find the tests that failed
+        fail <- tests[irow, which(action[irow,] == "QCF$")]
+        ## Add zeros on left of 'fail', if needed to match length of 'perf'
+        failFull <- paste0(paste(rep("0",nchar(perf)-nchar(fail)),collapse=""), fail, sep="")
+        perfIndices <- which(1==hexToBits(perf))
+        failIndices <- -1 + which(1==hexToBits(failFull))
+        if (style == "brief") {
+            cat(indent, "Tests performed: ", paste(QCTests[perfIndices], collapse=" "), "\n", sep="")
+            if (length(failIndices)) {
+                for (i in failIndices)
+                    cat(indent, sprintf("    Failed test %2d (%s)\n", QCTests[i], names(QCTests)[i]))
+            } else {
+                cat(indent, "    Passed all tests\n")
+            }
+        } else if (style == "full") {
+            cat(indent, "Test |  Status  | Description\n")
+            cat(indent, "-----|----------|--------------------------------------------------------------\n")
+            for (i in QCTests) {
+                failed <- i %in% failIndices
+                skipped <- !(i %in% perfIndices)
+                status <- if (failed) "*Failed*" else if (skipped) " Skipped" else "  Passed"
+                cat(indent, sprintf("%4d | %7s | %s\n", i, status, names(QCTests)[i]))
+            }
+            cat(indent, "-----|----------|--------------------------------------------------------------\n")
         } else {
-            cat("    Passed all tests\n")
+            stop("style must be either \"brief\" or \"full\", not \"", style, "\" as given")
         }
-    } else if (style == "full") {
-        cat("Test |  Status  | Description\n")
-        cat("-----|----------|--------------------------------------------------------------\n")
-        for (i in QCTests) {
-            failed <- i %in% failIndices
-            skipped <- !(i %in% perfIndices)
-            status <- if (failed) "*Failed*" else if (skipped) " Skipped" else "  Passed"
-            cat(sprintf("%4d | %7s | %s\n", i, status, names(QCTests)[i]))
-        }
-        cat("-----|----------|--------------------------------------------------------------\n")
-    } else {
-        stop("style must be either \"brief\" or \"full\", not \"", style, "\" as given")
     }
     invisible(NULL)
 }
