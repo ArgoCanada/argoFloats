@@ -168,12 +168,24 @@ output$plotMap <- shiny::renderPlot({
 
         if (input$type =="TS" && input$applyQC == FALSE && input$focus == "All") {
             plot(argos, which="TS")
-        }  else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
+        } else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
             plot(aid, which="TS")
+            ## this is new
+        } else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
+            plot(aid, which="TS", col="lightgray")
+            points(unlist(ac[["SA"]]), unlist(ac[["CT"]]), col="black", pch=20)
+        } else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+            plot(ac, which="TS")
+            ## this is end of new
         } else if (input$type =="TS" && input$applyQC == TRUE && input$focus =="All") {
             plot(clean, which="TS")
         } else if (input$type == "TS" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
             plot(cid, which="TS")
+        } else if (input$type =="TS" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
+            plot(cid, which="TS")
+            points(unlist(cc[["SA"]]), unlist(cc[["CT"]]), col="black", pch=20)
+        } else if (input$type =="TS" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+            plot(cc, which="TS")
         }
 
                         if (input$type =="density profile" && input$applyQC == FALSE && input$focus == "All") {
