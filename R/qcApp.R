@@ -163,8 +163,6 @@ output$plotMap <- shiny::renderPlot({
         colHistMean <- "forestgreen"
         colHist3SD <- "red"
 
-        ## FIXME: I am working on adding cycle subset
-
         if (input$type =="TS" && input$applyQC == FALSE && input$focus == "All") {
             plot(argos, which="TS")
         } else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
@@ -189,13 +187,11 @@ output$plotMap <- shiny::renderPlot({
                             plot(argos, which="profile", profileControl=list(parameter="sigma0"))
                         } else if (input$type =="density profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             plot(aid, which="profile", profileControl=list(parameter="sigma0"))
-                            ## NEW HERE
                         } else if (input$type =="density profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
                             plot(aid, which="profile", profileControl=list(parameter="sigma0"), col="lightgray")
                             points(unlist(ac[["sigma0"]]), unlist(ac[["pressure"]]), col="black", pch=20)
                         } else if (input$type =="density profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
                             plot(ac, which="profile", profileControl=list(parameter="sigma0"))
-                            ## END NEW
                         } else if (input$type =="density profile" && input$applyQC == TRUE && input$focus == "All") {
                             plot(clean, which="profile", profileControl=list(parameter="sigma0"))
                         } else if (input$type == "density profile" && input$applyQC == TRUE &&  0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
@@ -267,8 +263,6 @@ output$plotMap <- shiny::renderPlot({
                             plot(cc, which="profile", profileControl=list(parameter="temperature"))
                         }
 
-
-                                        # Start of histograms
 
                         if (input$type =="pressure histogram" && input$applyQC == FALSE && input$focus == "All") {
                             p <- unlist(argos[["pressure"]])
@@ -371,7 +365,7 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=SAmean + SAsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        } else if (input$type =="salinity histogram" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+                        } else if (input$type =="salinity histogram" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             SA <- unlist(aid[["SA"]])
                             SAmean <- mean(SA, na.rm=TRUE)
                             SAsd <- sd(SA, na.rm=TRUE)
@@ -380,6 +374,28 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=SAmean + SAsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type =="salinity histogram" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE) {
+                            ## FIXME: make cycle a different color on top of histogram
+                            SA <- unlist(aid[["SA"]])
+                            SAmean <- mean(SA, na.rm=TRUE)
+                            SAsd <- sd(SA, na.rm=TRUE)
+                            mean(SA, na.rm=TRUE)
+                            hist(SA, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
+                            abline(v=SAmean + SAsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=SAmean + SAsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type =="salinity histogram" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                            SA <- unlist(ac[["SA"]])
+                            SAmean <- mean(SA, na.rm=TRUE)
+                            SAsd <- sd(SA, na.rm=TRUE)
+                            mean(SA, na.rm=TRUE)
+                            hist(SA, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
+                            abline(v=SAmean + SAsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=SAmean + SAsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+
                         } else if (input$type =="salinity histogram" && input$applyQC == TRUE && input$focus == "All") {
                             SA <- unlist(clean[["SA"]])
                             SAmean <- mean(SA, na.rm=TRUE)
@@ -390,7 +406,7 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=SAmean + SAsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        } else if (input$type == "salinity histogram" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+                        } else if (input$type == "salinity histogram" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             SA <- unlist(cid[["SA"]])
                             SAmean <- mean(SA, na.rm=TRUE)
                             SAsd <- sd(SA, na.rm=TRUE)
@@ -400,7 +416,31 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=SAmean + SAsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type =="salinity histogram" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
+                             #FIXME: Add cycle in different color
+                             SA <- unlist(cc[["SA"]])
+                             SAmean <- mean(SA, na.rm=TRUE)
+                             SAsd <- sd(SA, na.rm=TRUE)
+                             ## FIXME: is this unflagged?
+                             hist(SA, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
+                             abline(v=SAmean + SAsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                   at=SAmean + SAsd * c(-3, 0, 3),
+                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+
+                        } else if (input$type =="salinity histogram" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                             SA <- unlist(cc[["SA"]])
+                             SAmean <- mean(SA, na.rm=TRUE)
+                             SAsd <- sd(SA, na.rm=TRUE)
+                             ## FIXME: is this unflagged?
+                             hist(SA, breaks=100, main="Histogram of unflagged values", xlab="Absolute Salinity")
+                             abline(v=SAmean + SAsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                   at=SAmean + SAsd * c(-3, 0, 3),
+                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         }
+
+# end of salinity start of temperature
 
                         if (input$type =="temperature histogram" && input$applyQC == FALSE && input$focus == "All") {
                             CT <- unlist(argos[["CT"]])
@@ -411,8 +451,29 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=CTmean + CTsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        } else if (input$type =="temperature histogram" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+                        } else if (input$type =="temperature histogram" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             CT <- unlist(aid[["CT"]])
+                            CTmean <- mean(CT, na.rm=TRUE)
+                            CTsd <- sd(CT, na.rm=TRUE)
+                            hist(CT, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
+                            abline(v=CTmean + CTsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=CTmean + CTsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+
+                        } else if (input$type =="temperature histogram" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE) {
+                            ## FIXME: make cycle a different color on top of histogram
+                            CT <- unlist(ac[["CT"]])
+                            CTmean <- mean(CT, na.rm=TRUE)
+                            CTsd <- sd(CT, na.rm=TRUE)
+                            hist(CT, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
+                            abline(v=CTmean + CTsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=CTmean + CTsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+
+                        } else if (input$type =="temperature histogram" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                            CT <- unlist(ac[["CT"]])
                             CTmean <- mean(CT, na.rm=TRUE)
                             CTsd <- sd(CT, na.rm=TRUE)
                             hist(CT, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
@@ -429,7 +490,7 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=CTcmean + CTcsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        } else if (input$type == "temperature histogram" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+                        } else if (input$type == "temperature histogram" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             CTc <- unlist(cid[["CT"]])
                             CTcmean <- mean(CTc, na.rm=TRUE)
                             CTcsd <- sd(CTc, na.rm=TRUE)
@@ -439,8 +500,29 @@ output$plotMap <- shiny::renderPlot({
                                   at=CTcmean + CTcsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         }
+                         ## New here
+                        else if (input$type =="pressure histogram" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
+                            CTc <- unlist(cc[["CT"]])
+                            CTcmean <- mean(CTc, na.rm=TRUE)
+                            CTcsd <- sd(CTc, na.rm=TRUE)
+                            hist(CTc, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
+                            abline(v=CTcmean + CTcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=CTcmean + CTcsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
 
+                            ## FIXME: cycle color on top again
+                        } else if (input$type =="pressure histogram" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                            CTc <- unlist(cid[["CT"]])
+                            CTcmean <- mean(CTc, na.rm=TRUE)
+                            CTcsd <- sd(CTc, na.rm=TRUE)
+                            hist(CTc, breaks=100, main="Histogram of unflagged values", xlab="Conservative Temperature")
+                            abline(v=CTcmean + CTcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD),lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=CTcmean + CTcsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
 
+                        }
                     })
 
 # Creating double-click
