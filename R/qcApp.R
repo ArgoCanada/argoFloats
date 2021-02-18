@@ -110,7 +110,6 @@ QCAppserver <- shinyServer(function(input,output){
                                                       ic <- subset(iid, cycle=input$cycle)
                                                       ac <<- readProfiles(getProfiles(ic))
                                                       cc <<- applyQC(ac)
-                                                      message(cc[["filename"]])
                                                   }})
 
                           shiny::observeEvent(input$help,
@@ -170,13 +169,11 @@ output$plotMap <- shiny::renderPlot({
             plot(argos, which="TS")
         } else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
             plot(aid, which="TS")
-            ## this is new
         } else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
             plot(aid, which="TS", col="lightgray")
             points(unlist(ac[["SA"]]), unlist(ac[["CT"]]), col="black", pch=20)
         } else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
             plot(ac, which="TS")
-            ## this is end of new
         } else if (input$type =="TS" && input$applyQC == TRUE && input$focus =="All") {
             plot(clean, which="TS")
         } else if (input$type == "TS" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
@@ -190,13 +187,33 @@ output$plotMap <- shiny::renderPlot({
 
                         if (input$type =="density profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="sigma0"))
-                        } else if (input$type =="density profile" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+                        } else if (input$type =="density profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             plot(aid, which="profile", profileControl=list(parameter="sigma0"))
+                            ## NEW HERE
+                        } else if (input$type =="density profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
+                            plot(aid, which="profile", profileControl=list(parameter="sigma0"), col="lightgray")
+                            points(unlist(ac[["sigma0"]]), unlist(ac[["pressure"]]), col="black", pch=20)
+                        } else if (input$type =="density profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                            plot(ac, which="profile", profileControl=list(parameter="sigma0"))
+                            ## END NEW
                         } else if (input$type =="density profile" && input$applyQC == TRUE && input$focus == "All") {
                             plot(clean, which="profile", profileControl=list(parameter="sigma0"))
-                        } else if (input$type == "density profile" && input$applyQC == TRUE &&  0 != nchar(input$ID)) {
+                        } else if (input$type == "density profile" && input$applyQC == TRUE &&  0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             plot(cid, which="profile", profileControl=list(parameter="sigma0"))
+                            ##New here
+                        } else if (input$type =="density profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
+                            plot(cid, which="profile", profileControl=list(parameter="sigma0"), col="lightgray")
+                            points(unlist(cc[["sigma0"]]), unlist(cc[["pressure"]]), col="black", pch=20)
+                        } else if (input$type =="density profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                            plot(cc, which="profile", profileControl=list(parameter="sigma0"))
                         }
+        ## end new
+
+
+
+
+
+
                         if (input$type =="salinity profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="SA"))
                         } else if (input$type =="salinity profile" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
