@@ -4,7 +4,8 @@ uiQCApp <- fluidPage(
                 shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
                 shiny::fluidRow(shiny::uiOutput(outputId="UIview")),
                 shiny::fluidRow(shiny::uiOutput(outputId="UIsingleQC")),
-                shiny::fluidRow(shiny::textOutput("showQCTests")),
+                shiny::fluidRow(shiny::textOutput("showQCTests"),
+                                shiny::uiOutput(outputId="UIcycleWidget")),
                 shiny::fluidRow(shiny::plotOutput(outputId="plotMap", dblclick=shiny::dblclickOpts("dblclick"))),
                 shiny::fluidRow(shiny::plotOutput(outputId="qcPlot"))
 
@@ -83,6 +84,13 @@ QCAppserver <- shinyServer(function(input,output){
                           } }
                           )
 
+                          ##FIXME: I need to fix placement of this widget
+                          output$UIcycleWidget <- shiny::renderUI({
+                                                  if (0 != nchar(input$cycle)) {
+                                                  shiny::column(2, shiny::checkboxInput("cyclePlot", "Focus on Single cycle", value=FALSE))
+                                                  }
+                          })
+
                           shiny::observeEvent(input$ID,
                                               {
                                                   if (0 == nchar(input$ID)) {
@@ -99,7 +107,10 @@ QCAppserver <- shinyServer(function(input,output){
                                                   if (0 == nchar(input$cycle)) {
                                                       msg <- shiny::HTML("FIXME:: This still needs to me coded in (float ID)")
                                                   } else if (0 != nchar(input$cycle)) {
-                                                      ic <- subset(index3, cycle=input$cycle)
+                                                      ic <- subset(iid, cycle=input$cycle)
+                                                      ac <<- readProfiles(getProfiles(ic))
+                                                      cc <<- applyQC(ac)
+                                                      message(cc[["filename"]])
                                                   }})
 
                           shiny::observeEvent(input$help,
@@ -153,13 +164,15 @@ output$plotMap <- shiny::renderPlot({
         colHistMean <- "forestgreen"
         colHist3SD <- "red"
 
+        ## FIXME: I am working on adding cycle subset
+
         if (input$type =="TS" && input$applyQC == FALSE && input$focus == "All") {
-            plot(argos, which="TS") }
-        else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+            plot(argos, which="TS")
+        }  else if (input$type =="TS" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
             plot(aid, which="TS")
         } else if (input$type =="TS" && input$applyQC == TRUE && input$focus =="All") {
             plot(clean, which="TS")
-        } else if (input$type == "TS" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+        } else if (input$type == "TS" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
             plot(cid, which="TS")
         }
 
