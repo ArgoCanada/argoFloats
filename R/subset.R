@@ -407,6 +407,8 @@ setMethod(f="subset",
                     stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
                 ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
                 xcycle <- x[["cycle"]]
+                argoFloatsDebug(debug, "x[[\"cycle\"]]: ", paste(xcycle, collapse=" "), "\n")
+                argoFloatsDebug(debug, "cycle: ", cycle, "\n")
                 if (is.character(cycle)) {
                     argoFloatsDebug(debug, "subsetting by cycle as a character value\n")
                     ## Here, keep is logical
@@ -429,7 +431,7 @@ setMethod(f="subset",
                     warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
                 if (!silent)
                     message("Kept ", nkeep, " profiles ")
-                x@data$index <- x@data$index[keep, ]
+                x@data[[1]] <- x@data[[1]][keep]
             } else if (dotsNames[1]=="dataStateIndicator") {
                 argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
                 dataStateIndicator <- dots[[1]]
