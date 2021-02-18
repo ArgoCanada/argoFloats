@@ -234,7 +234,7 @@ output$plotMap <- shiny::renderPlot({
                             plot(cc, which="profile", profileControl=list(parameter="SA"))
                         }
 
-
+                        ## FIXME: need to do spiciness
                         if (input$type =="spiciness profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="spice"))
                         } else if (input$type =="spiciness profile" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
@@ -245,14 +245,26 @@ output$plotMap <- shiny::renderPlot({
                             plot(cid, which="profile", profileControl=list(parameter="spice"))
                         }
 
+                        ## end of spiciness
+
                         if (input$type =="temperature profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="temperature"))
-                        } else if (input$type =="temperature profile" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+                        } else if (input$type =="temperature profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             plot(aid, which="profile", profileControl=list(parameter="temperature"))
+                        } else if (input$type =="temperature profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
+                            plot(aid, which="profile", profileControl=list(parameter="temperature"), col="lightgray")
+                            points(unlist(ac[["temperature"]]), unlist(ac[["pressure"]]), col="black", pch=20)
+                        } else if (input$type =="temperature profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                            plot(ac, which="profile", profileControl=list(parameter="temperature"))
                         } else if (input$type =="temperature profile" && input$applyQC == TRUE && input$focus == "All") {
                             plot(clean, which="profile", profileControl=list(parameter="temperature"))
-                        } else if (input$type == "temperature profile" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+                        } else if (input$type == "temperature profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             plot(cid, which="profile", profileControl=list(parameter="temperature"))
+                        } else if (input$type =="temperature profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
+                            plot(cid, which="profile", profileControl=list(parameter="temperature"), col="lightgray")
+                            points(unlist(cc[["temperature"]]), unlist(cc[["pressure"]]), col="black", pch=20)
+                        } else if (input$type =="temperature profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                            plot(cc, which="profile", profileControl=list(parameter="temperature"))
                         }
 
                         if (input$type =="pressure histogram" && input$applyQC == FALSE && input$focus == "All") {
