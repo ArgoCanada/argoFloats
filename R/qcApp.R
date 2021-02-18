@@ -200,19 +200,12 @@ output$plotMap <- shiny::renderPlot({
                             plot(clean, which="profile", profileControl=list(parameter="sigma0"))
                         } else if (input$type == "density profile" && input$applyQC == TRUE &&  0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             plot(cid, which="profile", profileControl=list(parameter="sigma0"))
-                            ##New here
                         } else if (input$type =="density profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
                             plot(cid, which="profile", profileControl=list(parameter="sigma0"), col="lightgray")
                             points(unlist(cc[["sigma0"]]), unlist(cc[["pressure"]]), col="black", pch=20)
                         } else if (input$type =="density profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
                             plot(cc, which="profile", profileControl=list(parameter="sigma0"))
                         }
-        ## end new
-
-
-
-
-
 
                         if (input$type =="salinity profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="SA"))
@@ -234,7 +227,6 @@ output$plotMap <- shiny::renderPlot({
                             plot(cc, which="profile", profileControl=list(parameter="SA"))
                         }
 
-                        ## FIXME: need to do spiciness
                         if (input$type =="spiciness profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="spice"))
                         } else if (input$type =="spiciness profile" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
@@ -248,15 +240,12 @@ output$plotMap <- shiny::renderPlot({
                             plot(clean, which="profile", profileControl=list(parameter="spice"))
                         } else if (input$type == "spiciness profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             plot(cid, which="profile", profileControl=list(parameter="spice"))
-                            ##New here
                         } else if (input$type =="spiciness profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
                             plot(cid, which="profile", profileControl=list(parameter="spice"), col="lightgray")
                             points(unlist(cc[["spice"]]), unlist(cc[["pressure"]]), col="black", pch=20)
                         } else if (input$type =="spiciness profile" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
                             plot(cc, which="profile", profileControl=list(parameter="spice"))
                         }
-        ## end new
-                        ## end of spiciness
 
                         if (input$type =="temperature profile" && input$applyQC == FALSE && input$focus == "All") {
                             plot(argos, which="profile", profileControl=list(parameter="temperature"))
@@ -278,6 +267,9 @@ output$plotMap <- shiny::renderPlot({
                             plot(cc, which="profile", profileControl=list(parameter="temperature"))
                         }
 
+
+                                        # Start of histograms
+
                         if (input$type =="pressure histogram" && input$applyQC == FALSE && input$focus == "All") {
                             p <- unlist(argos[["pressure"]])
                             pmean <- mean(p, na.rm=TRUE)
@@ -288,7 +280,7 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=pmean + psd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        } else if (input$type =="pressure histogram" && input$applyQC == FALSE && 0 != nchar(input$ID)) {
+                        } else if (input$type =="pressure histogram" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             p <- unlist(aid[["pressure"]])
                             pmean <- mean(p, na.rm=TRUE)
                             psd <- sd(p, na.rm=TRUE)
@@ -298,6 +290,31 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=pmean + psd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+
+#New here
+                        } else if (input$type =="pressure histogram" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE) {
+                            ## FIXME: make cycle a different color on top of histogram
+                            p <- unlist(aid[["pressure"]])
+                            pmean <- mean(p, na.rm=TRUE)
+                            psd <- sd(p, na.rm=TRUE)
+                            mean(p, na.rm=TRUE)
+                            hist(p, breaks=100, main="Histogram of unflagged values", xlab="Pressure [dbar]")
+                            abline(v=pmean + psd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=pmean + psd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+
+                        } else if (input$type =="pressure histogram" && input$applyQC == FALSE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                            p <- unlist(ac[["pressure"]])
+                            pmean <- mean(p, na.rm=TRUE)
+                            psd <- sd(p, na.rm=TRUE)
+                            mean(p, na.rm=TRUE)
+                            hist(p, breaks=100, main="Histogram of unflagged values", xlab="Pressure [dbar]")
+                            abline(v=pmean + psd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=pmean + psd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+# End new
                         } else if (input$type =="pressure histogram" && input$applyQC == TRUE && input$focus == "All") {
                             pc <- unlist(clean[["pressure"]])
                             pcmean <- mean(pc, na.rm=TRUE)
@@ -308,7 +325,7 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=pcmean + pcsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
-                        } else if (input$type == "pressure histogram" && input$applyQC == TRUE && 0 != nchar(input$ID)) {
+                        } else if (input$type == "pressure histogram" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 == nchar(input$cycle)) {
                             pc <- unlist(cid[["pressure"]])
                             pcmean <- mean(pc, na.rm=TRUE)
                             pcsd <- sd(pc, na.rm=TRUE)
@@ -318,7 +335,30 @@ output$plotMap <- shiny::renderPlot({
                             mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
                                   at=pcmean + pcsd * c(-3, 0, 3),
                                   col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                            ## New here
+                        } else if (input$type =="pressure histogram" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == FALSE ) {
+                            ## FIXME: cycle color on top again
+                            pc <- unlist(cid[["pressure"]])
+                            pcmean <- mean(pc, na.rm=TRUE)
+                            pcsd <- sd(pc, na.rm=TRUE)
+                            mean(pc, na.rm=TRUE)
+                            hist(pc, breaks=100, main="Histogram of unflagged values", xlab="Pressure [dbar]")
+                            abline(v=pcmean + pcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=pcmean + pcsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
+                        } else if (input$type =="pressure histogram" && input$applyQC == TRUE && 0 != nchar(input$ID) && 0 != nchar(input$cycle) && input$cyclePlot == TRUE ) {
+                            pc <- unlist(cc[["pressure"]])
+                            pcmean <- mean(pc, na.rm=TRUE)
+                            pcsd <- sd(pc, na.rm=TRUE)
+                            mean(pc, na.rm=TRUE)
+                            hist(pc, breaks=100, main="Histogram of unflagged values", xlab="Pressure [dbar]")
+                            abline(v=pcmean + pcsd * c(-3, 0, 3), col=c(colHist3SD, colHistMean, colHist3SD), lwd=1.4)
+                            mtext(text=c(expression(mu-3*sigma), expression(mu), expression(mu+3*sigma)),
+                                  at=pcmean + pcsd * c(-3, 0, 3),
+                                  col=c(colHist3SD, colHistMean, colHist3SD), side=3, cex=1.2)
                         }
+                        ## End pressure, now salinity histogram
 
 
 
