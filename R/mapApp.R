@@ -321,7 +321,36 @@ serverMapApp <- function(input, output, session)
         {
             msg <- "library(argoFloats)<br>"
             msg <- paste(msg, "# Download (or use cached) index from one of two international servers.<br>")
+            if ("bgc" %in% input$view && "core" != input$view && "deep" != input$view) {
+            msg <- paste(msg, "index <- getIndex(filename=\"bgc\")<br>")
+            }
+            if ("core" %in% input$view && "bgc" != input$view && input$view != "deep") {
             msg <- paste(msg, "index <- getIndex()<br>")
+            }
+            if ("deep" %in% input$view && "core" != input$view && "bgc" != input$view) {
+            msg <- paste(msg, "sai <- getIndex(filename=\"synthetic\")<br>")
+            msg <- paste(msg, "# Subset deep profiles.<br>")
+            msg <- paste(msg, "index <- subset(sai, deep=TRUE)<br>")
+            }
+            if ("core" %in% input$view && "bgc" %in% input$view && "deep" != input$view) {
+            msg <- paste(msg, "sai <- getIndex(filename=\"synthetic\")<br>")
+            msg <- paste(msg, "# Subset to remove deep profiles.<br>")
+            msg <- paste(msg, "index <- subset(sai, deep=FALSE)<br>")
+            }
+            if ("core" %in% input$view && "deep" %in% input$view && "bgc" != input$view) {
+            msg <- paste(msg, "ai <- getIndex()<br>")
+            msg <- paste(msg, "sai <- getIndex(filename=\"synthetic\")<br>")
+            msg <- paste(msg, "# Subset deep profiles.<br>")
+            msg <- paste(msg, "deep <- subset(sai, deep=TRUE)<br>")
+            msg <- paste(msg, "index <- merge(ai, deep)")
+            }
+            if ("bgc" %in% input$view && "deep" %in% input$view && "core" != input$view) {
+            msg <- paste(msg, "sai <- getIndex(filename=\"synthetic\")<br>")
+            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+            msg <- paste(msg, "# Subset deep profiles.<br>")
+            msg <- paste(msg, "deep <- subset(sai, deep=TRUE)<br>")
+            msg <- paste(msg, "index <- merge(bai, deep)")
+            }
             msg <- paste(msg, "# Subset by time.<br>")
             msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
             msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
