@@ -136,6 +136,7 @@ serverMapApp <- function(input, output, session)
         shiny::removeNotification(notificationId)
         notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
         iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
+        merge <- merge(i, iBGC)
         shiny::removeNotification(notificationId)
         ## Combine core and BGC data.
         notificationId <- shiny::showNotification("Combining \"core\" and \"BGC\" data.", type="message", duration=NULL)
@@ -321,35 +322,40 @@ serverMapApp <- function(input, output, session)
         {
             msg <- "library(argoFloats)<br>"
             msg <- paste(msg, "# Download (or use cached) index from one of two international servers.<br>")
-            if ("bgc" %in% input$view && "core" != input$view && "deep" != input$view) {
-            msg <- paste(msg, "index <- getIndex(filename=\"bgc\")<br>")
-            }
-            if ("core" %in% input$view && "bgc" != input$view && input$view != "deep") {
-            msg <- paste(msg, "index <- getIndex()<br>")
-            }
-            if ("deep" %in% input$view && "core" != input$view && "bgc" != input$view) {
-            msg <- paste(msg, "sai <- getIndex(filename=\"synthetic\")<br>")
-            msg <- paste(msg, "# Subset deep profiles.<br>")
-            msg <- paste(msg, "index <- subset(sai, deep=TRUE)<br>")
-            }
             if ("core" %in% input$view && "bgc" %in% input$view && "deep" != input$view) {
-            msg <- paste(msg, "sai <- getIndex(filename=\"synthetic\")<br>")
-            msg <- paste(msg, "# Subset to remove deep profiles.<br>")
-            msg <- paste(msg, "index <- subset(sai, deep=FALSE)<br>")
-            }
-            if ("core" %in% input$view && "deep" %in% input$view && "bgc" != input$view) {
             msg <- paste(msg, "ai <- getIndex()<br>")
-            msg <- paste(msg, "sai <- getIndex(filename=\"synthetic\")<br>")
-            msg <- paste(msg, "# Subset deep profiles.<br>")
-            msg <- paste(msg, "deep <- subset(sai, deep=TRUE)<br>")
-            msg <- paste(msg, "index <- merge(ai, deep)")
-            }
-            if ("bgc" %in% input$view && "deep" %in% input$view && "core" != input$view) {
-            msg <- paste(msg, "sai <- getIndex(filename=\"synthetic\")<br>")
+            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+            msg <- paste(msg, "merge <- merge(ai,bai)<br>")
+            msg <- paste(msg, "# Subset to remove deep profiles.<br>")
+            msg <- paste(msg, "index <- subset(merge, deep=FALSE)<br>")
+            } else if ("core" %in% input$view && "deep" %in% input$view && "bgc" != input$view) {
+            msg <- paste(msg, "ai <- getIndex()<br>")
             msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
             msg <- paste(msg, "# Subset deep profiles.<br>")
-            msg <- paste(msg, "deep <- subset(sai, deep=TRUE)<br>")
-            msg <- paste(msg, "index <- merge(bai, deep)")
+            msg <- paste(msg, "merge <- merge(ai,bai)<br>")
+            msg <- paste(msg, "deep <- subset(merge, deep=TRUE)<br>")
+            msg <- paste(msg, "index <- merge(ai, deep)<br>")
+            } else if ("bgc" %in% input$view && "deep" %in% input$view && "core" != input$view) {
+            msg <- paste(msg, "ai <- getIndex()<br>")
+            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+            msg <- paste(msg, "merge <- merge(ai,bai)<br>")
+            msg <- paste(msg, "# Subset deep profiles.<br>")
+            msg <- paste(msg, "deep <- subset(merge, deep=TRUE)<br>")
+            msg <- paste(msg, "index <- merge(bai, deep)<br>")
+            } else if ("bgc" %in% input$view && "deep" %in% input$view && "core" %in% input$view) {
+            msg <- paste(msg, "ai <- getIndex()<br>")
+            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+            msg <- paste(msg, "index <- merge(ai,bai)<br>")
+            } else if ("core" %in% input$view && "bgc" != input$view && "deep" != input$view) {
+            msg <- paste(msg, "index <- getIndex()<br>")
+            } else if ("bgc" %in% input$view && "core" != input$view && "deep" != input$view) {
+            msg <- paste(msg, "index <- getIndex(filename=\"bgc\")<br>")
+            } else if ("deep" %in% input$view && "core" != input$view && "bgc" != input$view) {
+            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+            msg <- paste(msg, "ai <- getIndex()<br>")
+            msg <- paste(msg, "merge <- merge(ai,bai)<br>")
+            msg <- paste(msg, "# Subset deep profiles.<br>")
+            msg <- paste(msg, "index <- subset(merge, deep=TRUE)<br>")
             }
             msg <- paste(msg, "# Subset by time.<br>")
             msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
