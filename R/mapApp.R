@@ -423,7 +423,6 @@ serverMapApp <- function(input, output, session)
                     state$startTime <<- min(argo$time[k])
                     state$endTime <<- max(argo$time[k])
                     message("setting box")
-                    message("state$startTime=", state$startTime, " state$endTime= ", state$endTime)
                     shiny::updateTextInput(session, "start",
                         value=format(state$startTime, "%Y-%m-%d"))
                     shiny::updateTextInput(session, "end",
@@ -464,7 +463,7 @@ serverMapApp <- function(input, output, session)
             if (0 == nchar(input$start)) {
                 state$startTime <<- min(argo$time, na.rm=TRUE)
             } else {
-                t <- try(as.POSIXct(input$start, tz="UTC"), silent=TRUE)
+                t <- try(as.POSIXct(format(input$start, "%Y-%m-%d", tz="UTC"), silent=TRUE))
                 if (inherits(t, "try-error")) {
                     shiny::showNotification(paste0("Start time \"",
                             input$start,
