@@ -136,7 +136,6 @@ serverMapApp <- function(input, output, session)
         shiny::removeNotification(notificationId)
         notificationId <- shiny::showNotification("Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
         iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
-        merge <- merge(i, iBGC)
         shiny::removeNotification(notificationId)
         ## Combine core and BGC data.
         notificationId <- shiny::showNotification("Combining \"core\" and \"BGC\" data.", type="message", duration=NULL)
@@ -466,13 +465,14 @@ serverMapApp <- function(input, output, session)
             if (0 == nchar(input$start)) {
                 state$startTime <<- min(argo$time, na.rm=TRUE)
             } else {
-                t <- try(as.POSIXct(format(input$start, "%Y-%m-%d", tz="UTC"), silent=TRUE))
+                t <- try(as.POSIXct(format(input$start, "%Y-%m-%d 00:00:00"), tz="UTC"), silent=TRUE)
                 if (inherits(t, "try-error")) {
                     shiny::showNotification(paste0("Start time \"",
                             input$start,
                             "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type="error")
                 } else {
                     state$startTime <<- t
+                    argoFloatsDebug(debug, "User selected start time ", format(t, "%Y-%m-%d %H:%M:%S %z"), "\n")
                 }
             }
         })
@@ -482,11 +482,12 @@ serverMapApp <- function(input, output, session)
             if (0 == nchar(input$end)) {
                 state$endTime <<- max(argo$time, na.rm = TRUE)
             } else {
-                t <- try(as.POSIXct(input$end, tz = "UTC"), silent = TRUE)
+                t <- try(as.POSIXct(format(input$end, "%Y-%m-%d 00:00:00"), tz="UTC"), silent=TRUE)
                 if (inherits(t, "try-error")) {
                     shiny::showNotification(paste0( "End time \"", input$end, "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type = "error")
                 } else {
                     state$endTime <<- t
+                    argoFloatsDebug(debug, "User selected end time ", format(t, "%Y-%m-%d %H:%M:%S %z"), "\n")
                 }
             }
         })
@@ -601,6 +602,8 @@ serverMapApp <- function(input, output, session)
                 }  else {
                     keep <- rep(TRUE, length(argo$ID))
                 }
+                argoFloatsDebug(debug, "about to subset, start time = ", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
+                argoFloatsDebug(debug, "about to subset, end time = ", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
                 keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
                 keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
                 keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
@@ -613,6 +616,7 @@ serverMapApp <- function(input, output, session)
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <- argo[k,]
+                        argoFloatsDebug(debug, "view= ", view, " , sum(k)= ", sum(k), ", length(k)= ",length(k),"\n")
                         colSettings <- list(core=if (input$Ccolour == "default") colDefaults$core else input$Ccolour,
                             bgc=if (input$Bcolour == "default") colDefaults$bgc else input$Bcolour,
                             deep=if (input$Dcolour == "default") colDefaults$deep else input$Dcolour)

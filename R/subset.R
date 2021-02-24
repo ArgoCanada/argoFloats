@@ -596,6 +596,8 @@ setMethod(f="subset",
                     }
                     if (time$to <= time$from)
                         stop ("in subset,argoFloats-method():\n \"to\" must be greater than \"from\"", call.=FALSE)
+                    argoFloatsDebug(debug, "from= ", format(time$from, "%Y-%m-%d %H:%M:%S %z"), "\n")
+                    argoFloatsDebug(debug, "to= ", format(time$to, "%Y-%m-%d %H:%M:%S %z"), "\n")
                     keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
                     keep[is.na(keep)] <- FALSE
                     if (!silent)
