@@ -36,14 +36,12 @@ This function returns a version of \code{x} for which the enclosed
 future uses of \code{\link{[[,argoFloats-method}}
 return the \emph{adjusted} data, not the original data.
 \strong{NOTE:} For this to work, the version 1.3.0 or greater
-of \CRANpkg{oce} must be installed, and, as of September 2020,
-that means that the user will need to install \CRANpkg{oce} from
-github.com/dankelley/oce, not from CRAN.
+of \CRANpkg{oce} must be installed.
 }
 \details{
 If the version of \CRANpkg{oce} is lower than 1.3.0, \code{useAdjusted()}
 reports an error.  Otherwise, it carries out its work by
-applying \code{preferAdjusted()} from the \CRANpkg{oce} to each
+applying \code{preferAdjusted()} from the \CRANpkg{oce} package to each
 of the Argo objects stored within the \code{data} slot of \code{x}.
 
 Although one might guess that adjusted data

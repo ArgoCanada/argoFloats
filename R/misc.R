@@ -7,13 +7,11 @@
 #' future uses of \code{\link{[[,argoFloats-method}}
 #' return the *adjusted* data, not the original data.
 #' **NOTE:** For this to work, the version 1.3.0 or greater
-#' of \CRANpkg{oce} must be installed, and, as of September 2020,
-#' that means that the user will need to install \CRANpkg{oce} from
-#' github.com/dankelley/oce, not from CRAN.
+#' of \CRANpkg{oce} must be installed.
 #'
 #' If the version of \CRANpkg{oce} is lower than 1.3.0, `useAdjusted()`
 #' reports an error.  Otherwise, it carries out its work by
-#' applying `preferAdjusted()` from the \CRANpkg{oce} to each
+#' applying `preferAdjusted()` from the \CRANpkg{oce} package to each
 #' of the Argo objects stored within the `data` slot of `x`.
 #'
 #' Although one might guess that adjusted data
