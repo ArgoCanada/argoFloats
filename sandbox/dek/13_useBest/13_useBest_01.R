@@ -2,7 +2,7 @@ library(argoFloats)
 set.seed(408)
 if (!exists("a")) {
     i <- getIndex(age=10) # no need to get latest and greatest
-    n <- 200
+    n <- 5 # 200
     s <- subset(i, sample(seq_len(i[["length"]]), n))
     a <- readProfiles(getProfiles(s))
 }
@@ -31,27 +31,51 @@ useBest <- function(a)
         if ("dataMode" %in% names(ai@metadata)) { # core
             dm <- ai@metadata$dataMode[1]
             message("    core dataset with dataMode=\"", dm, "\"")
-            if (dm == "A") {
+            if (dm == "D") {
+                # FIXME: see note at "A" below.
+                # FIXME: copy flags also.
                 for (name in varNamesRaw) {
                     adjustedName <- paste0(name, "Adjusted")
                     if (adjustedName %in% varNamesAdjusted) {
                         nok <- sum(is.finite(ai@data[[adjustedName]]))
                         ai@data[[name]] <- ai@data[[adjustedName]]
-                        message("      copied ", adjustedName, " into ", name, " (had ", nok, " finite adjusted data)")
+                        message("      ", adjustedName, " -> ", name, " (", nok, " finite data)")
                     }
                 }
-                # FIXME: copy flags also
             } else if (dm == "R") {
+                weird <- FALSE
+                nok <- 0
                 for (name in varNamesRaw) {
                     adjustedName <- paste0(name, "Adjusted")
                     if (adjustedName %in% varNamesAdjusted) {
                         nok <- sum(is.finite(ai@data[[adjustedName]]))
                         ai@data[[name]] <- ai@data[[adjustedName]]
-                        message("      copied ", adjustedName, " into ", name, " (had ", nok, " finite adjusted data)")
+                        message("      ", adjustedName, " -> ", name, " (", nok, " finite data)")
+                        weird <- TRUE
                     }
                 }
-             } else if (dm == "D") {
-                message("    delayed-mode (FIXME: code more)")
+                if (weird) {
+                    if (nok) {
+                        message("    ERROR: 'realtime' file contains non-NA 'adjusted' data.")
+                    } else {
+                        message("    WARNING: 'realtime' file contains 'adjusted' data, which seems wrong, but at least they all are NA.")
+                    }
+                }
+            } else if (dm == "A") {
+                # FIXME: if this will be identical to the "D" case, we'll copy the code there.
+                # FIXME: copy flags also.
+                weird <- TRUE
+                for (name in varNamesRaw) {
+                    adjustedName <- paste0(name, "Adjusted")
+                    if (adjustedName %in% varNamesAdjusted) {
+                        nok <- sum(is.finite(ai@data[[adjustedName]]))
+                        ai@data[[name]] <- ai@data[[adjustedName]]
+                        message("      ", adjustedName, " -> ", name, " (", nok, " finite data)")
+                        weird <- FALSE
+                    }
+                }
+                if (weird)
+                    message("    ERROR: 'adjusted' file lacks 'adjusted' data.")
             } else {
                 stop("dataMode must be \"A\", \"R\", or \"D\", not \"", dm, "\"")
             }
