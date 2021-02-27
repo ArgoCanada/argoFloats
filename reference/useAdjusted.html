@@ -52,9 +52,7 @@ oce::argo objects are modified in a way that makes
 future uses of [[,argoFloats-method
 return the adjusted data, not the original data.
 NOTE: For this to work, the version 1.3.0 or greater
-of oce must be installed, and, as of September 2020,
-that means that the user will need to install oce from
-github.com/dankelley/oce, not from CRAN." />
+of oce must be installed." />
 
 
 
@@ -151,9 +149,7 @@ github.com/dankelley/oce, not from CRAN." />
 future uses of <code><a href='[[,argoFloats-method.html'>[[,argoFloats-method</a></code>
 return the <em>adjusted</em> data, not the original data.
 <strong>NOTE:</strong> For this to work, the version 1.3.0 or greater
-of <a href='https://CRAN.R-project.org/package=oce'><span class="pkg">oce</span></a> must be installed, and, as of September 2020,
-that means that the user will need to install <a href='https://CRAN.R-project.org/package=oce'><span class="pkg">oce</span></a> from
-github.com/dankelley/oce, not from CRAN.</p>
+of <a href='https://CRAN.R-project.org/package=oce'><span class="pkg">oce</span></a> must be installed.</p>
     </div>
 
     <pre class="usage"><span class='fu'>useAdjusted</span><span class='op'>(</span><span class='va'>argo</span>, which <span class='op'>=</span> <span class='st'>"all"</span>, fallback <span class='op'>=</span> <span class='cn'>TRUE</span>, debug <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
@@ -198,7 +194,7 @@ should be printed.</p></td>
 
     <p>If the version of <a href='https://CRAN.R-project.org/package=oce'><span class="pkg">oce</span></a> is lower than 1.3.0, <code>useAdjusted()</code>
 reports an error.  Otherwise, it carries out its work by
-applying <code><a href='https://dankelley.github.io/oce/reference/preferAdjusted.html'>preferAdjusted()</a></code> from the <a href='https://CRAN.R-project.org/package=oce'><span class="pkg">oce</span></a> to each
+applying <code><a href='https://dankelley.github.io/oce/reference/preferAdjusted.html'>preferAdjusted()</a></code> from the <a href='https://CRAN.R-project.org/package=oce'><span class="pkg">oce</span></a> package to each
 of the Argo objects stored within the <code>data</code> slot of <code>x</code>.</p>
 <p>Although one might guess that adjusted data
 are always be preferable to original data, this is not always
