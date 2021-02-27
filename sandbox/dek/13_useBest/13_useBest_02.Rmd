@@ -12,43 +12,49 @@ output:
 the data for a particular float, downloaded from
 <https://data-argo.ifremer.fr/dac/aoml/5904013/profiles/D5904013_153.nc>, which
 had 3 columns, with `DATA_MODE` of DAD, meaning that columns 1 and 3 are
-delayed, while column 2 is adjusted.
+delayed, while column 2 is adjusted. A series of plots shows different ways of
+looking at the data, with the final one showing the results of using 'adjusted'
+data and applying flags.
 
-**Question.** What a user might try to do with those 3 columns?  For example,
-are all of them useful, or just the 'adjusted' one?
 
 # Load the data
 
-We read `DATA_MODE` with netcdf, and then (as `dataMode`, now a vector) with
-`read.oce()`.
-
 ```{r}
-library(ncdf4)
 library(oce)
-library(curl)
-
 url <- "https://data-argo.ifremer.fr/dac/aoml/5904013/profiles/D5904013_153.nc"
 file <- gsub(".*/", "", url)
 if (!file.exists(file))
-    curl_download(url, file)
-
-n <- nc_open(file)
-ncvar_get(n, "DATA_MODE")
+    download.file(url, file)
 d <- read.oce(file)
-d[["dataMode"]]
 ```
 
-So, we are reading `dataMode` correctly.  (This is not a surprise, but it was
-worth demonstrating.)
+# Data/flag overview
 
-## Define flag-interpretation functions
+The data mode is
+```{r}
+d[["dataMode"]]
+```
+indicating three columns, of type 'Delayed', 'Adjusted' and 'Delayed',
+respectively.
 
-Note that these functions handle both single variables (say for S only) or
-pairs of variables (say S and T, or S, T and p).
+An overview of the data for these three columns is
+```{r}
+str(d@data, 1)
+```
 
-In oce, flags are described as follows (based on descriptions from an official Argo document):
-`not_assessed`=0, `passed_all_tests`=1, `probably_good`=2, `probably_bad`=3, `bad`=4,
-`changed`=5, `not_used_6`=6, `not_used_7`=7, `estimated`=8, and `missing`=9.
+The data-quality flags are
+```{r}
+str(d@metadata$flags, 1)
+```
+
+# Define flag-interpretation functions
+
+
+In oce, flags are described as follows (based on descriptions from an official
+Argo document): `not_assessed`=0, `passed_all_tests`=1, `probably_good`=2,
+`probably_bad`=3, `bad`=4, `changed`=5, `not_used_6`=6, `not_used_7`=7,
+`estimated`=8, and `missing`=9.  The following functions consider all but
+categories 1, 2 and 5 as suspicious.
 
 ```{r}
 # accept if flagged with 1=passed, 2=probably good, 5=changed
@@ -72,10 +78,9 @@ flagCol <- function(f1, f2=NULL, f3=NULL)
 }
 ```
 
-\newpage
+# An overview of the data
 
-## Initial data examination
-
+## General overview
 ```{r}
 summary(d)
 ```
@@ -84,12 +89,10 @@ The QC tests are as follows
 ```{r}
 d[["historyAction"]] 
 d[["historyQCTest"]] 
-argoFloats::showQCTests(d)
+argoFloats::showQCTests(d, style="full")
 ```
 
-\newpage
-
-## More in-depth data examination
+## Tabular overview
 
 ```{r}
 p <- d[["pressure"]]
@@ -99,13 +102,13 @@ padjf <- d[["pressureAdjustedFlag"]]
 
 S <- d[["salinity"]]
 Sf <- d[["salinityFlag"]]
-Sadj <- d[["salinityAdjusted"]]
-Sadjf <- d[["salinityAdjustedFlag"]]
+Sa <- d[["salinityAdjusted"]]
+Saf <- d[["salinityAdjustedFlag"]]
 
 T <- d[["temperature"]]
 Tf <- d[["temperatureFlag"]]
-Tadj <- d[["temperatureAdjusted"]]
-Tadjf <- d[["temperatureAdjustedFlag"]]
+Ta <- d[["temperatureAdjusted"]]
+Taf <- d[["temperatureAdjustedFlag"]]
 
 npcol <- ncol(p)
 if (npcol != ncol(S))
@@ -118,25 +121,27 @@ pDF <- data.frame(p1=p[,1], p2=p[,2], p3=p[,3],
     padjf1=padjf[,1], padjf2=padjf[,2], padjf3=padjf[,3])
 SDF <- data.frame(S1=S[,1], S2=S[,2], S3=S[,3],
     Sf1=Sf[,1], Sf2=Sf[,2], Sf3=Sf[,3],
-    Sadj1=Sadj[,1], Sadj2=Sadj[,2], Sadj3=Sadj[,3],
-    Sadjf1=Sadjf[,1], Sadjf2=Sadjf[,2], Sadjf3=Sadjf[,3])
+    Sa1=Sa[,1], Sa2=Sa[,2], Sa3=Sa[,3],
+    Saf1=Saf[,1], Saf2=Saf[,2], Saf3=Saf[,3])
 TDF <- data.frame(T1=T[,1], T2=T[,2], T3=T[,3],
     Tf1=Tf[,1], Tf2=Tf[,2], Tf3=Tf[,3],
-    Tadj1=Tadj[,1], Tadj2=Tadj[,2], Tadj3=Tadj[,3],
-    Tadjf1=Tadjf[,1], Tadjf2=Tadjf[,2], Tadjf3=Tadjf[,3])
-head(pDF)
-tail(pDF)
-head(SDF)
-tail(SDF)
-head(TDF)
-tail(TDF)
+    Ta1=Ta[,1], Ta2=Ta[,2], Ta3=Ta[,3],
+    Taf1=Taf[,1], Taf2=Taf[,2], Taf3=Taf[,3])
+
+options(digits=5)
+headtail <- function(a, n=6) rbind(head(a,n), tail(a,n))
+headtail(pDF)
+headtail(SDF)
+headtail(TDF)
 ```
 
 \newpage
 
-## Plot unadjusted data, red if flagged as unacceptable
+# Plots
 
-```{r fig.height=5.5}
+## Unadjusted data, red if flagged as unacceptable
+
+```{r fig.height=6.5,fig.cap="Unadjusted data, with 'unacceptable' data coloured red. Left: first column, which is designated as 'delayed' by `DATA_MODE`. Middle: second column ('adjusted').  Right: third column ('delayed')."}
 par(mfrow=c(4, npcol), mar=c(3,3,1,1), mgp=c(2,0.7,0))
 ctd1 <- as.ctd(S[,1], T[,1], p[,1])
 ctd2 <- as.ctd(S[,2], T[,2], p[,2])
@@ -157,9 +162,9 @@ plotTS(ctd3, col=flagCol(Sf[,3], Tf[,3], pf[,3]))
 
 \newpage
 
-## Plot unadjusted data, skipping unacceptable (to narrow scales)
+## Unadjusted data, skipping unacceptable (to narrow scales)
 
-```{r fig.height=5.5}
+```{r fig.height=6.5,fig.cap="Unadjusted data, with 'unacceptable' data omitted. Left: first column, which is designated as 'delayed' by `DATA_MODE`. Middle: second column ('adjusted').  Right: third column ('delayed')."}
 par(mfrow=c(4, npcol), mar=c(3,3,1,1), mgp=c(2,0.7,0))
 accept <- flagIsAcceptable(Sf[,1], Tf[,1], pf[,1])
 ctd1 <- as.ctd(S[,1][accept], T[,1][accept], p[,1][accept])
@@ -183,39 +188,39 @@ plotTS(ctd3)
 
 \newpage
 
-## Plot adjusted data, red if flagged as unacceptable
+## Adjusted data, red if flagged as unacceptable
 
-```{r fig.height=5.5}
+```{r fig.height=6.5,fig.cap="Adjusted data, with 'unacceptable' data coloured red. Left: first column, which is designated as 'delayed' by `DATA_MODE`. Middle: second column ('adjusted').  Right: third column ('delayed')."}
 par(mfrow=c(4, npcol), mar=c(3,3,1,1), mgp=c(2,0.7,0))
-ctd1 <- as.ctd(Sadj[,1], Tadj[,1], padj[,1])
-ctd2 <- as.ctd(Sadj[,2], Tadj[,2], padj[,2])
-ctd3 <- as.ctd(Sadj[,3], Tadj[,3], padj[,3])
-plotProfile(ctd1, xtype="S", col=flagCol(Sadjf[,1], padjf[,1]), type="p", pch=20)
-plotProfile(ctd2, xtype="S", col=flagCol(Sadjf[,2], padjf[,2]), type="p", pch=20)
-plotProfile(ctd3, xtype="S", col=flagCol(Sadjf[,3], padjf[,3]), type="p", pch=20)
-plotProfile(ctd1, xtype="T", col=flagCol(Tadjf[,1], padjf[,1]), type="p", pch=20)
-plotProfile(ctd2, xtype="T", col=flagCol(Tadjf[,2], padjf[,2]), type="p", pch=20)
-plotProfile(ctd3, xtype="T", col=flagCol(Tadjf[,3], padjf[,3]), type="p", pch=20)
-plotProfile(ctd1, xtype="sigmaTheta", col=flagCol(Sadjf[,1], Tadjf[,1], padjf[,1]), type="p", pch=20)
-plotProfile(ctd2, xtype="sigmaTheta", col=flagCol(Sadjf[,2], Tadjf[,2], padjf[,2]), type="p", pch=20)
-plotProfile(ctd3, xtype="sigmaTheta", col=flagCol(Sadjf[,3], Tadjf[,3], padjf[,3]), type="p", pch=20)
-plotTS(ctd1, col=flagCol(Sadjf[,1], Tadjf[,1], padjf[,1]))
-plotTS(ctd2, col=flagCol(Sadjf[,2], Tadjf[,2], padjf[,2]))
-plotTS(ctd3, col=flagCol(Sadjf[,3], Tadjf[,3], padjf[,3]))
+ctd1 <- as.ctd(Sa[,1], Ta[,1], padj[,1])
+ctd2 <- as.ctd(Sa[,2], Ta[,2], padj[,2])
+ctd3 <- as.ctd(Sa[,3], Ta[,3], padj[,3])
+plotProfile(ctd1, xtype="S", col=flagCol(Saf[,1], padjf[,1]), type="p", pch=20)
+plotProfile(ctd2, xtype="S", col=flagCol(Saf[,2], padjf[,2]), type="p", pch=20)
+plotProfile(ctd3, xtype="S", col=flagCol(Saf[,3], padjf[,3]), type="p", pch=20)
+plotProfile(ctd1, xtype="T", col=flagCol(Taf[,1], padjf[,1]), type="p", pch=20)
+plotProfile(ctd2, xtype="T", col=flagCol(Taf[,2], padjf[,2]), type="p", pch=20)
+plotProfile(ctd3, xtype="T", col=flagCol(Taf[,3], padjf[,3]), type="p", pch=20)
+plotProfile(ctd1, xtype="sigmaTheta", col=flagCol(Saf[,1], Taf[,1], padjf[,1]), type="p", pch=20)
+plotProfile(ctd2, xtype="sigmaTheta", col=flagCol(Saf[,2], Taf[,2], padjf[,2]), type="p", pch=20)
+plotProfile(ctd3, xtype="sigmaTheta", col=flagCol(Saf[,3], Taf[,3], padjf[,3]), type="p", pch=20)
+plotTS(ctd1, col=flagCol(Saf[,1], Taf[,1], padjf[,1]))
+plotTS(ctd2, col=flagCol(Saf[,2], Taf[,2], padjf[,2]))
+plotTS(ctd3, col=flagCol(Saf[,3], Taf[,3], padjf[,3]))
 ```
 
 \newpage
 
-## Plot adjusted data, skipping if flagged as unacceptable (to improve scales)
+## Adjusted data, skipping if flagged as unacceptable (to improve scales)
 
-```{r fig.height=5.5}
+```{r fig.height=6.5,fig.cap="Adjusted data, with flags applied. Left: first column, which is designated as 'delayed' by `DATA_MODE`. Middle: second column ('adjusted').  Right: third column ('delayed')."}
 par(mfrow=c(4, npcol), mar=c(3,3,1,1), mgp=c(2,0.7,0))
-accept <- flagIsAcceptable(Sadjf[,1], Tadjf[,1], padjf[,1])
-ctd1 <- as.ctd(Sadj[,1][accept], Tadj[,1][accept], padj[,1][accept])
-accept <- flagIsAcceptable(Sadjf[,2], Tadjf[,2], padjf[,2])
-ctd2 <- as.ctd(Sadj[,2][accept], Tadj[,2][accept], padj[,2][accept])
-accept <- flagIsAcceptable(Sadjf[,3], Tadjf[,3], padjf[,3])
-ctd3 <- as.ctd(Sadj[,3][accept], Tadj[,3][accept], padj[,3][accept])
+accept <- flagIsAcceptable(Saf[,1], Taf[,1], padjf[,1])
+ctd1 <- as.ctd(Sa[,1][accept], Ta[,1][accept], padj[,1][accept])
+accept <- flagIsAcceptable(Saf[,2], Taf[,2], padjf[,2])
+ctd2 <- as.ctd(Sa[,2][accept], Ta[,2][accept], padj[,2][accept])
+accept <- flagIsAcceptable(Saf[,3], Taf[,3], padjf[,3])
+ctd3 <- as.ctd(Sa[,3][accept], Ta[,3][accept], padj[,3][accept])
 plotProfile(ctd1, xtype="S", type="p", pch=20)
 plotProfile(ctd2, xtype="S", type="p", pch=20)
 plotProfile(ctd3, xtype="S", type="p", pch=20)
