@@ -17,7 +17,7 @@ displayed in detail, but mostly the analysis centres on 4 diagrams.  Figures 1
 and 2 show the unadjusted and adjusted data^[Note that this meaning of
 'adjusted' is *not* the same as for the `DATA_MODE`.  Rather, we call the
 values in the netCDF variable `PSAL` as 'unadjusted', and those in
-`PSAL_ADJUSTED` as 'adjusted'.  ], with red dots for questionable data (flags
+`PSAL_ADJUSTED` as 'adjusted'.], with red dots for questionable data (flags
 not equal to 1=`passed`, 2=`probably_good`, or 5=`changed`).  Figures 3 and 4
 show unadjusted and adjusted data, omitting questionable data.  On a quick
 reading of this document, start by comparing Figures 3 and 4, which shows that
@@ -99,8 +99,8 @@ summary(d)
 
 The QC tests are as follows
 ```{r}
-d[["historyAction"]] 
-d[["historyQCTest"]] 
+d[["historyAction"]]
+d[["historyQCTest"]]
 argoFloats::showQCTests(d, style="full")
 ```
 
