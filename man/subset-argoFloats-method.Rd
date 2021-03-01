@@ -90,7 +90,9 @@ ocean. The permitted values are:
 \code{"I"} for Indian Ocean Area, from 20 E to 145 E.
 See example 10.
 \item A character value named \code{dataMode}, equal to either \code{realtime} or \code{delayed},
-that selects whether to retain real-time data or delayed data.
+that selects whether to retain real-time data or delayed data.  This is inferred
+from the first character of the filename, with \code{"R"} and \code{"D"} indicating
+realtime and delayed-mode, respectively.
 See example 11.
 \item An integer or character value named \code{cycle} that specifies which cycles are to be retained.
 This is done by regular-expression matching of the filename, looking between the

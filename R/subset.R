@@ -76,7 +76,9 @@
 #' See example 10.
 #'
 #' 11. A character value named `dataMode`, equal to either `realtime` or `delayed`,
-#' that selects whether to retain real-time data or delayed data.
+#' that selects whether to retain real-time data or delayed data.  This is inferred
+#' from the first character of the filename, with `"R"` and `"D"` indicating
+#' realtime and delayed-mode, respectively.
 #' See example 11.
 #'
 #' 12. An integer or character value named `cycle` that specifies which cycles are to be retained.
