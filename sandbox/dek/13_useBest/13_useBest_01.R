@@ -6,7 +6,7 @@ library(argoFloats)
 set.seed(408)
 if (!exists("a")) {
     i <- getIndex(age=10) # no need to get latest and greatest
-    n <- 5#200
+    n <- 200
     s <- subset(i, sample(seq_len(i[["length"]]), n))
     a <- readProfiles(getProfiles(s))
 }
@@ -18,7 +18,9 @@ useBestSingle <- function(a, debug=0)
     rval <- a
     fn <- a[["filename"]]
     typeFromFilename <- switch(substring(gsub(".*/","",fn),1,1), "A"="adjusted", "D"="delayed", "R"="realtime")
-    cat(sprintf("%s (filename suggests %s data)\n", fn, typeFromFilename))
+    cat(sprintf("%s (%s?)", gsub(".*/", "", fn), typeFromFilename))
+    if ("dataMode" %in% names(a@metadata))
+        cat(" DATA_MODE=", paste(a@metadata$dataMode, collapse=" "), "\n", sep="")
     varNames <- names(a[["data"]])
     adjustedNames <- grepl("Adjusted$", varNames)
     varNamesRaw <- varNames[!adjustedNames]
@@ -30,7 +32,7 @@ useBestSingle <- function(a, debug=0)
     }
     if ("dataMode" %in% names(a@metadata)) { # core
         dm <- a@metadata$dataMode[1]
-        cat("      non-BGC dataset since dataMode exists (it is ", a@metadata$dataMode, ")\n", sep="")
+        cat("      non-BGC dataset since dataMode exists\n", sep="")
         if (dm == "D") { # SEE NOTE 1 above
             # FIXME: see note at "A" below.
             # FIXME: copy flags also.
