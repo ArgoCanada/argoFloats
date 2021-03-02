@@ -11,48 +11,40 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
     typeFromFilename <- switch(substring(gsub(".*/","",fn),1,1), "A"="adjusted", "D"="delayed", "R"="realtime")
     cat(sprintf("%s (%s?)", gsub(".*/", "", fn), typeFromFilename))
     if (debug > 0 && "dataMode" %in% names(argo@metadata))
-        cat(" DATA_MODE=", paste(argo@metadata$dataMode, collapse=" "), "\n", sep="")
+        cat(" fallback=", fallback, ", DATA_MODE=", paste(argo@metadata$dataMode, collapse=" "), "\n", sep="")
     varNames <- names(argo[["data"]])
     adjustedNames <- grepl("Adjusted$", varNames)
     varNamesRaw <- varNames[!adjustedNames]
     varNamesAdjusted <- varNames[adjustedNames]
-
-    flagNames <- names(argo@metadata$flags)
-    adjustedFlagNames <- grepl("Adjusted$", flagNames)
-    flagNamesRaw <- flagNames[!adjustedFlagNames]
-    flagNamesAdjusted <- flagNames[adjustedFlagNames]
     if (debug > 1) {
         cat("        varNames:          ", paste(varNames, collapse=" "), "\n", sep="")
         cat("        varNamesRaw:       ", paste(varNamesRaw, collapse=" "), "\n", sep="")
         cat("        varNamesAdjusted:  ", paste(varNamesAdjusted, collapse=" "), "\n", sep="")
-        cat("        flagNames:         ", paste(flagNames, collapse=" "), "\n", sep="")
-        cat("        flagNamesRaw:      ", paste(flagNamesRaw, collapse=" "), "\n", sep="")
-        cat("        flagNamesAdjusted: ", paste(flagNamesAdjusted, collapse=" "), "\n", sep="")
     }
     if ("dataMode" %in% names(argo@metadata)) { # core
-        dm <- argo@metadata$dataMode[1]
+        #>> dm <- argo@metadata$dataMode[1] # FIXME: not used
         cat("      non-BGC dataset since dataMode exists\n", sep="")
         for (name in varNamesRaw) {
             adjustedName <- paste0(name, "Adjusted")
+            # There should always be an Adjusted field, but let's check, just
+            # to be safe.
             if (adjustedName %in% varNamesAdjusted) {
+                # We use the Adjusted field if fallback is "NA", or if it is
+                # "raw" and the adjusted data are all bad.
                 nok <- sum(is.finite(argo@data[[adjustedName]]))
-                res@data[[name]] <- argo@data[[adjustedName]]
-                if (debug > 0)
-                    cat("      data: ", adjustedName, " -> ", name, " (", nok, " finite data)\n", sep="")
-            }
-        }
-        for (name in flagNamesRaw) {
-            adjustedName <- paste0(name, "Adjusted")
-            if (adjustedName %in% flagNamesAdjusted) {
-                res@metadata$flags[[name]] <- argo@metadata[[adjustedName]]
-                if (debug > 0)
-                    cat("      flag: ", adjustedName, " -> ", name, "\n", sep="")
+                #> if (debug > 0) cat("    nok=", nok, "\n", sep="")
+                if (fallback == "NA" || nok > 0) {
+                    res@data[[name]] <- argo@data[[adjustedName]]
+                    res@metadata$flags[[name]] <- argo@metadata$flags[[adjustedName]]
+                    if (debug > 0)
+                        cat("      ", adjustedName, " -> ", name, " (nok=", nok, ")\n", sep="")
+                }
             }
         }
     } else if ("parameterDataMode" %in% names(argo@metadata)) { # BGC
-        dm <- argo@metadata$dataMode
+        #>> dm <- argo@metadata$dataMode
         if (debug > 0)
-            cat("   BGC dataset (contains \"parameterDataMode\"=\"", paste(dm, collapse="\" \""), "\")\n", sep="")
+            cat("   BGC dataset (contains \"parameterDataMode\"=\"", paste(dm, collapse=" "), "). FIXME: code this.\n", sep="")
     }
     res@processingLog <- oce::processingLogAppend(res@processingLog,
                                                   paste0("useAdjustedSingle(argos, fallback=\"", fallback, "\", debug=", debug, ")\n"))
@@ -117,5 +109,8 @@ if (!exists("a")) {
     a <- readProfiles(getProfiles(s))
 }
 
-b <- useAdjustedNEW(a, fallback="NA", debug=1)
+cat("###### NA case ##########\n")
+B <- useAdjustedNEW(a, fallback="NA", debug=1)
+cat("###### raw case ##########\n")
+C <- useAdjustedNEW(a, fallback="raw", debug=1)
 
