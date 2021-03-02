@@ -15,7 +15,9 @@ debug <- 1
 
 useBestSingle <- function(a, debug=0)
 {
-    rval <- a
+    if (!(inherits(a, "oce") && inherits(a, "argo")))
+        stop("First argument must be an oce::argo object")
+    res <- a
     fn <- a[["filename"]]
     typeFromFilename <- switch(substring(gsub(".*/","",fn),1,1), "A"="adjusted", "D"="delayed", "R"="realtime")
     cat(sprintf("%s (%s?)", gsub(".*/", "", fn), typeFromFilename))
@@ -40,7 +42,7 @@ useBestSingle <- function(a, debug=0)
                 adjustedName <- paste0(name, "Adjusted")
                 if (adjustedName %in% varNamesAdjusted) {
                     nok <- sum(is.finite(a@data[[adjustedName]]))
-                    rval@data[[name]] <- a@data[[adjustedName]]
+                    res@data[[name]] <- a@data[[adjustedName]]
                     cat("      ", adjustedName, " -> ", name, " (", nok, " finite data)\n", sep="")
                 }
             }
@@ -51,7 +53,7 @@ useBestSingle <- function(a, debug=0)
                 adjustedName <- paste0(name, "Adjusted")
                 if (adjustedName %in% varNamesAdjusted) {
                     nok <- sum(is.finite(a@data[[adjustedName]]))
-                    rval@data[[name]] <- a@data[[adjustedName]]
+                    res@data[[name]] <- a@data[[adjustedName]]
                     cat("      ", adjustedName, " -> ", name, " (", nok, " finite data)\n", sep="")
                     weird <- TRUE
                 }
@@ -71,7 +73,7 @@ useBestSingle <- function(a, debug=0)
                 adjustedName <- paste0(name, "Adjusted")
                 if (adjustedName %in% varNamesAdjusted) {
                     nok <- sum(is.finite(a@data[[adjustedName]]))
-                    rval@data[[name]] <- a@data[[adjustedName]]
+                    res@data[[name]] <- a@data[[adjustedName]]
                     cat("      ", adjustedName, " -> ", name, " (", nok, " finite data)\n", sep="")
                     weird <- FALSE
                 }
@@ -85,20 +87,24 @@ useBestSingle <- function(a, debug=0)
         dm <- a@metadata$dataMode
         cat("   BGC dataset (contains \"parameterDataMode\"=\"", paste(dm, collapse="\" \""), "\")\n", sep="")
     }
-    rval
+    res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+    res
 }
 
 
 useBest <- function(a, debug=0)
 {
-    if (!inherits(a, "argoFloats")) # FIXME: accept an oce::argo object or list of them
-        stop("'a' must be a list of oce:argo objects, or an object created with argoFloats::readProfiles()")
-    rval <- a
+    if (!inherits(a, "argoFloats"))
+        stop("'a' must be an argoFloats object")
+    if ("argos" != a@metadata$type)
+        stop("'a' must be an argoFloats object created with argoFloats::readProfiles()")
+    res <- a
     for (i in seq_along(a[["argos"]])) {
         cat(sprintf("\n%2d. ", i))
-        rval@data$argos[[i]] <- useBestSingle(a[[i]], debug=debug)
+        res@data$argos[[i]] <- useBestSingle(a[[i]], debug=debug)
     }
-    rval
+    res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+    res
 }
 
 b <- useBest(a)
