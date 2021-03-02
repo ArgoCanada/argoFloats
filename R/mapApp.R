@@ -558,6 +558,8 @@ serverMapApp <- function(input, output, session)
                 state$focusID <<- NULL
                 shiny::updateSelectInput(session, "focus", selected="all")
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
+                shiny::updateDateInput(session, inputId="start", label="Start", value=startTime)
+                shiny::updateDateInput(session, inputId="end", label="End", value=endTime)
             } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
