@@ -2,7 +2,7 @@ rm(list=ls()) # FIXME: helps during development
 
 library(argoFloats)
 
-useAdjustedSingleNEW <- function(argo, fallback="NA", debug=0)
+useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 {
     if (!(inherits(argo, "oce") && inherits(argo, "argo")))
         stop("First argument must be an oce::argo object")
@@ -103,9 +103,8 @@ useAdjustedNEW <- function(argos, fallback="NA", debug=0)
     for (i in seq_along(argoList)) {
         if (debug > 0)
             cat(sprintf("\n%2d. ", i))
-        res@data$argos[[i]] <- useAdjustedSingleNEW(argoList[[i]], fallback=fallback, debug=debug)
+        res@data$argos[[i]] <- useAdjustedSingle(argoList[[i]], fallback=fallback, debug=debug)
     }
-    DAN<<-match.call()
     res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
     res
 }
