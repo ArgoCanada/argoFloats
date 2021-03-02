@@ -21,6 +21,7 @@ keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
 <li> '<b>b</b>': go <b>b</b>ackward in time</li>
 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
 <li> '<b>p</b>': freeze and paste active hover message (press <b>p</b> again to toggle)</li>
+<li> '<b>0</b>': Unzoom an area and keep same time scale</li>
 <li> '<b>?</b>': display this message</li> </ul>"
 
 overallHelp <- "This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. The \"Save\" button saves an rda file containing a subset of index, which can later be used in the qcApp() for further analysis.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
@@ -560,6 +561,11 @@ serverMapApp <- function(input, output, session)
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 shiny::updateDateInput(session, inputId="start", label="Start", value=startTime)
                 shiny::updateDateInput(session, inputId="end", label="End", value=endTime)
+            } else if (key == "0") { # Unzoom an area and keep same time scale
+                state$xlim <<- c(-180, 180)
+                state$ylim <<- c(-90, 90)
+                shiny::updateSelectInput(session, "focus", selected="all")
+                shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
             } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
