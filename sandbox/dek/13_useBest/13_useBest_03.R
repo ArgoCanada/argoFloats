@@ -19,33 +19,34 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
         cat("        varNamesRaw:       ", paste(varNamesRaw, collapse=" "), "\n", sep="")
         cat("        varNamesAdjusted:  ", paste(varNamesAdjusted, collapse=" "), "\n", sep="")
     }
-    if ("dataMode" %in% names(argo@metadata)) { # core
+    #>>> if ("dataMode" %in% names(argo@metadata)) { # core
+    if (debug > 0)
         cat("      non-BGC dataset since dataMode exists\n", sep="")
-        nrow <- dim(argo@data$pressure)[1]
-        ncol <- dim(argo@data$pressure)[2]
-        for (name in varNamesRaw) {
-            adjustedName <- paste0(name, "Adjusted")
-            # There should always be an Adjusted field, but we check to be safe. 
-            if (adjustedName %in% varNamesAdjusted) {
-                # We use the Adjusted field if fallback=="NA", or if 
-                # fallback=="raw" and some adjusted data are non-NA.
-                for (icol in seq_len(ncol)) {
-                    nok <- sum(is.finite(argo@data[[adjustedName]][,icol]))
-                    cat("      name=", name, ", icol=", icol, ", nok=", nok, "\n", sep="")
-                    if (fallback == "NA" || nok > 0) {
-                        res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
-                        res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
-                        if (debug > 0)
-                            cat("      ", adjustedName, "[,", icol, "] -> ",
-                                name, "[,", icol, "] (# non-NA Adjusted values: ",
-                                nok, " or ", round(100*nok/nrow, 2), "%)\n", sep="")
-                    }
+    nrow <- dim(argo@data$pressure)[1]
+    ncol <- dim(argo@data$pressure)[2]
+    for (name in varNamesRaw) {
+        adjustedName <- paste0(name, "Adjusted")
+        # There should always be an Adjusted field, but we check to be safe.
+        if (adjustedName %in% varNamesAdjusted) {
+            # We use the Adjusted field if fallback=="NA", or if
+            # fallback=="raw" and some adjusted data are non-NA.
+            for (icol in seq_len(ncol)) {
+                nok <- sum(is.finite(argo@data[[adjustedName]][,icol]))
+                cat("      name=", name, ", icol=", icol, ", nok=", nok, "\n", sep="")
+                if (fallback == "NA" || nok > 0) {
+                    res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
+                    res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
+                    if (debug > 0)
+                        cat("      ", adjustedName, "[,", icol, "] -> ",
+                            name, "[,", icol, "] (# non-NA Adjusted values: ",
+                            nok, " or ", round(100*nok/nrow, 2), "%)\n", sep="")
                 }
             }
         }
-    } else if ("parameterDataMode" %in% names(argo@metadata)) { # BGC
-        stop("CODE THIS BGC case (likely put bgc into core)")
     }
+    #>>> } else if ("parameterDataMode" %in% names(argo@metadata)) { # BGC
+    #>>>     stop("CODE THIS BGC case (likely put bgc into core)")
+    #>>> }
     res@processingLog <- oce::processingLogAppend(res@processingLog,
                                                   paste0("useAdjustedSingle(argos, fallback=\"", fallback, "\", debug=", debug, ")\n"))
     res
@@ -53,22 +54,28 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 
 #' Switch [[ Focus to Adjusted data
 #'
-#' This function returns a version of its first argument for which the enclosed
-#' [oce::argo-class] objects have been modified in a way that makes
-#' future uses of \code{\link{[[,argoFloats-method}}
-#' focus (entirely or preferentially) on the *adjusted* data,
-#' not the original data.
+#' This function returns a copy of its first argument that has been modified by
+#' (optionally) replacing 'raw' parameter values, and their flags, with
+#' corresponding 'adjusted' values. The purpose is to ensure that future calls
+#' to \code{\link{[[,argoFloats-method}} and plotting methods will focus on
+#' the adjusted data instead of the raw data.  The procedure hinges on the value
+#' of the `fallback` argument, as explained in \dQuote{Details}.
 #'
-#' There are two cases.  *Case 1*: If `fallback` is `"NA"`
-#' (the default), then the adjusted values are returned, even if they
-#' are all `NA`. This is a cautious approach that should yield only
-#' data of high quality.  *Case 2*: if `fallback` is `"raw"`, then the data in
-#' the adjusted columns are examined one by one. If the values in a given
-#' column are all `NA`, then the parameter's raw values are returned.
-#' However, if any of the values in a given adjusted column are non-`NA`,
-#' then that whole adjusted column is returned, ignoring the raw values.
-#' Thus, the `"raw"` method provides a rough estimate even for dubious
-#' profiles.
+#' There are two cases.  *Case 1*: If `fallback` is `"NA"` (the default), then
+#' the adjusted values become the focus, even if they are all `NA`. Thus,
+#' `fallback="NA"` may be preferred as part of a cautious analysis that
+#' focusses only on data of high quality. The downside of this approach is a
+#' reduction in coverage, since it eliminates the 'raw' fields that are typical
+#' of real-time mode datasets.
+#'
+#' *Case 2*: if `fallback` is `"raw"`, then the data in the adjusted parameter
+#' data columns (corresponding to profiles) of each cycle are examined one by
+#' one. If the values in a given column are all `NA`, then the parameter's raw
+#' values for that column are not altered. However, if any of the values in a
+#' given adjusted column are non-`NA`, then that entire 'adjusted' column is
+#' copied into the corresponding 'raw' column. Since the `fallback="raw"`
+#' scheme combines 'raw' and 'adjusted' data, it increases coverage, at the
+#' possible expense of lowering overall data quality.
 #'
 #' @param argo an [`argoFloats-class`] object, as read by [readProfiles()].
 #'
@@ -76,7 +83,7 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #' values for a particular parameter-profile pair are `NA`. The choices are
 #' `"NA"` and `"raw"`; see \dQuote{Details}.
 #'
-#' @author Dan Kelley
+#' @author Dan Kelley and Jaimie Harbin
 #'
 #' @export
 useAdjustedNEW <- function(argos, fallback="NA", debug=0)
