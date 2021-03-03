@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Possibly print debugging information. — argoFloatsDebug • argoFloats</title>
+<title>Switch [[ and Plot to Focus on Adjusted data — useAdjustedNEW • argoFloats</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,12 +46,13 @@
 
 
 
-<meta property="og:title" content="Possibly print debugging information. — argoFloatsDebug" />
-<meta property="og:description" content="This function is intended mainly for use within the package, but users may
-also call it directly in their own code.  Within the package, the value
-of debug is generally reduced by 1 on each nested function call, leading
-to indented messages. Most functions start and end with a call to
-argoFloatsDebug() that has style=&quot;bold&quot; and unindent=1." />
+<meta property="og:title" content="Switch [[ and Plot to Focus on Adjusted data — useAdjustedNEW" />
+<meta property="og:description" content="This function returns a copy of its first argument that has been modified by
+(optionally) replacing 'raw' parameter values, and their flags, with
+corresponding 'adjusted' values. The purpose is to ensure that future calls
+to [[,argoFloats-method and plotting methods will focus on
+the adjusted data instead of the raw data.  The procedure hinges on the value
+of the fallback argument, as explained in &amp;#8220;Details&amp;#8221;." />
 
 
 
@@ -137,80 +138,65 @@ argoFloatsDebug() that has style=&quot;bold&quot; and unindent=1." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Possibly print debugging information.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/debug.R'><code>R/debug.R</code></a></small>
-    <div class="hidden name"><code>argoFloatsDebug.Rd</code></div>
+    <h1>Switch [[ and Plot to Focus on Adjusted data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/misc.R'><code>R/misc.R</code></a></small>
+    <div class="hidden name"><code>useAdjustedNEW.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function is intended mainly for use within the package, but users may
-also call it directly in their own code.  Within the package, the value
-of <code>debug</code> is generally reduced by 1 on each nested function call, leading
-to indented messages. Most functions start and end with a call to
-<code>argoFloatsDebug()</code> that has <code>style="bold"</code> and <code>unindent=1</code>.</p>
+    <p>This function returns a copy of its first argument that has been modified by
+(optionally) replacing 'raw' parameter values, and their flags, with
+corresponding 'adjusted' values. The purpose is to ensure that future calls
+to <code><a href='[[,argoFloats-method.html'>[[,argoFloats-method</a></code> and plotting methods will focus on
+the adjusted data instead of the raw data.  The procedure hinges on the value
+of the <code>fallback</code> argument, as explained in &#8220;Details&#8221;.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>argoFloatsDebug</span><span class='op'>(</span>
-  debug <span class='op'>=</span> <span class='fl'>0</span>,
-  <span class='va'>...</span>,
-  style <span class='op'>=</span> <span class='st'>"plain"</span>,
-  showTime <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  unindent <span class='op'>=</span> <span class='fl'>0</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>useAdjustedNEW</span><span class='op'>(</span><span class='va'>argos</span>, fallback <span class='op'>=</span> <span class='st'>"NA"</span>, debug <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>argos</th>
+      <td><p>an <code><a href='argoFloats-class.html'>argoFloats</a></code> object, as read by <code><a href='readProfiles.html'>readProfiles()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>fallback</th>
+      <td><p>a character value indicating what to do if all the adjusted
+values for a particular parameter-profile pair are <code>NA</code>. The choices are
+<code>"NA"</code> and <code>"raw"</code>; see &#8220;Details&#8221;.</p></td>
+    </tr>
+    <tr>
       <th>debug</th>
-      <td><p>an integer specifying the level of debugging. Values greater
-than zero indicate that some printing should be done. Values greater
-than 3 are trimmed to 3. Many functions pass <code>debug=debug-1</code> down to
-deeper functions, which yields a nesting-indent format in the output.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>values to be printed, analogous to the <code>...</code> argument
-list of <code><a href='https://rdrr.io/r/base/cat.html'>cat()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>style</th>
-      <td><p>character value indicating special formatting, with <code>"plain"</code>
-for normal text, <code>"bold"</code> for bold-faced text, <code>"italic"</code> for italicized
-text, <code>"red"</code> for red text, <code>"green"</code> for green text, or <code>"blue"</code> for blue
-text. These codes may not be combined.</p></td>
-    </tr>
-    <tr>
-      <th>showTime</th>
-      <td><p>logical value indicating whether to preface message with
-the present time. This can be useful for learning about which operations
-are using the most time, but the default is not to show this, in the
-interests of brevity.</p></td>
-    </tr>
-    <tr>
-      <th>unindent</th>
-      <td><p>integer specifying the degree of reverse indentation
-to be done, as explained in the &#8220;Details&#8221; section.</p></td>
+      <td><p>an integer that, if positive, indicates that some debugging information
+should be printed.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>There are two cases, depending on the value of <code>fallback</code>.</p><ol>
+<li><p>If <code>fallback</code> is <code>"NA"</code> (the default), then
+the adjusted values become the focus, even if they are all <code>NA</code>. Thus,
+<code>fallback="NA"</code> may be preferred as part of a cautious analysis that
+focuses only on data of high quality. The downside of this approach is a
+reduction in coverage, since it eliminates the 'raw' fields that are typical
+of real-time mode datasets.</p></li>
+<li><p>If <code>fallback</code> is <code>"raw"</code>, then the data in the adjusted parameter
+data columns (corresponding to profiles) of each cycle are examined one by
+one. If the values in a given column are all <code>NA</code>, then the parameter's raw
+values for that column are not altered. However, if any of the values in a
+given adjusted column are non-<code>NA</code>, then that entire 'adjusted' column is
+copied into the corresponding 'raw' column. Since the <code>fallback="raw"</code>
+scheme combines 'raw' and 'adjusted' data, it increases coverage, at the
+possible expense of lowering overall data quality.</p></li>
+</ol>
+
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
-    <p>Dan Kelley</p>
+    <p>Dan Kelley and Jaimie Harbin</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
-<span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"plain text\n"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       plain text</div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"red text\n"</span>, style<span class='op'>=</span><span class='st'>"red"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #BB0000;'>      red text
-#&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"blue text\n"</span>, style<span class='op'>=</span><span class='st'>"blue"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #0000BB;'>      blue text
-#&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"bold text\n"</span>, style<span class='op'>=</span><span class='st'>"bold"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='font-weight: bold;'>      bold text
-#&gt; </span><span></div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"italic text with time stamp\n"</span>, style<span class='op'>=</span><span class='st'>"italic"</span>, showTime<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='font-style: italic;'>      [20:19:03] italic text with time stamp
-#&gt; </span><span></div><div class='input'><span class='co'># }</span>
-</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
