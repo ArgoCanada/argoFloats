@@ -65,7 +65,7 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #' There are two cases.  *Case 1*: If `fallback` is `"NA"` (the default), then
 #' the adjusted values become the focus, even if they are all `NA`. Thus,
 #' `fallback="NA"` may be preferred as part of a cautious analysis that
-#' focusses only on data of high quality. The downside of this approach is a
+#' focuses only on data of high quality. The downside of this approach is a
 #' reduction in coverage, since it eliminates the 'raw' fields that are typical
 #' of real-time mode datasets.
 #'
