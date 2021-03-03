@@ -32,7 +32,8 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
             # fallback=="raw" and some adjusted data are non-NA.
             for (icol in seq_len(ncol)) {
                 nok <- sum(is.finite(argo@data[[adjustedName]][,icol]))
-                cat("      name=", name, ", icol=", icol, ", nok=", nok, "\n", sep="")
+                if (debug > 0)
+                    cat("      name=", name, ", icol=", icol, ", nok=", nok, "\n", sep="")
                 if (fallback == "NA" || nok > 0) {
                     res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                     res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
