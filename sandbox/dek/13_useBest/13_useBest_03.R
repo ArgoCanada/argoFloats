@@ -53,7 +53,7 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
     res
 }
 
-#' Switch [[ Focus to Adjusted data
+#' Switch [[ and Plot Focus to Adjusted data
 #'
 #' This function returns a copy of its first argument that has been modified by
 #' (optionally) replacing 'raw' parameter values, and their flags, with
