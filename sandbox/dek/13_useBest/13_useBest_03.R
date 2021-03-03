@@ -22,8 +22,11 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
         cat("        varNamesAdjusted:  ", paste(varNamesAdjusted, collapse=" "), "\n", sep="")
     }
     if ("dataMode" %in% names(argo@metadata)) { # core
+        #ncol <- argo@metadata$
         #>> dm <- argo@metadata$dataMode[1] # FIXME: not used
         cat("      non-BGC dataset since dataMode exists\n", sep="")
+        ncol <- dim(argo@data$pressure)[2]
+        ##>message("ncol=",ncol)
         for (name in varNamesRaw) {
             adjustedName <- paste0(name, "Adjusted")
             # There should always be an Adjusted field, but let's check, just
@@ -31,13 +34,18 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
             if (adjustedName %in% varNamesAdjusted) {
                 # We use the Adjusted field if fallback is "NA", or if it is
                 # "raw" and the adjusted data are all bad.
-                nok <- sum(is.finite(argo@data[[adjustedName]]))
-                #> if (debug > 0) cat("    nok=", nok, "\n", sep="")
-                if (fallback == "NA" || nok > 0) {
-                    res@data[[name]] <- argo@data[[adjustedName]]
-                    res@metadata$flags[[name]] <- argo@metadata$flags[[adjustedName]]
-                    if (debug > 0)
-                        cat("      ", adjustedName, " -> ", name, " (nok=", nok, ")\n", sep="")
+                for (icol in seq_len(ncol)) {
+                    nok <- sum(is.finite(argo@data[[adjustedName]][,icol]))
+                    #> if (debug > 0) cat("    nok=", nok, "\n", sep="")
+                    if (fallback == "NA" || nok > 0) {
+                        res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
+                        res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
+                        if (debug > 0)
+                            cat("      ", adjustedName, "[,", icol, "] -> ", name, "[,", icol, "] (nok=", nok, ")\n", sep="")
+                    } else {
+                        if (debug > 0)
+                            cat("      ", name, "[,", icol, "] not altered (nok=", nok, ")\n", sep="")
+                    }
                 }
             }
         }
