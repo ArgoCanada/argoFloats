@@ -41,7 +41,7 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
                         res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                         res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
                         if (debug > 0)
-                            cat("      ", adjustedName, "[,", icol, "] -> ", name, "[,", icol, "] (nok=", nok, ")\n", sep="")
+                            cat("      ", adjustedName, "[,", icol, "] -> ", name, "[,", icol, "] (# non-NA Adjusted values: ", nok, ")\n", sep="")
                     } else {
                         if (debug > 0)
                             cat("      ", name, "[,", icol, "] not altered (nok=", nok, ")\n", sep="")
