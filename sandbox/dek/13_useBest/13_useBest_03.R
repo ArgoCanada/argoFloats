@@ -20,39 +20,31 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
         cat("        varNamesAdjusted:  ", paste(varNamesAdjusted, collapse=" "), "\n", sep="")
     }
     if ("dataMode" %in% names(argo@metadata)) { # core
-        #ncol <- argo@metadata$
-        nrow <- nrow(argo@metadata$pressure)
-        #>> dm <- argo@metadata$dataMode[1] # FIXME: not used
         cat("      non-BGC dataset since dataMode exists\n", sep="")
         nrow <- dim(argo@data$pressure)[1]
         ncol <- dim(argo@data$pressure)[2]
-        ##>message("ncol=",ncol)
         for (name in varNamesRaw) {
             adjustedName <- paste0(name, "Adjusted")
-            # There should always be an Adjusted field, but let's check, just
-            # to be safe.
+            # There should always be an Adjusted field, but we check to be safe. 
             if (adjustedName %in% varNamesAdjusted) {
-                # We use the Adjusted field if fallback is "NA", or if it is
-                # "raw" and the adjusted data are all bad.
+                # We use the Adjusted field if fallback=="NA", or if 
+                # fallback=="raw" and some adjusted data are non-NA.
                 for (icol in seq_len(ncol)) {
                     nok <- sum(is.finite(argo@data[[adjustedName]][,icol]))
-                    #> if (debug > 0) cat("    nok=", nok, "\n", sep="")
+                    cat("      name=", name, ", icol=", icol, ", nok=", nok, "\n", sep="")
                     if (fallback == "NA" || nok > 0) {
                         res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                         res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
                         if (debug > 0)
-                            cat("      ", adjustedName, "[,", icol, "] -> ", name, "[,", icol, "] (# non-NA Adjusted values: ", nok, " or ", round(100*nok/nrow, 2), "%)\n", sep="")
-                    } else {
-                        if (debug > 0)
-                            cat("      ", name, "[,", icol, "] not altered (# non-NA Adjusted values: ", nok, " or ", round(100*nok/nrow, 3), "%)\n", sep="")
+                            cat("      ", adjustedName, "[,", icol, "] -> ",
+                                name, "[,", icol, "] (# non-NA Adjusted values: ",
+                                nok, " or ", round(100*nok/nrow, 2), "%)\n", sep="")
                     }
                 }
             }
         }
     } else if ("parameterDataMode" %in% names(argo@metadata)) { # BGC
-        #>> dm <- argo@metadata$dataMode
-        if (debug > 0)
-            cat("   BGC dataset (contains \"parameterDataMode\"=\"", paste(dm, collapse=" "), "). FIXME: code this.\n", sep="")
+        stop("CODE THIS BGC case (likely put bgc into core)")
     }
     res@processingLog <- oce::processingLogAppend(res@processingLog,
                                                   paste0("useAdjustedSingle(argos, fallback=\"", fallback, "\", debug=", debug, ")\n"))
@@ -61,7 +53,11 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 
 #' Switch [[ Focus to Adjusted data
 #'
-#' FIXME: intro para.
+#' This function returns a version of its first argument for which the enclosed
+#' [oce::argo-class] objects have been modified in a way that makes
+#' future uses of \code{\link{[[,argoFloats-method}}
+#' focus (entirely or preferentially) on the *adjusted* data,
+#' not the original data.
 #'
 #' There are two cases.  *Case 1*: If `fallback` is `"NA"`
 #' (the default), then the adjusted values are returned, even if they
@@ -76,16 +72,9 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #'
 #' @param argo an [`argoFloats-class`] object, as read by [readProfiles()].
 #'
-#' This function returns a version of its first argument for which the enclosed
-#' [oce::argo-class] objects have been modified in a way that makes
-#' future uses of \code{\link{[[,argoFloats-method}}
-#' focus (entirely or preferentially) on the *adjusted* data,
-#' not the original data.
-#'
-#' @param argo an [`argoFloats-class`] object, as read by [readProfiles()].
-#'
 #' @param fallback a character value indicating what to do if all the adjusted
-#' values for a particular parameter-profile pair are `NA`.
+#' values for a particular parameter-profile pair are `NA`. The choices are
+#' `"NA"` and `"raw"`; see \dQuote{Details}.
 #'
 #' @author Dan Kelley
 #'
