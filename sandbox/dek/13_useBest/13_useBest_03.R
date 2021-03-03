@@ -1,5 +1,3 @@
-rm(list=ls()) # FIXME: helps during development
-
 library(argoFloats)
 
 useAdjustedSingle <- function(argo, fallback="NA", debug=0)
@@ -23,8 +21,10 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
     }
     if ("dataMode" %in% names(argo@metadata)) { # core
         #ncol <- argo@metadata$
+        nrow <- nrow(argo@metadata$pressure)
         #>> dm <- argo@metadata$dataMode[1] # FIXME: not used
         cat("      non-BGC dataset since dataMode exists\n", sep="")
+        nrow <- dim(argo@data$pressure)[1]
         ncol <- dim(argo@data$pressure)[2]
         ##>message("ncol=",ncol)
         for (name in varNamesRaw) {
@@ -41,10 +41,10 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
                         res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                         res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
                         if (debug > 0)
-                            cat("      ", adjustedName, "[,", icol, "] -> ", name, "[,", icol, "] (# non-NA Adjusted values: ", nok, ")\n", sep="")
+                            cat("      ", adjustedName, "[,", icol, "] -> ", name, "[,", icol, "] (# non-NA Adjusted values: ", nok, " or ", round(100*nok/nrow, 2), "%)\n", sep="")
                     } else {
                         if (debug > 0)
-                            cat("      ", name, "[,", icol, "] not altered (nok=", nok, ")\n", sep="")
+                            cat("      ", name, "[,", icol, "] not altered (# non-NA Adjusted values: ", nok, " or ", round(100*nok/nrow, 3), "%)\n", sep="")
                     }
                 }
             }
@@ -112,6 +112,7 @@ useAdjustedNEW <- function(argos, fallback="NA", debug=0)
 set.seed(408)
 if (!exists("a")) {
     i <- getIndex(age=10) # no need to get latest and greatest
+    #n <- 2
     n <- 200
     s <- subset(i, sample(seq_len(i[["length"]]), n))
     a <- readProfiles(getProfiles(s))
