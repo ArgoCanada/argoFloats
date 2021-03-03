@@ -145,7 +145,7 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #' corresponding 'adjusted' values. The purpose is to ensure that future calls
 #' to \code{\link{[[,argoFloats-method}} and plotting methods will focus on
 #' the adjusted data instead of the raw data.  The procedure hinges on the value
-#' of the `fallback` argument, as explained in \dQuote{Details}.
+#' of the `fallback` argument.
 #'
 #' There are two cases, depending on the value of `fallback`.
 #' 1. If `fallback` is `"NA"` (the default), then

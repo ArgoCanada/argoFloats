@@ -22,7 +22,7 @@ This function returns a copy of its first argument that has been modified by
 corresponding 'adjusted' values. The purpose is to ensure that future calls
 to \code{\link{[[,argoFloats-method}} and plotting methods will focus on
 the adjusted data instead of the raw data.  The procedure hinges on the value
-of the \code{fallback} argument, as explained in \dQuote{Details}.
+of the \code{fallback} argument.
 }
 \details{
 There are two cases, depending on the value of \code{fallback}.
