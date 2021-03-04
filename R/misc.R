@@ -92,7 +92,8 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
     res <- argo
     fn <- argo[["filename"]]
     typeFromFilename <- switch(substring(gsub(".*/","",fn),1,1), "A"="adjusted", "D"="delayed", "R"="realtime")
-    cat(sprintf("%s (%s?)", gsub(".*/", "", fn), typeFromFilename))
+    if (debug > 0)
+        cat(sprintf("%s (%s?)", gsub(".*/", "", fn), typeFromFilename))
     if (debug > 0 && "dataMode" %in% names(argo@metadata))
         cat(" fallback=", fallback, ", DATA_MODE=", paste(argo@metadata$dataMode, collapse=" "), "\n", sep="")
     varNames <- names(argo[["data"]])
@@ -153,7 +154,7 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #' `fallback="NA"` may be preferred as part of a cautious analysis that
 #' focuses only on data of high quality. The downside of this approach is a
 #' reduction in coverage, since it eliminates the 'raw' fields that are typical
-#' of real-time mode datasets.
+#' of real-time mode data components (see  Section 2.2.5 of Reference 1).
 #'
 #' 2. If `fallback` is `"raw"`, then the data in the adjusted parameter
 #' data columns (corresponding to profiles) of each cycle are examined one by
@@ -174,6 +175,10 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #' should be printed.
 #'
 #' @author Dan Kelley and Jaimie Harbin
+#'
+#' @references
+#' 1. Argo Data Management Team. "Argo User’s Manual V3.4,"
+#' January 20, 2021. <https://archimer.ifremer.fr/doc/00187/29825/>
 #'
 #' @export
 useAdjustedNEW <- function(argos, fallback="NA", debug=0)

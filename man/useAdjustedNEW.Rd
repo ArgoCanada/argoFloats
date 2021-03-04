@@ -32,7 +32,7 @@ the adjusted values become the focus, even if they are all \code{NA}. Thus,
 \code{fallback="NA"} may be preferred as part of a cautious analysis that
 focuses only on data of high quality. The downside of this approach is a
 reduction in coverage, since it eliminates the 'raw' fields that are typical
-of real-time mode datasets.
+of real-time mode data components (see  Section 2.2.5 of Reference 1).
 \item If \code{fallback} is \code{"raw"}, then the data in the adjusted parameter
 data columns (corresponding to profiles) of each cycle are examined one by
 one. If the values in a given column are all \code{NA}, then the parameter's raw
@@ -41,6 +41,12 @@ given adjusted column are non-\code{NA}, then that entire 'adjusted' column is
 copied into the corresponding 'raw' column. Since the \code{fallback="raw"}
 scheme combines 'raw' and 'adjusted' data, it increases coverage, at the
 possible expense of lowering overall data quality.
+}
+}
+\references{
+\enumerate{
+\item Argo Data Management Team. "Argo User’s Manual V3.4,"
+January 20, 2021. \url{https://archimer.ifremer.fr/doc/00187/29825/}
 }
 }
 \author{
