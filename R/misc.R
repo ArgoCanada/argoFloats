@@ -64,10 +64,10 @@
 #' \doi{10.13155/29825}
 #'
 #' @importFrom utils packageVersion
-#' @export
+## @export
 #'
 #' @author Dan Kelley and Jaimie Harbin
-useAdjusted <- function(argo, which="all", fallback=TRUE, debug=0)
+useAdjustedOLD <- function(argo, which="all", fallback=TRUE, debug=0)
 {
     argoFloatsDebug(debug, "useAdjusted() {\n", sep="", unindent=1, style="bold")
     if (!inherits(argo, "argoFloats"))
@@ -174,6 +174,18 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #' @param debug an integer that, if positive, indicates that some debugging information
 #' should be printed.
 #'
+#' @examples
+#' library(argoFloats)
+#' file <- "SD5903586_001.nc"
+#' A <- readProfiles(system.file("extdata", file, package="argoFloats"))
+#' B <- useAdjusted(A, "NA")
+#' C <- useAdjusted(A, "raw")
+#' # Notice that the original values are smaller than the adjusted values 
+#' plot(C, which="profile", profileControl=list(parameter="oxygen"), pch=1)
+#' points(A[[1]][["oxygen"]], A[[1]][["pressure"]], pch=2)
+#' points(B[[1]][["oxygen"]], B[[1]][["pressure"]], pch=3)
+#' legend("bottomright", pch=c(3,1,2), legend=c("fallback='NA'", "fallback='raw'", "original"))
+#'
 #' @author Dan Kelley and Jaimie Harbin
 #'
 #' @references
@@ -181,7 +193,7 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #' January 20, 2021. <https://archimer.ifremer.fr/doc/00187/29825/>
 #'
 #' @export
-useAdjustedNEW <- function(argos, fallback="NA", debug=0)
+useAdjusted <- function(argos, fallback="NA", debug=0)
 {
     if (!inherits(argos, "argoFloats"))
         stop("'argos' must be an argoFloats object")
@@ -200,93 +212,6 @@ useAdjustedNEW <- function(argos, fallback="NA", debug=0)
     res
 }
 
-
-#useAdjustedProfile <- function(argo, debug=0)
-#{
-#    debug <- max(c(0, floor(debug)))
-#    if (!requireNamespace("oce", quietly=TRUE))
-#        stop("must install.packages(\"oce\") for useAdjusted() to work")
-#    argoFloatsDebug(debug, "useAdjusted() {\n", style="bold", sep="", unindent=1)
-#    res <- argo
-#    ## Step 1. Find names of related variables, and set up 'convert', which is a
-#    ## key to renaming things.  For example, "oxygenAdjusted" in the original will
-#    ## become "oxygen", and "oxygen" in the original will become "oxygenUnadjusted".
-#    namesData <- names(argo@data)
-#    basenames <- subset(namesData, !grepl("Adjusted", namesData))
-#    convert <- list()
-#    for (basename in basenames) {
-#        w <- grep(basename, namesData) ## FIXME: what if e.g. "oxygen" and "oxygenFrequency" co-occur in a profile?
-#        related <- namesData[w]
-#        argoFloatsDebug(debug, "basename '", basename, "'\n", sep="")
-#        if (length(related) > 1) {
-#            argoFloatsDebug(debug, "   relatives: '", paste(related, collapse="' '"), "'\n")
-#            for (r in related) {
-#                ## FIXME: only do this if the Adjusted field has non-NA data.
-#                ##??? if (any(is.finite(x@data[[basename]]))) {
-#                if (grepl("Adjusted$", r)) {
-#                    convert[r] <- gsub("Adjusted", "", r)
-#                } else if (grepl("AdjustedError", r)) {
-#                    convert[r] <- r
-#                } else {
-#                    convert[r] <- paste0(basename, "Unadjusted")
-#                }
-#                ##??? }
-#            }
-#        }
-#    }
-#    ##> if (debug > 0) {
-#    ##>     cat("next is convert:\n")
-#    ##>     print(convert)
-#    ##> }
-#    namesConvert <- names(convert)
-#    ## Step 2. Rename data
-#    namesData <- names(argo@data)
-#    tmp <- namesData
-#    for (i in seq_along(tmp)) {
-#        w <- which(namesData[i] == namesConvert)
-#        if (length(w))
-#            tmp[i] <- convert[[w]]
-#    }
-#    argoFloatsDebug(debug, "data ORIG:  ", paste(names(argo@data), collapse=" "), "\n")
-#    names(res@data) <- tmp
-#    argoFloatsDebug(debug, "data AFTER: ", paste(names(res@data), collapse=" "), "\n")
-#    ## Step 3. Rename metadata$flags
-#    namesFlags <- names(argo@metadata$flags)
-#    tmp <- namesFlags
-#    for (i in seq_along(tmp)) {
-#        w <- which(namesFlags[i] == namesConvert)
-#        if (length(w))
-#            tmp[i] <- convert[[w]]
-#    }
-#    argoFloatsDebug(debug, "flags ORIG:  ", paste(names(argo@metadata$flags), collapse=" "), "\n")
-#    names(res@metadata$flags) <- tmp
-#    argoFloatsDebug(debug, "flags AFTER: ", paste(names(res@metadata$flags), collapse=" "), "\n")
-#    ## Step 4. Rename metadata$units
-#    namesUnits <- names(argo@metadata$units)
-#    tmp <- namesUnits
-#    for (i in seq_along(tmp)) {
-#        w <- which(namesUnits[i] == namesConvert)
-#        if (length(w))
-#            tmp[i] <- convert[[w]]
-#    }
-#    argoFloatsDebug(debug, "units ORIG:  ", paste(names(argo@metadata$units), collapse=" "), "\n")
-#    names(res@metadata$units) <- tmp
-#    argoFloatsDebug(debug, "units AFTER: ", paste(names(res@metadata$units), collapse=" "), "\n")
-#    ## Step 5. Rename metadata$dataNamesOriginal
-#    namesUnits <- names(argo@metadata$dataNamesOriginal)
-#    tmp <- namesUnits
-#    for (i in seq_along(tmp)) {
-#        w <- which(namesUnits[i] == namesConvert)
-#        if (length(w))
-#            tmp[i] <- convert[[w]]
-#    }
-#    argoFloatsDebug(debug, "dataNamesOriginal ORIG:  ", paste(names(argo@metadata$dataNamesOriginal), collapse=" "), "\n")
-#    names(res@metadata$dataNamesOriginal) <- tmp
-#    argoFloatsDebug(debug, "dataNamesOriginal AFTER: ", paste(names(res@metadata$dataNamesOriginal), collapse=" "), "\n")
-#    res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
-#    argoFloatsDebug(debug, "} # useAdjusted()\n", style="bold", sep="", unindent=1)
-#    res
-#}
 
 
 #' Convert Hexadecimal Digit to Integer Vector
