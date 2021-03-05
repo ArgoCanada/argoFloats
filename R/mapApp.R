@@ -1,4 +1,4 @@
-## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+# vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 appName <- "mapApp"
 appVersion <- "0.1"
@@ -24,7 +24,7 @@ keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
 <li> '<b>0</b>': Unzoom an area and keep same time scale</li>
 <li> '<b>?</b>': display this message</li> </ul>"
 
-overallHelp <- "This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. The \"Save\" button saves an rda file containing a subset of index, which can later be used in the qcApp() for further analysis.<br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
+overallHelp <- "This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. <br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
 
 
 #' @importFrom graphics arrows image lines mtext
@@ -204,7 +204,6 @@ serverMapApp <- function(input, output, session)
             shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
                 shiny::actionButton("help", "Help"),
                 shiny::actionButton("code", "Code"),
-                shiny::actionButton("save", "Save"),
                 shiny::actionButton("goW", shiny::HTML("&larr;")),
                 shiny::actionButton("goN", shiny::HTML("&uarr;")),
                 shiny::actionButton("goS", shiny::HTML("&darr;")),
@@ -500,19 +499,6 @@ serverMapApp <- function(input, output, session)
             msg <- shiny::HTML(overallHelp)
             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
         })
-
-    shiny::observeEvent(input$save,
-                        {
-                            rda <<- paste0("mapApp_", format(Sys.time(), format="%Y%m%dT%H%m", tz="UTC"), ".rda")
-                            index1 <- getIndex()
-                            from <- as.POSIXct(format(state$startTime, "%Y-%m-%d", tz="UTC"))
-                            to <- as.POSIXct(format(state$endTime, "%Y-%m-%d", tz="UTC"))
-                            index2 <- subset(index1, time=list(from=from, to=to))
-                            longitude <- state$xlim
-                            latitude <- state$ylim
-                            index3 <<- subset(index2, rectangle=list(longitude=longitude, latitude=latitude))
-                            save(index3, file=rda)
-                        })
 
     shiny::observeEvent(input$keypressTrigger,
         {
