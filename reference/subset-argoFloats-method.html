@@ -246,10 +246,15 @@ ocean. The permitted values are:
 <code>"I"</code> for Indian Ocean Area, from 20 E to 145 E.
 See example 10.</p></li>
 <li><p>A character value named <code>dataMode</code>, equal to either <code>realtime</code> or <code>delayed</code>,
-that selects whether to retain real-time data or delayed data.  This is inferred
-from the first character of the filename, with <code>"R"</code> and <code>"D"</code> indicating
-realtime and delayed-mode, respectively.
-See example 11.</p></li>
+that selects whether to retain real-time data or delayed data.  There are two
+possibilities, depending on the <code>type</code> of the <code>x</code> argument.
+<strong>Case 1.</strong> If <code>x</code> is of <code>type="index"</code>, then the subset is done by looking for the letters
+<code>R</code> or <code>D</code> in the source filename. Note that a file in the
+latter category may contain some profiles that are of delayed mode <em>and also</em>
+some profiles that are of <code>realtime</code> or <code>adjusted</code> mode.  See example 11.
+<strong>Case 2.</strong> If <code>x</code> is
+of type <code>argos</code>, then the subset operation is done for each profile within
+the dataset. Sometimes this will yield data arrays with zero columns.</p></li>
 <li><p>An integer or character value named <code>cycle</code> that specifies which cycles are to be retained.
 This is done by regular-expression matching of the filename, looking between the
 underline character (<code>"_"</code>) and the suffix (<code>.nc</code>), but note that the expression
@@ -261,15 +266,18 @@ See example 12.</p></li>
 <li><p>A character value named <code>direction</code>, equal to either "descent" or "ascent",
 that selects whether to retain data from the ascent or decent phase.
 See example 13.</p></li>
+<li><p>An integer value named <code>profile</code>, that selects which profiles
+to retain.  Note that this type of subset is possible only
+for objects of type <code>"argos"</code>.
+See example 14.</p></li>
 <li><p>An integer value named <code>cycle</code>, that selects which cycles
-to obtain. Note that this type of subset is possible for <code>argos</code> and <code>index</code>
-type objects.
-See example 14.
-<strong>FIXME: Is this right? The code seems to only permit for <code>"argos"</code> type.</strong></p></li>
+to retain.
+See example 15.</p></li>
 <li><p>A character value named <code>dataStateIndicator</code>, equal to either "0A", "1A",
 "2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which <code>dataStateIndicator</code>
 to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
 understand the processing stage of data.
+This operation only works for objects of type <code>"argos"</code>.
 See example 16.</p></li>
 <li><p>A character value named <code>historyAction</code>, equal to either "CF", "CR", "CV",
 "DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
