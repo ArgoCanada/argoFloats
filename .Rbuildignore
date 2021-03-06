@@ -1,4 +1,4 @@
-^.Rplots.pdf$
+Rplots.pdf
 ^mapApp.*rda$
 ^.git$
 ^.github$
