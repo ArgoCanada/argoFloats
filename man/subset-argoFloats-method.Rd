@@ -90,10 +90,15 @@ ocean. The permitted values are:
 \code{"I"} for Indian Ocean Area, from 20 E to 145 E.
 See example 10.
 \item A character value named \code{dataMode}, equal to either \code{realtime} or \code{delayed},
-that selects whether to retain real-time data or delayed data.  This is inferred
-from the first character of the filename, with \code{"R"} and \code{"D"} indicating
-realtime and delayed-mode, respectively.
-See example 11.
+that selects whether to retain real-time data or delayed data.  There are two
+possibilities, depending on the \code{type} of the \code{x} argument.
+\strong{Case 1.} If \code{x} is of \code{type="index"}, then the subset is done by looking for the letters
+\code{R} or \code{D} in the source filename. Note that a file in the
+latter category may contain some profiles that are of delayed mode \emph{and also}
+some profiles that are of \code{realtime} or \code{adjusted} mode.  See example 11.
+\strong{Case 2.} If \code{x} is
+of type \code{argos}, then the subset operation is done for each profile within
+the dataset. Sometimes this will yield data arrays with zero columns.
 \item An integer or character value named \code{cycle} that specifies which cycles are to be retained.
 This is done by regular-expression matching of the filename, looking between the
 underline character (\code{"_"}) and the suffix (\code{.nc}), but note that the expression
@@ -105,15 +110,18 @@ See example 12.
 \item A character value named \code{direction}, equal to either "descent" or "ascent",
 that selects whether to retain data from the ascent or decent phase.
 See example 13.
-\item An integer value named \code{cycle}, that selects which cycles
-to obtain. Note that this type of subset is possible for \code{argos} and \code{index}
-type objects.
+\item An integer value named \code{profile}, that selects which profiles
+to retain.  Note that this type of subset is possible only
+for objects of type \code{"argos"}.
 See example 14.
-\strong{FIXME: Is this right? The code seems to only permit for \code{"argos"} type.}
+\item An integer value named \code{cycle}, that selects which cycles
+to retain.
+See example 15.
 \item A character value named \code{dataStateIndicator}, equal to either "0A", "1A",
 "2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which \code{dataStateIndicator}
 to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
 understand the processing stage of data.
+This operation only works for objects of type \code{"argos"}.
 See example 16.
 \item A character value named \code{historyAction}, equal to either "CF", "CR", "CV",
 "DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,

@@ -76,10 +76,15 @@
 #' See example 10.
 #'
 #' 11. A character value named `dataMode`, equal to either `realtime` or `delayed`,
-#' that selects whether to retain real-time data or delayed data.  This is inferred
-#' from the first character of the filename, with `"R"` and `"D"` indicating
-#' realtime and delayed-mode, respectively.
-#' See example 11.
+#' that selects whether to retain real-time data or delayed data.  There are two
+#' possibilities, depending on the `type` of the `x` argument.
+#' **Case 1.** If `x` is of `type="index"`, then the subset is done by looking for the letters
+#' `R` or `D` in the source filename. Note that a file in the
+#' latter category may contain some profiles that are of delayed mode *and also*
+#' some profiles that are of `realtime` or `adjusted` mode.  See example 11.
+#' **Case 2.** If `x` is
+#' of type `argos`, then the subset operation is done for each profile within
+#' the dataset. Sometimes this will yield data arrays with zero columns.
 #'
 #' 12. An integer or character value named `cycle` that specifies which cycles are to be retained.
 #' This is done by regular-expression matching of the filename, looking between the
@@ -94,19 +99,23 @@
 #' that selects whether to retain data from the ascent or decent phase.
 #' See example 13.
 #'
-#' 14. An integer value named `cycle`, that selects which cycles
-#' to obtain. Note that this type of subset is possible for `argos` and `index`
-#' type objects.
+#' 14. An integer value named `profile`, that selects which profiles
+#' to retain.  Note that this type of subset is possible only
+#' for objects of type `"argos"`.
 #' See example 14.
-#' **FIXME: Is this right? The code seems to only permit for `"argos"` type.**
 #'
-#' 15. A character value named `dataStateIndicator`, equal to either "0A", "1A",
+#' 15. An integer value named `cycle`, that selects which cycles
+#' to retain.
+#' See example 15.
+#'
+#' 16. A character value named `dataStateIndicator`, equal to either "0A", "1A",
 #' "2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which `dataStateIndicator`
 #' to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
 #' understand the processing stage of data.
+#' This operation only works for objects of type `"argos"`.
 #' See example 16.
 #'
-#' 16. A character value named `historyAction`, equal to either "CF", "CR", "CV",
+#' 17. A character value named `historyAction`, equal to either "CF", "CR", "CV",
 #' "DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
 #' V3.3 (Carvel et al. 2019) for the description of each acronym.
 #' See example 17.
@@ -460,8 +469,42 @@ setMethod(f="subset",
                 historyList <- lapply(x[["historyAction"]], function(h) x[["historyAction"]][[i]])
                 keep <- grepl("IP", historyList)
                 x@data[[1]] <- x@data[[1]][keep]
+            } else if (dotsNames[1] =="dataMode") {
+                seeking <- dots$dataMode
+                # This testing of 'dataMode' may be overly complex
+                if (length(seeking) != 1)
+                    stop("in subset,argoFloats-method(): length of 'dataMode' must be 1", call.=FALSE)
+                if (!seeking %in% c("realtime", "adjusted", "delayed"))
+                    stop('in subset,argoFloats-method(): \'dataMode\' must be "realtime", "adjusted" or "delayed", not "', seeking, '"', call.=FALSE)
+                seeking <- switch(seeking, realtime="R", adjusted="A", delayed="D")
+                res <- x
+                a <- x@data$argos
+                for (i in seq_along(a)) {
+                    A <- a[[i]]
+                    keepProfile <- A[["dataMode"]] == seeking
+                    #> message("i=", i, ", keepProfile=", paste(keepProfile, collapse=" "))
+                    ## flags
+                    for (flagName in names(A@metadata$flags)) {
+                        A@metadata$flags[[flagName]] <- A@metadata$flags[[flagName]][, keepProfile, drop=FALSE]
+                    }
+                    # dataMode
+                    A@metadata$dataMode <- A@metadata$dataMode[keepProfile, drop=FALSE]
+                    # data
+                    for (dataName in names(A@data)) {
+                        if (is.vector(A@data[[dataName]])) {
+                            #> message("subset ", dataName, " vector from ", paste(A@data[[dataName]], collapse=" "))
+                            A@data[[dataName]] <- A@data[[dataName]][keepProfile]
+                            #> message("   ... to ", paste(A@data[[dataName]], collapse=" "))
+                        } else if (is.array(A@data[[dataName]])) {
+                            A@data[[dataName]] <- A@data[[dataName]][, keepProfile, drop=FALSE]
+                        }
+                    }
+                    res@data$argos[[i]] <- A
+                }
+                res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+                return(res)
             } else {
-                stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an argos-type object. The only valid choices are \"profile\", \"cycle\", \"dataSateIndicator\" and \"historyAction\".", call.=FALSE)
+                stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an argos-type object. The only valid choices are \"cycle\", \"dataMode\", \"dataSateIndicator\", \"historyAction\" and \"profile\".", call.=FALSE)
             }
         }
         ## Step 2: Now we know the type is either "index" or "profiles".  In either case,
