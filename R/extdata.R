@@ -20,12 +20,11 @@
 #' @family raw datasets
 NULL
 
-#' Sample argo file (delayed data)
+#' Sample argo file (delayed-mode data)
 #'
-#' This is netcdf file for cycle 048 of Argo float 4900785, downloaded from
+#' This is netcdf file for delayed-mode data for cycle 048 of Argo float 4900785, downloaded from
 #' \url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/4900785/profiles/D4900785_048.nc}
 #' on 2020 June 24.
-#' As its filename indicates, it holds "realtime" data.
 #'
 #' @name D4900785_048.nc
 #'
@@ -42,6 +41,26 @@ NULL
 #' @family raw datasets
 NULL
 
+#' Sample argo file (realtime-mode data)
+#'
+#' This is netcdf file for realtime-mode data for cycle 163 of Argo float 3901602, downloaded from
+#' \url{https://data-argo.ifremer.fr/dac/coriolis/3901602/profiles/R3901602_163.nc}
+#' on 2021 March 7.
+#'
+#' @name R3901602_163.nc
+#'
+#' @docType data
+#'
+#' @encoding UTF-8
+#'
+#' @examples
+#' library(argoFloats)
+#' a <- readProfiles(system.file("extdata", "R3901602_163.nc", package="argoFloats"))
+#' summary(a)
+#' summary(a[[1]])
+#'
+#' @family raw datasets
+NULL
 
 #' Sample argo file (delayed synthetic bgc data)
 #'

@@ -84,7 +84,7 @@ useBestSingle <- function(a, debug=0)
             stop("dataMode must be \"A\", \"R\", or \"D\", not \"", dm, "\"")
         }
     } else if ("parameterDataMode" %in% names(a@metadata)) { # BGC
-        dm <- a@metadata$dataMode
+        dm <- a@metadata$parameterDataMode
         cat("   BGC dataset (contains \"parameterDataMode\"=\"", paste(dm, collapse="\" \""), "\")\n", sep="")
     }
     res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
