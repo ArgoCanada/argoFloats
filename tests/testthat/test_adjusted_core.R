@@ -1,6 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=2:softtabstop=2
 library(argoFloats)
-context("using 'adjusted' data")
+context("useAdjusted() on core data data")
 
 RMS <- function(x) sqrt(mean(x^2, na.rm=TRUE))
 
@@ -75,5 +75,4 @@ test_that("useAdjusted() on FAKED adjusted-mode data", {
             expect_equal(a[[1]][[paste0(param,"AdjustedparamFlag")]], araw[[1]][[paste0(param,"paramFlag")]]) 
           }
 })
-
 

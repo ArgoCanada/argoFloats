@@ -114,31 +114,22 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
     if (debug > 0)
         print(stationParameters)
     if ("dataMode" %in% names(argo@metadata)) {
-        dm <- strsplit(argo@metadata$dataMode, "")[[1]]
-        if (any(!dm %in% c("R", "A", "D"))) {
+        dataMode <- argo@metadata$dataMode
+        if (any(!dataMode %in% c("R", "A", "D"))) {
             warning("skipping a cycle, because some dataMode values are not \"R\", \"A\" or \"D\"\n")
             return(argo)
         }
-        argoFloatsDebug(debug, "this cycle is of 'core' type with dm=", paste(dm, collapse=" "), "\n")
+        argoFloatsDebug(debug, "this cycle is of 'core' type with dataMode=", paste(dataMode, collapse=" "), "\n")
         for (name in varNamesRaw) {
             adjustedName <- paste0(name, "Adjusted")
             # There should always be an Adjusted field, but we check to be safe.
             if (adjustedName %in% varNamesAdjusted) {
-                # Copy <PARAM>Adjusted into <PARAM> if any of the following is true.
-                # Case 1. fallback is "NA" (irrespective of mode)
-                # Case 2. mode is "A" or "D" (irrespective of fallback)
-                # Case 3. fallback is "raw", mode is "R", and <PARAM>Adjusted contains some finite values
+                # Copy <PARAM>Adjusted into <PARAM> if either of the following is true.
+                #    Case 1. fallback is FALSE
+                #    Case 2. fallback is TRUE and mode is "A" or "D"
                 for (icol in seq_len(ncol)) {
-                    profileMode <- dm[icol]
-                    case <- if (fallback == "NA") {
-                        1
-                    } else if (profileMode %in% c("A", "D")) {
-                        2
-                    } else if (profileMode == "R" && any(is.finite(argo@data[[adjustedName]][,icol]))) {
-                        3
-                    } else {
-                        0
-                    }
+                    profileMode <- dataMode[icol]
+                    case <- if (fallback == "NA") { 1 } else if (profileMode %in% c("A", "D")) { 2 } else { 0 }
                     if (case > 0) {
                         res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                         res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
@@ -148,8 +139,10 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
             }
         }
     } else if ("parameterDataMode" %in% names(argo@metadata)) {
-        pdm <- argo@metadata$parameterDataMode
-        argoFloatsDebug(debug, "this cycle is of not of 'core' type\n")
+        parameterDataMode <- argo@metadata$parameterDataMode
+        argoFloatsDebug(debug, "this cycle is of not of 'core' type; next is parameterDataMode:\n")
+        if (debug)
+            print(parameterDataMode)
         warning("not doing anything with non-core data (YET)\n")
     }  else {
         warning("oce::argo object's metadata lacks both 'dataMode' and'parameterDataMode', so returning unchanged input")
