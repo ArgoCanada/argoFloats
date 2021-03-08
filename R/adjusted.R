@@ -1,93 +1,91 @@
-## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4:tw=80
 
-#' Switch [[ Focus to Adjusted data (version 1: will be removed soon)
-#'
-#' This function returns a version of `x` for which the enclosed
-#' [oce::argo-class] objects are modified in a way that makes
-#' future uses of \code{\link{[[,argoFloats-method}}
-#' return the *adjusted* data, not the original data.
-#' **NOTE:** For this to work, the version 1.3.0 or greater
-#' of \CRANpkg{oce} must be installed.
-#'
-#' If the version of \CRANpkg{oce} is lower than 1.3.0, `useAdjusted()`
-#' reports an error.  Otherwise, it carries out its work by
-#' applying `preferAdjusted()` from the \CRANpkg{oce} package to each
-#' of the Argo objects stored within the `data` slot of `x`.
-#'
-#' Although one might guess that adjusted data
-#' are always be preferable to original data, this is not always
-#' the case.  Indeed, it is common for the adjusted data to consist
-#' entirely of `NA` values.  A careful analyst should study both
-#' data streams, and should also read the processing notes
-#' for any float (or float cycle) that is of particular interest.
-#' See Reference 1 for more information on the process of
-#' adding adjusted data to Argo files.
-#'
-#' \if{html}{\figure{useAdjustedDiagram.png}{options: width=455px alt="Figure: useAdjustedDiagram.png" fig.cap="hello"}}
-#'
-#' @param argo an [`argoFloats-class`] object, as read by [readProfiles()].
-#'
-#' @param which a character vector (passed directly to
-#' `preferAdjusted()`, or its mimic) naming the items for which
-#' (depending also on the value of `fallback`) adjusted values
-#' are to be sought by future calls to \code{\link{[[,argoFloats-method}}.
-#' The short names are used, e.g. `which="oxygen"` means that
-#' adjusted oxygen is to be returned in future calls
-#' such as `argo[["oxygen"]]`.  The default,
-#' `"all"`, means to  use adjusted values for any item in `argo`
-#' that has adjusted values.
-#'
-#' @param fallback a logical value (passed directly to
-#' `preferAdjusted()` or its mimic) indicating whether to fall back
-#' to unadjusted values for any data field in which the
-#' adjusted values are all `NA`.  The default value, `TRUE`,
-#' avoids a problem with biogeochemical fields, where adjustment
-#' of any one field may lead to insertion of "adjusted" values for
-#' other fields that consist of nothing more than `NA`s.
-##'
-#' @param debug an integer that, if positive, indicates that some debugging information
-#' should be printed.
-#'
-#' @examples
-#' library(argoFloats)
-#' # Note that useAdjusted() requires oce version to be 1.3.0 or higher.
-#' if (packageVersion("oce") >= "1.3.0") {
-#'     raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
-#'     adj <- useAdjusted(raw)
-#'     par(mfrow=c(1,2), mar=c(5,4,1,2))
-#'     hist(raw[[1]][["oxygen"]], xlab="Raw Oxygen", ylab="Frequency", main=NULL)
-#'     hist(adj[[1]][["oxygen"]], xlab="Adjusted Oxygen", ylab="Frequency", main=NULL)}
-#'
-#' @references
-#' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
-#' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
-#' \doi{10.13155/29825}
-#'
-#' @importFrom utils packageVersion
-## @export
-#'
-#' @author Dan Kelley and Jaimie Harbin
-useAdjustedOLD <- function(argo, which="all", fallback=TRUE, debug=0)
-{
-    argoFloatsDebug(debug, "useAdjustedOLD() {\n", sep="", unindent=1, style="bold")
-    if (!inherits(argo, "argoFloats"))
-        stop("useAdjusted() is only for argoFloats objects")
-    if ("argos" != argo[["type"]])
-        stop("useAdjusted() is only for argoFloats objects created by readProfiles()")
-    if (packageVersion("oce") < "1.3.0")
-        stop("useAdjusted() requires the oce version to be 1.3.0 or higher.")
-    res <- argo
-    for (i in argo[["length"]]) {
-        res@data$argos[[i]] <- oce::preferAdjusted(argo@data$argos[[i]], which=which, fallback=fallback)
-    }
-    argoFloatsDebug(debug, "} # useAdjustedOLD()\n", sep="", unindent=1, style="bold")
-    res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
-    res
-}
+# <OLD> #' Switch [[ Focus to Adjusted data (version 1: will be removed soon)
+# <OLD> #'
+# <OLD> #' This function returns a version of `x` for which the enclosed
+# <OLD> #' [oce::argo-class] objects are modified in a way that makes
+# <OLD> #' future uses of \code{\link{[[,argoFloats-method}}
+# <OLD> #' return the *adjusted* data, not the original data.
+# <OLD> #' **NOTE:** For this to work, the version 1.3.0 or greater
+# <OLD> #' of \CRANpkg{oce} must be installed.
+# <OLD> #'
+# <OLD> #' If the version of \CRANpkg{oce} is lower than 1.3.0, `useAdjusted()`
+# <OLD> #' reports an error.  Otherwise, it carries out its work by
+# <OLD> #' applying `preferAdjusted()` from the \CRANpkg{oce} package to each
+# <OLD> #' of the Argo objects stored within the `data` slot of `x`.
+# <OLD> #'
+# <OLD> #' Although one might guess that adjusted data
+# <OLD> #' are always be preferable to original data, this is not always
+# <OLD> #' the case.  Indeed, it is common for the adjusted data to consist
+# <OLD> #' entirely of `NA` values.  A careful analyst should study both
+# <OLD> #' data streams, and should also read the processing notes
+# <OLD> #' for any float (or float cycle) that is of particular interest.
+# <OLD> #' See Reference 1 for more information on the process of
+# <OLD> #' adding adjusted data to Argo files.
+# <OLD> #'
+# <OLD> #' \if{html}{\figure{useAdjustedDiagram.png}{options: width=455px alt="Figure: useAdjustedDiagram.png" fig.cap="hello"}}
+# <OLD> #'
+# <OLD> #' @param argo an [`argoFloats-class`] object, as read by [readProfiles()].
+# <OLD> #'
+# <OLD> #' @param which a character vector (passed directly to
+# <OLD> #' `preferAdjusted()`, or its mimic) naming the items for which
+# <OLD> #' (depending also on the value of `fallback`) adjusted values
+# <OLD> #' are to be sought by future calls to \code{\link{[[,argoFloats-method}}.
+# <OLD> #' The short names are used, e.g. `which="oxygen"` means that
+# <OLD> #' adjusted oxygen is to be returned in future calls
+# <OLD> #' such as `argo[["oxygen"]]`.  The default,
+# <OLD> #' `"all"`, means to  use adjusted values for any item in `argo`
+# <OLD> #' that has adjusted values.
+# <OLD> #'
+# <OLD> #' @param fallback a logical value (passed directly to
+# <OLD> #' `preferAdjusted()` or its mimic) indicating whether to fall back
+# <OLD> #' to unadjusted values for any data field in which the
+# <OLD> #' adjusted values are all `NA`.  The default value, `TRUE`,
+# <OLD> #' avoids a problem with biogeochemical fields, where adjustment
+# <OLD> #' of any one field may lead to insertion of "adjusted" values for
+# <OLD> #' other fields that consist of nothing more than `NA`s.
+# <OLD> ##'
+# <OLD> #' @param debug an integer that, if positive, indicates that some debugging information
+# <OLD> #' should be printed.
+# <OLD> #'
+# <OLD> #' @examples
+# <OLD> #' library(argoFloats)
+# <OLD> #' # Note that useAdjusted() requires oce version to be 1.3.0 or higher.
+# <OLD> #' if (packageVersion("oce") >= "1.3.0") {
+# <OLD> #'     raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+# <OLD> #'     adj <- useAdjusted(raw)
+# <OLD> #'     par(mfrow=c(1,2), mar=c(5,4,1,2))
+# <OLD> #'     hist(raw[[1]][["oxygen"]], xlab="Raw Oxygen", ylab="Frequency", main=NULL)
+# <OLD> #'     hist(adj[[1]][["oxygen"]], xlab="Adjusted Oxygen", ylab="Frequency", main=NULL)}
+# <OLD> #'
+# <OLD> #' @references
+# <OLD> #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+# <OLD> #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+# <OLD> #' \doi{10.13155/29825}
+# <OLD> #'
+# <OLD> #' @importFrom utils packageVersion
+# <OLD> ## @export
+# <OLD> #'
+# <OLD> #' @author Dan Kelley and Jaimie Harbin
+# <OLD> useAdjustedOLD <- function(argo, which="all", fallback=TRUE, debug=0)
+# <OLD> {
+# <OLD>     argoFloatsDebug(debug, "useAdjustedOLD() {\n", sep="", unindent=1, style="bold")
+# <OLD>     if (!inherits(argo, "argoFloats"))
+# <OLD>         stop("useAdjusted() is only for argoFloats objects")
+# <OLD>     if ("argos" != argo[["type"]])
+# <OLD>         stop("useAdjusted() is only for argoFloats objects created by readProfiles()")
+# <OLD>     if (packageVersion("oce") < "1.3.0")
+# <OLD>         stop("useAdjusted() requires the oce version to be 1.3.0 or higher.")
+# <OLD>     res <- argo
+# <OLD>     for (i in argo[["length"]]) {
+# <OLD>         res@data$argos[[i]] <- oce::preferAdjusted(argo@data$argos[[i]], which=which, fallback=fallback)
+# <OLD>     }
+# <OLD>     argoFloatsDebug(debug, "} # useAdjustedOLD()\n", sep="", unindent=1, style="bold")
+# <OLD>     res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+# <OLD>     res
+# <OLD> }
 
-#
-# useAdjusted Version 2 and 3: support function
-#
+# useAdjusted support function (not exported)
 useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 {
     if (!(inherits(argo, "oce") && inherits(argo, "argo")))
@@ -154,40 +152,38 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
     res
 }
 
-#
-# useAdjusted Version 2 and 3: driver function
-#
 #' Switch [[ and Plot to Focus on Adjusted data
 #'
-#' This function returns a copy of its first argument that has been modified by
-#' (optionally) replacing 'raw' parameter values, and their flags, with
-#' corresponding 'adjusted' values. The purpose is to ensure that future calls
-#' to \code{\link{[[,argoFloats-method}} and plotting methods will focus on
-#' the adjusted data instead of the raw data.  The procedure hinges on the value
-#' of the `fallback` argument.
+#' `useAdjusted` returns a copy of an `argos`-type object (as created with the
+#' [readProfiles()] function), in which the individual
+#' [oce::argo-class] objects have been modified so that future calls to
+#' `[[,argoFloats-method` or the `plot,argoFloats-method()` will work with
+#' *adjusted* versions of the data.  In effect, this changes the focus from the
+#' observed data to adjusted data.  The works profile-by-profile, for each of
+#' the [oce::argo-class] objects stored within the first argument.
+#' The details of how this works are controlled by
+#' the `fallback` argument.
 #'
-#' There are two cases, depending on the value of `fallback`.
-#' 1. If `fallback` is `"NA"` (the default), then
-#' the adjusted values become the focus, even if they are all `NA`. Thus,
-#' `fallback="NA"` may be preferred as part of a cautious analysis that
-#' focuses only on data of high quality. The downside of this approach is a
-#' reduction in coverage, since it eliminates the 'raw' fields that are typical
-#' of real-time mode data components (see  Section 2.2.5 of Reference 1).
+#' If `fallback` is `TRUE`, which the default, then the focus switches entirely
+#' to the adjusted data.  This improves the overall reliability of the results,
+#' but at the cost of eliminating realtime-mode data.  This is because the
+#' adjusted fields for realtime data are set to `NA` as a matter of policy (see
+#' section JJJ of reference 1).
 #'
-#' 2. If `fallback` is `"raw"`, then the data in the adjusted parameter
-#' data columns (corresponding to profiles) of each cycle are examined one by
-#' one. If the values in a given column are all `NA`, then the parameter's raw
-#' values for that column are not altered. However, if any of the values in a
-#' given adjusted column are non-`NA`, then that entire 'adjusted' column is
-#' copied into the corresponding 'raw' column. Since the `fallback="raw"`
-#' scheme combines 'raw' and 'adjusted' data, it increases coverage, at the
-#' possible expense of lowering overall data quality.
+#' Wider data coverage is obtained if `fallback` is set to `FALSE`.  In this
+#' case, the focus is shifted to adjusted data *only if* the data-mode for
+#' the individual profiles is `A` or `D`, indicating either Adjusted or
+#' Delayed mode. Any profiles that are of the `R` (Realtime) data-mode are
+#' left unaltered. This blending of adjusted and unadjusted data offers
+#' improved spatial and temporal coverage, while reducing the overall
+#' data quality, and so this approach should be used with caution.
 #'
 #' @param argos an [`argoFloats-class`] object, as read by [readProfiles()].
 #'
-#' @param fallback a character value indicating what to do if all the adjusted
-#' values for a particular parameter-profile pair are `NA`. The choices are
-#' `"NA"` and `"raw"`; see \dQuote{Details}.
+#' @param fallback a logical value indicating whether to 'fall back' from
+#' adjusted data to raw data for profiles that are in real-time mode.  By
+#' default, `fallback` is `FALSE`, to focus entirely on
+#' adjusted data.  See \dQuote{Details}.
 #'
 #' @param debug an integer that controls whether debugging information is printed
 #' during processing.  If `debug` is 0 or less, then no information is printed.
@@ -198,30 +194,30 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #' library(argoFloats)
 #' file <- "SD5903586_001.nc"
 #' A <- readProfiles(system.file("extdata", file, package="argoFloats"))
-#' B <- useAdjusted(A, "NA")
-#' C <- useAdjusted(A, "raw")
+#' B <- useAdjusted(A)
+#' C <- useAdjusted(A, TRUE)
 #' # Notice that the original values are smaller than the adjusted values
 #' plot(C, which="profile", profileControl=list(parameter="oxygen"), pch=1)
 #' points(A[[1]][["oxygen"]], A[[1]][["pressure"]], pch=2)
 #' points(B[[1]][["oxygen"]], B[[1]][["pressure"]], pch=3)
 #' legend("bottomright", pch=c(3,1,2), legend=c("fallback='NA'", "fallback='raw'", "original"))
 #'
-#' @author Dan Kelley and Jaimie Harbin
+#' @author Dan Kelley, Jaimie Harbin and Clark Richards
 #'
 #' @references
 #' 1. Argo Data Management Team. "Argo User’s Manual V3.4,"
 #' January 20, 2021. <https://archimer.ifremer.fr/doc/00187/29825/>
 #'
 #' @export
-useAdjusted <- function(argos, fallback="NA", debug=0)
+useAdjusted <- function(argos, fallback=FALSE, debug=0)
 {
     argoFloatsDebug(debug, "useAdjusted(..., fallback=\"", fallback, "\", debug=", debug, ") {\n", sep="", unindent=1, style="bold")
     if (!inherits(argos, "argoFloats"))
         stop("'argos' must be an argoFloats object")
     if ("argos" != argos@metadata$type)
         stop("'argos' must be an argoFloats object created with argoFloats::readProfiles()")
-    if (!fallback %in% c("NA", "raw"))
-        stop("fallback value \"", fallback, "\" is not understood.  It must be \"NA\" or \"raw\"")
+    if (!is.logical(fallback))
+        stop("fallback value \"", fallback, "\" is not understood.  It must be TRUE or FALSE")
     res <- argos
     argoList <- argos[["argos"]]
     for (i in seq_along(argoList)) {
