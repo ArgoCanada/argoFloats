@@ -22,7 +22,7 @@ NULL
 
 #' Sample argo file (delayed-mode data)
 #'
-#' This is netcdf file for delayed-mode data for cycle 048 of Argo float 4900785, downloaded from
+#' This is netcdf file for delayed-mode data for cycle 48 of Argo float 4900785, downloaded from
 #' \url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/4900785/profiles/D4900785_048.nc}
 #' on 2020 June 24.
 #'
@@ -64,7 +64,7 @@ NULL
 
 #' Sample argo file (delayed synthetic bgc data)
 #'
-#' This is the netcf file for cycle 001 of Argo float SD5903586, downloaded
+#' This is the netcf file for cycle 1 of Argo float SD5903586, downloaded from
 #' \url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc}
 #' on 2020 June 24.
 #' As its filename indicates, it holds "synthetic" data
