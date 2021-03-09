@@ -23,16 +23,20 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
     ncol <- ncol(argo@data$pressure)
     argoFloatsDebug(debug, "pressure is a ", ncol, "x", nrow, " matrix\n", sep="")
     stationParameters <- argo@metadata$stationParameters
-    argoFloatsDebug(debug, "next is stationParameters\n")
-    if (debug > 0)
+    if (debug > 1) {
+        argoFloatsDebug(debug, "next is stationParameters\n")
         print(stationParameters)
-    if ("dataMode" %in% names(argo@metadata)) {
+    }
+    isBGC <- "parameterDataMode" %in% names(argo@metadata)
+    if (!isBGC) {
+        argoFloatsDebug(debug, "non-BGC mode\n")
         dataMode <- argo@metadata$dataMode
         if (any(!dataMode %in% c("R", "A", "D"))) {
             warning("skipping a cycle, because some dataMode values are not \"R\", \"A\" or \"D\"\n")
             return(argo)
         }
-        argoFloatsDebug(debug, "this cycle is of 'core' type with dataMode=", paste(dataMode, collapse=" "), "\n")
+        # argoFloatsDebug(debug, "this cycle is of 'core' type with dataMode=", paste(dataMode, collapse=" "), "\n")
+        # FIXME: do as BGC in finding 'name'
         for (name in varNamesRaw) {
             adjustedName <- paste0(name, "Adjusted")
             # There should always be an Adjusted field, but we check to be safe.
@@ -46,12 +50,14 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
                     if (case > 0) {
                         res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                         res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
-                        argoFloatsDebug(debug, "  Copied \"", adjustedName, "\" to \"", name, "\" for profile ", icol, ", which is of case ", case, "\n", sep="")
+                        # argoFloatsDebug(debug, "  Copied \"", adjustedName, "\" to \"", name, "\" for profile ", icol, ", which is of case ", case, "\n", sep="")
+                        argoFloatsDebug(debug, "  copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", profileMode, "\n", sep="")
                     }
                 }
             }
         }
-    } else if ("parameterDataMode" %in% names(argo@metadata)) {
+    } else {
+        argoFloatsDebug(debug, "BGC mode\n")
         # dnoRev is the reverse of dataNamesOriginal, and is for looking up
         # items within parameterDataMode as we work through the columns (i.e.
         # profiles).
@@ -66,39 +72,38 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
         for (icol in seq_len(ncol)) {
             pdm <- argo@metadata$parameterDataMode[icol]
             parameters <- argo@metadata$parameter[,,icol]
-            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, ": pdm=\"", pdm, "\", parameters=",
-                            paste(parameters,collapse=" "), "\n", sep="")
+            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, "\n        data-mode:  \"", pdm, "\"\n        parameters: ", paste(parameters,collapse=" "), "\n", sep="")
+            varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
             for (name in varNamesRaw) {
+                argoFloatsDebug(debug, "    ", name, " (from ", dno[[name]], ")\n", sep="")
                 adjustedName <- paste0(name, "Adjusted")
                 # There should always be an Adjusted field, but we check to be safe.
                 if (adjustedName %in% varNamesAdjusted) {
-                    argoFloatsDebug(debug, "  ", name, "\n", sep="")
-                    # print(dno[name])
+                    #> argoFloatsDebug(debug, "    ", name, " (i.e. ", dno[[name]], ")\n", sep="")
                     # Look up data-mode for this variable in this profile
                     w <- which(parameters == dno[name])
-                    pdmThis <- substr(pdm, w, w)
-                    argoFloatsDebug(debug, "    mode: \"", pdmThis, "\"\n", sep="")
-                    # HEREHEREHERE
-                    case <- if (fallback == FALSE) { 1 } else if (pdmThis %in% c("A", "D")) { 2 } else { 0 }
-                    if (case > 0) {
-                        res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
-                        res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
-                        argoFloatsDebug(debug, "    copied \"", adjustedName, "\" to \"", name, "\" (case ", case, ")\n", sep="")
+                    if (length(w)) {
+                        pdmThis <- substr(pdm, w, w)
+                        # argoFloatsDebug(debug, "    pdmThis: \"", pdmThis, "\"\n", sep="")
+                        case <- if (!fallback) { 1 } else if (pdmThis %in% c("A", "D")) { 2 } else { 0 }
+                        if (case > 0) {
+                            res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
+                            res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
+                            argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", pdmThis, "\n", sep="")
+                        } else {
+                            argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, " and data-mode is ", pdmThis, "\n", sep="")
+                        }
+                    } else {
+                        argoFloatsDebug(debug, "      not present in this profile\n")
                     }
-
-
-
-
+                } else {
+                    argoFloatsDebug(debug, "      retaining original, since ", adjustedName, " is not present\n", sep="")
                 }
-
             }
             # argoFloatsDebug(debug, "this cycle is of not of 'core' type; next is parameterDataMode:\n")
             # if (debug)
             #     print(parameterDataMode)
         }
-    }  else {
-        warning("oce::argo object's metadata lacks both 'dataMode' and'parameterDataMode', so returning unchanged input")
-        return(argo)
     }
     res@processingLog <- oce::processingLogAppend(res@processingLog,
                                                   paste0("useAdjustedSingle(argo, fallback=\"", fallback, "\", debug=", debug, ")\n"))
