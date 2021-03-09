@@ -1,11 +1,11 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4:tw=80
 
 # UNEXPORTED support function for useAdjusted() on single oce::argo object
-useAdjustedSingle <- function(argo, fallback="NA", debug=0)
+useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 {
     if (!(inherits(argo, "oce") && inherits(argo, "argo")))
         stop("First argument must be an oce::argo object")
-    argoFloatsDebug(debug, "useAdjustedSingle(..., fallback=\"", fallback, "\", debug=", debug, ") {\n", sep="", unindent=1, style="bold")
+    argoFloatsDebug(debug, "useAdjustedSingle(..., fallback=", fallback, ", debug=", debug, ") {\n", sep="", unindent=1, style="bold")
     res <- argo
     fn <- argo[["filename"]]
     argoFloatsDebug(debug, "filename: \"", fn, "\"\n", sep="")
@@ -42,7 +42,7 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
                 #    Case 2. fallback is TRUE and mode is "A" or "D"
                 for (icol in seq_len(ncol)) {
                     profileMode <- dataMode[icol]
-                    case <- if (fallback == "NA") { 1 } else if (profileMode %in% c("A", "D")) { 2 } else { 0 }
+                    case <- if (fallback == FALSE) { 1 } else if (profileMode %in% c("A", "D")) { 2 } else { 0 }
                     if (case > 0) {
                         res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                         res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
@@ -61,24 +61,36 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
             dnoRev[[dno[[name]]]] <- name
         if (debug > 1) {               # show only at a high debug level
             cat("dnoRev follows:\n")
-            print(dnoRev)
+            cat(str(dnoRev))
         }
         for (icol in seq_len(ncol)) {
             pdm <- argo@metadata$parameterDataMode[icol]
-            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, ": pdm=\"", pdm, "\"\n", sep="")
             parameters <- argo@metadata$parameter[,,icol]
-            argoFloatsDebug(debug, "  parameters: ", paste(parameters, collapse=" "), "\n")
+            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, ": pdm=\"", pdm, "\", parameters=",
+                            paste(parameters,collapse=" "), "\n", sep="")
             for (name in varNamesRaw) {
                 adjustedName <- paste0(name, "Adjusted")
                 # There should always be an Adjusted field, but we check to be safe.
                 if (adjustedName %in% varNamesAdjusted) {
-                    argoFloatsDebug(debug, "   ", adjustedName, "->", name, "...\n")
+                    argoFloatsDebug(debug, "  ", name, "\n", sep="")
                     # print(dno[name])
                     # Look up data-mode for this variable in this profile
                     w <- which(parameters == dno[name])
                     pdmThis <- substr(pdm, w, w)
-                    argoFloatsDebug(debug, "      mode: \"", pdmThis, "\"\n", sep="")
+                    argoFloatsDebug(debug, "    mode: \"", pdmThis, "\"\n", sep="")
+                    # HEREHEREHERE
+                    case <- if (fallback == FALSE) { 1 } else if (pdmThis %in% c("A", "D")) { 2 } else { 0 }
+                    if (case > 0) {
+                        res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
+                        res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
+                        argoFloatsDebug(debug, "    copied \"", adjustedName, "\" to \"", name, "\" (case ", case, ")\n", sep="")
+                    }
+
+
+
+
                 }
+
             }
             # argoFloatsDebug(debug, "this cycle is of not of 'core' type; next is parameterDataMode:\n")
             # if (debug)
@@ -153,13 +165,14 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
 #' @export
 useAdjusted <- function(argos, fallback=FALSE, debug=0)
 {
-    argoFloatsDebug(debug, "useAdjusted(..., fallback=\"", fallback, "\", debug=", debug, ") {\n", sep="", unindent=1, style="bold")
+    argoFloatsDebug(debug, "useAdjusted(..., fallback=", fallback, ", debug=", debug, ") {\n", sep="", unindent=1, style="bold")
     if (!inherits(argos, "argoFloats"))
         stop("'argos' must be an argoFloats object")
     if ("argos" != argos@metadata$type)
         stop("'argos' must be an argoFloats object created with argoFloats::readProfiles()")
     if (!is.logical(fallback))
         stop("fallback value \"", fallback, "\" is not understood.  It must be TRUE or FALSE")
+    debug <- ifelse(debug > 3, 3L, as.integer(debug)) # limit depth
     res <- argos
     argoList <- argos[["argos"]]
     for (i in seq_along(argoList)) {

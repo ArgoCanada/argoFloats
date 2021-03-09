@@ -25,19 +25,19 @@ then information is printed for each Argo cycle contained in \code{argos}.}
 \link[oce:argo-class]{oce::argo} objects have been modified so that future calls to
 \verb{[[,argoFloats-method} or the \verb{plot,argoFloats-method()} will work with
 \emph{adjusted} versions of the data.  In effect, this changes the focus from the
-observed data to adjusted data.  The works profile-by-profile, for each of
+observed data to adjusted data.  This works profile-by-profile, for each of
 the \link[oce:argo-class]{oce::argo} objects stored within the first argument.
 The details of how this works are controlled by
 the \code{fallback} argument.
 }
 \details{
-If \code{fallback} is \code{TRUE}, which the default, then the focus switches entirely
+If \code{fallback} is \code{FALSE}, which the default, then the focus switches entirely
 to the adjusted data.  This improves the overall reliability of the results,
 but at the cost of eliminating realtime-mode data.  This is because the
 adjusted fields for realtime data are set to \code{NA} as a matter of policy (see
-section JJJ of reference 1).
+section 2.2.5 of reference 1).
 
-Wider data coverage is obtained if \code{fallback} is set to \code{FALSE}.  In this
+Wider data coverage is obtained if \code{fallback} is set to \code{TRUE}.  In this
 case, the focus is shifted to adjusted data \emph{only if} the data-mode for
 the individual profiles is \code{A} or \code{D}, indicating either Adjusted or
 Delayed mode. Any profiles that are of the \code{R} (Realtime) data-mode are
