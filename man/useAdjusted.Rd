@@ -48,15 +48,12 @@ data quality, and so this approach should be used with caution.
 \examples{
 library(argoFloats)
 file <- "SD5903586_001.nc"
-A <- readProfiles(system.file("extdata", file, package="argoFloats"))
-B <- useAdjusted(A)
-C <- useAdjusted(A, TRUE)
-# Notice that the original values are smaller than the adjusted values
-plot(C, which="profile", profileControl=list(parameter="oxygen"), pch=1)
-points(A[[1]][["oxygen"]], A[[1]][["pressure"]], pch=2)
-points(B[[1]][["oxygen"]], B[[1]][["pressure"]], pch=3)
-legend("bottomright", pch=c(3,1,2),
-       legend=c("fallback=TRUE", "fallback=FALSE", "original"))
+raw <- readProfiles(system.file("extdata", file, package="argoFloats"))
+adj <- useAdjusted(raw)
+# Autoscale with adjusted values so frame shows both raw and adjusted.
+plot(adj, which="profile", profileControl=list(parameter="oxygen"), pch=2)
+points(raw[[1]][["oxygen"]], raw[[1]][["pressure"]], pch=1)
+legend("bottomright", pch=c(2,1), legend=c("Raw", "Adjusted"))
 
 }
 \references{
