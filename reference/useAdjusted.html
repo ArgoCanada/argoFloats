@@ -47,12 +47,15 @@
 
 
 <meta property="og:title" content="Switch [[ and Plot to Focus on Adjusted data — useAdjusted" />
-<meta property="og:description" content="This function returns a copy of its first argument that has been modified by
-(optionally) replacing 'raw' parameter values, and their flags, with
-corresponding 'adjusted' values. The purpose is to ensure that future calls
-to [[,argoFloats-method and plotting methods will focus on
-the adjusted data instead of the raw data.  The procedure hinges on the value
-of the fallback argument." />
+<meta property="og:description" content="useAdjusted returns a copy of an argos-type object (as created with the
+readProfiles() function), in which the individual
+oce::argo objects have been modified so that future calls to
+[[,argoFloats-method or the plot,argoFloats-method() will work with
+adjusted versions of the data.  In effect, this changes the focus from the
+observed data to adjusted data.  This works profile-by-profile, for each of
+the oce::argo objects stored within the first argument.
+The details of how this works are controlled by
+the fallback argument." />
 
 
 
@@ -139,20 +142,23 @@ of the fallback argument." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Switch [[ and Plot to Focus on Adjusted data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/misc.R'><code>R/misc.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/adjusted.R'><code>R/adjusted.R</code></a></small>
     <div class="hidden name"><code>useAdjusted.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function returns a copy of its first argument that has been modified by
-(optionally) replacing 'raw' parameter values, and their flags, with
-corresponding 'adjusted' values. The purpose is to ensure that future calls
-to <code><a href='[[,argoFloats-method.html'>[[,argoFloats-method</a></code> and plotting methods will focus on
-the adjusted data instead of the raw data.  The procedure hinges on the value
-of the <code>fallback</code> argument.</p>
+    <p><code>useAdjusted</code> returns a copy of an <code>argos</code>-type object (as created with the
+<code><a href='readProfiles.html'>readProfiles()</a></code> function), in which the individual
+<a href='https://dankelley.github.io/oce/reference/argo-class.html'>oce::argo</a> objects have been modified so that future calls to
+<code>[[,argoFloats-method</code> or the <code>plot,argoFloats-method()</code> will work with
+<em>adjusted</em> versions of the data.  In effect, this changes the focus from the
+observed data to adjusted data.  This works profile-by-profile, for each of
+the <a href='https://dankelley.github.io/oce/reference/argo-class.html'>oce::argo</a> objects stored within the first argument.
+The details of how this works are controlled by
+the <code>fallback</code> argument.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>useAdjusted</span><span class='op'>(</span><span class='va'>argos</span>, fallback <span class='op'>=</span> <span class='st'>"NA"</span>, debug <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>useAdjusted</span><span class='op'>(</span><span class='va'>argos</span>, fallback <span class='op'>=</span> <span class='cn'>FALSE</span>, debug <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,36 +169,34 @@ of the <code>fallback</code> argument.</p>
     </tr>
     <tr>
       <th>fallback</th>
-      <td><p>a character value indicating what to do if all the adjusted
-values for a particular parameter-profile pair are <code>NA</code>. The choices are
-<code>"NA"</code> and <code>"raw"</code>; see &#8220;Details&#8221;.</p></td>
+      <td><p>a logical value indicating whether to 'fall back' from
+adjusted data to raw data for profiles that are in real-time mode.  By
+default, <code>fallback</code> is <code>FALSE</code>, to focus entirely on
+adjusted data.  See &#8220;Details&#8221;.</p></td>
     </tr>
     <tr>
       <th>debug</th>
-      <td><p>an integer that, if positive, indicates that some debugging information
-should be printed.</p></td>
+      <td><p>an integer that controls whether debugging information is printed
+during processing.  If <code>debug</code> is 0 or less, then no information is printed.
+If it is 1 then minimal overall information is printed.  If it exceeds 1,
+then information is printed for each Argo cycle contained in <code>argos</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There are two cases, depending on the value of <code>fallback</code>.</p><ol>
-<li><p>If <code>fallback</code> is <code>"NA"</code> (the default), then
-the adjusted values become the focus, even if they are all <code>NA</code>. Thus,
-<code>fallback="NA"</code> may be preferred as part of a cautious analysis that
-focuses only on data of high quality. The downside of this approach is a
-reduction in coverage, since it eliminates the 'raw' fields that are typical
-of real-time mode data components (see  Section 2.2.5 of Reference 1).</p></li>
-<li><p>If <code>fallback</code> is <code>"raw"</code>, then the data in the adjusted parameter
-data columns (corresponding to profiles) of each cycle are examined one by
-one. If the values in a given column are all <code>NA</code>, then the parameter's raw
-values for that column are not altered. However, if any of the values in a
-given adjusted column are non-<code>NA</code>, then that entire 'adjusted' column is
-copied into the corresponding 'raw' column. Since the <code>fallback="raw"</code>
-scheme combines 'raw' and 'adjusted' data, it increases coverage, at the
-possible expense of lowering overall data quality.</p></li>
-</ol>
-
+    <p>If <code>fallback</code> is <code>FALSE</code>, which the default, then the focus switches entirely
+to the adjusted data.  This improves the overall reliability of the results,
+but at the cost of eliminating realtime-mode data.  This is because the
+adjusted fields for realtime data are set to <code>NA</code> as a matter of policy (see
+section 2.2.5 of reference 1).</p>
+<p>Wider data coverage is obtained if <code>fallback</code> is set to <code>TRUE</code>.  In this
+case, the focus is shifted to adjusted data <em>only if</em> the data-mode for
+the individual profiles is <code>A</code> or <code>D</code>, indicating either Adjusted or
+Delayed mode. Any profiles that are of the <code>R</code> (Realtime) data-mode are
+left unaltered. This blending of adjusted and unadjusted data offers
+improved spatial and temporal coverage, while reducing the overall
+data quality, and so this approach should be used with caution.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     
@@ -203,25 +207,23 @@ January 20, 2021. <a href='https://archimer.ifremer.fr/doc/00187/29825/'>https:/
 
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
-    <p>Dan Kelley and Jaimie Harbin</p>
+    <p>Dan Kelley, Jaimie Harbin and Clark Richards</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
 <span class='va'>file</span> <span class='op'>&lt;-</span> <span class='st'>"SD5903586_001.nc"</span>
-<span class='va'>A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='va'>file</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>raw</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='va'>file</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
 #&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
 #&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
 #&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
 #&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
 #&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='input'><span class='va'>B</span> <span class='op'>&lt;-</span> <span class='fu'>useAdjusted</span><span class='op'>(</span><span class='va'>A</span>, <span class='st'>"NA"</span><span class='op'>)</span>
-<span class='va'>C</span> <span class='op'>&lt;-</span> <span class='fu'>useAdjusted</span><span class='op'>(</span><span class='va'>A</span>, <span class='st'>"raw"</span><span class='op'>)</span>
-<span class='co'># Notice that the original values are smaller than the adjusted values </span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>C</span>, which<span class='op'>=</span><span class='st'>"profile"</span>, profileControl<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>parameter<span class='op'>=</span><span class='st'>"oxygen"</span><span class='op'>)</span>, pch<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>A</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>A</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='st'>"pressure"</span><span class='op'>]</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>B</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>B</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='st'>"pressure"</span><span class='op'>]</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>3</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/legend.html'>legend</a></span><span class='op'>(</span><span class='st'>"bottomright"</span>, pch<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>,<span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span>, legend<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"fallback='NA'"</span>, <span class='st'>"fallback='raw'"</span>, <span class='st'>"original"</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; <span class='warning'>    1</span></div><div class='input'><span class='va'>adj</span> <span class='op'>&lt;-</span> <span class='fu'>useAdjusted</span><span class='op'>(</span><span class='va'>raw</span><span class='op'>)</span>
+<span class='co'># Autoscale with adjusted values so frame shows both raw and adjusted.</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>adj</span>, which<span class='op'>=</span><span class='st'>"profile"</span>, profileControl<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>parameter<span class='op'>=</span><span class='st'>"oxygen"</span><span class='op'>)</span>, pch<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>raw</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>raw</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='st'>"pressure"</span><span class='op'>]</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/legend.html'>legend</a></span><span class='op'>(</span><span class='st'>"bottomright"</span>, pch<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>1</span><span class='op'>)</span>, legend<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Raw"</span>, <span class='st'>"Adjusted"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='useAdjusted-1.png' alt='' width='672' height='672' /></div><div class='input'>
 </div></pre>
   </div>
