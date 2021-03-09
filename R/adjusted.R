@@ -154,7 +154,8 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 #' plot(C, which="profile", profileControl=list(parameter="oxygen"), pch=1)
 #' points(A[[1]][["oxygen"]], A[[1]][["pressure"]], pch=2)
 #' points(B[[1]][["oxygen"]], B[[1]][["pressure"]], pch=3)
-#' legend("bottomright", pch=c(3,1,2), legend=c("fallback='NA'", "fallback='raw'", "original"))
+#' legend("bottomright", pch=c(3,1,2),
+#'        legend=c("fallback=TRUE", "fallback=FALSE", "original"))
 #'
 #' @author Dan Kelley, Jaimie Harbin and Clark Richards
 #'
