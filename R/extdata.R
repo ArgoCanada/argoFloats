@@ -23,7 +23,7 @@ NULL
 #' Sample argo file (delayed-mode data)
 #'
 #' This is netcdf file for delayed-mode data for cycle 48 of Argo float 4900785, downloaded from
-#' \url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/4900785/profiles/D4900785_048.nc}
+#' \url{https://data-argo.ifremer.fr/dac/aoml/4900785/profiles/D4900785_048.nc}
 #' on 2020 June 24.
 #'
 #' @name D4900785_048.nc
