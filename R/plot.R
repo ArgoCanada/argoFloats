@@ -1031,7 +1031,9 @@ setMethod(f="plot",
                       pch <- 20
                       argoFloatsDebug(debug, "Profile plot defaulting to pch=", pch, "\n")
                   }
-                  plot(VARIABLE, Y, ylim=rev(range(Y, na.rm=TRUE)),
+                  plot(VARIABLE, Y,
+                       xlim=xlim,
+                       ylim=if (is.null(ylim)) rev(range(Y, na.rm=TRUE)) else ylim,
                        axes=FALSE,
                        ylab="", xlab="", # draw axes later, in oceanographic 'profile' locations
                        cex=cex,
