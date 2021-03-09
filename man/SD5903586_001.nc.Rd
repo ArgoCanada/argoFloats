@@ -6,7 +6,7 @@
 \alias{SD5903586_001.nc}
 \title{Sample argo file (delayed synthetic bgc data)}
 \description{
-This is the netcf file for cycle 001 of Argo float SD5903586, downloaded
+This is the netcf file for cycle 1 of Argo float SD5903586, downloaded from
 \url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc}
 on 2020 June 24.
 As its filename indicates, it holds "synthetic" data
@@ -28,6 +28,7 @@ hist(Percent, main="Oxygen adjustment")
 \seealso{
 Other raw datasets: 
 \code{\link{D4900785_048.nc}},
+\code{\link{R3901602_163.nc}},
 \code{\link{SR2902204_131.nc}}
 }
 \concept{raw datasets}

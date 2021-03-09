@@ -64,7 +64,7 @@ setMethod(f="summary",
                   cat("* hint: use readProfiles() on this to read these files\n")
               } else if (object@metadata$type == "argos") {
                   cat("* contains", length(object@data$argos), "objects\n")
-                  cat("* hint: access these objects with e.g. x[[\"argos\"]]\n")
+                  cat("* hint: access list of oce::argo objects with x[[\"argos\"]] or a single one with e.g. x[[1]]\n")
               }
               oce::processingLogShow(object)
               invisible(NULL)

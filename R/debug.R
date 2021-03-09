@@ -40,7 +40,7 @@
 #' @export
 argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=FALSE, unindent=0)
 {
-    debug <- max(0, min(3, floor(debug+0.5))) # max 3 levels deep
+    debug <- max(0L, min(3L, floor(debug+0.5))) # max 3 levels deep
     if (debug > 0) {
         n <- 4 - debug - unindent
         if (is.character(style) && style == "plain") {

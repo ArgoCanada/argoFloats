@@ -4,12 +4,11 @@
 \encoding{UTF-8}
 \name{D4900785_048.nc}
 \alias{D4900785_048.nc}
-\title{Sample argo file (delayed data)}
+\title{Sample argo file (delayed-mode data)}
 \description{
-This is netcdf file for cycle 048 of Argo float 4900785, downloaded from
-\url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/4900785/profiles/D4900785_048.nc}
+This is netcdf file for delayed-mode data for cycle 48 of Argo float 4900785, downloaded from
+\url{https://data-argo.ifremer.fr/dac/aoml/4900785/profiles/D4900785_048.nc}
 on 2020 June 24.
-As its filename indicates, it holds "realtime" data.
 }
 \examples{
 library(argoFloats)
@@ -20,6 +19,7 @@ summary(a[[1]])
 }
 \seealso{
 Other raw datasets: 
+\code{\link{R3901602_163.nc}},
 \code{\link{SD5903586_001.nc}},
 \code{\link{SR2902204_131.nc}}
 }
