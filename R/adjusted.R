@@ -65,30 +65,25 @@ useAdjustedSingle <- function(argo, fallback="NA", debug=0)
         }
         for (icol in seq_len(ncol)) {
             pdm <- argo@metadata$parameterDataMode[icol]
-            if (debug > 1) {           # show only at a high debug level
-                cat("pdm follows:\n")
-                print(pdm)
-            }
+            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, ": pdm=\"", pdm, "\"\n", sep="")
+            parameters <- argo@metadata$parameter[,,icol]
+            argoFloatsDebug(debug, "  parameters: ", paste(parameters, collapse=" "), "\n")
             for (name in varNamesRaw) {
                 adjustedName <- paste0(name, "Adjusted")
                 # There should always be an Adjusted field, but we check to be safe.
                 if (adjustedName %in% varNamesAdjusted) {
-                    cat("handle ", adjustedName, "->", name, "here\n")
-                    print(dno[name])
-                    parameters <- argo@metadata$parameter[,,icol]
-                    if (debug > 0) {
-                        cat("parameters follows:\n")
-                        print(parameters)
-                    }
-                    #print(dnoRev[name])
+                    argoFloatsDebug(debug, "   ", adjustedName, "->", name, "...\n")
+                    # print(dno[name])
+                    # Look up data-mode for this variable in this profile
+                    w <- which(parameters == dno[name])
+                    pdmThis <- substr(pdm, w, w)
+                    argoFloatsDebug(debug, "      mode: \"", pdmThis, "\"\n", sep="")
                 }
             }
-            stop()
-            argoFloatsDebug(debug, "this cycle is of not of 'core' type; next is parameterDataMode:\n")
-            if (debug)
-                print(parameterDataMode)
+            # argoFloatsDebug(debug, "this cycle is of not of 'core' type; next is parameterDataMode:\n")
+            # if (debug)
+            #     print(parameterDataMode)
         }
-        warning("not doing anything with non-core data (YET)\n")
     }  else {
         warning("oce::argo object's metadata lacks both 'dataMode' and'parameterDataMode', so returning unchanged input")
         return(argo)
