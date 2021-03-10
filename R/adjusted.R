@@ -1,4 +1,4 @@
-## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4:tw=80
+## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4:tw=90
 
 # UNEXPORTED support function for useAdjusted() on single oce::argo object
 useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
@@ -35,23 +35,48 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
             warning("skipping a cycle, because some dataMode values are not \"R\", \"A\" or \"D\"\n")
             return(argo)
         }
-        # argoFloatsDebug(debug, "this cycle is of 'core' type with dataMode=", paste(dataMode, collapse=" "), "\n")
-        # FIXME: do as BGC in finding 'name'
-        for (name in varNamesRaw) {
-            adjustedName <- paste0(name, "Adjusted")
-            # There should always be an Adjusted field, but we check to be safe.
-            if (adjustedName %in% varNamesAdjusted) {
-                # Copy <PARAM>Adjusted into <PARAM> if either of the following is true.
-                #    Case 1. fallback is FALSE
-                #    Case 2. fallback is TRUE and mode is "A" or "D"
-                for (icol in seq_len(ncol)) {
-                    profileMode <- dataMode[icol]
-                    case <- if (fallback == FALSE) { 1 } else if (profileMode %in% c("A", "D")) { 2 } else { 0 }
+        # Set up dnoRev, to find argoFloats name given netCDF name
+        dno <- argo@metadata$dataNamesOriginal
+        dnoRev <- list()
+        for (name in names(dno))
+            dnoRev[[dno[[name]]]] <- name
+        if (debug > 1) {               # show only at a high debug level
+            cat("dnoRev follows:\n")
+            cat(str(dnoRev))
+        }
+        #varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
+        for (icol in seq_len(ncol)) { # non-BGC case
+            parameters <- argo@metadata$parameter[,,icol]
+            varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
+            for (name in varNamesRaw) {
+                #argoFloatsDebug(debug, "name: \"", name, "\"", sep="")
+                adjustedName <- paste0(name, "Adjusted")
+                argoFloatsDebug(debug, "name=\"", name, "\", adjustedName=\"", adjustedName, "\"\n", sep="")
+                # Can only copy if we have an Adjusted field (which is not always the case).
+                mode <- dataMode[icol]
+                argoFloatsDebug(debug, "Profile ", icol, " of ", ncol,
+                                "\n        mode:       \"", mode, "\"",
+                                "\n        parameters: ", paste(parameters,collapse=" "), "\n", sep="")
+                cat("next is varNamesAdjusted\n");print(varNamesAdjusted)
+                if (adjustedName %in% varNamesAdjusted) {
+                    # Copy <PARAM>Adjusted into <PARAM> if either of the following is true.
+                    #    Case 1. fallback is FALSE
+                    #    Case 2. fallback is TRUE and mode is "A" or "D"
+                    case <- if (fallback == FALSE) { 1 } else if (mode %in% c("A", "D")) { 2 } else { 0 }
                     if (case > 0) {
                         res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                         res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
-                        # argoFloatsDebug(debug, "  Copied \"", adjustedName, "\" to \"", name, "\" for profile ", icol, ", which is of case ", case, "\n", sep="")
-                        argoFloatsDebug(debug, "  copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", profileMode, "\n", sep="")
+                        if (!fallback) {
+                            argoFloatsDebug(debug, "  copied ", adjustedName, " to ", name, ", since fallback=", fallback, "\n", sep="")
+                        } else {
+                            argoFloatsDebug(debug, "  copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", mode, "\n", sep="")
+                        }
+                    } else {
+                        if (!fallback) {
+                            argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, "\n", sep="")
+                        } else {
+                            argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, " and data-mode is ", pdmThis, "\n", sep="")
+                        }
                     }
                 }
             }
@@ -69,29 +94,40 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
             cat("dnoRev follows:\n")
             cat(str(dnoRev))
         }
-        for (icol in seq_len(ncol)) {
+        for (icol in seq_len(ncol)) { # BGC case
             pdm <- argo@metadata$parameterDataMode[icol]
             parameters <- argo@metadata$parameter[,,icol]
-            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, "\n        data-mode:  \"", pdm, "\"\n        parameters: ", paste(parameters,collapse=" "), "\n", sep="")
+            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol,
+                            "\n        mode:       \"", pdm, "\"",
+                            "\n        parameters: ", paste(parameters,collapse=" "), "\n", sep="")
             varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
             for (name in varNamesRaw) {
                 argoFloatsDebug(debug, "    ", name, " (from ", dno[[name]], ")\n", sep="")
                 adjustedName <- paste0(name, "Adjusted")
-                # There should always be an Adjusted field, but we check to be safe.
+                # Can only copy if we have an Adjusted field (which is not always the case).
                 if (adjustedName %in% varNamesAdjusted) {
-                    #> argoFloatsDebug(debug, "    ", name, " (i.e. ", dno[[name]], ")\n", sep="")
                     # Look up data-mode for this variable in this profile
                     w <- which(parameters == dno[name])
                     if (length(w)) {
                         pdmThis <- substr(pdm, w, w)
-                        # argoFloatsDebug(debug, "    pdmThis: \"", pdmThis, "\"\n", sep="")
+                        # Copy <PARAM>Adjusted into <PARAM> if either of the following is true.
+                        #    Case 1. fallback is FALSE
+                        #    Case 2. fallback is TRUE and mode is "A" or "D"
                         case <- if (!fallback) { 1 } else if (pdmThis %in% c("A", "D")) { 2 } else { 0 }
                         if (case > 0) {
                             res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                             res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
-                            argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", pdmThis, "\n", sep="")
+                            if (!fallback) {
+                                argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, "\n", sep="")
+                            } else {
+                                argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", pdmThis, "\n", sep="")
+                            }
                         } else {
-                            argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, " and data-mode is ", pdmThis, "\n", sep="")
+                            if (!fallback) {
+                                argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, "\n", sep="")
+                            } else {
+                                argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, " and data-mode is ", pdmThis, "\n", sep="")
+                            }
                         }
                     } else {
                         argoFloatsDebug(debug, "      not present in this profile\n")
