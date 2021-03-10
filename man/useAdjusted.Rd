@@ -2,7 +2,7 @@
 % Please edit documentation in R/adjusted.R
 \name{useAdjusted}
 \alias{useAdjusted}
-\title{Switch [[ and Plot to Focus on Adjusted data}
+\title{Switch [[ and Plot to Focus on Adjusted data, if available}
 \usage{
 useAdjusted(argos, fallback = FALSE, debug = 0)
 }
@@ -25,19 +25,22 @@ then information is printed for each Argo cycle contained in \code{argos}.}
 \link[oce:argo-class]{oce::argo} objects have been modified so that future calls to
 \verb{[[,argoFloats-method} or the \verb{plot,argoFloats-method()} will work with
 \emph{adjusted} versions of the data.  In effect, this changes the focus from the
-observed data to adjusted data.  This works profile-by-profile, for each of
+observed data to adjusted data.  This works profile-by-profile, i.e. for each of
 the \link[oce:argo-class]{oce::argo} objects stored within the first argument.
-The details of how this works are controlled by
-the \code{fallback} argument.
+Replacement only occurs if an adjusted field exists in the object.
+The \code{fallback} argument offers a way to ''fall back'' to unadjusted
+values, depending on the data-mode (realtime, adjusted or delayed)
+for individual items; see \dQuote{Details}.
 }
 \details{
-If \code{fallback} is \code{FALSE}, which the default, then the focus switches entirely
+There are two cases.  First, if \code{fallback} is \code{FALSE} (which the default)
+then the focus switches entirely
 to the adjusted data.  This improves the overall reliability of the results,
 but at the cost of eliminating realtime-mode data.  This is because the
 adjusted fields for realtime data are set to \code{NA} as a matter of policy (see
 section 2.2.5 of reference 1).
 
-Wider data coverage is obtained if \code{fallback} is set to \code{TRUE}.  In this
+Wider data coverage is obtained  if \code{fallback} is \code{TRUE}.  In this
 case, the focus is shifted to adjusted data \emph{only if} the data-mode for
 the individual profiles is \code{A} or \code{D}, indicating either Adjusted or
 Delayed mode. Any profiles that are of the \code{R} (Realtime) data-mode are

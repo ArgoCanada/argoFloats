@@ -1,4 +1,4 @@
-## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4:tw=90
+## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4:tw=120
 
 # UNEXPORTED support function for useAdjusted() on single oce::argo object
 useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
@@ -21,7 +21,7 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
     }
     nrow <- nrow(argo@data$pressure)
     ncol <- ncol(argo@data$pressure)
-    argoFloatsDebug(debug, "pressure is a ", ncol, "x", nrow, " matrix\n", sep="")
+    # argoFloatsDebug(debug, "pressure is a ", ncol, "x", nrow, " matrix\n", sep="")
     stationParameters <- argo@metadata$stationParameters
     if (debug > 1) {
         argoFloatsDebug(debug, "next is stationParameters\n")
@@ -29,7 +29,7 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
     }
     isBGC <- "parameterDataMode" %in% names(argo@metadata)
     if (!isBGC) {
-        argoFloatsDebug(debug, "non-BGC mode\n")
+        argoFloatsDebug(debug, "non-BGC file\n")
         dataMode <- argo@metadata$dataMode
         if (any(!dataMode %in% c("R", "A", "D"))) {
             warning("skipping a cycle, because some dataMode values are not \"R\", \"A\" or \"D\"\n")
@@ -46,18 +46,22 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
         }
         #varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
         for (icol in seq_len(ncol)) { # non-BGC case
-            parameters <- argo@metadata$parameter[,,icol]
+            mode <- dataMode[icol]
+            # Dewey Dunnington realized that 'stationParameters' is what we need next, not 'parameters'.
+            # (See https://github.com/ArgoCanada/argoFloats/issues/418 for discussion.)
+            parameters <- trimws(as.vector(argo@metadata$stationParameters[,icol]))
+            parameters <- parameters[nchar(parameters) > 0]
             varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
+            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, "\n", sep="")
+            argoFloatsDebug(debug, "  mode:       \"", mode, "\"\n", sep="")
+            argoFloatsDebug(debug, "  parameters: ", paste(parameters,collapse=" "), "\n", sep="")
+            # cat("next is varNamesAdjusted\n");print(varNamesAdjusted)
             for (name in varNamesRaw) {
+                argoFloatsDebug(debug, "    ", name, " (AKA ", dno[[name]], ")\n", sep="")
                 #argoFloatsDebug(debug, "name: \"", name, "\"", sep="")
                 adjustedName <- paste0(name, "Adjusted")
-                argoFloatsDebug(debug, "name=\"", name, "\", adjustedName=\"", adjustedName, "\"\n", sep="")
+                #argoFloatsDebug(debug, "name=\"", name, "\", adjustedName=\"", adjustedName, "\"\n", sep="")
                 # Can only copy if we have an Adjusted field (which is not always the case).
-                mode <- dataMode[icol]
-                argoFloatsDebug(debug, "Profile ", icol, " of ", ncol,
-                                "\n        mode:       \"", mode, "\"",
-                                "\n        parameters: ", paste(parameters,collapse=" "), "\n", sep="")
-                cat("next is varNamesAdjusted\n");print(varNamesAdjusted)
                 if (adjustedName %in% varNamesAdjusted) {
                     # Copy <PARAM>Adjusted into <PARAM> if either of the following is true.
                     #    Case 1. fallback is FALSE
@@ -67,9 +71,9 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
                         res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
                         res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
                         if (!fallback) {
-                            argoFloatsDebug(debug, "  copied ", adjustedName, " to ", name, ", since fallback=", fallback, "\n", sep="")
+                            argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, "\n", sep="")
                         } else {
-                            argoFloatsDebug(debug, "  copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", mode, "\n", sep="")
+                            argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", mode, "\n", sep="")
                         }
                     } else {
                         if (!fallback) {
@@ -78,11 +82,13 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
                             argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, " and data-mode is ", pdmThis, "\n", sep="")
                         }
                     }
+                } else {
+                    argoFloatsDebug(debug, "      retaining original, since ", adjustedName, " is not present\n", sep="")
                 }
             }
         }
     } else {
-        argoFloatsDebug(debug, "BGC mode\n")
+        argoFloatsDebug(debug, "BGC (or synthetic) file\n")
         # dnoRev is the reverse of dataNamesOriginal, and is for looking up
         # items within parameterDataMode as we work through the columns (i.e.
         # profiles).
@@ -96,13 +102,16 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
         }
         for (icol in seq_len(ncol)) { # BGC case
             pdm <- argo@metadata$parameterDataMode[icol]
-            parameters <- argo@metadata$parameter[,,icol]
-            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol,
-                            "\n        mode:       \"", pdm, "\"",
-                            "\n        parameters: ", paste(parameters,collapse=" "), "\n", sep="")
+            # Dewey Dunnington realized that 'stationParameters' is what we need next, not 'parameters'.
+            # (See https://github.com/ArgoCanada/argoFloats/issues/418 for discussion.)
+            parameters <- trimws(as.vector(argo@metadata$stationParameters[,icol]))
+            parameters <- parameters[nchar(parameters) > 0]
+            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, "\n", sep="")
+            argoFloatsDebug(debug, "  mode:       \"", pdm, "\"\n", sep="")
+            argoFloatsDebug(debug, "  parameters: ", paste(parameters,collapse=" "), "\n", sep="")
             varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
             for (name in varNamesRaw) {
-                argoFloatsDebug(debug, "    ", name, " (from ", dno[[name]], ")\n", sep="")
+                argoFloatsDebug(debug, "    ", name, " (AKA ", dno[[name]], ")\n", sep="")
                 adjustedName <- paste0(name, "Adjusted")
                 # Can only copy if we have an Adjusted field (which is not always the case).
                 if (adjustedName %in% varNamesAdjusted) {
@@ -130,7 +139,7 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
                             }
                         }
                     } else {
-                        argoFloatsDebug(debug, "      not present in this profile\n")
+                        argoFloatsDebug(debug, "      \"", name, "\" is not present in this profile\n")
                     }
                 } else {
                     argoFloatsDebug(debug, "      retaining original, since ", adjustedName, " is not present\n", sep="")
@@ -147,25 +156,28 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
     res
 }
 
-#' Switch [[ and Plot to Focus on Adjusted data
+#' Switch [[ and Plot to Focus on Adjusted data, if available
 #'
 #' `useAdjusted` returns a copy of an `argos`-type object (as created with the
 #' [readProfiles()] function), in which the individual
 #' [oce::argo-class] objects have been modified so that future calls to
 #' `[[,argoFloats-method` or the `plot,argoFloats-method()` will work with
 #' *adjusted* versions of the data.  In effect, this changes the focus from the
-#' observed data to adjusted data.  This works profile-by-profile, for each of
+#' observed data to adjusted data.  This works profile-by-profile, i.e. for each of
 #' the [oce::argo-class] objects stored within the first argument.
-#' The details of how this works are controlled by
-#' the `fallback` argument.
+#' Replacement only occurs if an adjusted field exists in the object.
+#' The `fallback` argument offers a way to ''fall back'' to unadjusted
+#' values, depending on the data-mode (realtime, adjusted or delayed)
+#' for individual items; see \dQuote{Details}.
 #'
-#' If `fallback` is `FALSE`, which the default, then the focus switches entirely
+#' There are two cases.  First, if `fallback` is `FALSE` (which the default)
+#' then the focus switches entirely
 #' to the adjusted data.  This improves the overall reliability of the results,
 #' but at the cost of eliminating realtime-mode data.  This is because the
 #' adjusted fields for realtime data are set to `NA` as a matter of policy (see
 #' section 2.2.5 of reference 1).
 #'
-#' Wider data coverage is obtained if `fallback` is set to `TRUE`.  In this
+#' Wider data coverage is obtained  if `fallback` is `TRUE`.  In this
 #' case, the focus is shifted to adjusted data *only if* the data-mode for
 #' the individual profiles is `A` or `D`, indicating either Adjusted or
 #' Delayed mode. Any profiles that are of the `R` (Realtime) data-mode are
