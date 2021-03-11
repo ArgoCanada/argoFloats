@@ -160,12 +160,18 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 #'
 #' `useAdjusted` returns a copy of an `argos`-type object (as created with the
 #' [readProfiles()] function), in which the individual
-#' [oce::argo-class] objects have been modified so that future calls to
-#' `[[,argoFloats-method` or the `plot,argoFloats-method()` will work with
-#' *adjusted* versions of the data.  In effect, this changes the focus from the
-#' observed data to adjusted data.  This works profile-by-profile, i.e. for each of
-#' the [oce::argo-class] objects stored within the first argument.
-#' Replacement only occurs if an adjusted field exists in the object.
+#' [oce::argo-class] objects may have been modified so that future calls to
+#' \code{\link{[[,argoFloats-method}}
+#' or \code{\link{plot,argoFloats-method}}
+#' will focus with
+#' *adjusted* versions of the data. (Note that this modification cannot
+#' be done for fields that lack adjusted values, so in such cases future
+#' calls to
+#' \code{\link{[[,argoFloats-method}}
+#' or
+#' \code{\link{plot,argoFloats-method}}
+#' work with the unadjusted fields.)
+#' The procedure is done profile by profile and parameter by parameter.
 #' The `fallback` argument offers a way to ''fall back'' to unadjusted
 #' values, depending on the data-mode (realtime, adjusted or delayed)
 #' for individual items; see \dQuote{Details}.

@@ -22,12 +22,18 @@ then information is printed for each Argo cycle contained in \code{argos}.}
 \description{
 \code{useAdjusted} returns a copy of an \code{argos}-type object (as created with the
 \code{\link[=readProfiles]{readProfiles()}} function), in which the individual
-\link[oce:argo-class]{oce::argo} objects have been modified so that future calls to
-\verb{[[,argoFloats-method} or the \verb{plot,argoFloats-method()} will work with
-\emph{adjusted} versions of the data.  In effect, this changes the focus from the
-observed data to adjusted data.  This works profile-by-profile, i.e. for each of
-the \link[oce:argo-class]{oce::argo} objects stored within the first argument.
-Replacement only occurs if an adjusted field exists in the object.
+\link[oce:argo-class]{oce::argo} objects may have been modified so that future calls to
+\code{\link{[[,argoFloats-method}}
+or \code{\link{plot,argoFloats-method}}
+will focus with
+\emph{adjusted} versions of the data. (Note that this modification cannot
+be done for fields that lack adjusted values, so in such cases future
+calls to
+\code{\link{[[,argoFloats-method}}
+or
+\code{\link{plot,argoFloats-method}}
+work with the unadjusted fields.)
+The procedure is done profile by profile and parameter by parameter.
 The \code{fallback} argument offers a way to ''fall back'' to unadjusted
 values, depending on the data-mode (realtime, adjusted or delayed)
 for individual items; see \dQuote{Details}.
