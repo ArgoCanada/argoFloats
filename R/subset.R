@@ -332,7 +332,7 @@ setMethod(f="subset",
                 res <- x
                 res@data$argos <- x@data$argos[keep]
                 if (!silent)
-                    message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                    message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                 argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                 return(res)
             }
@@ -442,7 +442,7 @@ setMethod(f="subset",
                 if (nkeep < 1)
                     warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
                 if (!silent)
-                    message("Kept ", nkeep, " profiles ")
+                    message("Kept ", nkeep, " cycles ")
                 x@data[[1]] <- x@data[[1]][keep]
             } else if (dotsNames[1]=="dataStateIndicator") {
                 argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
@@ -533,7 +533,7 @@ setMethod(f="subset",
                     keep[is.na(keep)] <- FALSE
                     x@data$index <- x@data$index[keep, ]
                     if (!silent)
-                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                 } else if (dotsNames[1] == "rectangle") {
                     argoFloatsDebug(debug, "subsetting an index by rectangle\n")
                     rectangle <- dots[[1]]
@@ -549,7 +549,7 @@ setMethod(f="subset",
                     keep <- keeplon & keeplat
                     x@data$index <- x@data$index[keep, ]
                     if (!silent)
-                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                 } else if (dotsNames[1]=="parameter") {
                     argoFloatsDebug(debug, "subsetting an index by parameter\n")
                     parameter <- dots[[1]]
@@ -561,7 +561,7 @@ setMethod(f="subset",
                     #if (sum(keep) < 1)
                     #warning("in subset,argoFloats-method(..., parameter):\n  found no profiles with given parameter", call.=FALSE)
                     if (!silent)
-                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                 } else if (dotsNames[1]=="polygon") {
                     argoFloatsDebug(debug, "subsetting an index by polygon\n")
@@ -617,7 +617,7 @@ setMethod(f="subset",
                     Intersection <- sf::st_intersection(Points, Polygon)
                     keep <- Intersection[,3]
                     if (!silent)
-                        message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                        message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                 } else if (dotsNames[1]=="time") {
                     argoFloatsDebug(debug, "subsetting an index by time\n")
@@ -647,7 +647,7 @@ setMethod(f="subset",
                     keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
                     keep[is.na(keep)] <- FALSE
                     if (!silent)
-                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                 } else if(dotsNames[1]=="institution") {
                     argoFloatsDebug(debug, "subsetting an index by institution\n")
@@ -659,7 +659,7 @@ setMethod(f="subset",
                     keep <- grepl(institution, x@data$index$institution)
                     keep[is.na(keep)] <- FALSE
                     if (!silent)
-                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                 } else if (dotsNames[1] == "deep") {
                     argoFloatsDebug(debug, "subsetting an index by deep category\n")
@@ -672,7 +672,7 @@ setMethod(f="subset",
                         keep <- grep("849|862|864", x@data$index$profiler_type, invert=TRUE)
                     }
                     if (!silent)
-                        message("Kept ", length(keep), " profiles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                        message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                 } else if (dotsNames[1] == "ID") {
                     argoFloatsDebug(debug, "subsetting an index by ID\n")
@@ -683,7 +683,7 @@ setMethod(f="subset",
                     for (thisID in ID)
                         keep <- keep | grepl(thisID, xID)
                     if (!silent)
-                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                 } else if (dotsNames[1]=="ocean") {
                     argoFloatsDebug(debug, "subsetting an index by ocean\n")
@@ -695,7 +695,7 @@ setMethod(f="subset",
                     keep <- grepl(ocean, x@data$index$ocean)
                     keep[is.na(keep)] <- FALSE
                     if (!silent)
-                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                 } else if (dotsNames[1]=="dataMode") {
                     argoFloatsDebug(debug, "subsetting an index by dataMode\n")
@@ -710,7 +710,7 @@ setMethod(f="subset",
                         stop("in subset,argoFloats-method():\n  \"dataMode\" must be either \"realtime\" or \"delayed\", not \"", dataMode, "\"", call.=FALSE)
                     }
                     if (!silent)
-                        message("Kept ", sum(keep), " profiles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                 } else if (dotsNames[1] == "cycle") {
                     cycle <- dots[[1]]
@@ -735,7 +735,7 @@ setMethod(f="subset",
                     if (nkeep < 1)
                         warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
                     if (!silent)
-                        message("Kept ", nkeep, " profiles (", sprintf("%.3g", 100*nkeep/N), "%)")
+                        message("Kept ", nkeep, " cycles (", sprintf("%.3g", 100*nkeep/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                 } else if (dotsNames[1]=="direction") {
                     argoFloatsDebug(debug, "subsetting an index by direction\n")
@@ -762,7 +762,7 @@ setMethod(f="subset",
                 if (!silent) {
                     if (is.logical(subset)) # this simplifies the percentage count for the method
                         subset <- which(subset)
-                    message("Kept ", length(subset), " profiles (", sprintf("%.3g", 100.0*length(subset)/dim(x@data$index)[1]), "%)")
+                    message("Kept ", length(subset), " cycles (", sprintf("%.3g", 100.0*length(subset)/dim(x@data$index)[1]), "%)")
                 }
                 x@data$index <- x@data$index[subset, ]
             } else {

@@ -21,13 +21,13 @@ test_that("subset by circle", {
           D <- oce::geodDist(lon, lat, -77.06, 26.54)
           N <- sum(D<=100)
           indexc <- expect_message(subset(index, circle=list(longitude=-77.06, latitude=26.54, radius=100)),
-                                   paste("Kept", N, "profiles"))
+                                   paste("Kept", N, "cycles"))
 })
 
 test_that("subset by rectangle", {
           N <- sum(-77 <= lon & lon <= -76 & 25 <= lat & lat <= 26)
           indexr <- expect_message(subset(index, rectangle=list(longitude=c(-77, -76), latitude=c(25, 26))),
-                                   paste("Kept", N, "profiles"))
+                                   paste("Kept", N, "cycles"))
 })
 
 test_that("subset by polygon", {
@@ -36,7 +36,7 @@ test_that("subset by polygon", {
           intersection <- sf::st_intersection(Points, Polygon)
           N <- nrow(intersection)
           expect_message(subset(index, polygon=list(latitude=c(25,27,25), longitude=c(-78,-77,-74))),
-                         paste("Kept", N, "profiles"))
+                         paste("Kept", N, "cycles"))
 })
 
 test_that("subset by time", {
@@ -44,23 +44,23 @@ test_that("subset by time", {
           to <- as.POSIXct("2019-12-31", tz="UTC")
           N <- sum(from <= time & time <= to)
           indext <- expect_message(subset(index, time=list(from=from, to=to)),
-                                   paste("Kept", N, "profiles"))
+                                   paste("Kept", N, "cycles"))
 })
 
 test_that("subset by institution", {
           N <- sum(index[["institution"]] == "AO")
           indexi <- expect_message(subset(index, institution="AO"),
-                                   paste("Kept", N, "profiles"))
+                                   paste("Kept", N, "cycles"))
 })
 
 test_that("subset by float ID", {
           N <- sum(ID == "1901584")
           indexID <- expect_message(subset(index, ID="1901584"),
-                                    paste("Kept", N, "profiles"))
+                                    paste("Kept", N, "cycles"))
 })
 
 test_that("subset by deep", {
-          indexID <- expect_message(subset(index, deep=TRUE), "Kept 0 profiles \\(0%\\)")
+          indexID <- expect_message(subset(index, deep=TRUE), "Kept 0 cycles \\(0%\\)")
 })
 
 test_that("silencing subset", {
@@ -70,12 +70,12 @@ test_that("silencing subset", {
 
 test_that("subset by ocean", {
           N <- sum(ocean == "A")
-          indexOcean <- expect_message(subset(index, ocean='A'), paste("Kept", N, "profiles"))
+          indexOcean <- expect_message(subset(index, ocean='A'), paste("Kept", N, "cycles"))
 })
 
 test_that("subset by cycle", {
           N <- sum(cycle == 124)
-          expect_message(subset(index, cycle=124), paste("Kept", N, "profiles"))
+          expect_message(subset(index, cycle=124), paste("Kept", N, "cycles"))
 })
 
 test_that("subset by profile",
@@ -83,9 +83,9 @@ test_that("subset by profile",
               skip_if_not(hasArgoTestCache())
               i <- getIndex(quiet=TRUE)
               N <- sum(i[["ID"]] == "5902250")
-              s <- expect_message(subset(i, ID="5902250"), paste("Kept", N, "profiles"))
+              s <- expect_message(subset(i, ID="5902250"), paste("Kept", N, "cycles"))
               N <- 1
-              s <- expect_message(subset(s, cycle="253"), paste("Kept", N, "profiles"))
+              s <- expect_message(subset(s, cycle="253"), paste("Kept", N, "cycles"))
               p <- getProfiles(s)
               a <- expect_output(readProfiles(p), "|===") # Robustness: OK if float stays in archive
               a1 <- expect_silent(subset(a, profile=1))
@@ -114,12 +114,12 @@ test_that("subset by profile",
 ##>           data("index")
 ##>           N <- 9
 ##>           index1 <- expect_message(subset(index, ID="1901584"),
-##>                                    paste("Kept", N, "profiles"))
+##>                                    paste("Kept", N, "cycles"))
 ##>           profiles <- expect_output(getProfiles(index1),"|===")
 ##>           argos <- expect_output(expect_warning(readProfiles(profiles),
 ##>                                                 "Of 9 profiles read, 8 have"), "|===")
 ##>           argos2 <- expect_message(subset(argos, cycle='147'),
-##>                                    "Kept 1 profiles \\(11.1%\\)")
+##>                                    "Kept 1 cycles \\(11.1%\\)")
 ##>           expect_equal(argos2[["cycle"]], "147")
 ##>           expect_equal(unique(argos2[['cycle']]), "147")
 ##> })
@@ -127,16 +127,16 @@ test_that("subset by profile",
 test_that("subset by dataMode", {
           Ndelayed <- sum(grepl(".*D[0-9_abc]+.nc$", index[["file"]]))
           index1 <- expect_message(subset(index, dataMode="delayed"),
-                                   paste("Kept", Ndelayed, "profiles"))
+                                   paste("Kept", Ndelayed, "cycles"))
           Nrealtime <- sum(grepl(".*R[0-9_abc]+.nc$", index[["file"]]))
           index2 <- expect_message(subset(index, dataMode="realtime"),
-                                   paste("Kept", Nrealtime, "profiles"))
+                                   paste("Kept", Nrealtime, "cycles"))
 })
 
 test_that("subset by parameter", {
           N <- sum(grepl("DOXY", indexBgc[["parameters"]]))
           index1 <- expect_message(subset(indexBgc, parameter="DOXY"),
-                                   paste("Kept", N, "profiles"))
+                                   paste("Kept", N, "cycles"))
 })
 
 test_that("subset stop messages", {
@@ -144,7 +144,7 @@ test_that("subset stop messages", {
           expect_error(subset(argos, "Error: in subset,argoFloats-method() : must give 'profile' or 'cycle' argument"))
           expect_error(subset(argos, profile=2,
                               "Error: in subset,argoFloats-method() : cannot access profile 2 of metadata item 'flags' because its dimension is 335 1 "))
-          argos2 <- expect_message(subset(argos, cycle=131), "Kept 1 profiles")
+          argos2 <- expect_message(subset(argos, cycle=131), "Kept 1 cycles")
           expect_error(subset(argos, map=1, " Error: in subset,argoFloats-method(): the only permitted '...' argument for argos type is 'profile' or 'cycle'"))
           expect_error(subset(argos, cycle="1", "Error: In subset,argoFloats-method(): Cycle '1' not found. Try one of: 131"))
           expect_error(subset(index, circle='dog', " Error: in subset,argoFloats-method() : 'circle' must be a list containing 'longitude', 'latitude' and 'radius'"))
@@ -175,7 +175,7 @@ test_that("subset stop messages", {
 ##>           skip_if_not(hasArgoTestCache())
 ##>           data("index")
 ##>           N <- 20
-##>           index1 <- expect_message(subset(index, 1:20, paste("Kept", N, "profiles")))
+##>           index1 <- expect_message(subset(index, 1:20, paste("Kept", N, "cycles")))
 ##>           profiles <- expect_output(getProfiles(index1),"|===")
 ##>           argos <- expect_output(expect_warning(readProfiles(profiles), "Of 20 profiles read, 8 have"), "|===")
 ##>           argos2 <- expect_silent(subset(argos, dataStateIndicator="2C"))

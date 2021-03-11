@@ -31,10 +31,10 @@ context("quality-control flags")
 ##> test_that("showing QC tests", {
 ##>     skip_if_not(hasArgoTestCache())
 ##>     data('index')
-##>     subset <- expect_message(subset(index, 1), "Kept 1 profile")
+##>     subset <- expect_message(subset(index, 1), "Kept 1 cycles")
 ##>     ## DK: this was not used
 ##>     ##indexq <- expect_message(subset(index, 1),
-##>     ##                         "Kept 1 profiles \\(0.105%\\)")
+##>     ##                         "Kept 1 cycles \\(0.105%\\)")
 ##>     profiles <- getProfiles(subset)
 ##>     argos <- expect_output(expect_warning(readProfiles(profiles), "^Of 1 profiles read"), "|===")
 ##>     argos1 <- argos[[1]]

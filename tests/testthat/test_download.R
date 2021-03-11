@@ -17,7 +17,7 @@ test_that("getProfiles()",
           {
               tempFile <- tempfile()
               dir.create(tempFile)
-              s <- expect_message(subset(index, 1:3), "Kept 3 profiles")
+              s <- expect_message(subset(index, 1:3), "Kept 3 cycles")
               p <- getProfiles(s, destdir=tempFile)
               expect <- expect_output(print(p), "argoFloats object of type \"profiles\" with 3 items")
               expect_equal(p[["cycle"]], c("124", "125", "126"))
@@ -137,7 +137,7 @@ test_that("downloadWithRetries() sets destination to NA on failure with async=TR
 ##>           {
 ##>               skip_if_not(hasArgoTestCache())
 ##>               data(index)
-##>               s <- expect_message(subset(index, 778), "Kept 1 profiles")
+##>               s <- expect_message(subset(index, 778), "Kept 1 cycles")
 ##>               p <- expect_output(getProfiles(s, skip=FALSE), "|===")
 ##>               p <- expect_output(getProfiles(s, skip=TRUE), "|===")
 ##>               p <- expect_output(getProfiles(s),"|===") # default is skip=TRUE

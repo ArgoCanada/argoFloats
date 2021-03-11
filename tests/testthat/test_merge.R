@@ -8,8 +8,8 @@ data(indexBgc)
 
 test_that("test merging core data",
           {
-              C <- expect_message(subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50)), "Kept [0-9]* profiles")
-              R <- expect_message(subset(index, rectangle=list(longitude=c(-76.5, -76), latitude=c(26.5, 27.5))), "Kept [0-9]* profiles")
+              C <- expect_message(subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50)), "Kept [0-9]* cycles")
+              R <- expect_message(subset(index, rectangle=list(longitude=c(-76.5, -76), latitude=c(26.5, 27.5))), "Kept [0-9]* cycles")
               RC <- expect_silent(merge(C, R))
           }
 )
