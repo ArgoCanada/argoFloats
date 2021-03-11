@@ -828,7 +828,6 @@ setMethod(f="plot",
                                      pressure=pressure,
                                      latitude=latitude,
                                      longitude=longitude)
-                  ## FIXME: move this TSControl work the which="TS" code {{
                   if (is.null(TSControl))
                       TSControl <- list(colByCycle=NULL)
                   if (is.null(TSControl$colByCycle)) {
@@ -848,7 +847,6 @@ setMethod(f="plot",
                       colByCycle <- rep(colByCycle, length.out=length(cycle))
                       col <- unlist(lapply(seq_along(cycle), function(i) rep(colByCycle[i], lengths[i])))
                   }
-                  ## }}} FIXME
                   if (is.null(cex)) {
                       cex <- par("cex")
                       argoFloatsDebug(debug, "TS plot defaulting to cex=", cex, "\n")

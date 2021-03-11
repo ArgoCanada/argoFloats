@@ -106,7 +106,7 @@ is returned as a named list.  (At present, there is only one choice: \code{"argo
 \item Otherwise, if \code{i} is a character value then it is taken to be
 an item within the \code{metadata} or \code{data} slots of the argo objects
 stored in \code{x}, and the returned value is a list containing that
-information with one (unnamed) item per profile.  \strong{FIXME: this does not work: <<<}
+information with one (unnamed) item per profile.
 If \code{j} is provided
 and equal to \code{"byLevel"}, then the items from the \code{metadata} are
 repeated (if necessary) and formed into matrix or vector of the same

@@ -282,7 +282,7 @@ setMethod(f="initialize",
 #'     7. Otherwise, if `i` is a character value then it is taken to be
 #'        an item within the `metadata` or `data` slots of the argo objects
 #'        stored in `x`, and the returned value is a list containing that
-#'        information with one (unnamed) item per profile.  **FIXME: this does not work: <<<**
+#'        information with one (unnamed) item per profile.
 #'        If `j` is provided
 #'        and equal to `"byLevel"`, then the items from the `metadata` are
 #'        repeated (if necessary) and formed into matrix or vector of the same
@@ -443,44 +443,6 @@ setMethod(f="[[",
                               RES <- lapply(x[["argos"]],
                                             function(a) {
                                                 a[[i]] # note that this might be i, or adjusted i
-                                                ## OLD: return(a[[i]]) # note that this might be i, or adjusted i
-                                                ## OLD: ## FIXME: ignoring next
-                                                ## OLD: if (i %in% names(a@data)) {
-                                                ## OLD:     argoFloatsDebug(debug, "Case 1: \"", i, "\" is known by name\n", sep="")
-                                                ## OLD:     res <- a[[i]] # note that this might be i, or adjusted i
-                                                ## OLD: } else {
-                                                ## OLD:     argoFloatsDebug(debug, "Case 2: \"", i, "\" must be computed\n", sep="")
-                                                ## OLD:     if (!i %in% computable) {
-                                                ## OLD:         warning("\"", i, "\" is not a known computable\n", sep="")
-                                                ## OLD:         return(NULL)
-                                                ## OLD:     }
-
-                                                ## OLD:     ## Assume uniform dimensionality for all @data in a given argo object
-                                                ## OLD:     p <- a@data[["pressure"]]
-                                                ## OLD:     if (is.null(p)) {
-                                                ## OLD:         warning("Returning NULL, since oce::argo object lacks pressure.\n")
-                                                ## OLD:         NULL
-                                                ## OLD:     }
-                                                ## OLD:     argoFloatsDebug(debug, "Pressure dimension, ", paste(dim(p), collapse="x"), ", will be used to set dim of return value.\n", sep="")
-                                                ## OLD:     if (is.matrix(p)) {
-                                                ## OLD:         argoFloatsDebug(debug, "Case 1: pressure is a matrix\n")
-                                                ## OLD:         nrow <- nrow(p)
-                                                ## OLD:         ncol <- ncol(p)
-                                                ## OLD:         ##> message("case 1: is a matrix with nrow=", nrow, ", ncol=", ncol)
-                                                ## OLD:         res <- matrix(NA, nrow=nrow, ncol=ncol)
-                                                ## OLD:         for (col in seq_len(ncol)) {
-                                                ## OLD:             argoFloatsDebug(debug, "  accessing profile number", col, "\n")
-                                                ## OLD:             ctd <- oce::as.ctd(a, profile=col)
-                                                ## OLD:             res[, col] <- ctd[[i, debug=debug]]
-                                                ## OLD:         }
-                                                ## OLD:     } else {
-                                                ## OLD:         argoFloatsDebug(debug, "Case 2: pressure is not a matrix\n")
-                                                ## OLD:         ##> message("case 2: not a matrix")
-                                                ## OLD:         ctd <- oce::as.ctd(a)
-                                                ## OLD:         res <- ctd[[i]]
-                                                ## OLD:     }
-                                                ## OLD: }
-                                                ## OLD: res
                                             })
                               argoFloatsDebug(debug, "} # [[,argoFloats-method\n", style="bold", unindent=1)
                               return(RES)
