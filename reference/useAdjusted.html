@@ -49,12 +49,18 @@
 <meta property="og:title" content="Switch [[ and Plot to Focus on Adjusted data, if available — useAdjusted" />
 <meta property="og:description" content="useAdjusted returns a copy of an argos-type object (as created with the
 readProfiles() function), in which the individual
-oce::argo objects have been modified so that future calls to
-[[,argoFloats-method or the plot,argoFloats-method() will work with
-adjusted versions of the data.  In effect, this changes the focus from the
-observed data to adjusted data.  This works profile-by-profile, i.e. for each of
-the oce::argo objects stored within the first argument.
-Replacement only occurs if an adjusted field exists in the object.
+oce::argo objects may have been modified so that future calls to
+[[,argoFloats-method
+or plot,argoFloats-method
+will focus with
+adjusted versions of the data. (Note that this modification cannot
+be done for fields that lack adjusted values, so in such cases future
+calls to
+[[,argoFloats-method
+or
+plot,argoFloats-method
+work with the unadjusted fields.)
+The procedure is done profile by profile and parameter by parameter.
 The fallback argument offers a way to ''fall back'' to unadjusted
 values, depending on the data-mode (realtime, adjusted or delayed)
 for individual items; see &amp;#8220;Details&amp;#8221;." />
@@ -151,12 +157,18 @@ for individual items; see &amp;#8220;Details&amp;#8221;." />
     <div class="ref-description">
     <p><code>useAdjusted</code> returns a copy of an <code>argos</code>-type object (as created with the
 <code><a href='readProfiles.html'>readProfiles()</a></code> function), in which the individual
-<a href='https://dankelley.github.io/oce/reference/argo-class.html'>oce::argo</a> objects have been modified so that future calls to
-<code>[[,argoFloats-method</code> or the <code>plot,argoFloats-method()</code> will work with
-<em>adjusted</em> versions of the data.  In effect, this changes the focus from the
-observed data to adjusted data.  This works profile-by-profile, i.e. for each of
-the <a href='https://dankelley.github.io/oce/reference/argo-class.html'>oce::argo</a> objects stored within the first argument.
-Replacement only occurs if an adjusted field exists in the object.
+<a href='https://dankelley.github.io/oce/reference/argo-class.html'>oce::argo</a> objects may have been modified so that future calls to
+<code><a href='[[,argoFloats-method.html'>[[,argoFloats-method</a></code>
+or <code><a href='plot,argoFloats-method.html'>plot,argoFloats-method</a></code>
+will focus with
+<em>adjusted</em> versions of the data. (Note that this modification cannot
+be done for fields that lack adjusted values, so in such cases future
+calls to
+<code><a href='[[,argoFloats-method.html'>[[,argoFloats-method</a></code>
+or
+<code><a href='plot,argoFloats-method.html'>plot,argoFloats-method</a></code>
+work with the unadjusted fields.)
+The procedure is done profile by profile and parameter by parameter.
 The <code>fallback</code> argument offers a way to ''fall back'' to unadjusted
 values, depending on the data-mode (realtime, adjusted or delayed)
 for individual items; see &#8220;Details&#8221;.</p>
