@@ -720,18 +720,16 @@ setMethod(f="subset",
                     xcycle <- x[["cycle"]]
                     # If cycle is numeric, we must convert it to character (so e.g. 1 becomes "001")
                     if (is.numeric(cycle)) {
-                        cycle <- sprintf("%03d", cycle)
+                        cycle <- sprintf("%03d", as.integer(cycle))
                         argoFloatsDebug(debug, "subsetting an index by cycle of numeric type\n")
-                    } else {
+                    } else if (is.character(cycle)) {
                         argoFloatsDebug(debug, "subsetting an index by cycle of character type\n")
-                    }
-                    if (is.character(cycle)) {
-                        keep <- rep(FALSE, length(xcycle))
-                        for (thisCycle in cycle)
-                            keep <- keep | grepl(thisCycle, xcycle)
                     } else {
                         stop("cycle must be character or numeric")
                     }
+                    keep <- rep(FALSE, length(xcycle))
+                    for (thisCycle in cycle)
+                        keep <- keep | grepl(thisCycle, xcycle)
                     nkeep <- sum(keep)
                     if (nkeep < 1)
                         warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
