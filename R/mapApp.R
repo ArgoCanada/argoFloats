@@ -138,7 +138,19 @@ serverMapApp <- function(input, output, session)
         notificationId <- shiny::showNotification("Step 2/5: Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
         iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
         shiny::removeNotification(notificationId)
-        ## Combine core and BGC data.
+        # Combine core and BGC data.  This relies on the fact that every BGC ID is
+        # also a core ID.  Here is sample code that proves it:
+        #
+        # library(argoFloats)
+        # i <- getIndex()
+        # b <- getIndex("bgc")
+        # iid <- i[["ID"]]
+        # bid <- b[["ID"]]
+        # stopifnot(sum(bid %in% iid) == length(bid))
+        #
+        # (The above works without signalling an error.  FYI, there were 231513 entries
+        # in bid.)
+
         #notificationId <- shiny::showNotification("Combining \"core\" and \"BGC\" data.", type="message", duration=NULL)
         notificationId <- shiny::showNotification("Step 3/5: Getting \"Deep\" Argo index. This may take a minute or two.", type="message", duration=NULL)
         ID <- i[["ID"]]

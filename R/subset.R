@@ -413,7 +413,7 @@ setMethod(f="subset",
                 argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                 return(res)
             } else if (dotsNames[1] == "cycle") {
-                argoFloatsDebug(debug, "subsetting by cycle for 'index' type\n")
+                argoFloatsDebug(debug, "subsetting by cycle for 'argos' type\n")
                 cycle <- dots[[1]]
                 if (!is.character(cycle) & !is.numeric(cycle))
                     stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
@@ -718,20 +718,21 @@ setMethod(f="subset",
                         stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
                     ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
                     xcycle <- x[["cycle"]]
-                    if (is.character(cycle)) {
+                    # If cycle is numeric, we must convert it to character (so e.g. 1 becomes "001")
+                    if (is.numeric(cycle)) {
+                        cycle <- sprintf("%03d", cycle)
+                        argoFloatsDebug(debug, "subsetting an index by cycle of numeric type\n")
+                    } else {
                         argoFloatsDebug(debug, "subsetting an index by cycle of character type\n")
-                        ## Here, keep is logical
+                    }
+                    if (is.character(cycle)) {
                         keep <- rep(FALSE, length(xcycle))
                         for (thisCycle in cycle)
                             keep <- keep | grepl(thisCycle, xcycle)
-                        nkeep <- sum(keep)
-                    } else if (is.numeric(cycle)) {
-                        argoFloatsDebug(debug, "subsetting an index by cycle of numeric type\n")
-                        keep <- grepl(sprintf("%03d", cycle), xcycle)
-                        # <WRONG>if (sum(keep) > 1)
-                        # <WRONG>    warning("In subset,argoFloats-method(..., cycle=", cycle, ") : more than one match; use a character value for 'cycle' to narrow to one match", call.=FALSE)
-                        nkeep <- sum(keep)
+                    } else {
+                        stop("cycle must be character or numeric")
                     }
+                    nkeep <- sum(keep)
                     if (nkeep < 1)
                         warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
                     if (!silent)
