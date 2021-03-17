@@ -76,6 +76,8 @@ test_that("subset by ocean", {
 test_that("subset by cycle", {
           N <- sum(cycle == 124)
           expect_message(subset(index, cycle=124), paste("Kept", N, "cycles"))
+          N <- 10
+          index1 <- expect_message(subset(index, cycle=124:125), paste("Kept", N, "cycles"))
 })
 
 test_that("subset by profile",
