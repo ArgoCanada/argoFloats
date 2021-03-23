@@ -120,6 +120,10 @@
 #' V3.3 (Carvel et al. 2019) for the description of each acronym.
 #' See example 17.
 #'
+#' 18. A list named `section`, which has elements named
+#' `lon1`,`lon2`, and `width` used to create a section of Argo floats.
+#' See example 18.
+#'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
 #' is positive for degrees North and negative for degrees South.
@@ -131,7 +135,7 @@
 #'
 #' @param ... the first entry here must be either (a) a list named `circle`,
 #' `rectangle`, `polygon`, `parameter`, `time`, `institution`,
-#' `ID`,`ocean`,`dataMode`,`cycle`, `direction`, or `profile`.
+#' `ID`,`ocean`,`dataMode`,`cycle`, `direction`, `profile`, or `section`.
 #'  (examples 2 through 8, and 10 through 14),
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
@@ -270,6 +274,10 @@
 #' # Example 17: subset by historyAction
 #' data("index")
 #' index17 <- subset(index, historyAction="IP")}
+#'
+#' # Example 18: subset by section
+#' data("index")
+#'
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -514,7 +522,7 @@ setMethod(f="subset",
         if (missing(subset)) {
             #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
             if (length(dots) == 0)
-                stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with \"subset\" argument, \"circle\",\"rectangle\", \"parameter\",\"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", dataMode\", \"cycle\", or \"direction\"", call.=FALSE)
+                stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with \"subset\" argument, \"circle\",\"rectangle\", \"parameter\",\"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", dataMode\", \"cycle\",\"direction\", or \"section\"", call.=FALSE)
             if (length(dots) > 1)
                 stop("in subset,argoFloats-method() :\n  cannot give more than one method in the \"...\" argument", call.=FALSE)
             N <- length(x@data$index[[1]]) # used in calculating percentages
@@ -749,8 +757,24 @@ setMethod(f="subset",
                         stop("in subset,argoFloats-method():\n  \"direction\" must be either \"ascent\" or \"descent\", not \"", direction, "\"", call.=FALSE)
                     }
                     x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1] == "section") {
+                    argoFloatsDebug(debug, "subsetting an index by section\n")
+                    section <- dots[[1]]
+                    if (!is.list(dots[1]))
+                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"lon1\", \"lon2\" and \"width\".", call.=FALSE)
+                    if (3 != sum(c("lon1", "lon2", "width") %in% sort(names(section))))
+                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"lon1\", \"lon2\" and \"width\".", call.=FALSE)
+                    keeplon <- section$lon1 <=x[["longitude"]] & x[["longitude"]] <= section$lon2
+                    latLim <- (section$width)/2 # diving by 2 to set latLim
+                    # keeplon keeps index between two given lons. Now need to get width to work.
+                    x@data$index <- x@data$index[keeplon, ]
+                    #if (!silent)
+                    #    message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+
+
+
                 } else {
-                    stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an index-type object. The only valid choices are \"circle\", \"rectangle\", \"parameter\", \"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", \"dataMode\", \"cycle\" and \"direction\".", call.=FALSE)
+                    stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an index-type object. The only valid choices are \"circle\", \"rectangle\", \"parameter\", \"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", \"dataMode\", \"cycle\",\"direction\" and \"section\"", call.=FALSE)
                 }
             }
         } else {
