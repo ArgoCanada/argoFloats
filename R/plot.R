@@ -701,23 +701,6 @@ setMethod(f="plot",
                       col[cycleType == "Bgc"] <- colDefaults$bgc
                       col[cycleType == "deep"] <- colDefaults$deep
                   }
-                  if (is.null(pch))
-                      pch <- 21
-                  if (length(pch) == 1 && pch == 21) {
-                      points(unlist(longitude), unlist(latitude),
-                             cex=if (is.null(cex)) 1 else cex,
-                             pch=pch,
-                             bg=col,
-                             type=if (is.null(type)) "p" else type,
-                             ...)
-                  } else {
-                      points(unlist(longitude), unlist(latitude),
-                             cex=if (is.null(cex)) 1 else cex,
-                             pch=pch,
-                             col=col,
-                             type=if (is.null(type)) "p" else type,
-                             ...)
-                  }
                   ## Select coastline.  Unlike in oce::plot,coastline-method, we base our choice
                   ## on just the distance spanned in the north-south direction.
                   ocedataIsInstalled <- requireNamespace("ocedata", quietly=TRUE)
@@ -747,6 +730,23 @@ setMethod(f="plot",
                           coastlineWorld <- get("coastlineWorld")
                           polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col= if (is.null(colLand)) "lightgray" else colLand)
                       }
+                  if (is.null(pch))
+                      pch <- 21
+                  if (length(pch) == 1 && pch == 21) {
+                      points(unlist(longitude), unlist(latitude),
+                             cex=if (is.null(cex)) 1 else cex,
+                             pch=pch,
+                             bg=col,
+                             type=if (is.null(type)) "p" else type,
+                             ...)
+                  } else {
+                      points(unlist(longitude), unlist(latitude),
+                             cex=if (is.null(cex)) 1 else cex,
+                             pch=pch,
+                             col=col,
+                             type=if (is.null(type)) "p" else type,
+                             ...)
+                  }
                   } else {
                       argoFloatsDebug(debug, "using coastlineWorld from oce package, since the ocedata package is not installed\n")
                       data("coastlineWorld", package="ocedata", envir=environment())
