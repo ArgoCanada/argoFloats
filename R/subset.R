@@ -121,7 +121,7 @@
 #' See example 17.
 #'
 #' 18. A list named `section`, which has elements named
-#' `lon1`,`lon2`, and `width` used to create a section of Argo floats.
+#' `longitude`,`latitude`, and `width` used to create a section of Argo floats.
 #' See example 18.
 #'
 #' In all cases, the notation is that longitude is positive
@@ -277,7 +277,7 @@
 #'
 #' # Example 18: subset by section
 #' data("index")
-#'
+#' index18 <- subset(index, section=list(longitude=c(-78, -76, -75), latitude=c(26,26,25), width=50))
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -761,18 +761,29 @@ setMethod(f="subset",
                     argoFloatsDebug(debug, "subsetting an index by section\n")
                     section <- dots[[1]]
                     if (!is.list(dots[1]))
-                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"lon1\", \"lon2\" and \"width\".", call.=FALSE)
-                    if (3 != sum(c("lon1", "lon2", "width") %in% sort(names(section))))
-                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"lon1\", \"lon2\" and \"width\".", call.=FALSE)
-                    keeplon <- section$lon1 <=x[["longitude"]] & x[["longitude"]] <= section$lon2
-                    latLim <- (section$width)/2 # diving by 2 to set latLim
-                    # keeplon keeps index between two given lons. Now need to get width to work.
-                    x@data$index <- x@data$index[keeplon, ]
-                    #if (!silent)
-                    #    message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-
-
-
+                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"longitude\", \"latitude\" and \"width\".", call.=FALSE)
+                    if (3 != sum(c("longitude", "latitude", "width") %in% sort(names(section))))
+                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"longitude\", \"latitude\" and \"width\".", call.=FALSE)
+                    if (!is.vector(section$longitude))
+                        stop("in subset,argoFloats-method() :\n  \"longitude\" must be a vector for section subset.", call.=FALSE)
+                    if (!is.vector(section$latitude))
+                        stop("in subset,argoFloats-method() :\n  \"latitude\" must be a vector for section subset.", call.=FALSE)
+                    km <- section$width/111 # Change width from km to degree
+                    range <- lapply(as.list(section$latitude), function(a) range(a-(km/2), a+(km/2)))
+                                        # Do all of the top, and then all of the bottom to avoid intersection
+                    lonPoints <-c(section$longitude, rev(section$longitude))
+                    resultFirst <- vector("numeric", length(range))
+                    for(i in seq_along(range)) {
+                        first <- range[[i]][[1]]
+                        resultFirst[i] <- first
+                    }
+                    resultSecond <- vector("numeric", length(range))
+                    for(i in seq_along(range)) {
+                        second <- range[[i]][[2]]
+                        resultSecond[i] <- second
+                    }
+                    latPoints <- c(resultFirst, rev(resultSecond))
+                                        #subset(x, polygon=list(longitude=lonPoints, latitude=latPoints))
                 } else {
                     stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an index-type object. The only valid choices are \"circle\", \"rectangle\", \"parameter\", \"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", \"dataMode\", \"cycle\",\"direction\" and \"section\"", call.=FALSE)
                 }
