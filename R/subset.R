@@ -277,9 +277,14 @@
 #' data("index")
 #' index17 <- subset(index, historyAction="IP")}
 #'
-#' # Example 18: subset by section
-#' data("index")
-#' index18 <- subset(index, section=list(longitude=c(-78, -76, -75), latitude=c(26,26,25), width=50))
+#' # Example 18: subset by section to create a map plot
+#' \dontrun{
+#' ai <- getIndex()
+#' longitude <- c(-78, -76, -75)
+#' latitude <-c(26,26,25)
+#' index18 <- subset(ai, section=list(longitude=longitude, latitude=latitude, width=50))
+#' plot(index18, xlim=c(-78.5, -74))
+#' points(longitude, latitude, pch=21, col="black", bg="red")}
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
