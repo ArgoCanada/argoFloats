@@ -181,8 +181,8 @@ indices of <code>x@data$index</code> to keep (example 1).</p></td>
       <th>...</th>
       <td><p>the first entry here must be either (a) a list named <code>circle</code>,
 <code>rectangle</code>, <code>polygon</code>, <code>parameter</code>, <code>time</code>, <code>institution</code>,
-<code>ID</code>,<code>ocean</code>,<code>dataMode</code>,<code>cycle</code>, <code>direction</code>, or <code>profile</code>.
-(examples 2 through 8, and 10 through 14),
+<code>ID</code>,<code>ocean</code>,<code>dataMode</code>,<code>cycle</code>, <code>direction</code>, <code>profile</code>, or <code>section</code>.
+(examples 2 through 8, and 10 through 18),
 or (b) a logical value named <code>deep</code> (example 9).  Optionally, this entry
 may be followed by second entry named <code>silent</code>, which is a logical
 value indicating whether to prevent the printing of messages that
@@ -283,6 +283,11 @@ See example 16.</p></li>
 "DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
 V3.3 (Carvel et al. 2019) for the description of each acronym.
 See example 17.</p></li>
+<li><p>A list named <code>section</code>, which has three elements:
+<code>longitude</code>, and <code>latitude</code>, that are numeric vectors, and <code>width</code>, given in km
+that specifies the total span from the <code>latitude</code> and <code>longitude</code> points that
+will be retained in the section.
+See example 18.</p></li>
 </ol>
 
 <p>In all cases, the notation is that longitude is positive
@@ -462,7 +467,16 @@ col1<span class='op'>=</span> <span class='va'>argos14B</span><span class='op'>[
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"index"</span><span class='op'>)</span>
 <span class='va'>index17</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, historyAction<span class='op'>=</span><span class='st'>"IP"</span><span class='op'>)</span><span class='co'># }</span>
 </div><div class='output co'>#&gt; <span class='error'>Error: in subset,argoFloats-method():</span>
-#&gt; <span class='error'>  the "..." argument "historyAction" is not permitted for an index-type object. The only valid choices are "circle", "rectangle", "parameter", "polygon", "time", "institution", "deep", "ID", "ocean", "dataMode", "cycle" and "direction".</span></div><div class='input'>
+#&gt; <span class='error'>  the "..." argument "historyAction" is not permitted for an index-type object. The only valid choices are "circle", "rectangle", "parameter", "polygon", "time", "institution", "deep", "ID", "ocean", "dataMode", "cycle","direction" and "section"</span></div><div class='input'>
+<span class='co'># Example 18: subset by section to create a map plot</span>
+<span class='co'># \dontrun{</span>
+<span class='va'>ai</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>longitude</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>78</span>, <span class='op'>-</span><span class='fl'>76</span>, <span class='op'>-</span><span class='fl'>75</span><span class='op'>)</span>
+<span class='va'>latitude</span> <span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>26</span>,<span class='fl'>26</span>,<span class='fl'>25</span><span class='op'>)</span>
+<span class='va'>index18</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>ai</span>, section<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='va'>longitude</span>, latitude<span class='op'>=</span><span class='va'>latitude</span>, width<span class='op'>=</span><span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Kept 127 cycles (0.00523%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index18</span>, xlim<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>78.5</span>, <span class='op'>-</span><span class='fl'>74</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>longitude</span>, <span class='va'>latitude</span>, pch<span class='op'>=</span><span class='fl'>21</span>, col<span class='op'>=</span><span class='st'>"black"</span>, bg<span class='op'>=</span><span class='st'>"red"</span><span class='op'>)</span><span class='co'># }</span>
+</div><div class='img'><img src='subset-argoFloats-method-5.png' alt='' width='672' height='672' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
