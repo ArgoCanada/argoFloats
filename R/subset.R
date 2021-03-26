@@ -120,6 +120,12 @@
 #' V3.3 (Carvel et al. 2019) for the description of each acronym.
 #' See example 17.
 #'
+#' 18. A list named `section`, which has three elements:
+#' `longitude`, and `latitude`, that are numeric vectors, and `width`, given in km
+#' that specifies the total span from the `latitude` and `longitude` points that
+#' will be retained in the section.
+#' See example 18.
+#'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
 #' is positive for degrees North and negative for degrees South.
@@ -131,8 +137,8 @@
 #'
 #' @param ... the first entry here must be either (a) a list named `circle`,
 #' `rectangle`, `polygon`, `parameter`, `time`, `institution`,
-#' `ID`,`ocean`,`dataMode`,`cycle`, `direction`, or `profile`.
-#'  (examples 2 through 8, and 10 through 14),
+#' `ID`,`ocean`,`dataMode`,`cycle`, `direction`, `profile`, or `section`.
+#'  (examples 2 through 8, and 10 through 18),
 #' or (b) a logical value named `deep` (example 9).  Optionally, this entry
 #' may be followed by second entry named `silent`, which is a logical
 #' value indicating whether to prevent the printing of messages that
@@ -270,6 +276,15 @@
 #' # Example 17: subset by historyAction
 #' data("index")
 #' index17 <- subset(index, historyAction="IP")}
+#'
+#' # Example 18: subset by section to create a map plot
+#' \dontrun{
+#' ai <- getIndex()
+#' longitude <- c(-78, -76, -75)
+#' latitude <-c(26,26,25)
+#' index18 <- subset(ai, section=list(longitude=longitude, latitude=latitude, width=50))
+#' plot(index18, xlim=c(-78.5, -74))
+#' points(longitude, latitude, pch=21, col="black", bg="red",type="o")}
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
@@ -514,7 +529,7 @@ setMethod(f="subset",
         if (missing(subset)) {
             #argoFloatsDebug(debug, "no subset was given, so it must be circle=, rectangle=, or similar\n")
             if (length(dots) == 0)
-                stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with \"subset\" argument, \"circle\",\"rectangle\", \"parameter\",\"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", dataMode\", \"cycle\", or \"direction\"", call.=FALSE)
+                stop("in subset,argoFloats-method() :\n for indices, must specify the subset, with \"subset\" argument, \"circle\",\"rectangle\", \"parameter\",\"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", dataMode\", \"cycle\",\"direction\", or \"section\"", call.=FALSE)
             if (length(dots) > 1)
                 stop("in subset,argoFloats-method() :\n  cannot give more than one method in the \"...\" argument", call.=FALSE)
             N <- length(x@data$index[[1]]) # used in calculating percentages
@@ -749,8 +764,193 @@ setMethod(f="subset",
                         stop("in subset,argoFloats-method():\n  \"direction\" must be either \"ascent\" or \"descent\", not \"", direction, "\"", call.=FALSE)
                     }
                     x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1] == "section") {
+                    argoFloatsDebug(debug, "subsetting an index by section\n")
+                    section <- dots[[1]]
+                    if (!is.list(dots[1]))
+                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"longitude\", \"latitude\" and \"width\".", call.=FALSE)
+                    if (3 != sum(c("longitude", "latitude", "width") %in% sort(names(section))))
+                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"longitude\", \"latitude\" and \"width\".", call.=FALSE)
+                    if (!is.vector(section$longitude))
+                        stop("in subset,argoFloats-method() :\n  \"longitude\" must be a vector for section subset.", call.=FALSE)
+                    if (!is.vector(section$latitude))
+                        stop("in subset,argoFloats-method() :\n  \"latitude\" must be a vector for section subset.", call.=FALSE)
+                    km <- section$width/111 # Change width from km to degree
+                    range <- lapply(as.list(section$latitude), function(a) range(a-(km/2), a+(km/2)))
+                                        # Do all of the top, and then all of the bottom to avoid intersection
+                    lonPoints <-c(section$longitude, rev(section$longitude))
+                    resultFirst <- vector("numeric", length(range))
+                    for(i in seq_along(range)) {
+                        first <- range[[i]][[1]]
+                        resultFirst[i] <- first
+                    }
+                    resultSecond <- vector("numeric", length(range))
+                    for(i in seq_along(range)) {
+                        second <- range[[i]][[2]]
+                        resultSecond[i] <- second
+                    }
+                    latPoints <- c(resultFirst, rev(resultSecond))
+                    if (length(latPoints) != length(lonPoints))
+                        stop("lengths of section$longitude and section$latitude must match, but they are ",
+                             length(latPoints), " and ", length(lonPoints))
+                    if ((head(lonPoints, 1) != tail(lonPoints, 1)) || head(latPoints, 1) != tail(latPoints, 1)) {
+                        lonPoints <- c(lonPoints, lonPoints[1])
+                        latPoints <- c(latPoints, latPoints[1])
+                    }
+                    alon <- x[["longitude"]]
+                    alat <- x[["latitude"]]
+                    ok <- is.finite(alon) & is.finite(alat)
+                    if (!requireNamespace("sf", quietly=TRUE))
+                        stop("must install sf package for subset(...,section,...) to this to work")
+                    Polygon <- sf::st_polygon(list(outer=cbind(lonPoints, latPoints, rep(0, length(lonPoints)))))
+                    if (!is.finite(sf::st_is_valid(Polygon))) {
+                        errorMessage <- sf::st_is_valid(Polygon, reason=TRUE)
+                        stop(paste0("Error in subset,argoFloats-method():\n  polygon is invalid, because of ", errorMessage), call.=FALSE)
+                    }
+                    Points <- sf::st_multipoint(cbind(ifelse(ok, alon, 0),
+                                                      ifelse(ok, alat, 0),
+                                                      seq_along(alon)))
+                    if (!sf::st_is_valid(Points)) {
+                        errorMessage <- sf::st_is_valid(Points, reason=TRUE)
+                        stop(paste0("Error in subset,argoFloats-method():\n  \"Points\" is invalid, because of ", errorMessage), call.=FALSE)
+                    }
+                    Intersection <- sf::st_intersection(Points, Polygon)
+                    keep <- Intersection[,3]
+                    if (!silent)
+                        message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1]=="time") {
+                    argoFloatsDebug(debug, "subsetting an index by time\n")
+                    time <- dots[[1]]
+                    if(!is.list(dots[1]))
+                        stop("in subset,argoFloats-method():\n  \"time\" must be a list", call.=FALSE)
+                    if (2 != sum(c("from", "to") %in% names(time)))
+                        stop("in subset,argoFloats-method():\n  \"time\" must be a list containing \"to\"and \"from\"", call.=FALSE)
+                    if (length(time$from) != 1)
+                        stop("from must be of length 1")
+                    if (length(time$to) != 1)
+                        stop("to must be of length 1")
+                    if (!inherits(time$from, "POSIXt")) {
+                        time$from <- try(as.POSIXct(time$from, tz="UTC"))
+                        if (inherits(time$from, "try-error"))
+                            stop("in subset,argoFloats-method():\n  cannot convert \"time$from\" to a POSIX time", call.=FALSE)
+                    }
+                    if (!inherits(time$to, "POSIXt")) {
+                        time$to <- try(as.POSIXct(time$to, tz="UTC"))
+                        if (inherits(time$to, "try-error"))
+                            stop("in subset,argoFloats-method():\n  cannot convert \"time$to\" to a POSIX time", call.=FALSE)
+                    }
+                    if (time$to <= time$from)
+                        stop ("in subset,argoFloats-method():\n \"to\" must be greater than \"from\"", call.=FALSE)
+                    argoFloatsDebug(debug, "from= ", format(time$from, "%Y-%m-%d %H:%M:%S %z"), "\n")
+                    argoFloatsDebug(debug, "to= ", format(time$to, "%Y-%m-%d %H:%M:%S %z"), "\n")
+                    keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
+                    keep[is.na(keep)] <- FALSE
+                    if (!silent)
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if(dotsNames[1]=="institution") {
+                    argoFloatsDebug(debug, "subsetting an index by institution\n")
+                    institution <- dots[[1]]
+                    if(!is.list(dots[1]))
+                        stop("in subset,argoFloats-method():\n  \"institution\" must be a list")
+                    if (length(institution) > 1)
+                        stop("\"institution\" cannot hold more than one element")
+                    keep <- grepl(institution, x@data$index$institution)
+                    keep[is.na(keep)] <- FALSE
+                    if (!silent)
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1] == "deep") {
+                    argoFloatsDebug(debug, "subsetting an index by deep category\n")
+                    deep <- dots[[1]]
+                    if (!is.logical(deep))
+                        stop("in subset,argoFloats-method():\n deep must be a logical vector indicating TRUE or FALSE", call.=FALSE)
+                    if (deep) {
+                        keep <- grep("849|862|864", x@data$index$profiler_type)
+                    } else {
+                        keep <- grep("849|862|864", x@data$index$profiler_type, invert=TRUE)
+                    }
+                    if (!silent)
+                        message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1] == "ID") {
+                    argoFloatsDebug(debug, "subsetting an index by ID\n")
+                    ID <- as.character(dots[[1]]) # convert in case it is numeric
+                    xID <- x[["ID"]]
+                    keep <- rep(FALSE, length(xID))
+                    file <- x@data$index$file
+                    for (thisID in ID)
+                        keep <- keep | grepl(thisID, xID)
+                    if (!silent)
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1]=="ocean") {
+                    argoFloatsDebug(debug, "subsetting an index by ocean\n")
+                    ocean <- dots[[1]]
+                    if (!is.character(ocean))
+                        stop("in subset,argoFloats-method() : \"ocean\" must be character value", call.=FALSE)
+                    if (length(ocean) > 1)
+                        stop("in subset,argoFloats-method():\n \"ocean\" cannot hold more than one element", call.=FALSE)
+                    keep <- grepl(ocean, x@data$index$ocean)
+                    keep[is.na(keep)] <- FALSE
+                    if (!silent)
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1]=="dataMode") {
+                    argoFloatsDebug(debug, "subsetting an index by dataMode\n")
+                    dataMode <- dots[[1]]
+                    if (!is.character(dataMode))
+                        stop("in subset,argoFloats-method():\n  \"dataMode\" must be character value",call.=FALSE)
+                    if (dataMode == "delayed") {
+                        keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}D.*$", x[["file"]])
+                    } else if (dataMode == "realtime") {
+                        keep <- grepl("^[a-z]*/[0-9]*/profiles/.{0,1}R.*$", x[["file"]])
+                    } else {
+                        stop("in subset,argoFloats-method():\n  \"dataMode\" must be either \"realtime\" or \"delayed\", not \"", dataMode, "\"", call.=FALSE)
+                    }
+                    if (!silent)
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1] == "cycle") {
+                    cycle <- dots[[1]]
+                    if (!is.character(cycle) & !is.numeric(cycle))
+                        stop("in subset,argoFloats-method() : \"cycle\" must be character value or numeric value", call.=FALSE)
+                    ## Calculate 'keep', a logical vector that will be used for the actual subsetting.
+                    xcycle <- x[["cycle"]]
+                    # If cycle is numeric, we must convert it to character (so e.g. 1 becomes "001")
+                    if (is.numeric(cycle)) {
+                        cycle <- sprintf("%03d", as.integer(cycle))
+                        argoFloatsDebug(debug, "subsetting an index by cycle of numeric type\n")
+                    } else if (is.character(cycle)) {
+                        argoFloatsDebug(debug, "subsetting an index by cycle of character type\n")
+                    } else {
+                        stop("cycle must be character or numeric")
+                    }
+                    keep <- rep(FALSE, length(xcycle))
+                    for (thisCycle in cycle)
+                        keep <- keep | grepl(thisCycle, xcycle)
+                    nkeep <- sum(keep)
+                    if (nkeep < 1)
+                        warning("In subset,argoFloats-method(..., parameter) : found no profiles with given cycle(s)", call.=FALSE)
+                    if (!silent)
+                        message("Kept ", nkeep, " cycles (", sprintf("%.3g", 100*nkeep/N), "%)")
+                    x@data$index <- x@data$index[keep, ]
+                } else if (dotsNames[1]=="direction") {
+                    argoFloatsDebug(debug, "subsetting an index by direction\n")
+                    direction <- dots[[1]]
+                    if (!is.character(direction))
+                        stop("in subset,argoFloats-method():\n  \"direction\" must be character value of either \"ascent\" or \"descent\"", call.=FALSE)
+                    if (direction == "ascent") {
+                        keep <- grepl("^.*[^D].nc$", x@data$index$file)
+                    } else if (direction == "descent") {
+                        keep <- grepl("^.*D.nc$", x@data$index$file)
+                    } else {
+                        stop("in subset,argoFloats-method():\n  \"direction\" must be either \"ascent\" or \"descent\", not \"", direction, "\"", call.=FALSE)
+                    }
+                    x@data$index <- x@data$index[keep, ]
                 } else {
-                    stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an index-type object. The only valid choices are \"circle\", \"rectangle\", \"parameter\", \"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", \"dataMode\", \"cycle\" and \"direction\".", call.=FALSE)
+                    stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an index-type object. The only valid choices are \"circle\", \"rectangle\", \"parameter\", \"polygon\", \"time\", \"institution\", \"deep\", \"ID\", \"ocean\", \"dataMode\", \"cycle\",\"direction\" and \"section\"", call.=FALSE)
                 }
             }
         } else {

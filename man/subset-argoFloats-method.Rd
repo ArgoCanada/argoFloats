@@ -14,8 +14,8 @@ indices of \code{x@data$index} to keep (example 1).}
 
 \item{...}{the first entry here must be either (a) a list named \code{circle},
 \code{rectangle}, \code{polygon}, \code{parameter}, \code{time}, \code{institution},
-\code{ID},\code{ocean},\code{dataMode},\code{cycle}, \code{direction}, or \code{profile}.
-(examples 2 through 8, and 10 through 14),
+\code{ID},\code{ocean},\code{dataMode},\code{cycle}, \code{direction}, \code{profile}, or \code{section}.
+(examples 2 through 8, and 10 through 18),
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
 value indicating whether to prevent the printing of messages that
@@ -127,6 +127,11 @@ See example 16.
 "DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
 V3.3 (Carvel et al. 2019) for the description of each acronym.
 See example 17.
+\item A list named \code{section}, which has three elements:
+\code{longitude}, and \code{latitude}, that are numeric vectors, and \code{width}, given in km
+that specifies the total span from the \code{latitude} and \code{longitude} points that
+will be retained in the section.
+See example 18.
 }
 
 In all cases, the notation is that longitude is positive
@@ -261,6 +266,15 @@ argos16B <- subset(argos, dataStateIndicator="2B")
 # Example 17: subset by historyAction
 data("index")
 index17 <- subset(index, historyAction="IP")}
+
+# Example 18: subset by section to create a map plot
+\dontrun{
+ai <- getIndex()
+longitude <- c(-78, -76, -75)
+latitude <-c(26,26,25)
+index18 <- subset(ai, section=list(longitude=longitude, latitude=latitude, width=50))
+plot(index18, xlim=c(-78.5, -74))
+points(longitude, latitude, pch=21, col="black", bg="red")}
 
 }
 \references{
