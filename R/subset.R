@@ -284,7 +284,7 @@
 #' latitude <-c(26,26,25)
 #' index18 <- subset(ai, section=list(longitude=longitude, latitude=latitude, width=50))
 #' plot(index18, xlim=c(-78.5, -74))
-#' points(longitude, latitude, pch=21, col="black", bg="red")}
+#' points(longitude, latitude, pch=21, col="black", bg="red",type="o")}
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
