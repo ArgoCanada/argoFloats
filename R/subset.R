@@ -546,6 +546,8 @@ setMethod(f="subset",
                     keep <- dist < circle$radius
                     keep[is.na(keep)] <- FALSE
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by circle with longitude= ", circle$longitude, " , latitude= ", circle$latitude, ", and radius= ", circle$radius))
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                 } else if (dotsNames[1] == "rectangle") {
@@ -562,6 +564,8 @@ setMethod(f="subset",
                     keeplat[!ok] <- FALSE
                     keep <- keeplon & keeplat
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by rectangle with longitude= ", rectangle$longitude, " and latitude= ", rectangle$latitude ))
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                 } else if (dotsNames[1]=="parameter") {
@@ -577,6 +581,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by parameter= ",parameter))
                 } else if (dotsNames[1]=="polygon") {
                     argoFloatsDebug(debug, "subsetting an index by polygon\n")
                     if (!requireNamespace("sf", quietly=TRUE))
@@ -633,6 +639,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by polygon"))
                 } else if (dotsNames[1]=="time") {
                     argoFloatsDebug(debug, "subsetting an index by time\n")
                     time <- dots[[1]]
@@ -663,6 +671,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by time from", time$from, "to ", time$to))
                 } else if(dotsNames[1]=="institution") {
                     argoFloatsDebug(debug, "subsetting an index by institution\n")
                     institution <- dots[[1]]
@@ -675,6 +685,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by institution " ,institution))
                 } else if (dotsNames[1] == "deep") {
                     argoFloatsDebug(debug, "subsetting an index by deep category\n")
                     deep <- dots[[1]]
@@ -688,6 +700,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type to only include deep data"))
                 } else if (dotsNames[1] == "ID") {
                     argoFloatsDebug(debug, "subsetting an index by ID\n")
                     ID <- as.character(dots[[1]]) # convert in case it is numeric
@@ -699,6 +713,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by float ID", ID))
                 } else if (dotsNames[1]=="ocean") {
                     argoFloatsDebug(debug, "subsetting an index by ocean\n")
                     ocean <- dots[[1]]
@@ -711,6 +727,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by ocean", ocean))
                 } else if (dotsNames[1]=="dataMode") {
                     argoFloatsDebug(debug, "subsetting an index by dataMode\n")
                     dataMode <- dots[[1]]
@@ -726,6 +744,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by dataMode", dataMode))
                 } else if (dotsNames[1] == "cycle") {
                     cycle <- dots[[1]]
                     if (!is.character(cycle) & !is.numeric(cycle))
@@ -750,6 +770,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", nkeep, " cycles (", sprintf("%.3g", 100*nkeep/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by cycle=", cycle))
                 } else if (dotsNames[1]=="direction") {
                     argoFloatsDebug(debug, "subsetting an index by direction\n")
                     direction <- dots[[1]]
@@ -763,6 +785,8 @@ setMethod(f="subset",
                         stop("in subset,argoFloats-method():\n  \"direction\" must be either \"ascent\" or \"descent\", not \"", direction, "\"", call.=FALSE)
                     }
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by direction=", direction))
                 } else if (dotsNames[1] == "section") {
                     argoFloatsDebug(debug, "subsetting an index by section\n")
                     section <- dots[[1]]
@@ -818,6 +842,8 @@ setMethod(f="subset",
                     if (!silent)
                         message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
+                    x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset index type by section with longitude= ", section$longitude, " , latitude= ", section$latitude, ", and width= ", section$width, " km."))
                 } else if (dotsNames[1]=="time") {
                     argoFloatsDebug(debug, "subsetting an index by time\n")
                     time <- dots[[1]]
