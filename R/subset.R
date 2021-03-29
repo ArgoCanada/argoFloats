@@ -849,7 +849,10 @@ setMethod(f="subset",
                         message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
-                                                  paste("subset index type by section with longitude= ", section$longitude, " , latitude= ", section$latitude, ", and width= ", section$width, " km."))
+                                                  paste0("subset index type by section with longitude=c(",
+                                                        paste(section$longitude, collapse=", "), "), latitude=c(",
+                                                        paste(section$latitude, collapse=", "), "), and width=",
+                                                        section$width, " km"))
                 } else if (dotsNames[1]=="time") {
                     argoFloatsDebug(debug, "subsetting an index by time\n")
                     time <- dots[[1]]
