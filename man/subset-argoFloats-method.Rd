@@ -272,7 +272,7 @@ data("index")
 longitude <- c(-78, -77, -76)
 latitude <-c(27.5,27.5,26.5)
 index18 <- subset(index, section=list(longitude=longitude, latitude=latitude, width=50))
-plot(index18, xlim=c(-78.5, -74))
+plot(index18, xlim=c(-78.5, -74), bathymetry=FALSE)
 points(longitude, latitude, pch=21, col="black", bg="red",type="o")
 
 }
