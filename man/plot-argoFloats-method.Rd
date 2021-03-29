@@ -288,7 +288,8 @@ plot(index, bathymetry=list(source=topo))
 
 # Example 5D. World view with Mollweide projection (Canada Day, 2020)
 jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
-plot(jul1, which="map", mapControl=list(projection=TRUE), pch=20, col=4, cex=0.75)
+plot(jul1, which="map", mapControl=list(projection=TRUE), bathymetry=FALSE,
+     pch=20, col=4, cex=0.75)
 
 # Example 5E. Customized map, sidestepping this function.
 lon <- topo[["longitude"]]

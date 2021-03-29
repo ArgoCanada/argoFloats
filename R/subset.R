@@ -215,7 +215,7 @@
 #' \dontrun{
 #' ai <- getIndex()
 #' index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
-#' plot(index10, which="map")
+#' plot(index10, which="map", bathymetry=FALSE)
 #' atlantic <- subset(index10, ocean="A") # Subsetting for Atlantic Ocean
 #' pacific <- subset(index10, ocean="P")
 #' points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2)
