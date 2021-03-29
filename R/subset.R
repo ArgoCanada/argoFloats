@@ -425,6 +425,8 @@ setMethod(f="subset",
                     }
                 }
                 argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
+                res@processingLog <- oce::processingLogAppend(res@processingLog,
+                                                  paste("subset argos type for profile=", profile))
                 return(res)
             } else if (dotsNames[1] == "cycle") {
                 argoFloatsDebug(debug, "subsetting by cycle for 'argos' type\n")
@@ -458,6 +460,8 @@ setMethod(f="subset",
                 if (!silent)
                     message("Kept ", nkeep, " cycles ")
                 x@data[[1]] <- x@data[[1]][keep]
+                x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset argos type for cycle=", cycle))
             } else if (dotsNames[1]=="dataStateIndicator") {
                 argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
                 dataStateIndicator <- dots[[1]]
@@ -477,6 +481,8 @@ setMethod(f="subset",
                     ##> print(keep)
                 }
                 x@data[[1]] <- x@data[[1]][keep]
+                x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                  paste("subset argos type by dataStateIndicator=", dataStateIndicator))
             } else if (dotsNames[1] =="historyAction") {
                 for (i in seq_along(x[["argos"]])) {
                     historyList <- x[["historyAction"]][[i]][1,]
