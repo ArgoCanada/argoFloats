@@ -136,9 +136,9 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' `ar_index_global_meta.txt.gz`         \tab -                       \tab Metadata files\cr
 #' `ar_index_global_prof.txt.gz`         \tab `"argo"` or `"core"`      \tab Argo data\cr
 #' `ar_index_global_tech.txt.gz`         \tab -                       \tab Technical files\cr
-#' `ar_index_global_traj.txt.gz`         \tab -                       \tab Trajectory files\cr
+#' `ar_index_global_traj.txt.gz`         \tab `"traj"`                \tab Trajectory files\cr
 #' `argo_bio-profile_index.txt.gz`       \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T)\cr
-#' `argo_bio-traj_index.txt.gz`          \tab -                       \tab Bio-trajectory files\cr
+#' `argo_bio-traj_index.txt.gz`          \tab `"bio-traj"`            \tab Bio-trajectory files\cr
 #' `argo_synthetic-profile_index.txt.gz` \tab `"synthetic"`           \tab Synthetic data, successor to `"merge"`\cr
 #' }
 #' Note: as of Dec 01,2020 the user will no longer have the option to use `"argo"` as a filename argument. Instead, `"core"` will
@@ -256,7 +256,7 @@ getIndex <- function(filename="core",
         stop("'", destdir, "' is not a directory")
     ## Handle nicknames
     filenameOrig <- filename
-    names <- c("core","bgc","bgcargo","synthetic", "ar_index_global_prof.txt.gz", "argo_bio-profile_index.txt.gz", "argo_synthetic-profile_index.txt.gz")
+    names <- c("core","bgc","bgcargo","synthetic", "traj", "bio-traj", "ar_index_global_prof.txt.gz", "argo_bio-profile_index.txt.gz", "argo_synthetic-profile_index.txt.gz", "ar_index_global_traj.txt.gz", "argo_bio-traj_index.txt.gz")
     if (filename == "core") {
         filename <- "ar_index_global_prof.txt.gz"
     } else if (filename == "bgcargo" || filename == "bgc") {
@@ -265,9 +265,16 @@ getIndex <- function(filename="core",
         stop("in getIndex() :\n Merged datasets are no longer available. Try using filename='synthetic'", call.=FALSE)
     } else if (filename == "synthetic") {
         filename <- "argo_synthetic-profile_index.txt.gz"
+    } else if (filename == "traj") {
+        filename <- "ar_index_global_traj.txt.gz"
+        message('in traj')
+    } else if (filename == "bio-traj") {
+        filename <- argo_bio-traj_index.txt.gz
+        message('in biotraj')
     }
+
     if (!(filename %in% names))
-        stop("filename=\"", filename, "\" doesn't exist. Try one of these: \"core\", \"bgc\", \"bgcargo\",\"synthetic\",\"ar_index_global_prof.txt.gz\", \"argo_bio-profile_index.txt.gz\", or \"argo_synthetic-profile_index.txt.gz\".")
+        stop("filename=\"", filename, "\" doesn't exist. Try one of these: \"core\", \"bgc\", \"bgcargo\", \"traj\", \"bio-traj\", \"synthetic\",\"ar_index_global_prof.txt.gz\", \"argo_bio-profile_index.txt.gz\", \"ar_index_global_traj.txt.gz\", \"argo_bio-traj_index.txt.gz\", or \"argo_synthetic-profile_index.txt.gz\".")
     if (filename != filenameOrig)
         argoFloatsDebug(debug, "Converted filename='", filenameOrig, "' to filename='", filename, "'.\n", sep="")
     ## Note: 'url' may contain more than one element
@@ -567,7 +574,7 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         ## way, so the ifremer case was rewritten to match the usgodae case.
         urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
-        file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls), 
+        file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls),
                                     quiet=quiet, age=age, async=TRUE, debug=debug-1)
     }
     res@metadata$destdir <- destdir
