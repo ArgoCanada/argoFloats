@@ -15,7 +15,7 @@ indices of \code{x@data$index} to keep (example 1).}
 \item{...}{the first entry here must be either (a) a list named \code{circle},
 \code{rectangle}, \code{polygon}, \code{parameter}, \code{time}, \code{institution},
 \code{ID},\code{ocean},\code{dataMode},\code{cycle}, \code{direction}, \code{profile}, or \code{section}.
-(examples 2 through 8, and 10 through 18),
+(examples 2 through 8, and 10 through 17),
 or (b) a logical value named \code{deep} (example 9).  Optionally, this entry
 may be followed by second entry named \code{silent}, which is a logical
 value indicating whether to prevent the printing of messages that
@@ -132,6 +132,152 @@ See example 17.
 In all cases, the notation is that longitude is positive
 for degrees East and negative for degrees West, and that latitude
 is positive for degrees North and negative for degrees South.
+}
+\examples{
+library(argoFloats)
+data(index)
+
+# Example 1: subset to the first 3 profiles in the (built-in) index
+index1 <- subset(index, 1:3)
+cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
+
+# Example 2A: subset to a circle near Abaca Island
+index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+
+# Exampe 2B: subset a 300 km radius around Panama using "maps" package
+\dontrun{
+library("maps")
+data(world.cities)
+ai <- getIndex()
+panama <- subset(world.cities, name=="Panama")
+index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
+}
+
+# Example 3: subset to a rectangle near Abaca Island
+lonRect <- c(-76.5, -76)
+latRect <- c(26.5, 27.5)
+index3 <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
+
+# Example 4: subset to a polygon to near Abaco Island
+poly <- list(longitude=c(-77.492, -78.219, -77.904, -77.213, -76.728, -77.492),
+             latitude=c(26.244, 25.247, 24.749, 24.987, 25.421, 26.244))
+index4 <- subset(index, polygon=poly)
+
+# Show some of these subsets on a map
+plot(index, bathymetry=FALSE)
+points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
+points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
+rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
+points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
+polygon(poly$longitude, poly$latitude, border=4)
+
+# Example 5: subset synthetic data containing "DOXY" parameters
+# Data containing "DOXY" data
+data(indexSynthetic)
+index5A <- subset(indexSynthetic, parameter="DOXY")
+# Data containing both "PSAL" and "DOWN_IRRADIANCE380" data
+data(indexSynthetic)
+index5B <- subset(indexSynthetic, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
+
+# Example 6: subset data for the year 2019
+data(index)
+index6 <- subset(index, time=list(from="2019-01-01", to="2019-12-31"))
+
+# Example 7: subset to the Canadian MEDS data
+index7 <- subset(index, institution="ME")
+
+# Example 8: subset to a specific ID
+\dontrun{
+ai <- getIndex(filename="synthetic")
+index9 <- subset(ai, ID="1900722")
+}
+
+# Example 9: subset data to only include deep argo
+\dontrun{
+ai <- getIndex(filename="synthetic")
+index8 <- subset(ai, deep=TRUE)
+}
+
+# Example 10: subset data by ocean
+\dontrun{
+ai <- getIndex()
+index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
+plot(index10, which="map", bathymetry=FALSE)
+atlantic <- subset(index10, ocean="A") # Subsetting for Atlantic Ocean
+pacific <- subset(index10, ocean="P")
+points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2)
+points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3)
+}
+
+# Example 11: subset by delayed time
+\dontrun{
+data(indexBgc)
+index11 <- subset(indexBgc, dataMode="delayed")
+profiles <- getProfiles(index11)
+argos <- readProfiles(profiles)
+oxygen <- argos[["oxygen"]][[3]]
+pressure <- argos[["pressure"]][[3]]
+plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
+     ylab="Pressure (dbar)", xlab="Oxygen (umol/kg)")
+}
+
+# Example 12: subset by cycle
+\dontrun{
+data(index)
+index12A <- subset(index, cycle="124")
+index12B <- subset(index, cycle=0:2)
+cat("File names with cycle number 124:", paste(index12A[["file"]]), "\n")
+cat("File names with cycle number between 0 and 2:", paste(index12B[["file"]]), "\n")
+}
+
+# Example 13: subset by direction
+\dontrun{
+library(argoFloats)
+index13A <- subset(getIndex(), deep=TRUE)
+index13B <- subset(index13A, direction="descent")
+head(index13B[["file"]])
+}
+
+# Example 14: subset by profile (for argos type)
+\dontrun{
+library(argoFloats)
+index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
+index14B <- subset(index14A, cycle="074")
+argos14A <- readProfiles(getProfiles(index14B))
+argos14B <- subset(argos14A, profile=1)
+D <- data.frame(Oxygen = argos14A[["oxygen"]],
+col1= argos14B[["oxygen"]][[1]])
+}
+
+# Example 15: subset by cycle (for argos type) to create TS diagram
+\dontrun{
+data("index")
+index15 <- subset(index, ID="1901584")
+profiles <- getProfiles(index15)
+argos <- readProfiles(profiles)
+plot(subset(argos, cycle="147"), which="TS")
+}
+
+# Example 16: subset by dataStateIndicator
+\dontrun{
+data("index")
+index16 <- subset(index, 1:40)
+argos <- readProfiles(getProfiles(index16))
+argos16A <- subset(argos, dataStateIndicator="2C")
+argos16B <- subset(argos, dataStateIndicator="2B")
+}
+
+# Example 17: subset by section to create a map plot
+if (requireNamespace("s2")) {
+    data("index")
+    lon <- c(-78, -77, -76)
+    lat <-c(27.5,27.5,26.5)
+    index18 <- subset(index,
+                      section=list(longitude=lon, latitude=lat, width=50))
+    plot(index18, bathymetry=FALSE)
+    points(lon, lat, pch=21, col="black", bg="red", type="o")
+}
+
 }
 \references{
 \enumerate{
