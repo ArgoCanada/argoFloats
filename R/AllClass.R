@@ -219,9 +219,11 @@ setMethod(f="initialize",
 #'     2. Otherwise, if `i` is `"data"` then the `data` slot of `x` is returned.
 #'     3. Otherwise, if `i` is `"cycle"` then a character vector of the cycle
 #'        numbers is returned.
-#'     4. Otherwise, if `i` is `"ID"` then a character vector of the ID numbers
+#'     4. Otherwise, if `i` is `"processingLog"` then the `processingLog` slot of
+#'        `x` is returned.
+#'     5. Otherwise, if `i` is `"ID"` then a character vector of the ID numbers
 #'        is returned.
-#'     5. Otherwise, the following steps are taken, depending on `type`.
+#'     6. Otherwise, the following steps are taken, depending on `type`.
 #'
 #' 2. If `type` is `"index"`, i.e. if `x` was created with [getIndex()]
 #' or with [subset,argoFloats-method()] acting on the result of [getIndex()],
@@ -332,6 +334,10 @@ setMethod(f="[[",
               if (length(i) == 1 && i == "data") {
                   argoFloatsDebug(debug, "} # returned data slot\n", style="bold", unindent=1)
                   return(x@data)
+              }
+              if (length(i) == 1 && i == "processingLog") {
+                  argoFloatsDebug(debug, "} # returned processingLog slot\n", style="bold", unindent=1)
+                  return(x@processingLog)
               }
               type <- x@metadata$type
               if (type == "index") {

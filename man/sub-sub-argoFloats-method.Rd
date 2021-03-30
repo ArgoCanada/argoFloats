@@ -36,6 +36,8 @@ order listed here.
 \item Otherwise, if \code{i} is \code{"data"} then the \code{data} slot of \code{x} is returned.
 \item Otherwise, if \code{i} is \code{"cycle"} then a character vector of the cycle
 numbers is returned.
+\item Otherwise, if \code{i} is \code{"processingLog"} then the \code{processingLog} slot of
+\code{x} is returned.
 \item Otherwise, if \code{i} is \code{"ID"} then a character vector of the ID numbers
 is returned.
 \item Otherwise, the following steps are taken, depending on \code{type}.
