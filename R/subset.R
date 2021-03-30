@@ -114,16 +114,11 @@
 #' This operation only works for objects of type `"argos"`.
 #' See example 16.
 #'
-#' 17. A character value named `historyAction`, equal to either "CF", "CR", "CV",
-#' "DC", "ED", "IP", "NG", "PE", or "QC" (see table 7 of Reference 1
-#' for descriptions of these acronyms).
-#' See example 17.
-#'
-#' 18. A list named `section` that  has three elements:
+#' 17. A list named `section` that  has three elements:
 #' `longitude`, and `latitude`, that are numeric vectors, and `width`, given in km
 #' that specifies the total span from the `latitude` and `longitude` points that
 #' will be retained in the section.
-#' See example 18.
+#' See example 17.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -272,11 +267,7 @@
 #' argos16A <- subset(argos, dataStateIndicator="2C")
 #' argos16B <- subset(argos, dataStateIndicator="2B")
 #'
-#' # Example 17: subset by historyAction
-#' data("index")
-#' index17 <- subset(index, historyAction="IP")}
-#'
-#' # Example 18: subset by section to create a map plot
+#' # Example 17: subset by section to create a map plot
 #' if (requireNamespace("s2")) {
 #'     data("index")
 #'     lon <- c(-78, -77, -76)
@@ -354,7 +345,7 @@ setMethod(f="subset",
             }
             argoFloatsDebug(debug, "subsetting with type=\"argos\"\n")
             if (length(dotsNames) == 0)
-                stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", \"dataStateIndicator\", or \"historyAction\" argument", call.=FALSE)
+                stop("in subset,argoFloats-method() :\n  must give \"profile\" , \"cycle\", or \"dataStateIndicator\" argument", call.=FALSE)
             if (dotsNames[1] == "profile") {
                 argoFloatsDebug(debug, "subsetting by profile ", profile, "\n")
                 profile <- dots[[1]]
@@ -485,13 +476,6 @@ setMethod(f="subset",
                 x@data[[1]] <- x@data[[1]][keep]
                 x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset argos type by dataStateIndicator=", dataStateIndicator))
-            } else if (dotsNames[1] =="historyAction") {
-                for (i in seq_along(x[["argos"]])) {
-                    historyList <- x[["historyAction"]][[i]][1,]
-                }
-                historyList <- lapply(x[["historyAction"]], function(h) x[["historyAction"]][[i]])
-                keep <- grepl("IP", historyList)
-                x@data[[1]] <- x@data[[1]][keep]
             } else if (dotsNames[1] =="dataMode") {
                 seeking <- dots$dataMode
                 # This testing of 'dataMode' may be overly complex
@@ -528,7 +512,7 @@ setMethod(f="subset",
                 argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                 return(res)
             } else {
-                stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an argos-type object. The only valid choices are \"cycle\", \"dataMode\", \"dataSateIndicator\", \"historyAction\" and \"profile\".", call.=FALSE)
+                stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an argos-type object. The only valid choices are \"cycle\", \"dataMode\", \"dataSateIndicator\" and \"profile\".", call.=FALSE)
             }
         }
         ## Step 2: Now we know the type is either "index" or "profiles".  In either case,
