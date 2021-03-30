@@ -25,7 +25,7 @@
 #' the subset region, and the third gives the radius of
 #' that region, in kilometers. See example 2A and 2B.
 #'
-#' 3. A list named `rectangle`, which has elements named
+#' 3. A list named `rectangle` that has elements named
 #' `longitude` and `latitude`, two-element numeric vectors
 #' giving the western and eastern, and southern and northern
 #' limits of the selection region. See example 3.
@@ -39,15 +39,15 @@
 #' See example 4.
 #'
 #' 5. A vector or list named `parameter` that holds character values that
-#' specify the names of measured parameters to keep. See section 3.3 of the
-#' Argo User's Manual, V3.3 (Carval et al. 2019) for a list of parameters.
+#' specify the names of measured parameters to keep. See section 3.3 of
+#' Reference 1 for a list of parameters.
 #' See example 5.
 #'
 #' 6. A list named `time` that has elements `from` and `to` that are either
 #' POSIXt times, or character strings that `subset()` will convert to
 #' POSIXt times using [as.POSIXct()] with `tz="UTC"`. See example 6.
 #'
-#' 7. A list named `institution`, which holds a single character element that
+#' 7. A list named `institution` that holds a single character element that
 #' names the institution.  The permitted values are:
 #' `"AO"` for AOML, USA;
 #' `"BO"` for BODC, United Kingdom;
@@ -68,7 +68,7 @@
 #' 9. A list named `ID` that holds a character value specifying a float identifier.
 #' See example 9.
 #'
-#' 10. A list named `ocean`, which holds a single character element that names the
+#' 10. A list named `ocean` that  holds a single character element that names the
 #' ocean. The permitted values are:
 #' `"A"` for Atlantic Ocean Area, from 70 W to 20 E,
 #' `"P"` for Pacific Ocean Area, from 145 E to 70 W, and
@@ -99,28 +99,27 @@
 #' that selects whether to retain data from the ascent or decent phase.
 #' See example 13.
 #'
-#' 14. An integer value named `profile`, that selects which profiles
+#' 14. An integer value named `profile` that selects which profiles
 #' to retain.  Note that this type of subset is possible only
 #' for objects of type `"argos"`.
 #' See example 14.
 #'
-#' 15. An integer value named `cycle`, that selects which cycles
+#' 15. An integer value named `cycle` that selects which cycles
 #' to retain.
 #' See example 15.
 #'
 #' 16. A character value named `dataStateIndicator`, equal to either "0A", "1A",
-#' "2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which `dataStateIndicator`
-#' to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
-#' understand the processing stage of data.
+#' "2B", "2B+", "2C", "2C+", "3B", or "3C" that selects which `dataStateIndicator`
+#' to keep (see table 6 of Reference 1 for details of these codes).
 #' This operation only works for objects of type `"argos"`.
 #' See example 16.
 #'
 #' 17. A character value named `historyAction`, equal to either "CF", "CR", "CV",
-#' "DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
-#' V3.3 (Carvel et al. 2019) for the description of each acronym.
+#' "DC", "ED", "IP", "NG", "PE", or "QC" (see table 7 of Reference 1
+#' for descriptions of these acronyms).
 #' See example 17.
 #'
-#' 18. A list named `section`, which has three elements:
+#' 18. A list named `section` that  has three elements:
 #' `longitude`, and `latitude`, that are numeric vectors, and `width`, given in km
 #' that specifies the total span from the `latitude` and `longitude` points that
 #' will be retained in the section.
@@ -278,15 +277,18 @@
 #' index17 <- subset(index, historyAction="IP")}
 #'
 #' # Example 18: subset by section to create a map plot
-#' data("index")
-#' longitude <- c(-78, -77, -76)
-#' latitude <-c(27.5,27.5,26.5)
-#' index18 <- subset(index, section=list(longitude=longitude, latitude=latitude, width=50))
-#' plot(index18, xlim=c(-78.5, -74), bathymetry=FALSE)
-#' points(longitude, latitude, pch=21, col="black", bg="red",type="o")
+#' if (requireNamespace("s2")) {
+#'     data("index")
+#'     lon <- c(-78, -77, -76)
+#'     lat <-c(27.5,27.5,26.5)
+#'     index18 <- subset(index,
+#'                       section=list(longitude=lon, latitude=lat, width=50))
+#'     plot(index18, bathymetry=FALSE)
+#'     points(lon, lat, pch=21, col="black", bg="red", type="o")
+#'}
 #'
 #' @references
-#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 #' \doi{10.13155/29825}.
 #'

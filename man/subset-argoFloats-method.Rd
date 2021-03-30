@@ -47,7 +47,7 @@ The possibilities for the \code{...} argument are as follows.
 \code{latitude} and \code{radius}.  The first two give the center of
 the subset region, and the third gives the radius of
 that region, in kilometers. See example 2A and 2B.
-\item A list named \code{rectangle}, which has elements named
+\item A list named \code{rectangle} that has elements named
 \code{longitude} and \code{latitude}, two-element numeric vectors
 giving the western and eastern, and southern and northern
 limits of the selection region. See example 3.
@@ -59,13 +59,13 @@ and an error message will be issued if it is.  If the polygon is not closed
 onto the end, to close it.
 See example 4.
 \item A vector or list named \code{parameter} that holds character values that
-specify the names of measured parameters to keep. See section 3.3 of the
-Argo User's Manual, V3.3 (Carval et al. 2019) for a list of parameters.
+specify the names of measured parameters to keep. See section 3.3 of
+Reference 1 for a list of parameters.
 See example 5.
 \item A list named \code{time} that has elements \code{from} and \code{to} that are either
 POSIXt times, or character strings that \code{subset()} will convert to
 POSIXt times using \code{\link[=as.POSIXct]{as.POSIXct()}} with \code{tz="UTC"}. See example 6.
-\item A list named \code{institution}, which holds a single character element that
+\item A list named \code{institution} that holds a single character element that
 names the institution.  The permitted values are:
 \code{"AO"} for AOML, USA;
 \code{"BO"} for BODC, United Kingdom;
@@ -83,7 +83,7 @@ See example 7.
 are deep argo (i.e. \code{profiler_type} 849, 862, and 864). See example 8.
 \item A list named \code{ID} that holds a character value specifying a float identifier.
 See example 9.
-\item A list named \code{ocean}, which holds a single character element that names the
+\item A list named \code{ocean} that  holds a single character element that names the
 ocean. The permitted values are:
 \code{"A"} for Atlantic Ocean Area, from 70 W to 20 E,
 \code{"P"} for Pacific Ocean Area, from 145 E to 70 W, and
@@ -110,24 +110,23 @@ See example 12.
 \item A character value named \code{direction}, equal to either "descent" or "ascent",
 that selects whether to retain data from the ascent or decent phase.
 See example 13.
-\item An integer value named \code{profile}, that selects which profiles
+\item An integer value named \code{profile} that selects which profiles
 to retain.  Note that this type of subset is possible only
 for objects of type \code{"argos"}.
 See example 14.
-\item An integer value named \code{cycle}, that selects which cycles
+\item An integer value named \code{cycle} that selects which cycles
 to retain.
 See example 15.
 \item A character value named \code{dataStateIndicator}, equal to either "0A", "1A",
-"2B", "2B+", "2C", "2C+", "3B", or "3C", that selects which \code{dataStateIndicator}
-to keep.  See table 6 of the Argo User's Manual, V3.3 (Carval et al. 2019) to
-understand the processing stage of data.
+"2B", "2B+", "2C", "2C+", "3B", or "3C" that selects which \code{dataStateIndicator}
+to keep (see table 6 of Reference 1 for details of these codes).
 This operation only works for objects of type \code{"argos"}.
 See example 16.
 \item A character value named \code{historyAction}, equal to either "CF", "CR", "CV",
-"DC", "ED", "IP", "NG", "PE", or "QC". See table 7 of the Argo User's Manual,
-V3.3 (Carvel et al. 2019) for the description of each acronym.
+"DC", "ED", "IP", "NG", "PE", or "QC" (see table 7 of Reference 1
+for descriptions of these acronyms).
 See example 17.
-\item A list named \code{section}, which has three elements:
+\item A list named \code{section} that  has three elements:
 \code{longitude}, and \code{latitude}, that are numeric vectors, and \code{width}, given in km
 that specifies the total span from the \code{latitude} and \code{longitude} points that
 will be retained in the section.
@@ -268,18 +267,23 @@ data("index")
 index17 <- subset(index, historyAction="IP")}
 
 # Example 18: subset by section to create a map plot
-data("index")
-longitude <- c(-78, -77, -76)
-latitude <-c(27.5,27.5,26.5)
-index18 <- subset(index, section=list(longitude=longitude, latitude=latitude, width=50))
-plot(index18, xlim=c(-78.5, -74), bathymetry=FALSE)
-points(longitude, latitude, pch=21, col="black", bg="red",type="o")
+if (requireNamespace("s2")) {
+    data("index")
+    lon <- c(-78, -77, -76)
+    lat <-c(27.5,27.5,26.5)
+    index18 <- subset(index,
+                      section=list(longitude=lon, latitude=lat, width=50))
+    plot(index18, bathymetry=FALSE)
+    points(lon, lat, pch=21, col="black", bg="red", type="o")
+}
 
 }
 \references{
-Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+\enumerate{
+\item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
 \doi{10.13155/29825}.
+}
 }
 \author{
 Dan Kelley and Jaimie Harbin
