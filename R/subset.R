@@ -294,7 +294,7 @@
 #'
 ## @importFrom oce geodDist
 ## @importFrom sp point.in.polygon
-## @importFrom sf st_is_valid st_polygon st_multipoint st_intersection
+## @importFrom sf st_is_valid st_polygon s2_make_line s2_dwithin sst_intersection
 #' @export
 setMethod(f="subset",
     signature="argoFloats",
@@ -794,59 +794,37 @@ setMethod(f="subset",
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by direction=", direction))
                 } else if (dotsNames[1] == "section") {
+                    # The following link shows a test of this method.
+                    # https://github.com/ArgoCanada/argoFloats/issues/397#issuecomment-798960312
+                    if (!requireNamespace("s2", quietly=TRUE))
+                        stop("must install.packages(\"s2\") to subset by section")
                     argoFloatsDebug(debug, "subsetting an index by section\n")
                     section <- dots[[1]]
+                    # Ensure that section is well-formed
                     if (!is.list(dots[1]))
-                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"longitude\", \"latitude\" and \"width\".", call.=FALSE)
-                    if (3 != sum(c("longitude", "latitude", "width") %in% sort(names(section))))
-                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"longitude\", \"latitude\" and \"width\".", call.=FALSE)
-                    if (!is.vector(section$longitude))
-                        stop("in subset,argoFloats-method() :\n  \"longitude\" must be a vector for section subset.", call.=FALSE)
-                    if (!is.vector(section$latitude))
-                        stop("in subset,argoFloats-method() :\n  \"latitude\" must be a vector for section subset.", call.=FALSE)
-                    km <- section$width/111 # Change width from km to degree
-                    range <- lapply(as.list(section$latitude), function(a) range(a-(km/2), a+(km/2)))
-                                        # Do all of the top, and then all of the bottom to avoid intersection
-                    lonPoints <-c(section$longitude, rev(section$longitude))
-                    resultFirst <- vector("numeric", length(range))
-                    for(i in seq_along(range)) {
-                        first <- range[[i]][[1]]
-                        resultFirst[i] <- first
-                    }
-                    resultSecond <- vector("numeric", length(range))
-                    for(i in seq_along(range)) {
-                        second <- range[[i]][[2]]
-                        resultSecond[i] <- second
-                    }
-                    latPoints <- c(resultFirst, rev(resultSecond))
-                    if (length(latPoints) != length(lonPoints))
-                        stop("lengths of section$longitude and section$latitude must match, but they are ",
-                             length(latPoints), " and ", length(lonPoints))
-                    if ((head(lonPoints, 1) != tail(lonPoints, 1)) || head(latPoints, 1) != tail(latPoints, 1)) {
-                        lonPoints <- c(lonPoints, lonPoints[1])
-                        latPoints <- c(latPoints, latPoints[1])
-                    }
+                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"longitude\", \"latitude\" and \"width\"", call.=FALSE)
+                    if (3 != length(section))
+                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing 3 items", call.=FALSE)
+                    if (!all(c("longitude", "latitude", "width") %in% sort(names(section))))
+                        stop("in subset,argoFloats-method() :\n  \"section\" must contain \"longitude\", \"latitude\" and \"width\"", call.=FALSE)
+                    # Create a spine for the section.
+                    sectionSpine <- s2::s2_make_line(section$longitude, section$latitude)
+                    # Create points for float locations.  Blank the NAs, in case not allowed.
                     alon <- x[["longitude"]]
                     alat <- x[["latitude"]]
-                    ok <- is.finite(alon) & is.finite(alat)
-                    if (!requireNamespace("sf", quietly=TRUE))
-                        stop("must install sf package for subset(...,section,...) to this to work")
-                    Polygon <- sf::st_polygon(list(outer=cbind(lonPoints, latPoints, rep(0, length(lonPoints)))))
-                    if (!is.finite(sf::st_is_valid(Polygon))) {
-                        errorMessage <- sf::st_is_valid(Polygon, reason=TRUE)
-                        stop(paste0("Error in subset,argoFloats-method():\n  polygon is invalid, because of ", errorMessage), call.=FALSE)
-                    }
-                    Points <- sf::st_multipoint(cbind(ifelse(ok, alon, 0),
-                                                      ifelse(ok, alat, 0),
-                                                      seq_along(alon)))
-                    if (!sf::st_is_valid(Points)) {
-                        errorMessage <- sf::st_is_valid(Points, reason=TRUE)
-                        stop(paste0("Error in subset,argoFloats-method():\n  \"Points\" is invalid, because of ", errorMessage), call.=FALSE)
-                    }
-                    Intersection <- sf::st_intersection(Points, Polygon)
-                    keep <- Intersection[,3]
+                    bad <- !is.finite(alon) | !is.finite(alat)
+                    alon[bad] <- 0
+                    alat[bad] <- 0
+                    floatLocations <- s2::as_s2_geography(s2::s2_lnglat(alon, alat))
+                    # Identify floats near the section spine
+                    keep <- s2::s2_dwithin(floatLocations, sectionSpine, 1000*section$width)
+                    argoFloatsDebug(debug, "sum(keep)=", sum(keep), " i.e. ",
+                                    round(100*sum(keep)/length(keep), 3), "% (before accounting for NA values)\n", sep="")
+                    keep <- keep & !bad
+                    argoFloatsDebug(debug, "sum(keep)=", sum(keep), " i.e. ",
+                                    round(100*sum(keep)/length(keep), 3), "% (after accounting for NA values)\n", sep="")
                     if (!silent)
-                        message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                        message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste0("subset index type by section with longitude=c(",
