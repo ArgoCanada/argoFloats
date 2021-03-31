@@ -1,0 +1,10 @@
+if (!interactive()) png("section_map.png")
+library(argoFloats)
+library(oce)
+lon <- c(-70, -64,-50, -40, -30,-20, -10)
+lat <-c(40,35,35,35,35,35,35)
+index1 <- subset(getIndex(), section=list(longitude=lon, latitude=lat, width=50))
+plot(index1)
+points(lon, lat, pch=21, col="black", bg="red", type="o")
+
+if (!interactive()) dev.off()

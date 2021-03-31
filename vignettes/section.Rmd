@@ -1,0 +1,25 @@
+---
+title: "Dealing with section data"
+author: "Jaimie Harbin (https://orcid.org/0000-0003-3774-3732), Dan Kelley (https://orcid.org/0000-0001-7808-5911) and Clark Richards (https://orcid.org/0000-0002-7833-206X)"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+    fig_caption: yes
+    fig_width: 5
+    fig_height: 5
+    dpi: 72
+    dev.args: list(pointsize=11)
+vignette: >
+  %\VignetteIndexEntry{Handling Quality Control Flags and Adjusted Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}?
+---
+
+# Introduction
+
+A section of data is a collection of Argo floats within a given region, or section. An example can be as follows:
+
+
+FIXME: This will be replicating ctd data with argos
