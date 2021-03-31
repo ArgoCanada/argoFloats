@@ -278,10 +278,14 @@ See example 15.</p></li>
 to keep (see table 6 of Reference 1 for details of these codes).
 This operation only works for objects of type <code>"argos"</code>.
 See example 16.</p></li>
-<li><p>A list named <code>section</code> that  has three elements:
-<code>longitude</code>, and <code>latitude</code>, that are numeric vectors, and <code>width</code>, given in km
-that specifies the total span from the <code>latitude</code> and <code>longitude</code> points that
-will be retained in the section.
+<li><p>A list named <code>section</code> that  has four elements:
+<code>longitude</code>,<code>latitude</code>, <code>width</code>, and <code>segments</code>. <code>longitude</code>
+and <code>latitude</code> are both numeric vectors. <code>width</code> is given in km
+to specify the total span from the <code>latitude</code> and <code>longitude</code> points that
+will be retained in the section, which is defaulted to 100 km. <code>segments</code>
+subdivides the longitude, latitude trace to the given number. This is
+100 by default. If <code>segments</code> is equal to <code>NULL</code>, the great circle is used.
+Note: this subset will take less than a minute.
 See example 17.</p></li>
 </ol>
 
