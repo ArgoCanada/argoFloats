@@ -114,10 +114,14 @@
 #' This operation only works for objects of type `"argos"`.
 #' See example 16.
 #'
-#' 17. A list named `section` that  has three elements:
-#' `longitude`, and `latitude`, that are numeric vectors, and `width`, given in km
-#' that specifies the total span from the `latitude` and `longitude` points that
-#' will be retained in the section.
+#' 17. A list named `section` that  has four elements:
+#' `longitude`,`latitude`, `width`, and `segments`. `longitude`
+#' and `latitude` are both numeric vectors. `width` is given in km
+#' to specify the total span from the `latitude` and `longitude` points that
+#' will be retained in the section, which is defaulted to 100 km. `segments`
+#' subdivides the longitude, latitude trace to the given number. This is
+#' 100 by default. If `segments` is equal to `NULL`, the great circle is used.
+#' Note: this subset will take less than a minute.
 #' See example 17.
 #'
 #' In all cases, the notation is that longitude is positive

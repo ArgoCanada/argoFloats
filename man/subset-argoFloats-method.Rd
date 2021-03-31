@@ -122,10 +122,14 @@ See example 15.
 to keep (see table 6 of Reference 1 for details of these codes).
 This operation only works for objects of type \code{"argos"}.
 See example 16.
-\item A list named \code{section} that  has three elements:
-\code{longitude}, and \code{latitude}, that are numeric vectors, and \code{width}, given in km
-that specifies the total span from the \code{latitude} and \code{longitude} points that
-will be retained in the section.
+\item A list named \code{section} that  has four elements:
+\code{longitude},\code{latitude}, \code{width}, and \code{segments}. \code{longitude}
+and \code{latitude} are both numeric vectors. \code{width} is given in km
+to specify the total span from the \code{latitude} and \code{longitude} points that
+will be retained in the section, which is defaulted to 100 km. \code{segments}
+subdivides the longitude, latitude trace to the given number. This is
+100 by default. If \code{segments} is equal to \code{NULL}, the great circle is used.
+Note: this subset will take less than a minute.
 See example 17.
 }
 
