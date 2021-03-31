@@ -115,13 +115,16 @@
 #' See example 16.
 #'
 #' 17. A list named `section` that  has four elements:
-#' `longitude`,`latitude`, `width`, and `segments`. `longitude`
-#' and `latitude` are both numeric vectors. `width` is given in km
-#' to specify the total span from the `latitude` and `longitude` points that
-#' will be retained in the section, which is defaulted to 100 km. `segments`
-#' subdivides the longitude, latitude trace to the given number. This is
-#' 100 by default. If `segments` is equal to `NULL`, the great circle is used.
-#' Note: this subset will take less than a minute.
+#' `longitude`,`latitude`, `width`, and `segments`. The first two of these
+#' are numeric vectors that define the spine of the section, in degrees East
+#' and North, respectively.  These are both mandatory, while both `width` and `segments`
+#' are optional. If given, `width` is taken as maximal distance between an Argo
+#' and the spine, for that float to be retained. If `width` is not given, it
+#' defaults to 100km.  If given, `segments` is either `NULL` or a positive
+#' integer.  Setting `segments` to `NULL` will cause the float-spine distance
+#' to be computed along a great-circle route.  By contrast, if `segments` is an
+#' integer, then the spine is traced using `stats::approx()`, creating
+#' `segments` new points.  If `segments` is not provided, it defaults to 100.
 #' See example 17.
 #'
 #' In all cases, the notation is that longitude is positive

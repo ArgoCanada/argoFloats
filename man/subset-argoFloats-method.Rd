@@ -123,13 +123,16 @@ to keep (see table 6 of Reference 1 for details of these codes).
 This operation only works for objects of type \code{"argos"}.
 See example 16.
 \item A list named \code{section} that  has four elements:
-\code{longitude},\code{latitude}, \code{width}, and \code{segments}. \code{longitude}
-and \code{latitude} are both numeric vectors. \code{width} is given in km
-to specify the total span from the \code{latitude} and \code{longitude} points that
-will be retained in the section, which is defaulted to 100 km. \code{segments}
-subdivides the longitude, latitude trace to the given number. This is
-100 by default. If \code{segments} is equal to \code{NULL}, the great circle is used.
-Note: this subset will take less than a minute.
+\code{longitude},\code{latitude}, \code{width}, and \code{segments}. The first two of these
+are numeric vectors that define the spine of the section, in degrees East
+and North, respectively.  These are both mandatory, while both \code{width} and \code{segments}
+are optional. If given, \code{width} is taken as maximal distance between an Argo
+and the spine, for that float to be retained. If \code{width} is not given, it
+defaults to 100km.  If given, \code{segments} is either \code{NULL} or a positive
+integer.  Setting \code{segments} to \code{NULL} will cause the float-spine distance
+to be computed along a great-circle route.  By contrast, if \code{segments} is an
+integer, then the spine is traced using \code{stats::approx()}, creating
+\code{segments} new points.  If \code{segments} is not provided, it defaults to 100.
 See example 17.
 }
 
