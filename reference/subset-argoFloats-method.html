@@ -293,7 +293,7 @@ is positive for degrees North and negative for degrees South.</p>
     
 <ol>
 <li><p>Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
-Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 doi: <a href='https://doi.org/10.13155/29825'>10.13155/29825</a>
 .</p></li>
 </ol>
@@ -476,12 +476,12 @@ col1<span class='op'>=</span> <span class='va'>argos14B</span><span class='op'>[
     <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"index"</span><span class='op'>)</span>
     <span class='va'>lon</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>78</span>, <span class='op'>-</span><span class='fl'>77</span>, <span class='op'>-</span><span class='fl'>76</span><span class='op'>)</span>
     <span class='va'>lat</span> <span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>27.5</span>,<span class='fl'>27.5</span>,<span class='fl'>26.5</span><span class='op'>)</span>
-    <span class='va'>index18</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>,
+    <span class='va'>index17</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>,
                       section<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='va'>lon</span>, latitude<span class='op'>=</span><span class='va'>lat</span>, width<span class='op'>=</span><span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
-    <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index18</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
-    <span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>lon</span>, <span class='va'>lat</span>, pch<span class='op'>=</span><span class='fl'>21</span>, col<span class='op'>=</span><span class='st'>"black"</span>, bg<span class='op'>=</span><span class='st'>"red"</span>, type<span class='op'>=</span><span class='st'>"o"</span><span class='op'>)</span>
+    <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index17</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
+    <span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>lon</span>, <span class='va'>lat</span>, pch<span class='op'>=</span><span class='fl'>21</span>, col<span class='op'>=</span><span class='st'>"black"</span>, bg<span class='op'>=</span><span class='st'>"red"</span>, type<span class='op'>=</span><span class='st'>"o"</span>, lwd<span class='op'>=</span><span class='fl'>3</span><span class='op'>)</span>
 <span class='op'>}</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: s2</span></div><div class='output co'>#&gt; <span class='message'>Kept 372 cycles (36.9%)</span></div><div class='img'><img src='subset-argoFloats-method-5.png' alt='' width='672' height='672' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: s2</span></div><div class='output co'>#&gt; <span class='message'>Kept 371 cycles (36.8%)</span></div><div class='img'><img src='subset-argoFloats-method-5.png' alt='' width='672' height='672' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
