@@ -272,17 +272,17 @@ if (requireNamespace("s2")) {
     data("index")
     lon <- c(-78, -77, -76)
     lat <-c(27.5,27.5,26.5)
-    index18 <- subset(index,
+    index17 <- subset(index,
                       section=list(longitude=lon, latitude=lat, width=50))
-    plot(index18, bathymetry=FALSE)
-    points(lon, lat, pch=21, col="black", bg="red", type="o")
+    plot(index17, bathymetry=FALSE)
+    points(lon, lat, pch=21, col="black", bg="red", type="o", lwd=3)
 }
 
 }
 \references{
 \enumerate{
 \item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
-Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 \doi{10.13155/29825}.
 }
 }

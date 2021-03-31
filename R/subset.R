@@ -281,19 +281,20 @@
 #'     data("index")
 #'     lon <- c(-78, -77, -76)
 #'     lat <-c(27.5,27.5,26.5)
-#'     index18 <- subset(index,
+#'     index17 <- subset(index,
 #'                       section=list(longitude=lon, latitude=lat, width=50))
-#'     plot(index18, bathymetry=FALSE)
-#'     points(lon, lat, pch=21, col="black", bg="red", type="o")
+#'     plot(index17, bathymetry=FALSE)
+#'     points(lon, lat, pch=21, col="black", bg="red", type="o", lwd=3)
 #'}
 #'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
-#' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+#' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' \doi{10.13155/29825}.
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
+#' @importFrom stats approx
 ## @importFrom oce geodDist
 ## @importFrom sp point.in.polygon
 ## @importFrom sf st_is_valid st_polygon s2_make_line s2_dwithin sst_intersection
@@ -464,13 +465,13 @@ setMethod(f="subset",
                 x@data[[1]] <- x@data[[1]][keep]
                 x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset argos type for cycle=", cycle))
-            } else if (dotsNames[1]=="dataStateIndicator") {
+            } else if (dotsNames[1] == "dataStateIndicator") {
                 argoFloatsDebug(debug, "subsetting by dataStateIndicator\n")
                 dataStateIndicator <- dots[[1]]
                 if (is.list(dots[1]))
                     dataStateIndicator <- unlist(dataStateIndicator)
                 ## Reference Table 6, in section 3.6, of
-                ## Argo Data Management Team. “Argo User’s Manual V3.3.”
+                ## Argo Data Management Team. “Argo User's Manual V3.3.”
                 ## Ifremer, November 28, 2019. https://doi.org/10.13155/29825.
                 if (!is.character(dataStateIndicator))
                     stop("in subset,argoFloats-method() :  \"dataStateIndicator\" must be character value", call.=FALSE)
@@ -485,7 +486,7 @@ setMethod(f="subset",
                 x@data[[1]] <- x@data[[1]][keep]
                 x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset argos type by dataStateIndicator=", dataStateIndicator))
-            } else if (dotsNames[1] =="dataMode") {
+            } else if (dotsNames[1] == "dataMode") {
                 seeking <- dots$dataMode
                 # This testing of 'dataMode' may be overly complex
                 if (length(seeking) != 1)
@@ -569,7 +570,7 @@ setMethod(f="subset",
                                                   paste("subset index type by rectangle with longitude= ", rectangle$longitude, " and latitude= ", rectangle$latitude ))
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                } else if (dotsNames[1]=="parameter") {
+                } else if (dotsNames[1] == "parameter") {
                     argoFloatsDebug(debug, "subsetting an index by parameter\n")
                     parameter <- dots[[1]]
                     if (is.list(dots[1]))
@@ -584,7 +585,7 @@ setMethod(f="subset",
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by parameter= ",parameter))
-                } else if (dotsNames[1]=="polygon") {
+                } else if (dotsNames[1] == "polygon") {
                     argoFloatsDebug(debug, "subsetting an index by polygon\n")
                     if (!requireNamespace("sf", quietly=TRUE))
                         stop("must install.packages(\"sf\") for subset() by polygon to work")
@@ -642,7 +643,7 @@ setMethod(f="subset",
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by polygon"))
-                } else if (dotsNames[1]=="time") {
+                } else if (dotsNames[1] == "time") {
                     argoFloatsDebug(debug, "subsetting an index by time\n")
                     time <- dots[[1]]
                     if(!is.list(dots[1]))
@@ -674,7 +675,7 @@ setMethod(f="subset",
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by time from", time$from, "to ", time$to))
-                } else if(dotsNames[1]=="institution") {
+                } else if(dotsNames[1] == "institution") {
                     argoFloatsDebug(debug, "subsetting an index by institution\n")
                     institution <- dots[[1]]
                     if(!is.list(dots[1]))
@@ -716,7 +717,7 @@ setMethod(f="subset",
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by float ID", ID))
-                } else if (dotsNames[1]=="ocean") {
+                } else if (dotsNames[1] == "ocean") {
                     argoFloatsDebug(debug, "subsetting an index by ocean\n")
                     ocean <- dots[[1]]
                     if (!is.character(ocean))
@@ -730,7 +731,7 @@ setMethod(f="subset",
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by ocean", ocean))
-                } else if (dotsNames[1]=="dataMode") {
+                } else if (dotsNames[1] == "dataMode") {
                     argoFloatsDebug(debug, "subsetting an index by dataMode\n")
                     dataMode <- dots[[1]]
                     if (!is.character(dataMode))
@@ -773,7 +774,7 @@ setMethod(f="subset",
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by cycle=", cycle))
-                } else if (dotsNames[1]=="direction") {
+                } else if (dotsNames[1] == "direction") {
                     argoFloatsDebug(debug, "subsetting an index by direction\n")
                     direction <- dots[[1]]
                     if (!is.character(direction))
@@ -795,13 +796,31 @@ setMethod(f="subset",
                         stop("must install.packages(\"s2\") to subset by section")
                     argoFloatsDebug(debug, "subsetting an index by section\n")
                     section <- dots[[1]]
-                    # Ensure that section is well-formed
-                    if (!is.list(dots[1]))
-                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing \"longitude\", \"latitude\" and \"width\"", call.=FALSE)
-                    if (3 != length(section))
-                        stop("in subset,argoFloats-method() :\n  \"section\" must be a list containing 3 items", call.=FALSE)
-                    if (!all(c("longitude", "latitude", "width") %in% sort(names(section))))
-                        stop("in subset,argoFloats-method() :\n  \"section\" must contain \"longitude\", \"latitude\" and \"width\"", call.=FALSE)
+                    if (!is.list(section))
+                        stop("in subset,argoFloats-method() :\n  section must be a list containing \"longitude\", \"latitude\" and possibly \"width\" and \"segments\"", call.=FALSE)
+                    # Handle mandatory components
+                    if (!"longitude" %in% names(section))
+                        stop("in subset,argoFloats-method() :\n  section must have a \"longitude\" entry", call.=FALSE)
+                    if (!"latitude" %in% names(section))
+                        stop("in subset,argoFloats-method() :\n  section must have a \"latitude\" entry", call.=FALSE)
+                    if (length(section$longitude) != length(section$latitude))
+                        stop("in subset,argoFloats-method() :\n  length of section$longitude (",
+                             length(section$longitude), ") and section$latitude (", length(section$latitude), ") disagree", call.=FALSE)
+                    # Handle optional components
+                    if (!"width" %in% names(section))
+                        section$width <- 100
+                    if (!"segments" %in% names(section))
+                        section$segments <- 100
+                    if (!is.null(section$segments)) {
+                        if (!is.numeric(section$segments) || section$segments > 0) {
+                            argoFloatsDebug(debug, "subdividing lon,lat trace (of length ", length(section$longitude), ") to increase length to ", section$segments, "\n", sep="")
+                            s <- seq(0, 1, length.out=length(section$longitude))
+                            section$longitude <- stats::approx(s, section$longitude, seq(0, 1, length.out=section$segments))$y
+                            section$latitude <- stats::approx(s, section$latitude, seq(0, 1, length.out=section$segments))$y
+                        } else {
+                            stop("in subset,argoFloats-method() :\n  section$segments must be NULL or a positive integer", call.=FALSE)
+                        }
+                    }
                     # Create a spine for the section.
                     sectionSpine <- s2::s2_make_line(section$longitude, section$latitude)
                     # Create points for float locations.  Blank the NAs, in case not allowed.
