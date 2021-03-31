@@ -267,10 +267,8 @@ getIndex <- function(filename="core",
         filename <- "argo_synthetic-profile_index.txt.gz"
     } else if (filename == "traj") {
         filename <- "ar_index_global_traj.txt.gz"
-        message('in traj')
     } else if (filename == "bio-traj") {
-        filename <- argo_bio-traj_index.txt.gz
-        message('in biotraj')
+        filename <- "argo_bio-traj_index.txt.gz"
     }
 
     if (!(filename %in% names))
@@ -361,6 +359,7 @@ getIndex <- function(filename="core",
     header <- first[hash]
     lastHash <- tail(hash, 1)
     names <- strsplit(first[1 + lastHash], ",")[[1]]
+    ## message(names)
     ##if (grepl("merge", filename)) {
     ##     names <- c("file", "date", "latitude", "longitude", "ocean",
     ##                "profiler_type", "institution", "parameters",
@@ -371,16 +370,20 @@ getIndex <- function(filename="core",
     ##    print(system.time(
     index <- read.csv(destfileTemp, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE, colClasses="character")
     ##))
-    index$latitude <- as.numeric(index$latitude)
-    index$longitude <- as.numeric(index$longitude)
     argoFloatsDebug(debug, "Setting out-of-range longitude and latitude to NA.\n")
     if ("latitude" %in% names(index)) {
+        index$latitude <- as.numeric(index$latitude)
         index$latitude[abs(index$latitude) > 90] <- NA
+    } else if ("latitude_max" %in% names(index)) {
+        index$latitude_max <- as.numeric(index$latitude_max)
     } else {
         stop("Misconfigured index file: no \"latitude\" data found")
     }
     if ("longitude" %in% names(index)) {
+        index$longitude <- as.numeric(index$longitude)
         index$longitude[abs(index$longitude) > 360] <- NA
+    } else if ("longitude_max" %in% names(index)) {
+        index$longitude_max <- as.numeric(index$longitude_max)
     } else {
         stop("Misconfigured index file: no \"longitude\" data found")
     }
