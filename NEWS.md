@@ -1,5 +1,9 @@
 # argoFloats (development version)
 
+## argoFloats 0.2.0
+
+* Add subset by section
+
 ## argoFloats 0.1.3
 
 * widen support of `age` argument, remove support for `force`

@@ -67,7 +67,7 @@ legend("bottomright", pch=c(2,1), legend=c("Raw", "Adjusted"))
 }
 \references{
 \enumerate{
-\item Argo Data Management Team. "Argo User’s Manual V3.4,"
+\item Argo Data Management Team. "Argo User's Manual V3.4,"
 January 20, 2021. \url{https://archimer.ifremer.fr/doc/00187/29825/}
 }
 }

@@ -216,7 +216,7 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 #' @author Dan Kelley, Jaimie Harbin and Clark Richards
 #'
 #' @references
-#' 1. Argo Data Management Team. "Argo User’s Manual V3.4,"
+#' 1. Argo Data Management Team. "Argo User's Manual V3.4,"
 #' January 20, 2021. <https://archimer.ifremer.fr/doc/00187/29825/>
 #'
 #' @importFrom utils str

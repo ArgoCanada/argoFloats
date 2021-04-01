@@ -122,10 +122,17 @@ See example 15.
 to keep (see table 6 of Reference 1 for details of these codes).
 This operation only works for objects of type \code{"argos"}.
 See example 16.
-\item A list named \code{section} that  has three elements:
-\code{longitude}, and \code{latitude}, that are numeric vectors, and \code{width}, given in km
-that specifies the total span from the \code{latitude} and \code{longitude} points that
-will be retained in the section.
+\item A list named \code{section} that  has four elements:
+\code{longitude},\code{latitude}, \code{width}, and \code{segments}. The first two of these
+are numeric vectors that define the spine of the section, in degrees East
+and North, respectively.  These are both mandatory, while both \code{width} and \code{segments}
+are optional. If given, \code{width} is taken as maximal distance between an Argo
+and the spine, for that float to be retained. If \code{width} is not given, it
+defaults to 100km.  If given, \code{segments} is either \code{NULL} or a positive
+integer.  Setting \code{segments} to \code{NULL} will cause the float-spine distance
+to be computed along a great-circle route.  By contrast, if \code{segments} is an
+integer, then the spine is traced using \code{stats::approx()}, creating
+\code{segments} new points.  If \code{segments} is not provided, it defaults to 100.
 See example 17.
 }
 
@@ -272,17 +279,17 @@ if (requireNamespace("s2")) {
     data("index")
     lon <- c(-78, -77, -76)
     lat <-c(27.5,27.5,26.5)
-    index18 <- subset(index,
+    index17 <- subset(index,
                       section=list(longitude=lon, latitude=lat, width=50))
-    plot(index18, bathymetry=FALSE)
-    points(lon, lat, pch=21, col="black", bg="red", type="o")
+    plot(index17, bathymetry=FALSE)
+    points(lon, lat, pch=21, col="black", bg="red", type="o", lwd=3)
 }
 
 }
 \references{
 \enumerate{
 \item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
-Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 \doi{10.13155/29825}.
 }
 }

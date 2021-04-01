@@ -371,7 +371,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
-#' Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
+#' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' \doi{10.13155/29825}
 #'
 #' @importFrom graphics abline axis box contour par plot.window points polygon rect text
