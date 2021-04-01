@@ -661,7 +661,7 @@ getTraj <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProfileA
     n <- length(index@data$index)
     argoFloatsDebug(debug,  "getTraj() {\n", style="bold", showTime=FALSE, unindent=1)
     if (missing(index))
-        stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
+        stop("In getTraj() : must provide an index, as created by getIndex()", call.=FALSE)
     if (!inherits(index, "argoFloats"))
         stop("'index' must be an object created by getIndex()")
     res <- new("argoFloats", type="profiles")
@@ -669,8 +669,10 @@ getTraj <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProfileA
     if (n == 0) {
         warning("In getTraj() : the index has no files, so there is nothing to 'get'\n", call.=FALSE)
         file <- character(0)
-    } else {
+    }
+   if (!"longitude_max" %in% names(index@data$index)) {
+        stop("In getTraj() : index must be trajectory files. Try using filename = 'traj' or 'bio-traj' in getIndex() before hand", call.=FALSE)
+   } else {
         message('hi')
-        ## FIXME: add a test that it is from trajectory files
     }
 }
