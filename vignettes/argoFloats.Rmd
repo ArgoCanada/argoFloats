@@ -37,7 +37,7 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 
 # Introduction
 
-The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on Core, Biogeochemical ("BGC") , or Deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, or dataStateIndicator, etc. Once downloaded, such data sets can be analysed within `argoFloats` or using other R tools and packages.
+The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on Core, Biogeochemical ("BGC") , or Deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, dataStateIndicator, etc. Once downloaded, such data sets can be analysed within `argoFloats` or using other R tools and packages.
 
 # Youtube Videos
 
@@ -85,7 +85,7 @@ As shown above, the central functions for the `argoFloats` package are `getIndex
 
 Some built-in data sets are provided for concreteness of illustration and for testing, but actual work always starts with a call to `getIndex()` to download a full index of float data, which we will demonstrate later in this vignette.
 
-To begin to get familiar with how the `argoFloats` package works, we will begin looking at the built in data sets. Built into the `argoFloats` package is the `index`, `indexBgc`, `indexSynthetic`, and `indexDeep` indices, referring to core Argo, BGC-Argo, and a combination, deep Argo respectively. It should be noted that as of September 21, 2020, `indexMerged` no longer exists as the switch to `indexSynthetic` has been made. For the sake of this vignette we will focus on the `index` data set.
+To begin to get familiar with how the `argoFloats` package works, we will begin looking at the built in data sets. Built into the `argoFloats` package is the `index`, `indexBgc`, `indexSynthetic`, and `indexDeep` indices, referring to core Argo, BGC-Argo, a combination, and deep Argo respectively. It should be noted that as of September 21, 2020, `indexMerged` no longer exists as the switch to `indexSynthetic` has been made. For the sake of this vignette we will focus on the `index` data set.
 
 The first step is to access the required packages that will be needed during this tutorial, with
 
@@ -173,9 +173,9 @@ ai <- index
 
 ## subset()
 
-As shown by Figure 1, the next step when working with the `argoFloats` package is to use the `subset()` function to focus on a subset of profiles. The `argoFloats` package provides tools to sift through profiles based on ID, time, geography, variable, institution, ocean, dataMode, cycle, direction, profile, and dataStateIndicator.
+As shown by Figure 1, the next step when working with the `argoFloats` package is to use the `subset()` function to focus on a subset of profiles. The `argoFloats` package provides tools to sift through profiles based on ID, time, geography, variable, institution, ocean, dataMode, cycle, direction, profile, dataStateIndicator, section, etc.
 
-For geographic subsetting, the user has the ability to subset by `circle`, `rectangle`, or `polygon`.
+For geographic subsetting, the user has the ability to subset by `circle`, `rectangle`, `polygon`, or `section`.
 
 To subset for specific groups of Argo profiling floats off the coast of Bahamas, the following code is used:
 
@@ -193,33 +193,32 @@ plot(CP, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 
 **Exercise 1:** Use the subset by rectangle function to add a rectangle subset onto Figure 3 and subset all of the data to only include samples between 2012 and 2020.
 
-**Note**
-
-By combining subset by `rectangle` and subset by `time`, it is possible to determine which sampling method would be beneficial for specific scientific questions. For example, Figure 4 shows a comparison between Argo data and CTD section data. This type of plot reveals many pros and cons of each sampling method.
+As of March, 2021, a subset by `section` was developed to create a section of Argo data, similarly to what is done with CTD data. A subset by `section` combined with subset by `time` can provide insightful information of Argo vs CTD sampling efforts. An example of this is highlighted below, which compares a section of Argo data from the Mediterranean outflow region across to North America to the line A03 CTD section data collected in 1993-09-11. 
 
 **Exercise 2:** Use the information from Figure 4 to compare Argo and CTD section sampling methods.
 
-```{r fig.cap="Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 152 samples from 2020-09-07 to 2020-12-06 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package", eval=FALSE}
+```{r fig.cap="Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 49 samples from 2020-09-23 to 2020-10-25 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package", eval=FALSE}
 library(oce)
 library(argoFloats)
 par(mfrow=c(2,1))
 data(section, package="oce")
 #getIndex()
 ai <- getIndex()
-#subset by rectangtle
-latlim <- c(36.2030, 38.2373)
-lonlim <- c(-73.6727, -8.8263) # from range(section[["longitude"]])
-index1 <- subset(ai, rectangle=list(longitude=lonlim, latitude=latlim))
+#subset by section
+lonlim <- c(-70, -64,-10)
+latlim <-c(40,35,35)
+index1 <- subset(ai, section=list(longitude=lonlim, latitude=latlim, width=100))
 #subset by time
-from <- as.POSIXct("2020-09-07", tz="UTC")
-to <- as.POSIXct("2020-12-07", tz="UTC")
+from <- as.POSIXct("2020-09-23", tz="UTC")
+to <- as.POSIXct("2020-10-25", tz="UTC")
 index2 <- subset(index1, time=list(from=from, to=to))
 plot(index2,bathymetry=FALSE, mar=par("mar"),  asp= 1 / cos(mean(range(unlist(index2[["latitude"]]), na.rm=TRUE))*pi/180),  mgp=getOption("oceMgp")
 )
+points(lonlim, latlim, pch=21, col="black", bg="red", type="o")
 plot(section, which="map", mar=par("mar"), col="tan")
 ```
 
-![Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 152 samples from 2020-09-07 to 2020-12-06 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package](01_section_argo.png)
+![Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 49 samples from 2020-09-23 to 2020-10-25 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package](01_section_argo.png)
 
 ## getProfiles()
 
@@ -269,9 +268,9 @@ index6 <- subset(index5, time=list(from="2012-01-01", to="2020-01-01"))
 plot(index6, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 ```
 
-**Exercise 2:** Use the information from Figure 4 to compare Argo and CTD section sampling methods.
+**Exercise 2:** Use the information from Figure 4 to compare Argo and CTD section sampling efforts.
 
-Figure 4 reveals that it takes 3 months (from todays current date, 2020-12-06) of Argo sampling to reproduce a 1 month CTD section cruise. Additionally, it displayed that there are geographical gaps within the Argo data. On the other hand, it should be noted that by extending the latitude range, these gaps are quickly filled in. Additionally, Argo sampling is much more cost effective, and it can allow for collection of more information (ie. nutrients, oxygen, backscattering, etc.) if such thing is desired.
+Figure 4 reveals that it takes almost 3 months of Argo sampling to reproduce a 1 month CTD section cruise. Additionally, it displayed that there are geographical gaps within the Argo data. On the other hand, it should be noted that by extending the latitude range, these gaps are quickly filled in. In conclusion, Argo sampling is much more cost effective, and it can allow for collection of more information (ie. nutrients, oxygen, backscattering, etc.) if such thing is desired.
 
 **Exercise 3:** Using the profile in the previous example, plot a TS diagram.
 
