@@ -577,3 +577,90 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
     argoFloatsDebug(debug,  "} # getProfiles()\n", style="bold", showTime=FALSE, unindent=1)
     res
 }
+
+#' Get Profiles Named in an argoFloats trajectory Index
+#'
+#' This takes an index constructed with [getIndex()], with
+#' filenames equal to 'traj' or 'bio-traj', possibly after
+#' focusing with [subset,argoFloats-method()], and creates
+#' a list of files to download from the server named in the index.
+#' Then these files are downloaded to the `destdir` directory,
+#' using filenames inferred from the source filenames. The
+#' value returned by [getTraj()] is suitable for use
+#' by [readProfiles()].
+#'
+#' It should be noted that the constructed server URL follows
+#' a different pattern on the usgodae an ifremer servers, and
+#' so if some other server is used, the URL may be wrong, leading
+#' to an error.  Similarly, if the patterns on these two
+#' servers change, then [getProfiles()] will fail. Users who
+#' encounter such problems are requested to report them
+#' to the authors.
+#'
+#' If a particular data file cannot be downloaded after multiple trials, then
+#' the behaviour depends on the value of the `skip` argument.  If that is
+#' `TRUE` then a `NA` value is inserted in the corresponding
+#' spot in the return value, but if it is `FALSE` (the default), then an error is reported.
+#' Note that [readProfiles()] skips over any such `NA` entries,
+#' while reporting their positions within `index`.
+#'
+#' @param index an [`argoFloats-class`] object of type `"index"`, as created
+#' by [getIndex()] with 'filename' arguments 'traj' and 'bio-traj'.
+#'
+#' @template destdir
+#'
+#' @template age
+#'
+#' @template retries
+#'
+#' @template skip
+#'
+#' @template quiet
+#'
+#' @template debug
+#'
+#' @return An object of class [`argoFloats-class`] with type=`"profiles"`, the
+#' `data` slot of which contains two items: `url`,
+#' which holds the URLs from which the netcdf
+#' files were downloaded, and `file`, which
+#' holds the path names of the downloaded files; the latter
+#' is used by [readProfiles()].
+#'
+#' @examples
+#' # Download some Argo data files.
+#'\dontrun{
+#' library(argoFloats)
+#' ai <- getIndex(filename="traj")
+#' index2 <- subset(ai, 1:2)
+#' profiles2 <- getProfiles(index2)
+#' # See ?readProfiles for how to read the files now downloaded.
+#' }
+#'
+#' @author Jaimie Harbin
+#'
+## @importFrom oce processingLogAppend vectorShow
+#'
+#' @export
+getTraj <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProfileAge(), retries=3, skip=TRUE, quiet=TRUE, debug=0)
+{
+    if (!inherits(index, "argoFloats") || index[["type"]] != "index")
+        stop("'index' must be an object created with getIndex() or subset()")
+    debug <- max(0, min(3, floor(debug+0.5)))
+    if (!requireNamespace("oce", quietly=TRUE))
+        stop("must install.packages(\"oce\") for getTraj() to work")
+    n <- length(index@data$index)
+    argoFloatsDebug(debug,  "getTraj() {\n", style="bold", showTime=FALSE, unindent=1)
+    if (missing(index))
+        stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
+    if (!inherits(index, "argoFloats"))
+        stop("'index' must be an object created by getIndex()")
+    res <- new("argoFloats", type="profiles")
+    n <- length(index[["file"]])
+    if (n == 0) {
+        warning("In getTraj() : the index has no files, so there is nothing to 'get'\n", call.=FALSE)
+        file <- character(0)
+    } else {
+        message('hi')
+        ## FIXME: add a test that it is from trajectory files
+    }
+}
