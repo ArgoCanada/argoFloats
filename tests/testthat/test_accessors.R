@@ -96,7 +96,7 @@ test_that("test error messages",
           {
               data("index")
               expect_error(index[["parameters"]], "there are no parameters for core Argo index objects. Try BGC, Merged, or Synthetic Argo.")
-              expect_error(index[["dog"]], "cannot interpret i=dog for an object of type=\"index\"")
+              expect_error(index[["dog"]], "no \"dog\" in an object of type=\"index\" and subtype=\"cycles\"")
           }
 )
 
