@@ -236,7 +236,8 @@ getIndex <- function(filename="core",
     ## Sample file
     ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
     ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
-    res <- new("argoFloats", type="index")
+    istraj <- filename %in% c("traj", "bio-traj", "ar_index_global_traj.txt.gz", "argo_bio-traj_index.txt.gz")
+    res <- new("argoFloats", type="index", subtype=if (istraj) "trajectories" else "cycles")
     argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     serverOrig <- server
     serverNicknames <- c("ifremer-https" = "https://data-argo.ifremer.fr",
@@ -478,7 +479,7 @@ getIndex <- function(filename="core",
 }
 
 
-#' Get Profiles Named in an argoFloats Index
+#' Get "cycles"/"trajectory" Files Named in an argoFloats Index
 #'
 #' This takes an index constructed with [getIndex()], possibly
 #' after focusing with [subset,argoFloats-method()], and creates
