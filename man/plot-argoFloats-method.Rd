@@ -171,7 +171,9 @@ maps.
 \details{
 The various plot types are as follows.
 \itemize{
-\item For \code{which="map"}, a map of profile locations is created. This
+\item For \code{which="map"}, a map of profile locations is created if subtype
+is equal to cycles, or a rectangle highlighting the trajectory of a
+float ID is created when subtype is equal to trajectories. This
 only works if the \code{type} is \code{"index"} (meaning that \code{x} was created
 by \code{\link[=getIndex]{getIndex()}} or a subset of such an object, created with
 \code{\link[=subset,argoFloats-method]{subset,argoFloats-method()}}), or \code{argos} (meaning that
