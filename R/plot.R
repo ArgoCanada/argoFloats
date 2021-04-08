@@ -431,15 +431,17 @@ setMethod(f="plot",
                       longitude <- x[["longitude", debug=debug]]
                       latitude <- x[["latitude", debug=debug]]
                   }
-                  if (istraj && x[["length"]] != 1)
-                      stop("In plot,argoFloats-method(): can only plot trajectory for one ID at a time", call.=FALSE)
                   if (istraj) {
+                      if (x[["length"]] != 1)
+                          stop("In plot,argoFloats-method(): can only plot trajectory for one ID at a time", call.=FALSE)
+                      else {
                       lat1 <- as.numeric(x[["latitude_min"]])
                       lat2 <- as.numeric(x[["latitude_max"]])
                       lon1 <- as.numeric(x[["longitude_min"]])
                       lon2 <- as.numeric(x[["longitude_max"]])
                       latitude <- c(lat1, lat2)
                       longitude <- c(lon1, lon2)
+                      }
                   }
                   n <- x[["length"]]
                   ## Find type of each cycle, for colour-coding
@@ -473,7 +475,7 @@ setMethod(f="plot",
                                          type=if (is.null(type)) "p" else type,
                                          ...)
                       } else if (istraj) {
-                          rect(lon1,lat1, lon2,lat2, col = rgb(red = 1, green = 0, blue = 0, alpha = 0.3))
+                          rect(lon1,lat1, lon2,lat2)
                       }
                       ## warning("In plot,argoFloats-method(): projected maps do not (yet) show bathymetry", call.=FALSE)
                       return(invisible(NULL))
@@ -775,7 +777,7 @@ setMethod(f="plot",
                                  type=if (is.null(type)) "p" else type,
                                  ...)
                       } else if (istraj) {
-                          rect(lon1,lat1, lon2,lat2, col = rgb(red = 1, green = 0, blue = 0, alpha = 0.3))
+                          rect(lon1,lat1, lon2,lat2)
                       }
                   } else {
                       argoFloatsDebug(debug, "using coastlineWorld from oce package, since the ocedata package is not installed\n")
