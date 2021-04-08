@@ -432,16 +432,12 @@ setMethod(f="plot",
                       latitude <- x[["latitude", debug=debug]]
                   }
                   if (istraj) {
-                      if (x[["length"]] != 1)
-                          stop("In plot,argoFloats-method(): can only plot trajectory for one ID at a time", call.=FALSE)
-                      else {
                       lat1 <- as.numeric(x[["latitude_min"]])
                       lat2 <- as.numeric(x[["latitude_max"]])
                       lon1 <- as.numeric(x[["longitude_min"]])
                       lon2 <- as.numeric(x[["longitude_max"]])
                       latitude <- c(lat1, lat2)
                       longitude <- c(lon1, lon2)
-                      }
                   }
                   n <- x[["length"]]
                   ## Find type of each cycle, for colour-coding
