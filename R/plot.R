@@ -853,8 +853,10 @@ setMethod(f="plot",
                   longitude <- unlist(x[["longitude", "byLevel", debug=debug]])
                   # Interpolate across NA longitudes (required for traj data, to get TS plot)
                   n <- length(longitude)
-                  longitude <- approx(1:n, longitude, 1:n)$y
-                  latitude <- approx(1:n, latitude, 1:n)$y
+                  if (any(is.na(longitude)))
+                      longitude <- approx(1:n, longitude, 1:n)$y
+                  if (any(is.na(latitude)))
+                      latitude <- approx(1:n, latitude, 1:n)$y
                   ctd <- oce::as.ctd(salinity=salinity,
                                      temperature=temperature,
                                      pressure=pressure,
