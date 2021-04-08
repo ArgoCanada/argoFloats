@@ -592,8 +592,11 @@ setMethod(f="subset",
                     keep <- unlist(lapply(parametersList, function(pl) nparameters == sum(parameters %in% pl)))
                     #if (sum(keep) < 1)
                     #warning("in subset,argoFloats-method(..., parameter):\n  found no profiles with given parameter", call.=FALSE)
-                    if (!silent)
+                    if (!silent && !istraj) {
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    } else if (!silent && istraj) {
+                        message("Kept ", sum(keep), " trajectories (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    }
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by parameter= ",parameter))
@@ -684,8 +687,11 @@ setMethod(f="subset",
                     argoFloatsDebug(debug, "to= ", format(time$to, "%Y-%m-%d %H:%M:%S %z"), "\n")
                     keep <- time$from[1] <= x[["date"]] & x[["date"]] <= time$to[1]
                     keep[is.na(keep)] <- FALSE
-                    if (!silent)
+                    if (!silent && !istraj) {
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    } else if (!silent &&istraj) {
+                        message("Kept ", sum(keep), " trajectories (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    }
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by time from", time$from, "to ", time$to))
@@ -698,8 +704,11 @@ setMethod(f="subset",
                         stop("\"institution\" cannot hold more than one element")
                     keep <- grepl(institution, x@data$index$institution)
                     keep[is.na(keep)] <- FALSE
-                    if (!silent)
+                    if (!silent && !istraj) {
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    } else if (!silent && istraj) {
+                        message("Kept ", sum(keep), " trajectories (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    }
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by institution " ,institution))
@@ -713,8 +722,11 @@ setMethod(f="subset",
                     } else {
                         keep <- grep("849|862|864", x@data$index$profiler_type, invert=TRUE)
                     }
-                    if (!silent)
+                    if (!silent && !istraj) {
                         message("Kept ", length(keep), " cycles (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                    } else if (!silent && istraj) {
+                        message("Kept ", length(keep), " trajectories (", sprintf("%.3g", 100*length(keep)/N), "%)")
+                    }
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type to only include deep data"))
@@ -726,8 +738,11 @@ setMethod(f="subset",
                     file <- x@data$index$file
                     for (thisID in ID)
                         keep <- keep | grepl(thisID, xID)
-                    if (!silent)
+                    if (!silent && !istraj) {
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    } else if (!silent && istraj) {
+                        message("Kept ", sum(keep), " trajectories (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                    }
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by float ID", ID))
@@ -763,8 +778,12 @@ setMethod(f="subset",
                     } else {
                         stop("in subset,argoFloats-method():\n  \"dataMode\" must be either \"realtime\" or \"delayed\", not \"", dataMode, "\"", call.=FALSE)
                     }
-                    if (!silent)
+                    if (!silent && !istraj) {
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
+                    } else if (!silent && istraj) {
+                        message("Kept ", sum(keep), " trajectories (", sprintf("%.3g", 100.0*sum(keep)/N), "%)")
+                    }
+
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
                                                   paste("subset index type by dataMode", dataMode))
