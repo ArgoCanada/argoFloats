@@ -91,6 +91,12 @@ readProfiles <- function(profiles, FUN, destdir=argoDefaultDestdir(), quiet=FALS
     res <- new("argoFloats", type="argos")
     if (is.character(profiles)) {
         argoFloatsDebug(debug, "Case 1: vector of ", length(profiles), " character valuesn", sep="")
+        # find subtype, and don't permit mixed subtypes
+        istraj <- grepl("traj", profiles)
+        if (any(istraj) && any(!istraj))
+            stop("cannot mix \"trajectories\" and \"cycle\" subtypes for case where 'profiles' is a character vector")
+        res@metadata$subtype <- if (istraj[1]) "trajectories" else "cycles"
+        # get storage for the oce::argo objects
         n <- length(profiles)
         res@data$argos <- vector("list", length=n)
         for (i in seq_len(n)) {
@@ -124,7 +130,13 @@ readProfiles <- function(profiles, FUN, destdir=argoDefaultDestdir(), quiet=FALS
                                                                      "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
         }
     } else if (inherits(profiles, "argoFloats")) {
+        # Handle result of previous call to getProfiles(), i.e. a 'profiles' type.
         type <- profiles[["type"]]
+        filenames <- profiles[["file"]]
+        istraj <- grepl("traj", filenames)
+        if (any(istraj) && any(!istraj))
+            stop("cannot mix \"trajectories\" and \"cycle\" subtypes for case where 'profiles' is an argoFloats object")
+        res@metadata$subtype <- if (istraj[1]) "trajectories" else "cycles"
         if (type == "profiles") {
             argoFloatsDebug(debug, "case 2: object created by getProfiles()\n")
             mustSkip <- is.na(profiles@data$file)
