@@ -177,8 +177,8 @@ As its filename indicates, it holds the "synthetic" version of "realtime" data.<
 #&gt; * hint: access list of oce::argo objects with x[["argos"]] or a single one with e.g. x[[1]]
 #&gt; * Processing Log
 #&gt; 
-#&gt;     - 2021-04-01 16:51:03 UTC: `create 'argoFloats' object`
-#&gt;     - 2021-04-01 16:51:03 UTC: `readProfiles(profiles = system.file("extdata", "SR2902204_131.nc",     package = "argoFloats"))`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+#&gt;     - 2021-04-09 13:23:11 UTC: `create 'argoFloats' object`
+#&gt;     - 2021-04-09 13:23:11 UTC: `readProfiles(profiles = system.file("extdata", "SR2902204_131.nc",     package = "argoFloats"))`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Argo Summary
 #&gt; ------------
 #&gt; 
@@ -201,9 +201,9 @@ As its filename indicates, it holds the "synthetic" version of "realtime" data.<
 #&gt;     salinity [PSS-78]                         35.582      35.94    36.224 335x1   0                  PSAL
 #&gt;     salinityAdjusted [PSS-78]                 35.582      35.94    36.224 335x1   0         PSAL_ADJUSTED
 #&gt;     salinityAdjustedError [PSS-78]                NA         NA        NA 335x1 335   PSAL_ADJUSTED_ERROR
-#&gt;     oxygen [\u03bcmol/kg]                   -0.65686     35.741    200.11 335x1 263                  DOXY
-#&gt;     oxygenAdjusted [\u03bcmol/kg]                 NA         NA        NA 335x1 335         DOXY_ADJUSTED
-#&gt;     oxygenAdjustedError [\u03bcmol/kg]            NA         NA        NA 335x1 335   DOXY_ADJUSTED_ERROR
+#&gt;     oxygen [μmol/kg]                        -0.65686     35.741    200.11 335x1 263                  DOXY
+#&gt;     oxygenAdjusted [μmol/kg]                      NA         NA        NA 335x1 335         DOXY_ADJUSTED
+#&gt;     oxygenAdjustedError [μmol/kg]                 NA         NA        NA 335x1 335   DOXY_ADJUSTED_ERROR
 #&gt;     chlorophyllA                              0.0511    0.35557    2.0878 335x1 263                  CHLA
 #&gt;     chlorophyllAAdjusted                          NA         NA        NA 335x1 335         CHLA_ADJUSTED
 #&gt;     chlorophyllAAdjustedError                     NA         NA        NA 335x1 335   CHLA_ADJUSTED_ERROR
@@ -234,10 +234,10 @@ As its filename indicates, it holds the "synthetic" version of "realtime" data.<
 #&gt; 
 #&gt; * Processing Log
 #&gt; 
-#&gt;     - 2021-04-01 16:51:03 UTC: `create 'argo' object`
-#&gt;     - 2021-04-01 16:51:03 UTC: `initializeFlagScheme(object, name="argo", mapping=list(not_assessed=0,passed_all_tests=1,probably_good=2,probably_bad=3,bad=4,changed=5,not_used_6=6,not_used_7=7,estimated=8,missing=9)), default=c(0,3,4,9))`
-#&gt;     - 2021-04-01 16:51:03 UTC: `read.argo(file="/Users/runner/work/_temp/Library/argoFloats/extdata/SR2902204_131.nc")`
-#&gt;     - 2021-04-01 16:51:03 UTC: `override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)`</div><div class='input'>
+#&gt;     - 2021-04-09 13:23:11 UTC: `create 'argo' object`
+#&gt;     - 2021-04-09 13:23:11 UTC: `initializeFlagScheme(object, name="argo", mapping=list(not_assessed=0,passed_all_tests=1,probably_good=2,probably_bad=3,bad=4,changed=5,not_used_6=6,not_used_7=7,estimated=8,missing=9)), default=c(0,3,4,9))`
+#&gt;     - 2021-04-09 13:23:11 UTC: `read.argo(file="/Users/runner/work/_temp/Library/argoFloats/extdata/SR2902204_131.nc")`
+#&gt;     - 2021-04-09 13:23:11 UTC: `override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)`</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

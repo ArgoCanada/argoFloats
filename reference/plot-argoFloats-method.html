@@ -362,7 +362,9 @@ within this function.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The various plot types are as follows.</p><ul>
-<li><p>For <code>which="map"</code>, a map of profile locations is created. This
+<li><p>For <code>which="map"</code>, a map of profile locations is created if subtype
+is equal to cycles, or a rectangle highlighting the trajectory of a
+float ID is created when subtype is equal to trajectories. This
 only works if the <code>type</code> is <code>"index"</code> (meaning that <code>x</code> was created
 by <code><a href='getIndex.html'>getIndex()</a></code> or a subset of such an object, created with
 <code><a href='subset,argoFloats-method.html'>subset,argoFloats-method()</a></code>), or <code>argos</code> (meaning that
