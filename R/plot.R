@@ -782,7 +782,7 @@ setMethod(f="plot",
                       polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col=col)
                   }
                   par(mar=omar, mgp=omgp)
-              } else if (which == "summary") {
+              } else if (which == "summary" && !istraj) {
                   argoFloatsDebug(debug, "summary plot\n", sep="")
                   if (x[["length"]] < 2)
                       stop("In plot,argoFloats-method() : cannot draw a summary plot with only one float cycle", call.=FALSE)
@@ -837,6 +837,9 @@ setMethod(f="plot",
                           }
                       }
                   }
+              } else if (which == "summary" && istraj) {
+                      stop("In plot,argoFloats-method(): cannot draw summary plot for subtype = trajectories", call.=FALSE)
+
               } else if (which == "TS") {
                   argoFloatsDebug(debug, "TS plot\n", sep="")
                   if ((x[["type"]] != "argos"))
@@ -915,7 +918,7 @@ setMethod(f="plot",
                               mar=mar, mgp=mgp, eos=eos,
                               type=if (is.null(type)) "p" else type, ...)
                   par(mar=omar, mgp=omgp)
-              } else if (which == "QC") {
+              } else if (which == "QC" && !istraj) {
                   if (x[["type"]] != "argos")
                       stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)
                   IDs <- x[["ID"]]
@@ -993,6 +996,9 @@ setMethod(f="plot",
                       box()
                       text(0, 0.5, paste(' No', QCControl$parameter, "flags available"), pos=4)
                   }
+              } else if (which == "QC" && istraj) {
+                      stop("In plot,argoFloats-method(): cannot draw QC plot for subtype = trajectories", call.=FALSE)
+
               } else if (which == "profile") {
                   if (x[["type"]] != "argos")
                       stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)
