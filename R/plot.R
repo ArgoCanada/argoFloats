@@ -54,7 +54,9 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'
 #' The various plot types are as follows.
 #'
-#' * For `which="map"`, a map of profile locations is created. This
+#' * For `which="map"`, a map of profile locations is created if subtype
+#' is equal to cycles, or a rectangle highlighting the trajectory of a
+#' float ID is created when subtype is equal to trajectories. This
 #' only works if the `type` is `"index"` (meaning that `x` was created
 #' by [getIndex()] or a subset of such an object, created with
 #' [subset,argoFloats-method()]), or `argos` (meaning that
@@ -421,11 +423,22 @@ setMethod(f="plot",
               if (is.null(mar))
                   mar <- par("mar") #c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
               par(mar=mar, mgp=mgp)
+              istraj <- identical(x@metadata$subtype, "trajectories")
               if (which == "map") {
                   data("coastlineWorld", package="oce", envir=environment())
                   argoFloatsDebug(debug, "map plot\n", sep="")
-                  longitude <- x[["longitude", debug=debug]]
-                  latitude <- x[["latitude", debug=debug]]
+                  if (!istraj) {
+                      longitude <- x[["longitude", debug=debug]]
+                      latitude <- x[["latitude", debug=debug]]
+                  }
+                  if (istraj) {
+                      lat1 <- as.numeric(x[["latitude_min"]])
+                      lat2 <- as.numeric(x[["latitude_max"]])
+                      lon1 <- as.numeric(x[["longitude_min"]])
+                      lon2 <- as.numeric(x[["longitude_max"]])
+                      latitude <- c(lat1, lat2)
+                      longitude <- c(lon1, lon2)
+                  }
                   n <- x[["length"]]
                   ## Find type of each cycle, for colour-coding
                   cycleType <- rep("core", n)
@@ -449,20 +462,32 @@ setMethod(f="plot",
                       data("coastlineWorld", package="oce", envir=environment())
                       coastlineWorld <- get("coastlineWorld")
                       oce::mapPlot(coastlineWorld, col= "lightgray", projection=mapControl$projection, drawBox=FALSE)
-                      oce::mapPoints(unlist(longitude), unlist(latitude),
-                                     cex=if (is.null(cex)) 1 else cex,
-                                     col=if (is.null(col)) "white" else col,
-                                     pch=if (is.null(pch)) 21 else pch,
-                                     bg=if (is.null(bg)) "red" else bg,
-                                     type=if (is.null(type)) "p" else type,
-                                     ...)
+                      if (!istraj) {
+                          oce::mapPoints(unlist(longitude), unlist(latitude),
+                                         cex=if (is.null(cex)) 1 else cex,
+                                         col=if (is.null(col)) "white" else col,
+                                         pch=if (is.null(pch)) 21 else pch,
+                                         bg=if (is.null(bg)) "red" else bg,
+                                         type=if (is.null(type)) "p" else type,
+                                         ...)
+                      } else if (istraj) {
+                          rect(lon1,lat1, lon2,lat2)
+                      }
                       ## warning("In plot,argoFloats-method(): projected maps do not (yet) show bathymetry", call.=FALSE)
                       return(invisible(NULL))
                   }
                   if (is.null(xlim))
-                      xlim <- extendrange(longitude)
+                      if (!istraj) {
+                          xlim <- extendrange(longitude)
+                      } else if (istraj) {
+                          xlim <- extendrange(range(lon1,lon2))
+                      }
                   if (is.null(ylim))
-                      ylim <- extendrange(latitude)
+                      if (!istraj) {
+                          ylim <- extendrange(latitude)
+                      } else if (istraj) {
+                          ylim <- extendrange(range(lat1, lat2))
+                      }
 
                   ## Draw empty plot box, with axes, to set par("usr") for later use with bathymetry.
                   xlab <- if (is.null(xlab)) "" else xlab
@@ -733,20 +758,22 @@ setMethod(f="plot",
                       }
                       if (is.null(pch))
                           pch <- 21
-                      if (length(pch) == 1 && pch == 21) {
+                      if (length(pch) == 1 && pch == 21 && !istraj) {
                           points(unlist(longitude), unlist(latitude),
                                  cex=if (is.null(cex)) 1 else cex,
                                  pch=pch,
                                  bg=col,
                                  type=if (is.null(type)) "p" else type,
                                  ...)
-                      } else {
+                      } else if (!istraj) {
                           points(unlist(longitude), unlist(latitude),
                                  cex=if (is.null(cex)) 1 else cex,
                                  pch=pch,
                                  col=col,
                                  type=if (is.null(type)) "p" else type,
                                  ...)
+                      } else if (istraj) {
+                          rect(lon1,lat1, lon2,lat2)
                       }
                   } else {
                       argoFloatsDebug(debug, "using coastlineWorld from oce package, since the ocedata package is not installed\n")
@@ -824,6 +851,12 @@ setMethod(f="plot",
                   ## will match the salinity, temperature and pressure vectors.
                   latitude <- unlist(x[["latitude", "byLevel", debug=debug]])
                   longitude <- unlist(x[["longitude", "byLevel", debug=debug]])
+                  # Interpolate across NA longitudes (required for traj data, to get TS plot)
+                  n <- length(longitude)
+                  if (any(is.na(longitude)))
+                      longitude <- approx(1:n, longitude, 1:n)$y
+                  if (any(is.na(latitude)))
+                      latitude <- approx(1:n, latitude, 1:n)$y
                   ctd <- oce::as.ctd(salinity=salinity,
                                      temperature=temperature,
                                      pressure=pressure,

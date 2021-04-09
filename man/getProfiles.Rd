@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.R
 \name{getProfiles}
 \alias{getProfiles}
-\title{Get Profiles Named in an argoFloats Index}
+\title{Get "cycles"/"trajectory" Files Named in an argoFloats Index}
 \usage{
 getProfiles(
   index,

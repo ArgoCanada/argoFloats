@@ -194,8 +194,9 @@ setClass("argoFloats", slots=c(metadata="list", data="list", processingLog="list
 
 setMethod(f="initialize",
           signature="argoFloats",
-          definition=function(.Object, type="unspecified") {
+          definition=function(.Object, type="unspecified", subtype="cycles") {
               .Object@metadata$type <- type
+              .Object@metadata$subtype <- subtype
               .Object@processingLog$time <- as.POSIXct(Sys.time())
               .Object@processingLog$value <- "create 'argoFloats' object"
               return(.Object)
@@ -340,8 +341,9 @@ setMethod(f="[[",
                   return(x@processingLog)
               }
               type <- x@metadata$type
+              istraj <- identical(x@metadata$subtype, "trajectories")
               if (type == "index") {
-                  argoFloatsDebug(debug, "Handling type==\"index\" case.\n")
+                  argoFloatsDebug(debug, "Handling type \"index\" case (istraj=", istraj, ").\n", sep="")
                   if (is.numeric(i)) {
                       return(x@data$index[i,])
                   } else if (length(i) == 1 && i == "index") {
@@ -356,11 +358,14 @@ setMethod(f="[[",
                       ## warning("converted x[[\"profile\"]] to x[[\"cycle\"]] for backwards compatibility;\n  NOTE: this conversion will cease after September, 2020.")
                       ## cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
                       ## return(as.vector(if (missing(j)) cycle else cycle[j]))
-                  } else if (length(i) == 1 && i == "cycle") {
+                  } else if (length(i) == 1 && i == "cycle" && !istraj) {
                       cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
-                  } else if (length(i) == 1 && i == "ID") {
+                  } else if (length(i) == 1 && i == "ID" && !istraj) {
                       ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3,4}[A-Z]*\\.nc$", "\\1", x@data$index$file)
+                      return(as.vector(if (missing(j)) ID else ID[j]))
+                  } else if (length(i) == 1 && i == "ID" && istraj) {
+                      ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[A-Z]*traj*\\.nc$", "\\1", x@data$index$file)
                       return(as.vector(if (missing(j)) ID else ID[j]))
                   } else if (length(i) == 1 && i == "length") {
                       return(length(x@data$index$file))
@@ -371,7 +376,8 @@ setMethod(f="[[",
                   } else if (length(i) == 1 && i == "time_update") {
                       return(x@data$index$date_update)
                   } else {
-                      stop("cannot interpret i=", paste(i, collapse=","), " for an object of type=\"index\"", call.=FALSE)
+                      subtype <- if (is.null(x@metadata$subtype)) "cycles" else x@metadata$subtype
+                      stop("no \"", paste(i, collapse=","), "\" in an object of type=\"index\" and subtype=\"", subtype, "\"", call.=FALSE)
                   }
               } else if (type == "profiles") { # made by getProfiles()
                   argoFloatsDebug(debug, "Handling type==\"profiles\" case.\n")
