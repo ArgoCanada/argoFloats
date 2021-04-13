@@ -562,15 +562,23 @@ setMethod(f="subset",
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                 } else if (dotsNames[1] == "circle" && istraj) {
                         stop("in subset,argoFloats-method(): cannot subset circle for \"index\" type with subtype = trajectories", call.=FALSE)
-                } else if (dotsNames[1] == "rectangle" && !istraj) {
+                } else if (dotsNames[1] == "rectangle") {
                     argoFloatsDebug(debug, "subsetting an index by rectangle\n")
                     rectangle <- dots[[1]]
                     if (!is.list(dots[1]))
                         stop("in subset,argoFloats-method():\n  \"rectangle\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
                     if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
                         stop("in subset,argoFloats-method():\n  \"rectangle\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
+                    if (!istraj) {
                     keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
                     keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[["latitude"]] <= rectangle$latitude[2]
+                    } else if (istraj) {
+                                        # FIXME: it's keeplon and keeplat that would change
+
+                    keeplon <- rectangle$longitude[1] <= as.numeric(x[["longitude_min"]]) & as.numeric(x[["longitude_max"]]) <= rectangle$longitude[2]
+                    keeplat <- rectangle$latitude[1] <= as.numeric(x[["latitude_min"]]) & as.numeric(x[["latitude_max"]]) <= rectangle$longitude[2]
+
+                    }
                     ok <- is.finite(keeplon) & is.finite(keeplat)
                     keeplon[!ok] <- FALSE
                     keeplat[!ok] <- FALSE
@@ -580,8 +588,6 @@ setMethod(f="subset",
                                                   paste("subset index type by rectangle with longitude= ", rectangle$longitude, " and latitude= ", rectangle$latitude ))
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
-                } else if (dotsNames[1] == "rectangle" && istraj) {
-                        stop("in subset,argoFloats-method(): cannot subset rectangle for \"index\" type with subtype = trajectories", call.=FALSE)
                 } else if (dotsNames[1] == "parameter") {
                     argoFloatsDebug(debug, "subsetting an index by parameter\n")
                     parameter <- dots[[1]]
