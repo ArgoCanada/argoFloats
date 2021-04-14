@@ -147,7 +147,7 @@ the \code{cycle}.}
 case, and is ignored for the other cases.
 If \code{TSControl} is not supplied as an argument,
 points will be coloured black if their quality-control flags indicate
-good data, or red otherwise.
+good data, red if flags indicate bad data, and gray if flags are not accessed.
 Otherwise, if \code{TSControl} contains a
 vector element named \code{colByCycle}, then the \code{col} argument will be ignored,
 and instead individual cycles will be coloured as dictated by successive
@@ -236,11 +236,12 @@ is an \linkS4class{argoFloats} object of type \code{"argos"}, i.e. if it was
 created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
 can be altered by putting \code{Slim} and \code{Tlim} arguments in the \code{...} list; see
 the documentation for \code{\link[oce:plotTS]{oce::plotTS()}} for other arguments that can be
-provided. This plot has a default color code to represent bad vs good data.
+provided. This plot has a default color code to represent bad, good, and not assessed data.
 This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
-data are considered bad if flagged 3, 4, 6, or 7, and good
-if flagged 1, 2, 5, or 8; good values are plotted with black symbols,
-and bad ones are plotted with red symbols.
+data are considered bad if flagged 3, 4, 6, or 7, good
+if flagged 1, 2, 5, or 8, and not accessed if flagged 0; good values are plotted
+with black symbols, bad ones are plotted with red symbols, and not assessed values
+are plotted with gray symbols.
 }
 }
 \examples{

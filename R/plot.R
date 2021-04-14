@@ -126,11 +126,12 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' created by [readProfiles()]. The scales for the plot
 #' can be altered by putting `Slim` and `Tlim` arguments in the `...` list; see
 #' the documentation for [oce::plotTS()] for other arguments that can be
-#' provided. This plot has a default color code to represent bad vs good data.
+#' provided. This plot has a default color code to represent bad, good, and not assessed data.
 #' This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
-#' data are considered bad if flagged 3, 4, 6, or 7, and good
-#' if flagged 1, 2, 5, or 8; good values are plotted with black symbols,
-#' and bad ones are plotted with red symbols.
+#' data are considered bad if flagged 3, 4, 6, or 7, good
+#' if flagged 1, 2, 5, or 8, and not accessed if flagged 0; good values are plotted
+#' with black symbols, bad ones are plotted with red symbols, and not assessed values
+#' are plotted with gray symbols.
 #'
 #' @param x an [`argoFloats-class`] object.
 #'
@@ -249,7 +250,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' case, and is ignored for the other cases.
 #' If `TSControl` is not supplied as an argument,
 #' points will be coloured black if their quality-control flags indicate
-#' good data, or red otherwise.
+#' good data, red if flags indicate bad data, and gray if flags are not accessed.
 #' Otherwise, if `TSControl` contains a
 #' vector element named `colByCycle`, then the `col` argument will be ignored,
 #' and instead individual cycles will be coloured as dictated by successive
@@ -906,9 +907,12 @@ setMethod(f="plot",
                       goodT <- temperatureFlag %in% c(1, 2, 5, 8)
                       goodS <- salinityFlag %in% c(1, 2, 5, 8)
                       good <- goodS & goodT
-                      col <- ifelse(good, "black", "red")
+                      okT <- temperatureFlag %in% c(0)
+                      okS <- salinityFlag %in% c(0)
+                      ok <- okS & okT
+                      col <- ifelse(good, "black", ifelse(ok, "gray", "red"))
                       if (pch == 21)
-                          bg <- ifelse(good, "black", "red")
+                          bg <- ifelse(good, "black", ifelse(ok, "gray", "red"))
                   }
                   oce::plotTS(ctd,
                               cex=cex,
