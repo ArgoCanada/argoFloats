@@ -342,7 +342,7 @@ the <code>cycle</code>.</p></td>
 case, and is ignored for the other cases.
 If <code>TSControl</code> is not supplied as an argument,
 points will be coloured black if their quality-control flags indicate
-good data, or red otherwise.
+good data, red if flags indicate bad data, and gray if flags are not accessed.
 Otherwise, if <code>TSControl</code> contains a
 vector element named <code>colByCycle</code>, then the <code>col</code> argument will be ignored,
 and instead individual cycles will be coloured as dictated by successive
@@ -425,11 +425,12 @@ is an <a href='argoFloats-class.html'>argoFloats</a> object of type <code>"argos
 created by <code><a href='readProfiles.html'>readProfiles()</a></code>. The scales for the plot
 can be altered by putting <code>Slim</code> and <code>Tlim</code> arguments in the <code>...</code> list; see
 the documentation for <code><a href='https://dankelley.github.io/oce/reference/plotTS.html'>oce::plotTS()</a></code> for other arguments that can be
-provided. This plot has a default color code to represent bad vs good data.
+provided. This plot has a default color code to represent bad, good, and not assessed data.
 This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
-data are considered bad if flagged 3, 4, 6, or 7, and good
-if flagged 1, 2, 5, or 8; good values are plotted with black symbols,
-and bad ones are plotted with red symbols.</p></li>
+data are considered bad if flagged 3, 4, 6, or 7, good
+if flagged 1, 2, 5, or 8, and not accessed if flagged 0; good values are plotted
+with black symbols, bad ones are plotted with red symbols, and not assessed values
+are plotted with gray symbols.</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
