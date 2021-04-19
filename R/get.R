@@ -375,16 +375,19 @@ getIndex <- function(filename="core",
     if ("latitude" %in% names(index)) {
         index$latitude <- as.numeric(index$latitude)
         index$latitude[abs(index$latitude) > 90] <- NA
-    } else if ("latitude_max" %in% names(index)) {
+    } else if ("latitude_max" %in% names(index) && "latitude_min" %in% names(index)) {
         index$latitude_max <- as.numeric(index$latitude_max)
+        index$latitude_min <- as.numeric(index$latitude_min)
+        #message("the class of lat min is", class(index$latitude_min), "and the class of lat max is", class(index$latitude_max))
     } else {
         stop("Misconfigured index file: no \"latitude\" data found")
     }
     if ("longitude" %in% names(index)) {
         index$longitude <- as.numeric(index$longitude)
         index$longitude[abs(index$longitude) > 360] <- NA
-    } else if ("longitude_max" %in% names(index)) {
+    } else if ("longitude_max" %in% names(index) && "longitude_min" %in% names(index)) {
         index$longitude_max <- as.numeric(index$longitude_max)
+        index$longitude_min <- as.numeric(index$longitude_min)
     } else {
         stop("Misconfigured index file: no \"longitude\" data found")
     }
