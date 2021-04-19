@@ -570,39 +570,39 @@ setMethod(f="subset",
                     if (2 != sum(c("longitude", "latitude") %in% sort(names(rectangle))))
                         stop("in subset,argoFloats-method():\n  \"rectangle\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
                     if (!istraj) {
-                    keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
-                    keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[["latitude"]] <= rectangle$latitude[2]
-                    ok <- is.finite(keeplon) & is.finite(keeplat)
-                    keeplon[!ok] <- FALSE
-                    keeplat[!ok] <- FALSE
-                    keep <- keeplon & keeplat
+                        keeplon <- rectangle$longitude[1] <=x[["longitude"]] & x[["longitude"]] <= rectangle$longitude[2]
+                        keeplat <- rectangle$latitude[1] <= x[["latitude"]] & x[["latitude"]] <= rectangle$latitude[2]
+                        ok <- is.finite(keeplon) & is.finite(keeplat)
+                        keeplon[!ok] <- FALSE
+                        keeplat[!ok] <- FALSE
+                        keep <- keeplon & keeplat
                     } else if (istraj) {
-                        # This is for the rectangle subset
                         sE <- rectangle$longitude[2]
                         sW <- rectangle$longitude[1]
                         sS <- rectangle$latitude[1]
                         sN <- rectangle$latitude[2]
                         s <- rbind(c(sW,sS), c(sW, sN), c(sE,sN), c(sE, sS), c(sW,sS))
                         S <- sf::st_polygon(list(s))
-                        #plot(S, border="black")
-                        #axis(1)
-                        #axis(2)
-                        tE <- as.numeric(x[["longitude_max"]])
-                        tW <- as.numeric(x[["longitude_min"]])
-                        tS <- as.numeric(x[["latitude_min"]])
-                        tN <- as.numeric(x[["latitude_max"]])
-                        t <- rbind(c(tW,tS), c(tW, tN), c(tE,tN), c(tE, tS), c(tW,tS))
-                        T <- sf::st_polygon(list(t))
-                        #plot(T, border="red", add=TRUE)
-                        i <- sf::st_intersection(T, S)
-                        # FIXME: I need to get keep to work
-                        keep <- i[[1]]
-                        itIntersects <- length(i) > 0
-                        #plot(i, border="blue", add=TRUE, lwd=3, lty="dotted")
+                        n <- nrow(x@data$index)
+                        keep <- rep(FALSE, n)
+                        for (i in seq_len(n)) {
+                            #message("i equals ", i)
+                            #print(x@data$index[i,])
+                            tE <- as.numeric(x@data$index$longitude_max[i])
+                            tW <- as.numeric(x@data$index$longitude_min[i])
+                            tS <- as.numeric(x@data$index$latitude_min[i])
+                            tN <- as.numeric(x@data$index$latitude_max[i])
+                            t <- rbind(c(tW,tS), c(tW, tN), c(tE,tN), c(tE, tS), c(tW,tS))
+                            T <- sf::st_polygon(list(t))
+                            intersection <- sf::st_intersection(T, S)
+                            keep[i] <- length(intersection) > 0
+                            #print(intersects)
+                            #message('intersects ', length(intersects) > 0)
+                        }
                     }
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
-                                                  paste("subset index type by rectangle with longitude= ", rectangle$longitude, " and latitude= ", rectangle$latitude ))
+                                                                paste("subset index type by rectangle with longitude= ", rectangle$longitude, " and latitude= ", rectangle$latitude ))
                     if (!silent)
                         message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
                 } else if (dotsNames[1] == "parameter") {
