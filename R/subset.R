@@ -584,21 +584,21 @@ setMethod(f="subset",
                         sN <- rectangle$latitude[2]
                         s <- rbind(c(sW,sS), c(sW, sN), c(sE,sN), c(sE, sS), c(sW,sS))
                         S <- sf::st_polygon(list(s))
-                        plot(S, border="black")
-                        axis(1)
-                        axis(2)
+                        #plot(S, border="black")
+                        #axis(1)
+                        #axis(2)
                         tE <- as.numeric(x[["longitude_max"]])
                         tW <- as.numeric(x[["longitude_min"]])
                         tS <- as.numeric(x[["latitude_min"]])
                         tN <- as.numeric(x[["latitude_max"]])
                         t <- rbind(c(tW,tS), c(tW, tN), c(tE,tN), c(tE, tS), c(tW,tS))
                         T <- sf::st_polygon(list(t))
-                        plot(T, border="red", add=TRUE)
+                        #plot(T, border="red", add=TRUE)
                         i <- sf::st_intersection(T, S)
                         # FIXME: I need to get keep to work
                         keep <- i[[1]]
                         itIntersects <- length(i) > 0
-                        plot(i, border="blue", add=TRUE, lwd=3, lty="dotted")
+                        #plot(i, border="blue", add=TRUE, lwd=3, lty="dotted")
                     }
                     x@data$index <- x@data$index[keep, ]
                     x@processingLog <- oce::processingLogAppend(x@processingLog,
