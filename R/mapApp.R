@@ -448,6 +448,12 @@ serverMapApp <- function(input, output, session)
                 # "all"
                 shiny::updateTextInput(session, "ID", value="")
                 state$focusID <<- NULL
+                state$startTime <<- startTime
+                state$endTime <<- endTime
+                shiny::updateTextInput(session, "start",
+                                       value=format(state$startTime, "%Y-%m-%d"))
+                shiny::updateTextInput(session, "end",
+                                       value=format(state$endTime, "%Y-%m-%d"))
             }
         })
 
