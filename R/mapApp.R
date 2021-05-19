@@ -239,6 +239,12 @@ serverMapApp <- function(input, output, session)
                             shiny::tags$span("Without Profiles", style="color: black;")),
                         choiceValues=list( "start", "end", "lines"),
                         inline=TRUE)))
+            #message('jaim traj')
+        }
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1,2)) {
+            shiny::updateTextInput(session, "ID", value=input$ID)
+            shiny::updateSelectInput(session, "focus", selected=input$focus)
+            message(' ')
         }
     })
 
