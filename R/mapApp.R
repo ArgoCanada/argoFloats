@@ -438,7 +438,7 @@ serverMapApp <- function(input, output, session)
                     ## https://github.com/ArgoCanada/argoFloats/issues/283.
                     state$startTime <<- min(argo$time[k])
                     state$endTime <<- max(argo$time[k])
-                    message("setting box")
+                    #message("setting box")
                     shiny::updateTextInput(session, "start",
                         value=format(state$startTime, "%Y-%m-%d"))
                     shiny::updateTextInput(session, "end",
