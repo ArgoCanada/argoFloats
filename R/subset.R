@@ -334,6 +334,7 @@ setMethod(f="subset",
         ## Step 1: handle "argo" type first. Note that "subset" is ignored; rather, we insist that either
         ## "profile" or "cycle" be provided.
         if (x@metadata$type == "argos") {
+            N <- x[["length"]]
             if (!missing(subset)) {
                 N <- x[["length"]]
                 if (is.logical(subset)) {
@@ -438,6 +439,22 @@ setMethod(f="subset",
                 res@processingLog <- oce::processingLogAppend(res@processingLog,
                                                   paste("subset argos type for profile=", profile))
                 return(res)
+            } else if (dotsNames[1] == "ID") {
+                istraj <- identical(x@metadata$subtype, "trajectories")
+                argoFloatsDebug(debug, "subsetting an argos object by ID\n")
+                ID <- as.character(dots[[1]]) # convert in case it is numeric
+                xID <- x[["ID"]]
+                keep <- rep(FALSE, length(xID))
+                for (thisID in ID)
+                    keep <- keep | grepl(thisID, xID)
+                if (!silent && !istraj) {
+                    message("Kept ", sum(keep), " cycles (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                } else if (!silent && istraj) {
+                    message("Kept ", sum(keep), " trajectories (", sprintf("%.3g", 100*sum(keep)/N), "%)")
+                }
+                x@data$argos <- x@data$argos[keep]
+                x@processingLog <- oce::processingLogAppend(x@processingLog,
+                                                            paste("subset argos type by float ID", ID))
             } else if (dotsNames[1] == "cycle") {
                 argoFloatsDebug(debug, "subsetting by cycle for 'argos' type\n")
                 cycle <- dots[[1]]
@@ -529,7 +546,7 @@ setMethod(f="subset",
                 argoFloatsDebug(debug, "} # subset,argoFloats-method()\n", style="bold", sep="", unindent=1)
                 return(res)
             } else {
-                stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an argos-type object. The only valid choices are \"cycle\", \"dataMode\", \"dataSateIndicator\" and \"profile\".", call.=FALSE)
+                stop("in subset,argoFloats-method():\n  the \"...\" argument \"", dotsNames[1], "\" is not permitted for an argos-type object. The only valid choices are \"cycle\", \"dataMode\", \"ID\", \"dataSateIndicator\" and \"profile\".", call.=FALSE)
             }
         }
         ## Step 2: Now we know the type is either "index" or "profiles".  In either case,
