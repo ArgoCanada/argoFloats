@@ -762,24 +762,24 @@ setMethod(f="plot",
                       type <- if (is.null(type)) "p" else type
                       if (length(pch) == 1 && pch == 21 && !istraj) {
                           if (type != "l") {
-                          points(unlist(longitude), unlist(latitude),
-                                 cex=if (is.null(cex)) 1 else cex,
-                                 pch=pch,
-                                 bg=col,
-                                 type= type,
-                                 ...)
+                              points(unlist(longitude), unlist(latitude),
+                                     cex=if (is.null(cex)) 1 else cex,
+                                     pch=pch,
+                                     bg=col,
+                                     type= type,
+                                     ...)
                           } else if (type == "l") {
-                              for (i in unique(x[["ID"]])) {
-                                  index1 <- subset(x, ID=unique(x[["ID"]][1]), silent=TRUE)
+                              index1 <- subset(x, ID=unique(x[["ID"]][1]), silent=TRUE)
+                              longitude <- index1[["longitude"]]
+                              latitude <- index1[["latitude"]]
+                              points(unlist(longitude), unlist(latitude),
+                                     cex=if (is.null(cex)) 1 else cex,
+                                     pch=pch,
+                                     bg=col,
+                                     type= "l",
+                                     ...)
+                              for (i in  unique(x[["ID"]])[2:length(unique(x[["ID"]]))]) {
                                   index2 <- subset(x, ID=i, silent=TRUE)
-                                  longitude <- index1[["longitude"]]
-                                  latitude <- index1[["latitude"]]
-                                  points(unlist(longitude), unlist(latitude),
-                                         cex=if (is.null(cex)) 1 else cex,
-                                         pch=pch,
-                                         bg=col,
-                                         type= "l",
-                                         ...)
                                   points(unlist(index2[["longitude"]]), unlist(index2[["latitude"]]),
                                          cex=if (is.null(cex)) 1 else cex,
                                          pch=pch,
