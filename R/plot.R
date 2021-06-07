@@ -759,13 +759,35 @@ setMethod(f="plot",
                       }
                       if (is.null(pch))
                           pch <- 21
+                      type <- if (is.null(type)) "p" else type
                       if (length(pch) == 1 && pch == 21 && !istraj) {
+                          if (type != "l") {
                           points(unlist(longitude), unlist(latitude),
                                  cex=if (is.null(cex)) 1 else cex,
                                  pch=pch,
                                  bg=col,
-                                 type=if (is.null(type)) "p" else type,
+                                 type= type,
                                  ...)
+                          } else if (type == "l") {
+                              for (i in unique(x[["ID"]])) {
+                                  index1 <- subset(x, ID=unique(x[["ID"]][1]), silent=TRUE)
+                                  index2 <- subset(x, ID=i, silent=TRUE)
+                                  longitude <- index1[["longitude"]]
+                                  latitude <- index1[["latitude"]]
+                                  points(unlist(longitude), unlist(latitude),
+                                         cex=if (is.null(cex)) 1 else cex,
+                                         pch=pch,
+                                         bg=col,
+                                         type= "l",
+                                         ...)
+                                  points(unlist(index2[["longitude"]]), unlist(index2[["latitude"]]),
+                                         cex=if (is.null(cex)) 1 else cex,
+                                         pch=pch,
+                                         bg=col,
+                                         type= "l",
+                                         ...)
+                              }
+                          }
                       } else if (!istraj) {
                           points(unlist(longitude), unlist(latitude),
                                  cex=if (is.null(cex)) 1 else cex,
