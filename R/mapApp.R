@@ -408,10 +408,20 @@ serverMapApp <- function(input, output, session)
                 }
             }
 
+            if ("start" %in% input$action) {
+                msg <- paste(msg, "o <- order(subset2[['time']])<br>")
+                msg <- paste(msg, "lat <- subset2[['latitude']]<br>")
+                msg <- paste(msg, "lon <- subset2[['longitude']]<br>")
+                msg <- paste(msg, "points(lon[1],lat[1], pch=2, cex=2, lwd=1.4)<br>")
+            }
 
-
-
-
+            if ("end" %in% input$action) {
+                msg <- paste(msg, "o <- order(subset2[['time']])<br>")
+                msg <- paste(msg, "lat <- subset2[['latitude']]<br>")
+                msg <- paste(msg, "lon <- subset2[['longitude']]<br>")
+                msg <- paste(msg, "no <- length(o)<br>")
+                msg <- paste(msg, "points(lon[no],lat[no], pch=0, cex=2, lwd=1.4)<br>")
+            }
 
             if ("contour" %in% input$view) {
                 msg <- paste(msg, "# Adding contour. <br>")
