@@ -388,6 +388,11 @@ serverMapApp <- function(input, output, session)
             } else {
             msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE)<br>")
             }
+            if ("contour" %in% input$view) {
+                msg <- paste(msg, "# Adding contour. <br>")
+                msg <- paste(msg, "data(topoWorld)<br>")
+                msg <- paste(msg, "contour(topoWorld[[\"longitude\"]], topoWorld[[\"latitude\"]], topoWorld[[\"z\"]], levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)<br>")
+            }
             msg <- paste(msg, "# The following shows how to make a TS plot for these profiles. This<br>")
             msg <- paste(msg, "# involves downloading, which will be slow for a large number of<br>")
             msg <- paste(msg, "# profiles, so the steps are placed in an unexecuted block.<br>")
