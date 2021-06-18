@@ -383,7 +383,11 @@ serverMapApp <- function(input, output, session)
                     lonRect[1], lonRect[2], latRect[1], latRect[2]))
             msg <- paste(msg, "subset2 <- subset(subset1, rectangle=rect)<br>")
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
+            if ("topo" %in% input$view) {
             msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
+            } else {
+            msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE)<br>")
+            }
             msg <- paste(msg, "# The following shows how to make a TS plot for these profiles. This<br>")
             msg <- paste(msg, "# involves downloading, which will be slow for a large number of<br>")
             msg <- paste(msg, "# profiles, so the steps are placed in an unexecuted block.<br>")
