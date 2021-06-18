@@ -24,7 +24,7 @@ keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
 <li> '<b>0</b>': Unzoom an area and keep same time scale</li>
 <li> '<b>?</b>': display this message</li> </ul>"
 
-overallHelp <- "This GUI has three tabs, the Main, Trajectory, and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. <br><br> On the <b>Trajectory tab</b>, you can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. <br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
+overallHelp <- "This GUI has two tabs, the Main and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. You can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. <br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
 
 
 #' @importFrom graphics arrows image lines mtext
@@ -48,7 +48,7 @@ uiMapApp <- shiny::fluidPage(
                     selected=TRUE,
                     id="settab")),
             id="tabselected")),
-    shiny::fluidRow(shiny::uiOutput(outputId="UItrajectory")),
+    shiny::uiOutput(outputId="UItrajectory"),
     shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
         shiny::fluidRow(
             shiny::column(2, shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
@@ -228,7 +228,7 @@ serverMapApp <- function(input, output, session)
     })
 
     output$UItrajectory <- shiny::renderUI({
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1) && "path" %in% input$view) {
             shiny::fluidRow(shiny::column(6,
                     style="padding-left:0px;",
                     shiny::checkboxGroupInput("action",
@@ -238,12 +238,6 @@ serverMapApp <- function(input, output, session)
                             shiny::tags$span("Without Profiles", style="color: black;")),
                         choiceValues=list( "start", "end", "lines"),
                         inline=TRUE)))
-            #message('jaim traj')
-        }
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-            shiny::updateTextInput(session, "ID", value=input$ID)
-            shiny::updateSelectInput(session, "focus", selected=input$focus)
-            message(' ')
         }
     })
 
