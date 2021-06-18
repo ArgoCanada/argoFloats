@@ -387,9 +387,17 @@ serverMapApp <- function(input, output, session)
             }
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
             if ("topo" %in% input$view) {
+                if ("path" %in% input$view) {
+                msg <- paste(msg, "plot(subset2, which=\"map\", type=\"o\")<br>")
+                } else {
                 msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
+                }
             } else {
+                if ("path" %in% input$view) {
+                msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE, type=\"o\")<br>")
+                } else {
                 msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE)<br>")
+                }
             }
             if ("contour" %in% input$view) {
                 msg <- paste(msg, "# Adding contour. <br>")
