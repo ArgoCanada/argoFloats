@@ -41,7 +41,6 @@ uiMapApp <- shiny::fluidPage(
     shiny::fluidRow(shiny::uiOutput(outputId="UIinfo")),
     shiny::mainPanel(shiny::tabsetPanel(type="tab",
             shiny::tabPanel("Main", value=1),
-            shiny::tabPanel("Trajectory", value=2),
             shiny::tabPanel("Settings", value=3,
                 shiny::tabsetPanel(shiny::tabPanel("Core", value=4),
                     shiny::tabPanel("BGC", value=5),
@@ -193,7 +192,7 @@ serverMapApp <- function(input, output, session)
     }
 
     output$UIview <- shiny::renderUI({
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
         shiny::removeNotification(notificationId)
         notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
             shiny::checkboxGroupInput("view",
@@ -212,7 +211,7 @@ serverMapApp <- function(input, output, session)
     })
 
     output$UIwidget <- shiny::renderUI({
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
             shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
                 shiny::actionButton("help", "Help"),
                 shiny::actionButton("code", "Code"),
@@ -229,7 +228,7 @@ serverMapApp <- function(input, output, session)
     })
 
     output$UItrajectory <- shiny::renderUI({
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(2)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
             shiny::fluidRow(shiny::column(6,
                     style="padding-left:0px;",
                     shiny::checkboxGroupInput("action",
@@ -241,7 +240,7 @@ serverMapApp <- function(input, output, session)
                         inline=TRUE)))
             #message('jaim traj')
         }
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1,2)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
             shiny::updateTextInput(session, "ID", value=input$ID)
             shiny::updateSelectInput(session, "focus", selected=input$focus)
             message(' ')
@@ -249,13 +248,13 @@ serverMapApp <- function(input, output, session)
     })
 
     output$UIID <- shiny::renderUI({
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
             shiny::textInput("ID", "Float ID", value="", width="8em")
         }
     })
 
     output$UIfocus <- shiny::renderUI({
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1, 2)) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
             shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"), selected="all", width="10em")
         }
     })
