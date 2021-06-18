@@ -388,13 +388,17 @@ serverMapApp <- function(input, output, session)
             }
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
             if ("topo" %in% input$view) {
-                if (nchar(state$focusID) == 0) {
-            msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
+                if (nchar(state$focusID == 0)) {
+                    msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
                 } else if (nchar(state$focusID > 0)) {
-                               msg <- paste(msg, "plot(subset3, which=\"map\")<br>")
+                    msg <- paste(msg, "plot(subset3, which=\"map\")<br>")
                 }
             } else {
-            msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE)<br>")
+                if (nchar(state$focusID) == 0) {
+                    msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE)<br>")
+                } else if (nchar(state$focusID > 0)) {
+                    msg <- paste(msg, "plot(subset3, which=\"map\", bathymetry=FALSE)<br>")
+                }
             }
             if ("contour" %in% input$view) {
                 msg <- paste(msg, "# Adding contour. <br>")
