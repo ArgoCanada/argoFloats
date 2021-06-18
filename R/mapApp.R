@@ -398,11 +398,21 @@ serverMapApp <- function(input, output, session)
                 }
             } else {
                 if ("path" %in% input$view) {
-                msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE, type=\"o\")<br>")
+                    if ("lines" %in% input$action) {
+                        msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE, type=\"l\")<br>")
+                    } else {
+                        msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE, type=\"o\")<br>")
+                    }
                 } else {
-                msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE)<br>")
+                    msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE)<br>")
                 }
             }
+
+
+
+
+
+
             if ("contour" %in% input$view) {
                 msg <- paste(msg, "# Adding contour. <br>")
                 msg <- paste(msg, "data(topoWorld)<br>")
