@@ -382,6 +382,10 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, sprintf("rect <- list(longitude=c(%.4f,%.4f), latitude=c(%.4f,%.4f))<br>",
                     lonRect[1], lonRect[2], latRect[1], latRect[2]))
             msg <- paste(msg, "subset2 <- subset(subset1, rectangle=rect)<br>")
+            if ("single" %in% input$focus && nchar(state$focusID) > 0){
+                msg <- paste0(msg, sprintf("subset3 <- subset(subset2, ID=%2s)<br>", state$focusID))
+                #FIXME: for plot and TS need to include if subset3 exists
+            }
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
             if ("topo" %in% input$view) {
             msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
