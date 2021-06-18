@@ -388,7 +388,11 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
             if ("topo" %in% input$view) {
                 if ("path" %in% input$view) {
+                    if("lines" %in% input$action) {
+                msg <- paste(msg, "plot(subset2, which=\"map\", type=\"l\")<br>")
+                    } else  {
                 msg <- paste(msg, "plot(subset2, which=\"map\", type=\"o\")<br>")
+                    }
                 } else {
                 msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
                 }
