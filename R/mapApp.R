@@ -107,11 +107,11 @@ serverMapApp <- function(input, output, session)
         stop("must install.packages('shiny') for mapApp() to work")
     ## State variable: reactive!
     state <- shiny::reactiveValues(xlim=c(-180, 180),
-        ylim=c(-90, 90),
-        startTime=startTime,
-        endTime=endTime,
-        focusID=NULL,
-        hoverIsPasted=FALSE)
+                                   ylim=c(-90, 90),
+                                   startTime=startTime,
+                                   endTime=endTime,
+                                   focusID=NULL,
+                                   hoverIsPasted=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
@@ -221,9 +221,8 @@ serverMapApp <- function(input, output, session)
                 shiny::actionButton("goE", shiny::HTML("&rarr;")),
                 shiny::actionButton("zoomIn", "+"),
                 shiny::actionButton("zoomOut", "-"),
-                shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start",
-                        value=sprintf("%4d-%02d-%02d", startTime$year + 1900, startTime$mon + 1, startTime$mday), format="yyyy-mm-dd")),
-                shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",shiny::dateInput(inputId="end", label="End", value=sprintf("%4d-%02d-%02d", endTime$year + 1900, endTime$mon + 1, endTime$mday), format="yyyy-mm-dd")))
+                shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
+                shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",shiny::dateInput(inputId="end", label="End", value=state$endTime)))
         }
     })
 
@@ -294,16 +293,21 @@ serverMapApp <- function(input, output, session)
         rval
     })
 
+    #JAIMIE shiny::observeEvent(input$view,
+    #JAIMIE     {
+    #JAIMIE         state$view <<- input$view
+    #JAIMIE     })
+
     shiny::observeEvent(input$goE,
         {
             dx <- diff(state$xlim) # present longitude span
-            state$xlim <<- pinlat(state$xlim + dx / 4)
+            state$xlim <<- pinlon(state$xlim + dx / 4)
         })
 
     shiny::observeEvent(input$goW,
         {
             dx <- diff(state$xlim) # present longitude span
-            state$xlim <<- pinlat(state$xlim - dx / 4)
+            state$xlim <<- pinlon(state$xlim - dx / 4)
         })
 
     shiny::observeEvent(input$goS,
@@ -335,42 +339,42 @@ serverMapApp <- function(input, output, session)
             msg <- "library(argoFloats)<br>"
             msg <- paste(msg, "# Download (or use cached) index from one of two international servers.<br>")
             if ("core" %in% input$view && "bgc" %in% input$view && "deep" != input$view) {
-            msg <- paste(msg, "ai <- getIndex()<br>")
-            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
-            msg <- paste(msg, "merge <- merge(ai,bai)<br>")
-            msg <- paste(msg, "# Subset to remove deep profiles.<br>")
-            msg <- paste(msg, "index <- subset(merge, deep=FALSE)<br>")
+                msg <- paste(msg, "ai <- getIndex()<br>")
+                msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+                msg <- paste(msg, "merge <- merge(ai,bai)<br>")
+                msg <- paste(msg, "# Subset to remove deep profiles.<br>")
+                msg <- paste(msg, "index <- subset(merge, deep=FALSE)<br>")
             } else if ("core" %in% input$view && "deep" %in% input$view && "bgc" != input$view) {
-            msg <- paste(msg, "ai <- getIndex()<br>")
-            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
-            msg <- paste(msg, "# Subset deep profiles.<br>")
-            msg <- paste(msg, "deep1 <- subset(ai, deep=TRUE)<br>")
-            msg <- paste(msg, "deep2 <- subset(bai, deep=TRUE)<br>")
-            msg <- paste(msg, "deep <- merge(deep1,deep2)<br>")
-            msg <- paste(msg, "index <- merge(ai,deep)<br>")
+                msg <- paste(msg, "ai <- getIndex()<br>")
+                msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+                msg <- paste(msg, "# Subset deep profiles.<br>")
+                msg <- paste(msg, "deep1 <- subset(ai, deep=TRUE)<br>")
+                msg <- paste(msg, "deep2 <- subset(bai, deep=TRUE)<br>")
+                msg <- paste(msg, "deep <- merge(deep1,deep2)<br>")
+                msg <- paste(msg, "index <- merge(ai,deep)<br>")
             } else if ("bgc" %in% input$view && "deep" %in% input$view && "core" != input$view) {
-            msg <- paste(msg, "ai <- getIndex()<br>")
-            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
-            msg <- paste(msg, "# Subset deep profiles.<br>")
-            msg <- paste(msg, "deep1 <- subset(ai, deep=TRUE)<br>")
-            msg <- paste(msg, "deep2 <- subset(bai, deep=TRUE)<br>")
-            msg <- paste(msg, "deep <- merge(deep1,deep2)<br>")
-            msg <- paste(msg, "index <- merge(bai,deep)<br>")
+                msg <- paste(msg, "ai <- getIndex()<br>")
+                msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+                msg <- paste(msg, "# Subset deep profiles.<br>")
+                msg <- paste(msg, "deep1 <- subset(ai, deep=TRUE)<br>")
+                msg <- paste(msg, "deep2 <- subset(bai, deep=TRUE)<br>")
+                msg <- paste(msg, "deep <- merge(deep1,deep2)<br>")
+                msg <- paste(msg, "index <- merge(bai,deep)<br>")
             } else if ("bgc" %in% input$view && "deep" %in% input$view && "core" %in% input$view) {
-            msg <- paste(msg, "ai <- getIndex()<br>")
-            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
-            msg <- paste(msg, "index <- merge(ai,bai)<br>")
+                msg <- paste(msg, "ai <- getIndex()<br>")
+                msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+                msg <- paste(msg, "index <- merge(ai,bai)<br>")
             } else if ("core" %in% input$view && "bgc" != input$view && "deep" != input$view) {
-            msg <- paste(msg, "index <- getIndex()<br>")
+                msg <- paste(msg, "index <- getIndex()<br>")
             } else if ("bgc" %in% input$view && "core" != input$view && "deep" != input$view) {
-            msg <- paste(msg, "index <- getIndex(filename=\"bgc\")<br>")
+                msg <- paste(msg, "index <- getIndex(filename=\"bgc\")<br>")
             } else if ("deep" %in% input$view && "core" != input$view && "bgc" != input$view) {
-            msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
-            msg <- paste(msg, "ai <- getIndex()<br>")
-            msg <- paste(msg, "# Subset deep profiles.<br>")
-            msg <- paste(msg, "deep1 <- subset(ai, deep=TRUE)<br>")
-            msg <- paste(msg, "deep2 <- subset(bai, deep=TRUE)<br>")
-            msg <- paste(msg, "index <- merge(deep1,deep2)<br>")
+                msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
+                msg <- paste(msg, "ai <- getIndex()<br>")
+                msg <- paste(msg, "# Subset deep profiles.<br>")
+                msg <- paste(msg, "deep1 <- subset(ai, deep=TRUE)<br>")
+                msg <- paste(msg, "deep2 <- subset(bai, deep=TRUE)<br>")
+                msg <- paste(msg, "index <- merge(deep1,deep2)<br>")
             }
             msg <- paste(msg, "# Subset by time.<br>")
             msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
@@ -380,7 +384,7 @@ serverMapApp <- function(input, output, session)
             lonRect <- state$xlim
             latRect <- state$ylim
             msg <- paste(msg, sprintf("rect <- list(longitude=c(%.4f,%.4f), latitude=c(%.4f,%.4f))<br>",
-                    lonRect[1], lonRect[2], latRect[1], latRect[2]))
+                                      lonRect[1], lonRect[2], latRect[1], latRect[2]))
             msg <- paste(msg, "subset2 <- subset(subset1, rectangle=rect)<br>")
             if ("single" %in% input$focus && nchar(state$focusID) > 0){
                 msg <- paste0(msg, sprintf("subset2 <- subset(subset2, ID=%2s)<br>", state$focusID))
@@ -389,12 +393,12 @@ serverMapApp <- function(input, output, session)
             if ("topo" %in% input$view) {
                 if ("path" %in% input$view) {
                     if("lines" %in% input$action) {
-                msg <- paste(msg, "plot(subset2, which=\"map\", type=\"l\")<br>")
+                        msg <- paste(msg, "plot(subset2, which=\"map\", type=\"l\")<br>")
                     } else  {
-                msg <- paste(msg, "plot(subset2, which=\"map\", type=\"o\")<br>")
+                        msg <- paste(msg, "plot(subset2, which=\"map\", type=\"o\")<br>")
                     }
                 } else {
-                msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
+                    msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
                 }
             } else {
                 if ("path" %in% input$view) {
