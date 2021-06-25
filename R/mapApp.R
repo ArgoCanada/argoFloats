@@ -53,7 +53,7 @@ uiMapApp <- shiny::fluidPage(
         shiny::fluidRow(
             shiny::column(2, shiny::selectInput("Ccolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
             shiny::column(2, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-            shiny::column(2, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+            shiny::column(2, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
             shiny::column(2, shiny::conditionalPanel("input.Csymbol== 21",
                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                         shiny::selectInput("Cborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))
@@ -66,7 +66,7 @@ uiMapApp <- shiny::fluidPage(
         shiny::fluidRow(
             shiny::column(2, shiny::selectInput("Bcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
             shiny::column(2, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-            shiny::column(2, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+            shiny::column(2, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
             shiny::column(2,shiny::conditionalPanel("input.Bsymbol== 21",
                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                         shiny::selectInput("Bborder", "Border Colour",
@@ -78,7 +78,7 @@ uiMapApp <- shiny::fluidPage(
         shiny::fluidRow(
             shiny::column(2, shiny::selectInput("Dcolour", "Symbol Colour", choices=c("1","2","3","4","5","6","7","8", "default"), selected="default")),
             shiny::column(2, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-            shiny::column(2, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.5, step=0.05)),
+            shiny::column(2, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
             shiny::column(2, shiny::conditionalPanel("input.Dsymbol== 21",
                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                         shiny::selectInput("Dborder", "Border Colour",
@@ -670,7 +670,7 @@ serverMapApp <- function(input, output, session)
                 keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
                 keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
                 keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
-                cex <- 1.0
+                cex <- 0.9 
                 ## Draw points, optionally connecting paths (and indicating start points)
                 ## {{{
                 visible <<- rep(FALSE, length(argo$lon))
