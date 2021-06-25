@@ -206,7 +206,7 @@ serverMapApp <- function(input, output, session)
                     shiny::tags$span("Path", style="color:black;"),
                     shiny::tags$span("Contour", style="color:black;")),
                 choiceValues=list("core", "deep", "bgc", "hires", "topo", "path", "contour"),
-                selected=c("core", "deep", "bgc"),
+                selected=state$view,
                 inline=TRUE)
         }
     })
@@ -228,7 +228,7 @@ serverMapApp <- function(input, output, session)
     })
 
     output$UItrajectory <- shiny::renderUI({
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1) && "path" %in% input$view) {
+        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1) && "path" %in% state$view) {
             shiny::fluidRow(shiny::column(6,
                     style="padding-left:0px;",
                     shiny::checkboxGroupInput("action",
@@ -294,10 +294,10 @@ serverMapApp <- function(input, output, session)
         rval
     })
 
-    #JAIMIE shiny::observeEvent(input$view,
-    #JAIMIE     {
-    #JAIMIE         state$view <<- input$view
-    #JAIMIE     })
+    shiny::observeEvent(input$view,
+                        {
+                            state$view <<- input$view
+                        })
 
     shiny::observeEvent(input$goE,
         {
@@ -339,13 +339,13 @@ serverMapApp <- function(input, output, session)
         {
             msg <- "library(argoFloats)<br>"
             msg <- paste(msg, "# Download (or use cached) index from one of two international servers.<br>")
-            if ("core" %in% input$view && "bgc" %in% input$view && "deep" != input$view) {
+            if ("core" %in% state$view && "bgc" %in% state$view && "deep" != state$view) {
                 msg <- paste(msg, "ai <- getIndex()<br>")
                 msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
                 msg <- paste(msg, "merge <- merge(ai,bai)<br>")
                 msg <- paste(msg, "# Subset to remove deep profiles.<br>")
                 msg <- paste(msg, "index <- subset(merge, deep=FALSE)<br>")
-            } else if ("core" %in% input$view && "deep" %in% input$view && "bgc" != input$view) {
+            } else if ("core" %in% state$view && "deep" %in% state$view && "bgc" != state$view) {
                 msg <- paste(msg, "ai <- getIndex()<br>")
                 msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
                 msg <- paste(msg, "# Subset deep profiles.<br>")
@@ -353,7 +353,7 @@ serverMapApp <- function(input, output, session)
                 msg <- paste(msg, "deep2 <- subset(bai, deep=TRUE)<br>")
                 msg <- paste(msg, "deep <- merge(deep1,deep2)<br>")
                 msg <- paste(msg, "index <- merge(ai,deep)<br>")
-            } else if ("bgc" %in% input$view && "deep" %in% input$view && "core" != input$view) {
+            } else if ("bgc" %in% state$view && "deep" %in% state$view && "core" != state$view) {
                 msg <- paste(msg, "ai <- getIndex()<br>")
                 msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
                 msg <- paste(msg, "# Subset deep profiles.<br>")
@@ -361,15 +361,15 @@ serverMapApp <- function(input, output, session)
                 msg <- paste(msg, "deep2 <- subset(bai, deep=TRUE)<br>")
                 msg <- paste(msg, "deep <- merge(deep1,deep2)<br>")
                 msg <- paste(msg, "index <- merge(bai,deep)<br>")
-            } else if ("bgc" %in% input$view && "deep" %in% input$view && "core" %in% input$view) {
+            } else if ("bgc" %in% state$view && "deep" %in% state$view && "core" %in% state$view) {
                 msg <- paste(msg, "ai <- getIndex()<br>")
                 msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
                 msg <- paste(msg, "index <- merge(ai,bai)<br>")
-            } else if ("core" %in% input$view && "bgc" != input$view && "deep" != input$view) {
+            } else if ("core" %in% state$view && "bgc" != state$view && "deep" != state$view) {
                 msg <- paste(msg, "index <- getIndex()<br>")
-            } else if ("bgc" %in% input$view && "core" != input$view && "deep" != input$view) {
+            } else if ("bgc" %in% state$view && "core" != state$view && "deep" != state$view) {
                 msg <- paste(msg, "index <- getIndex(filename=\"bgc\")<br>")
-            } else if ("deep" %in% input$view && "core" != input$view && "bgc" != input$view) {
+            } else if ("deep" %in% state$view && "core" != state$view && "bgc" != state$view) {
                 msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
                 msg <- paste(msg, "ai <- getIndex()<br>")
                 msg <- paste(msg, "# Subset deep profiles.<br>")
@@ -391,8 +391,8 @@ serverMapApp <- function(input, output, session)
                 msg <- paste0(msg, sprintf("subset2 <- subset(subset2, ID=%2s)<br>", state$focusID))
             }
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
-            if ("topo" %in% input$view) {
-                if ("path" %in% input$view) {
+            if ("topo" %in% state$view) {
+                if ("path" %in% state$view) {
                     if("lines" %in% input$action) {
                         msg <- paste(msg, "plot(subset2, which=\"map\", type=\"l\")<br>")
                     } else  {
@@ -402,7 +402,7 @@ serverMapApp <- function(input, output, session)
                     msg <- paste(msg, "plot(subset2, which=\"map\")<br>")
                 }
             } else {
-                if ("path" %in% input$view) {
+                if ("path" %in% state$view) {
                     if ("lines" %in% input$action) {
                         msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE, type=\"l\")<br>")
                     } else {
@@ -428,7 +428,7 @@ serverMapApp <- function(input, output, session)
                 msg <- paste(msg, "points(lon[no],lat[no], pch=0, cex=2, lwd=1.4)<br>")
             }
 
-            if ("contour" %in% input$view) {
+            if ("contour" %in% state$view) {
                 msg <- paste(msg, "# Adding contour. <br>")
                 msg <- paste(msg, "data(topoWorld)<br>")
                 msg <- paste(msg, "contour(topoWorld[[\"longitude\"]], topoWorld[[\"latitude\"]], topoWorld[[\"z\"]], levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)<br>")
@@ -635,12 +635,12 @@ serverMapApp <- function(input, output, session)
                     state$ylim <<- c(input$brush$ymin, input$brush$ymax)
                 }
             }
-            if (sum(c("core", "deep", "bgc") %in% input$view) > 0) {
+            if (sum(c("core", "deep", "bgc") %in% state$view) > 0) {
                 notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
                 par(mar=c(2.5, 2.5, 2, 1.5))
                 plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
-                topo <- if ("hires" %in% input$view) topoWorldFine else topoWorld
-                if ("topo" %in% input$view) {
+                topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
+                if ("topo" %in% state$view) {
                     image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
                 }
                 usr <- par("usr")
@@ -656,7 +656,7 @@ serverMapApp <- function(input, output, session)
                 at <- at[usr[3] < at & at < usr[4]]
                 labels <- paste(abs(at), ifelse(at < 0, "S", ifelse(at > 0, "N", "")), sep="")
                 axis(2, pos=pinlon(usr[1]), at=at, labels=labels, lwd=1)
-                coastline <- if ("hires" %in% input$view) coastlineWorldFine else coastlineWorld
+                coastline <- if ("hires" %in% state$view) coastlineWorldFine else coastlineWorld
                 polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
                 rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
                 ## For focusID mode, we do not trim by time or space
@@ -675,7 +675,7 @@ serverMapApp <- function(input, output, session)
                 ## {{{
                 visible <<- rep(FALSE, length(argo$lon))
                 for (view in c("core", "deep", "bgc")) {
-                    if (view %in% input$view) {
+                    if (view %in% state$view) {
                         k <- keep & argo$type == view
                         visible <<- visible | k
                         lonlat <- argo[k,]
@@ -694,7 +694,7 @@ serverMapApp <- function(input, output, session)
                             } else {
                                 points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                             }
-                        if ("path" %in% input$view) {
+                        if ("path" %in% state$view) {
                             ##> ## Turn off warnings for zero-length arrows
                             ##> owarn <- options("warn")$warn
                             ##> options(warn = -1)
@@ -718,7 +718,7 @@ serverMapApp <- function(input, output, session)
                                 }
                             }
                         }
-                        if ("contour" %in% input$view){
+                        if ("contour" %in% state$view){
                             contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]], levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
                         }
                     }
