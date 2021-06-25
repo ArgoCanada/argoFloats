@@ -111,6 +111,7 @@ serverMapApp <- function(input, output, session)
                                    startTime=startTime,
                                    endTime=endTime,
                                    focusID=NULL,
+                                   view=c("core", "deep", "bgc"),
                                    hoverIsPasted=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
@@ -242,7 +243,7 @@ serverMapApp <- function(input, output, session)
 
     output$UIID <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-            shiny::textInput("ID", "Float ID", value="", width="8em")
+            shiny::textInput("ID", "Float ID", value=state$focusID, width="8em")
         }
     })
 
@@ -669,7 +670,7 @@ serverMapApp <- function(input, output, session)
                 keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
                 keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
                 keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
-                cex <- 0.8
+                cex <- 1.0
                 ## Draw points, optionally connecting paths (and indicating start points)
                 ## {{{
                 visible <<- rep(FALSE, length(argo$lon))
