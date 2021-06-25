@@ -110,6 +110,7 @@ serverMapApp <- function(input, output, session)
                                    ylim=c(-90, 90),
                                    startTime=startTime,
                                    endTime=endTime,
+                                   focus="all",
                                    focusID=NULL,
                                    view=c("core", "deep", "bgc"),
                                    hoverIsPasted=FALSE)
@@ -249,7 +250,7 @@ serverMapApp <- function(input, output, session)
 
     output$UIfocus <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-            shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"), selected="all", width="10em")
+            shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"), selected=state$focus, width="10em")
         }
     })
 
@@ -387,7 +388,7 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, sprintf("rect <- list(longitude=c(%.4f,%.4f), latitude=c(%.4f,%.4f))<br>",
                                       lonRect[1], lonRect[2], latRect[1], latRect[2]))
             msg <- paste(msg, "subset2 <- subset(subset1, rectangle=rect)<br>")
-            if ("single" %in% input$focus && nchar(state$focusID) > 0){
+            if ("single" %in% state$focus && nchar(state$focusID) > 0){
                 msg <- paste0(msg, sprintf("subset2 <- subset(subset2, ID=%2s)<br>", state$focusID))
             }
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
@@ -455,7 +456,7 @@ serverMapApp <- function(input, output, session)
                     state$focusID <<- input$ID
                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                    if (input$focus == "all")
+                    if (state$focus == "all")
                         shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
                             type="message", duration=10
                             )
@@ -469,6 +470,7 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$focus,
         {
+            state$focus <<- input$focus
             if (input$focus == "single") {
                 if (is.null(state$focusID)) {
                     shiny::showNotification(
@@ -476,6 +478,7 @@ serverMapApp <- function(input, output, session)
                         type = "error",
                         duration = NULL)
                 } else {
+                    state$focus <<- input$focus
                     k <- argo$ID == state$focusID
                     ## Extend the range 3X more than the default, because I almost always
                     ## end up typing "-" a few times to zoom out
@@ -510,7 +513,7 @@ serverMapApp <- function(input, output, session)
             x <- input$dblclick$x
             y <- input$dblclick$y
             fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
-            if (input$focus == "single" && !is.null(state$focusID)) {
+            if (state$focus == "single" && !is.null(state$focusID)) {
                 keep <- argo$ID == state$focusID
             } else {
                 ## Restrict search to the present time window
@@ -660,7 +663,7 @@ serverMapApp <- function(input, output, session)
                 polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
                 rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
                 ## For focusID mode, we do not trim by time or space
-                if (input$focus == "single" && !is.null(state$focusID)) {
+                if (state$focus == "single" && !is.null(state$focusID)) {
                     keep <- argo$ID == state$focusID
                 }  else {
                     keep <- rep(TRUE, length(argo$ID))
@@ -728,7 +731,7 @@ serverMapApp <- function(input, output, session)
                 if (-180 < state$xlim[1] || state$xlim[2] < 180 || -90 < state$ylim[1] || state$ylim[2] < 90)
                     rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
                 ## Write a margin comment
-                if (input$focus == "single" &&
+                if (state$focus == "single" &&
                     !is.null(state$focusID)) {
                     mtext(sprintf("Float %s: %s to %s",
                             state$focusID,
