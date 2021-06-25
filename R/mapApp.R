@@ -111,6 +111,7 @@ serverMapApp <- function(input, output, session)
                                    startTime=startTime,
                                    endTime=endTime,
                                    focus="all",
+                                   action=NULL,
                                    focusID=NULL,
                                    view=c("core", "deep", "bgc"),
                                    hoverIsPasted=FALSE)
@@ -237,7 +238,7 @@ serverMapApp <- function(input, output, session)
                         choiceNames=list(shiny::tags$span("Start", style="color: black;"),
                             shiny::tags$span("End", style="color: black;"),
                             shiny::tags$span("Without Profiles", style="color: black;")),
-                        choiceValues=list( "start", "end", "lines"),
+                        choiceValues=list( "start", "end", "lines"), selected=state$action,
                         inline=TRUE)))
         }
     })
@@ -298,6 +299,11 @@ serverMapApp <- function(input, output, session)
     shiny::observeEvent(input$view,
                         {
                             state$view <<- input$view
+                        })
+
+     shiny::observeEvent(input$action,
+                        {
+                            state$action <<- input$action
                         })
 
     shiny::observeEvent(input$goE,
@@ -394,7 +400,7 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
             if ("topo" %in% state$view) {
                 if ("path" %in% state$view) {
-                    if("lines" %in% input$action) {
+                    if("lines" %in% state$action) {
                         msg <- paste(msg, "plot(subset2, which=\"map\", type=\"l\")<br>")
                     } else  {
                         msg <- paste(msg, "plot(subset2, which=\"map\", type=\"o\")<br>")
@@ -404,7 +410,7 @@ serverMapApp <- function(input, output, session)
                 }
             } else {
                 if ("path" %in% state$view) {
-                    if ("lines" %in% input$action) {
+                    if ("lines" %in% state$action) {
                         msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE, type=\"l\")<br>")
                     } else {
                         msg <- paste(msg, "plot(subset2, which=\"map\", bathymetry=FALSE, type=\"o\")<br>")
@@ -414,14 +420,14 @@ serverMapApp <- function(input, output, session)
                 }
             }
 
-            if ("start" %in% input$action) {
+            if ("start" %in% state$action) {
                 msg <- paste(msg, "o <- order(subset2[['time']])<br>")
                 msg <- paste(msg, "lat <- subset2[['latitude']]<br>")
                 msg <- paste(msg, "lon <- subset2[['longitude']]<br>")
                 msg <- paste(msg, "points(lon[1],lat[1], pch=2, cex=2, lwd=1.4)<br>")
             }
 
-            if ("end" %in% input$action) {
+            if ("end" %in% state$action) {
                 msg <- paste(msg, "o <- order(subset2[['time']])<br>")
                 msg <- paste(msg, "lat <- subset2[['latitude']]<br>")
                 msg <- paste(msg, "lon <- subset2[['longitude']]<br>")
@@ -691,7 +697,7 @@ serverMapApp <- function(input, output, session)
                         sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
                         #message("the symbSettings are", symbSettings)
                         #message("the colSettings are", colSettings)
-                        if (!"lines" %in% input$action)
+                        if (!"lines" %in% state$action)
                             if (symbSettings[[view]] == 21) {
                                 points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], bg=colSettings[[view]], col=borderSettings[[view]], lwd=0.5)
                             } else {
@@ -714,9 +720,9 @@ serverMapApp <- function(input, output, session)
                                     LONLAT <<- LONLAT[o, ]
                                     lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
                                     ## as opposed to maybe 3 months of data for a set of floats).
-                                    if ("start" %in% input$action)
+                                    if ("start" %in% state$action)
                                         points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
-                                    if ("end" %in% input$action)
+                                    if ("end" %in% state$action)
                                         points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=if (no > 10) 2 else 1, lwd=1.4)
                                 }
                             }
