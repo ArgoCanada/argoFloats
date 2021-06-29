@@ -200,8 +200,6 @@ serverMapApp <- function(input, output, session)
         notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
             shiny::checkboxGroupInput("view",
                 label="View",
-                # paste0('color:#',paste(as.raw(as.vector(col2rgb('red'))), collapse=''))
-                # paste0(as.raw(as.vector(col2rgb('red'))), collapse='')
                 choiceNames=list(shiny::tags$span("Core",style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Ccolour == "default", colDefaults$core, input$Ccolour)))), collapse=''))),
                     shiny::tags$span("Deep", style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Dcolour == "default", colDefaults$deep, input$Dcolour)))), collapse=''))),
                     shiny::tags$span("BGC",  style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Bcolour == "default", colDefaults$bgc, input$Bcolour)))), collapse=''))),
