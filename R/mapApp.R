@@ -200,9 +200,11 @@ serverMapApp <- function(input, output, session)
         notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
             shiny::checkboxGroupInput("view",
                 label="View",
-                choiceNames=list(shiny::tags$span("Core", style="color:#F5C710; font-weight:bold"),
-                    shiny::tags$span("Deep", style="color:#CD0BBC; font-weight:bold"),
-                    shiny::tags$span("BGC", style="color:#61D04F; font-weight:bold"),
+                # paste0('color:#',paste(as.raw(as.vector(col2rgb('red'))), collapse=''))
+                # paste0(as.raw(as.vector(col2rgb('red'))), collapse='')
+                choiceNames=list(shiny::tags$span("Core",style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Ccolour == "default", colDefaults$core, input$Ccolour)))), collapse=''))),
+                    shiny::tags$span("Deep", style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Dcolour == "default", colDefaults$deep, input$Dcolour)))), collapse=''))),
+                    shiny::tags$span("BGC",  style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Bcolour == "default", colDefaults$bgc, input$Bcolour)))), collapse=''))),
                     shiny::tags$span("HiRes", style="color: black;"),
                     shiny::tags$span("Topo", style="color: black;"),
                     shiny::tags$span("Path", style="color:black;"),
