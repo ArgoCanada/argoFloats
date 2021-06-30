@@ -622,6 +622,8 @@ serverMapApp <- function(input, output, session)
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 shiny::updateDateInput(session, inputId="start", label="Start", value=startTime)
                 shiny::updateDateInput(session, inputId="end", label="End", value=endTime)
+                state$view <<- c("core", "deep", "bgc")
+                state$action <<- NULL
             } else if (key == "0") { # Unzoom an area and keep same time scale
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
