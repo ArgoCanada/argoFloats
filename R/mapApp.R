@@ -63,7 +63,7 @@ uiMapApp <- shiny::fluidPage(
 
         shiny::fluidRow(
             shiny::column(2, shiny::selectInput("CPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
-            shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0, max=1, value=1, step=0.1)))),
+            shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1)))),
 
     shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
                             shiny::mainPanel(
@@ -77,7 +77,7 @@ uiMapApp <- shiny::fluidPage(
                             choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))),
         shiny::fluidRow(
             shiny::column(3, shiny::selectInput("BPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0, max=1, value=1, step=0.1))))),
+            shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
     shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
                             shiny::mainPanel(
         shiny::fluidRow(
@@ -90,7 +90,7 @@ uiMapApp <- shiny::fluidPage(
                             choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))),
         shiny::fluidRow(
             shiny::column(3, shiny::selectInput("DPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0, max=1, value=1, step=0.1))))),
+            shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
 
     ## using withSpinner does not work here
     shiny::conditionalPanel("input.tabselected!=3",
