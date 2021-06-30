@@ -308,6 +308,7 @@ serverMapApp <- function(input, output, session)
      shiny::observeEvent(input$action,
                         {
                             state$action <<- input$action
+                            shiny::updateCheckboxGroupInput(session, inputId= "action", selected=state$action)
                         })
 
     shiny::observeEvent(input$goE,
