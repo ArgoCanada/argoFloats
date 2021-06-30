@@ -138,11 +138,11 @@ serverMapApp <- function(input, output, session)
         argo <- argoFloatsGetFromCache("argo", debug=debug)
     } else {
         ## Get core and BGC data.
-        notificationId <- shiny::showNotification("Step 1/5: Getting \"core\" Argo index, either by downloading new data or using data in \"destdir\".  This may take a minute or two.", type="message", duration=NULL)
+        notificationId <- shiny::showNotification("Step 1/3: Getting \"core\" Argo index, either by downloading new data or using data in \"destdir\".  This may take a minute or two.", type="message", duration=NULL)
         i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
         argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n")
         shiny::removeNotification(notificationId)
-        notificationId <- shiny::showNotification("Step 2/5: Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
+        notificationId <- shiny::showNotification("Step 2/3: Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
         iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
         shiny::removeNotification(notificationId)
         # Combine core and BGC data.  This relies on the fact that every BGC ID is
@@ -159,7 +159,7 @@ serverMapApp <- function(input, output, session)
         # in bid.)
 
         #notificationId <- shiny::showNotification("Combining \"core\" and \"BGC\" data.", type="message", duration=NULL)
-        notificationId <- shiny::showNotification("Step 3/5: Getting \"Deep\" Argo index. This may take a minute or two.", type="message", duration=NULL)
+        notificationId <- shiny::showNotification("Step 3/3: Getting \"Deep\" Argo index. This may take a minute or two.", type="message", duration=NULL)
         ID <- i[["ID"]]
         cycle <- i[["cycle"]]
         lon <- i[["longitude"]]
@@ -202,7 +202,7 @@ serverMapApp <- function(input, output, session)
     output$UIview <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
         shiny::removeNotification(notificationId)
-        notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
+        #notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
             shiny::checkboxGroupInput("view",
                 label="View",
                 choiceNames=list(shiny::tags$span("Core",style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Ccolour == "default", colDefaults$core, input$Ccolour)))), collapse=''))),
@@ -652,7 +652,7 @@ serverMapApp <- function(input, output, session)
                 }
             }
             if (sum(c("core", "deep", "bgc") %in% state$view) > 0) {
-                notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
+                #notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
                 par(mar=c(2.5, 2.5, 2, 1.5))
                 plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
                 topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
