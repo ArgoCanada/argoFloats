@@ -58,7 +58,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::column(3, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
             shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                        shiny::selectInput("Cborder", "Border Colour", choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))
+                        shiny::selectInput("Cborder", "Border Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))
             )),
 
         shiny::fluidRow(
@@ -74,7 +74,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::column(3,shiny::conditionalPanel("input.Bsymbol== 21",
                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                         shiny::selectInput("Bborder", "Border Colour",
-                            choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))),
+                            choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
         shiny::fluidRow(
             shiny::column(3, shiny::selectInput("BPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
             shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
@@ -87,7 +87,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
                     shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                         shiny::selectInput("Dborder", "Border Colour",
-                            choices=c("1","2", "3", "4", "5", "6", "7", "8"), selected="1"))))),
+                            choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
         shiny::fluidRow(
             shiny::column(3, shiny::selectInput("DPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
             shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
