@@ -354,9 +354,9 @@ serverMapApp <- function(input, output, session)
             if ("core" %in% state$view && "bgc" %in% state$view && "deep" != state$view) {
                 msg <- paste(msg, "ai <- getIndex()<br>")
                 msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
-                msg <- paste(msg, "merge <- merge(ai,bai)<br>")
+                msg <- paste(msg, "mai <- merge(ai,bai)<br>")
                 msg <- paste(msg, "# Subset to remove deep profiles.<br>")
-                msg <- paste(msg, "index <- subset(merge, deep=FALSE)<br>")
+                msg <- paste(msg, "index <- subset(mai, deep=FALSE)<br>")
             } else if ("core" %in% state$view && "deep" %in% state$view && "bgc" != state$view) {
                 msg <- paste(msg, "ai <- getIndex()<br>")
                 msg <- paste(msg, "bai <- getIndex(filename=\"bgc\")<br>")
