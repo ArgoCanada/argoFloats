@@ -720,11 +720,13 @@ serverMapApp <- function(input, output, session)
                                 o <- order(LONLAT$time)
                                 no <- length(o)
                                 if (no > 1) {
-                                    pathColour <- list(core=if (input$Ccolour == "default") colDefaults$core else input$CPcolour,
-                                        bgc=if (input$Bcolour == "default") colDefaults$bgc else input$BPcolour,
-                                        deep=if (input$Dcolour == "default") colDefaults$deep else input$DPcolour)
+                                    #message("view = '", view, "' jaimie")
+                                    pathColour <- list(core=if (input$CPcolour == "default") colDefaults$core else input$CPcolour,
+                                        bgc=if (input$BPcolour == "default") colDefaults$bgc else input$BPcolour,
+                                        deep=if (input$DPcolour == "default") colDefaults$deep else input$DPcolour)
                                     pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
                                     LONLAT <<- LONLAT[o, ]
+                                    #message(pathColour[[view]], " is the path color")
                                     lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
                                     ## as opposed to maybe 3 months of data for a set of floats).
                                     if ("start" %in% state$action)
