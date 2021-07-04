@@ -38,8 +38,8 @@ jobs:
           
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
           install.packages(c("remotes", "rcmdcheck"))
+          remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       ## A refresh of the cache can be forced by incrementing
       ## the number at the end of `key`. This should be done whenever
