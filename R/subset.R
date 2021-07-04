@@ -642,8 +642,8 @@ setMethod(f="subset",
                                                   paste("subset index type by parameter= ",parameter))
                 } else if (dotsNames[1] == "polygon" && !istraj) {
                     argoFloatsDebug(debug, "subsetting an index by polygon\n")
-                    if (!requireNamespace("sf", quietly=TRUE))
-                        stop("must install.packages(\"sf\") for subset() by polygon to work")
+                    #?if (!requireNamespace("sf", quietly=TRUE))
+                    #?    stop("must install.packages(\"sf\") for subset() by polygon to work")
                     polygon <- dots[[1]]
                     if(!is.list(dots[1]))
                         stop("in subset,argoFloats-method():\n  \"polygon\" must be a list", call.=FALSE)
@@ -675,8 +675,8 @@ setMethod(f="subset",
                     ##
                     ## See https://github.com/ArgoCanada/argoFloats/issues/86
                     ok <- is.finite(alon) & is.finite(alat)
-                    if (!requireNamespace("sf", quietly=TRUE))
-                        stop("must install sf package for subset(...,polygon,...) to this to work")
+                    #?if (!requireNamespace("sf", quietly=TRUE))
+                    #?    stop("must install sf package for subset(...,polygon,...) to this to work")
                     Polygon <- sf::st_polygon(list(outer=cbind(plon, plat, rep(0, length(plon)))))
                     ## DOES NOT WORK (REQUIRES OTHER SOFTWARE??): Polygon <- sf::st_make_valid(Polygon)
                     if (!is.finite(sf::st_is_valid(Polygon))) {
