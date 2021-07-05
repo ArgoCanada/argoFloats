@@ -380,7 +380,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' @importFrom graphics abline axis box contour par plot.window points polygon rect text
 #' @importFrom grDevices extendrange gray rgb
 #' @importFrom utils data
-## @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
+#' @importFrom oce as.ctd colormap drawPalette imagep oceColorsGebco oce.plot.ts plotTS
 ##old @importFrom marmap getNOAA.bathy
 #' @export
 #' @aliases plot,argoFloats-method

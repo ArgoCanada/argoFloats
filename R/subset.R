@@ -299,13 +299,14 @@
 #' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' \doi{10.13155/29825}.
 #'
-#' @author Dan Kelley and Jaimie Harbin
-#'
 #' @importFrom stats approx
-## @importFrom oce geodDist
-## @importFrom sp point.in.polygon
-## @importFrom sf st_is_valid st_polygon s2_make_line s2_dwithin sst_intersection
+#' @importFrom oce geodDist
+#' @importFrom sf st_is_valid st_polygon st_intersection
+#' @importFrom s2 as_s2_geography s2_dwithin s2_make_line
+#'
 #' @export
+#'
+#' @author Dan Kelley and Jaimie Harbin
 setMethod(f="subset",
     signature="argoFloats",
     definition=function(x, subset=NULL, ...)
@@ -599,6 +600,8 @@ setMethod(f="subset",
                         sS <- rectangle$latitude[1]
                         sN <- rectangle$latitude[2]
                         s <- rbind(c(sW,sS), c(sW, sN), c(sE,sN), c(sE, sS), c(sW,sS))
+                        if (!requireNamespace("sf", quietly=TRUE))
+                            stop("must install sf package for subset(...,circle,...) to work")
                         S <- sf::st_polygon(list(s))
                         n <- nrow(x@data$index)
                         keep <- rep(FALSE, n)
@@ -642,8 +645,8 @@ setMethod(f="subset",
                                                   paste("subset index type by parameter= ",parameter))
                 } else if (dotsNames[1] == "polygon" && !istraj) {
                     argoFloatsDebug(debug, "subsetting an index by polygon\n")
-                    #?if (!requireNamespace("sf", quietly=TRUE))
-                    #?    stop("must install.packages(\"sf\") for subset() by polygon to work")
+                    if (!requireNamespace("sf", quietly=TRUE))
+                        stop("must install.packages(\"sf\") for subset() by polygon to work")
                     polygon <- dots[[1]]
                     if(!is.list(dots[1]))
                         stop("in subset,argoFloats-method():\n  \"polygon\" must be a list", call.=FALSE)
@@ -675,8 +678,8 @@ setMethod(f="subset",
                     ##
                     ## See https://github.com/ArgoCanada/argoFloats/issues/86
                     ok <- is.finite(alon) & is.finite(alat)
-                    #?if (!requireNamespace("sf", quietly=TRUE))
-                    #?    stop("must install sf package for subset(...,polygon,...) to this to work")
+                    if (!requireNamespace("sf", quietly=TRUE))
+                        stop("must install sf package for subset(...,polygon,...) to work")
                     Polygon <- sf::st_polygon(list(outer=cbind(plon, plat, rep(0, length(plon)))))
                     ## DOES NOT WORK (REQUIRES OTHER SOFTWARE??): Polygon <- sf::st_make_valid(Polygon)
                     if (!is.finite(sf::st_is_valid(Polygon))) {

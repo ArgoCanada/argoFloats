@@ -28,7 +28,7 @@ overallHelp <- "This GUI has two tabs, the Main and Settings tab.<br><br> On the
 
 
 #' @importFrom graphics arrows image lines mtext
-#' @importFrom grDevices grey
+#' @importFrom grDevices col2rgb grey
 #' @importFrom utils write.table
 uiMapApp <- shiny::fluidPage(
     shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
