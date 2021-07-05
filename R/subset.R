@@ -301,8 +301,8 @@
 #'
 #' @importFrom stats approx
 #' @importFrom oce geodDist
-#' @importFrom sf st_is_valid st_polygon st_intersection
-#' @importFrom s2 as_s2_geography s2_dwithin s2_make_line
+## @importFrom sf st_is_valid st_polygon st_intersection
+## @importFrom s2 as_s2_geography s2_dwithin s2_make_line
 #'
 #' @export
 #'
@@ -595,13 +595,13 @@ setMethod(f="subset",
                         keeplat[!ok] <- FALSE
                         keep <- keeplon & keeplat
                     } else if (istraj) {
+                        if (!requireNamespace("sf", quietly=TRUE))
+                            stop("must install sf package for subset(...,circle,...) to work with trajectory files")
                         sE <- rectangle$longitude[2]
                         sW <- rectangle$longitude[1]
                         sS <- rectangle$latitude[1]
                         sN <- rectangle$latitude[2]
                         s <- rbind(c(sW,sS), c(sW, sN), c(sE,sN), c(sE, sS), c(sW,sS))
-                        if (!requireNamespace("sf", quietly=TRUE))
-                            stop("must install sf package for subset(...,circle,...) to work")
                         S <- sf::st_polygon(list(s))
                         n <- nrow(x@data$index)
                         keep <- rep(FALSE, n)

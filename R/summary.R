@@ -13,7 +13,6 @@
 #' summary(index)
 #'
 ## @importFrom oce processingLogShow vectorShow
-#' @importFrom methods callNextMethod
 #' @importFrom utils head
 #' @export
 #'
