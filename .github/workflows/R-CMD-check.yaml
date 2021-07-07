@@ -18,26 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@v1
-      
-      # dd: Using gfortran should be easier than this; however, modifying
-      # ~/.R/Makevars doesn't appear to work in this context; nor does
-      # ln -s with the library directory. This part of the action is
-      # temporary and should be removed when CRAN oce can be used
-      #DEK# - name: Link gfortran for devel oce 
-      #DEK#   run: |
-      #DEK#     ln -s `which gfortran-10` /usr/local/bin/gfortran
-      #DEK#     gfortran --version || true
-      #DEK#     ls /usr/local/Cellar/gcc | tail -n 1
-      #DEK#     
-      #DEK#     sudo mkdir -p /usr/local/gfortran
-      #DEK#     sudo cp -r /usr/local/Cellar/gcc/`ls /usr/local/Cellar/gcc | tail -n 1`/lib/gcc/10 /usr/local/gfortran/lib
-      #DEK#     sudo chmod 755 /usr/local/gfortran
-      #DEK#     sudo chmod 755 /usr/local/gfortran/lib
-      #DEK#     
-      #DEK#     ls /usr/local/gfortran/lib || true
           
       - name: Install dependencies
         run: |
+          options(pkgType = "binary")
           install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
@@ -49,7 +33,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ runner.temp }}/argo-cache-dir
-          key: argo-cache-dir-check-1
+          key: argo-cache-dir-check-2
       - name: Ensure Argo cache directory exists
         env:
           R_ARGOFLOATS_DESTDIR: ${{ runner.temp }}/argo-cache-dir
