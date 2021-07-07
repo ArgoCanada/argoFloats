@@ -43,7 +43,7 @@ jobs:
         shell: Rscript {0}
       - name: Check
         env:
-          _R_CHECK_FORCE_SUGGESTS_: "FALSE"
+          _R_CHECK_FORCE_SUGGESTS_: 0
           R_ARGOFLOATS_DESTDIR: ${{ runner.temp }}/argo-cache-dir
           R_ARGOFLOATS_INDEX_AGE: "Inf"
           R_ARGOFLOATS_PROFILE_AGE: "Inf"
