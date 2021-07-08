@@ -139,6 +139,7 @@ serverMapApp <- function(input, output, session)
         ## Get core and BGC data.
         notificationId <- shiny::showNotification("Step 1/3: Getting \"core\" Argo index, either by downloading new data or using data in \"destdir\".  This may take a minute or two.", type="message", duration=NULL)
         i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
+        message("age = ", age)
         argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n")
         shiny::removeNotification(notificationId)
         notificationId <- shiny::showNotification("Step 2/3: Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
@@ -158,7 +159,7 @@ serverMapApp <- function(input, output, session)
         # in bid.)
 
         #notificationId <- shiny::showNotification("Combining \"core\" and \"BGC\" data.", type="message", duration=NULL)
-        notificationId <- shiny::showNotification("Step 3/3: Getting \"Deep\" Argo index. This may take a minute or two.", type="message", duration=NULL)
+        notificationId <- shiny::showNotification("Step 3/3: Computing \"Deep\" Argo index. This may take a minute or two.", type="message", duration=NULL)
         ID <- i[["ID"]]
         cycle <- i[["cycle"]]
         lon <- i[["longitude"]]
@@ -303,13 +304,12 @@ serverMapApp <- function(input, output, session)
     shiny::observeEvent(input$view,
                         {
                             state$view <<- input$view
-                        })
+                        }, ignoreNULL=FALSE)
 
      shiny::observeEvent(input$action,
                         {
                             state$action <<- input$action
-                            shiny::updateCheckboxGroupInput(session, inputId= "action", selected=state$action)
-                        })
+                        }, ignoreNULL=FALSE)
 
     shiny::observeEvent(input$goE,
         {
@@ -651,42 +651,42 @@ serverMapApp <- function(input, output, session)
                     state$ylim <<- c(input$brush$ymin, input$brush$ymax)
                 }
             }
+            topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
+            #notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
+            par(mar=c(2.5, 2.5, 2, 1.5))
+            plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
+            if ("topo" %in% state$view) {
+                image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
+            }
+            usr <- par("usr")
+            usr[1] <- pinlon(usr[1])
+            usr[2] <- pinlon(usr[2])
+            usr[3] <- pinlat(usr[3])
+            usr[4] <- pinlat(usr[4])
+            at <- pretty(usr[1:2], 10)
+            at <- at[usr[1] < at & at < usr[2]]
+            labels <- paste(abs(at), ifelse(at < 0, "W", ifelse(at > 0, "E", "")), sep="")
+            axis(1, pos=pinlat(usr[3]), at=at, labels=labels, lwd=1)
+            at <- pretty(usr[3:4], 10)
+            at <- at[usr[3] < at & at < usr[4]]
+            labels <- paste(abs(at), ifelse(at < 0, "S", ifelse(at > 0, "N", "")), sep="")
+            axis(2, pos=pinlon(usr[1]), at=at, labels=labels, lwd=1)
+            coastline <- if ("hires" %in% state$view) coastlineWorldFine else coastlineWorld
+            polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
+            rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
+            ## For focusID mode, we do not trim by time or space
+            if (state$focus == "single" && !is.null(state$focusID)) {
+                keep <- argo$ID == state$focusID
+            }  else {
+                keep <- rep(TRUE, length(argo$ID))
+            }
+            argoFloatsDebug(debug, "about to subset, start time = ", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
+            argoFloatsDebug(debug, "about to subset, end time = ", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
+            keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
+            keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
+            keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
+            cex <- 0.9
             if (sum(c("core", "deep", "bgc") %in% state$view) > 0) {
-                #notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
-                par(mar=c(2.5, 2.5, 2, 1.5))
-                plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
-                topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
-                if ("topo" %in% state$view) {
-                    image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
-                }
-                usr <- par("usr")
-                usr[1] <- pinlon(usr[1])
-                usr[2] <- pinlon(usr[2])
-                usr[3] <- pinlat(usr[3])
-                usr[4] <- pinlat(usr[4])
-                at <- pretty(usr[1:2], 10)
-                at <- at[usr[1] < at & at < usr[2]]
-                labels <- paste(abs(at), ifelse(at < 0, "W", ifelse(at > 0, "E", "")), sep="")
-                axis(1, pos=pinlat(usr[3]), at=at, labels=labels, lwd=1)
-                at <- pretty(usr[3:4], 10)
-                at <- at[usr[3] < at & at < usr[4]]
-                labels <- paste(abs(at), ifelse(at < 0, "S", ifelse(at > 0, "N", "")), sep="")
-                axis(2, pos=pinlon(usr[1]), at=at, labels=labels, lwd=1)
-                coastline <- if ("hires" %in% state$view) coastlineWorldFine else coastlineWorld
-                polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
-                rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
-                ## For focusID mode, we do not trim by time or space
-                if (state$focus == "single" && !is.null(state$focusID)) {
-                    keep <- argo$ID == state$focusID
-                }  else {
-                    keep <- rep(TRUE, length(argo$ID))
-                }
-                argoFloatsDebug(debug, "about to subset, start time = ", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
-                argoFloatsDebug(debug, "about to subset, end time = ", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
-                keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
-                keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
-                keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
-                cex <- 0.9 
                 ## Draw points, optionally connecting paths (and indicating start points)
                 ## {{{
                 visible <<- rep(FALSE, length(argo$lon))
@@ -762,7 +762,7 @@ serverMapApp <- function(input, output, session)
                     if (diff(range(state$ylim)) < 90 && sum(visible)) {
                         oce::mapScalebar(x="topright") }
                 }
-            }
+            }                          # if (sum(c("core", "deep", "bgc") %in% state$view) > 0)
         }
     }, height=500, pointsize=18)       # plotMap
 }                                      # serverMapApp
