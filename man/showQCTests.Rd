@@ -34,6 +34,7 @@ or indirectly with \code{\link[=readProfiles]{readProfiles()}}, the latter being
 \dQuote{Examples} section below.  The \dQuote{Details}
 section provides an explanation of how \code{showQCTests} works
 at a low level, as an adjunct to the Argo documentation.
+See section 3.3 of Kelley et al. (2021) for more on this function.
 }
 \details{
 The format used in the \code{historyQCTest} and \code{historyAction}
@@ -101,6 +102,10 @@ showQCTests(a[[1]])
 Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 \doi{10.13155/29825}
+
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 \author{
 Jaimie Harbin and Dan Kelley

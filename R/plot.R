@@ -50,7 +50,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' [argoFloats-class] objects are easy to extract, users should
 #' not find it difficult to create their own plots to meet a
 #' particular aesthetic; Example 5C provides an example for
-#' maps.
+#' maps. For more plotting examples see Kelley et al. (2021).
 #'
 #' The various plot types are as follows.
 #'
@@ -376,6 +376,10 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' \doi{10.13155/29825}
+#'
+#' 2. Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
 #'
 #' @importFrom graphics abline axis box contour par plot.window points polygon rect text
 #' @importFrom grDevices extendrange gray rgb

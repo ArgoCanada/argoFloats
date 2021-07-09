@@ -116,7 +116,7 @@ shape as the \code{"pressure"} field; this can be convenient for computations
 involving items that only occur once per profile, such as \code{"longitude"},
 but it should not be used for items that are not level-specific, such
 as the various \code{"HISTORY_*"} elements, which apply to a dataset, not to
-a level.\strong{>>> EMXIF}
+a level
 \item Otherwise, NULL is reported.
 }
 \item Otherwise, an error is reported.
@@ -132,6 +132,11 @@ data.frame(file=gsub(".*/", "", index5[["file"]][1]),
            lon=index5[["longitude"]],
            lat=index5[["latitude"]])
 
+}
+\references{
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 \author{
 Dan Kelley

@@ -791,6 +791,7 @@ serverMapApp <- function(input, output, session)
 #' save(topoWorldFine, file="topoWorldFine.rda")
 #' unlink(topoFile) # clean up
 #'```
+#' For more on this app, see section 4 of Kelley et al. (2021).
 #'
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
@@ -815,6 +816,11 @@ serverMapApp <- function(input, output, session)
 #'     library(argoFloats)
 #'     mapApp()
 #' }
+#'
+#' @references
+#' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #' @importFrom shiny shinyApp shinyOptions

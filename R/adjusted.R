@@ -189,7 +189,8 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 #' Delayed mode. Any profiles that are of the `R` (Realtime) data-mode are
 #' left unaltered. This blending of adjusted and unadjusted data offers
 #' improved spatial and temporal coverage, while reducing the overall
-#' data quality, and so this approach should be used with caution.
+#' data quality, and so this approach should be used with caution. For more
+#' on this function see section 3.4 of Kelley et. al (2021).
 #'
 #' @param argos an [`argoFloats-class`] object, as read by [readProfiles()].
 #'
@@ -218,6 +219,10 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 #' @references
 #' 1. Argo Data Management Team. "Argo User's Manual V3.4,"
 #' January 20, 2021. <https://archimer.ifremer.fr/doc/00187/29825/>
+#'
+#' 2. Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
 #'
 #' @importFrom utils str
 #' @export

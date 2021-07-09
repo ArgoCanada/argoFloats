@@ -166,7 +166,7 @@ somewhat limited scope for customization. Since the data with
 \linkS4class{argoFloats} objects are easy to extract, users should
 not find it difficult to create their own plots to meet a
 particular aesthetic; Example 5C provides an example for
-maps.
+maps. For more plotting examples see Kelley et al. (2021).
 }
 \details{
 The various plot types are as follows.
@@ -357,6 +357,9 @@ plot(a, which="summary")
 \item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 \doi{10.13155/29825}
+\item Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 }
 \author{

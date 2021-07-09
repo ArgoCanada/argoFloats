@@ -52,7 +52,8 @@ the individual profiles is \code{A} or \code{D}, indicating either Adjusted or
 Delayed mode. Any profiles that are of the \code{R} (Realtime) data-mode are
 left unaltered. This blending of adjusted and unadjusted data offers
 improved spatial and temporal coverage, while reducing the overall
-data quality, and so this approach should be used with caution.
+data quality, and so this approach should be used with caution. For more
+on this function see section 3.4 of Kelley et. al (2021).
 }
 \examples{
 library(argoFloats)
@@ -69,6 +70,9 @@ legend("bottomright", pch=c(2,1), legend=c("Raw", "Adjusted"))
 \enumerate{
 \item Argo Data Management Team. "Argo User's Manual V3.4,"
 January 20, 2021. \url{https://archimer.ifremer.fr/doc/00187/29825/}
+\item Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 }
 \author{

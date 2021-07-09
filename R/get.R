@@ -150,6 +150,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' index, and this is typically followed by a call to
 #' [readProfiles()], which reads the local files, yielding
 #' an object that can be plotted or analysed in other ways.
+#' For more on this function, see section 2 of Kelley et al. (2021).
 #'
 #' @param filename character value that indicates the file name on the server, as in
 #' the first column of the table given in \dQuote{Details}, or (for some file types)
@@ -203,6 +204,11 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' summary(i)
 #' hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
 #' }
+#'
+#' @references
+#' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
 #'
 #' @author Dan Kelley
 #'
@@ -506,6 +512,7 @@ getIndex <- function(filename="core",
 #' spot in the return value, but if it is `FALSE` (the default), then an error is reported.
 #' Note that [readProfiles()] skips over any such `NA` entries,
 #' while reporting their positions within `index`.
+#' For more on this function, see Kelley et al. (2021).
 #'
 #' @param index an [`argoFloats-class`] object of type `"index"`, as created
 #' by [getIndex()].
@@ -538,6 +545,11 @@ getIndex <- function(filename="core",
 #' profiles2 <- getProfiles(index2)
 #' # See ?readProfiles for how to read the files now downloaded.
 #' }
+#'
+#' @references
+#' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
 #'
 #' @author Dan Kelley
 #'

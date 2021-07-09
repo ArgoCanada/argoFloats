@@ -14,7 +14,8 @@ and packages.
 \details{
 The development website is \url{https://github.com/ArgoCanada/argoFloats}, and
 \url{https://argocanada.github.io/argoFloats/index.html} provides a simpler view
-that may be more helpful to most users.
+that may be more helpful to most users. For more on the argoFloats package, see
+Kelley et al. (2021).
 
 The sketch given below illustrates the typical workflow with the package, with
 descriptions of the steps on the left, and names of the relevant functions
@@ -54,4 +55,8 @@ This means that \code{argoFloats} users can rely on
 a wide variety of \code{oce} functions to analyse their data.
 The full suite of R tools is also available, and the vastness of
 that suite explains why \code{argoFloats} is written in R.
+
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }

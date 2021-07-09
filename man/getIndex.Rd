@@ -141,6 +141,7 @@ copies of the per-profile data files that are listed in an
 index, and this is typically followed by a call to
 \code{\link[=readProfiles]{readProfiles()}}, which reads the local files, yielding
 an object that can be plotted or analysed in other ways.
+For more on this function, see section 2 of Kelley et al. (2021).
 }
 \examples{
 \dontrun{
@@ -151,6 +152,11 @@ summary(i)
 hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
 }
 
+}
+\references{
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 \author{
 Dan Kelley

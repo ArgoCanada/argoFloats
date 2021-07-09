@@ -10,7 +10,8 @@
 #'
 #' The development website is \url{https://github.com/ArgoCanada/argoFloats}, and
 #' \url{https://argocanada.github.io/argoFloats/index.html} provides a simpler view
-#' that may be more helpful to most users.
+#' that may be more helpful to most users. For more on the argoFloats package, see
+#' Kelley et al. (2021).
 #'
 #' The sketch given below illustrates the typical workflow with the package, with
 #' descriptions of the steps on the left, and names of the relevant functions
@@ -53,6 +54,10 @@
 #' a wide variety of `oce` functions to analyse their data.
 #' The full suite of R tools is also available, and the vastness of
 #' that suite explains why `argoFloats` is written in R.
+#'
+#' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
 #'
 #' @importFrom methods new
 #' @name argoFloats-package
@@ -293,9 +298,10 @@ setMethod(f="initialize",
 #'        involving items that only occur once per profile, such as `"longitude"`,
 #'        but it should not be used for items that are not level-specific, such
 #'        as the various `"HISTORY_*"` elements, which apply to a dataset, not to
-#'        a level.**>>> EMXIF**
+#'        a level
 #'     8. Otherwise, NULL is reported.
 #' 5. Otherwise, an error is reported.
+#. For more on this function, see Kelley et al. (2021).
 #'
 #' @param x an [`argoFloats-class`] object.
 #' @param i a character value that specifies the item to be looked up;
@@ -313,6 +319,11 @@ setMethod(f="initialize",
 #' data.frame(file=gsub(".*/", "", index5[["file"]][1]),
 #'            lon=index5[["longitude"]],
 #'            lat=index5[["latitude"]])
+#'
+#' @references
+#' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
 #'
 #' @author Dan Kelley
 #'

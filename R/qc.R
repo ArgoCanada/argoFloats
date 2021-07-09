@@ -7,7 +7,7 @@
 #' data with `NA` values, so they will not appear in plots or be considered in calculations.
 #' This is an important early step in processing, because suspicious Argo floats commonly
 #' report data that are suspicious based on statistical and physical measures, as
-#' is illustrated in the \dQuote{Examples} section.
+#' is illustrated in the \dQuote{Examples} section. See section 3.3 of Kelley et al. (2021) for more on this function.
 #'
 #' The work is done by using [oce::handleFlags,argo-method()]
 #' on each of the profiles stored within the object. In most cases, only
@@ -63,6 +63,10 @@
 #' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' \doi{10.13155/29825}
 #'
+#' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
+#'
 #' @export
 #' @author Dan Kelley
 applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
@@ -87,7 +91,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #'
 #' `showQCTests` prints a summary of the quality-control (QC) tests
 #' (if any) that were performed on an Argo profile in real-time (**Caution**: any tests completed and/or failed on delayed
-                                        #' mode data are not recorded).  It uses
+#' mode data are not recorded).  It uses
 #' [hexToBits()] to decode the hexadecimal  values that may
 #' be stored in `historyQCTest`. From there it pairs the determined
 #' test values with the appropriate actions, QC Tests performed or QC
@@ -97,6 +101,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' \dQuote{Examples} section below.  The \dQuote{Details}
 #' section provides an explanation of how `showQCTests` works
 #' at a low level, as an adjunct to the Argo documentation.
+#' See section 3.3 of Kelley et al. (2021) for more on this function.
 #'
 #' The format used in the `historyQCTest` and `historyAction`
 #' elements of the `metadata` slot of an [oce::argo-class] object
@@ -176,6 +181,10 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' \doi{10.13155/29825}
+#'
+#' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
 #'
 #' @export
 #' @author Jaimie Harbin and Dan Kelley

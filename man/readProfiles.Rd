@@ -63,7 +63,8 @@ or a replacement function provided as the \code{FUN} argument.
 By default, warnings are issued about any
 profiles in which 10 percent or more of the measurements are flagged
 with a quality-control code of 0, 3, 4, 6, 7, or 9 (see the
-\code{\link[=applyQC]{applyQC()}} documentation for the meanings of these codes).
+\code{\link[=applyQC]{applyQC()}} documentation for the meanings of these codes). For more
+on this function, see section 2 of Kelley et al. (2021).
 }
 \examples{
 # Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
@@ -90,6 +91,11 @@ u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_00
 p <- readProfiles(u)
 }
 
+}
+\references{
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 \author{
 Dan Kelley
