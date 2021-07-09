@@ -665,11 +665,11 @@ serverMapApp <- function(input, output, session)
             at <- pretty(usr[1:2], 10)
             at <- at[usr[1] < at & at < usr[2]]
             labels <- paste(abs(at), ifelse(at < 0, "W", ifelse(at > 0, "E", "")), sep="")
-            axis(1, pos=pinlat(usr[3]), at=at, labels=labels, lwd=1)
+            axis(1, pos=pinlat(usr[3]), at=at, labels=labels, lwd=1, cex.axis=0.8)
             at <- pretty(usr[3:4], 10)
             at <- at[usr[3] < at & at < usr[4]]
             labels <- paste(abs(at), ifelse(at < 0, "S", ifelse(at > 0, "N", "")), sep="")
-            axis(2, pos=pinlon(usr[1]), at=at, labels=labels, lwd=1)
+            axis(2, pos=pinlon(usr[1]), at=at, labels=labels, lwd=1, cex.axis=0.8)
             coastline <- if ("hires" %in% state$view) coastlineWorldFine else coastlineWorld
             polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
             rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
