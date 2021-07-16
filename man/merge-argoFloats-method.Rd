@@ -2,7 +2,7 @@
 % Please edit documentation in R/merge.R
 \name{merge,argoFloats-method}
 \alias{merge,argoFloats-method}
-\title{Merge argoFloats Indices}
+\title{Merge argoFloats indices}
 \usage{
 \S4method{merge}{argoFloats}(x, y, ...)
 }
@@ -15,7 +15,7 @@
 An \code{\linkS4class{argoFloats}} object of type \code{index}.
 }
 \description{
-Merge argoFloats Indices
+Merge argoFloats indices
 }
 \examples{
 library(argoFloats)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/debug.R
 \name{argoFloatsDebug}
 \alias{argoFloatsDebug}
-\title{Possibly print debugging information.}
+\title{Print debugging information.}
 \usage{
 argoFloatsDebug(
   debug = 0,

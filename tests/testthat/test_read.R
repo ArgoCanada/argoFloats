@@ -6,7 +6,7 @@ library(argoFloats)
 context("reading data")
 
 ## FIXME: add test with 'adjusted' argument (if we retain that trial feature)
-test_that("read a local netcdf file", {
+test_that("read a local NetCDF file", {
           a <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")),
                               "Of 1 profiles read, 1 has")
           expect_equal(1L, a[["length"]])

@@ -97,7 +97,7 @@ function, holds a list named \code{index} that holds following elements:
 (see next paragraph).
 \item \code{server}, the URL at which the index was found, and from
 which \code{\link[=getProfiles]{getProfiles()}} can construct URLs from which to
-download the netcdf files for individual float profiles.
+download the NetCDF files for individual float profiles.
 \item \code{filename}, the argument provided here.
 \item \code{header}, the preliminary lines in the source file that start
 with the \verb{#} character.

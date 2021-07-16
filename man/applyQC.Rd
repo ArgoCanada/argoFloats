@@ -40,7 +40,7 @@ A copy of \code{x} but with each of the objects within its
 \code{data} slot having been passed through \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.
 }
 \description{
-This function examines the quality-control (QC) flags within an \code{\linkS4class{argoFloats}}
+This function examines the quality-control ("QC") flags within an \code{\linkS4class{argoFloats}}
 object that was created by \code{\link[=readProfiles]{readProfiles()}}.  By default, it replaces all suspicious
 data with \code{NA} values, so they will not appear in plots or be considered in calculations.
 This is an important early step in processing, because suspicious Argo floats commonly

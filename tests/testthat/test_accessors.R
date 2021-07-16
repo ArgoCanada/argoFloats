@@ -58,7 +58,7 @@ test_that("historyQCTest length and (trimmed) contents for issue 136",
               filename <- system.file("extdata", "D4900785_048.nc", package = "argoFloats")
               a <- expect_silent(readProfiles(filename))
               a1 <- a[[1]]
-              ## We test two ways of storing the HISTORY_QC_TEST item as named in the netcdf file,
+              ## We test two ways of storing the HISTORY_QC_TEST item as named in the NetCDF file,
               ## because the camelCase variety only became valid in late June of 2020, and then
               ## only in the github vrsion, not yet the CRAN version.
               test1 <- a1[["historyQCTest"]]

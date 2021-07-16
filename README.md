@@ -38,7 +38,7 @@ argo files will be stored locally.)
 2. The `subset` function is used to narrow the region of interest, yielding 39
    profiles as of mid-June, 2020.
 
-3. `getProfiles` is used to download the netcdf files that contain the profile
+3. `getProfiles` is used to download the NetCDF files that contain the profile
    measurements.
 
 4. `readProfiles` is used to read those files.
@@ -69,9 +69,9 @@ indexAll <- getIndex()
 ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))
-## 3. Get netcdf files for these profiles, saving to ~/data/argo by default.
+## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
 profiles  <- getProfiles(index)
-## 4. Read the netcdf files.
+## 4. Read the NetCDF files.
 argos <- readProfiles(profiles)
 ## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)

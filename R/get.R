@@ -20,7 +20,7 @@ argoFloatsStoreInCache <- function(name, value, debug=0)
 
 #' Get Data for an Argo Float Profile
 #'
-#' @param url character value giving the URL for a netcdf file containing an
+#' @param url character value giving the URL for a NetCDF file containing an
 #' particular profile of a particular Argo float.
 #' @template destdir
 #'
@@ -107,7 +107,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #'    (see next paragraph).
 #' * `server`, the URL at which the index was found, and from
 #'    which [getProfiles()] can construct URLs from which to
-#'    download the netcdf files for individual float profiles.
+#'    download the NetCDF files for individual float profiles.
 #' * `filename`, the argument provided here.
 #' * `header`, the preliminary lines in the source file that start
 #'    with the `#` character.
@@ -531,7 +531,7 @@ getIndex <- function(filename="core",
 #'
 #' @return An object of class [`argoFloats-class`] with type=`"profiles"`, the
 #' `data` slot of which contains two items: `url`,
-#' which holds the URLs from which the netcdf
+#' which holds the URLs from which the NetCDF
 #' files were downloaded, and `file`, which
 #' holds the path names of the downloaded files; the latter
 #' is used by [readProfiles()].
@@ -585,7 +585,7 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         ## failed, for the *same* index object -- that is, the file structure on the server
         ## must be changeable.  So, as a test (which will need to be reevaluated over time),
         ## we switched to using "server" instead of "ftpRoot".  That means that we seek
-        ## the netcdf files from the same source as the index, and *not* from the source listed
+        ## the NetCDF files from the same source as the index, and *not* from the source listed
         ## in the "# FTP" line in the header within that index.
         server <- index[["server"]]
         ## I *thought* the USGODAE and IFREMER servers were once set up differently, with only usgodae having "dac" in the path

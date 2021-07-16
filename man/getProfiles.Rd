@@ -60,7 +60,7 @@ to see if the output suggests a problem in the call.}
 \value{
 An object of class \code{\linkS4class{argoFloats}} with type=\code{"profiles"}, the
 \code{data} slot of which contains two items: \code{url},
-which holds the URLs from which the netcdf
+which holds the URLs from which the NetCDF
 files were downloaded, and \code{file}, which
 holds the path names of the downloaded files; the latter
 is used by \code{\link[=readProfiles]{readProfiles()}}.

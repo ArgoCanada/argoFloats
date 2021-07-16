@@ -15,7 +15,7 @@ getProfileFromUrl(
 )
 }
 \arguments{
-\item{url}{character value giving the URL for a netcdf file containing an
+\item{url}{character value giving the URL for a NetCDF file containing an
 particular profile of a particular Argo float.}
 
 \item{destdir}{character value indicating the directory in which to store

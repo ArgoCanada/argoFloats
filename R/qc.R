@@ -2,7 +2,7 @@
 
 #' Use quality-control flags to alter argoFloats data
 #'
-#' This function examines the quality-control (QC) flags within an [`argoFloats-class`]
+#' This function examines the quality-control ("QC") flags within an [`argoFloats-class`]
 #' object that was created by [readProfiles()].  By default, it replaces all suspicious
 #' data with `NA` values, so they will not appear in plots or be considered in calculations.
 #' This is an important early step in processing, because suspicious Argo floats commonly

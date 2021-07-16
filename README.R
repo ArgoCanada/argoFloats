@@ -6,9 +6,9 @@ indexAll <- getIndex()
 ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))
-## 3. Get netcdf files for these profiles, saving to ~/data/argo by default.
+## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
 profiles  <- getProfiles(index)
-## 4. Read the netcdf files.
+## 4. Read the NetCDF files.
 argos <- readProfiles(profiles)
 ## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)
