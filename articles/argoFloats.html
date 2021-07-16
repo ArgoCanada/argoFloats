@@ -94,7 +94,7 @@
       <h1 data-toc-skip>Introduction to argoFloats</h1>
                         <h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 class="date">2021-07-09</h4>
+            <h4 class="date">2021-07-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/master/vignettes/argoFloats.Rmd"><code>vignettes/argoFloats.Rmd</code></a></small>
       <div class="hidden name"><code>argoFloats.Rmd</code></div>
@@ -117,7 +117,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data. It allows users to focus on Core, Biogeochemical (“BGC”) , or Deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, dataStateIndicator, etc. Once downloaded, such data sets can be analysed within <code>argoFloats</code> or using other R tools and packages.</p>
+<p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data. It allows users to focus on Core, Biogeochemical (“BGC”) , or Deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, dataStateIndicator, etc. Once downloaded, such data sets can be analyzed within <code>argoFloats</code> or using other R tools and packages.</p>
 </div>
 <div id="youtube-videos" class="section level1">
 <h1 class="hasAnchor">
@@ -280,7 +280,7 @@ Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Ba
 <p>The following output occurs:</p>
 <pre><code>argoFloats object of type "index" with 953 items</code></pre>
 <p><strong>Hint:</strong> This command can be particularly useful when doing the <code><a href="https://rdrr.io/r/base/merge.html">merge()</a></code> command, which will be explained in greater detail further down.</p>
-<p>It should be noted that the profile elements within <code>argoFloats</code> objects are stored as in the form of <code>argo</code> objects as defined by the <code>oce</code> package. This means that <code>argoFloats</code> users can rely on a wide variety of <code>oce</code> functions to analyse their data. The full suite of R tools is also available, and the vastness of that suite explains why <code>argoFloats</code> is written in R.</p>
+<p>It should be noted that the profile elements within <code>argoFloats</code> objects are stored as in the form of <code>argo</code> objects as defined by the <code>oce</code> package. This means that <code>argoFloats</code> users can rely on a wide variety of <code>oce</code> functions to analyze their data. The full suite of R tools is also available, and the vastness of that suite explains why <code>argoFloats</code> is written in R.</p>
 </div>
 </div>
 <div id="function-details" class="section level1">
@@ -408,7 +408,7 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <div id="readprofiles" class="section level2">
 <h2 class="hasAnchor">
 <a href="#readprofiles" class="anchor"></a>readProfiles()</h2>
-<p>The <code><a href="../reference/readProfiles.html">readProfiles()</a></code> command works with either a list of local netCDF files, or a <code>argoFloats</code> object type <code>profiles</code>, as created by <code><a href="../reference/getProfiles.html">getProfiles()</a></code>.</p>
+<p>The <code><a href="../reference/readProfiles.html">readProfiles()</a></code> command works with either a list of local NetCDF files, or a <code>argoFloats</code> object type <code>profiles</code>, as created by <code><a href="../reference/getProfiles.html">getProfiles()</a></code>.</p>
 <p>The command can be useful for analyzing individual profiles, for example:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">index1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">index</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span> <span class="co"># To subset for profiles</span>

@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Read argo profiles from local files — readProfiles" />
-<meta property="og:description" content="This works with either a vector of netCDF files,
+<meta property="og:description" content="This works with either a vector of NetCDF files,
 or a argoFloats object of type &quot;profiles&quot;, as
 created by getProfiles().
 During the reading, argo profile objects are created with oce::read.argo()
@@ -143,7 +143,7 @@ or a replacement function provided as the FUN argument." />
     </div>
 
     <div class="ref-description">
-    <p>This works with either a vector of netCDF files,
+    <p>This works with either a vector of NetCDF files,
 or a <code><a href='argoFloats-class.html'>argoFloats</a></code> object of type <code>"profiles"</code>, as
 created by <code><a href='getProfiles.html'>getProfiles()</a></code>.
 During the reading, argo profile objects are created with <code><a href='https://dankelley.github.io/oce/reference/read.argo.html'>oce::read.argo()</a></code>
@@ -164,7 +164,7 @@ or a replacement function provided as the <code>FUN</code> argument.</p>
     <tr>
       <th>profiles</th>
       <td><p>either (1) a character vector that holds
-the names of netcfd files or (2) an <code><a href='argoFloats-class.html'>argoFloats</a></code>
+the names of NetCDF files or (2) an <code><a href='argoFloats-class.html'>argoFloats</a></code>
 object created by <code><a href='getProfiles.html'>getProfiles()</a></code>. In the first case, any
 items that start with <code>"ftp:"</code> are taken to represent
 the full paths to remote files, and these first downloaded
@@ -172,7 +172,7 @@ to the <code>destdir</code> directory using <code><a href='getProfileFromUrl.htm
     </tr>
     <tr>
       <th>FUN</th>
-      <td><p>a function that reads the netcdf files in which the argo
+      <td><p>a function that reads the NetCDF files in which the argo
 profiles are stored.  If <code>FUN</code> not provided, then it defaults
 to <code><a href='https://dankelley.github.io/oce/reference/read.argo.html'>oce::read.argo()</a></code>.  Only experts should consider anything
 other than this default, or a wrapper to it.</p></td>
