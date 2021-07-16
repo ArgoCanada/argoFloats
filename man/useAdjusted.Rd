@@ -35,15 +35,15 @@ or
 work with the unadjusted fields.)
 The procedure is done profile by profile and parameter by parameter.
 The \code{fallback} argument offers a way to ''fall back'' to unadjusted
-values, depending on the data-mode (realtime, adjusted or delayed)
+values, depending on the data-mode (real-time, adjusted or delayed)
 for individual items; see \dQuote{Details}.
 }
 \details{
 There are two cases.  First, if \code{fallback} is \code{FALSE} (which the default)
 then the focus switches entirely
 to the adjusted data.  This improves the overall reliability of the results,
-but at the cost of eliminating realtime-mode data.  This is because the
-adjusted fields for realtime data are set to \code{NA} as a matter of policy (see
+but at the cost of eliminating real-time data.  This is because the
+adjusted fields for real-time data are set to \code{NA} as a matter of policy (see
 section 2.2.5 of reference 1).
 
 Wider data coverage is obtained  if \code{fallback} is \code{TRUE}.  In this

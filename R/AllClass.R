@@ -5,7 +5,7 @@
 #' The `argoFloats` package provides tools for downloading and processing Argo profile data.
 #' It allows users to focus on core Argo, biogeochemical ("BGC") Argo, or deep Argo profiles, and
 #' also to sift these profiles based on ID, time, geography, variable, institution, and ocean, etc.
-#' Once downloaded, such datasets can be analysed within `argoFloats` or using other R tools
+#' Once downloaded, such datasets can be analyzed within `argoFloats` or using other R tools
 #' and packages.
 #'
 #' The development website is \url{https://github.com/ArgoCanada/argoFloats}, and
@@ -51,7 +51,7 @@
 #' It should be noted that the profile elements within `argoFloats` objects are stored as
 #' in the form of `argo` objects as defined by the `oce` package.
 #' This means that `argoFloats` users can rely on
-#' a wide variety of `oce` functions to analyse their data.
+#' a wide variety of `oce` functions to analyze their data.
 #' The full suite of R tools is also available, and the vastness of
 #' that suite explains why `argoFloats` is written in R.
 #'

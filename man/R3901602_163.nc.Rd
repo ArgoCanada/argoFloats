@@ -4,9 +4,9 @@
 \encoding{UTF-8}
 \name{R3901602_163.nc}
 \alias{R3901602_163.nc}
-\title{Sample argo file (realtime-mode data)}
+\title{Sample argo file (real-time data)}
 \description{
-This is netcdf file for realtime-mode data for cycle 163 of Argo float 3901602, downloaded from
+This is Netcdf file for real-time data for cycle 163 of Argo float 3901602, downloaded from
 \url{https://data-argo.ifremer.fr/dac/coriolis/3901602/profiles/R3901602_163.nc}
 on 2021 March 7.
 }

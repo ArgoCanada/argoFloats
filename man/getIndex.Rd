@@ -59,7 +59,7 @@ progress indicators.  The default is to show such indicators.}
 \item{keep}{logical value indicating whether to retain the
 raw index file as downloaded from the server.  This is \code{FALSE}
 by default, indicating that the raw index file is to be
-discarded once it has been analysed.  Note that if \code{keep}
+discarded once it has been analyzed  Note that if \code{keep}
 is \code{TRUE}, then the supplied value of \code{age} is converted
 to 0, to force a new download.}
 
@@ -140,12 +140,12 @@ use \code{\link[=getProfiles]{getProfiles()}}, which downloads or checks for loc
 copies of the per-profile data files that are listed in an
 index, and this is typically followed by a call to
 \code{\link[=readProfiles]{readProfiles()}}, which reads the local files, yielding
-an object that can be plotted or analysed in other ways.
+an object that can be plotted or analyzed in other ways.
 For more on this function, see section 2 of Kelley et al. (2021).
 }
 \examples{
 \dontrun{
-# Download an index of synthetic argo/bgc-argo floats, and plot temporal coverage.
+# Download an index of synthetic Argo/BGC-Argo floats, and plot temporal coverage.
 library(argoFloats)
 i <- getIndex("synthetic")
 summary(i)

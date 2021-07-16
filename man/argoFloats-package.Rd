@@ -8,7 +8,7 @@
 The \code{argoFloats} package provides tools for downloading and processing Argo profile data.
 It allows users to focus on core Argo, biogeochemical ("BGC") Argo, or deep Argo profiles, and
 also to sift these profiles based on ID, time, geography, variable, institution, and ocean, etc.
-Once downloaded, such datasets can be analysed within \code{argoFloats} or using other R tools
+Once downloaded, such datasets can be analyzed within \code{argoFloats} or using other R tools
 and packages.
 }
 \details{
@@ -52,7 +52,7 @@ See \code{\link[=show,argoFloats-method]{show,argoFloats-method()}} for details.
 It should be noted that the profile elements within \code{argoFloats} objects are stored as
 in the form of \code{argo} objects as defined by the \code{oce} package.
 This means that \code{argoFloats} users can rely on
-a wide variety of \code{oce} functions to analyse their data.
+a wide variety of \code{oce} functions to analyze their data.
 The full suite of R tools is also available, and the vastness of
 that suite explains why \code{argoFloats} is written in R.
 

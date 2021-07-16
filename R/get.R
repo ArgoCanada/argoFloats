@@ -149,7 +149,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' copies of the per-profile data files that are listed in an
 #' index, and this is typically followed by a call to
 #' [readProfiles()], which reads the local files, yielding
-#' an object that can be plotted or analysed in other ways.
+#' an object that can be plotted or analyzed in other ways.
 #' For more on this function, see section 2 of Kelley et al. (2021).
 #'
 #' @param filename character value that indicates the file name on the server, as in
@@ -187,7 +187,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' @param keep logical value indicating whether to retain the
 #' raw index file as downloaded from the server.  This is `FALSE`
 #' by default, indicating that the raw index file is to be
-#' discarded once it has been analysed.  Note that if `keep`
+#' discarded once it has been analyzed  Note that if `keep`
 #' is `TRUE`, then the supplied value of `age` is converted
 #' to 0, to force a new download.
 #'
@@ -198,7 +198,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #'
 #' @examples
 #'\dontrun{
-#' # Download an index of synthetic argo/bgc-argo floats, and plot temporal coverage.
+#' # Download an index of synthetic Argo/BGC-Argo floats, and plot temporal coverage.
 #' library(argoFloats)
 #' i <- getIndex("synthetic")
 #' summary(i)
@@ -499,7 +499,7 @@ getIndex <- function(filename="core",
 #' by [readProfiles()].
 #'
 #' It should be noted that the constructed server URL follows
-#' a different pattern on the usgodae an ifremer servers, and
+#' a different pattern on the USGODAE an Ifremer servers, and
 #' so if some other server is used, the URL may be wrong, leading
 #' to an error.  Similarly, if the patterns on these two
 #' servers change, then [getProfiles()] will fail. Users who
@@ -590,7 +590,7 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         server <- index[["server"]]
         ## I *thought* the USGODAE and IFREMER servers were once set up differently, with only usgodae having "dac" in the path
         ## name.  That is why the next block was written.  However, as of May 15, 2020, it seems they are set up in the same
-        ## way, so the ifremer case was rewritten to match the usgodae case.
+        ## way, so the Ifremer case was rewritten to match the usgodae case.
         urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
         file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls),

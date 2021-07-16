@@ -76,7 +76,7 @@ by \code{\link[=readProfiles]{readProfiles()}}.
 }
 \details{
 It should be noted that the constructed server URL follows
-a different pattern on the usgodae an ifremer servers, and
+a different pattern on the USGODAE an Ifremer servers, and
 so if some other server is used, the URL may be wrong, leading
 to an error.  Similarly, if the patterns on these two
 servers change, then \code{\link[=getProfiles]{getProfiles()}} will fail. Users who

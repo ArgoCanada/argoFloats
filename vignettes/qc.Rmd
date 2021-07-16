@@ -61,7 +61,7 @@ a flag value of 1, 2, 5, or 8 are considered 'good', those given a
 flag value of 9 are missing, and those given flags 3, 4, 6, and 7
 are considered 'bad'.
 
-A useful parameter to familiarize with is the `dataStateIndicator`. This tells the user the the degree of processing the data has passed through and can be helpful to determine the validity of the data. `argoFloats` has incorporated a way to subset by `dataStateIndicator` to allow the user to analyze data with a specific dgree of validity if they wish.
+A useful parameter to familiarize with is the `dataStateIndicator`. This tells the user the the degree of processing the data has passed through and can be helpful to determine the validity of the data. `argoFloats` has incorporated a way to subset by `dataStateIndicator` to allow the user to analyze data with a specific degree of validity if they wish.
 
 The `argoFloats` package, using the associated `oce` package, has incorporated a 3-step process when
 considering argo QC flags. The process encourages users to
@@ -163,7 +163,7 @@ D <- data.frame(T=A[["temperature"]], TF=A[["temperatureFlag"]],
 
 Note that this particular test is based on potential density, so some further
 calculations will be required to check on the procedure.  The procedure is not
-simple, and some study of the Argo documention will be required of any user who
+simple, and some study of the Argo documentation will be required of any user who
 wants to check on the procedures. Even then, a reasonable level of coding
 expertise would be required of anyone intending to alter the procedures.
 Proceed with caution!
@@ -198,7 +198,7 @@ plot(clean, which="TS")
 Although Figure 3 provides a clear illustration of the need for QC testing and
 the handling of QC flags, it also illustrates limitations, for the plot on the
 right still contains several data points that are far from the overall data cloud,
-and therefore very likely to be erronous.  A good step at this point might be
+and therefore very likely to be erroneous  A good step at this point might be
 to find the individual cycles/profiles containing those stray points. This type
 of analysis can be found at our Youtube page in video 08
 (https://youtu.be/nN4xs0wCnB4) and video 09 (https://youtu.be/dYzEO5S2GBw).
@@ -233,7 +233,7 @@ documentation for `useAdjusted()` and illustrated the following flowchart.
 ![Figure 4: Flow chart for `useAdjusted()`.](../man/figures/useAdjustedDiagram.png)
 
 One example where it is useful to use adjusted data is when considering oxygen.
-Often times, BCG sensors have calibration issues and more specifically for
+Often times, BGC sensors have calibration issues and more specifically for
 oxygen optodes, floats can initially read low compared to climatology. In the
 example below we used the built in data set, named SD5903586_001.nc, to focus on
 the oxygen in the first cycle with float `ID` 5903586 in the synthetic data.
@@ -352,7 +352,7 @@ summary(unlist(argos[["salinity"]]))
 summary(unlist(clean[["salinity"]]))
 ```
 This indicates no "bad" data were taken away, and it is up to the user to
-determine the validy of the data.
+determine the validity of the data.
 
 **Exercise 4** Use the same `ID` and cycle as the previous example to determine
 if there is a statistically significant difference between raw and adjusted

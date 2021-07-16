@@ -2,7 +2,7 @@
 
 #' Read argo profiles from local files
 #'
-#' This works with either a vector of netCDF files,
+#' This works with either a vector of NetCDF files,
 #' or a [`argoFloats-class`] object of type `"profiles"`, as
 #' created by [getProfiles()].
 #' During the reading, argo profile objects are created with [oce::read.argo()]
@@ -15,13 +15,13 @@
 #' on this function, see section 2 of Kelley et al. (2021).
 #'
 #' @param profiles either (1) a character vector that holds
-#' the names of netcfd files or (2) an [`argoFloats-class`]
+#' the names of NetCDF files or (2) an [`argoFloats-class`]
 #' object created by [getProfiles()]. In the first case, any
 #' items that start with `"ftp:"` are taken to represent
 #' the full paths to remote files, and these first downloaded
 #' to the `destdir` directory using [getProfileFromUrl()].
 #'
-#' @param FUN a function that reads the netcdf files in which the argo
+#' @param FUN a function that reads the NetCDF files in which the argo
 #' profiles are stored.  If `FUN` not provided, then it defaults
 #' to [oce::read.argo()].  Only experts should consider anything
 #' other than this default, or a wrapper to it.
@@ -159,7 +159,7 @@ readProfiles <- function(profiles, FUN, destdir=argoDefaultDestdir(), quiet=FALS
             fullFileNames <- paste0(destdir, "/", fileNames)
             
             n <- length(fullFileNames)
-            argoFloatsDebug(debug, "reading", length(fullFileNames), "netcdf files ...\n")
+            argoFloatsDebug(debug, "reading", length(fullFileNames), "NetCDF files ...\n")
             useProgressBar <- !quiet && interactive()
             if (useProgressBar)
                 pb <- txtProgressBar(0, n, 0, style=3)

@@ -44,7 +44,7 @@ whether (and how) to indicate water depth; see \dQuote{Details}.}
 for the \code{which="map"} case, but only if no projection is called
 for in the \code{mapControl} argument.  With
 \code{geographical=0} (which is the default),
-the axis ticks are labelled with signed longitudes and latitudes, measured in
+the axis ticks are labeled with signed longitudes and latitudes, measured in
 degrees. The signs are dropped with \code{geographical=1}.
 In the \code{geographical=4} case, signs are also dropped, but hemispheres
 are indicated by writing \code{S}, \code{N}, \code{W} or \code{E} after axis tick labels, except
@@ -113,7 +113,7 @@ See Example 5D for a case with Mollweide projection.}
 
 \item{profileControl}{a list that permits control of the \code{which="profile"}
 case.  If provided, it may contain elements named \code{parameter} (a character value
-naming the quantity to plot on the x axis), \code{ytype} (a character value equalling
+naming the quantity to plot on the x axis), \code{ytype} (a character value equal to
 either \code{"pressure"} or \code{"sigma0"}) and \code{connect} (a logical value indicating
 whether to skip across \code{NA} values if the \code{type} argument is \code{"l"}, \code{"o"},
 or \code{"b"}).

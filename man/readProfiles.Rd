@@ -14,13 +14,13 @@ readProfiles(
 }
 \arguments{
 \item{profiles}{either (1) a character vector that holds
-the names of netcfd files or (2) an \code{\linkS4class{argoFloats}}
+the names of NetCDF files or (2) an \code{\linkS4class{argoFloats}}
 object created by \code{\link[=getProfiles]{getProfiles()}}. In the first case, any
 items that start with \code{"ftp:"} are taken to represent
 the full paths to remote files, and these first downloaded
 to the \code{destdir} directory using \code{\link[=getProfileFromUrl]{getProfileFromUrl()}}.}
 
-\item{FUN}{a function that reads the netcdf files in which the argo
+\item{FUN}{a function that reads the NetCDF files in which the argo
 profiles are stored.  If \code{FUN} not provided, then it defaults
 to \code{\link[oce:read.argo]{oce::read.argo()}}.  Only experts should consider anything
 other than this default, or a wrapper to it.}
@@ -53,7 +53,7 @@ contains a list named \code{argos} that holds objects
 that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 }
 \description{
-This works with either a vector of netCDF files,
+This works with either a vector of NetCDF files,
 or a \code{\linkS4class{argoFloats}} object of type \code{"profiles"}, as
 created by \code{\link[=getProfiles]{getProfiles()}}.
 During the reading, argo profile objects are created with \code{\link[oce:read.argo]{oce::read.argo()}}

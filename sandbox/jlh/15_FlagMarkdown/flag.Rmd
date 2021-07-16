@@ -22,8 +22,8 @@ Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the
 data found at the Data Assembly Centers are as accurate as possible. More
 specifically, testing is done in three levels: 1: Real time that complete
 checks on all measurements and assigned a quality flag within a 24-48 hour
-time frame, 2. Delayed mode, and 3. Regional scientific analyses of all float
-data with other available data. The procedures for regional analyses are still
+time frame, 2. Delayed mode, and 3. Regional scientific analyzes of all float
+data with other available data. The procedures for regional analyzes are still
 to be determined.
 
 At first glance, it can be difficult for users to understand the Quality Control

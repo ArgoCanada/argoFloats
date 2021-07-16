@@ -4,7 +4,7 @@ context("useAdjusted() on core data data")
 
 RMS <- function(x) sqrt(mean(x^2, na.rm=TRUE))
 
-test_that("useAdjusted() on realtime-mode file that holds Adjusted parameters", {
+test_that("useAdjusted() on real-time file that holds Adjusted parameters", {
           a <- readProfiles(system.file("extdata", "R3901602_163.nc", package="argoFloats"), quiet=TRUE)
           # fallback="NA" case. First we check whether <PARAM> copied, then it's flags.
           aNA <- useAdjusted(a)
@@ -20,7 +20,7 @@ test_that("useAdjusted() on realtime-mode file that holds Adjusted parameters", 
           }
 })
 
-test_that("useAdjusted() on realtime-mode file that holds Adjusted parameters (S faked to NA)", {
+test_that("useAdjusted() on real-time file that holds Adjusted parameters (S faked to NA)", {
           a <- readProfiles(system.file("extdata", "R3901602_163.nc", package="argoFloats"), quiet=TRUE)
           # FAKE: set all salinityAdjusted to NA to test fallback="raw"
           fake <- a

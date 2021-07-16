@@ -11,7 +11,7 @@ test_that("useAdjusted() on BGC (synthetic) delayed-mode data", {
           # this file was originally equal to "DDDDARR", for variables PRES TEMP
           # PSAL DOXY CHLA BBP700 NITRATE.  We can do this by changing the last
           # 'D' entry to 'R", to make it look as though the oxygen data are in
-          # realtime mode.  Then, fallback=TRUE should return 'oxygen' from
+          # real-time.  Then, fallback=TRUE should return 'oxygen' from
           # the original, instead of copying over the oxygenAdjusted values.
           aFake <- a
           aFake@data$argos[[1]]@metadata$parameterDataMode <- "DDDRARR"

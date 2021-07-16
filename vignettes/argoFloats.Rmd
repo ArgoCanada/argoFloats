@@ -37,7 +37,7 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 
 # Introduction
 
-The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on Core, Biogeochemical ("BGC") , or Deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, dataStateIndicator, etc. Once downloaded, such data sets can be analysed within `argoFloats` or using other R tools and packages.
+The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on Core, Biogeochemical ("BGC") , or Deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, dataStateIndicator, etc. Once downloaded, such data sets can be analyzed within `argoFloats` or using other R tools and packages.
 
 # Youtube Videos
 
@@ -137,7 +137,7 @@ The following output occurs:
 
 **Hint:** This command can be particularly useful when doing the `merge()` command, which will be explained in greater detail further down.
 
-It should be noted that the profile elements within `argoFloats` objects are stored as in the form of `argo` objects as defined by the `oce` package. This means that `argoFloats` users can rely on a wide variety of `oce` functions to analyse their data. The full suite of R tools is also available, and the vastness of that suite explains why `argoFloats` is written in R.
+It should be noted that the profile elements within `argoFloats` objects are stored as in the form of `argo` objects as defined by the `oce` package. This means that `argoFloats` users can rely on a wide variety of `oce` functions to analyze their data. The full suite of R tools is also available, and the vastness of that suite explains why `argoFloats` is written in R.
 
 # Function Details
 
@@ -226,7 +226,7 @@ The next step within the `argoFloats` package is the `getProfiles()` function. T
 
 ## readProfiles()
 
-The `readProfiles()` command works with either a list of local netCDF files, or a `argoFloats` object type `profiles`, as created by `getProfiles()`.
+The `readProfiles()` command works with either a list of local NetCDF files, or a `argoFloats` object type `profiles`, as created by `getProfiles()`.
 
 The command can be useful for analyzing individual profiles, for example:
 

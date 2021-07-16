@@ -146,7 +146,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' for the `which="map"` case, but only if no projection is called
 #' for in the `mapControl` argument.  With
 #' `geographical=0` (which is the default),
-#' the axis ticks are labelled with signed longitudes and latitudes, measured in
+#' the axis ticks are labeled with signed longitudes and latitudes, measured in
 #' degrees. The signs are dropped with `geographical=1`.
 #' In the `geographical=4` case, signs are also dropped, but hemispheres
 #' are indicated by writing `S`, `N`, `W` or `E` after axis tick labels, except
@@ -216,7 +216,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'
 #' @param profileControl a list that permits control of the `which="profile"`
 #' case.  If provided, it may contain elements named `parameter` (a character value
-#' naming the quantity to plot on the x axis), `ytype` (a character value equalling
+#' naming the quantity to plot on the x axis), `ytype` (a character value equal to
 #' either `"pressure"` or `"sigma0"`) and `connect` (a logical value indicating
 #' whether to skip across `NA` values if the `type` argument is `"l"`, `"o"`,
 #' or `"b"`).

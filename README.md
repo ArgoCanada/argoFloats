@@ -23,11 +23,11 @@ Once things are set up as above, it will be possible to use all the features of
 functions, and in the vignette that is built into the package, both of which
 are displayed on the [user-oriented
 website](https://argocanada.github.io/argoFloats/index.html). Note that the
-vignette also lists youtube videos about the package.
+vignette also lists Youtube videos about the package.
 
 As a practical example, the code block given below shows how to create a map
 and a temperature-salinity diagram for Argo float profiles near Abaco Island in
-the Bahamas. The key steps, many of which are common to most analyses using the
+the Bahamas. The key steps, many of which are common to most analyzes using the
 package, are as follows.
 
 1. The `getIndex` function is used to download a worldwide index of float
