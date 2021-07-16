@@ -111,7 +111,7 @@
 <ol>
 <li><p>The <code>getIndex</code> function is used to download a worldwide index of float profiles. (Use <code><a href="reference/getIndex.html">?getIndex</a></code> to learn more about this function, and note in particular the <code>destdir</code> argument, which determines where the index and other argo files will be stored locally.)</p></li>
 <li><p>The <code>subset</code> function is used to narrow the region of interest, yielding 39 profiles as of mid-June, 2020.</p></li>
-<li><p><code>getProfiles</code> is used to download the netcdf files that contain the profile measurements.</p></li>
+<li><p><code>getProfiles</code> is used to download the NetCDF files that contain the profile measurements.</p></li>
 <li><p><code>readProfiles</code> is used to read those files.</p></li>
 <li><p><code>applyQC</code> is used to set questionable data to <code>NA</code>. This uses quality-control (QC) flags that are present in the argo data.</p></li>
 <li><p><code>plot</code> is used to create a map plot. The image shows water depth in metres, determined through a call to the <code>getNOAA.bathy</code> function in the <code>marmap</code> package. For context, a star is drawn to indicate the centre of he focus region. A label is drawn above the map, showing the number of profiles. This illustrates the use of <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code>, a generic R function that is used in argoFloats to access data and metadata elements in argoFloats objects, as well as things that can be computed from these elements, such as seawater density, etc. Use <code><a href="reference/%5B%5B,argoFloats-method.html">?"[[,argoFloats-method"</a></code> to see the details of how <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code> works.</p></li>
@@ -126,9 +126,9 @@
 <span class="co">## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.</span>
 <span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">indexAll</span>,
                 circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.06</span>,latitude<span class="op">=</span><span class="fl">26.54</span>,radius<span class="op">=</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## 3. Get netcdf files for these profiles, saving to ~/data/argo by default.</span>
+<span class="co">## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.</span>
 <span class="va">profiles</span>  <span class="op">&lt;-</span> <span class="fu"><a href="reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">index</span><span class="op">)</span>
-<span class="co">## 4. Read the netcdf files.</span>
+<span class="co">## 4. Read the NetCDF files.</span>
 <span class="va">argos</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="va">profiles</span><span class="op">)</span>
 <span class="co">## 5. Examine QC flags, and set questionable data to NA.</span>
 <span class="va">argosClean</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/applyQC.html">applyQC</a></span><span class="op">(</span><span class="va">argos</span><span class="op">)</span>
