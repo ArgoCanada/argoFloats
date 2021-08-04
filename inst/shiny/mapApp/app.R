@@ -29,14 +29,21 @@ overallHelp <- "This GUI has two tabs, the Main and Settings tab.<br><br> On the
 
 
 ui <- shiny::fluidPage(
+
+    # Header Panel
     shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
     shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
     style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
-    shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
-    shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
+    shiny::fluidRow(
+        shiny::uiOutput(outputId="UIwidget")),
+    shiny::fluidRow(
+        shiny::column(7, shiny::uiOutput(outputId="UIview")),
         shiny::column(2, shiny::uiOutput(outputId="UIID")),
         shiny::column(3, shiny::uiOutput(outputId="UIfocus"))),
-    shiny::fluidRow(shiny::uiOutput(outputId="UIinfo")),
+    shiny::fluidRow(
+        shiny::uiOutput(outputId="UIinfo")),
+
+    # Main Panel
     shiny::mainPanel(shiny::tabsetPanel(type="tab",
             shiny::tabPanel("Main", value=1),
             shiny::tabPanel("Settings", value=3,
@@ -49,54 +56,52 @@ ui <- shiny::fluidPage(
 
     shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
         shiny::fluidRow(
-                        shiny::mainPanel(
-            shiny::column(3, shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-            shiny::column(3, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
-            shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
-                    shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                        shiny::selectInput("Cborder", "Border Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))
-            )),
+            shiny::mainPanel(
+                shiny::column(3, shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
+                shiny::column(3, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+                shiny::column(3, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
+                shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
+                        shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                            shiny::selectInput("Cborder", "Border Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))
+                )),
 
         shiny::fluidRow(
             shiny::column(2, shiny::selectInput("CPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
             shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1)))),
 
     shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
-                            shiny::mainPanel(
-        shiny::fluidRow(
-            shiny::column(3, shiny::selectInput("Bcolour", "Symbol Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-            shiny::column(3, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
-            shiny::column(3,shiny::conditionalPanel("input.Bsymbol== 21",
-                    shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                        shiny::selectInput("Bborder", "Border Colour",
-                            choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
-        shiny::fluidRow(
-            shiny::column(3, shiny::selectInput("BPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
+        shiny::mainPanel(
+            shiny::fluidRow(
+                shiny::column(3, shiny::selectInput("Bcolour", "Symbol Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
+                shiny::column(3, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+                shiny::column(3, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
+                shiny::column(3,shiny::conditionalPanel("input.Bsymbol== 21",
+                        shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                            shiny::selectInput("Bborder", "Border Colour",
+                                choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
+            shiny::fluidRow(
+                shiny::column(3, shiny::selectInput("BPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
+                shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
     shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
-                            shiny::mainPanel(
-        shiny::fluidRow(
-            shiny::column(3, shiny::selectInput("Dcolour", "Symbol Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-            shiny::column(3, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
-            shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
-                    shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                        shiny::selectInput("Dborder", "Border Colour",
-                            choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
-        shiny::fluidRow(
-            shiny::column(3, shiny::selectInput("DPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
+        shiny::mainPanel(
+            shiny::fluidRow(
+                shiny::column(3, shiny::selectInput("Dcolour", "Symbol Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
+                shiny::column(3, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+                shiny::column(3, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
+                shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
+                        shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                            shiny::selectInput("Dborder", "Border Colour",
+                                choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
+            shiny::fluidRow(
+                shiny::column(3, shiny::selectInput("DPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
+                shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
 
-    ## using withSpinner does not work here
     shiny::conditionalPanel("input.tabselected!=3",
         shiny::fluidRow(shiny::plotOutput("plotMap",
                 hover=shiny::hoverOpts("hover"),
                 dblclick=shiny::dblclickOpts("dblclick"),
                 brush=shiny::brushOpts("brush", delay=2000, resetOnNew=TRUE)))))
 
-## @importFrom shiny actionButton brushOpts checkboxGroupInput column dblclickOpts fluidPage fluidRow headerPanel HTML p plotOutput selectInput showNotification tags textInput
 server <- function(input, output, session)
 {
     lastHoverMessage <- "" # used with 'p' keystroke
@@ -198,8 +203,7 @@ server <- function(input, output, session)
 
     output$UIview <- shiny::renderUI({
         if (argoFloats:::argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-        shiny::removeNotification(notificationId)
-        #notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
+            shiny::removeNotification(notificationId)
             shiny::checkboxGroupInput("view",
                 label="View",
                 choiceNames=list(shiny::tags$span("Core",style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Ccolour == "default", colDefaults$core, input$Ccolour)))), collapse=''))),
