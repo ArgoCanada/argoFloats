@@ -69,7 +69,7 @@ legend("bottomright", pch=c(2,1), legend=c("Raw", "Adjusted"))
 \references{
 \enumerate{
 \item Argo Data Management Team. "Argo User's Manual V3.4,"
-January 20, 2021. \url{https://archimer.ifremer.fr/doc/00187/29825/}
+January 20, 2021. \verb{https://archimer.ifremer.fr/doc/00187/29825/}
 \item Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
 Argo data. Frontiers in Marine Science, (8), 636922.
 \doi{10.3389/fmars.2021.635922}

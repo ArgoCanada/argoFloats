@@ -218,7 +218,7 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 #'
 #' @references
 #' 1. Argo Data Management Team. "Argo User's Manual V3.4,"
-#' January 20, 2021. <https://archimer.ifremer.fr/doc/00187/29825/>
+#' January 20, 2021. `https://archimer.ifremer.fr/doc/00187/29825/`
 #'
 #' 2. Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
 #' Argo data. Frontiers in Marine Science, (8), 636922.

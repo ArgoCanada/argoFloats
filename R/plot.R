@@ -375,7 +375,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
-#' \doi{10.13155/29825}
+#' `doi:10.13155/29825`
 #'
 #' 2. Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
 #' Argo data. Frontiers in Marine Science, (8), 636922.
