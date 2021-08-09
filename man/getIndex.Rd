@@ -109,9 +109,9 @@ The names of these items are determined automatically from
 Some expertise is required in deciding on the value for the
 \code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of June 2020, the
 FTP sites
-\url{ftp://usgodae.org/pub/outgoing/argo}
+\verb{ftp://usgodae.org/pub/outgoing/argo}
 and
-\url{ftp://ftp.ifremer.fr/ifremer/argo}
+\verb{ftp://ftp.ifremer.fr/ifremer/argo}
 contain multiple index files, as listed in the left-hand column of the
 following table. The middle column lists nicknames
 for some of the files.  These can be provided as the \code{file} argument,

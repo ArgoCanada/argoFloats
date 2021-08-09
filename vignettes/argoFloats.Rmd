@@ -45,18 +45,18 @@ As an adjunct to the written documentation, the following videos are provided, t
 
 | Video Name                                             | Creators                   | Date         | URL                            |
 |--------------------------------------------------------|----------------------------|--------------|--------------------------------|
-| argoFloats R 01: Introduction                          | Dan Kelley & Jaimie Harbin | Apr  9, 2020 | <https://youtu.be/xeBoFbb66Nk> |
-| argoFloats R 02: TS plot near Bermuda                  | Jaimie Harbin & Dan Kelley | Apr 24, 2020 | <https://youtu.be/ZoTrVEMG5Qo> |
-| argoFloats R 03: new website                           | Jaimie Harbin & Dan Kelley | Apr 30, 2020 | <https://youtu.be/lOvCrRDTmTs> |
-| argoFloats R 04: subset by ocean or polygon            | Jaimie Harbin & Dan Kelley | May  7, 2020 | <https://youtu.be/tcGRB479Udk> |
-| argoFloats R 05: TS diagram, colour-coded by oxygen    | Jaimie Harbin & Dan Kelley | May 14, 2020 | <https://youtu.be/Y_SxjcOnW04> |
-| argoFloats R 06: trajectory plot, colour coded by time | Jaimie Harbin & Dan Kelley | May 28, 2020 | <https://youtu.be/7BB3UuwjUqo> |
-| argoFloats R 07: maps with bathymetry                  | Jaimie Harbin & Dan Kelley | Jun  4, 2020 | <https://youtu.be/Lc32MTMCbbI> |
-| argoFloats R 08: Introduction to quality control flags | Jaimie Harbin & Dan Kelley | Aug 12, 2020 | <https://youtu.be/nN4xs0wCnB4> |
-| argoFloats R 09: Advanced Quality Control              | Dan Kelley & Jaimie Harbin | Aug 27, 2020 | <https://youtu.be/dYzEO5S2GBw> |
-| argoFloats R 10: Using adjusted data streams           | Dan Kelley & Jaimie Harbin | Sep  3, 2020 | <https://youtu.be/AuauWeUnopc> |
-| argoFloats R 11: mapApp() | Dan Kelley & Jaimie Harbin | Sep 21, 2020 |  https://youtu.be/PEkIBwXLLpE |
-| argoFloats R 12: dataStateIndicator() | Dan Kelley & Jaimie Harbin | Nov 13, 2020 | https://youtu.be/RhLmT5S_XzU |
+| argoFloats R 01: Introduction                          | Dan Kelley & Jaimie Harbin | Apr  9, 2020 | `https://youtu.be/xeBoFbb66Nk` |
+| argoFloats R 02: TS plot near Bermuda                  | Jaimie Harbin & Dan Kelley | Apr 24, 2020 | `https://youtu.be/ZoTrVEMG5Qo` |
+| argoFloats R 03: New website                           | Jaimie Harbin & Dan Kelley | Apr 30, 2020 | `https://youtu.be/lOvCrRDTmTs` |
+| argoFloats R 04: Subset by ocean or polygon            | Jaimie Harbin & Dan Kelley | May  7, 2020 | `https://youtu.be/tcGRB479Udk` |
+| argoFloats R 05: TS diagram, colour-coded by oxygen    | Jaimie Harbin & Dan Kelley | May 14, 2020 | `https://youtu.be/Y_SxjcOnW04` |
+| argoFloats R 06: Trajectory plot, colour coded by time | Jaimie Harbin & Dan Kelley | May 28, 2020 | `https://youtu.be/7BB3UuwjUqo` |
+| argoFloats R 07: Maps with bathymetry                  | Jaimie Harbin & Dan Kelley | Jun  4, 2020 | `https://youtu.be/Lc32MTMCbbI` |
+| argoFloats R 08: Introduction to quality control flags | Jaimie Harbin & Dan Kelley | Aug 12, 2020 | `https://youtu.be/nN4xs0wCnB4` |
+| argoFloats R 09: Advanced Quality Control              | Dan Kelley & Jaimie Harbin | Aug 27, 2020 | `https://youtu.be/dYzEO5S2GBw` |
+| argoFloats R 10: Using adjusted data streams           | Dan Kelley & Jaimie Harbin | Sep  3, 2020 | `https://youtu.be/AuauWeUnopc` |
+| argoFloats R 11: mapApp()                              | Dan Kelley & Jaimie Harbin | Sep 21, 2020 | `https://youtu.be/PEkIBwXLLpE` |
+| argoFloats R 12: dataStateIndicator()                  | Dan Kelley & Jaimie Harbin | Nov 13, 2020 | `https://youtu.be/RhLmT5S_XzU` |
 
 
 # Preliminary Setup

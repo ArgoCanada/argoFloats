@@ -201,7 +201,7 @@ right still contains several data points that are far from the overall data clou
 and therefore very likely to be erroneous  A good step at this point might be
 to find the individual cycles/profiles containing those stray points. This type
 of analysis can be found at our Youtube page in video 08
-(https://youtu.be/nN4xs0wCnB4) and video 09 (https://youtu.be/dYzEO5S2GBw).
+(`https://youtu.be/nN4xs0wCnB4`) and video 09 (`https://youtu.be/dYzEO5S2GBw`).
 
 **Exercise 3** : Use `applyQC()` on float with `ID` 4900845 from exercise 1 and
 plot comparing TS diagrams. Do the plots look different? Use basic R functions
