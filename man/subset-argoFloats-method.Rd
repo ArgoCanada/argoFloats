@@ -153,11 +153,12 @@ cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
 index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 
 # Exampe 2B: subset a 300 km radius around Panama using "maps" package
-if (requireNamespace("maps")) {
-    data(world.cities, package="maps")
-    ai <- getIndex()
-    panama <- subset(world.cities, name=="Panama")
-    index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
+\dontrun{
+library("maps")
+data(world.cities)
+ai <- getIndex()
+panama <- subset(world.cities, name=="Panama")
+index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
 }
 
 # Example 3: subset to a rectangle near Abaca Island
