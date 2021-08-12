@@ -51,47 +51,52 @@ uiMapApp <- shiny::fluidPage(
 
     shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
         shiny::fluidRow(
-                        shiny::mainPanel(
-            shiny::column(3, shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-            shiny::column(3, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
-            shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
-                    shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                        shiny::selectInput("Cborder", "Border Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))
-            )),
+            shiny::mainPanel(
+                shiny::column(3, shiny::selectInput("Ccolour", "Symbol Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
+                shiny::column(3, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+                shiny::column(3, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
+                shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
+                        shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                            shiny::selectInput("Cborder", "Border Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))
+                )),
 
         shiny::fluidRow(
             shiny::column(2, shiny::selectInput("CPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
             shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1)))),
 
     shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
-                            shiny::mainPanel(
-        shiny::fluidRow(
-            shiny::column(3, shiny::selectInput("Bcolour", "Symbol Colour", choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-            shiny::column(3, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
-            shiny::column(3,shiny::conditionalPanel("input.Bsymbol== 21",
-                    shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                        shiny::selectInput("Bborder", "Border Colour",
-                            choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
-        shiny::fluidRow(
-            shiny::column(3, shiny::selectInput("BPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
+        shiny::mainPanel(
+            shiny::fluidRow(
+                shiny::column(3, shiny::selectInput("Bcolour", "Symbol Colour",
+                        choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"),
+                        selected="default")),
+                shiny::column(3, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+                shiny::column(3, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
+                shiny::column(3,shiny::conditionalPanel("input.Bsymbol== 21",
+                        shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                            shiny::selectInput("Bborder", "Border Colour",
+                                choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
+            shiny::fluidRow(
+                shiny::column(3, shiny::selectInput("BPcolour", "Path Colour",
+                        choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"),
+                        selected="default")),
+                shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
     shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
-                            shiny::mainPanel(
-        shiny::fluidRow(
-            shiny::column(3, shiny::selectInput("Dcolour", "Symbol Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-            shiny::column(3, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
-            shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
-                    shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                        shiny::selectInput("Dborder", "Border Colour",
-                            choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
-        shiny::fluidRow(
-            shiny::column(3, shiny::selectInput("DPcolour", "Path Colour",choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
-            shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
+        shiny::mainPanel(
+            shiny::fluidRow(
+                shiny::column(3, shiny::selectInput("Dcolour", "Symbol Colour",
+                        choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
+                shiny::column(3, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+                shiny::column(3, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
+                shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
+                        shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                            shiny::selectInput("Dborder", "Border Colour",
+                                choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="black"))))),
+            shiny::fluidRow(
+                shiny::column(3, shiny::selectInput("DPcolour", "Path Colour",
+                        choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"), selected="default")),
+                shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
 
-    ## using withSpinner does not work here
     shiny::conditionalPanel("input.tabselected!=3",
         shiny::fluidRow(shiny::plotOutput("plotMap",
                 hover=shiny::hoverOpts("hover"),
@@ -111,14 +116,14 @@ serverMapApp <- function(input, output, session)
         stop("must install.packages('shiny') for mapApp() to work")
     ## State variable: reactive!
     state <- shiny::reactiveValues(xlim=c(-180, 180),
-                                   ylim=c(-90, 90),
-                                   startTime=startTime,
-                                   endTime=endTime,
-                                   focus="all",
-                                   action=NULL,
-                                   focusID=NULL,
-                                   view=c("core", "deep", "bgc"),
-                                   hoverIsPasted=FALSE)
+        ylim=c(-90, 90),
+        startTime=startTime,
+        endTime=endTime,
+        focus="all",
+        action=NULL,
+        focusID=NULL,
+        view=c("core", "deep", "bgc"),
+        hoverIsPasted=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
@@ -200,8 +205,8 @@ serverMapApp <- function(input, output, session)
 
     output$UIview <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-        shiny::removeNotification(notificationId)
-        #notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
+            shiny::removeNotification(notificationId)
+            #notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
             shiny::checkboxGroupInput("view",
                 label="View",
                 choiceNames=list(shiny::tags$span("Core",style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Ccolour == "default", colDefaults$core, input$Ccolour)))), collapse=''))),
@@ -301,14 +306,14 @@ serverMapApp <- function(input, output, session)
     })
 
     shiny::observeEvent(input$view,
-                        {
-                            state$view <<- input$view
-                        }, ignoreNULL=FALSE)
+        {
+            state$view <<- input$view
+        }, ignoreNULL=FALSE)
 
-     shiny::observeEvent(input$action,
-                        {
-                            state$action <<- input$action
-                        }, ignoreNULL=FALSE)
+    shiny::observeEvent(input$action,
+        {
+            state$action <<- input$action
+        }, ignoreNULL=FALSE)
 
     shiny::observeEvent(input$goE,
         {
@@ -475,8 +480,6 @@ serverMapApp <- function(input, output, session)
                 }
             }
         })
-    #shiny::observeEvent(input$Ccolour,
-    #message("the core symbol= ",input$Csymbol," the bgc symbol= ", input$Bsymbol, " the deep symbol= ", input$Dsymbol))
 
     shiny::observeEvent(input$focus,
         {
@@ -512,9 +515,9 @@ serverMapApp <- function(input, output, session)
                 state$startTime <<- startTime
                 state$endTime <<- endTime
                 shiny::updateTextInput(session, "start",
-                                       value=format(state$startTime, "%Y-%m-%d"))
+                    value=format(state$startTime, "%Y-%m-%d"))
                 shiny::updateTextInput(session, "end",
-                                       value=format(state$endTime, "%Y-%m-%d"))
+                    value=format(state$endTime, "%Y-%m-%d"))
             }
         })
 
@@ -841,6 +844,4 @@ mapApp <- function(age=argoDefaultIndexAge(),
         stop("must install.packages(\"shiny\") for this to work")
     print(shiny::shinyApp(ui=uiMapApp, server=serverMapApp))
 }
-
-#shiny::shinyApp(ui, server)
 
