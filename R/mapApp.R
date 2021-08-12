@@ -308,7 +308,7 @@ serverMapApp <- function(input, output, session)
     shiny::observeEvent(input$view,
         {
             state$view <<- input$view
-        }, ignoreNULL=FALSE)
+        })
 
     shiny::observeEvent(input$action,
         {
