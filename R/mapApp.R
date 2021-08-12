@@ -3,7 +3,7 @@
 appName <- "mapApp"
 appVersion <- "0.1"
 
-colDefaults <- list(core="7", bgc="#05f076", deep="6")
+colDefaults <- list(core="#F5C710", bgc="#05f076", deep="#CD0BBC")
 
 ## Default start and end times
 endTime <- as.POSIXlt(Sys.time(), tz="UTC")
