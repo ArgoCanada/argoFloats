@@ -219,7 +219,7 @@ serverMapApp <- function(input, output, session)
 
     output$UIwidget <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-            shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:1em;\">  ",appName, appVersion,"</b>"))),
+            shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:2em;\">  ",appName, appVersion,"</b>"))),
                 shiny::actionButton("help", "Help"),
                 shiny::actionButton("code", "Code"),
                 shiny::actionButton("goW", shiny::HTML("&larr;")),
