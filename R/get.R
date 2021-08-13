@@ -1,16 +1,40 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 argoFloatsCacheEnv <- new.env(parent=emptyenv())
+
+#' Check whether an item is cached
+#'
+#' @param name character value, naming the item.
+#' @param debug an integer, passed to [argoFloatsDebug()].
+#'
+#' @export
+#'
+#' @author Dan Kelley, making a thin copy of code written by Dewey Dunnington
 argoFloatsIsCached <- function(name, debug=0)
 {
     argoFloatsDebug(debug, "in argoFloatsIsCached()\n")
     name %in% names(argoFloatsCacheEnv)
 }
+
+#' Get an item from the cache
+#'
+#' @param name character value, naming the item.
+#' @param debug an integer, passed to [argoFloatsDebug()].
+#'
+#' @export
 argoFloatsGetFromCache <- function(name, debug=0)
 {
     argoFloatsDebug(debug, "in argoFloatsGetFromCache()\n")
     argoFloatsCacheEnv[[name]]
 }
+
+#' Store an item in the cache
+#'
+#' @param name character value, naming the item.
+#' @param value the new contents of the item.
+#' @param debug an integer, passed to [argoFloatsDebug()].
+#'
+#' @export
 argoFloatsStoreInCache <- function(name, value, debug=0)
 {
     argoFloatsDebug(debug, "in argoFloatsStoreInCache()\n")
