@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Print debugging information. — argoFloatsDebug • argoFloats</title>
+<title>Check whether an item is cached — argoFloatsIsCached • argoFloats</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,12 +46,8 @@
 
 
 
-<meta property="og:title" content="Print debugging information. — argoFloatsDebug" />
-<meta property="og:description" content="This function is intended mainly for use within the package, but users may
-also call it directly in their own code.  Within the package, the value
-of debug is generally reduced by 1 on each nested function call, leading
-to indented messages. Most functions start and end with a call to
-argoFloatsDebug() that has style=&quot;bold&quot; and unindent=1." />
+<meta property="og:title" content="Check whether an item is cached — argoFloatsIsCached" />
+<meta property="og:description" content="Check whether an item is cached" />
 
 
 
@@ -137,80 +133,34 @@ argoFloatsDebug() that has style=&quot;bold&quot; and unindent=1." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Print debugging information.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/debug.R'><code>R/debug.R</code></a></small>
-    <div class="hidden name"><code>argoFloatsDebug.Rd</code></div>
+    <h1>Check whether an item is cached</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ArgoCanada/argoFloats/blob/master/R/get.R'><code>R/get.R</code></a></small>
+    <div class="hidden name"><code>argoFloatsIsCached.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function is intended mainly for use within the package, but users may
-also call it directly in their own code.  Within the package, the value
-of <code>debug</code> is generally reduced by 1 on each nested function call, leading
-to indented messages. Most functions start and end with a call to
-<code>argoFloatsDebug()</code> that has <code>style="bold"</code> and <code>unindent=1</code>.</p>
+    <p>Check whether an item is cached</p>
     </div>
 
-    <pre class="usage"><span class='fu'>argoFloatsDebug</span><span class='op'>(</span>
-  debug <span class='op'>=</span> <span class='fl'>0</span>,
-  <span class='va'>...</span>,
-  style <span class='op'>=</span> <span class='st'>"plain"</span>,
-  showTime <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  unindent <span class='op'>=</span> <span class='fl'>0</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>argoFloatsIsCached</span><span class='op'>(</span><span class='va'>name</span>, debug <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>name</th>
+      <td><p>character value, naming the item.</p></td>
+    </tr>
+    <tr>
       <th>debug</th>
-      <td><p>an integer specifying the level of debugging. Values greater
-than zero indicate that some printing should be done. Values greater
-than 3 are trimmed to 3. Many functions pass <code>debug=debug-1</code> down to
-deeper functions, which yields a nesting-indent format in the output.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>values to be printed, analogous to the <code>...</code> argument
-list of <code><a href='https://rdrr.io/r/base/cat.html'>cat()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>style</th>
-      <td><p>character value indicating special formatting, with <code>"plain"</code>
-for normal text, <code>"bold"</code> for bold-faced text, <code>"italic"</code> for italicized
-text, <code>"red"</code> for red text, <code>"green"</code> for green text, or <code>"blue"</code> for blue
-text. These codes may not be combined.</p></td>
-    </tr>
-    <tr>
-      <th>showTime</th>
-      <td><p>logical value indicating whether to preface message with
-the present time. This can be useful for learning about which operations
-are using the most time, but the default is not to show this, in the
-interests of brevity.</p></td>
-    </tr>
-    <tr>
-      <th>unindent</th>
-      <td><p>integer specifying the degree of reverse indentation
-to be done, as explained in the &#8220;Details&#8221; section.</p></td>
+      <td><p>an integer, passed to <code><a href='argoFloatsDebug.html'>argoFloatsDebug()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
-    <p>Dan Kelley</p>
+    <p>Dan Kelley, making a thin copy of code written by Dewey Dunnington</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
-<span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"plain text\n"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       plain text</div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"red text\n"</span>, style<span class='op'>=</span><span class='st'>"red"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #BB0000;'>      red text
-#&gt; </span></div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"blue text\n"</span>, style<span class='op'>=</span><span class='st'>"blue"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #0000BB;'>      blue text
-#&gt; </span></div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"bold text\n"</span>, style<span class='op'>=</span><span class='st'>"bold"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='font-weight: bold;'>      bold text
-#&gt; </span></div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"italic text with time stamp\n"</span>, style<span class='op'>=</span><span class='st'>"italic"</span>, showTime<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='font-style: italic;'>      [18:41:04] italic text with time stamp
-#&gt; </span></div><div class='input'><span class='co'># }</span>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
