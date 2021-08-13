@@ -270,7 +270,7 @@ plot(index6, bathymetry=FALSE)             # also, try using bathymetry=TRUE
 
 **Exercise 2:** Use the information from Figure 4 to compare Argo and CTD section sampling efforts.
 
-Figure 4 reveals that it takes almost 3 months of Argo sampling to reproduce a 1 month CTD section cruise. Additionally, it displayed that there are geographical gaps within the Argo data. On the other hand, it should be noted that by extending the latitude range, these gaps are quickly filled in. In conclusion, Argo sampling is much more cost effective, and it can allow for collection of more information (ie. nutrients, oxygen, backscattering, etc.) if such thing is desired.
+Figure 4 reveals that it takes almost 3 months of Argo sampling to reproduce a 1 month CTD section cruise. Additionally, it displayed that there are geographical gaps within the Argo data. On the other hand, it should be noted that by extending the latitude range, these gaps are quickly filled in. In conclusion, Argo sampling is much more cost effective, and it can allow for collection of more information (i.e. nutrients, oxygen, backscattering, etc.) if such thing is desired.
 
 **Exercise 3:** Using the profile in the previous example, plot a TS diagram.
 

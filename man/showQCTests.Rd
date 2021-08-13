@@ -99,7 +99,7 @@ showQCTests(a[[1]])
 
 }
 \references{
-Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 \code{doi:10.13155/29825}
 

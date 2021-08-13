@@ -59,7 +59,7 @@
 #'}
 #'
 #' @references
-#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' `doi:10.13155/29825`
 #'
@@ -178,7 +178,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #' showQCTests(a[[1]])
 #'
 #' @references
-#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' `doi:10.13155/29825`
 #'

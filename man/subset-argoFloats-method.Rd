@@ -67,17 +67,17 @@ POSIXt times, or character strings that \code{subset()} will convert to
 POSIXt times using \code{\link[=as.POSIXct]{as.POSIXct()}} with \code{tz="UTC"}. See example 6.
 \item A list named \code{institution} that holds a single character element that
 names the institution.  The permitted values are:
-\code{"AO"} for AOML, USA;
-\code{"BO"} for BODC, United Kingdom;
-\code{"CS"} for CSIRO, Australia;
-\code{"HZ"} for CSIO, China Second Institute of Oceanography;
+\code{"AO"} for Atlantic Oceanographic and Meteorological Laboratory;
+\code{"BO"} for British Oceanographic Data Centre;
+\code{"CS"} for Commonwealth Scientific and Industrial Research Organization;
+\code{"HZ"} for China Second Institute of Oceanography;
 \code{"IF"} for Ifremer, France;
-\code{"IN"} for INCOIS, India;
-\code{"JA"} for JMA, Japan;
-\code{"KM"} for KMA, Korea;
-\code{"KO"} for KORDI, Korea;
-\code{"ME"} for MEDS, Canada; and
-\code{"NM"} for NMDIS, China.
+\code{"IN"} for India National Centre for Ocean Information Services;
+\code{"JA"} for Japan Meteorological Agency;
+\code{"KM"} for Korea Meteorological Agency;
+\code{"KO"} for Korea Ocean Research and Development Institute;
+\code{"ME"} for Marine Environment Data Section; and
+\code{"NM"} for National Marine Data & Information Service.
 See example 7.
 \item A list named \code{deep} that holds a logical value indicating whether argo floats
 are deep argo (i.e. \code{profiler_type} 849, 862, and 864). See example 8.
@@ -289,7 +289,7 @@ if (requireNamespace("s2")) {
 }
 \references{
 \enumerate{
-\item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+\item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 \code{doi:10.13155/29825}.
 \item Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing

@@ -203,7 +203,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' has the same effect as the parameter `bathymetry`), `colLand` (which indicates the colour of the land), and `projection` (which
 #' may be `FALSE`, meaning to plot longitude and latitude on rectilinear axes,
 #' `TRUE`, meaning to plot with [oce::mapPlot()], using Mollweide projection that
-#' is suitable mainly for world-scaqle views, or a character value that will be
+#' is suitable mainly for world-scale views, or a character value that will be
 #' supplied to [oce::mapPlot()].  If a projection is used, then the positions
 #' of the Argo floats are plotted with [oce::mapPoints()], rather than with
 #' [points()], and if the user wishes to locate points with mouse clicks,
@@ -373,7 +373,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'}
 #'
 #' @references
-#' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' `doi:10.13155/29825`
 #'

@@ -101,7 +101,7 @@ case.  If provided, it may contain elements named \code{bathymetry} (which
 has the same effect as the parameter \code{bathymetry}), \code{colLand} (which indicates the colour of the land), and \code{projection} (which
 may be \code{FALSE}, meaning to plot longitude and latitude on rectilinear axes,
 \code{TRUE}, meaning to plot with \code{\link[oce:mapPlot]{oce::mapPlot()}}, using Mollweide projection that
-is suitable mainly for world-scaqle views, or a character value that will be
+is suitable mainly for world-scale views, or a character value that will be
 supplied to \code{\link[oce:mapPlot]{oce::mapPlot()}}.  If a projection is used, then the positions
 of the Argo floats are plotted with \code{\link[oce:mapPoints]{oce::mapPoints()}}, rather than with
 \code{\link[=points]{points()}}, and if the user wishes to locate points with mouse clicks,
@@ -354,7 +354,7 @@ plot(a, which="summary")
 }
 \references{
 \enumerate{
-\item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+\item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 \code{doi:10.13155/29825}
 \item Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing

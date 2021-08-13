@@ -49,17 +49,17 @@
 #'
 #' 7. A list named `institution` that holds a single character element that
 #' names the institution.  The permitted values are:
-#' `"AO"` for AOML, USA;
-#' `"BO"` for BODC, United Kingdom;
-#' `"CS"` for CSIRO, Australia;
-#' `"HZ"` for CSIO, China Second Institute of Oceanography;
+#' `"AO"` for Atlantic Oceanographic and Meteorological Laboratory;
+#' `"BO"` for British Oceanographic Data Centre;
+#' `"CS"` for Commonwealth Scientific and Industrial Research Organization;
+#' `"HZ"` for China Second Institute of Oceanography;
 #' `"IF"` for Ifremer, France;
-#' `"IN"` for INCOIS, India;
-#' `"JA"` for JMA, Japan;
-#' `"KM"` for KMA, Korea;
-#' `"KO"` for KORDI, Korea;
-#' `"ME"` for MEDS, Canada; and
-#' `"NM"` for NMDIS, China.
+#' `"IN"` for India National Centre for Ocean Information Services;
+#' `"JA"` for Japan Meteorological Agency;
+#' `"KM"` for Korea Meteorological Agency;
+#' `"KO"` for Korea Ocean Research and Development Institute;
+#' `"ME"` for Marine Environment Data Section; and
+#' `"NM"` for National Marine Data & Information Service.
 #' See example 7.
 #'
 #' 8. A list named `deep` that holds a logical value indicating whether argo floats
@@ -296,7 +296,7 @@
 #'}
 #'
 #' @references
-#' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
+#' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
 #' Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 #' `doi:10.13155/29825`.
 #' 2. Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
