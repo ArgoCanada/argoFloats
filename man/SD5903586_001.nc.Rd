@@ -7,8 +7,8 @@
 \title{Sample argo file (delayed synthetic BGC data)}
 \description{
 This is the NetCDF file for cycle 1 of Argo float SD5903586, downloaded from
-\url{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc}
-on 2020 June 24.
+\code{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc}
+on 2020 June 24 (this URL appears to be unreliable).
 As its filename indicates, it holds "synthetic" data
 in "delayed" mode. The oxygen values are adjusted by 16\%, as
 is shown here, and in the documentation for \code{\link[=useAdjusted]{useAdjusted()}}.
