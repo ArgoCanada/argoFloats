@@ -44,4 +44,5 @@ marmap_coord.*csv
 ^\.github$
 .gitCOMMIT_EDITMSG
 ^log.dat$
+^revdep$
 
