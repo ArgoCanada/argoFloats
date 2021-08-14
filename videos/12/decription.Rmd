@@ -1,0 +1,5 @@
+This video provides an overview of the dataStateIndicator. It then demonstrates how to subset by dataStateIndicator, for a dataset in the Arabian sea, to ensure the highest level of data processing.
+
+R language,oceanography,Dalhousie University,Argo float,computing,data processing
+
+

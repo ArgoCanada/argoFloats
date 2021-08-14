@@ -4,27 +4,41 @@
 \alias{readProfiles}
 \title{Read argo profiles from local files}
 \usage{
-readProfiles(profiles, FUN, destdir = "~/data/argo", silent = FALSE, debug = 0)
+readProfiles(
+  profiles,
+  FUN,
+  destdir = argoDefaultDestdir(),
+  quiet = FALSE,
+  debug = 0
+)
 }
 \arguments{
 \item{profiles}{either (1) a character vector that holds
-the names of netcfd files or (2) an \code{\linkS4class{argoFloats}}
+the names of NetCDF files or (2) an \code{\linkS4class{argoFloats}}
 object created by \code{\link[=getProfiles]{getProfiles()}}. In the first case, any
 items that start with \code{"ftp:"} are taken to represent
 the full paths to remote files, and these first downloaded
 to the \code{destdir} directory using \code{\link[=getProfileFromUrl]{getProfileFromUrl()}}.}
 
-\item{FUN}{a function that reads the netcdf files in which the argo
+\item{FUN}{a function that reads the NetCDF files in which the argo
 profiles are stored.  If \code{FUN} not provided, then it defaults
 to \code{\link[oce:read.argo]{oce::read.argo()}}.  Only experts should consider anything
 other than this default, or a wrapper to it.}
 
-\item{destdir}{a character value that specifies a directory into
-which to save downloaded files, in the case that they are
-provided in the \code{profiles} argument.}
+\item{destdir}{character value indicating the directory in which to store
+downloaded files. The default value is to compute this using
+\code{\link[=argoDefaultDestdir]{argoDefaultDestdir()}}, which returns \verb{~/data/argo} by default,
+although it also provides ways to set other values using
+\code{\link[=options]{options()}}.
+Set \code{destdir=NULL}
+if \code{destfile} is a filename with full path information.
+File clutter is reduced by creating a top-level directory called
+\code{data}, with subdirectories for various file types; see
+\dQuote{Examples}.}
 
-\item{silent}{a logical value (\code{FALSE} by default) indicating whether
-work silently, without displaying information about the progress.}
+\item{quiet}{logical value; use \code{TRUE} to show more
+verbose information when downloading files.
+(Problems will still be reported, though.)}
 
 \item{debug}{an integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,
@@ -39,7 +53,7 @@ contains a list named \code{argos} that holds objects
 that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 }
 \description{
-This works with either a vector of netCDF files,
+This works with either a vector of NetCDF files,
 or a \code{\linkS4class{argoFloats}} object of type \code{"profiles"}, as
 created by \code{\link[=getProfiles]{getProfiles()}}.
 During the reading, argo profile objects are created with \code{\link[oce:read.argo]{oce::read.argo()}}
@@ -49,7 +63,8 @@ or a replacement function provided as the \code{FUN} argument.
 By default, warnings are issued about any
 profiles in which 10 percent or more of the measurements are flagged
 with a quality-control code of 0, 3, 4, 6, 7, or 9 (see the
-\code{\link[=applyQC]{applyQC()}} documentation for the meanings of these codes).
+\code{\link[=applyQC]{applyQC()}} documentation for the meanings of these codes). For more
+on this function, see section 2 of Kelley et al. (2021).
 }
 \examples{
 # Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
@@ -59,14 +74,14 @@ data(index)
 index1 <- subset(index, 1)
 profiles <- getProfiles(index1)
 raw <- readProfiles(profiles)
-clean <- applyQC(profiles)
+clean <- applyQC(raw)
 par(mfrow=c(1, 2))
 file <- gsub(".*/", "",  profiles[[1]])
-aWithNA <- argosWithNA[[1]]
-plotTS(raw[[1]], eos="unesco", type="o")
+aWithNA <- clean[[1]]
+oce::plotTS(raw[[1]], eos="unesco", type="o")
 mtext(file, cex=0.7*par("cex"))
-aWithoutNA <- argosWithoutNA[[1]]
-plotTS(clean[[1]], eos="unesco", type="o")
+aWithoutNA <- raw[[1]]
+oce::plotTS(clean[[1]], eos="unesco", type="o")
 mtext(paste(file, "\n (after applying QC)"), cex=0.7*par("cex"))
 }
 
@@ -76,6 +91,11 @@ u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_00
 p <- readProfiles(u)
 }
 
+}
+\references{
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 \author{
 Dan Kelley

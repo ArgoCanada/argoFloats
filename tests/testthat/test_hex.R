@@ -1,5 +1,4 @@
 library(argoFloats)
-library(testthat)
 
 context("hex to bits")
 

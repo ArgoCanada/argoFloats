@@ -5,10 +5,10 @@
 \title{Get an Index of Available Argo Float Profiles}
 \usage{
 getIndex(
-  filename = "argo",
-  server = "auto",
-  destdir = "~/data/argo",
-  age = 1,
+  filename = "core",
+  server = argoDefaultServer(),
+  destdir = argoDefaultDestdir(),
+  age = argoDefaultIndexAge(),
   quiet = FALSE,
   keep = FALSE,
   debug = 0
@@ -25,18 +25,21 @@ that nicknames are expanded to the full filenames before saving.}
 the name of servers that supply argo data.  If more than
 one value is given, then these are tried sequentially until one
 is found to supply the index file named in the \code{filename} argument.
-As of May 2020, the two servers known to work are
-\code{"ftp://usgodae.org/pub/outgoing/argo"} and
-\code{"ftp://ftp.ifremer.fr/ifremer/argo"}.  These may be referred
-to with nicknames \code{"usgodae"} and \code{"ifremer"}.  As a further
-convenience, a third nickname (and the default for this argument)
-is also available: \code{"auto"} is expanded to \code{c("usgodae","ifremer")}.
-Note that if a nickname is not used, the character value(s) in \code{server}
-must start with \code{"ftp://"}.}
+As of December 2020, the three servers known to work are
+\code{"https://data-argo.ifremer.fr"}, \code{"ftp://ftp.ifremer.fr/ifremer/argo"} and
+\code{"ftp://usgodae.org/pub/outgoing/argo"}.
+These may be referred
+to with nicknames \code{"ifremer-https"}, \code{"ifremer"}and  \code{"usgodae"}.
+Any URL that can be used in \code{\link[curl:curl_download]{curl::curl_download()}} is a valid value provided
+that the file structure is identical to the mirrors listed above. See
+\code{\link[=argoDefaultServer]{argoDefaultServer()}} for how to provide a default value.}
 
 \item{destdir}{character value indicating the directory in which to store
-downloaded files. The default value of \code{"."} means to store the
-downloaded file in the present working directory.  Set \code{destdir=NULL}
+downloaded files. The default value is to compute this using
+\code{\link[=argoDefaultDestdir]{argoDefaultDestdir()}}, which returns \verb{~/data/argo} by default,
+although it also provides ways to set other values using
+\code{\link[=options]{options()}}.
+Set \code{destdir=NULL}
 if \code{destfile} is a filename with full path information.
 File clutter is reduced by creating a top-level directory called
 \code{data}, with subdirectories for various file types; see
@@ -44,7 +47,7 @@ File clutter is reduced by creating a top-level directory called
 
 \item{age}{numeric value indicating how old a downloaded file
 must be (in days), for it to be considered out-of-date.  The
-default, \code{age=1}, limits downloads to once per day, as a way
+default, \code{\link[=argoDefaultIndexAge]{argoDefaultIndexAge()}}, limits downloads to once per day, as a way
 to avoid slowing down a workflow with a download that might take
 a minute or so. Note that setting \code{age=0} will force a new
 download, regardless of the age of the local file, and that
@@ -56,7 +59,7 @@ progress indicators.  The default is to show such indicators.}
 \item{keep}{logical value indicating whether to retain the
 raw index file as downloaded from the server.  This is \code{FALSE}
 by default, indicating that the raw index file is to be
-discarded once it has been analysed.  Note that if \code{keep}
+discarded once it has been analyzed  Note that if \code{keep}
 is \code{TRUE}, then the supplied value of \code{age} is converted
 to 0, to force a new download.}
 
@@ -74,8 +77,7 @@ is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 This function gets an index of available Argo float profiles, typically
 for later use as the first argument to \code{\link[=getProfiles]{getProfiles()}}. The work is done
 either by downloading information from a data repository or by reusing an existing
-index (packaged within an \code{.rda} file) that was prepared by a recent call to the
-This choice is made behind the scenes, controlled by the \code{age} argument.
+index (packaged within an \code{.rda} file) that is controlled by the \code{age} argument behind the scenes.
 }
 \details{
 The first step is to construct a URL for downloading, based on the
@@ -95,23 +97,21 @@ function, holds a list named \code{index} that holds following elements:
 (see next paragraph).
 \item \code{server}, the URL at which the index was found, and from
 which \code{\link[=getProfiles]{getProfiles()}} can construct URLs from which to
-download the netcdf files for individual float profiles.
+download the NetCDF files for individual float profiles.
 \item \code{filename}, the argument provided here.
 \item \code{header}, the preliminary lines in the source file that start
 with the \verb{#} character.
 \item \code{data}, a data frame containing the items in the source file.
 The names of these items are determined automatically from
-\code{"argo"} and \code{"bgcargo"} files, but for \code{"merged"} files,
-the header is malformed (as of February 2020) and so the names
-are set based on the authors' inspection of a downloaded file.
+\code{"core"},\code{"bgcargo"}, \code{"synthetic"} files.
 }
 
 Some expertise is required in deciding on the value for the
 \code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of June 2020, the
 FTP sites
-\url{ftp://usgodae.org/pub/outgoing/argo}
+\verb{ftp://usgodae.org/pub/outgoing/argo}
 and
-\url{ftp://ftp.ifremer.fr/ifremer/argo}
+\verb{ftp://ftp.ifremer.fr/ifremer/argo}
 contain multiple index files, as listed in the left-hand column of the
 following table. The middle column lists nicknames
 for some of the files.  These can be provided as the \code{file} argument,
@@ -121,38 +121,42 @@ Note that the servers also provide files with names similar to those
 given in the table, but ending in \code{.txt}.  These are uncompressed
 equivalents of the \code{.gz} files that offer no advantage and take
 longer to download, so \code{\link[=getIndex]{getIndex()}} is not designed to work with them.
-Finally, note that, as of June 2020,
-the usgodae server does not supply \code{"synthetic"} files, but
-the ifremer server does; this is typically not a concern to users,
-because \code{getIndex} searches both servers for index files.
 \tabular{lll}{
 \emph{File Name}                           \tab \emph{Nickname}              \tab \emph{Contents}\cr
 \code{ar_greylist.txt}                     \tab -                       \tab Suspicious/malfunctioning floats\cr
 \code{ar_index_global_meta.txt.gz}         \tab -                       \tab Metadata files\cr
-\code{ar_index_global_prof.txt.gz}         \tab \code{"argo"}                \tab Argo data\cr
+\code{ar_index_global_prof.txt.gz}         \tab \code{"argo"} or \code{"core"}      \tab Argo data\cr
 \code{ar_index_global_tech.txt.gz}         \tab -                       \tab Technical files\cr
-\code{ar_index_global_traj.txt.gz}         \tab -                       \tab Trajectory files\cr
+\code{ar_index_global_traj.txt.gz}         \tab \code{"traj"}                \tab Trajectory files\cr
 \code{argo_bio-profile_index.txt.gz}       \tab \code{"bgc"} or \code{"bgcargo"}  \tab Biogeochemical Argo data (without S or T)\cr
-\code{argo_bio-traj_index.txt.gz}          \tab -                       \tab Bio-trajectory files\cr
-\code{argo_merge-profile_index.txt.gz}     \tab \code{"merge"} or \code{"merged"} \tab Merged \code{"argo"} and \code{"bgc"} data\cr
+\code{argo_bio-traj_index.txt.gz}          \tab \code{"bio-traj"}            \tab Bio-trajectory files\cr
 \code{argo_synthetic-profile_index.txt.gz} \tab \code{"synthetic"}           \tab Synthetic data, successor to \code{"merge"}\cr
 }
+Note: as of Dec 01,2020 the user will no longer have the option to use \code{"argo"} as a filename argument. Instead, \code{"core"} will
+be used.
 
 The next step after using \code{\link[=getIndex]{getIndex()}} is usually to
 use \code{\link[=getProfiles]{getProfiles()}}, which downloads or checks for local
 copies of the per-profile data files that are listed in an
 index, and this is typically followed by a call to
 \code{\link[=readProfiles]{readProfiles()}}, which reads the local files, yielding
-an object that can be plotted or analysed in other ways.
+an object that can be plotted or analyzed in other ways.
+For more on this function, see section 2 of Kelley et al. (2021).
 }
 \examples{
 \dontrun{
-# Download an index of merged argo/bgc-argo floats, and plot temporal coverage.
+# Download an index of synthetic Argo/BGC-Argo floats, and plot temporal coverage.
 library(argoFloats)
-i <- getIndex("merged")
+i <- getIndex("synthetic")
 summary(i)
-hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)}
+hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
+}
 
+}
+\references{
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 \author{
 Dan Kelley

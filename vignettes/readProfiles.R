@@ -2,12 +2,9 @@ if (!interactive()) png("readProfiles.png", unit="in", width=5, height=2.8, poin
 par((mar=c(3, 2.5, 1, 1)+0.1), mgp=c(2, 0.7, 0), cex.lab=0.9)
 library(argoFloats)
 data(index)
-sub <- subset(index, 1:2) # To subset for profiles
-profiles <- getProfiles(sub)
+index1 <- subset(index, 1:2) # To subset for profiles
+profiles <- getProfiles(index1)
 argos <- readProfiles(profiles)
 argosClean <- applyQC(argos)
-pressure <- argosClean[['argos']][[1]][['pressure']]
-temperature <- argosClean[['argos']][[1]][['temperature']]
-plot(temperature, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
-     xlab='Temperature (C)', ylab='Depth (dbar)')
+plot(argosClean, which="profile")
 if (!interactive()) dev.off()

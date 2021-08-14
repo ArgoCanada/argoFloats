@@ -7,7 +7,7 @@
 hexToBits(hex)
 }
 \arguments{
-\item{hex}{A vector of character values corresponding to a sequence of one or more
+\item{hex}{a vector of character values corresponding to a sequence of one or more
 hexadecimal digits (i.e. \code{"0"} through \code{"9"},\code{"a"} through \code{"f"}, or \code{"A"} through \code{"F"}).}
 }
 \value{

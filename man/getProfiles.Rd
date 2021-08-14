@@ -2,12 +2,12 @@
 % Please edit documentation in R/get.R
 \name{getProfiles}
 \alias{getProfiles}
-\title{Get Profiles Named in an argoFloats Index}
+\title{Get "cycles"/"trajectory" Files Named in an argoFloats Index}
 \usage{
 getProfiles(
   index,
-  destdir = NULL,
-  force = FALSE,
+  destdir = argoDefaultDestdir(),
+  age = argoDefaultProfileAge(),
   retries = 3,
   skip = TRUE,
   quiet = TRUE,
@@ -18,25 +18,38 @@ getProfiles(
 \item{index}{an \code{\linkS4class{argoFloats}} object of type \code{"index"}, as created
 by \code{\link[=getIndex]{getIndex()}}.}
 
-\item{destdir}{character value naming the directory into which to store the
-downloaded Argo files, or \code{NULL} (the default) to use the value of
-\code{destdir} that was provided in the \code{\link[=getIndex]{getIndex()}} call that created \code{index}.}
+\item{destdir}{character value indicating the directory in which to store
+downloaded files. The default value is to compute this using
+\code{\link[=argoDefaultDestdir]{argoDefaultDestdir()}}, which returns \verb{~/data/argo} by default,
+although it also provides ways to set other values using
+\code{\link[=options]{options()}}.
+Set \code{destdir=NULL}
+if \code{destfile} is a filename with full path information.
+File clutter is reduced by creating a top-level directory called
+\code{data}, with subdirectories for various file types; see
+\dQuote{Examples}.}
 
-\item{force}{a logical value that indicates whether to force a file
-download, even if the destination file already exists.}
+\item{age}{a numerical value indicating a time interval, in days.  If the file
+to be downloaded from the server already exists locally, and was created
+is less than \code{age} days in the past, it will not be downloaded.  The default,
+\code{\link[=argoDefaultProfileAge]{argoDefaultProfileAge()}}, is one year.  Setting \code{age=0} will force a download.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
 
 \item{skip}{A logical value indicating whether to skip over netcdf
-files that cannot be downloaded from the server.  This is \code{TRUE} by
-default, to allow \code{\link[=getProfiles]{getProfiles()}} to handle out-of-date indices
-without stopping when it tries to download netcdf files that are no
-longer available.}
+files that cannot be downloaded from the server.  This is \code{FALSE} by
+default, so that \code{\link[=getProfiles]{getProfiles()}} will raise an error if it is
+impossible to re-download an outdated file.  This is not
+unexpected with built-in index files, e.g. \code{data(index)},
+because this package cannot be updated every time the Argo
+servers change the names of netcdf files.  However, users
+are commonly working with index files they created with
+\code{\link[=getIndex]{getIndex()}}, so they ought to be up-to-date.}
 
-\item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download without showing a progress
-bar. (Problems will still be reported, though.)}
+\item{quiet}{logical value; use \code{TRUE} to show more
+verbose information when downloading files.
+(Problems will still be reported, though.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
@@ -47,7 +60,7 @@ to see if the output suggests a problem in the call.}
 \value{
 An object of class \code{\linkS4class{argoFloats}} with type=\code{"profiles"}, the
 \code{data} slot of which contains two items: \code{url},
-which holds the URLs from which the netcdf
+which holds the URLs from which the NetCDF
 files were downloaded, and \code{file}, which
 holds the path names of the downloaded files; the latter
 is used by \code{\link[=readProfiles]{readProfiles()}}.
@@ -63,7 +76,7 @@ by \code{\link[=readProfiles]{readProfiles()}}.
 }
 \details{
 It should be noted that the constructed server URL follows
-a different pattern on the usgodae an ifremer servers, and
+a different pattern on the USGODAE an Ifremer servers, and
 so if some other server is used, the URL may be wrong, leading
 to an error.  Similarly, if the patterns on these two
 servers change, then \code{\link[=getProfiles]{getProfiles()}} will fail. Users who
@@ -72,10 +85,11 @@ to the authors.
 
 If a particular data file cannot be downloaded after multiple trials, then
 the behaviour depends on the value of the \code{skip} argument.  If that is
-\code{TRUE} (the default) then a \code{NA} value is inserted in the corresponding
-spot in the return value, but if it is \code{FALSE}, then an error is reported.
+\code{TRUE} then a \code{NA} value is inserted in the corresponding
+spot in the return value, but if it is \code{FALSE} (the default), then an error is reported.
 Note that \code{\link[=readProfiles]{readProfiles()}} skips over any such \code{NA} entries,
 while reporting their positions within \code{index}.
+For more on this function, see Kelley et al. (2021).
 }
 \examples{
 # Download some Argo data files.
@@ -87,6 +101,11 @@ profiles2 <- getProfiles(index2)
 # See ?readProfiles for how to read the files now downloaded.
 }
 
+}
+\references{
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 \author{
 Dan Kelley

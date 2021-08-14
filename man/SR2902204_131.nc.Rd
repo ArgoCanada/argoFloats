@@ -4,12 +4,12 @@
 \encoding{UTF-8}
 \name{SR2902204_131.nc}
 \alias{SR2902204_131.nc}
-\title{Sample argo file (synthetic realtime data)}
+\title{Sample argo file (synthetic real-time data)}
 \description{
-This is the netcdf file for cycle 131 of Argo float 2902204, downloaded from
+This is the NetCDF file for cycle 131 of Argo float 2902204, downloaded from
 \url{ftp://ftp.ifremer.fr/ifremer/argo/dac/incois/2902204/profiles/SR2902204_131.nc}
 on 2020 June 24.
-As its filename indicates, it holds the "synthetic" version of "realtime" data.
+As its filename indicates, it holds the "synthetic" version of "real-time" data.
 }
 \examples{
 library(argoFloats)
@@ -21,6 +21,7 @@ summary(a[[1]])
 \seealso{
 Other raw datasets: 
 \code{\link{D4900785_048.nc}},
+\code{\link{R3901602_163.nc}},
 \code{\link{SD5903586_001.nc}}
 }
 \concept{raw datasets}

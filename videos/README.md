@@ -26,3 +26,26 @@
     - Jaimie Harbin and Dan Kelley
     - Video https://youtu.be/Lc32MTMCbbI
     - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/07/video07_map_with_bathymetry.R
+* **argoFloats R 08: Introduction to Quality Control flags** (August 12, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video https://youtu.be/nN4xs0wCnB4
+    - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/08/video08_qc_intro.R
+
+* **argoFloats R 09: Advanced Quality Control** (August 27, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video https://youtu.be/dYzEO5S2GBw
+    - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/09/video09_qc_advanced.R
+ 
+ * **argoFloats R 10: Using adjusted data streams** (September 3, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video https://youtu.be/AuauWeUnopc
+    - Sample Code https://github.com/ArgoCanada/argoFloats/blob/develop/videos/10/video10_useAdjusted.R
+ 
+ * **argoFloats R 11: mapApp()** (September 21, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video https://youtu.be/PEkIBwXLLpE
+
+ * **argoFloats R 12: dataStateIndicator** (November 13, 2020)
+    - Jaimie Harbin and Dan Kelley
+    - Video: https://youtu.be/RhLmT5S_XzU
+    - Sample Code: https://github.com/ArgoCanada/argoFloats/blob/develop/videos/12/video12_dataStateIndicator.R

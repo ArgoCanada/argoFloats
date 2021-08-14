@@ -2,7 +2,7 @@
 % Please edit documentation in R/debug.R
 \name{argoFloatsDebug}
 \alias{argoFloatsDebug}
-\title{Possibly print debugging information.}
+\title{Print debugging information.}
 \usage{
 argoFloatsDebug(
   debug = 0,
@@ -14,7 +14,9 @@ argoFloatsDebug(
 }
 \arguments{
 \item{debug}{an integer specifying the level of debugging. Values greater
-than zero indicate that some printing should be done. Many functions}
+than zero indicate that some printing should be done. Values greater
+than 3 are trimmed to 3. Many functions pass \code{debug=debug-1} down to
+deeper functions, which yields a nesting-indent format in the output.}
 
 \item{...}{values to be printed, analogous to the \code{...} argument
 list of \code{\link[=cat]{cat()}}.}

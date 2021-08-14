@@ -21,11 +21,12 @@ for (i in seq_len(a[["length"]])) {
                 hypothesis,
                 paste(argo[["dataMode"]], collapse=","),
                 isRealtime == (argo[["dataMode"]][1]=="A")))
-    cat(sprintf("   T: %6.3f unadjusted: %6.3f\n",
+    cat(sprintf("   T: %6.3f unadjusted: %s\n",
                 mean(argo[["temperature"]], na.rm=TRUE),
-                mean(argo[["temperatureUnadjusted"]], na.rm=TRUE)))
+                if ("temperatureUnadjusted" %in% names(argo@data))
+                    sprintf("%6.3f", mean(argo[["temperatureUnadjusted"]], na.rm=TRUE)) else "(missing"))
 }
-dataMode <- unlist(lapply(a[["profile"]], function(x) x[["dataMode"]][1]))
+dataMode <- unlist(lapply(a[["argos"]], function(x) x[["dataMode"]][1]))
 cat("\n\n")
 cat("Hypothesis worked on cases: ", paste(which(testOfHypothesis), collapse=" "), "\n", sep="")
 cat("datamode=='D'     on cases: ", paste(which(dataMode=="D"), collapse=" "), "\n", sep="")

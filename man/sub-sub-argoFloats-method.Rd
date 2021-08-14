@@ -34,6 +34,12 @@ order listed here.
 \enumerate{
 \item If \code{i} is \code{"metadata"} then the \code{metadata} slot of \code{x} is returned.
 \item Otherwise, if \code{i} is \code{"data"} then the \code{data} slot of \code{x} is returned.
+\item Otherwise, if \code{i} is \code{"cycle"} then a character vector of the cycle
+numbers is returned.
+\item Otherwise, if \code{i} is \code{"processingLog"} then the \code{processingLog} slot of
+\code{x} is returned.
+\item Otherwise, if \code{i} is \code{"ID"} then a character vector of the ID numbers
+is returned.
 \item Otherwise, the following steps are taken, depending on \code{type}.
 }
 \item If \code{type} is \code{"index"}, i.e. if \code{x} was created with \code{\link[=getIndex]{getIndex()}}
@@ -53,7 +59,8 @@ is returned. The choices are:
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
 is returned.  The choices are:
 \code{"date"}, \code{"date_update"}, \code{"file"}, \code{"institution"}, \code{"latitude"},
-\code{"longitude"}, \code{"ocean"}, and \code{"profiler_type"}.
+\code{"longitude"}, \code{"ocean"}, and \code{"profiler_type"}. Note that \code{"time"} and
+\code{"time_update"} may be used as synonyms for \code{"date"} and \code{"date_update"}.
 \item Otherwise, if \code{i=="index"} then that item from the \code{data} slot of \code{x} is returned.
 (For the possible names, see the previous item in this sub-list.)
 \item Otherwise, if \code{i} is an integer, then the \code{i}-th row of the \code{index} item in
@@ -82,54 +89,35 @@ is returned. The choices are:
 \code{"type"} and \code{"destdir"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
 is returned.  There is only one choice: \code{"file"}.
-\item Otherwise, if \code{i} is \code{"cycle"} then the return value is developed from the
-\code{file} item in the \code{data} slot of \code{x}, in one of four sub-cases:
-\enumerate{
-\item If \code{j} is not supplied, the return value is \code{file},
-i.e. a vector holding the full names of the files downloaded
-by \code{\link[=getProfiles]{getProfiles()}}.
-\item Otherwise, if \code{j} is numeric, then the return value is a vector of the
-\code{file} entries, as indexed by \code{j}.
-\item Otherwise, an error is reported.
-}
 \item If \code{i} is \code{"length"}, the number of local file names that were downloaded
 by \code{\link[=getProfiles]{getProfiles()}} is returned.
 }
 \item Otherwise, if \code{type} is \code{"argos"}, i.e. if \code{x} was created with \code{\link[=readProfiles]{readProfiles()}}, then:
 \enumerate{
+\item If \code{i} is equal to \code{"argos"}, and \code{j} is unspecified, then a list
+holding the \link[oce:argo-class]{oce::argo} objects stored within \code{x} is returned.
+\item If \code{i} is equal to \code{"argos"}, and \code{j} is provided, then the associated
+\link[oce:argo-class]{oce::argo} object is returned.
 \item If \code{i} is numeric and \code{j} is unspecified, then return the argo objects identified
-by using \code{i} as an index.  Thus, e.g. \code{x[[i]]} is equivalent to
-\code{x[["cycle", i]]}.
+by using \code{i} as an index.
 \item If \code{i} is the name of an item in the \code{metadata} slot, then that item
 is returned. There is only choice, \code{"type"}.
 \item Otherwise, if \code{i} is the name of an item in the \code{data} slot, then that item
-is returned.  There is only one choice: \code{"argos"}.
-\item Otherwise, if \code{i} is \code{"cycle"} then the return value depends on the value of \code{j}.
-There are four sub-cases:
-\enumerate{
-\item If \code{j} is not supplied, the return value is a list containing
-all the profiles in \code{x}, each an \code{argo} object as created by
-\code{\link[oce:read.argo]{oce::read.argo()}} in the \code{oce} package.
-\item Otherwise, if \code{j} is a single integer,  then the return value is a single
-\code{argo} object.
-\item Otherwise, if \code{j} is a vector  of integers, then a list of \code{argo} objects
-is returned.
-\item Otherwise, an error is reported.
-}
-\item Otherwise, if \code{i} is \code{"length"}, the number of oce-type argo objects in \code{x} is returned.
-\item Otherwise, if \code{i} is \code{"ID"}, a vector of the IDs of the profiles is returned.
-\item Otherwise, if \code{i} is a character value, then it is taken to be
+is returned as a named list.  (At present, there is only one choice: \code{"argos"}.)
+\item Otherwise, if \code{i} is \code{"length"} then the number of oce-type argo objects in \code{x} is returned.
+\item Otherwise, if \code{i} is a character value then it is taken to be
 an item within the \code{metadata} or \code{data} slots of the argo objects
 stored in \code{x}, and the returned value is a list containing that
-information with one (unnamed) item per profile.  If \code{j} is provided
+information with one (unnamed) item per profile.
+If \code{j} is provided
 and equal to \code{"byLevel"}, then the items from the \code{metadata} are
 repeated (if necessary) and formed into matrix or vector of the same
 shape as the \code{"pressure"} field; this can be convenient for computations
 involving items that only occur once per profile, such as \code{"longitude"},
 but it should not be used for items that are not level-specific, such
 as the various \code{"HISTORY_*"} elements, which apply to a dataset, not to
-a level.
-\item Otherwise, an error is reported.
+a level
+\item Otherwise, NULL is reported.
 }
 \item Otherwise, an error is reported.
 }
@@ -144,6 +132,11 @@ data.frame(file=gsub(".*/", "", index5[["file"]][1]),
            lon=index5[["longitude"]],
            lat=index5[["latitude"]])
 
+}
+\references{
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 \author{
 Dan Kelley

@@ -3,214 +3,101 @@ title: "Tweet Thread"
 output: html_document
 ---
 
-# Tweet One
+# Tweet 1
 
 Hi Argo community! I want to introduce you to a newly developed R package, argoFloats. This package was created by myself, Dan Kelley, and Jaimie Harbin to provide tools for downloading and analyzing collections of oceanographic Argo float datasets.
 
-**Insert argoFloats logo found at https://github.com/ArgoCanada/argoFloats/blob/develop/logo/logo.R**
+![](argoFloats_logo_06.png)
 
 
-# Tweet Two
-argoFloats has an easy-to-follow work flow, to allow the users to effectively access, download, and read Argo data.
+# Tweet 2
+argoFloats has an easy-to-follow work flow, to allow users to effectively access, download, and read Argo data. It targets both experienced and new R users.
 
-```{r workflow, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=2.8, fig.width=5, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
-colText <- "darkblue"
-colCode <- "black"
-library(graphics)
-textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New Roman", col="black", tweakx=0)
-{
-    w <- graphics::strwidth(text)
-    h <- graphics::strheight(text)
-    if (center)
-        x <- x - w/2
-    text(x+tweakx, y, text, cex=cex, pos=pos, family=family, col=col)
-    rect(x+tweakx, y-h, x+tweakx+1.1*w, y+h, border=col)
-    invisible(list(w=w, h=h))
-}
-omar <- par("mar")
-par(mar=c(0,1,0,0))
-plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
-x0 <- 0.25
-y0 <- 0.9
-dy <- 0.2
-wh <- textInBox(x0, y0, "Get index from server", col=colText)
-h <- wh$h * 1.2
-xarrow <- x0 + 0.01 # not sure why we need to move it
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
-y0 <- y0 - dy
-textInBox(x0, y0, "Focus on a subset of profiles", col=colText)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
-y0 <- y0 - dy
-textInBox(x0, y0, "Get profile data files from server", col=colText)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
-y0 <- y0 - dy
-textInBox(x0, y0, "Read profile data files", col=colText)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
-y0 <- y0 - dy
-textInBox(x0, y0, "Process the data", col=colText)
-x0 <- 0.8
-y0 <- 0.9
-wh <- textInBox(x0, y0, "getIndex() ", family="sans", col=colCode)
-h <- wh$h * 1.2
-xarrow <- x0 + 0.01 # not sure why we need to move it
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
-y0 <- y0 - dy
-textInBox(x0, y0, "subset() ", family="sans", col=colCode)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
-y0 <- y0 - dy
-textInBox(x0, y0, "getProfiles() ", family="sans", col=colCode)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
-y0 <- y0 - dy
-textInBox(x0, y0, "readProfiles() ", family="sans", col=colCode)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
-y0 <- y0 - dy
-textInBox(x0, y0, ". . .   ", family="sans", col=colCode, tweakx=0.005)
-par(mar=omar)
-```
+![](../../../vignettes/flowchart.png)
 
-# Tweet Three
-To get familiar with argoFloats, check out the user website, https://argocanada.github.io/argoFloats/index.html, or developer website https://github.com/ArgoCanada/argoFloats for more advanced R users.
+# Tweet 3
+To get familiar with argoFloats, check out the user website (https://argocanada.github.io/argoFloats/index.html) or the developer website (https://github.com/ArgoCanada/argoFloats) for more advanced R users.
 
-# Tweet Four
-Users can easily sift through data based on geographical region, parameter, time, institution, deep Argo, ID, ocean, mode, and profile. A series of real-time examples exists at our Youtube channel https://www.youtube.com/channel/UCmVBNwRRGx5sRa1skvfOrvA.
+# Tweet 4
+Users can easily sift through data based on geographical region, parameter, time, institution, deep Argo, ID, ocean, mode, cycle, direction, column, or dataStateIndicator. A series of real-time examples exists at our Youtube channel https://www.youtube.com/channel/UCmVBNwRRGx5sRa1skvfOrvA.
 
-# Tweet Five
-For example, the following code demonstrates how to use the easy-to-follow work flow to produces a TS plot near Bermuda:
+# Tweet 5
+For example, the following code demonstrates the workflow to produce a TS plot near Bermuda.
 
-```{r, message=FALSE, warning=FALSE}
-library(argoFloats)
-# Get world index
-data(index)
-# Get index withing 50km of Bermuda
-ais <- subset(index, 1:10)
-# Get profile data files for this near-Bermuda index
-pr <- getProfiles(ais)
-# Read those data files
-a <- readProfiles(pr)
-QC <- applyQC(a)
-# Plot a map to the left, and a TS diagram to the right
-par(mfrow=c(1, 2))
-plot(QC, which="map")
-plot(QC, which='TS')
-```
+![](TSCode.png)
+![](TS.png)
 
-# Tweet Six
-The following link provides code for subsetting by ocean near the Isthmus of Panama. Note it is a subset by ocean "Area", which is why we incorporated the subset by polygon function.
-https://github.com/ArgoCanada/argoFloats/tree/develop/videos/04
+# Tweet 6
+To subset by ocean "Area", the following code is used. Note: regarding those spurious red dots in the Pacific, we also provide a method to subset by polygon.
 
-```{r, warning=FALSE, error=FALSE, message=FALSE}
-library(argoFloats)
-ai <- getIndex()
-s <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
-plot(s, which='map') # To get a visual
-atlantic <- subset(s, ocean='A') # Subsetting for Atlantic Ocean
-pacific <- subset(s, ocean='P')
-points(atlantic[['longitude']], atlantic[['latitude']], pch=20, col=2)
-points(pacific[['longitude']], pacific[['latitude']], pch=20, col=3)
-```
+![](oceanAreaCode.png)
+![](oceanArea.png)
 
-# Tweet 07
-Code found at https://github.com/ArgoCanada/argoFloats/blob/develop/sandbox/jlh/08_polygonPlot/polygonPlot.R demonstrates how to use our subset by polygon and TS plot function to create a T-S diagram comparing the Atlantic and Pacific Ocean near the Isthmus of Panama.
+# Tweet 7
+The code shown below demonstrates how to subset by polygon to study watermass contrasts between the Atlantic and Pacific oceans across the Isthmus of Panama.
 
-`**INSERT PHOTO from https://github.com/ArgoCanada/argoFloats/blob/develop/sandbox/jlh/08_polygonPlot/polygonPlot.R**
+![](TSPanamaCode.png)
+![](TSpanama.png)
 
-# Tweet 07
-The code found at https://github.com/ArgoCanada/argoFloats/blob/develop/videos/05/video05_TS_by_oxygen.R demonstrates how to use the argoFloats package to create a TS diagram, colour-coded by oxygen.
+# Tweet 8
 
-```{r, message=FALSE, warning=FALSE, error=FALSE, echo=FALSE}
-library(oce)
-library(argoFloats)
+In addition, argoFloats users have the ability to create a TS diagram, colour-coding for oxygen, as follows.
 
-# Acquire merged argo index, subset by circle, and then subset by oxygen
-ai <- getIndex(filename='merge')
-subc <- subset(ai, circle=list(longitude=-77.5, latitude=27.5, radius=300))
-subo <- subset(subc, parameter='DOXY')
+![](TSoxygenCode.png)
 
-# Download argo files, read them, and thn extract O2
-profiles <- getProfiles(subo)
-argos <- readProfiles(profiles)
-O2 <- unlist(argos[["oxygen"]]) # note that [[ returns a list
 
-# Plot colour palette, and then the TS plot
-cm <- colormap(O2)
-drawPalette(colormap=cm, zlab="Oxygen", pos=3)
-plot(argos, which="TS", col=cm$zcol)
-```
-
-# Tweet 08
-Bathymetry has recently been added to the argoFloats package. If you visit https://github.com/ArgoCanada/argoFloats/blob/develop/videos/07/video07_map_with_bathymetry.R you can find code to create a trajectory plot, colour coded by time, with bathymetry.
-
-```{r, message=FALSE, warning=FALSE, error=FALSE, echo=FALSE}
-library(argoFloats)
-library(oce)
-ID0 <- '6900388'
-if (!exists("index0"))
-    index0 <- subset(getIndex(), ID=ID0)
-
-lon <- index0[["longitude"]]
-lat <- index0[["latitude"]]
-profile <- index0[['profile']]
-t <- index0[["date"]]
-
-par(mar=c(2,2,1,1))
-
-cm <- colormap(t, col=oceColorsJet)
-drawPalette(colormap=cm, tformat="%Y-%m", pos=3)
-plot(index0, bathymetry=TRUE)
-points(lon, lat, pch=21, cex=1, bg=cm$zcol, col="black", lwd=1.2)
-lines(lon, lat)
-sub <- seq(1, length(lon), by=10)
-text(lon[sub], lat[sub], profile[sub], cex=2/3, pos=1)
-mtext(paste("Float", ID0), adj=0)
-```
+![](TSoxygen.png)
 
 # Tweet 9
-FIX ME!!! NEED TO ADD LINK TO QC VIGNETTE
+Bathymetry can be shown on argoFloats map plots. A good example of this is shown in a trajectory plot for a float in the Labrador Sea, colour-coded for time.
 
-What about Quality Control, you say? argoFloats has incorporated a simple work flow to assess Argo float flags. A quality control vignette can also be found at: 
-```{r qualityControlProcess, echo=FALSE, fig.cap="Figure 1: Work flow of the argoFloats package.", fig.height=1.8, fig.width=5, fig.align='center', dev.args=list(pointsize=10), warning=FALSE}
-colText <- "darkblue"
-colCode <- "black"
-library(graphics)
-textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New Roman", col="black", tweakx=0)
-{
-    w <- graphics::strwidth(text)
-    h <- graphics::strheight(text)
-    if (center)
-        x <- x - w/2
-    text(x+tweakx, y, text, cex=cex, pos=pos, family=family, col=col)
-    rect(x+tweakx, y-h, x+tweakx+1.1*w, y+h, border=col)
-    invisible(list(w=w, h=h))
-}
-omar <- par("mar")
-par(mar=c(0,1,0,0))
-plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
-x0 <- 0.25
-y0 <- 0.9
-dy <- 0.3
-wh <- textInBox(x0, y0, "    What is the quality of the data?", col=colText)
-h <- wh$h * 1.2
-xarrow <- x0 + 0.01 # not sure why we need to move it
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
-y0 <- y0 - dy
-textInBox(x0, y0, "   What tests were performed?", col=colText)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1, col=colText)
-y0 <- y0 - dy
-textInBox(x0, y0, "   Set low-quality data to NA.", col=colText)
-x0 <- 0.8
-y0 <- 0.9
-wh <- textInBox(x0, y0, "plot(which='QC') ", family="sans", col=colCode)
-h <- wh$h * 1.2
-xarrow <- x0 + 0.01 # not sure why we need to move it
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
-y0 <- y0 - dy
-textInBox(x0, y0, "showQCTests() ", family="sans", col=colCode)
-arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
-y0 <- y0 - dy
-textInBox(x0, y0, "applyQC()  ", family="sans", col=colCode)
-par(mar=omar)
-```
+![](bathymetryCode.png)
+
+![](bathymetry.png)
 
 # Tweet 10
-FIX ME!!! NEED TO ADD USEADJUSTED CODE LINK
-In addition to dealing with flags, argoFloats has incorporated a useAdjusted() function to use adjusted parameter data when it's available. An example of this can be found at:
+What about Quality Control (QC), you say? argoFloats offers an easy workflow for handling Argo QC flags.
+
+![](../../../vignettes/qc_flowchart.png)
+
+# Tweet 11
+The dataStateIndicator reveals the degree of processing the Argo data has gone through. Using the following code, the user has the ability to select a specific degree of processing data in the Arabian Sea, for example.
+
+![](dataStateIndicatorCode.png)
+
+# Tweet 12
+For further QC analysis of Argo data, the first step is to plot the quality of the data using the QC plot. This is shown below, where each point is a cycle representing "bad" data in red, and "good" data in black.
+
+![](plotQCCode.png)
+![](../../../vignettes/plotqc.png)
+
+# Tweet 13
+In the QC plot, the first cycle is considered "bad". Here's how to determine which QC Tests were performed on that cycle:
+
+![](showQCTestsCode.png)
+![](showQCTestOutput.png)
+
+# Tweet 14
+
+If you agree with the test failed, you can replace all suspicious data with NA. For example, the following shows the need for QC testing in our previous example ... but there are still some stray points!
+
+![](applyQCCode.png)
+![](../../../vignettes/applyQC.png)
+
+# Tweet 15
+In addition to flags, some datasets undergo adjustments that are made in recognition of the QC analysis or to employ information about improved calibrations, etc. We'll get into that in the next tweet.
+
+# Tweet 16
+useAdjusted can be a fairly complicated process; the following diagram demonstrates the actions taken when a user specifies `which=ALL` or `which=<param>`.
+
+![](../../../man/figures/useAdjustedDiagram.png)
+
+# Tweet 17
+The useAdjusted function is handy when dealing with oxygen data, which may be adjusted due to sensor recalibration, etc.
+
+![](useAdjustedCode.png)
+![](useAdjusted.png)
+
+# Tweet 18
+Lastly, typing mapApp() opens a interactive app to analyze specific regions, floats, time, etc.
+

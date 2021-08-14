@@ -1,0 +1,893 @@
+Kept 200 profiles (0.00828%)
+Failed downloads:
+'https://data-argo.ifremer.fr/dac/csiro/5905185/profiles/R5905185_130.nc'
+  after 4 attempts.
+  Try running getIndex(age=0) to refresh the index, in case a file name changed.
+Warning in readProfiles(getProfiles(s)) :
+  Of 199 profiles read, 6 have >10% of conductivity values with QC flag of 4, signalling bad data.
+    The indices of the bad profiles are as follows.
+    5 32 79 81 90 159
+Warning in readProfiles(getProfiles(s)) :
+  Of 199 profiles read, 10 have >10% of pressure values with QC flag of 4, signalling bad data.
+    The indices of the bad profiles are as follows.
+    5 8 19 40 59 64 79 81 91 159
+Warning in readProfiles(getProfiles(s)) :
+  Of 199 profiles read, 17 have >10% of salinity values with QC flag of 4, signalling bad data.
+    The indices of the bad profiles are as follows.
+    5 8 19 35 39 40 64 72 79 82 90 115 138 155 159 173 192
+Warning in readProfiles(getProfiles(s)) :
+  Of 199 profiles read, 10 have >10% of temperature values with QC flag of 4, signalling bad data.
+    The indices of the bad profiles are as follows.
+    5 8 19 39 40 64 79 90 138 159
+Warning message:
+In readProfiles(getProfiles(s)) :
+  skipping a profile with NA file name, at index 147
+
+ 1. /Users/kelley/Dropbox/data/argo/R6901814_136.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+ 2. /Users/kelley/Dropbox/data/argo/D6900564_024.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+ 3. /Users/kelley/Dropbox/data/argo/D6902829_047.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+ 4. /Users/kelley/Dropbox/data/argo/D3900546_218.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+ 5. /Users/kelley/Dropbox/data/argo/D5904013_153.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+ 6. /Users/kelley/Dropbox/data/argo/D2901849_017.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+ 7. /Users/kelley/Dropbox/data/argo/D3901840_099.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+ 8. /Users/kelley/Dropbox/data/argo/D1900634_062.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+ 9. /Users/kelley/Dropbox/data/argo/D5902393_055.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+10. /Users/kelley/Dropbox/data/argo/D5903553_035.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+11. /Users/kelley/Dropbox/data/argo/D1901620_135.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+12. /Users/kelley/Dropbox/data/argo/D7900318_023.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+13. /Users/kelley/Dropbox/data/argo/R5903468_303.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 72 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 72 finite adjusted data)
+      copied salinityAdjusted into salinity (had 72 finite adjusted data)
+
+14. /Users/kelley/Dropbox/data/argo/D2902560_082.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+15. /Users/kelley/Dropbox/data/argo/D5900696_238.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+16. /Users/kelley/Dropbox/data/argo/D5900599_093.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+17. /Users/kelley/Dropbox/data/argo/D7900394_149.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+18. /Users/kelley/Dropbox/data/argo/D4900486_059.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+19. /Users/kelley/Dropbox/data/argo/D2901579_178.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+20. /Users/kelley/Dropbox/data/argo/D5904822_007.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+21. /Users/kelley/Dropbox/data/argo/D3900414_129.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+22. /Users/kelley/Dropbox/data/argo/D1901513_241.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+23. /Users/kelley/Dropbox/data/argo/R6903276_095.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+24. /Users/kelley/Dropbox/data/argo/R4903193_023.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 1000 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 1000 finite adjusted data)
+      copied salinityAdjusted into salinity (had 1000 finite adjusted data)
+
+25. /Users/kelley/Dropbox/data/argo/D3900573_016.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+26. /Users/kelley/Dropbox/data/argo/D6901169_051.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+27. /Users/kelley/Dropbox/data/argo/D7900502_104.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+28. /Users/kelley/Dropbox/data/argo/R2902494_186.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 74 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 74 finite adjusted data)
+      copied salinityAdjusted into salinity (had 74 finite adjusted data)
+
+29. /Users/kelley/Dropbox/data/argo/D5901731_033.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+30. /Users/kelley/Dropbox/data/argo/D5900878_205.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+31. /Users/kelley/Dropbox/data/argo/D2901310_119.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+32. /Users/kelley/Dropbox/data/argo/D3900364_102.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+33. /Users/kelley/Dropbox/data/argo/D1901118_301.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+34. /Users/kelley/Dropbox/data/argo/R2902448_031.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 117 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 117 finite adjusted data)
+      copied salinityAdjusted into salinity (had 117 finite adjusted data)
+
+35. /Users/kelley/Dropbox/data/argo/D5900799_122.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+36. /Users/kelley/Dropbox/data/argo/D6900969_020.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+37. /Users/kelley/Dropbox/data/argo/R4902100_182.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+38. /Users/kelley/Dropbox/data/argo/D6900782_075.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+39. /Users/kelley/Dropbox/data/argo/R6901010_222.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+40. /Users/kelley/Dropbox/data/argo/D5901353_114.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+41. /Users/kelley/Dropbox/data/argo/D3900634_208.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+42. /Users/kelley/Dropbox/data/argo/D7900297_009.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+43. /Users/kelley/Dropbox/data/argo/D5901256_187.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+44. /Users/kelley/Dropbox/data/argo/D2901229_027.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+45. /Users/kelley/Dropbox/data/argo/D4900841_166.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+46. /Users/kelley/Dropbox/data/argo/D5900547_001.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+47. /Users/kelley/Dropbox/data/argo/D5902195_024.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+48. /Users/kelley/Dropbox/data/argo/R39013_067.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+
+49. /Users/kelley/Dropbox/data/argo/D3901671_048.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+50. /Users/kelley/Dropbox/data/argo/D5901062_313.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+51. /Users/kelley/Dropbox/data/argo/D3900662_185.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+52. /Users/kelley/Dropbox/data/argo/D3900554_315.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+53. /Users/kelley/Dropbox/data/argo/D5905396_047.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+54. /Users/kelley/Dropbox/data/argo/R2902195_128.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 1112 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 1112 finite adjusted data)
+      copied salinityAdjusted into salinity (had 1112 finite adjusted data)
+
+55. /Users/kelley/Dropbox/data/argo/D6900284_091.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+56. /Users/kelley/Dropbox/data/argo/D5901873_109.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+57. /Users/kelley/Dropbox/data/argo/D5901047_035.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+58. /Users/kelley/Dropbox/data/argo/D4901242_318.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+59. /Users/kelley/Dropbox/data/argo/R6901511_213.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+60. /Users/kelley/Dropbox/data/argo/D5904992_164.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+61. /Users/kelley/Dropbox/data/argo/D2900944_072.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+62. /Users/kelley/Dropbox/data/argo/R3902133_308.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+63. /Users/kelley/Dropbox/data/argo/D5901435_160.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+64. /Users/kelley/Dropbox/data/argo/R5905254_124.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+65. /Users/kelley/Dropbox/data/argo/D5903670_046.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+66. /Users/kelley/Dropbox/data/argo/D5901244_181.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+67. /Users/kelley/Dropbox/data/argo/D3900754_188.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+68. /Users/kelley/Dropbox/data/argo/D5903798_058.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+69. /Users/kelley/Dropbox/data/argo/D1901338_397.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+70. /Users/kelley/Dropbox/data/argo/D5900951_018.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+71. /Users/kelley/Dropbox/data/argo/R6901764_017.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+72. /Users/kelley/Dropbox/data/argo/R3900994_130.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+73. /Users/kelley/Dropbox/data/argo/D6900565_023.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+74. /Users/kelley/Dropbox/data/argo/D5905323_057.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+75. /Users/kelley/Dropbox/data/argo/D5902439_002.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+76. /Users/kelley/Dropbox/data/argo/D5903424_047.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+77. /Users/kelley/Dropbox/data/argo/D5905118_068.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+78. /Users/kelley/Dropbox/data/argo/D3901036_102.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+79. /Users/kelley/Dropbox/data/argo/D5904010_190.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+80. /Users/kelley/Dropbox/data/argo/D2900589_170.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+81. /Users/kelley/Dropbox/data/argo/D1900569_113.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+82. /Users/kelley/Dropbox/data/argo/D1901453_276.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+83. /Users/kelley/Dropbox/data/argo/R2901702_163.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 52 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+84. /Users/kelley/Dropbox/data/argo/D1900064_014.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+85. /Users/kelley/Dropbox/data/argo/D7900310_183.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+86. /Users/kelley/Dropbox/data/argo/D3900092_071.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+87. /Users/kelley/Dropbox/data/argo/D6902930_125.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+88. /Users/kelley/Dropbox/data/argo/D3900529_106.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+89. /Users/kelley/Dropbox/data/argo/R2902447_020.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 117 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 117 finite adjusted data)
+      copied salinityAdjusted into salinity (had 117 finite adjusted data)
+
+90. /Users/kelley/Dropbox/data/argo/D1900076_064.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+91. /Users/kelley/Dropbox/data/argo/D3900097_065.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+92. /Users/kelley/Dropbox/data/argo/R2901781_001.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+93. /Users/kelley/Dropbox/data/argo/D5904404_045.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+94. /Users/kelley/Dropbox/data/argo/D5904992_048.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+95. /Users/kelley/Dropbox/data/argo/D6900463_106.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+96. /Users/kelley/Dropbox/data/argo/R5905683_087.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+97. /Users/kelley/Dropbox/data/argo/D5904266_210.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+98. /Users/kelley/Dropbox/data/argo/D5901398_173.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+99. /Users/kelley/Dropbox/data/argo/D6900926_121.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+100. /Users/kelley/Dropbox/data/argo/D3901852_198.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+101. /Users/kelley/Dropbox/data/argo/D5900949_084.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+102. /Users/kelley/Dropbox/data/argo/D6902907_075.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+103. /Users/kelley/Dropbox/data/argo/R2900387_179.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 1 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 1 finite adjusted data)
+      copied salinityAdjusted into salinity (had 1 finite adjusted data)
+
+104. /Users/kelley/Dropbox/data/argo/D5904630_097.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+105. /Users/kelley/Dropbox/data/argo/D5902489_048.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+106. /Users/kelley/Dropbox/data/argo/D4900347_356.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+107. /Users/kelley/Dropbox/data/argo/D5905794_034.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+108. /Users/kelley/Dropbox/data/argo/D6900211_081.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+109. /Users/kelley/Dropbox/data/argo/D3901118_021.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+110. /Users/kelley/Dropbox/data/argo/D5903875_209.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+111. /Users/kelley/Dropbox/data/argo/D3901231_040.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+112. /Users/kelley/Dropbox/data/argo/D4900611_022.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+113. /Users/kelley/Dropbox/data/argo/R5905850_021.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 1002 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 1002 finite adjusted data)
+      copied salinityAdjusted into salinity (had 1002 finite adjusted data)
+
+114. /Users/kelley/Dropbox/data/argo/D5901116_124.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+115. /Users/kelley/Dropbox/data/argo/D5904300_151.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+116. /Users/kelley/Dropbox/data/argo/D5903831_085.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+117. /Users/kelley/Dropbox/data/argo/D5900463_035.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+118. /Users/kelley/Dropbox/data/argo/R5901390_431.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 72 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 72 finite adjusted data)
+      copied salinityAdjusted into salinity (had 72 finite adjusted data)
+
+119. /Users/kelley/Dropbox/data/argo/D1900802_103.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+120. /Users/kelley/Dropbox/data/argo/D5904066_080.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+121. /Users/kelley/Dropbox/data/argo/D4901464_230.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+122. /Users/kelley/Dropbox/data/argo/D5904418_131.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+123. /Users/kelley/Dropbox/data/argo/D5902190_005.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+124. /Users/kelley/Dropbox/data/argo/D5901345_157.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+125. /Users/kelley/Dropbox/data/argo/D1900727_129.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+126. /Users/kelley/Dropbox/data/argo/D3900331_081.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+127. /Users/kelley/Dropbox/data/argo/D4901052_206.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+128. /Users/kelley/Dropbox/data/argo/D1900806_085.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+129. /Users/kelley/Dropbox/data/argo/D5903954_139.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+130. /Users/kelley/Dropbox/data/argo/D4901579_048.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+131. /Users/kelley/Dropbox/data/argo/D5900938_095.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+132. /Users/kelley/Dropbox/data/argo/D2901220_091.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+133. /Users/kelley/Dropbox/data/argo/R5904748_223.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 354 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 354 finite adjusted data)
+      copied salinityAdjusted into salinity (had 354 finite adjusted data)
+
+134. /Users/kelley/Dropbox/data/argo/D2900183_068.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+135. /Users/kelley/Dropbox/data/argo/D5900706_267.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+136. /Users/kelley/Dropbox/data/argo/D2901403_018.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+137. /Users/kelley/Dropbox/data/argo/D5903528_076.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+138. /Users/kelley/Dropbox/data/argo/D5901291_184.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+139. /Users/kelley/Dropbox/data/argo/D5904227_079.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+140. /Users/kelley/Dropbox/data/argo/D3900202_152.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+141. /Users/kelley/Dropbox/data/argo/D2901398_240.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+142. /Users/kelley/Dropbox/data/argo/R1900957_027.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 47 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 47 finite adjusted data)
+      copied salinityAdjusted into salinity (had 47 finite adjusted data)
+
+143. /Users/kelley/Dropbox/data/argo/R5901301_402.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 72 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 72 finite adjusted data)
+      copied salinityAdjusted into salinity (had 72 finite adjusted data)
+
+144. /Users/kelley/Dropbox/data/argo/D2902725_032.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+145. /Users/kelley/Dropbox/data/argo/D5903975_005.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+146. /Users/kelley/Dropbox/data/argo/D1900729_030.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+147. /Users/kelley/Dropbox/data/argo/R4901264_325.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 72 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 72 finite adjusted data)
+      copied salinityAdjusted into salinity (had 72 finite adjusted data)
+
+148. /Users/kelley/Dropbox/data/argo/R2902156_193.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 302 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 302 finite adjusted data)
+      copied salinityAdjusted into salinity (had 302 finite adjusted data)
+
+149. /Users/kelley/Dropbox/data/argo/D5905648_024.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+150. /Users/kelley/Dropbox/data/argo/D3901667_029.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+151. /Users/kelley/Dropbox/data/argo/D5902477_068.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+152. /Users/kelley/Dropbox/data/argo/D5900598_101.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+153. /Users/kelley/Dropbox/data/argo/D5903463_217.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+154. /Users/kelley/Dropbox/data/argo/D3900335_233.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+155. /Users/kelley/Dropbox/data/argo/D2903177_133.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+156. /Users/kelley/Dropbox/data/argo/D4900510_020.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+157. /Users/kelley/Dropbox/data/argo/D3901794_055.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+158. /Users/kelley/Dropbox/data/argo/D1900314_072.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+159. /Users/kelley/Dropbox/data/argo/D5903750_183.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+160. /Users/kelley/Dropbox/data/argo/R2901450_075.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 46 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 46 finite adjusted data)
+      copied salinityAdjusted into salinity (had 46 finite adjusted data)
+
+161. /Users/kelley/Dropbox/data/argo/D4900631_081.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+162. /Users/kelley/Dropbox/data/argo/D2900326_192.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+163. /Users/kelley/Dropbox/data/argo/D4900300_042.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+164. /Users/kelley/Dropbox/data/argo/R4901518_004.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 1007 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 1007 finite adjusted data)
+      copied salinityAdjusted into salinity (had 1007 finite adjusted data)
+
+165. /Users/kelley/Dropbox/data/argo/R2902137_224.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+166. /Users/kelley/Dropbox/data/argo/D2900419_057.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+167. /Users/kelley/Dropbox/data/argo/D1900972_161.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+168. /Users/kelley/Dropbox/data/argo/R6902876_110.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+169. /Users/kelley/Dropbox/data/argo/D1901633_027.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+170. /Users/kelley/Dropbox/data/argo/D6901472_019.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+171. /Users/kelley/Dropbox/data/argo/R3902106_224.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+172. /Users/kelley/Dropbox/data/argo/R4901243_344.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 72 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 72 finite adjusted data)
+      copied salinityAdjusted into salinity (had 72 finite adjusted data)
+
+173. /Users/kelley/Dropbox/data/argo/D1900067_090.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+174. /Users/kelley/Dropbox/data/argo/R6902723_161.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 1015 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 1015 finite adjusted data)
+      copied salinityAdjusted into salinity (had 1015 finite adjusted data)
+
+175. /Users/kelley/Dropbox/data/argo/D5903263_098.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+176. /Users/kelley/Dropbox/data/argo/D5901045_095.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+177. /Users/kelley/Dropbox/data/argo/D3900271_228.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+178. /Users/kelley/Dropbox/data/argo/D3900704_179.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+179. /Users/kelley/Dropbox/data/argo/R4902095_214.nc (filename suggests realtime data)
+    core dataset with dataMode="A"
+      copied pressureAdjusted into pressure (had 46 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 46 finite adjusted data)
+      copied salinityAdjusted into salinity (had 46 finite adjusted data)
+
+180. /Users/kelley/Dropbox/data/argo/D2900677_375.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+181. /Users/kelley/Dropbox/data/argo/D5904883_184.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+182. /Users/kelley/Dropbox/data/argo/D1900791_166.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+183. /Users/kelley/Dropbox/data/argo/D5903225_446.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+184. /Users/kelley/Dropbox/data/argo/D3900410_254.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+185. /Users/kelley/Dropbox/data/argo/D6901910_192.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+186. /Users/kelley/Dropbox/data/argo/D1901005_085.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+187. /Users/kelley/Dropbox/data/argo/D5904986_098.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+188. /Users/kelley/Dropbox/data/argo/R6903770_039.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+189. /Users/kelley/Dropbox/data/argo/D5904179_030.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+190. /Users/kelley/Dropbox/data/argo/D5905221_167.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+191. /Users/kelley/Dropbox/data/argo/R1901715_020.nc (filename suggests realtime data)
+    core dataset with dataMode="R"
+      copied pressureAdjusted into pressure (had 0 finite adjusted data)
+      copied temperatureAdjusted into temperature (had 0 finite adjusted data)
+      copied salinityAdjusted into salinity (had 0 finite adjusted data)
+
+192. /Users/kelley/Dropbox/data/argo/D5904155_197.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+193. /Users/kelley/Dropbox/data/argo/D3901246_019.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+194. /Users/kelley/Dropbox/data/argo/D6901507_124.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+195. /Users/kelley/Dropbox/data/argo/D3900737_003.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+196. /Users/kelley/Dropbox/data/argo/D6901544_036.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+197. /Users/kelley/Dropbox/data/argo/D5904492_080.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+198. /Users/kelley/Dropbox/data/argo/D1900335_019.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)
+
+199. /Users/kelley/Dropbox/data/argo/D5900966_190.nc (filename suggests delayed data)
+    core dataset with dataMode="D"
+    delayed-mode (FIXME: code more)

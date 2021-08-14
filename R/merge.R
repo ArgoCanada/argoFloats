@@ -1,6 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-#' Merge argoFloats Indices
+#' Merge argoFloats indices
 #'
 #' @param x,y two [`argoFloats-class`] objects of type `index`, e.g. as created by [getIndex()].
 #'
@@ -22,7 +22,8 @@
 #'
 #' RC <- merge(C, R)
 #'\dontrun{
-#' plot(RC, bathymetry=FALSE)}
+#' plot(RC, bathymetry=FALSE)
+#'}
 #'
 #' @author Dan Kelley
 #'
@@ -35,36 +36,48 @@ setMethod(f="merge",
                   stop("must install.packages(\"oce\") for merge() to work")
               dots <- list(...)
               if (!inherits(x, "argoFloats"))
-                  stop("'x' must be an argoFloats object")
+                  stop("in merge,argoFloats-method():\n 'x' must be an argoFloats object")
               if ("index" != x[["type"]])
-                  stop("'x' was not created with getIndex().")
-              destdir <- x[["destdir"]]
+                  stop("in merge,argoFloats-method():\n 'x' was not created with getIndex().", call.=FALSE)
               ftpRoot <- x[["ftpRoot"]]
               if (!inherits(y, "argoFloats"))
-                  stop("'y' must be an argoFloats object")
+                  stop("in merge,argoFloats-method():\n 'y' must be an argoFloats object", call.=FALSE)
               if ("index" != y[["type"]])
-                  stop("'y' was not created with getIndex().")
-              if (destdir != y[["destdir"]])
-                  stop("'x' and 'xy' must have the same destdir.  Use same 'destdir' in getIndex() call.")
+                  stop("in merge,argoFloats-method():\n 'y' was not created with getIndex().", call.=FALSE)
               if (!all.equal(ftpRoot, y[["ftpRoot"]]))
-                  stop("'x' and 'xy' must have the same ftpRoot. Use same 'server' in getIndex() call.")
+                  stop("in merge,argoFloats-method():\n 'x' and 'xy' must have the same ftpRoot. Use same 'server' in getIndex() call.", call.=FALSE)
               for (i in seq_along(dots)) {
-                  message('i=',i)
                   if (!inherits(dots[[i]], "argoFloats"))
-                      stop("argument ", i+2, " is not an argoFloats object")
+                      stop("in merge,argoFloats-method():\n argument ", i+2, " is not an argoFloats object", call.=FALSE)
                   if ("index" != dots[[i]][["type"]])
-                      stop("argument ", i+2, " was not created with getIndex().")
-                  if (destdir != dots[[i]][["destdir"]])
-                      stop("argument ", i+2, " does not have same destdir as previous arguments. Use same 'destdir' in getIndex() call.")
+                      stop("in merge,argoFloats-method():\n argument ", i+2, " was not created with getIndex().",call.=FALSE)
                   if (ftpRoot != dots[[i]][["ftpRoot"]])
-                      stop("argument ", i+2, " does not have same ftpRoot as previous arguments.  Use same 'server' in getIndex() call.")
+                      stop("in merge,argoFloats-method():\n argument ", i+2, " does not have same ftpRoot as previous arguments.  Use same 'server' in getIndex() call.",call.=FALSE)
               }
               ## OK, all data are okay, so we can construct the return value
               res <- x
-              res@data$index <- rbind(x@data$index, y@data$index)
+              ## Ensure that we have the two extra columns that Bgc data have, viz.
+              ## "parameters" and "parameter_data_mode"
+              X <- x@data$index
+              if (!"parameters" %in% names(X))
+                  X$parameters <- NA
+              if (!"parameter_data_mode" %in% names(X))
+                  X$parameter_data_mode <- NA
+              Y <- y@data$index
+              if (!"parameters" %in% names(Y))
+                  Y$parameters <- NA
+              if (!"parameter_data_mode" %in% names(Y))
+                  Y$parameter_data_mode <- NA
+              INDEX <- rbind(X, Y)
               for (i in seq_along(dots)) {
-                  res@data$index <- rbind(x@data$index, dots[[i]]@data$index)
+                  D <- dots[[i]]@data$index
+                  if (!"parameters" %in% names(D))
+                      D$parameters <- NA
+                  if (!"parameter_data_mode" %in% names(D))
+                      D$parameter_data_mode <- NA
+                  INDEX <- rbind(INDEX, D)
               }
+              res@data$index <- INDEX
               res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
               res
           }

@@ -2,16 +2,16 @@
 % Please edit documentation in R/qc.R
 \name{showQCTests}
 \alias{showQCTests}
-\title{Show QC test results for an argo object}
+\title{Show real-time QC test results for an argo object}
 \usage{
 showQCTests(x, style = "brief")
 }
 \arguments{
-\item{x}{An \link[oce:argo-class]{oce::argo} object, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
+\item{x}{an \link[oce:argo-class]{oce::argo} object, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
 or as extracted from the return value of a call to \code{\link[=readProfiles]{readProfiles()}}, as
 in the \dQuote{Examples}.}
 
-\item{style}{A character value governing the output printed by \code{showQCFlags},
+\item{style}{a character value governing the output printed by \code{showQCFlags},
 either \code{"brief"} (the default) for a single line stating all the tests by
 numbers, followed by lines giving the number and description of all failed tests,
 or \code{"full"} for a listing of each test that was performed, with an indication
@@ -22,25 +22,48 @@ This function returns nothing; its action is in the printing
 of results.
 }
 \description{
-\code{showQCTests} print a summary of the quality-control (QC) tests
-(if any) that were performed on an argo profile.  It uses
+\code{showQCTests} prints a summary of the quality-control (QC) tests
+(if any) that were performed on an Argo profile in real-time (\strong{Caution}: any tests completed and/or failed on delayed
+mode data are not recorded).  It uses
 \code{\link[=hexToBits]{hexToBits()}} to decode the hexadecimal  values that may
-be stored in \code{historyQCTest} and \code{historyAction} within
-the \code{metadata} slot of an individual argo profile, as read
-directly with \code{\link[oce:read.argo]{oce::read.argo()}} or indirectly with
-\code{\link[=readProfiles]{readProfiles()}}, the latter being illustrated in the
-\dQuote{Examples} secton below.
-The format used in \code{historyQCTest} and \code{historyAction}
+be stored in \code{historyQCTest}. From there it pairs the determined
+test values with the appropriate actions, QC Tests performed or QC
+Tests failed, found in \code{historyAction} within the \code{metadata} slot
+of an individual Argo profile, as read directly with \code{\link[oce:read.argo]{oce::read.argo()}}
+or indirectly with \code{\link[=readProfiles]{readProfiles()}}, the latter being illustrated in the
+\dQuote{Examples} section below.  The \dQuote{Details}
+section provides an explanation of how \code{showQCTests} works
+at a low level, as an adjunct to the Argo documentation.
+See section 3.3 of Kelley et al. (2021) for more on this function.
+}
+\details{
+The format used in the \code{historyQCTest} and \code{historyAction}
+elements of the \code{metadata} slot of an \link[oce:argo-class]{oce::argo} object
 is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
 of Carval et al. (2019), in which they are called
 \code{HISTORY_QCTEST} and \code{HISTORY_ACTION}, respectively.
-}
-\details{
-The tests, from Carval et al. (2019) Table 11, are as follows
-(after correcting the "Number" for test 18 from
+Both of these things are vectors of character values,
+with the entries within \code{historyAction} providing names for
+the entries within \code{historyQCTest}.
+
+In the context of \code{showQCTests}, the focus is on the element
+of \code{historyAction} that equals \code{"QCP$"} (which maps to the element
+of \code{historyQCTest} that specifies the QC tests that were
+performed) and \code{"QCF$"} (which maps to the results of those
+tests).  These mapped elements are character values providing
+hexadecimal digits that are decoded with \code{\link[=hexToBits]{hexToBits()}}, possibly after
+lengthening the \code{historyQCTest} value matching\code{"QCF$"} by adding \code{"0"} digits
+on the left to make the length be the same as that of the
+\code{historyQCTest} value matching `"QCP$".
+
+The bits decoded from the relevant elements of \code{historyQCTest}
+correspond to QC tests as indicated in the following table.
+This is based on Table 11 of Carval et al. (2019),
+after correcting the "Number" for test 18 from
 261144 to 262144, because the former is not an
 integral power of 2, suggesting a typo
-in the manual).\tabular{lll}{
+in the manual (since the whole point of the numerical scheme
+is that the individual bits map to individual tests).\tabular{lll}{
    Test \tab Number \tab Meaning \cr
    1 \tab 2 \tab Platform Identification test \cr
    2 \tab 4 \tab Impossible Date test \cr
@@ -76,9 +99,13 @@ showQCTests(a[[1]])
 
 }
 \references{
-Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch Loch,
-Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019.
-\url{https://doi.org/10.13155/29825}.
+Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
+Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
+\code{doi:10.13155/29825}
+
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }
 \author{
 Jaimie Harbin and Dan Kelley

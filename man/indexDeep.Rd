@@ -5,8 +5,8 @@
 \alias{indexDeep}
 \title{A sample index of deep Argo}
 \description{
-This was created by subsetting a global index to the 163 deep Argo profiles
-that were within a 800km radius of Antarctica (67S,105E), as of 2020 July 22,
+This was created by subsetting a global index to the deep Argo profiles
+that were within a 800km radius of Antarctica (67S,105E),
 using the following code.\preformatted{library(argoFloats)
 subset <- subset(getIndex(), deep=TRUE)
 sub2 <- subset(subset, circle=list(longitude=105, latitude=-67, radius=800))
@@ -15,11 +15,11 @@ sub2 <- subset(subset, circle=list(longitude=105, latitude=-67, radius=800))
 \section{Caveat about out-of-date index files}{
 
 
-Note that the netcdf files on argo repositories are changeable,
+Note that the NetCDF files on Argo repositories are changeable,
 not just in content, but also in file name.  For example, the data acquired
-in a given profile of a given float may initially be provided in realtime
+in a given profile of a given float may initially be provided in real-time
 mode (with a file name containing an "R" as the first or second character),
-my later be replaced later with a delayed-mode file (with a "D" in the first
+but later be replaced later with a delayed-mode file (with a "D" in the first
 or second character). Since index files name data files directly, this means
 that index files can become out-of-date, containing references to netcdf
 files that no longer exist on the server. This applies to the sample
@@ -36,7 +36,6 @@ summary(indexDeep)
 \seealso{
 Other datasets provided with argoFloats: 
 \code{\link{indexBgc}},
-\code{\link{indexMerged}},
 \code{\link{indexSynthetic}},
 \code{\link{index}}
 }

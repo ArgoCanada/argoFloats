@@ -1,0 +1,25 @@
+# Example
+library(argoFloats)
+raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+adjusted <- useAdjusted(raw)
+rawOxygen <- unlist(raw[['oxygen']])
+rawPressure <- unlist(raw[['pressure']])
+adjustedOxygen <- unlist(adjusted[['oxygen']])
+adjustedPressure <- unlist(adjusted[['pressure']])
+plot(rawOxygen, rawPressure, ylim=rev(range(rawPressure, na.rm=TRUE)), pch=16, col='blue', xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"), ylab='Pressure (dbar)')
+points(adjustedOxygen, adjustedPressure, ylim=rev(range(unlist(adjusted[['pressure']]), na.rm=TRUE)), pch=16, col='red')
+legend("bottomright", col=c('blue','red'), c("Raw", "Adjusted"), pch=c(16, 16))
+stop()
+
+
+#Exercise
+library(argoFloats)
+raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+adjusted <- useAdjusted(raw)
+rawC <- unlist(raw[['chlorophyllA']])
+rawPressure <- unlist(raw[['pressure']])
+adjustedC <- unlist(adjusted[['chlorophyllA']])
+adjustedPressure <- unlist(adjusted[['pressure']])
+plot(rawC, rawPressure, ylim=rev(range(rawPressure, na.rm=TRUE)), pch=16, col='blue', xlab=expression("Raw Chlorophyll"), ylab='Pressure (dbar)')
+points(adjustedC, adjustedPressure, ylim=rev(range(unlist(adjusted[['pressure']]), na.rm=TRUE)), pch=16, col='red')
+legend("bottomright", col=c('blue','red'), c("Raw", "Adjusted"), pch=c(16, 16))

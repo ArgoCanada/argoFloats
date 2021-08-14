@@ -1,0 +1,269 @@
+---
+title: "How to handle adjusted/delayed columns? (D5904013_153 case)"
+author: "Dan Kelley"
+date: "2021-03-01"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+---
+
+**Abstract.** Adjusted and unadjusted data are examined for cycle 153 of float
+4904013 (downloaded from
+<https://data-argo.ifremer.fr/dac/aoml/5904013/profiles/D5904013_153.nc>). This
+cycle has 3 columns. The `DATA_MODE` is `"DAD"`, meaning that columns 1 and 3
+are in *delayed* mode, and column 2 is in *adjusted* mode.  Some data are
+displayed in detail, but mostly the analysis centres on 4 diagrams.  Figures 1
+and 2 show the unadjusted and adjusted data^[Note that this meaning of
+'adjusted' is *not* the same as for the `DATA_MODE`.  Rather, we call the
+values in the netCDF variable `PSAL` as 'unadjusted', and those in
+`PSAL_ADJUSTED` as 'adjusted'.], with red dots for questionable data (flags
+not equal to 1=`passed`, 2=`probably_good`, or 5=`changed`).  Figures 3 and 4
+show unadjusted and adjusted data, omitting questionable data.  On a quick
+reading of this document, start by comparing Figures 3 and 4, which shows that
+adjusted and unadjusted data are very similar, with the main apparent
+difference being in the near-surface salinity in the second profile.
+
+
+# Load the data and define support functions
+
+```{r}
+library(oce)
+url <- "https://data-argo.ifremer.fr/dac/aoml/5904013/profiles/D5904013_153.nc"
+file <- gsub(".*/", "", url)
+if (!file.exists(file))
+    download.file(url, file)
+d <- read.oce(file)
+```
+
+# `DATA_MODE` and Flag overview
+
+The data mode is
+```{r}
+d[["dataMode"]]
+ncol <- ncol(d[["pressure"]])
+```
+indicating `r ncol` columns, of type 'Delayed', 'Adjusted' and 'Delayed',
+respectively.
+
+An overview of the data for these `r ncol` columns is
+```{r}
+str(d@data, 1)
+```
+
+The data-quality flags are
+```{r}
+str(d@metadata$flags, 1)
+```
+
+# Define support functions
+
+
+In oce, flags are described as follows (based on descriptions from an official
+Argo document): `not_assessed`=0, `passed_all_tests`=1, `probably_good`=2,
+`probably_bad`=3, `bad`=4, `changed`=5, `not_used_6`=6, `not_used_7`=7,
+`estimated`=8, and `missing`=9.  The following functions consider all but
+categories 1, 2 and 5 as suspicious.
+
+```{r}
+# accept if flagged with 1=passed, 2=probably good, 5=changed
+flagIsAcceptable <- function(f1, f2=NULL, f3=NULL)
+{
+    if (is.null(f2))
+        f2 <- rep(2, length(f1))
+    if (is.null(f3))
+        f3 <- rep(2, length(f1))
+    (f1 %in% c(1, 2, 5)) & (f2 %in% c(1, 2, 5)) & (f3 %in% c(1, 2, 5))
+}
+
+# black if acceptable, red otherwise
+flagCol <- function(f1, f2=NULL, f3=NULL)
+{
+    if (is.null(f2))
+        f2 <- rep(2, length(f1))
+    if (is.null(f3))
+        f3 <- rep(2, length(f1))
+    ifelse(flagIsAcceptable(f1, f2, f3), "black", "red")
+}
+
+# Show top and bottom of an item
+headtail <- function(a, n=6)
+    rbind(head(a,n), tail(a,n))
+
+# Construct flag strings from oce flag vectors
+flagToChar <- function(f)
+{
+    f[is.na(f)] <- " "
+    paste(f, collapse="")
+}
+
+# Attempt to plot something, showing a box if not
+P <- function(expr)
+{
+    t <- try(expr, silent=TRUE)
+    if (inherits(t, "try-error")) {
+        plot(0:1, 0:1, xlab="", ylab="", type="n")
+        box()
+        text(0.1, 0.5, "No valid data")
+    }
+}
+```
+
+# An overview of the data
+
+## General overview
+```{r}
+summary(d)
+```
+
+The QC tests are as follows
+```{r}
+d[["historyAction"]]
+d[["historyQCTest"]]
+argoFloats::showQCTests(d, style="full")
+```
+
+As a matter of interest, are the flags for adjusted and unadjusted data different?
+```{r}
+all(d[["salinityFlag"]] == d[["salinityAdjustedFlag"]])
+all(d[["temperatureFlag"]] == d[["temperatureAdjustedFlag"]])
+all(d[["pressureFlag"]] == d[["pressureAdjustedFlag"]])
+```
+
+Yes, they are the same for this ID/cycle (but not for all; see 13_useBest_02_b.Rmd).
+
+Before moving on, we ought to double-check that oce is reading the netCDF
+correctly:
+
+```{r}
+library(ncdf4)
+n <- nc_open(file)
+for (i in 1:ncol) {
+    cat("checking column", i, "of", ncol, "\n")
+    stopifnot(all.equal(ncvar_get(n, "PSAL_QC")[i], flagToChar(d[["salinityFlag"]][,i])))
+    stopifnot(all.equal(ncvar_get(n, "PSAL_ADJUSTED_QC")[i], flagToChar(d[["salinityAdjustedFlag"]][,i])))
+    stopifnot(all.equal(ncvar_get(n, "TEMP_QC")[i], flagToChar(d[["temperatureFlag"]][,i])))
+    stopifnot(all.equal(ncvar_get(n, "TEMP_ADJUSTED_QC")[i], flagToChar(d[["temperatureAdjustedFlag"]][,i])))
+    stopifnot(all.equal(ncvar_get(n, "PRES_QC")[i], flagToChar(d[["pressureFlag"]][,i])))
+    stopifnot(all.equal(ncvar_get(n, "PRES_ADJUSTED_QC")[i], flagToChar(d[["pressureAdjustedFlag"]][,i])))
+}
+```
+The lack of errors in the above indicates that the oce flag values match those
+in the netCDF file, in this case.
+
+## Tabular overview
+
+```{r}
+p <- d[["pressure"]]
+pf <- d[["pressureFlag"]]
+pa <- d[["pressureAdjusted"]]
+paf <- d[["pressureAdjustedFlag"]]
+
+S <- d[["salinity"]]
+Sf <- d[["salinityFlag"]]
+Sa <- d[["salinityAdjusted"]]
+Saf <- d[["salinityAdjustedFlag"]]
+
+T <- d[["temperature"]]
+Tf <- d[["temperatureFlag"]]
+Ta <- d[["temperatureAdjusted"]]
+Taf <- d[["temperatureAdjustedFlag"]]
+
+if (ncol != ncol(S))
+    stop("p and S have differing numbers of columns")
+if (ncol != ncol(T))
+    stop("p and T have differing numbers of columns")
+pDF <- data.frame(p1=p[,1], p2=p[,2], p3=p[,3],
+    pf1=pf[,1], pf2=pf[,2], pf3=pf[,3],
+    pa1=pa[,1], pa2=pa[,2], pa3=pa[,3],
+    paf1=paf[,1], paf2=paf[,2], paf3=paf[,3])
+SDF <- data.frame(S1=S[,1], S2=S[,2], S3=S[,3],
+    Sf1=Sf[,1], Sf2=Sf[,2], Sf3=Sf[,3],
+    Sa1=Sa[,1], Sa2=Sa[,2], Sa3=Sa[,3],
+    Saf1=Saf[,1], Saf2=Saf[,2], Saf3=Saf[,3])
+TDF <- data.frame(T1=T[,1], T2=T[,2], T3=T[,3],
+    Tf1=Tf[,1], Tf2=Tf[,2], Tf3=Tf[,3],
+    Ta1=Ta[,1], Ta2=Ta[,2], Ta3=Ta[,3],
+    Taf1=Taf[,1], Taf2=Taf[,2], Taf3=Taf[,3])
+
+options(digits=5)
+headtail(pDF)
+headtail(SDF)
+headtail(TDF)
+```
+
+
+# Plots
+
+## Unadjusted data, red if flagged as unacceptable
+
+```{r fig.height=6.5,fig.cap="Unadjusted data, with 'unacceptable' data coloured red. Left: first column, which is designated as 'delayed' by `DATA_MODE`. Middle: second column ('adjusted').  Right: third column ('delayed')."}
+par(mfrow=c(4, ncol), mar=c(3,3,1,1), mgp=c(2,0.7,0))
+ctds <- vector("list", ncol)
+for (i in seq_len(ncol))
+    ctds[[i]] <- as.ctd(S[,i], T[,i], p[,i])
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="S", col=flagCol(Sf[,i], pf[,i]), type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="T", col=flagCol(Tf[,i], pf[,i]), type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotTS(ctds[[i]], col=flagCol(Sf[,i], Tf[,i], pf[,i])))
+```
+
+
+## Adjusted data, red if flagged as unacceptable
+
+```{r fig.height=6.5,fig.cap="Adjusted data, with 'unacceptable' data coloured red. Left: first column, which is designated as 'delayed' by `DATA_MODE`. Middle: second column ('adjusted').  Right: third column ('delayed')."}
+par(mfrow=c(4, ncol), mar=c(3,3,1,1), mgp=c(2,0.7,0))
+for (i in seq_len(ncol))
+    ctds[[i]] <- as.ctd(Sa[,i], Ta[,i], pa[,i])
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="S", col=flagCol(Saf[,i], paf[,i]), type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="T", col=flagCol(Taf[,i], paf[,i]), type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="sigmaTheta", col=flagCol(Saf[,i], Taf[,i], paf[,i]), type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotTS(ctds[[i]], col=flagCol(Saf[,i], Taf[,i], paf[,i])))
+```
+
+
+
+## Unadjusted data, skipping unacceptable (to narrow scales)
+
+```{r fig.height=6.5,fig.cap="Unadjusted data, omitting points considered 'unacceptable'. Left: first column, which is designated as 'delayed' by `DATA_MODE`. Middle: second column ('adjusted').  Right: third column ('delayed')."}
+par(mfrow=c(4, ncol), mar=c(3,3,1,1), mgp=c(2,0.7,0))
+for (i in seq_len(ncol)) {
+    accept <- flagIsAcceptable(Sf[,i], Tf[,i], pf[,i])
+    ctds[[i]] <- as.ctd(S[,i][accept], T[,i][accept], p[,i][accept])
+}
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="S", type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="T", type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="sigmaTheta", type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotTS(ctds[[i]]))
+```
+
+
+## Adjusted data, skipping if flagged as unacceptable (to improve scales)
+
+```{r fig.height=6.5,fig.cap="Adjusted data, omitting points considered 'unacceptable'. Left: first column, which is designated as 'delayed' by `DATA_MODE`. Middle: second column ('adjusted').  Right: third column ('delayed')."}
+par(mfrow=c(4, ncol), mar=c(3,3,1,1), mgp=c(2,0.7,0))
+for (i in seq_len(ncol)) {
+    accept <- flagIsAcceptable(Saf[,i], Taf[,i], paf[,i])
+    ctds[[i]] <- as.ctd(Sa[,i][accept], Ta[,i][accept], pa[,i][accept])
+}
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="S", type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="T", type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotProfile(ctds[[i]], xtype="sigmaTheta", type="p", pch=20))
+for (i in seq_len(ncol))
+    P(plotTS(ctds[[i]]))
+```
+

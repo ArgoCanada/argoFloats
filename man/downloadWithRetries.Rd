@@ -6,12 +6,12 @@
 \usage{
 downloadWithRetries(
   url,
-  destdir = "~/data/argo",
-  destfile = NULL,
-  mode = "wb",
+  destdir,
+  destfile,
   quiet = FALSE,
-  force = FALSE,
+  age = argoDefaultProfileAge(),
   retries = 3,
+  async = FALSE,
   debug = 0
 )
 }
@@ -19,8 +19,11 @@ downloadWithRetries(
 \item{url}{character value giving the full URL of a file to be downloaded.}
 
 \item{destdir}{character value indicating the directory in which to store
-downloaded files. The default value of \code{"."} means to store the
-downloaded file in the present working directory.  Set \code{destdir=NULL}
+downloaded files. The default value is to compute this using
+\code{\link[=argoDefaultDestdir]{argoDefaultDestdir()}}, which returns \verb{~/data/argo} by default,
+although it also provides ways to set other values using
+\code{\link[=options]{options()}}.
+Set \code{destdir=NULL}
 if \code{destfile} is a filename with full path information.
 File clutter is reduced by creating a top-level directory called
 \code{data}, with subdirectories for various file types; see
@@ -32,24 +35,20 @@ the other parameters of the function call, so that subsequent calls with
 the same parameters will yield the same result; this is useful
 for caching.}
 
-\item{mode}{character value passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-controlling the mode used in writing the local file. The default
-value, \code{mode="wb"}, means to set the write format to binary. This
-is necessary on Windows machines, which otherwise will alter newline
-characters, ruining file integrity for binary files (such as
-netcdf files). The setting is not required on other machines, but
-it makes sense to use this default in all instances.  See the
-documentation for \code{\link[curl:curl_download]{curl::curl_download()}}.}
+\item{quiet}{logical value; use \code{TRUE} to show more
+verbose information when downloading files.
+(Problems will still be reported, though.)}
 
-\item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download without showing a progress
-bar. (Problems will still be reported, though.)}
-
-\item{force}{a logical value that indicates whether to force a file
-download, even if the destination file already exists.}
+\item{age}{a numerical value indicating a time interval, in days.  If the file
+to be downloaded from the server already exists locally, and was created
+is less than \code{age} days in the past, it will not be downloaded.  The default,
+\code{\link[=argoDefaultProfileAge]{argoDefaultProfileAge()}}, is one year.  Setting \code{age=0} will force a download.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
+
+\item{async}{Use \code{TRUE} to perform requests asynchronously. This is much
+faster for many small files (e.g., Argo profile NetCDF files).}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions

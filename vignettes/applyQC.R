@@ -1,11 +1,13 @@
-if (!interactive()) png("applyQC.png", unit="in", width=5, height=2.8, pointsize=11, res=150)
+if (!interactive()) png("applyQC.png", unit="in", width=7, height=3.92, pointsize=11, res=100)
+par(mfrow=c(1,2), mar=c(3,3,1,1))
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(index)
-i <- subset(index, ID='1901584')
-raw <- readProfiles(getProfiles(i))
-clean <- applyQC(raw)
+index1 <- subset(index, ID='1901584')
+argos <- readProfiles(getProfiles(index1))
+clean <- applyQC(argos)
 par(mfrow=c(1, 2))
-plot(raw, which="TS")
+plot(argos, which="TS")
 plot(clean, which="TS")
 if (!interactive()) dev.off()
+

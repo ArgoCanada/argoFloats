@@ -9,7 +9,7 @@ if (forceUpdate) {
     library(argoFloats)
     ## https://github.com/ArgoCanada/argoFloats/issues/117#issuecomment-640758567
     i <- getIndex(filename="synthetic", age=0)
-    s <- subset(subset(subset(i, mode="realtime"), ID=2902204), profile=131)
+    s <- subset(subset(subset(i, mode="realtime"), ID=2902204), cycle=131)
     p <- getProfiles(s)
     stopifnot(s[['file']] == "incois/2902204/profiles/SR2902204_131.nc")
     cat("SOURCE: '", p[["url"]], "'\n", sep="")
@@ -24,11 +24,11 @@ if (forceUpdate) {
     library(argoFloats)
     data(index)
     s1 <- subset(index, mode="delayed")
-    t <- table(s1[["ID"]])
+    t <- table(s1[["id"]])
     ID <- names(t[which.max(t)])           # 4900785
     s2 <- subset(s1, ID=ID)
-    profile <- s2[["profile"]][1]
-    s3 <- subset(s2, profile=profile)
+    cycle <- s2[["cycle"]][1]
+    s3 <- subset(s2, cycle=cycle)
     stopifnot(s3[["file"]] == "aoml/4900785/profiles/D4900785_048.nc")
     p <- getProfiles(s3)
     file <- p[["file"]]

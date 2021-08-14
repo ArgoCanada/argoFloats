@@ -5,9 +5,9 @@
 \alias{indexSynthetic}
 \title{A sample index of synthetic (i.e. combined) Argo and biogeochemical-argo profiles}
 \description{
-This was created by subsetting a global index to the 39 BGC Argo profiles
+This was created by subsetting a global index to the BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 May 15, using the following code.\preformatted{library(argoFloats)
+Bahamas, using the following code.\preformatted{library(argoFloats)
 indexAll <- getIndex("synthetic")
 indexSynthetic <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
@@ -15,17 +15,17 @@ indexSynthetic <- subset(indexAll,
 
 This "synthetic" type of index is a replacement for the older "merged" index.  See
 \url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
-for more on the data file format, reasons for the change, and timetable for transition
-from "merged".
+for more on the data file format, the reasons for the change, and the
+timetable for the transition from "merged".
 }
 \section{Caveat about out-of-date index files}{
 
 
-Note that the netcdf files on argo repositories are changeable,
+Note that the NetCDF files on Argo repositories are changeable,
 not just in content, but also in file name.  For example, the data acquired
-in a given profile of a given float may initially be provided in realtime
+in a given profile of a given float may initially be provided in real-time
 mode (with a file name containing an "R" as the first or second character),
-my later be replaced later with a delayed-mode file (with a "D" in the first
+but later be replaced later with a delayed-mode file (with a "D" in the first
 or second character). Since index files name data files directly, this means
 that index files can become out-of-date, containing references to netcdf
 files that no longer exist on the server. This applies to the sample
@@ -44,7 +44,6 @@ unique(indexSynthetic[["parameters"]])
 Other datasets provided with argoFloats: 
 \code{\link{indexBgc}},
 \code{\link{indexDeep}},
-\code{\link{indexMerged}},
 \code{\link{index}}
 }
 \concept{datasets provided with argoFloats}

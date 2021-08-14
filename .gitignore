@@ -1,3 +1,5 @@
+Rplots.pdf
+[0-9].R
 *_index.txt.gz
 *.rda
 *.nc
@@ -14,3 +16,11 @@ Meta
 marmap*.csv
 *.json
 doc
+marmap*csv
+docs
+^[0-9]*.R$
+.Rprofile
+.gitCOMMIT_EDITMSG
+log.dat
+revdep
+

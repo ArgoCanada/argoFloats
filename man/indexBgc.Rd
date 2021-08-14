@@ -5,9 +5,9 @@
 \alias{indexBgc}
 \title{A sample index of biogeochemical-Argo profiles}
 \description{
-This was created by subsetting a global index to the 39 BGC Argo profiles
+This was created by subsetting a global index to the BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 March 23, using the following code.\preformatted{library(argoFloats)
+Bahamas, using the following code.\preformatted{library(argoFloats)
 indexAll <- getIndex("bgc")
 indexBgc <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
@@ -16,11 +16,11 @@ indexBgc <- subset(indexAll,
 \section{Caveat about out-of-date index files}{
 
 
-Note that the netcdf files on argo repositories are changeable,
+Note that the NetCDF files on Argo repositories are changeable,
 not just in content, but also in file name.  For example, the data acquired
-in a given profile of a given float may initially be provided in realtime
+in a given profile of a given float may initially be provided in real-time
 mode (with a file name containing an "R" as the first or second character),
-my later be replaced later with a delayed-mode file (with a "D" in the first
+but later be replaced later with a delayed-mode file (with a "D" in the first
 or second character). Since index files name data files directly, this means
 that index files can become out-of-date, containing references to netcdf
 files that no longer exist on the server. This applies to the sample
@@ -38,7 +38,6 @@ unique(indexBgc[["parameters"]])
 \seealso{
 Other datasets provided with argoFloats: 
 \code{\link{indexDeep}},
-\code{\link{indexMerged}},
 \code{\link{indexSynthetic}},
 \code{\link{index}}
 }

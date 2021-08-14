@@ -1,0 +1,89 @@
+---
+title: argoFloats tests
+author: Dan Kelley
+date: "`r Sys.Date()`"
+output:
+    pdf_document:
+        latex_engine: xelatex
+---
+
+# Summary
+
+In addition to URL problems, a local `R CMD CHECK` (and the equivalent from
+within RStudio) give a NOTE on installed size being 9.4Mb.  However,
+`devtools::check_win_release()` does not show this NOTE.
+
+**QUESTION.** Is the size a concern for a CRAN submission? And, if so, what
+steps should we take?  (I have seen this expansion of the 'size' of R before,
+and I think it has to do with importing other packages.)
+
+# Local check within RStudio
+
+```
+> checking installed package size ... NOTE
+    installed size is  9.4Mb
+    sub-directories of 1Mb or more:
+      R   8.0Mb
+
+0 errors ✓ | 0 warnings ✓ | 1 note x
+```
+
+# Local test with 'R CMD'
+
+## URL problems
+
+```
+Found the following (possibly) invalid URLs:
+  URL: ftp://ftp.ifremer.fr/ifremer/argo
+    From: man/getIndex.Rd
+    Status: Error
+    Message: libcurl error code 78:
+      	The file does not exist
+  URL: ftp://usgodae.org/pub/outgoing/argo
+    From: man/getIndex.Rd
+    Status: Error
+    Message: libcurl error code 78:
+      	The file does not exist
+```
+
+## Size problem
+
+```
+
+* checking installed package size ... NOTE
+  installed size is  9.4Mb
+  sub-directories of 1Mb or more:
+    R   8.0Mb
+```
+
+
+# devtools::check_win_release() check
+
+## URL problems
+
+```
+Found the following (possibly) invalid URLs:
+  URL: ftp://ftp.ifremer.fr/ifremer/argo
+    From: man/getIndex.Rd
+    Status: Error
+    Message: Given file does not exist
+  URL: ftp://usgodae.org/pub/outgoing/argo
+    From: man/getIndex.Rd
+    Status: Error
+    Message: Given file does not exist
+  URL: https://youtu.be/ZoTrVEMG5Qo
+    From: inst/doc/argoFloats.html
+    Status: 221
+  URL: https://youtu.be/dYzEO5S2GBw
+    From: inst/doc/argoFloats.html
+          inst/doc/qc.html
+    Status: 221
+  URL: https://youtu.be/lOvCrRDTmTs
+    From: inst/doc/argoFloats.html
+    Status: 221
+  URL: https://youtu.be/xeBoFbb66Nk
+    From: inst/doc/argoFloats.html
+    Status: 221
+```
+
+

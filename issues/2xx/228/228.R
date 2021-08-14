@@ -1,0 +1,18 @@
+library(argoFloats)
+library(oce)
+index1 <- subset(getIndex(), circle=list(longitude=-83, latitude=9, radius=150))
+ppx <- c(-84.50618, -83.41864, -81.82846, -81.60913, -83.19931, -84.60671, -84.61585)
+ppy <- c(9.643841, 8.939756, 7.919735, 7.621853, 7.630880, 7.657960, 9.445253)
+index2 <- subset(index1, polygon=list(longitude=ppx, latitude=ppy))
+index3 <- subset(index2, id='3900407')
+profiles <- getProfiles(index3)
+argos <- readProfiles(profiles)
+if (!interactive()) png("228.png")
+plot(argos, which="QC", parameter='temperature')
+time <- oce::numberAsPOSIXct(unlist(argos[["time"]]))
+if (!interactive()) dev.off()
+
+o <- order(time)
+df <- data.frame(order=o, time=time, cycle=argos[["cycle"]], id=argos[["id"]])
+df[o,]
+if (!interactive()) png("228.png")

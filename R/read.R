@@ -2,7 +2,7 @@
 
 #' Read argo profiles from local files
 #'
-#' This works with either a vector of netCDF files,
+#' This works with either a vector of NetCDF files,
 #' or a [`argoFloats-class`] object of type `"profiles"`, as
 #' created by [getProfiles()].
 #' During the reading, argo profile objects are created with [oce::read.argo()]
@@ -11,26 +11,24 @@
 #' By default, warnings are issued about any
 #' profiles in which 10 percent or more of the measurements are flagged
 #' with a quality-control code of 0, 3, 4, 6, 7, or 9 (see the
-#' [applyQC()] documentation for the meanings of these codes).
+#' [applyQC()] documentation for the meanings of these codes). For more
+#' on this function, see section 2 of Kelley et al. (2021).
 #'
 #' @param profiles either (1) a character vector that holds
-#' the names of netcfd files or (2) an [`argoFloats-class`]
+#' the names of NetCDF files or (2) an [`argoFloats-class`]
 #' object created by [getProfiles()]. In the first case, any
 #' items that start with `"ftp:"` are taken to represent
 #' the full paths to remote files, and these first downloaded
 #' to the `destdir` directory using [getProfileFromUrl()].
 #'
-#' @param FUN a function that reads the netcdf files in which the argo
+#' @param FUN a function that reads the NetCDF files in which the argo
 #' profiles are stored.  If `FUN` not provided, then it defaults
 #' to [oce::read.argo()].  Only experts should consider anything
 #' other than this default, or a wrapper to it.
 #'
-#' @param destdir a character value that specifies a directory into
-#' which to save downloaded files, in the case that they are
-#' provided in the `profiles` argument.
+#' @template destdir
 #'
-#' @param silent a logical value (`FALSE` by default) indicating whether
-#' work silently, without displaying information about the progress.
+#' @template quiet
 #'
 #' @param debug an integer specifying the level of debugging. If
 #' this is zero, the work proceeds silently. If it is 1,
@@ -51,14 +49,14 @@
 #' index1 <- subset(index, 1)
 #' profiles <- getProfiles(index1)
 #' raw <- readProfiles(profiles)
-#' clean <- applyQC(profiles)
+#' clean <- applyQC(raw)
 #' par(mfrow=c(1, 2))
 #' file <- gsub(".*/", "",  profiles[[1]])
-#' aWithNA <- argosWithNA[[1]]
-#' plotTS(raw[[1]], eos="unesco", type="o")
+#' aWithNA <- clean[[1]]
+#' oce::plotTS(raw[[1]], eos="unesco", type="o")
 #' mtext(file, cex=0.7*par("cex"))
-#' aWithoutNA <- argosWithoutNA[[1]]
-#' plotTS(clean[[1]], eos="unesco", type="o")
+#' aWithoutNA <- raw[[1]]
+#' oce::plotTS(clean[[1]], eos="unesco", type="o")
 #' mtext(paste(file, "\n (after applying QC)"), cex=0.7*par("cex"))
 #'}
 #'
@@ -68,17 +66,20 @@
 #' p <- readProfiles(u)
 #'}
 #'
+#' @references
+#' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' \doi{10.3389/fmars.2021.635922}
 #' @export
+#' @importFrom utils setTxtProgressBar txtProgressBar
 #'
 #' @author Dan Kelley
-readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, debug=0)
+readProfiles <- function(profiles, FUN, destdir=argoDefaultDestdir(), quiet=FALSE, debug=0)
 {
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\") for readProfiles() to work")
     if (!requireNamespace("ncdf4", quietly=TRUE))
         stop("must install.packages(\"ncdf4\") for readProfiles() to work")
-    debug <- floor(0.5 + debug)
-    debug <- max(0, debug)
     res <- NULL
     argoFloatsDebug(debug, "readProfiles() {\n", style="bold", sep="", unindent=1)
     if (missing(FUN)) {
@@ -92,15 +93,20 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
     ## checking argoFloats.
     ncversion <- ncdf4::nc_version()
     argoFloatsDebug(debug, "ncdf4 version: ", ncversion, "\n")
-
     res <- new("argoFloats", type="argos")
     if (is.character(profiles)) {
         argoFloatsDebug(debug, "Case 1: vector of ", length(profiles), " character valuesn", sep="")
+        # find subtype, and don't permit mixed subtypes
+        istraj <- grepl("traj", profiles)
+        if (any(istraj) && any(!istraj))
+            stop("cannot mix \"trajectories\" and \"cycle\" subtypes for case where 'profiles' is a character vector")
+        res@metadata$subtype <- if (istraj[1]) "trajectories" else "cycles"
+        # get storage for the oce::argo objects
         n <- length(profiles)
         res@data$argos <- vector("list", length=n)
         for (i in seq_len(n)) {
             if (grepl("^ftp:", profiles[i])) {
-                localFile <- getProfileFromUrl(profiles[i], destdir=destdir, debug=debug)
+                localFile <- getProfileFromUrl(profiles[i], destdir=destdir, debug=debug, quiet=quiet)
                 res@data$argos[[i]] <- FUN(localFile, debug=debug-1)
             } else {
                 argoFloatsDebug(debug, "Attempting to read file '", profiles[i], "'.\n", sep="")
@@ -129,23 +135,42 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
                                                                      "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
         }
     } else if (inherits(profiles, "argoFloats")) {
+        # Handle result of previous call to getProfiles(), i.e. a 'profiles' type.
         type <- profiles[["type"]]
+        filenames <- profiles[["file"]]
+        istraj <- grepl("traj", filenames)
+        if (any(istraj) && any(!istraj))
+            stop("cannot mix \"trajectories\" and \"cycle\" subtypes for case where 'profiles' is an argoFloats object")
+        res@metadata$subtype <- if (istraj[1]) "trajectories" else "cycles"
         if (type == "profiles") {
             argoFloatsDebug(debug, "case 2: object created by getProfiles()\n")
             mustSkip <- is.na(profiles@data$file)
             if (sum(mustSkip)) {
                 if (sum(mustSkip) == 1) {
-                    message("skipping a profile with NA file name, at index ", which(mustSkip))
+                    warning("skipping a profile with NA file name, at index ", which(mustSkip))
                 } else {
-                    message("skipping ", sum(mustSkip), " profiles with NA file names, at indices: ",
+                    warning("skipping ", sum(mustSkip), " profiles with NA file names, at indices: ",
                             paste(which(mustSkip), collapse=" "))
                 }
             }
+            if (all(mustSkip))
+                stop("No valid files found in the \"", destdir, "\" directory. Perhaps getProfiles() was unable to download them, or they were deleted after downloading.")
             fileNames <- gsub(".*/(.*).nc", "\\1.nc", profiles@data$file[!mustSkip])
-            fullFileNames <- paste0(profiles@metadata$destdir, "/", fileNames)
-            argoFloatsDebug(debug, "reading", length(fullFileNames), "netcdf files ...\n")
-            res@data$argos <- lapply(fullFileNames, oce::read.argo, debug=debug-1)
-            n <- length(res@data$argos)
+            fullFileNames <- paste0(destdir, "/", fileNames)
+            
+            n <- length(fullFileNames)
+            argoFloatsDebug(debug, "reading", length(fullFileNames), "NetCDF files ...\n")
+            useProgressBar <- !quiet && interactive()
+            if (useProgressBar)
+                pb <- txtProgressBar(0, n, 0, style=3)
+            res@data$argos <- lapply(seq_along(fullFileNames), function(i) {
+                if (useProgressBar)
+                    setTxtProgressBar(pb, i)
+                oce::read.argo(fullFileNames[i], debug=debug-1)
+            })
+            if (useProgressBar)
+                close(pb)
+            
             argoFloatsDebug(debug, "initializing the flag-mapping scheme in the profiles (over-rides oce defaults).\n")
             for (i in seq_len(n)) {
                 res@data$argos[[i]]@metadata$flagScheme <- list(name="argo",
@@ -162,7 +187,7 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
                                                                 default=c(0, 3, 4, 9))
                 res@data$argos[[i]]@processingLog <- oce::processingLogAppend(res@data$argos[[i]]@processingLog,
                                                                               "override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)")
-             }
+            }
         } else {
             stop("'profiles' must be a character vector or an object created by getProfiles()")
         }
@@ -170,7 +195,7 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
         stop("'profiles' must be a character vector or an object created by getProfiles().")
     }
     ## tabulate flags (ignore "Adjusted" items)
-    if (!silent || debug) {
+    if (!quiet || debug) {
         flagNamesAll <- unique(sort(unlist(lapply(res@data$argos, function(a) names(a@metadata$flags)))))
         flagNames <- flagNamesAll[!grepl("Adjusted$", flagNamesAll)]
         for (flagName in flagNames) {
@@ -190,7 +215,7 @@ readProfiles <- function(profiles, FUN, destdir="~/data/argo", silent=FALSE, deb
                         if (sum(badCases, na.rm=TRUE) > 1) " have " else " has ",
                         ">10% of ", flagName, " values with QC flag of 4, signalling bad data.",
                         "\n    The indices of the bad profiles are as follows.",
-                        "\n    ", paste(which(badCases), collapse=" "))
+                        "\n    ", paste(which(badCases), collapse=" "), immediate. = TRUE)
             }
         }
     }

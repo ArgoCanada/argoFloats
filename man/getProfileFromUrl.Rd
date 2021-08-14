@@ -6,21 +6,24 @@
 \usage{
 getProfileFromUrl(
   url = NULL,
-  destdir = "~/data/argo",
+  destdir = argoDefaultDestdir(),
   destfile = NULL,
-  force = FALSE,
+  age = argoDefaultProfileAge(),
   retries = 3,
   quiet = FALSE,
   debug = 0
 )
 }
 \arguments{
-\item{url}{character value giving the URL for a netcdf file containing an
+\item{url}{character value giving the URL for a NetCDF file containing an
 particular profile of a particular Argo float.}
 
 \item{destdir}{character value indicating the directory in which to store
-downloaded files. The default value of \code{"."} means to store the
-downloaded file in the present working directory.  Set \code{destdir=NULL}
+downloaded files. The default value is to compute this using
+\code{\link[=argoDefaultDestdir]{argoDefaultDestdir()}}, which returns \verb{~/data/argo} by default,
+although it also provides ways to set other values using
+\code{\link[=options]{options()}}.
+Set \code{destdir=NULL}
 if \code{destfile} is a filename with full path information.
 File clutter is reduced by creating a top-level directory called
 \code{data}, with subdirectories for various file types; see
@@ -30,15 +33,17 @@ File clutter is reduced by creating a top-level directory called
 for the downloaded file. If this is not specified, then a name is determined
 from the value of \code{url}.}
 
-\item{force}{a logical value that indicates whether to force a file
-download, even if the destination file already exists.}
+\item{age}{a numerical value indicating a time interval, in days.  If the file
+to be downloaded from the server already exists locally, and was created
+is less than \code{age} days in the past, it will not be downloaded.  The default,
+\code{\link[=argoDefaultProfileAge]{argoDefaultProfileAge()}}, is one year.  Setting \code{age=0} will force a download.}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
 
-\item{quiet}{logical value, passed to \code{\link[curl:curl_download]{curl::curl_download()}},
-that indicates whether to download without showing a progress
-bar. (Problems will still be reported, though.)}
+\item{quiet}{logical value; use \code{TRUE} to show more
+verbose information when downloading files.
+(Problems will still be reported, though.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
@@ -61,7 +66,7 @@ library(oce)
 
 # Example 1: a particular file
 url <- "ftp://ftp.ifremer.fr/ifremer/argo/dac/nmdis/2901633/profiles/R2901633_071.nc"
-file <- getProfileFromUrl(url=url, destdir="~/data/argo")
+file <- getProfileFromUrl(url=url)
 argo <- read.argo(file)
 plot(argo, which=c(1, 4, 6, 5))
 
@@ -69,14 +74,13 @@ plot(argo, which=c(1, 4, 6, 5))
 index <- getIndex()
 lon0 <- -59.9149
 lat0 <- 43.9337
-if (requireNamespace("oce")) {
-    dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
-    w <- which.min(dist)
-    url <- paste0(index[["metadata"]]["ftpRoot"], "/", index[["file"]][w])
-    fileSable <- getProfileFromUrl(url=url)
-    argoSable <- read.oce(fileSable)
-    plot(argoSable, which=c(1, 4, 6, 5))
-}
+
+dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
+w <- which.min(dist)
+url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
+fileSable <- getProfileFromUrl(url=url)
+argoSable <- read.oce(fileSable)
+plot(argoSable, which=c(1, 4, 6, 5))
 }
 
 }

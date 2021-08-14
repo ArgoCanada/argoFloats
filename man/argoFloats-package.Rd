@@ -6,15 +6,16 @@
 \title{A Package for Processing Argo Float Profiles}
 \description{
 The \code{argoFloats} package provides tools for downloading and processing Argo profile data.
-It allows users to focus on core argo, biogeochemical (bgc) argo, or deep argo profiles, and
-also to sift these profiles based on ID, time, geography, variable, institution, and ocean.
-Once downloaded, such datasets can be analysed within \code{argoFloats} or using other R tools
+It allows users to focus on core, biogeochemical ("BGC"), or deep Argo profiles, and
+also to sift these profiles based on ID, time, geography, variable, institution, and ocean, etc.
+Once downloaded, such datasets can be analyzed within \code{argoFloats} or using other R tools
 and packages.
 }
 \details{
 The development website is \url{https://github.com/ArgoCanada/argoFloats}, and
 \url{https://argocanada.github.io/argoFloats/index.html} provides a simpler view
-that may be more helpful to most users.
+that may be more helpful to most users. For more on the argoFloats package, see
+Kelley et al. (2021).
 
 The sketch given below illustrates the typical workflow with the package, with
 descriptions of the steps on the left, and names of the relevant functions
@@ -51,7 +52,11 @@ See \code{\link[=show,argoFloats-method]{show,argoFloats-method()}} for details.
 It should be noted that the profile elements within \code{argoFloats} objects are stored as
 in the form of \code{argo} objects as defined by the \code{oce} package.
 This means that \code{argoFloats} users can rely on
-a wide variety of \code{oce} functions to analyse their data.
+a wide variety of \code{oce} functions to analyze their data.
 The full suite of R tools is also available, and the vastness of
 that suite explains why \code{argoFloats} is written in R.
+
+Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
 }

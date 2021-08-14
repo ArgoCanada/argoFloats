@@ -1,0 +1,6 @@
+library(argoFloats)
+data(indexSynthetic)
+subset <- subset(indexSynthetic,1)
+argos <- readProfiles(getProfiles(subset))
+plot(argos, which='profile', parameter='temperature', debug=3)
+plot(argos, which='profile', parameter='oxygen', debug=3)

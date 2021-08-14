@@ -1,6 +1,6 @@
 # argoFloats
 
-[![TravisCI Build Status](https://travis-ci.org/ArgoCanada/argoFloats.svg?branch=develop)](https://travis-ci.org/ArgoCanada/argoFloats)
+[![R build status](https://github.com/ArgoCanada/argoFloats/workflows/R-CMD-check/badge.svg)](https://github.com/ArgoCanada/argoFloats/actions)
 [![codecov](https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg)](https://codecov.io/gh/ArgoCanada/argoFloats)
 
 The argoFloats package for the R language provides tools for downloading and
@@ -8,32 +8,26 @@ analyzing collections of oceanographic Argo float datasets.  Its developers are
 * Dan Kelley, Dalhousie University
 * Jaimie Harbin, Bedford Institute of Oceanography and Dalhousie University
 * Clark Richards, Bedford Institute of Oceanography
+* Dewey Dunnington, Bedford Institute of Oceanography
 
 Since argoFloats is in an active phase of development, it is not yet
 available on CRAN.  Still, it is easily installed in R with
 ```R
 library(devtools)
-install_github('ArgoCanada/argoFloats', ref='develop')
+install_github("ArgoCanada/argoFloats", ref="develop")
 ```
-where, of course, the `devtools` package must be installed first, if it is not
-already present on the user's system.  It is also necessary to have reasonably
-up-to-date versions of the `oce` and `ocedata` packages installed, which is
-accomplished with
-```R
-install_github('dankelley/oce', ref='develop')
-install_github('dankelley/ocedata', ref='develop')
-```
+where, of course, the `devtools` package must be installed first, if it is not already present on the user's system.
 
 Once things are set up as above, it will be possible to use all the features of
 `argoFloats`, many of which are illustrated in the documentation for its
 functions, and in the vignette that is built into the package, both of which
 are displayed on the [user-oriented
 website](https://argocanada.github.io/argoFloats/index.html). Note that the
-vignette also lists youtube videos about the package.
+vignette also lists Youtube videos about the package.
 
 As a practical example, the code block given below shows how to create a map
 and a temperature-salinity diagram for Argo float profiles near Abaco Island in
-the Bahamas. The key steps, many of which are common to most analyses using the
+the Bahamas. The key steps, many of which are common to most analyzes using the
 package, are as follows.
 
 1. The `getIndex` function is used to download a worldwide index of float
@@ -44,7 +38,7 @@ argo files will be stored locally.)
 2. The `subset` function is used to narrow the region of interest, yielding 39
    profiles as of mid-June, 2020.
 
-3. `getProfiles` is used to download the netcdf files that contain the profile
+3. `getProfiles` is used to download the NetCDF files that contain the profile
    measurements.
 
 4. `readProfiles` is used to read those files.
@@ -75,9 +69,9 @@ indexAll <- getIndex()
 ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))
-## 3. Get netcdf files for these profiles, saving to ~/data/argo by default.
+## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
 profiles  <- getProfiles(index)
-## 4. Read the netcdf files.
+## 4. Read the NetCDF files.
 argos <- readProfiles(profiles)
 ## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)

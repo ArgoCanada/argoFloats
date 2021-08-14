@@ -13,7 +13,6 @@
 #' summary(index)
 #'
 ## @importFrom oce processingLogShow vectorShow
-#' @importFrom methods callNextMethod
 #' @importFrom utils head
 #' @export
 #'
@@ -54,7 +53,7 @@ setMethod(f="summary",
                           if (ndata>1) " rows " else " row ",
                           "and column names: \"",
                           paste(head(colnames, -1), collapse="\", \""),
-                          " and \"", tail(colnames, 1), "\"", "\n", sep="")
+                          "\" and \"", tail(colnames, 1), "\"\n", sep="")
                   } else {
                       cat("* index: (none)\n", sep="")
                   }
@@ -64,7 +63,7 @@ setMethod(f="summary",
                   cat("* hint: use readProfiles() on this to read these files\n")
               } else if (object@metadata$type == "argos") {
                   cat("* contains", length(object@data$argos), "objects\n")
-                  cat("* hint: access these objects with e.g. x[[\"argos\"]]\n")
+                  cat("* hint: access list of oce::argo objects with x[[\"argos\"]] or a single one with e.g. x[[1]]\n")
               }
               oce::processingLogShow(object)
               invisible(NULL)

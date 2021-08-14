@@ -5,9 +5,9 @@
 \alias{index}
 \title{A sample index of profiles}
 \description{
-This was created by subsetting a global index to the 1788 Argo profiles
+This was created by subsetting a global index to the Argo profiles
 that were within a 200km radius of Marsh Harbour, Abaco Island,
-Bahamas, as of 2020 March 14, using the following code.\preformatted{indexAll <- getIndex()
+Bahamas, using the following code.\preformatted{indexAll <- getIndex()
 index <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=200))
 }
@@ -15,11 +15,11 @@ index <- subset(indexAll,
 \section{Caveat about out-of-date index files}{
 
 
-Note that the netcdf files on argo repositories are changeable,
+Note that the NetCDF files on Argo repositories are changeable,
 not just in content, but also in file name.  For example, the data acquired
-in a given profile of a given float may initially be provided in realtime
+in a given profile of a given float may initially be provided in real-time
 mode (with a file name containing an "R" as the first or second character),
-my later be replaced later with a delayed-mode file (with a "D" in the first
+but later be replaced later with a delayed-mode file (with a "D" in the first
 or second character). Since index files name data files directly, this means
 that index files can become out-of-date, containing references to netcdf
 files that no longer exist on the server. This applies to the sample
@@ -36,7 +36,6 @@ plot(index, bathymetry=FALSE)
 Other datasets provided with argoFloats: 
 \code{\link{indexBgc}},
 \code{\link{indexDeep}},
-\code{\link{indexMerged}},
 \code{\link{indexSynthetic}}
 }
 \concept{datasets provided with argoFloats}

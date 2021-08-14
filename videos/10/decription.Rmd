@@ -1,0 +1,5 @@
+This video demonstrates how to analyze adjusted Argo data using the useAdjusted() function from the argoFloats package.
+
+R language,oceanography,Dalhousie University,Argo float,computing,data processing,adjusted data
+
+

@@ -1,0 +1,16 @@
+if (!interactive()) png("TS.png", unit="in", width=7, height=3.92, pointsize=11, res=100)
+library(argoFloats)
+# Get world index
+data(index)
+# Get index withing 50km of Bermuda
+ais <- subset(index, 1:10)
+# Get profile data files for this near-Bermuda index
+pr <- getProfiles(ais)
+# Read those data files
+a <- readProfiles(pr)
+QC <- applyQC(a)
+# Plot a map to the left, and a TS diagram to the right
+par(mfrow=c(1, 2))
+plot(QC, which="map")
+plot(QC, which='TS')
+if (!interactive()) dev.off()
