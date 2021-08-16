@@ -115,6 +115,8 @@ serverMapApp <- function(input, output, session)
     debug <- shiny::getShinyOption("debug")
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages('shiny') for mapApp() to work")
+    if (!requireNamespace("colourpicker", quietly=TRUE))
+        stop("must install.packages('colourpicker') for mapApp() to work")
     ## State variable: reactive!
     state <- shiny::reactiveValues(xlim=c(-180, 180),
         ylim=c(-90, 90),
