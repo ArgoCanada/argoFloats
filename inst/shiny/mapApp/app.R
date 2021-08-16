@@ -24,7 +24,7 @@ keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
 <li> '<b>0</b>': Unzoom an area and keep same time scale</li>
 <li> '<b>?</b>': display this message</li> </ul>"
 
-overallHelp <- "This GUI has two tabs, the Main and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. You can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. <br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
+overallHelp <- "This GUI has two tabs, the Main and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. If a path is displayed, you have the option to highlight the start and end points of the path, or view the path without profile locations. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the single focus to analyze the specific float. <br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width. You are also provided with a \"Symbol Gallery\" button which when clicked provides a visual of the relevant symbol types<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. <br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
 
 
 uiMapApp <- shiny::fluidPage(
@@ -62,17 +62,14 @@ uiMapApp <- shiny::fluidPage(
                         shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                             shiny::selectInput("Cborder", "Border Colour",
                                 choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"),
-                                selected="black")))),
-                )),
-        shiny::fluidRow(
-            shiny::actionButton("symbolGallery", "symbol gallery")
-            ),
+                                selected="black")))))),
 
         shiny::fluidRow(
             shiny::column(2, shiny::selectInput("CPcolour", "Path Colour",
                     choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"),
                     selected="default")),
-            shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1)))),
+            shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1)),
+            shiny::column(3, shiny::actionButton("CsymbolGallery", "Symbol Gallery")))),
 
     shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
         shiny::mainPanel(
@@ -91,7 +88,8 @@ uiMapApp <- shiny::fluidPage(
                 shiny::column(3, shiny::selectInput("BPcolour", "Path Colour",
                         choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"),
                         selected="default")),
-                shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1)),
+                shiny::column(3, shiny::actionButton("BsymbolGallery", "Symbol Gallery"))))),
 
     shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
         shiny::mainPanel(
@@ -110,7 +108,8 @@ uiMapApp <- shiny::fluidPage(
                 shiny::column(3, shiny::selectInput("DPcolour", "Path Colour",
                         choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"),
                         selected="default")),
-                shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1)),
+                shiny::column(3, shiny::actionButton("DsymbolGallery", "Symbol Gallery"))))),
 
     shiny::conditionalPanel("input.tabselected!=3",
         shiny::fluidRow(shiny::plotOutput("plotMap",
@@ -596,10 +595,20 @@ serverMapApp <- function(input, output, session)
             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
         })
 
-    # FIXME: the placement of this button is poor -- it's just to show J how to code this.
-    shiny::observeEvent(input$symbolGallery,
+    shiny::observeEvent(input$CsymbolGallery,
         {
-            message("responding to 'symbol gallery' button")
+            shiny::showModal(shiny::modalDialog(shiny::img(src="/pch_gallery.png"),
+                    title="Symbol Gallery", size="s", easyClose=TRUE))
+        })
+
+    shiny::observeEvent(input$BsymbolGallery,
+        {
+            shiny::showModal(shiny::modalDialog(shiny::img(src="/pch_gallery.png"),
+                    title="Symbol Gallery", size="s", easyClose=TRUE))
+        })
+
+    shiny::observeEvent(input$DsymbolGallery,
+        {
             shiny::showModal(shiny::modalDialog(shiny::img(src="/pch_gallery.png"),
                     title="Symbol Gallery", size="s", easyClose=TRUE))
         })
