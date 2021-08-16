@@ -55,7 +55,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::mainPanel(
                 shiny::column(3,
                   colourpicker::colourInput("Ccolour", "Symbol Colour", colDefaults$core)),
-                shiny::column(3, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+                shiny::column(3, shiny::numericInput("Csymbol", "Symbol Type", value=21, min=0, max=25)),
                 shiny::column(3, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
                 shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
                         shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
@@ -71,8 +71,8 @@ uiMapApp <- shiny::fluidPage(
         shiny::mainPanel(
             shiny::fluidRow(
                 shiny::column(3,
-                  colourpicker::colourInput("Bcolour", "Symbol Colour", colDefaults$bgc)),
-                shiny::column(3, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+                    colourpicker::colourInput("Bcolour", "Symbol Colour", colDefaults$bgc)),
+                shiny::column(3, shiny::numericInput("Bsymbol", "Symbol Type", value=21, min=0, max=25)),
                 shiny::column(3, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
                 shiny::column(3,shiny::conditionalPanel("input.Bsymbol== 21",
                         shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
@@ -87,8 +87,8 @@ uiMapApp <- shiny::fluidPage(
         shiny::mainPanel(
             shiny::fluidRow(
                 shiny::column(3,
-                  colourpicker::colourInput("Dcolour", "Symbol Colour", colDefaults$deep)),
-                shiny::column(3, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
+                    colourpicker::colourInput("Dcolour", "Symbol Colour", colDefaults$deep)),
+                shiny::column(3, shiny::numericInput("Dsymbol", "Symbol Type", value=21, min=0, max=25)),
                 shiny::column(3, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
                 shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
                         shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
