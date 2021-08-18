@@ -221,12 +221,6 @@ serverMapApp <- function(input, output, session)
         ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
     pinlon <- function(lon)
         ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
-    ## Function to show an error instead of a plot
-    showError <- function(msg)
-    {
-        plot(0:1, 0:1, xlab="", ylab="", type="n", axes=FALSE)
-        text(0.5, 0.5, msg, col=2, font=2)
-    }
 
     output$UIview <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
@@ -688,7 +682,10 @@ serverMapApp <- function(input, output, session)
 
     output$plotMap <- shiny::renderPlot({
         if (state$startTime > state$endTime) {
-            showError(paste0("Start must precede End , but got Start=", format(state$startTime, "%Y-%m-%d"), " and End=", format(state$endTime, "%Y-%m-%d.")))
+            shiny::showNotification(
+                paste0("Start must precede End, but got Start=",
+                    format(state$startTime, "%Y-%m-%d"), " and End=",
+                    format(state$endTime, "%Y-%m-%d.")), type="error")
         } else {
             if (!is.null(input$brush)) {
                 ## Require a minimum size, to avoid mixups with minor click-slide
