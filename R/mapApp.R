@@ -56,7 +56,7 @@
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
-#' @importFrom shiny shinyApp shinyOptions
+## @importFrom shiny shinyApp shinyOptions
 #' @importFrom graphics arrows image lines mtext
 #' @importFrom grDevices col2rgb grey
 #' @importFrom utils write.table
@@ -67,6 +67,8 @@ mapApp <- function(age=argoDefaultIndexAge(),
     colLand="lightgray",
     debug=0)
 {
+    if (!requireNamespace("colourpicker", quietly=TRUE))
+        stop("must install.packages(\"colourpicker\") for this to work")
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages(\"shiny\") for this to work")
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
