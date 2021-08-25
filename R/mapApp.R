@@ -67,11 +67,14 @@ mapApp <- function(age=argoDefaultIndexAge(),
     colLand="lightgray",
     debug=0)
 {
-    if (!requireNamespace("colourpicker", quietly=TRUE))
-        stop("must install.packages(\"colourpicker\") for this to work")
-    if (!requireNamespace("shiny", quietly=TRUE))
-        stop("must install.packages(\"shiny\") for this to work")
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
+    # Check for related packages and show how to install any that are missing
+    needs <- c("colourpicker", "curl", "lubridate", "ncdf4", "oce", "ocedata", "s2", "sf")
+    need <- needs[sapply(needs, function(p) !requireNamespace(p, quietly=TRUE))]
+    if (length(need) > 0L)
+        stop("please install necessary packages, using\n  install.packages(c(\"",
+            paste(need, collapse="\",\""), "\"))")
+    # Establish options related to downloading and caching
     shiny::shinyOptions(age=age,
         destdir=destdir,
         argoServer=server, # rename server to avoid shiny problem

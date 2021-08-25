@@ -1,3 +1,4 @@
+^.*\.csv$
 Rplots.pdf
 ^mapApp.*rda$
 ^.git$
