@@ -69,8 +69,8 @@ mapApp <- function(age=argoDefaultIndexAge(),
 {
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
     # Check for related packages and show how to install any that are missing
-    needs <- c("colourpicker", "curl", "lubridate", "ncdf4", "oce", "ocedata", "s2", "sf")
-    need <- needs[sapply(needs, function(p) !requireNamespace(p, quietly=TRUE))]
+    need <- c("colourpicker", "curl", "lubridate", "ncdf4", "oce", "ocedata", "s2", "sf")
+    need <- need[sapply(need, function(p) !requireNamespace(p, quietly=TRUE))]
     if (length(need) > 0L)
         stop("please install necessary packages, using\n  install.packages(c(\"",
             paste(need, collapse="\",\""), "\"))")
