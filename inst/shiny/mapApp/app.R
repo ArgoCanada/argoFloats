@@ -20,7 +20,7 @@ keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
 <li> '<b>f</b>': go <b>f</b>orward in time</li>
 <li> '<b>b</b>': go <b>b</b>ackward in time</li>
 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
-<li> '<b>p</b>': freeze and paste active hover message (press <b>p</b> again to toggle)</li>
+<li> '<b>h</b>': hold active hover message (press <b>h</b> again to undo)</li>
 <li> '<b>0</b>': Unzoom an area and keep same time scale</li>
 <li> '<b>?</b>': display this message</li> </ul>"
 
@@ -655,7 +655,7 @@ serverMapApp <- function(input, output, session)
             } else if (key == "o") { # zoom out
                 state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
-            } else if (key == "p") { # paste hover message
+            } else if (key == "h") { # paste hover message
                 state$hoverIsPasted <<- !state$hoverIsPasted
             } else if (key == "r") { # reset to start
                 state$xlim <<- c(-180, 180)
@@ -673,8 +673,8 @@ serverMapApp <- function(input, output, session)
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
                 shiny::updateSelectInput(session, "focus", selected="all")
-                shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
-            } else if (key == "?") { # show help on keystrokes
+                    shine::updateCheckboxGroupInput(session, "show", selected=character(0))
+                } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
             }
