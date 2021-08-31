@@ -555,6 +555,7 @@ serverMapApp <- function(input, output, session)
             i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
             state$focusID <<- argo$ID[i]
             shiny::updateTextInput(session, "ID", value=state$focusID)
+            shiny::updateSelectInput(session, "focus", selected="single")
             msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
                 argo$ID[i],
                 argo$cycle[i],
