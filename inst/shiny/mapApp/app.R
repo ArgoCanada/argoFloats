@@ -664,6 +664,7 @@ serverMapApp <- function(input, output, session)
                 state$startTime <<- startTime
                 state$endTime <<- endTime
                 state$focusID <<- NULL
+                state$hoverIsPasted <<- FALSE
                 shiny::updateSelectInput(session, "focus", selected="all")
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 shiny::updateDateInput(session, inputId="start", label="Start", value=startTime)
