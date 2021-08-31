@@ -294,7 +294,7 @@ serverMapApp <- function(input, output, session)
     output$info <- shiny::renderText({
         ## show location.  If lat range is under 90deg, also show nearest float within 100km
         if (state$hoverIsPasted)
-            return(lastHoverMessage)
+            return(paste("[HOLD:ON] ",lastHoverMessage))
         x <- input$hover$x
         y <- input$hover$y
         if (is.null(x) && input$tabselected == 1)
