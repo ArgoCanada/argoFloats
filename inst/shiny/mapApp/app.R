@@ -287,7 +287,12 @@ serverMapApp <- function(input, output, session)
 
     output$UIinfo <- shiny::renderUI({
         if (argoFloatsIsCached("argo")) {
-            shiny::fluidRow(shiny::verbatimTextOutput("info"))
+            shiny::fluidRow(shiny::verbatimTextOutput("info"),
+                if (state$hoverIsPasted == TRUE)
+                    tags$head(tags$style("#info{color: red}"
+                    )
+                    )
+            )
         }
     })
 
