@@ -1,5 +1,10 @@
 # argoFloats (development version)
 
+## argoFloats 1.0.0
+
+* Improve documentation for a CRAN release
+* Remove version number from mapApp()
+
 ## argoFloats 0.2.0
 
 * Add subset by section

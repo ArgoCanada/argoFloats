@@ -1,7 +1,7 @@
 # vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 appName <- "mapApp"
-appVersion <- "0.1"
+#appVersion <- "0.1"
 
 colDefaults <- list(core="#F5C710", bgc="#05f076", deep="#CD0BBC")
 
@@ -20,11 +20,11 @@ keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
 <li> '<b>f</b>': go <b>f</b>orward in time</li>
 <li> '<b>b</b>': go <b>b</b>ackward in time</li>
 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
-<li> '<b>p</b>': freeze and paste active hover message (press <b>p</b> again to toggle)</li>
+<li> '<b>h</b>': hold active hover message (press <b>h</b> again to undo)</li>
 <li> '<b>0</b>': Unzoom an area and keep same time scale</li>
 <li> '<b>?</b>': display this message</li> </ul>"
 
-overallHelp <- "This GUI has two tabs, the Main and Settings tab.<br><br> On the <b> Main tab </b>, enter values in the Start and End boxes to set the time range in numeric yyyy-mm-dd format, or empty either box to use the full time range of the data.<br><br>Use 'View' to select profiles to show (core points are in black, deep in purple, and BGC in green), whether to show coastline and topography in high or low resolution, whether to show contour lines, and whether to show a path trajectory. Click-drag the mouse to enlarge a region. Double-click on a particular point to get a popup window giving info on that profile. After such double-clicking, you have the ability to switch to the Trajectory tab to analyze the specific float. You can change the path to show no profiles. Additionally,you also may change to focus to Single, to see the whole history of that float's trajectory. If the focus is on a single trajectory, click on Start to see the earliest position of that particular float or End to see the most recent position of the float.<br><br>A box above the plot shows the mouse position in longitude and latitude.  If the latitude range is under 90 degrees, a scale bar will appear, and if the mouse is within 100km of a float location, that box will also show the float ID and the cycle (profile) number.<br><br> On the <b> Settings tab </b>, you have the ability to click on Core, BGC, or Deep. Each of these have the option to change the symbol colour, type, and size, as well as the path colour and width.<br><br>The \"R code\" button brings up a window showing R code that isolates to the view shown and demonstrates some further operations. <br><br>Type '?' to bring up a window that lists key-stroke commands, for further actions including zooming and shifting the spatial view, and sliding the time window.<br><br>For more details, type <tt>?argoFloats::mapApp</tt> in an R console."
+overallHelp <- "<p>This app responds to keystroke actions and GUI actions.</p><p>The permitted <u>keystroke actions</u> will be shown in a pop-up window if the <b>?</b> key is pressed. There are keys for zooming in and out, for moving the focus region through space and time, and for controlling updates to an information box that displays mouse location and aspects of a nearby float.</p><p>The <u>GUI actions</u> are reasonably self-explanatory. On the <i>Main tab</i>, users may enter values in the \"Start\" and \"End\" boxes to set the time range of the display, or empty either box to use the data range. The checkboxes of the \"View\" grouping may be used to choose whether to show 'Core', 'Deep' or 'BGC' data, whether to draw a high-resolution coastline, whether to draw connecting line segments to indicate the path of individual floats, and whether to indicate water depth using contour lines. If a path is displayed, there are options to highlight its start and end points, or to hide all points. The focus region may be selected by pressing the mouse at one location, sliding it to a new location, and then releasing it. Double-clicking on a particular float location creates a pop-up window that provides information on that profile. There is a way to focus on an individual float, to the exclusion of others.  Experimenting with the interface will reveal other capabilities; for example, it is worth exploring the <i>Settings tab</i>, which provides control over several aesthetic properties.<p>A text box above the plot shows the mouse position in longitude and latitude as well as information about the nearest profile, if it is within 100km of the mouse location (typing <b>h</b> toggles a setting that causes this information to track the mouse).</p><p>The \"R code\" button brings up a window showing R code that will approximate the view shown in the app, and that hints at some other operations that might be useful in analysis.</p><p>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.</p>"
 
 
 uiMapApp <- shiny::fluidPage(
@@ -51,66 +51,76 @@ uiMapApp <- shiny::fluidPage(
     shiny::uiOutput(outputId="UItrajectory"),
 
     shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
-        shiny::fluidRow(
-            shiny::mainPanel(
-                shiny::column(3, shiny::selectInput("Ccolour", "Symbol Colour",
-                        choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"),
-                        selected="default")),
-                shiny::column(3, shiny::sliderInput("Csymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-                shiny::column(3, shiny::sliderInput("Csize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
+        shiny::mainPanel(
+            shiny::fluidRow(
+                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                    hr("Symbol Properties"))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    shiny::div(style="margin-bottom: 10px;",
+                        shiny::actionButton("CsymbolGallery", "Symbol Gallery")))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    colourpicker::colourInput("Ccolour", "Colour", colDefaults$core)),
+                shiny::column(2, shiny::numericInput("Csymbol", "Type", value=21, min=0, max=25)),
+                shiny::column(3, shiny::sliderInput("Csize", "Size", min=0, max=1, value=0.9, step=0.05)),
                 shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
-                        shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                            shiny::selectInput("Cborder", "Border Colour",
-                                choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"),
-                                selected="black")))),
-                )),
-        shiny::fluidRow(
-            shiny::actionButton("symbolGallery", "symbol gallery")
-            ),
-
-        shiny::fluidRow(
-            shiny::column(2, shiny::selectInput("CPcolour", "Path Colour",
-                    choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"),
-                    selected="default")),
-            shiny::column(2, shiny::sliderInput("CPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1)))),
+                        colourpicker::colourInput("Cborder", "Border Colour", "black")))),
+            shiny::fluidRow(
+                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                    hr("Path Properties"))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    colourpicker::colourInput("CPcolour", "Colour", colDefaults$core)),
+                shiny::column(3, shiny::sliderInput("CPwidth", "Width", min=0.5, max=2.5, value=1, step=0.1))))),
 
     shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
         shiny::mainPanel(
             shiny::fluidRow(
-                shiny::column(3, shiny::selectInput("Bcolour", "Symbol Colour",
-                        choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"),
-                        selected="default")),
-                shiny::column(3, shiny::sliderInput("Bsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-                shiny::column(3, shiny::sliderInput("Bsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
-                shiny::column(3,shiny::conditionalPanel("input.Bsymbol== 21",
-                        shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                            shiny::selectInput("Bborder", "Border Colour",
-                                choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"),
-                                selected="black"))))),
+                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                    hr("Symbol Properties"))),
             shiny::fluidRow(
-                shiny::column(3, shiny::selectInput("BPcolour", "Path Colour",
-                        choices=c("black","white","blue","green","yellow","red","pink","purple", "orange","default"),
-                        selected="default")),
-                shiny::column(3, shiny::sliderInput("BPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3,
+                    shiny::div(style="margin-bottom: 10px;",
+                        shiny::actionButton("BsymbolGallery", "Symbol Gallery")))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    colourpicker::colourInput("Bcolour", "Colour", colDefaults$bgc)),
+                shiny::column(2, shiny::numericInput("Bsymbol", "Type", value=21, min=0, max=25)),
+                shiny::column(3, shiny::sliderInput("Bsize", "Size", min=0, max=1, value=0.9, step=0.05)),
+                shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
+                        colourpicker::colourInput("Bborder", "Border Colour", "black")))),
+            shiny::fluidRow(
+                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                    hr("Path Properties"))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    colourpicker::colourInput("BPcolour", "Colour", colDefaults$bgc)),
+                shiny::column(3, shiny::sliderInput("BPwidth", "Width", min=0.5, max=2.5, value=1, step=0.1))))),
 
     shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
         shiny::mainPanel(
             shiny::fluidRow(
-                shiny::column(3, shiny::selectInput("Dcolour", "Symbol Colour",
-                        choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"),
-                        selected="default")),
-                shiny::column(3, shiny::sliderInput("Dsymbol", "Symbol Type", min=0, max=25, value=21, step=1)),
-                shiny::column(3, shiny::sliderInput("Dsize", "Symbol Size", min=0, max=1, value=0.9, step=0.05)),
-                shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
-                        shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                            shiny::selectInput("Dborder", "Border Colour",
-                                choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"),
-                                selected="black"))))),
+                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                    hr("Symbol Properties"))),
             shiny::fluidRow(
-                shiny::column(3, shiny::selectInput("DPcolour", "Path Colour",
-                        choices=c("black","white","blue","green","yellow","red","pink","purple", "orange", "default"),
-                        selected="default")),
-                shiny::column(3, shiny::sliderInput("DPwidth", "Path Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3,
+                    shiny::div(style="margin-bottom: 10px;",
+                        shiny::actionButton("DsymbolGallery", "Symbol Gallery")))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    colourpicker::colourInput("Dcolour", "Colour", colDefaults$deep)),
+                shiny::column(2, shiny::numericInput("Dsymbol", "Type", value=21, min=0, max=25)),
+                shiny::column(3, shiny::sliderInput("Dsize", "Size", min=0, max=1, value=0.9, step=0.05)),
+                shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
+                        colourpicker::colourInput("Dborder", "Border Colour", "black")))),
+            shiny::fluidRow(
+                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                    hr("Path Properties"))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    colourpicker::colourInput("DPcolour", "Colour", colDefaults$deep)),
+                shiny::column(3, shiny::sliderInput("DPwidth", "Width", min=0.5, max=2.5, value=1, step=0.1))))),
 
     shiny::conditionalPanel("input.tabselected!=3",
         shiny::fluidRow(shiny::plotOutput("plotMap",
@@ -128,6 +138,8 @@ serverMapApp <- function(input, output, session)
     debug <- shiny::getShinyOption("debug")
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages('shiny') for mapApp() to work")
+    if (!requireNamespace("colourpicker", quietly=TRUE))
+        stop("must install.packages('colourpicker') for mapApp() to work")
     ## State variable: reactive!
     state <- shiny::reactiveValues(xlim=c(-180, 180),
         ylim=c(-90, 90),
@@ -209,12 +221,6 @@ serverMapApp <- function(input, output, session)
         ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
     pinlon <- function(lon)
         ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
-    ## Function to show an error instead of a plot
-    showError <- function(msg)
-    {
-        plot(0:1, 0:1, xlab="", ylab="", type="n", axes=FALSE)
-        text(0.5, 0.5, msg, col=2, font=2)
-    }
 
     output$UIview <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
@@ -239,7 +245,7 @@ serverMapApp <- function(input, output, session)
 
     output$UIwidget <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-            shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:2em;\">  ",appName, appVersion,"</b>"))),
+            shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:2em;\">  ",appName, "</b>"))),
                 shiny::actionButton("help", "Help"),
                 shiny::actionButton("code", "Code"),
                 shiny::actionButton("goW", shiny::HTML("&larr;")),
@@ -281,14 +287,19 @@ serverMapApp <- function(input, output, session)
 
     output$UIinfo <- shiny::renderUI({
         if (argoFloatsIsCached("argo")) {
-            shiny::fluidRow(shiny::verbatimTextOutput("info"))
+            shiny::fluidRow(shiny::verbatimTextOutput("info"),
+                if (state$hoverIsPasted == TRUE)
+                    tags$head(tags$style("#info{color: red}"
+                    )
+                    )
+            )
         }
     })
 
     output$info <- shiny::renderText({
         ## show location.  If lat range is under 90deg, also show nearest float within 100km
         if (state$hoverIsPasted)
-            return(lastHoverMessage)
+            return(paste("[HOLD:ON] ",lastHoverMessage))
         x <- input$hover$x
         y <- input$hover$y
         if (is.null(x) && input$tabselected == 1)
@@ -549,6 +560,7 @@ serverMapApp <- function(input, output, session)
             i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
             state$focusID <<- argo$ID[i]
             shiny::updateTextInput(session, "ID", value=state$focusID)
+            shiny::updateSelectInput(session, "focus", selected="single")
             msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
                 argo$ID[i],
                 argo$cycle[i],
@@ -596,10 +608,20 @@ serverMapApp <- function(input, output, session)
             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
         })
 
-    # FIXME: the placement of this button is poor -- it's just to show J how to code this.
-    shiny::observeEvent(input$symbolGallery,
+    shiny::observeEvent(input$CsymbolGallery,
         {
-            message("responding to 'symbol gallery' button")
+            shiny::showModal(shiny::modalDialog(shiny::img(src="/pch_gallery.png"),
+                    title="Symbol Gallery", size="s", easyClose=TRUE))
+        })
+
+    shiny::observeEvent(input$BsymbolGallery,
+        {
+            shiny::showModal(shiny::modalDialog(shiny::img(src="/pch_gallery.png"),
+                    title="Symbol Gallery", size="s", easyClose=TRUE))
+        })
+
+    shiny::observeEvent(input$DsymbolGallery,
+        {
             shiny::showModal(shiny::modalDialog(shiny::img(src="/pch_gallery.png"),
                     title="Symbol Gallery", size="s", easyClose=TRUE))
         })
@@ -639,7 +661,7 @@ serverMapApp <- function(input, output, session)
             } else if (key == "o") { # zoom out
                 state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
-            } else if (key == "p") { # paste hover message
+            } else if (key == "h") { # paste hover message
                 state$hoverIsPasted <<- !state$hoverIsPasted
             } else if (key == "r") { # reset to start
                 state$xlim <<- c(-180, 180)
@@ -647,6 +669,7 @@ serverMapApp <- function(input, output, session)
                 state$startTime <<- startTime
                 state$endTime <<- endTime
                 state$focusID <<- NULL
+                state$hoverIsPasted <<- FALSE
                 shiny::updateSelectInput(session, "focus", selected="all")
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 shiny::updateDateInput(session, inputId="start", label="Start", value=startTime)
@@ -657,8 +680,8 @@ serverMapApp <- function(input, output, session)
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
                 shiny::updateSelectInput(session, "focus", selected="all")
-                shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
-            } else if (key == "?") { # show help on keystrokes
+                    shine::updateCheckboxGroupInput(session, "show", selected=character(0))
+                } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
             }
@@ -666,7 +689,10 @@ serverMapApp <- function(input, output, session)
 
     output$plotMap <- shiny::renderPlot({
         if (state$startTime > state$endTime) {
-            showError(paste0("Start must precede End , but got Start=", format(state$startTime, "%Y-%m-%d"), " and End=", format(state$endTime, "%Y-%m-%d.")))
+            shiny::showNotification(
+                paste0("Start must precede End, but got Start=",
+                    format(state$startTime, "%Y-%m-%d"), " and End=",
+                    format(state$endTime, "%Y-%m-%d.")), type="error")
         } else {
             if (!is.null(input$brush)) {
                 ## Require a minimum size, to avoid mixups with minor click-slide

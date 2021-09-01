@@ -7,7 +7,7 @@
 \title{Sample argo file (synthetic real-time data)}
 \description{
 This is the NetCDF file for cycle 131 of Argo float 2902204, downloaded from
-\url{ftp://ftp.ifremer.fr/ifremer/argo/dac/incois/2902204/profiles/SR2902204_131.nc}
+\code{ftp://ftp.ifremer.fr/ifremer/argo/dac/incois/2902204/profiles/SR2902204_131.nc}
 on 2020 June 24.
 As its filename indicates, it holds the "synthetic" version of "real-time" data.
 }

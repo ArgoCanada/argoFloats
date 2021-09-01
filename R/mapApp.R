@@ -56,7 +56,7 @@
 #'
 #' @author Dan Kelley and Jaimie Harbin
 #'
-#' @importFrom shiny shinyApp shinyOptions
+## @importFrom shiny shinyApp shinyOptions
 #' @importFrom graphics arrows image lines mtext
 #' @importFrom grDevices col2rgb grey
 #' @importFrom utils write.table
@@ -67,9 +67,14 @@ mapApp <- function(age=argoDefaultIndexAge(),
     colLand="lightgray",
     debug=0)
 {
-    if (!requireNamespace("shiny", quietly=TRUE))
-        stop("must install.packages(\"shiny\") for this to work")
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
+    # Check for related packages and show how to install any that are missing
+    need <- c("colourpicker", "curl", "lubridate", "ncdf4", "oce", "ocedata", "s2", "sf")
+    need <- need[sapply(need, function(p) !requireNamespace(p, quietly=TRUE))]
+    if (length(need) > 0L)
+        stop("please install necessary packages, using\n  install.packages(c(\"",
+            paste(need, collapse="\",\""), "\"))")
+    # Establish options related to downloading and caching
     shiny::shinyOptions(age=age,
         destdir=destdir,
         argoServer=server, # rename server to avoid shiny problem

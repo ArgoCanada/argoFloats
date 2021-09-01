@@ -7,7 +7,7 @@
 \title{Sample argo file (delayed-mode data)}
 \description{
 This is NetCDF file for delayed-mode data for cycle 48 of Argo float 4900785, downloaded from
-\url{https://data-argo.ifremer.fr/dac/aoml/4900785/profiles/D4900785_048.nc}
+\code{https://data-argo.ifremer.fr/dac/aoml/4900785/profiles/D4900785_048.nc}
 on 2020 June 24.
 }
 \examples{
