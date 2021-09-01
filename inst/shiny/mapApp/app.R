@@ -1,7 +1,7 @@
 # vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 appName <- "mapApp"
-appVersion <- "0.1"
+#appVersion <- "0.1"
 
 colDefaults <- list(core="#F5C710", bgc="#05f076", deep="#CD0BBC")
 
@@ -245,7 +245,7 @@ serverMapApp <- function(input, output, session)
 
     output$UIwidget <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-            shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:2em;\">  ",appName, appVersion,"</b>"))),
+            shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:2em;\">  ",appName, "</b>"))),
                 shiny::actionButton("help", "Help"),
                 shiny::actionButton("code", "Code"),
                 shiny::actionButton("goW", shiny::HTML("&larr;")),

@@ -1,7 +1,7 @@
 Package: argoFloats
 Type: Package
 Title: Analysis of Oceanographic Argo Floats
-Version: 0.2.0
+Version: 1.0.0
 Authors@R: c(
     person(given="Dan", family="Kelley", email="dan.kelley@dal.ca", role=c("aut", "cre"),
         comment=c(ORCID="https://orcid.org/0000-0001-7808-5911")),
