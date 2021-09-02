@@ -411,7 +411,7 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">index1</span><span class="op">)</span>
 <span class="va">argos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="va">profiles</span><span class="op">)</span>
 <span class="va">argosClean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/applyQC.html">applyQC</a></span><span class="op">(</span><span class="va">argos</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"profile"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"profile"</span>, type<span class="op">=</span><span class="st">"p"</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="readProfiles.png" alt=""><p class="caption">Figure 5: Temperature profile created using argoFloats readProfiles function</p>
 </div>
