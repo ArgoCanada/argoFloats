@@ -2,7 +2,7 @@
 % Please edit documentation in R/qc.R
 \name{applyQC}
 \alias{applyQC}
-\title{Use quality-control flags to alter argoFloats data}
+\title{Apply Quality Control Flags}
 \usage{
 applyQC(x, flags = NULL, actions = NULL, debug = 0)
 }

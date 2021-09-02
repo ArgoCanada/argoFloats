@@ -2,7 +2,7 @@
 % Please edit documentation in R/adjusted.R
 \name{useAdjusted}
 \alias{useAdjusted}
-\title{Switch [[ and Plot to Focus on Adjusted data, if available}
+\title{Switch [[ and Plot to Focus on Adjusted Data, if Available}
 \usage{
 useAdjusted(argos, fallback = FALSE, debug = 0)
 }

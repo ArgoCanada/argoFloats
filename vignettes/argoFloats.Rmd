@@ -98,7 +98,7 @@ data("index")
 
 It is now possible to process the downloaded index using the `argoFloats` specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()` as shown below.
 
-# Overview of Processing Steps
+# Processing Steps
 
 The following subsections use built-in data.
 

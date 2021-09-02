@@ -1,6 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-#' Read argo profiles from local files
+#' Read Argo Profiles From Local Files
 #'
 #' This works with either a vector of NetCDF files,
 #' or a [`argoFloats-class`] object of type `"profiles"`, as

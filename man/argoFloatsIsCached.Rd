@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.R
 \name{argoFloatsIsCached}
 \alias{argoFloatsIsCached}
-\title{Check whether an item is cached}
+\title{Check Whether an Item is Cached}
 \usage{
 argoFloatsIsCached(name, debug = 0)
 }
@@ -12,7 +12,7 @@ argoFloatsIsCached(name, debug = 0)
 \item{debug}{an integer, passed to \code{\link[=argoFloatsDebug]{argoFloatsDebug()}}.}
 }
 \description{
-Check whether an item is cached
+Check Whether an Item is Cached
 }
 \author{
 Dan Kelley, making a thin copy of code written by Dewey Dunnington

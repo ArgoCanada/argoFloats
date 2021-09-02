@@ -156,7 +156,7 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
     res
 }
 
-#' Switch [[ and Plot to Focus on Adjusted data, if available
+#' Switch [[ and Plot to Focus on Adjusted Data, if Available
 #'
 #' `useAdjusted` returns a copy of an `argos`-type object (as created with the
 #' [readProfiles()] function), in which the individual

@@ -3,7 +3,7 @@
 \docType{data}
 \name{indexDeep}
 \alias{indexDeep}
-\title{A sample index of deep Argo}
+\title{A Sample Index of Deep Argo}
 \description{
 This was created by subsetting a global index to the deep Argo profiles
 that were within a 800km radius of Antarctica (67S,105E),

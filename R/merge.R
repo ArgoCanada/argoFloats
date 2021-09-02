@@ -1,6 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-#' Merge argoFloats indices
+#' Merge argoFloats Indices
 #'
 #' @param x,y two [`argoFloats-class`] objects of type `index`, e.g. as created by [getIndex()].
 #'

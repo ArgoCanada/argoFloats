@@ -2,7 +2,7 @@
 % Please edit documentation in R/qc.R
 \name{showQCTests}
 \alias{showQCTests}
-\title{Show real-time QC test results for an argo object}
+\title{Show Real-Time QC Test Results For an Argo Object}
 \usage{
 showQCTests(x, style = "brief")
 }

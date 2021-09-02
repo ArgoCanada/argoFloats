@@ -4,7 +4,7 @@
 \encoding{UTF-8}
 \name{SR2902204_131.nc}
 \alias{SR2902204_131.nc}
-\title{Sample argo file (synthetic real-time data)}
+\title{Sample Argo File (Real-Time Synthetic Data)}
 \description{
 This is the NetCDF file for cycle 131 of Argo float 2902204, downloaded from
 \code{ftp://ftp.ifremer.fr/ifremer/argo/dac/incois/2902204/profiles/SR2902204_131.nc}

@@ -3,7 +3,7 @@
 \docType{data}
 \name{indexSynthetic}
 \alias{indexSynthetic}
-\title{A sample index of synthetic (i.e. combined) Argo and biogeochemical-argo profiles}
+\title{A Sample Index of Synthetic (i.e. Combined) Argo and Biogeochemical-Argo Profiles}
 \description{
 This was created by subsetting a global index to the BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,

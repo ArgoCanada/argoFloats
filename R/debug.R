@@ -1,6 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-#' Print debugging information.
+#' Print Debugging Information
 #'
 #' This function is intended mainly for use within the package, but users may
 #' also call it directly in their own code.  Within the package, the value

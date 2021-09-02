@@ -1,4 +1,4 @@
-#' Show information about argoFloats object
+#' Show Information About argoFloats Object
 #'
 #' @param object an [`argoFloats-class`] object.
 #'

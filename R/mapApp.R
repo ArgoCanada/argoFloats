@@ -1,4 +1,4 @@
-#' Interactive app for viewing Argo float positions
+#' Interactive App For Viewing Argo Float Positions
 #'
 #' The GUI permits specifying a spatial-temporal region of interest, a set
 #' of float types to show, etc.  The interface ought to be reasonably

@@ -3,7 +3,7 @@
 \docType{data}
 \name{indexBgc}
 \alias{indexBgc}
-\title{A sample index of biogeochemical-Argo profiles}
+\title{A Sample Index of Biogeochemical-Argo Profiles}
 \description{
 This was created by subsetting a global index to the BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,

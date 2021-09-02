@@ -65,7 +65,7 @@
 NULL
 
 
-#' A sample index of profiles
+#' A Sample Index of Profiles
 #'
 #' This was created by subsetting a global index to the Argo profiles
 #' that were within a 200km radius of Marsh Harbour, Abaco Island,
@@ -89,7 +89,7 @@ NULL
 NULL
 
 
-#' A sample index of biogeochemical-Argo profiles
+#' A Sample Index of Biogeochemical-Argo Profiles
 #'
 #' This was created by subsetting a global index to the BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
@@ -140,7 +140,7 @@ NULL
 ## @family datasets provided with argoFloats
 NULL
 
-#' A sample index of synthetic (i.e. combined) Argo and biogeochemical-argo profiles
+#' A Sample Index of Synthetic Profiles
 #'
 #' This was created by subsetting a global index to the BGC Argo profiles
 #' that were within a 300km radius of Marsh Harbour, Abaco Island,
@@ -169,7 +169,7 @@ NULL
 #' @family datasets provided with argoFloats
 NULL
 
-#' A sample index of deep Argo
+#' A Sample Index of Deep Argo
 #'
 #' This was created by subsetting a global index to the deep Argo profiles
 #' that were within a 800km radius of Antarctica (67S,105E),
@@ -193,7 +193,7 @@ NULL
 NULL
 
 #'
-#' Class to hold argoFloats objects
+#' Class to Hold argoFloats Objects
 setClass("argoFloats", slots=c(metadata="list", data="list", processingLog="list"))
 
 
