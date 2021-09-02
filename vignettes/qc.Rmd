@@ -34,7 +34,7 @@ data are handled with the `useAdjusted()` function.
 
 # Developer note
 
-I thought that after rebuilding the package and its vignttes, and installing
+I thought that after rebuilding the package and its vignettes, and installing
 the package, using
 ```{r eval=FALSE}
 library(argoFloats)
@@ -61,7 +61,7 @@ a flag value of 1, 2, 5, or 8 are considered 'good', those given a
 flag value of 9 are missing, and those given flags 3, 4, 6, and 7
 are considered 'bad'.
 
-A useful parameter to familiarize with is the `dataStateIndicator`. This tells the user the the degree of processing the data has passed through and can be helpful to determine the validity of the data. `argoFloats` has incorporated a way to subset by `dataStateIndicator` to allow the user to analyze data with a specific degree of validity if they wish.
+A useful parameter to familiarize with is the `dataStateIndicator`. This tells the user the degree of processing the data has passed through and can be helpful to determine the validity of the data. `argoFloats` has incorporated a way to subset by `dataStateIndicator` to allow the user to analyze data with a specific degree of validity if they wish.
 
 The `argoFloats` package, using the associated `oce` package, has incorporated a 3-step process when
 considering argo QC flags. The process encourages users to
@@ -227,8 +227,8 @@ on each of the Argo objects stored within the first argument, which will then
 cause future uses of the `[[` accessor to return adjusted versions of
 variables.  It should be noted that the adjusted versions are not always
 preferable (e.g. sometimes the adjusted values are all `NA`), so
-`useAdjusted()` is a somewhat sophisticated process, as is explained in the
-documentation for `useAdjusted()`.
+`useAdjusted()` is a somewhat sophisticated process, as is explained in its
+documentation.
 
 One example where it is useful to use adjusted data is when considering oxygen.
 Often times, BGC sensors have calibration issues and more specifically for
