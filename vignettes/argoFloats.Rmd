@@ -235,7 +235,7 @@ index1 <- subset(index, 1:2) # To subset for profiles
 profiles <- getProfiles(index1)
 argos <- readProfiles(profiles)
 argosClean <- applyQC(argos)
-plot(argosClean, which="profile")
+plot(argosClean, which="profile", type="p")
 ```
 
 ![Figure 5: Temperature profile created using argoFloats readProfiles function](readProfiles.png)
