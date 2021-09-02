@@ -228,9 +228,7 @@ cause future uses of the `[[` accessor to return adjusted versions of
 variables.  It should be noted that the adjusted versions are not always
 preferable (e.g. sometimes the adjusted values are all `NA`), so
 `useAdjusted()` is a somewhat sophisticated process, as is explained in the
-documentation for `useAdjusted()` and illustrated the following flowchart.
-
-![Figure 4: Flow chart for `useAdjusted()`.](../man/figures/useAdjustedDiagram.png)
+documentation for `useAdjusted()`.
 
 One example where it is useful to use adjusted data is when considering oxygen.
 Often times, BGC sensors have calibration issues and more specifically for
