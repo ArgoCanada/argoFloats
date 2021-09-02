@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.R
 \name{argoFloatsGetFromCache}
 \alias{argoFloatsGetFromCache}
-\title{Get an item from the cache}
+\title{Get an Item From The Cache}
 \usage{
 argoFloatsGetFromCache(name, debug = 0)
 }
@@ -12,5 +12,5 @@ argoFloatsGetFromCache(name, debug = 0)
 \item{debug}{an integer, passed to \code{\link[=argoFloatsDebug]{argoFloatsDebug()}}.}
 }
 \description{
-Get an item from the cache
+Get an Item From The Cache
 }
