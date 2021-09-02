@@ -47,3 +47,4 @@ marmap_coord.*csv
 ^log.dat$
 ^revdep$
 
+^README\.Rmd$
