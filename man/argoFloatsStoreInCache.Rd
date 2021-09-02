@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.R
 \name{argoFloatsStoreInCache}
 \alias{argoFloatsStoreInCache}
-\title{Store an item in the cache}
+\title{Store an Item in the Cache}
 \usage{
 argoFloatsStoreInCache(name, value, debug = 0)
 }
@@ -14,5 +14,5 @@ argoFloatsStoreInCache(name, value, debug = 0)
 \item{debug}{an integer, passed to \code{\link[=argoFloatsDebug]{argoFloatsDebug()}}.}
 }
 \description{
-Store an item in the cache
+Store an Item in the Cache
 }

@@ -4,9 +4,9 @@
 \encoding{UTF-8}
 \name{SD5903586_001.nc}
 \alias{SD5903586_001.nc}
-\title{Sample argo file (delayed synthetic BGC data)}
+\title{Sample Argo File (Delayed Synthetic Data)}
 \description{
-This is the NetCDF file for cycle 1 of Argo float SD5903586, downloaded from
+This is the NetCDF file for cycle 1 of Argo float 5903586, downloaded from
 \code{ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/SD5903586_001.nc}
 on 2020 June 24 (this URL appears to be unreliable).
 As its filename indicates, it holds "synthetic" data

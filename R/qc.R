@@ -1,6 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-#' Use quality-control flags to alter argoFloats data
+#' Apply Quality Control Flags
 #'
 #' This function examines the quality-control ("QC") flags within an [`argoFloats-class`]
 #' object that was created by [readProfiles()].  By default, it replaces all suspicious
@@ -87,7 +87,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 }
 
 
-#' Show real-time QC test results for an argo object
+#' Show Real-Time QC Test Results For an Argo Object
 #'
 #' `showQCTests` prints a summary of the quality-control (QC) tests
 #' (if any) that were performed on an Argo profile in real-time (**Caution**: any tests completed and/or failed on delayed

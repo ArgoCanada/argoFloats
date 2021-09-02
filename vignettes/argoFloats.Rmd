@@ -37,7 +37,7 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 
 # Introduction
 
-The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on Core, Biogeochemical ("BGC") , or Deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, dataStateIndicator, etc. Once downloaded, such data sets can be analyzed within `argoFloats` or using other R tools and packages.
+The `argoFloats` package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical ("BGC") , or deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, dataStateIndicator, etc. Once downloaded, such data sets can be analyzed within `argoFloats` or using other R tools and packages.
 
 # Youtube Videos
 
@@ -61,25 +61,20 @@ As an adjunct to the written documentation, the following videos are provided, t
 
 # Preliminary Setup
 
-To set up a computer to use `argoFloats`, the user should first install the following packages (*Hint:* you may have to use the `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS=TRUE)` command if you receive a Zero Exit Status Error):
+Since argoFloats is in an active phase of development, it is not yet available on CRAN. Still, it is easily installed in R with
 
-```{r eval=FALSE}
-remotes::install_github("dankelley/oce", ref="develop")
-remotes::install_github("dankelley/ocedata", ref="develop")
-remotes::install_github("ArgoCanada/argoFloats", ref="develop")
+```{r, eval=FALSE}
+library(devtools)
+install_github("ArgoCanada/argoFloats", ref="develop")
 ```
-
-The above will fail unless the `remotes` package has been installed with
-```{r eval=FALSE}
-install.packages(remotes)
-```
-at some time in the past.  (This need only be installed once.)
+`
+where, of course, the devtools package must be installed first, if it is not already present on the user's system.
 
 # Work Flow
 
 Figure 1 illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
 
-![Figure 1: Work flow of the argoFloats package](flowchart.png)
+![Figure 1: Work flow of the argoFloats package with descriptions on the left and relevant functions on the right](flowchart.png)
 
 As shown above, the central functions for the `argoFloats` package are `getIndex()`, `subset()`, `getProfiles()`, and `readProfiles()`.
 
@@ -103,7 +98,7 @@ data("index")
 
 It is now possible to process the downloaded index using the `argoFloats` specialized versions of R "generic" functions, `plot()`, `[[`, `summary()`, and `show()` as shown below.
 
-# Overview of Processing Steps
+# Processing Steps
 
 The following subsections use built-in data.
 

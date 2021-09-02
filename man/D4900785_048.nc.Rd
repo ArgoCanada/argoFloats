@@ -4,7 +4,7 @@
 \encoding{UTF-8}
 \name{D4900785_048.nc}
 \alias{D4900785_048.nc}
-\title{Sample argo file (delayed-mode data)}
+\title{Sample Argo File (Delayed Core Data)}
 \description{
 This is NetCDF file for delayed-mode data for cycle 48 of Argo float 4900785, downloaded from
 \code{https://data-argo.ifremer.fr/dac/aoml/4900785/profiles/D4900785_048.nc}

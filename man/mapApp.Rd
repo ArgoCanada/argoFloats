@@ -2,7 +2,7 @@
 % Please edit documentation in R/mapApp.R
 \name{mapApp}
 \alias{mapApp}
-\title{Interactive app for viewing Argo float positions}
+\title{Interactive App For Viewing Argo Float Positions}
 \usage{
 mapApp(
   age = argoDefaultIndexAge(),

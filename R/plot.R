@@ -41,7 +41,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 ## issue259     }
 ## issue259  }
 
-#' Plot an argoFloats object
+#' Plot an argoFloats Object
 #'
 #' The action depends on the `type` of the object, and
 #' this is set up by the function that created the object;

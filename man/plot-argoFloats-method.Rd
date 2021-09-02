@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot,argoFloats-method}
 \alias{plot,argoFloats-method}
-\title{Plot an argoFloats object}
+\title{Plot an argoFloats Object}
 \usage{
 \S4method{plot}{argoFloats}(
   x,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.R
 \name{readProfiles}
 \alias{readProfiles}
-\title{Read argo profiles from local files}
+\title{Read Argo Profiles From Local Files}
 \usage{
 readProfiles(
   profiles,

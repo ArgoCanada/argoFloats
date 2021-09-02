@@ -3,7 +3,7 @@
 \docType{data}
 \name{index}
 \alias{index}
-\title{A sample index of profiles}
+\title{A Sample Index of Profiles}
 \description{
 This was created by subsetting a global index to the Argo profiles
 that were within a 200km radius of Marsh Harbour, Abaco Island,

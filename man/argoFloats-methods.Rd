@@ -3,7 +3,7 @@
 \docType{methods}
 \name{show,argoFloats-method}
 \alias{show,argoFloats-method}
-\title{Show information about argoFloats object}
+\title{Show Information About argoFloats Object}
 \usage{
 \S4method{show}{argoFloats}(object)
 }
@@ -11,7 +11,7 @@
 \item{object}{an \code{\linkS4class{argoFloats}} object.}
 }
 \description{
-Show information about argoFloats object
+Show Information About argoFloats Object
 }
 \examples{
 library(argoFloats)

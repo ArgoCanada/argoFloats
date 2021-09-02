@@ -2,7 +2,7 @@
 
 argoFloatsCacheEnv <- new.env(parent=emptyenv())
 
-#' Check whether an item is cached
+#' Check Whether an Item is Cached
 #'
 #' @param name character value, naming the item.
 #' @param debug an integer, passed to [argoFloatsDebug()].
@@ -16,7 +16,7 @@ argoFloatsIsCached <- function(name, debug=0)
     name %in% names(argoFloatsCacheEnv)
 }
 
-#' Get an item from the cache
+#' Get an Item From The Cache
 #'
 #' @param name character value, naming the item.
 #' @param debug an integer, passed to [argoFloatsDebug()].
@@ -28,7 +28,7 @@ argoFloatsGetFromCache <- function(name, debug=0)
     argoFloatsCacheEnv[[name]]
 }
 
-#' Store an item in the cache
+#' Store an Item in the Cache
 #'
 #' @param name character value, naming the item.
 #' @param value the new contents of the item.
