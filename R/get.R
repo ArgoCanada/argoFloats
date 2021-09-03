@@ -158,7 +158,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' *File Name*                           \tab *Nickname*              \tab *Contents*\cr
 #' `ar_greylist.txt`                     \tab -                       \tab Suspicious/malfunctioning floats\cr
 #' `ar_index_global_meta.txt.gz`         \tab -                       \tab Metadata files\cr
-#' `ar_index_global_prof.txt.gz`         \tab `"argo"` or `"core"`      \tab Argo data\cr
+#' `ar_index_global_prof.txt.gz`         \tab `"argo"` or `"core"`    \tab Argo data\cr
 #' `ar_index_global_tech.txt.gz`         \tab -                       \tab Technical files\cr
 #' `ar_index_global_traj.txt.gz`         \tab `"traj"`                \tab Trajectory files\cr
 #' `argo_bio-profile_index.txt.gz`       \tab `"bgc"` or `"bgcargo"`  \tab Biogeochemical Argo data (without S or T)\cr
@@ -166,7 +166,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' `argo_synthetic-profile_index.txt.gz` \tab `"synthetic"`           \tab Synthetic data, successor to `"merge"`\cr
 #' }
 #' Note: as of Dec 01,2020 the user will no longer have the option to use `"argo"` as a filename argument. Instead, `"core"` will
-                                        #' be used.
+#' be used.
 #'
 #' The next step after using [getIndex()] is usually to
 #' use [getProfiles()], which downloads or checks for local

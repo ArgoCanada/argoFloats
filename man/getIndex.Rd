@@ -125,7 +125,7 @@ longer to download, so \code{\link[=getIndex]{getIndex()}} is not designed to wo
 \emph{File Name}                           \tab \emph{Nickname}              \tab \emph{Contents}\cr
 \code{ar_greylist.txt}                     \tab -                       \tab Suspicious/malfunctioning floats\cr
 \code{ar_index_global_meta.txt.gz}         \tab -                       \tab Metadata files\cr
-\code{ar_index_global_prof.txt.gz}         \tab \code{"argo"} or \code{"core"}      \tab Argo data\cr
+\code{ar_index_global_prof.txt.gz}         \tab \code{"argo"} or \code{"core"}    \tab Argo data\cr
 \code{ar_index_global_tech.txt.gz}         \tab -                       \tab Technical files\cr
 \code{ar_index_global_traj.txt.gz}         \tab \code{"traj"}                \tab Trajectory files\cr
 \code{argo_bio-profile_index.txt.gz}       \tab \code{"bgc"} or \code{"bgcargo"}  \tab Biogeochemical Argo data (without S or T)\cr
