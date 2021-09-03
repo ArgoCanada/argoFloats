@@ -192,14 +192,34 @@ NULL
 #' @family datasets provided with argoFloats
 NULL
 
+#' Base Class for argoFloats Objects
 #'
-#' Class to Hold argoFloats Objects
+#' In the normal situation, users will not create these objects directly. Instead,
+#' they are created by functions such as [getIndex()].
+#'
+#' @slot data The `data` slot is a list with contents that vary with the object type.  For example,
+#' [getIndex()] creates objects of type `"index"` that have a single unnamed
+#' element in `data` that is a data frame. This data frame has a column named `file`
+#' that is used in combination with `metadata@ftpRoot` to form a URL for downloading,
+#' along with columns named `date`, `latitude`, `longitude`,
+#' `ocean`, `profiler_type`, `institution` and `date_update`. Other "get" functions
+#' create objects with different contents.
+#'
+#' @slot metadata The `metadata` slot is a list containing information about the data. The contents vary
+#' between objects and object types.  That type is indicated by elements named
+#' `type` and `subtype`, which are checked by many functions within the package.
+#'
+#' @slot processingLog The `processingLog` slot is a list containing time-stamped processing steps that may be
+#' stored in the object by argoFloats functions. These are noted in `summary()` calls.
+#'
+#' @examples
+#' str(new("argoFloats"))
 setClass("argoFloats", slots=c(metadata="list", data="list", processingLog="list"))
-
 
 setMethod(f="initialize",
           signature="argoFloats",
           definition=function(.Object, type="unspecified", subtype="cycles") {
+              .Object@data <- list()
               .Object@metadata$type <- type
               .Object@metadata$subtype <- subtype
               .Object@processingLog$time <- as.POSIXct(Sys.time())

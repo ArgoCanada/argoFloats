@@ -3,7 +3,30 @@
 \docType{class}
 \name{argoFloats-class}
 \alias{argoFloats-class}
-\title{Class to Hold argoFloats Objects}
+\title{Base Class for argoFloats Objects}
 \description{
-Class to Hold argoFloats Objects
+In the normal situation, users will not create these objects directly. Instead,
+they are created by functions such as \code{\link[=getIndex]{getIndex()}}.
+}
+\section{Slots}{
+
+\describe{
+\item{\code{data}}{The \code{data} slot is a list with contents that vary with the object type.  For example,
+\code{\link[=getIndex]{getIndex()}} creates objects of type \code{"index"} that have a single unnamed
+element in \code{data} that is a data frame. This data frame has a column named \code{file}
+that is used in combination with \code{metadata@ftpRoot} to form a URL for downloading,
+along with columns named \code{date}, \code{latitude}, \code{longitude},
+\code{ocean}, \code{profiler_type}, \code{institution} and \code{date_update}. Other "get" functions
+create objects with different contents.}
+
+\item{\code{metadata}}{The \code{metadata} slot is a list containing information about the data. The contents vary
+between objects and object types.  That type is indicated by elements named
+\code{type} and \code{subtype}, which are checked by many functions within the package.}
+
+\item{\code{processingLog}}{The \code{processingLog} slot is a list containing time-stamped processing steps that may be
+stored in the object by argoFloats functions. These are noted in \code{summary()} calls.}
+}}
+
+\examples{
+str(new("argoFloats"))
 }
