@@ -703,7 +703,9 @@ serverMapApp <- function(input, output, session)
             }
             topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
             #notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
+            omar <- par("mar")
             par(mar=c(2.5, 2.5, 2, 1.5))
+            on.exit(par(mar=omar))
             plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
             if ("topo" %in% state$view) {
                 image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
@@ -779,9 +781,9 @@ serverMapApp <- function(input, output, session)
                                     lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
                                     ## as opposed to maybe 3 months of data for a set of floats).
                                     if ("start" %in% state$action)
-                                        points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
+                                        points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=1, lwd=1.4)
                                     if ("end" %in% state$action)
-                                        points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=if (no > 10) 2 else 1, lwd=1.4)
+                                        points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=1, lwd=1.4)
                                 }
                             }
                         }
