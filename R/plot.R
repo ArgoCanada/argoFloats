@@ -30,8 +30,11 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' The `bathymetry` argument controls whether (and how) to draw a map underlay
 #' that shows water depth. There are three possible values for `bathymetry`:
 #'     1. `FALSE`, meaning not to draw bathymetry;
-#'     2. `TRUE` (the default), meaning to draw bathymetry using
-#'        data downloaded with [oce::download.topo()], as in Example 4;
+#'     2. `TRUE` (the default), meaning to draw bathymetry as an
+#'        image, using data downloaded with [oce::download.topo()].
+#'        Example 4 illustrates this, and also shows how to adjust
+#'        the margins after the plot, in case there is a need to add
+#'        extra graphical elements using [points()], [lines()], etc.
 #'     3. A list with items controlling both the bathymetry data and its
 #'        representation in the plot, as in Example 5.  Those items are:
 #'
@@ -39,21 +42,23 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'            (a) the string `"auto"` (the default) to use
 #'            [oce::download.topo()] to download the data
 #'            or (b) a value returned by [oce::read.topo()].
-#'         2. `contour`, an optional logical value (with `FALSE` as the default) indicating
-#'            (as in Examples 5A and 5B) whether to represent bathymetry with contours
-#'            (with depths of 100m, 200m, 500m shown, along with 1km, 2km up to 10km),
-#'            as opposed to an image;
+#'         2. `contour`, an optional logical value (with `FALSE` as the default)
+#'            indicating (as in Examples 5A and 5B) whether to represent
+#'            bathymetry with contours (with depths of 100m, 200m, 500m shown,
+#'            along with 1km, 2km up to 10km), as opposed to an image;
 #'         3. `colormap`, ignored if `contour` is `TRUE`,
 #'            an optional value that is either the string `"auto"` (the default)
-#'            for a form of GEBCO colors (as in Example 5C) computed with [oce::oceColorsGebco()], or a value
-#'            computed with [oce::colormap()] applied to the bathymetry data; and
+#'            for a form of GEBCO colors (as in Example 5C) computed with
+#'            [oce::oceColorsGebco()], or a value computed with [oce::colormap()]
+#'            applied to the bathymetry data; and
 #'         4. `palette`, ignored if `contour` is `TRUE`,
 #'            an optional logical value (with `TRUE` as the default)
-#'            indicating (again, as in Example 5C) whether to draw a depth-color palette to the right of the plot.
+#'            indicating (again, as in Example 5C) whether to draw a depth-color
+#'            palette to the right of the plot.
 #'
-#' * For `which="profile"`, a profile plot is created, showing the variation of some quantity
-#' with pressure or potential density anomaly, as specified by the `profileControl` argument;
-#' see Examples 8 and 9.
+#' * For `which="profile"`, a profile plot is created, showing the variation of
+#' some quantity with pressure or potential density anomaly, as specified by the
+#' `profileControl` argument; see Examples 8 and 9.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
@@ -81,7 +86,8 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' created by [readProfiles()]. The scales for the plot
 #' can be altered by putting `Slim` and `Tlim` arguments in the `...` list; see
 #' the documentation for [oce::plotTS()] for other arguments that can be
-#' provided. This plot has a default color code to represent bad, good, and not assessed data.
+#' provided. This plot has a default color code to represent bad, good,
+#' and unassessed data.
 #' This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
 #' data are considered bad if flagged 3, 4, 6, or 7, good
 #' if flagged 1, 2, 5, or 8, and not accessed if flagged 0; good values are plotted
@@ -101,21 +107,22 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'
 #' @param geographical flag indicating the style of axes
 #' for the `which="map"` case, but only if no projection is called
-#' for in the `mapControl` argument.  With
-#' `geographical=0` (which is the default),
-#' the axis ticks are labeled with signed longitudes and latitudes, measured in
-#' degrees. The signs are dropped with `geographical=1`.
+#' for in the `mapControl` argument.  With `geographical=0` (which
+#' is the default), the axis ticks are labeled with signed
+#' longitudes and latitudes, measured in degrees. The signs are dropped
+#' with `geographical=1`.
 #' In the `geographical=4` case, signs are also dropped, but hemispheres
-#' are indicated by writing `S`, `N`, `W` or `E` after axis tick labels, except
-#' at the equator and prime meridian.
-#' Note that this scheme mimics that
-#' used by [oce::plot,coastline-method()], although the
-#' latter also takes values 2 and 3, which cause a display of angles in degrees,
-#' minutes and seconds, which seldom makes sense for large-scale argo maps.
+#' are indicated by writing `S`, `N`, `W` or `E` after axis tick labels,
+#' except at the equator and prime meridian.
+#' Note that this scheme mimics that used by [oce::plot,coastline-method()],
+#' although the latter also takes values 2 and 3, which cause a display
+#' of angles in degrees, minutes and seconds, although such fine
+#' resolution is unlikely to be required argo maps, which typically
+#' show  large-scale views.
 #'
 #' @param xlim,ylim numerical values, each a two-element vector, that
-#' set the `x` and `y` limits of plot axes, as for [plot.default()] and other conventional
-#' plotting functions.
+#' set the `x` and `y` limits of plot axes, as for [plot.default()] and
+#' other conventional plotting functions.
 #'
 #' @param xlab a character value indicating the name for the horizontal axis, or
 #' `NULL`, which indicates that this function should choose an appropriate name
@@ -132,15 +139,15 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' value that depends on the value of `which`.
 #'
 #' @param col the colour to be used for plot symbols, or `NULL`, to get an value
-#' that depends on the value of `which` (see \dQuote{Details}).  If `which="TS"`, then the
-#' `TSControl` argument takes precedence over `col`.
+#' that depends on the value of `which` (see \dQuote{Details}).  If `which="TS"`,
+#' then the `TSControl` argument takes precedence over `col`.
 #'
 #' @param bg the colour to be used for plot symbol interior, for `pch`
 #' values that distinguish between the interior of the symbol and the
 #' border, e.g. for `pch=21`.
 #'
-#' @param pch an integer or character value indicating the type of plot symbol, or `NULL`,
-#' to get a value that depends on the value of `which`.
+#' @param pch an integer or character value indicating the type of plot symbol,
+#' or `NULL`, to get a value that depends on the value of `which`.
 #' (See [par()] for more on specifying `pch`.)
 #'
 ##<old> @param mar either a four-element vector giving the margins to be used for
@@ -249,13 +256,13 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' # Example 4: map with bathymetry. Note that par(mar) is adjusted
 #' # for the bathymetry palette, so if must be adjusted again after
 #' # the plot(), in order to add new plot elements.
-#' par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0)) # narrow margins for a map
 #' # This example specifies a coarse bathymetry dataset that is provided
 #' # by the 'oce' package.  In typical applications, the user will use
 #' # a finer-scale dataset, either by using bathymetry=TRUE (which
 #' # downloads a file appropriate for the plot view), or by using
 #' # an already-downloaded file.
 #' data(topoWorld, package="oce")
+#' par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0)) # narrow margins for a map
 #' plot(index, bathymetry=list(source=topoWorld))
 #' # For bathymetry plots that use images, plot() temporarily
 #' # adds 2.75 to par("mar")[4] so the same must be done, in order
