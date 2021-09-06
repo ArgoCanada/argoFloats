@@ -203,6 +203,10 @@ can be helpful in diagnosing problems or bottlenecks.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>mapApp</code> has no return value, since it creates a shiny app by passing
+control to <code><a href='https://rdrr.io/pkg/shiny/man/runApp.html'>shiny::runApp()</a></code>, which never returns.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This app will use <code><a href='getIndex.html'>getIndex()</a></code> to download index files from the Argo server

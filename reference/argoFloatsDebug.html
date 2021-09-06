@@ -194,12 +194,15 @@ to be done, as explained in the &#8220;Details&#8221; section.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>None (invisible NULL).</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Dan Kelley</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"plain text\n"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;       plain text</div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"red text\n"</span>, style<span class='op'>=</span><span class='st'>"red"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #BB0000;'>      red text
@@ -208,7 +211,7 @@ to be done, as explained in the &#8220;Details&#8221; section.</p></td>
 #&gt; </span></div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"bold text\n"</span>, style<span class='op'>=</span><span class='st'>"bold"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='font-weight: bold;'>      bold text
 #&gt; </span></div><div class='input'><span class='fu'>argoFloatsDebug</span><span class='op'>(</span><span class='fl'>1</span>, <span class='st'>"italic text with time stamp\n"</span>, style<span class='op'>=</span><span class='st'>"italic"</span>, showTime<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='font-style: italic;'>      [09:51:15] italic text with time stamp
+</div><div class='output co'>#&gt; <span style='font-style: italic;'>      [15:47:48] italic text with time stamp
 #&gt; </span></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>

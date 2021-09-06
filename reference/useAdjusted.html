@@ -47,8 +47,8 @@
 
 
 <meta property="og:title" content="Switch [[ and Plot to Focus on Adjusted Data, if Available — useAdjusted" />
-<meta property="og:description" content="useAdjusted returns a copy of an argos-type object (as created with the
-readProfiles() function), in which the individual
+<meta property="og:description" content="useAdjusted returns a copy of an argoFloats object
+within which the individual
 oce::argo objects may have been modified so that future calls to
 [[,argoFloats-method
 or plot,argoFloats-method
@@ -155,8 +155,8 @@ for individual items; see &amp;#8220;Details&amp;#8221;." />
     </div>
 
     <div class="ref-description">
-    <p><code>useAdjusted</code> returns a copy of an <code>argos</code>-type object (as created with the
-<code><a href='readProfiles.html'>readProfiles()</a></code> function), in which the individual
+    <p><code>useAdjusted</code> returns a copy of an <code><a href='argoFloats-class.html'>argoFloats</a></code> object
+within which the individual
 <a href='https://dankelley.github.io/oce/reference/argo-class.html'>oce::argo</a> objects may have been modified so that future calls to
 <code><a href='[[,argoFloats-method.html'>[[,argoFloats-method</a></code>
 or <code><a href='plot,argoFloats-method.html'>plot,argoFloats-method</a></code>
@@ -199,6 +199,12 @@ then information is printed for each Argo cycle contained in <code>argos</code>.
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>useAdjusted</code> returns an <code><a href='argoFloats-class.html'>argoFloats</a></code> object that is similar to
+its first argument, but which is set up so that future calls to
+<code><a href='[[,argoFloats-method.html'>[[,argoFloats-method</a></code> or <code><a href='plot,argoFloats-method.html'>plot,argoFloats-method</a></code>
+will focus on the "adjusted" data stream.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>There are two cases.  First, if <code>fallback</code> is <code>FALSE</code> (which the default)
