@@ -241,7 +241,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' near <- oce::geodDist(lon, lat, -77.06, 26.54) < 100
 #' R <- subset(index, near)
 #' points(R[["longitude"]], R[["latitude"]],
-#'     cex=0.3, pch=20, col="blue")
+#'     cex=0.6, pch=20, col="red")
 #'
 #' # The rest of the examples are slow and/or require file downloads, so
 #' # they are not tested by default.
@@ -263,14 +263,14 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' # downloads a file appropriate for the plot view), or by using
 #' # an already-downloaded file.
 #' data(topoWorld, package="oce")
-#' par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0)) # narrow margins for a map
+#' par(mar=c(2, 2, 1, 2), mgp=c(2, 0.7, 0)) # narrow margins for a map
 #' plot(index, bathymetry=list(source=topoWorld))
 #' # For bathymetry plots that use images, plot() temporarily
 #' # adds 2.75 to par("mar")[4] so the same must be done, in order
 #' # to correctly position additional points (shown as black rings).
 #' par(mar=par("mar") + c(0, 0, 0, 2.75))
 #' points(index[["longitude"]], index[["latitude"]],
-#'     cex=0.3, pch=20, col="blue")
+#'     cex=0.6, pch=20, col="red")
 #'
 #' # Example 5A. Simple contour version, using coarse dataset (ok on basin-scale).
 #' # Hint: use oce::download.topo() to download high-resolution datasets to
