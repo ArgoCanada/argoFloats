@@ -254,16 +254,17 @@ data(index)
 plot(index, bathymetry=FALSE)
 
 # Example 2: as Example 1, but narrow the margins and highlight floats
-# within a circular region of diameter 100-km.
+# within a circular region of diameter 100 km.
 par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0))
 plot(index, bathymetry=FALSE)
 lon <- index[["longitude"]]
 lat <- index[["latitude"]]
 near <- oce::geodDist(lon, lat, -77.06, 26.54) < 100
 R <- subset(index, near)
-points(R[["longitude"]], R[["latitude"]], pch=20, col="blue")
+points(R[["longitude"]], R[["latitude"]],
+    cex=0.3, pch=20, col="blue")
 
-# The following tests are slow and require file downloads, so
+# The rest of the examples are slow and/or require file downloads, so
 # they are not tested by default.
 \donttest{
 
@@ -289,7 +290,8 @@ plot(index, bathymetry=list(source=topoWorld))
 # adds 2.75 to par("mar")[4] so the same must be done, in order
 # to correctly position additional points (shown as black rings).
 par(mar=par("mar") + c(0, 0, 0, 2.75))
-points(index[["longitude"]], index[["latitude"]])
+points(index[["longitude"]], index[["latitude"]],
+    cex=0.3, pch=20, col="blue")
 
 # Example 5A. Simple contour version, using coarse dataset (ok on basin-scale).
 # Hint: use oce::download.topo() to download high-resolution datasets to
