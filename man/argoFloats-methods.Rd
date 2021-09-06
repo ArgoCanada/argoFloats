@@ -11,11 +11,19 @@
 \item{object}{an \code{\linkS4class{argoFloats}} object.}
 }
 \description{
-Show Information About argoFloats Object
+This produces a one-line explanation of the contents of the object,
+that typically indicates the type and the number of items referenced
+by the object. Those items depend on the type of object:
+URLs if \code{metadata$type} is \code{"index"}, local filenames if
+\code{"profiles"}, or oce-created argo objects if \code{"argos"}.
+As with other R \code{show()} methods, it may be invoked in an interactive
+session just by typing the object, or by using \code{print()}; see the Examples.
 }
 \examples{
 library(argoFloats)
 data(index)
+show(index)
+print(index)
 index
 
 }
