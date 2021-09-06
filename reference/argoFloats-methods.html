@@ -47,7 +47,13 @@
 
 
 <meta property="og:title" content="Show Information About argoFloats Object — show,argoFloats-method" />
-<meta property="og:description" content="Show Information About argoFloats Object" />
+<meta property="og:description" content="This produces a one-line explanation of the contents of the object,
+that typically indicates the type and the number of items referenced
+by the object. Those items depend on the type of object:
+URLs if metadata$type is &quot;index&quot;, local filenames if
+&quot;profiles&quot;, or oce-created argo objects if &quot;argos&quot;.
+As with other R show() methods, it may be invoked in an interactive
+session just by typing the object, or by using print(); see the Examples." />
 
 
 
@@ -79,7 +85,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -139,7 +145,13 @@
     </div>
 
     <div class="ref-description">
-    <p>Show Information About argoFloats Object</p>
+    <p>This produces a one-line explanation of the contents of the object,
+that typically indicates the type and the number of items referenced
+by the object. Those items depend on the type of object:
+URLs if <code>metadata$type</code> is <code>"index"</code>, local filenames if
+<code>"profiles"</code>, or oce-created argo objects if <code>"argos"</code>.
+As with other R <code>show()</code> methods, it may be invoked in an interactive
+session just by typing the object, or by using <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code>; see the Examples.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for argoFloats</span>
@@ -161,7 +173,9 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
-<span class='va'>index</span>
+<span class='fu'>show</span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; argoFloats object of type "index" with 1008 items</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; argoFloats object of type "index" with 1008 items</div><div class='input'><span class='va'>index</span>
 </div><div class='output co'>#&gt; argoFloats object of type "index" with 1008 items</div><div class='input'>
 </div></pre>
   </div>
