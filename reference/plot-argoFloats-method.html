@@ -205,23 +205,24 @@ adjustment done if an image is used to show bathymetry.</p></td>
       <th>geographical</th>
       <td><p>flag indicating the style of axes
 for the <code>which="map"</code> case, but only if no projection is called
-for in the <code>mapControl</code> argument.  With
-<code>geographical=0</code> (which is the default),
-the axis ticks are labeled with signed longitudes and latitudes, measured in
-degrees. The signs are dropped with <code>geographical=1</code>.
+for in the <code>mapControl</code> argument.  With <code>geographical=0</code> (which
+is the default), the axis ticks are labeled with signed
+longitudes and latitudes, measured in degrees. The signs are dropped
+with <code>geographical=1</code>.
 In the <code>geographical=4</code> case, signs are also dropped, but hemispheres
-are indicated by writing <code>S</code>, <code>N</code>, <code>W</code> or <code>E</code> after axis tick labels, except
-at the equator and prime meridian.
-Note that this scheme mimics that
-used by <code>oce::plot,coastline-method()</code>, although the
-latter also takes values 2 and 3, which cause a display of angles in degrees,
-minutes and seconds, which seldom makes sense for large-scale argo maps.</p></td>
+are indicated by writing <code>S</code>, <code>N</code>, <code>W</code> or <code>E</code> after axis tick labels,
+except at the equator and prime meridian.
+Note that this scheme mimics that used by <code>oce::plot,coastline-method()</code>,
+although the latter also takes values 2 and 3, which cause a display
+of angles in degrees, minutes and seconds, although such fine
+resolution is unlikely to be required argo maps, which typically
+show  large-scale views.</p></td>
     </tr>
     <tr>
       <th>xlim, ylim</th>
       <td><p>numerical values, each a two-element vector, that
-set the <code>x</code> and <code>y</code> limits of plot axes, as for <code><a href='https://rdrr.io/r/graphics/plot.default.html'>plot.default()</a></code> and other conventional
-plotting functions.</p></td>
+set the <code>x</code> and <code>y</code> limits of plot axes, as for <code><a href='https://rdrr.io/r/graphics/plot.default.html'>plot.default()</a></code> and
+other conventional plotting functions.</p></td>
     </tr>
     <tr>
       <th>xlab</th>
@@ -248,13 +249,13 @@ value that depends on the value of <code>which</code>.</p></td>
     <tr>
       <th>col</th>
       <td><p>the colour to be used for plot symbols, or <code>NULL</code>, to get an value
-that depends on the value of <code>which</code> (see &#8220;Details&#8221;).  If <code>which="TS"</code>, then the
-<code>TSControl</code> argument takes precedence over <code>col</code>.</p></td>
+that depends on the value of <code>which</code> (see &#8220;Details&#8221;).  If <code>which="TS"</code>,
+then the <code>TSControl</code> argument takes precedence over <code>col</code>.</p></td>
     </tr>
     <tr>
       <th>pch</th>
-      <td><p>an integer or character value indicating the type of plot symbol, or <code>NULL</code>,
-to get a value that depends on the value of <code>which</code>.
+      <td><p>an integer or character value indicating the type of plot symbol,
+or <code>NULL</code>, to get a value that depends on the value of <code>which</code>.
 (See <code><a href='https://rdrr.io/r/graphics/par.html'>par()</a></code> for more on specifying <code>pch</code>.)</p></td>
     </tr>
     <tr>
@@ -369,30 +370,35 @@ is large enough); otherwise, if the <code>oce</code> package is available, then 
 The <code>bathymetry</code> argument controls whether (and how) to draw a map underlay
 that shows water depth. There are three possible values for <code>bathymetry</code>:</p><ol>
 <li><p><code>FALSE</code>, meaning not to draw bathymetry;</p></li>
-<li><p><code>TRUE</code> (the default), meaning to draw bathymetry using
-data downloaded with <code><a href='https://dankelley.github.io/oce/reference/download.topo.html'>oce::download.topo()</a></code>, as in Example 4;</p></li>
+<li><p><code>TRUE</code> (the default), meaning to draw bathymetry as an
+image, using data downloaded with <code><a href='https://dankelley.github.io/oce/reference/download.topo.html'>oce::download.topo()</a></code>.
+Example 4 illustrates this, and also shows how to adjust
+the margins after the plot, in case there is a need to add
+extra graphical elements using <code><a href='https://rdrr.io/r/graphics/points.html'>points()</a></code>, <code><a href='https://rdrr.io/r/graphics/lines.html'>lines()</a></code>, etc.</p></li>
 <li><p>A list with items controlling both the bathymetry data and its
 representation in the plot, as in Example 5.  Those items are:</p><ol>
 <li><p><code>source</code>, a mandatory value that is either
 (a) the string <code>"auto"</code> (the default) to use
 <code><a href='https://dankelley.github.io/oce/reference/download.topo.html'>oce::download.topo()</a></code> to download the data
 or (b) a value returned by <code><a href='https://dankelley.github.io/oce/reference/read.topo.html'>oce::read.topo()</a></code>.</p></li>
-<li><p><code>contour</code>, an optional logical value (with <code>FALSE</code> as the default) indicating
-(as in Examples 5A and 5B) whether to represent bathymetry with contours
-(with depths of 100m, 200m, 500m shown, along with 1km, 2km up to 10km),
-as opposed to an image;</p></li>
+<li><p><code>contour</code>, an optional logical value (with <code>FALSE</code> as the default)
+indicating (as in Examples 5A and 5B) whether to represent
+bathymetry with contours (with depths of 100m, 200m, 500m shown,
+along with 1km, 2km up to 10km), as opposed to an image;</p></li>
 <li><p><code>colormap</code>, ignored if <code>contour</code> is <code>TRUE</code>,
 an optional value that is either the string <code>"auto"</code> (the default)
-for a form of GEBCO colors (as in Example 5C) computed with <code><a href='https://dankelley.github.io/oce/reference/oceColorsGebco.html'>oce::oceColorsGebco()</a></code>, or a value
-computed with <code><a href='https://dankelley.github.io/oce/reference/colormap.html'>oce::colormap()</a></code> applied to the bathymetry data; and</p></li>
+for a form of GEBCO colors (as in Example 5C) computed with
+<code><a href='https://dankelley.github.io/oce/reference/oceColorsGebco.html'>oce::oceColorsGebco()</a></code>, or a value computed with <code><a href='https://dankelley.github.io/oce/reference/colormap.html'>oce::colormap()</a></code>
+applied to the bathymetry data; and</p></li>
 <li><p><code>palette</code>, ignored if <code>contour</code> is <code>TRUE</code>,
 an optional logical value (with <code>TRUE</code> as the default)
-indicating (again, as in Example 5C) whether to draw a depth-color palette to the right of the plot.</p></li>
+indicating (again, as in Example 5C) whether to draw a depth-color
+palette to the right of the plot.</p></li>
 </ol></li>
 </ol></li>
-<li><p>For <code>which="profile"</code>, a profile plot is created, showing the variation of some quantity
-with pressure or potential density anomaly, as specified by the <code>profileControl</code> argument;
-see Examples 8 and 9.</p></li>
+<li><p>For <code>which="profile"</code>, a profile plot is created, showing the variation of
+some quantity with pressure or potential density anomaly, as specified by the
+<code>profileControl</code> argument; see Examples 8 and 9.</p></li>
 <li><p>For <code>which="QC"</code>, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named <code>parameter</code> must be given, to name the
@@ -417,7 +423,8 @@ is an <a href='argoFloats-class.html'>argoFloats</a> object of type <code>"argos
 created by <code><a href='readProfiles.html'>readProfiles()</a></code>. The scales for the plot
 can be altered by putting <code>Slim</code> and <code>Tlim</code> arguments in the <code>...</code> list; see
 the documentation for <code><a href='https://dankelley.github.io/oce/reference/plotTS.html'>oce::plotTS()</a></code> for other arguments that can be
-provided. This plot has a default color code to represent bad, good, and not assessed data.
+provided. This plot has a default color code to represent bad, good,
+and unassessed data.
 This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
 data are considered bad if flagged 3, 4, 6, or 7, good
 if flagged 1, 2, 5, or 8, and not accessed if flagged 0; good values are plotted
@@ -475,13 +482,13 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
 <span class='co'># Example 4: map with bathymetry. Note that par(mar) is adjusted</span>
 <span class='co'># for the bathymetry palette, so if must be adjusted again after</span>
 <span class='co'># the plot(), in order to add new plot elements.</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># narrow margins for a map</span>
 <span class='co'># This example specifies a coarse bathymetry dataset that is provided</span>
 <span class='co'># by the 'oce' package.  In typical applications, the user will use</span>
 <span class='co'># a finer-scale dataset, either by using bathymetry=TRUE (which</span>
 <span class='co'># downloads a file appropriate for the plot view), or by using</span>
 <span class='co'># an already-downloaded file.</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>topoWorld</span>, package<span class='op'>=</span><span class='st'>"oce"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># narrow margins for a map</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>source<span class='op'>=</span><span class='va'>topoWorld</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='input'><span class='co'># For bathymetry plots that use images, plot() temporarily</span>
 <span class='co'># adds 2.75 to par("mar")[4] so the same must be done, in order</span>
