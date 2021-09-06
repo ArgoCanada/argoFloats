@@ -22,6 +22,8 @@
 #' @docType methods
 #' @rdname argoFloats-methods
 #'
+#' @return None (invisible NULL).
+#'
 #' @author Jaimie Harbin
 setMethod(f="show",
           signature="argoFloats",

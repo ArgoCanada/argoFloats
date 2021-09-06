@@ -54,7 +54,7 @@ the object needs to be specified, for the default actions coincide with
 common conventions for flags in Argo data.
 }
 \examples{
-\dontrun{
+\donttest{
 library(argoFloats)
 # Contrast TS diagrams for raw and flag-handled data
 data(index)
@@ -62,6 +62,7 @@ i <- subset(index, 1:5) # first 5 profiles
 raw <- readProfiles(getProfiles(i))
 clean <- applyQC(raw)
 par(mfrow=c(1, 2))
+# Note that oce::plot() changes par(mfrow) and par(mar).
 plot(raw, which="TS")
 plot(clean, which="TS")
 }

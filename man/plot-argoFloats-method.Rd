@@ -18,8 +18,6 @@
   col = NULL,
   pch = NULL,
   bg = NULL,
-  mar = NULL,
-  mgp = NULL,
   eos = "gsw",
   mapControl = NULL,
   profileControl = NULL,
@@ -38,7 +36,9 @@ choices are \code{"map"}, \code{"profile"}, \code{"QC"}, \code{"summary"} and \c
 see \dQuote{Details}.}
 
 \item{bathymetry}{an argument used only if \code{which="map"}, to control
-whether (and how) to indicate water depth; see \dQuote{Details}.}
+whether (and how) to indicate water depth. See \dQuote{Details} for details,
+and see Example 4 for an example of how to compensate for the margin
+adjustment done if an image is used to show bathymetry.}
 
 \item{geographical}{flag indicating the style of axes
 for the \code{which="map"} case, but only if no projection is called
@@ -84,21 +84,14 @@ to get a value that depends on the value of \code{which}.
 values that distinguish between the interior of the symbol and the
 border, e.g. for \code{pch=21}.}
 
-\item{mar}{either a four-element vector giving the margins to be used for
-the plot (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
-\link{par}\code{("mar")}.}
-
-\item{mgp}{either a three-element vector giving the geometry for
-axis labels (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
-\link{par}\code{("mgp")}.}
-
 \item{eos}{a character value indicating the equation of state to use
 if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
 see \code{\link[oce:plotTS]{oce::plotTS()}}.}
 
 \item{mapControl}{a list that permits particular control of the \code{which="map"}
 case.  If provided, it may contain elements named \code{bathymetry} (which
-has the same effect as the parameter \code{bathymetry}), \code{colLand} (which indicates the colour of the land), and \code{projection} (which
+has the same effect as the parameter \code{bathymetry}), \code{colLand}
+(which indicates the colour of the land), and \code{projection} (which
 may be \code{FALSE}, meaning to plot longitude and latitude on rectilinear axes,
 \code{TRUE}, meaning to plot with \code{\link[oce:mapPlot]{oce::mapPlot()}}, using Mollweide projection that
 is suitable mainly for world-scale views, or a character value that will be
@@ -158,6 +151,9 @@ elements in \code{colByCycle}.}
 \item{\dots}{extra arguments passed to the plot calls that are made
 within this function.}
 }
+\value{
+None (invisible NULL).
+}
 \description{
 The action depends on the \code{type} of the object, and
 this is set up by the function that created the object;
@@ -165,8 +161,8 @@ see \dQuote{Details}. These are basic plot styles, with
 somewhat limited scope for customization. Since the data with
 \linkS4class{argoFloats} objects are easy to extract, users should
 not find it difficult to create their own plots to meet a
-particular aesthetic; Example 5C provides an example for
-maps. For more plotting examples see Kelley et al. (2021).
+particular aesthetic. See Example 5 and Kelley et al. (2021)
+for more plotting examples.
 }
 \details{
 The various plot types are as follows.
@@ -245,64 +241,71 @@ are plotted with gray symbols.
 }
 }
 \examples{
-# Example 1: map profiles in index, highlighting a neighborhood of 30
+# Example 1: map profiles in index
 library(argoFloats)
 data(index)
 plot(index, bathymetry=FALSE)
+
+# Example 2: as Example 1, but narrow the margins and highlight floats
+# within a circular region of diameter 100-km.
+par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0))
+plot(index, bathymetry=FALSE)
 lon <- index[["longitude"]]
 lat <- index[["latitude"]]
-dist <- oce::geodDist(lon, lat, -77.06, 26.54)
-o <- order(dist)
-index30 <- subset(index, o[1:30])
-points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
+near <- oce::geodDist(lon, lat, -77.06, 26.54) < 100
+R <- subset(index, near)
+points(R[["longitude"]], R[["latitude"]], pch=20, col="blue")
 
-# Example 3: TS of first 10 profiles
-# (Slow, so not run by default.)
-\dontrun{
+# The following tests are slow and require file downloads, so
+# they are not tested by default.
+\donttest{
+
+# Example 3: TS of first 10 profiles.
 index10 <- subset(index, 1:10)
 profiles10 <- getProfiles(index10)
 argos10 <- readProfiles(profiles10)
+par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 plot(argos10, which="TS")
-}
 
-# Example 4: map with bathymetry
-# (Slow, so not run by default.)
-\dontrun{
-par(mar=c(3, 3, 1, 2))
-plot(index, bathymetry=TRUE)
-}
+# Example 4: map with bathymetry. Note that par(mar) is adjusted
+# for the bathymetry palette, so if must be adjusted again after
+# the plot(), in order to add new plot elements.
+par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0)) # narrow margins for a map
+# This example specifies a coarse bathymetry dataset that is provided
+# by the 'oce' package.  In typical applications, the user will use
+# a finer-scale dataset, either by using bathymetry=TRUE (which
+# downloads a file appropriate for the plot view), or by using
+# an already-downloaded file.
+data(topoWorld, package="oce")
+plot(index, bathymetry=list(source=topoWorld))
+# For bathymetry plots that use images, plot() temporarily
+# adds 2.75 to par("mar")[4] so the same must be done, in order
+# to correctly position additional points (shown as black rings).
+par(mar=par("mar") + c(0, 0, 0, 2.75))
+points(index[["longitude"]], index[["latitude"]])
 
-# Example 5: map with fine-grained bathymetry control
-# (Slow, so not run by default.)
-\dontrun{
+# Example 5A. Simple contour version, using coarse dataset (ok on basin-scale).
+# Hint: use oce::download.topo() to download high-resolution datasets to
+# use instead of topoWorld.
 par(mar=c(2, 2, 1, 1))
-topoFile <- oce::download.topo(-82, -71, 23, 30, 2)
-topo <- oce::read.topo(topoFile)
-
-# Example 5A. Simple contour version.
-plot(index, bathymetry=list(source=topo, contour=TRUE))
-
-# Example 5B. Simple contour version, using coarse dataset (ok on basin-scale).
 data(topoWorld, package="oce")
 plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 
-# Example 5C. Simple colour version.
-plot(index, bathymetry=list(source=topo))
-
-# Example 5D. World view with Mollweide projection (Canada Day, 2020)
+# Example 5B. World view with Mollweide projection (Canada Day, 2020)
 jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
+par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0)) # narrow margins for a map
 plot(jul1, which="map", mapControl=list(projection=TRUE), bathymetry=FALSE,
      pch=20, col=4, cex=0.75)
 
-# Example 5E. Customized map, sidestepping this function.
-lon <- topo[["longitude"]]
-lat <- topo[["latitude"]]
+# Example 5C. Customized map, sidestepping plot,argoFloats-method().
+lon <- topoWorld[["longitude"]]
+lat <- topoWorld[["latitude"]]
 asp <- 1/cos(pi/180*mean(lat))
 # Limit plot region to float region.
 xlim <- range(index[["longitude"]])
 ylim <- range(index[["latitude"]])
 # Colourize 1km, 2km, etc, isobaths.
-contour(x=lon, y=lat, z=topo[["z"]], xlab="", ylab="",
+contour(x=lon, y=lat, z=topoWorld[["z"]], xlab="", ylab="",
         xlim=xlim, ylim=ylim, asp=asp,
         col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 # Show land
@@ -310,27 +313,24 @@ data(coastlineWorldFine, package="ocedata")
 polygon(coastlineWorldFine[["longitude"]],
         coastlineWorldFine[["latitude"]], col="lightgray")
 # Indicate float positions.
-points(index[["longitude"]], index[["latitude"]], pch=20)}
+points(index[["longitude"]], index[["latitude"]], pch=20)
 
 # Example 6: TS plot for a particular argo
-library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 plot(a, which="TS")
 
 # Example 7: Temperature QC plot for 25 cycles of a float in the Arabian Sea
-\dontrun{
-library(argoFloats)
 ais <- getIndex(filename="synthetic")
 sub <- subset(subset(ais, ID='2902123'), 50:75)
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
+par(mar=c(3.3, 3.3, 2, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 plot(argos, which="QC") # defaults to temperature
 plot(argos, which="QC", QCControl=list(parameter="salinity"))
 plot(argos, which="QC", QCControl=list(parameter="salinity",dataStateIndicator=TRUE))
-}
 
 # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
-library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 par(mfrow=c(1, 1))
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
@@ -338,15 +338,13 @@ par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 plot(a, which="profile")
 
 # Example 9: As Example 8, but showing temperature dependence on potential density anomaly.
-library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sigma0"))
 
 # Example 10: Summary plot
-\dontrun{
-library(argoFloats)
+par(mar=c(2, 3.3, 2, 1))
 a <- readProfiles(getProfiles(subset(getIndex(), ID=1901584)))
 plot(a, which="summary")
 }

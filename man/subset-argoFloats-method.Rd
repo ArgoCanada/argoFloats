@@ -25,6 +25,8 @@ See \dQuote{Details} and \dQuote{Examples}.}
 }
 \value{
 An \code{\linkS4class{argoFloats}} object.
+
+An \code{\linkS4class{argoFloats}} object, restricted as indicated.
 }
 \description{
 Return a subset of an \code{\linkS4class{argoFloats}} object.  This applies
@@ -153,7 +155,7 @@ cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
 index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 
 # Exampe 2B: subset a 300 km radius around Panama using "maps" package
-\dontrun{
+\donttest{
 library("maps")
 data(world.cities)
 ai <- getIndex()
@@ -195,19 +197,19 @@ index6 <- subset(index, time=list(from="2019-01-01", to="2019-12-31"))
 index7 <- subset(index, institution="ME")
 
 # Example 8: subset to a specific ID
-\dontrun{
+\donttest{
 ai <- getIndex(filename="synthetic")
 index9 <- subset(ai, ID="1900722")
 }
 
 # Example 9: subset data to only include deep argo
-\dontrun{
+\donttest{
 ai <- getIndex(filename="synthetic")
 index8 <- subset(ai, deep=TRUE)
 }
 
 # Example 10: subset data by ocean
-\dontrun{
+\donttest{
 ai <- getIndex()
 index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
 plot(index10, which="map", bathymetry=FALSE)
@@ -218,7 +220,7 @@ points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3)
 }
 
 # Example 11: subset by delayed time
-\dontrun{
+\donttest{
 data(indexBgc)
 index11 <- subset(indexBgc, dataMode="delayed")
 profiles <- getProfiles(index11)
@@ -230,7 +232,7 @@ plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
 }
 
 # Example 12: subset by cycle
-\dontrun{
+\donttest{
 data(index)
 index12A <- subset(index, cycle="124")
 index12B <- subset(index, cycle=0:2)
@@ -239,7 +241,7 @@ cat("File names with cycle number between 0 and 2:", paste(index12B[["file"]]), 
 }
 
 # Example 13: subset by direction
-\dontrun{
+\donttest{
 library(argoFloats)
 index13A <- subset(getIndex(), deep=TRUE)
 index13B <- subset(index13A, direction="descent")
@@ -247,7 +249,7 @@ head(index13B[["file"]])
 }
 
 # Example 14: subset by profile (for argos type)
-\dontrun{
+\donttest{
 library(argoFloats)
 index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
 index14B <- subset(index14A, cycle="074")
@@ -258,7 +260,7 @@ col1= argos14B[["oxygen"]][[1]])
 }
 
 # Example 15: subset by cycle (for argos type) to create TS diagram
-\dontrun{
+\donttest{
 data("index")
 index15 <- subset(index, ID="1901584")
 profiles <- getProfiles(index15)
@@ -267,7 +269,7 @@ plot(subset(argos, cycle="147"), which="TS")
 }
 
 # Example 16: subset by dataStateIndicator
-\dontrun{
+\donttest{
 data("index")
 index16 <- subset(index, 1:40)
 argos <- readProfiles(getProfiles(index16))

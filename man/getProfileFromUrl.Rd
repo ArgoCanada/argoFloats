@@ -59,7 +59,7 @@ or \code{NULL} if the file could not be downloaded.
 Get Data for an Argo Float Profile
 }
 \examples{
-\dontrun{
+\donttest{
 # These examples assume that the ~/data/argo directory exists.
 library(argoFloats)
 library(oce)
@@ -68,7 +68,8 @@ library(oce)
 url <- "ftp://ftp.ifremer.fr/ifremer/argo/dac/nmdis/2901633/profiles/R2901633_071.nc"
 file <- getProfileFromUrl(url=url)
 argo <- read.argo(file)
-plot(argo, which=c(1, 4, 6, 5))
+# Note that oce::plot() changes par(mfrow) and par(mar).
+oce::plot(argo, which=c(1, 4, 6, 5))
 
 # Example 2: argo profile nearest Sable Island
 index <- getIndex()
@@ -80,6 +81,7 @@ w <- which.min(dist)
 url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
 fileSable <- getProfileFromUrl(url=url)
 argoSable <- read.oce(fileSable)
+# Note that oce::plot() changes par(mfrow) and par(mar).
 plot(argoSable, which=c(1, 4, 6, 5))
 }
 

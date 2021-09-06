@@ -26,7 +26,7 @@
 #' to be done, as explained in the \dQuote{Details} section.
 #'
 #' @examples
-#'\dontrun{
+#'\donttest{
 #' argoFloatsDebug(1, "plain text\n")
 #' argoFloatsDebug(1, "red text\n", style="red")
 #' argoFloatsDebug(1, "blue text\n", style="blue")
@@ -34,6 +34,8 @@
 #' argoFloatsDebug(1, "italic text with time stamp\n", style="italic", showTime=TRUE)
 #'}
 #' @author Dan Kelley
+#'
+#' @return None (invisible NULL).
 #'
 #' @importFrom utils flush.console
 #'

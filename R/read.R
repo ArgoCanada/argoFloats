@@ -43,7 +43,7 @@
 #'
 #' @examples
 #' # Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
-#'\dontrun{
+#'\donttest{
 #' library(argoFloats)
 #' data(index)
 #' index1 <- subset(index, 1)
@@ -61,7 +61,7 @@
 #'}
 #'
 #' # Example 2: read from a URI
-#'\dontrun{
+#'\donttest{
 #' u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_001.nc"
 #' p <- readProfiles(u)
 #'}

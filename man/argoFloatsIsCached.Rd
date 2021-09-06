@@ -11,6 +11,9 @@ argoFloatsIsCached(name, debug = 0)
 
 \item{debug}{an integer, passed to \code{\link[=argoFloatsDebug]{argoFloatsDebug()}}.}
 }
+\value{
+A logical value indicating whether a cached value is available.
+}
 \description{
 Check Whether an Item is Cached
 }

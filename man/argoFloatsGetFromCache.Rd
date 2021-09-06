@@ -11,6 +11,9 @@ argoFloatsGetFromCache(name, debug = 0)
 
 \item{debug}{an integer, passed to \code{\link[=argoFloatsDebug]{argoFloatsDebug()}}.}
 }
+\value{
+The cached value, as stored with \code{\link[=argoFloatsStoreInCache]{argoFloatsStoreInCache()}}.
+}
 \description{
 Get an Item From The Cache
 }

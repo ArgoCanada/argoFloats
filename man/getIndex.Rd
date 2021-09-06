@@ -144,7 +144,7 @@ an object that can be plotted or analyzed in other ways.
 For more on this function, see section 2 of Kelley et al. (2021).
 }
 \examples{
-\dontrun{
+\donttest{
 # Download an index of synthetic Argo/BGC-Argo floats, and plot temporal coverage.
 library(argoFloats)
 i <- getIndex("synthetic")

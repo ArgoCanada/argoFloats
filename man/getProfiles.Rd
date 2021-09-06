@@ -93,7 +93,7 @@ For more on this function, see Kelley et al. (2021).
 }
 \examples{
 # Download some Argo data files.
-\dontrun{
+\donttest{
 library(argoFloats)
 data(index)
 index2 <- subset(index, 1:2)
