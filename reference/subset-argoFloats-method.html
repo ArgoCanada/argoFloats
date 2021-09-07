@@ -194,34 +194,31 @@ See &#8220;Details&#8221; and &#8220;Examples&#8221;.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An <code><a href='argoFloats-class.html'>argoFloats</a></code> object.</p>
-<p>An <code><a href='argoFloats-class.html'>argoFloats</a></code> object, restricted as indicated.</p>
+    <p>An <code><a href='argoFloats-class.html'>argoFloats</a></code> object, restricted as indicated.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The possibilities for the <code>...</code> argument are as follows.</p><ol>
-<li><p>An integer vector giving indices to keep. See example 1.</p></li>
+<li><p>An integer vector giving indices to keep.</p></li>
 <li><p>A list named <code>circle</code> with numeric elements named <code>longitude</code>,
 <code>latitude</code> and <code>radius</code>.  The first two give the center of
 the subset region, and the third gives the radius of
-that region, in kilometers. See example 2A and 2B.</p></li>
+that region, in kilometers.</p></li>
 <li><p>A list named <code>rectangle</code> that has elements named
 <code>longitude</code> and <code>latitude</code>, two-element numeric vectors
 giving the western and eastern, and southern and northern
-limits of the selection region. See example 3.</p></li>
+limits of the selection region.</p></li>
 <li><p>A list named <code>polygon</code> that has elements named <code>longitude</code> and <code>latitude</code>
 that are numeric vectors specifying a polygon within which profiles
 will be retained. The polygon must not be self-intersecting,
 and an error message will be issued if it is.  If the polygon is not closed
 (i.e. if the first and last points do not coincide) the first point is pasted
-onto the end, to close it.
-See example 4.</p></li>
+onto the end, to close it.</p></li>
 <li><p>A vector or list named <code>parameter</code> that holds character values that
 specify the names of measured parameters to keep. See section 3.3 of
-Reference 1 for a list of parameters.
-See example 5.</p></li>
+Reference 1 for a list of parameters.</p></li>
 <li><p>A list named <code>time</code> that has elements <code>from</code> and <code>to</code> that are either
 POSIXt times, or character strings that <code><a href='https://rdrr.io/r/base/subset.html'>subset()</a></code> will convert to
-POSIXt times using <code><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct()</a></code> with <code>tz="UTC"</code>. See example 6.</p></li>
+POSIXt times using <code><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct()</a></code> with <code>tz="UTC"</code>.</p></li>
 <li><p>A list named <code>institution</code> that holds a single character element that
 names the institution.  The permitted values are:
 <code>"AO"</code> for Atlantic Oceanographic and Meteorological Laboratory;
@@ -234,25 +231,22 @@ names the institution.  The permitted values are:
 <code>"KM"</code> for Korea Meteorological Agency;
 <code>"KO"</code> for Korea Ocean Research and Development Institute;
 <code>"ME"</code> for Marine Environment Data Section; and
-<code>"NM"</code> for National Marine Data &amp; Information Service.
-See example 7.</p></li>
+<code>"NM"</code> for National Marine Data &amp; Information Service.</p></li>
 <li><p>A list named <code>deep</code> that holds a logical value indicating whether argo floats
-are deep argo (i.e. <code>profiler_type</code> 849, 862, and 864). See example 8.</p></li>
-<li><p>A list named <code>ID</code> that holds a character value specifying a float identifier.
-See example 9.</p></li>
+are deep argo (i.e. <code>profiler_type</code> 849, 862, and 864).</p></li>
+<li><p>A list named <code>ID</code> that holds a character value specifying a float identifier.</p></li>
 <li><p>A list named <code>ocean</code> that  holds a single character element that names the
 ocean. The permitted values are:
 <code>"A"</code> for Atlantic Ocean Area, from 70 W to 20 E,
 <code>"P"</code> for Pacific Ocean Area, from 145 E to 70 W, and
-<code>"I"</code> for Indian Ocean Area, from 20 E to 145 E.
-See example 10.</p></li>
+<code>"I"</code> for Indian Ocean Area, from 20 E to 145 E.</p></li>
 <li><p>A character value named <code>dataMode</code>, equal to either <code>realtime</code> or <code>delayed</code>,
 that selects whether to retain real-time data or delayed data.  There are two
 possibilities, depending on the <code>type</code> of the <code>x</code> argument.
 <strong>Case 1.</strong> If <code>x</code> is of <code>type="index"</code>, then the subset is done by looking for the letters
 <code>R</code> or <code>D</code> in the source filename. Note that a file in the
 latter category may contain some profiles that are of delayed mode <em>and also</em>
-some profiles that are of <code>realtime</code> or <code>adjusted</code> mode.  See example 11.
+some profiles that are of <code>realtime</code> or <code>adjusted</code> mode.
 <strong>Case 2.</strong> If <code>x</code> is
 of type <code>argos</code>, then the subset operation is done for each profile within
 the dataset. Sometimes this will yield data arrays with zero columns.</p></li>
@@ -262,23 +256,18 @@ underline character (<code>"_"</code>) and the suffix (<code>.nc</code>), but no
 is made up of a compulsory component comprising 3 or 4 digits, and an optional
 component that is either blank or the character <code>"D"</code> (which designates a
 descending profile).  Thus, <code>001</code> will match both <code>*_001.nc</code> and <code>*_001D.nc</code>.
-Note this can be used for both <code>"index"</code> and <code>"argos"</code> types.
-See example 12.</p></li>
+Note this can be used for both <code>"index"</code> and <code>"argos"</code> types.</p></li>
 <li><p>A character value named <code>direction</code>, equal to either "descent" or "ascent",
-that selects whether to retain data from the ascent or decent phase.
-See example 13.</p></li>
+that selects whether to retain data from the ascent or decent phase.</p></li>
 <li><p>An integer value named <code>profile</code> that selects which profiles
 to retain.  Note that this type of subset is possible only
-for objects of type <code>"argos"</code>.
-See example 14.</p></li>
+for objects of type <code>"argos"</code>.</p></li>
 <li><p>An integer value named <code>cycle</code> that selects which cycles
-to retain.
-See example 15.</p></li>
+to retain.</p></li>
 <li><p>A character value named <code>dataStateIndicator</code>, equal to either "0A", "1A",
 "2B", "2B+", "2C", "2C+", "3B", or "3C" that selects which <code>dataStateIndicator</code>
 to keep (see table 6 of Reference 1 for details of these codes).
-This operation only works for objects of type <code>"argos"</code>.
-See example 16.</p></li>
+This operation only works for objects of type <code>"argos"</code>.</p></li>
 <li><p>A list named <code>section</code> that  has four elements:
 <code>longitude</code>,<code>latitude</code>, <code>width</code>, and <code>segments</code>. The first two of these
 are numeric vectors that define the spine of the section, in degrees East
@@ -289,8 +278,7 @@ defaults to 100km.  If given, <code>segments</code> is either <code>NULL</code> 
 integer.  Setting <code>segments</code> to <code>NULL</code> will cause the float-spine distance
 to be computed along a great-circle route.  By contrast, if <code>segments</code> is an
 integer, then the spine is traced using <code><a href='https://rdrr.io/r/stats/approxfun.html'>stats::approx()</a></code>, creating
-<code>segments</code> new points.  If <code>segments</code> is not provided, it defaults to 100.
-See example 17.</p></li>
+<code>segments</code> new points.  If <code>segments</code> is not provided, it defaults to 100.</p></li>
 </ol>
 
 <p>In all cases, the notation is that longitude is positive
@@ -316,190 +304,36 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
-
-<span class='co'># Example 1: subset to the first 3 profiles in the (built-in) index</span>
-<span class='va'>index1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 3 cycles (0.298%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>"First 3 longitudes:"</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>index1</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>, <span class='st'>"\n"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; First 3 longitudes: -76.231 -76.024 -76.32 </div><div class='input'>
-<span class='co'># Example 2A: subset to a circle near Abaca Island</span>
-<span class='va'>index2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, circle<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='op'>-</span><span class='fl'>77.5</span>, latitude<span class='op'>=</span><span class='fl'>27.5</span>, radius<span class='op'>=</span><span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 104 cycles (10.3%)</span></div><div class='input'>
-<span class='co'># Example 2B: subset a 300 km radius around Panama using "maps" package</span>
-<span class='co'># This example requires downloading.</span>
-<span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='st'>"maps"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>world.cities</span><span class='op'>)</span>
-<span class='va'>ai</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>panama</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>world.cities</span>, <span class='va'>name</span><span class='op'>==</span><span class='st'>"Panama"</span><span class='op'>)</span>
-<span class='va'>index1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>ai</span>, circle<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='va'>panama</span><span class='op'>$</span><span class='va'>long</span>, latitude<span class='op'>=</span><span class='va'>panama</span><span class='op'>$</span><span class='va'>lat</span>, radius<span class='op'>=</span><span class='fl'>200</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 168 cycles (0.00674%)</span></div><div class='input'><span class='co'># }</span>
-
-<span class='co'># Example 3: subset to a rectangle near Abaca Island</span>
-<span class='va'>lonRect</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>76.5</span>, <span class='op'>-</span><span class='fl'>76</span><span class='op'>)</span>
-<span class='va'>latRect</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>26.5</span>, <span class='fl'>27.5</span><span class='op'>)</span>
-<span class='va'>index3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, rectangle<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='va'>lonRect</span>, latitude<span class='op'>=</span><span class='va'>latRect</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 59 cycles (5.85%)</span></div><div class='input'>
-<span class='co'># Example 4: subset to a polygon to near Abaco Island</span>
-<span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>77.492</span>, <span class='op'>-</span><span class='fl'>78.219</span>, <span class='op'>-</span><span class='fl'>77.904</span>, <span class='op'>-</span><span class='fl'>77.213</span>, <span class='op'>-</span><span class='fl'>76.728</span>, <span class='op'>-</span><span class='fl'>77.492</span><span class='op'>)</span>,
-          latitude<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>26.244</span>, <span class='fl'>25.247</span>, <span class='fl'>24.749</span>, <span class='fl'>24.987</span>, <span class='fl'>25.421</span>, <span class='fl'>26.244</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>index4</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, polygon<span class='op'>=</span><span class='va'>p</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 173 cycles (17.2%)</span></div><div class='input'>
-<span class='co'># Show some of these subsets on a map</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>index2</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>index2</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, col<span class='op'>=</span><span class='fl'>2</span>, pch<span class='op'>=</span><span class='fl'>20</span>, cex<span class='op'>=</span><span class='fl'>1.4</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>index3</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>index3</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, col<span class='op'>=</span><span class='fl'>3</span>, pch<span class='op'>=</span><span class='fl'>20</span>, cex<span class='op'>=</span><span class='fl'>1.4</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/rect.html'>rect</a></span><span class='op'>(</span><span class='va'>lonRect</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>latRect</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>lonRect</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span>, <span class='va'>latRect</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span>, border<span class='op'>=</span><span class='fl'>3</span>, lwd<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>index4</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>index4</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, col<span class='op'>=</span><span class='fl'>4</span>, pch<span class='op'>=</span><span class='fl'>20</span>, cex<span class='op'>=</span><span class='fl'>1.4</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/polygon.html'>polygon</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>$</span><span class='va'>longitude</span>, <span class='va'>p</span><span class='op'>$</span><span class='va'>latitude</span>, border<span class='op'>=</span><span class='fl'>4</span><span class='op'>)</span>
-</div><div class='img'><img src='subset-argoFloats-method-1.png' alt='' width='672' height='672' /></div><div class='input'>
-<span class='co'># Example 5: subset synthetic data containing "DOXY" parameters</span>
-<span class='co'># Data containing "DOXY" data</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>indexSynthetic</span><span class='op'>)</span>
-<span class='va'>index5A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>indexSynthetic</span>, parameter<span class='op'>=</span><span class='st'>"DOXY"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 38 cycles (95%)</span></div><div class='input'><span class='co'># Data containing both "PSAL" and "DOWN_IRRADIANCE380" data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>indexSynthetic</span><span class='op'>)</span>
-<span class='va'>index5B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>indexSynthetic</span>, parameter<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"PSAL"</span>, <span class='st'>"DOWN_IRRADIANCE380"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 2 cycles (5%)</span></div><div class='input'>
-<span class='co'># Example 6: subset data for the year 2019</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
-<span class='va'>index6</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, time<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>from<span class='op'>=</span><span class='st'>"2019-01-01"</span>, to<span class='op'>=</span><span class='st'>"2019-12-31"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 9 cycles (0.893%)</span></div><div class='input'>
-<span class='co'># Example 7: subset to the Canadian MEDS data</span>
-<span class='va'>index7</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, institution<span class='op'>=</span><span class='st'>"ME"</span><span class='op'>)</span>
+
+<span class='co'># Subset to the first 3 profiles in the (built-in) index</span>
+<span class='va'>indexFirst3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Kept 3 cycles (0.298%)</span></div><div class='input'>
-<span class='co'># Example 8: subset to a specific ID</span>
-<span class='co'># This example requires downloading.</span>
-<span class='co'># \donttest{</span>
-<span class='va'>ai</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span>filename<span class='op'>=</span><span class='st'>"synthetic"</span><span class='op'>)</span>
-<span class='va'>index9</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>ai</span>, ID<span class='op'>=</span><span class='st'>"1900722"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 133 cycles (0.0553%)</span></div><div class='input'><span class='co'># }</span>
-
-<span class='co'># Example 9: subset data to only include deep argo</span>
-<span class='co'># This example requires downloading.</span>
-<span class='co'># \donttest{</span>
-<span class='va'>ai</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span>filename<span class='op'>=</span><span class='st'>"synthetic"</span><span class='op'>)</span>
-<span class='va'>index8</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>ai</span>, deep<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 740 cycles (0.308%)</span></div><div class='input'><span class='co'># }</span>
-
-<span class='co'># Example 10: subset data by ocean</span>
-<span class='co'># This example requires downloading.</span>
-<span class='co'># \donttest{</span>
-<span class='va'>ai</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>index10</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>ai</span>, circle<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='op'>-</span><span class='fl'>83</span>, latitude<span class='op'>=</span><span class='fl'>9</span>, radius<span class='op'>=</span><span class='fl'>500</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 2163 cycles (0.0868%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index10</span>, which<span class='op'>=</span><span class='st'>"map"</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='input'><span class='va'>atlantic</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index10</span>, ocean<span class='op'>=</span><span class='st'>"A"</span><span class='op'>)</span> <span class='co'># Subsetting for Atlantic Ocean</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 955 cycles (44.2%)</span></div><div class='input'><span class='va'>pacific</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index10</span>, ocean<span class='op'>=</span><span class='st'>"P"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 1208 cycles (55.8%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>atlantic</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>atlantic</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>20</span>, col<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>pacific</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>pacific</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>20</span>, col<span class='op'>=</span><span class='fl'>3</span><span class='op'>)</span>
-</div><div class='img'><img src='subset-argoFloats-method-2.png' alt='' width='672' height='672' /></div><div class='input'><span class='co'># }</span>
-
-<span class='co'># Example 11: subset by delayed time</span>
-<span class='co'># This example requires downloading.</span>
-<span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>indexBgc</span><span class='op'>)</span>
-<span class='va'>index11</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>indexBgc</span>, dataMode<span class='op'>=</span><span class='st'>"delayed"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 6 cycles (15.4%)</span></div><div class='input'><span class='va'>profiles</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span><span class='op'>(</span><span class='va'>index11</span><span class='op'>)</span>
-<span class='va'>argos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='va'>profiles</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 6 profiles read, 2 have &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 6 profiles read, 4 have &gt;10% of bphaseOxygen values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    3 4 5 6</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 6 profiles read, 2 have &gt;10% of CDOM values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 6 profiles read, 2 have &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 6 profiles read, 2 have &gt;10% of fluorescenceCDOM values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 6 profiles read, 2 have &gt;10% of rawDownwellingIrradiance380 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 6 profiles read, 2 have &gt;10% of rawDownwellingIrradiance412 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 6 profiles read, 2 have &gt;10% of rawDownwellingIrradiance490 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 6 profiles read, 2 have &gt;10% of rawDownwellingPAR values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2</span></div><div class='input'><span class='va'>oxygen</span> <span class='op'>&lt;-</span> <span class='va'>argos</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>pressure</span> <span class='op'>&lt;-</span> <span class='va'>argos</span><span class='op'>[[</span><span class='st'>"pressure"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>oxygen</span>, <span class='va'>pressure</span>, ylim<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>pressure</span>, na.rm<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>,
-     ylab<span class='op'>=</span><span class='st'>"Pressure (dbar)"</span>, xlab<span class='op'>=</span><span class='st'>"Oxygen (umol/kg)"</span><span class='op'>)</span>
-</div><div class='img'><img src='subset-argoFloats-method-3.png' alt='' width='672' height='672' /></div><div class='input'><span class='co'># }</span>
-
-<span class='co'># Example 12: subset by cycle</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
-<span class='va'>index12A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, cycle<span class='op'>=</span><span class='st'>"124"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 5 cycles (0.496%)</span></div><div class='input'><span class='va'>index12B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, cycle<span class='op'>=</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 15 cycles (1.49%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>"File names with cycle number 124:"</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>index12A</span><span class='op'>[[</span><span class='st'>"file"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>, <span class='st'>"\n"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; File names with cycle number 124: aoml/1901584/profiles/D1901584_124.nc aoml/4900436/profiles/D4900436_124.nc aoml/4901274/profiles/R4901274_124.nc aoml/4901453/profiles/D4901453_124.nc aoml/4901645/profiles/R4901645_124.nc </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='st'>"File names with cycle number between 0 and 2:"</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>index12B</span><span class='op'>[[</span><span class='st'>"file"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>, <span class='st'>"\n"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; File names with cycle number between 0 and 2: aoml/4900579/profiles/D4900579_001.nc aoml/4900579/profiles/D4900579_002.nc aoml/4900580/profiles/D4900580_001.nc aoml/4900580/profiles/D4900580_002.nc aoml/4900581/profiles/D4900581_001.nc aoml/4900581/profiles/D4900581_002.nc aoml/4900753/profiles/D4900753_001.nc aoml/4900753/profiles/D4900753_002.nc aoml/4900791/profiles/D4900791_000.nc aoml/4901532/profiles/R4901532_002.nc aoml/4901536/profiles/R4901536_001.nc aoml/4901536/profiles/R4901536_002.nc aoml/4902066/profiles/R4902066_001.nc aoml/4902066/profiles/R4902066_002.nc coriolis/6901048/profiles/D6901048_002.nc </div><div class='input'>
-<span class='co'># Example 13: subset by direction</span>
-<span class='co'># This example requires downloading.</span>
-<span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
-<span class='va'>index13A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span><span class='op'>)</span>, deep<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 12852 cycles (0.516%)</span></div><div class='input'><span class='va'>index13B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index13A</span>, direction<span class='op'>=</span><span class='st'>"descent"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>index13B</span><span class='op'>[[</span><span class='st'>"file"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "aoml/4902321/profiles/R4902321_001D.nc"
-#&gt; [2] "aoml/4902321/profiles/R4902321_002D.nc"
-#&gt; [3] "aoml/4902321/profiles/R4902321_003D.nc"
-#&gt; [4] "aoml/4902321/profiles/R4902321_004D.nc"
-#&gt; [5] "aoml/4902321/profiles/R4902321_005D.nc"
-#&gt; [6] "aoml/4902321/profiles/R4902321_006D.nc"</div><div class='input'><span class='co'># }</span>
-
-<span class='co'># Example 14: subset by profile (for argos type)</span>
-<span class='co'># This example requires downloading.</span>
-<span class='co'># \donttest{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
-<span class='va'>index14A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='fu'><a href='getIndex.html'>getIndex</a></span><span class='op'>(</span>filename<span class='op'>=</span><span class='st'>"synthetic"</span><span class='op'>)</span>, ID<span class='op'>=</span><span class='st'>"5903889"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 223 cycles (0.0927%)</span></div><div class='input'><span class='va'>index14B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index14A</span>, cycle<span class='op'>=</span><span class='st'>"074"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 1 cycles (0.448%)</span></div><div class='input'><span class='va'>argos14A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='getProfiles.html'>getProfiles</a></span><span class='op'>(</span><span class='va'>index14B</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='input'><span class='va'>argos14B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>argos14A</span>, profile<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
-<span class='va'>D</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Oxygen <span class='op'>=</span> <span class='va'>argos14A</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span>,
-col1<span class='op'>=</span> <span class='va'>argos14B</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-<span class='co'># }</span>
-
-<span class='co'># Example 15: subset by cycle (for argos type) to create TS diagram</span>
-<span class='co'># This example requires downloading.</span>
-<span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"index"</span><span class='op'>)</span>
-<span class='va'>index15</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, ID<span class='op'>=</span><span class='st'>"1901584"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 10 cycles (0.992%)</span></div><div class='input'><span class='va'>profiles</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getProfiles.html'>getProfiles</a></span><span class='op'>(</span><span class='va'>index15</span><span class='op'>)</span>
-<span class='va'>argos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='va'>profiles</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 10 profiles read, 9 have &gt;10% of salinity values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2 3 4 5 6 7 8 10</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 10 profiles read, 9 have &gt;10% of temperature values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2 3 4 5 6 7 8 10</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>argos</span>, cycle<span class='op'>=</span><span class='st'>"147"</span><span class='op'>)</span>, which<span class='op'>=</span><span class='st'>"TS"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 1 cycles </span></div><div class='img'><img src='subset-argoFloats-method-4.png' alt='' width='672' height='672' /></div><div class='input'><span class='co'># }</span>
-
-<span class='co'># Example 16: subset by dataStateIndicator</span>
-<span class='co'># This example requires downloading.</span>
-<span class='co'># \donttest{</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"index"</span><span class='op'>)</span>
-<span class='va'>index16</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>40</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 40 cycles (3.97%)</span></div><div class='input'><span class='va'>argos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='getProfiles.html'>getProfiles</a></span><span class='op'>(</span><span class='va'>index16</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 40 profiles read, 1 has &gt;10% of conductivity values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    40</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 40 profiles read, 12 have &gt;10% of salinity values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2 3 4 5 6 7 8 10 29 38 40</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 40 profiles read, 12 have &gt;10% of temperature values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1 2 3 4 5 6 7 8 10 29 38 40</span></div><div class='input'><span class='va'>argos16A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>argos</span>, dataStateIndicator<span class='op'>=</span><span class='st'>"2C"</span><span class='op'>)</span>
-<span class='va'>argos16B</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>argos</span>, dataStateIndicator<span class='op'>=</span><span class='st'>"2B"</span><span class='op'>)</span>
-<span class='co'># }</span>
-
-<span class='co'># Example 17: subset by section to create a map plot</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span><span class='op'>(</span><span class='st'>"s2"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"index"</span><span class='op'>)</span>
-    <span class='va'>lon</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>78</span>, <span class='op'>-</span><span class='fl'>77</span>, <span class='op'>-</span><span class='fl'>76</span><span class='op'>)</span>
-    <span class='va'>lat</span> <span class='op'>&lt;-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>27.5</span>,<span class='fl'>27.5</span>,<span class='fl'>26.5</span><span class='op'>)</span>
-    <span class='va'>index17</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>,
-                      section<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='va'>lon</span>, latitude<span class='op'>=</span><span class='va'>lat</span>, width<span class='op'>=</span><span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
-    <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index17</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
-    <span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>lon</span>, <span class='va'>lat</span>, pch<span class='op'>=</span><span class='fl'>21</span>, col<span class='op'>=</span><span class='st'>"black"</span>, bg<span class='op'>=</span><span class='st'>"red"</span>, type<span class='op'>=</span><span class='st'>"o"</span>, lwd<span class='op'>=</span><span class='fl'>3</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: s2</span></div><div class='output co'>#&gt; <span class='message'>Kept 371 cycles (36.8%)</span></div><div class='img'><img src='subset-argoFloats-method-5.png' alt='' width='672' height='672' /></div><div class='input'>
+<span class='co'># Subset to a circle near Abaco Island</span>
+<span class='va'>indexCircle</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, circle<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='op'>-</span><span class='fl'>77.5</span>, latitude<span class='op'>=</span><span class='fl'>27.5</span>, radius<span class='op'>=</span><span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Kept 104 cycles (10.3%)</span></div><div class='input'>
+<span class='co'># Subset to a rectangle near Abac0 Island</span>
+<span class='va'>lonlim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>76.5</span>, <span class='op'>-</span><span class='fl'>76</span><span class='op'>)</span>
+<span class='va'>latlim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>26.5</span>, <span class='fl'>27.5</span><span class='op'>)</span>
+<span class='va'>indexRectangle</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, rectangle<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='va'>lonlim</span>, latitude<span class='op'>=</span><span class='va'>latlim</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Kept 59 cycles (5.85%)</span></div><div class='input'>
+<span class='co'># Subset to a polygon near Abaco Island</span>
+<span class='va'>lonp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>77.492</span>, <span class='op'>-</span><span class='fl'>78.219</span>, <span class='op'>-</span><span class='fl'>77.904</span>, <span class='op'>-</span><span class='fl'>77.213</span>, <span class='op'>-</span><span class='fl'>76.728</span>, <span class='op'>-</span><span class='fl'>77.492</span><span class='op'>)</span>
+<span class='va'>latp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span> <span class='fl'>26.244</span>,  <span class='fl'>25.247</span>,  <span class='fl'>24.749</span>,  <span class='fl'>24.987</span>,  <span class='fl'>25.421</span>,  <span class='fl'>26.244</span><span class='op'>)</span>
+<span class='va'>indexPolygon</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, polygon<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>longitude<span class='op'>=</span><span class='va'>lonp</span>, latitude<span class='op'>=</span><span class='va'>latp</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Kept 173 cycles (17.2%)</span></div><div class='input'>
+<span class='co'># Subset to year 2019</span>
+<span class='va'>index2019</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, time<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>from<span class='op'>=</span><span class='st'>"2019-01-01"</span>, to<span class='op'>=</span><span class='st'>"2019-12-31"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Kept 9 cycles (0.893%)</span></div><div class='input'>
+<span class='co'># Subset to Canadian MEDS data</span>
+<span class='va'>indexMEDS</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, institution<span class='op'>=</span><span class='st'>"ME"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Kept 3 cycles (0.298%)</span></div><div class='input'>
+<span class='co'># Subset to profiles with oxygen data</span>
+<span class='va'>indexOxygen</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>indexSynthetic</span>, parameter<span class='op'>=</span><span class='st'>"DOXY"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Kept 38 cycles (95%)</span></div><div class='input'>
+<span class='co'># Subset to profiles with both salinity and 380-nm downward irradiance data</span>
+<span class='va'>indexSalinityIrradiance</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>indexSynthetic</span>, parameter<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"PSAL"</span>, <span class='st'>"DOWN_IRRADIANCE380"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Kept 2 cycles (5%)</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
