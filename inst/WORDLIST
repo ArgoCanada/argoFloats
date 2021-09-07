@@ -1,4 +1,3 @@
-
 AOML
 Abaco
 ArgoCanada
@@ -40,6 +39,8 @@ adjustedPressure
 al
 applyQC
 argo
+argoFloat
+argoFloats
 backscattering
 bathymetry
 behaviour
