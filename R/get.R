@@ -572,15 +572,17 @@ getIndex <- function(filename="core",
 #' holds the path names of the downloaded files; the latter
 #' is used by [readProfiles()].
 #'
-#' @examples
-#' # Download some Argo data files.
-#'\donttest{
-#' library(argoFloats)
-#' data(index)
-#' index2 <- subset(index, 1:2)
-#' profiles2 <- getProfiles(index2)
-#' # See ?readProfiles for how to read the files now downloaded.
-#' }
+## This example was removed because (a) it's not very informative and
+## (b) it might fail on a CRAN test that disallows downloads to userspace.
+## @examples
+## # Download some Argo data files.
+##\donttest{
+## library(argoFloats)
+## data(index)
+## index2 <- subset(index, 1:2)
+## profiles2 <- getProfiles(index2)
+## # See ?readProfiles for how to read the files now downloaded.
+##}
 #'
 #' @references
 #' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing

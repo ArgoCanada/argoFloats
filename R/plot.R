@@ -243,17 +243,15 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' points(R[["longitude"]], R[["latitude"]],
 #'     cex=0.6, pch=20, col="red")
 #'
-#' # The rest of the examples are slow and/or require file downloads, so
-#' # they are not tested by default.
-#'\donttest{
-#'
-#' # Example 3: TS of first 10 profiles.
-#' index10 <- subset(index, 1:10)
-#' profiles10 <- getProfiles(index10)
-#' argos10 <- readProfiles(profiles10)
+#' # Example 3: TS of a built-in data file.
+#' f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
+#' a <- readProfiles(f)
 #' par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
-#' plot(argos10, which="TS")
+#' plot(a, which="TS")
 #'
+#' # Wrap other tests in donttest, because they do not complete in under 5s,
+#' # as is required for CRAN submission.
+#'\donttest{
 #' # Example 4: map with bathymetry. Note that par(mar) is adjusted
 #' # for the bathymetry palette, so if must be adjusted again after
 #' # the plot(), in order to add new plot elements.

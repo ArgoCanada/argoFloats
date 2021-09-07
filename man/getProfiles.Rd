@@ -91,17 +91,6 @@ Note that \code{\link[=readProfiles]{readProfiles()}} skips over any such \code{
 while reporting their positions within \code{index}.
 For more on this function, see Kelley et al. (2021).
 }
-\examples{
-# Download some Argo data files.
-\donttest{
-library(argoFloats)
-data(index)
-index2 <- subset(index, 1:2)
-profiles2 <- getProfiles(index2)
-# See ?readProfiles for how to read the files now downloaded.
-}
-
-}
 \references{
 Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
 Argo data. Frontiers in Marine Science, (8), 636922.

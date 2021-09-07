@@ -68,6 +68,7 @@ on this function, see section 2 of Kelley et al. (2021).
 }
 \examples{
 # Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
+# This example requires downloading.
 \donttest{
 library(argoFloats)
 data(index)

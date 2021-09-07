@@ -161,7 +161,8 @@
 #' # Example 2A: subset to a circle near Abaca Island
 #' index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 #'
-#' # Exampe 2B: subset a 300 km radius around Panama using "maps" package
+#' # Example 2B: subset a 300 km radius around Panama using "maps" package
+#' # This example requires downloading.
 #' \donttest{
 #' library("maps")
 #' data(world.cities)
@@ -176,9 +177,9 @@
 #' index3 <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
 #'
 #' # Example 4: subset to a polygon to near Abaco Island
-#' poly <- list(longitude=c(-77.492, -78.219, -77.904, -77.213, -76.728, -77.492),
-#'              latitude=c(26.244, 25.247, 24.749, 24.987, 25.421, 26.244))
-#' index4 <- subset(index, polygon=poly)
+#' p <- list(longitude=c(-77.492, -78.219, -77.904, -77.213, -76.728, -77.492),
+#'           latitude=c(26.244, 25.247, 24.749, 24.987, 25.421, 26.244))
+#' index4 <- subset(index, polygon=p)
 #'
 #' # Show some of these subsets on a map
 #' plot(index, bathymetry=FALSE)
@@ -186,7 +187,7 @@
 #' points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
 #' rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
 #' points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
-#' polygon(poly$longitude, poly$latitude, border=4)
+#' polygon(p$longitude, p$latitude, border=4)
 #'
 #' # Example 5: subset synthetic data containing "DOXY" parameters
 #' # Data containing "DOXY" data
@@ -204,18 +205,21 @@
 #' index7 <- subset(index, institution="ME")
 #'
 #' # Example 8: subset to a specific ID
+#' # This example requires downloading.
 #' \donttest{
 #' ai <- getIndex(filename="synthetic")
 #' index9 <- subset(ai, ID="1900722")
 #'}
 #'
 #' # Example 9: subset data to only include deep argo
+#' # This example requires downloading.
 #' \donttest{
 #' ai <- getIndex(filename="synthetic")
 #' index8 <- subset(ai, deep=TRUE)
 #'}
 #'
 #' # Example 10: subset data by ocean
+#' # This example requires downloading.
 #' \donttest{
 #' ai <- getIndex()
 #' index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
@@ -227,6 +231,7 @@
 #'}
 #'
 #' # Example 11: subset by delayed time
+#' # This example requires downloading.
 #' \donttest{
 #' data(indexBgc)
 #' index11 <- subset(indexBgc, dataMode="delayed")
@@ -239,15 +244,14 @@
 #'}
 #'
 #' # Example 12: subset by cycle
-#' \donttest{
 #' data(index)
 #' index12A <- subset(index, cycle="124")
 #' index12B <- subset(index, cycle=0:2)
 #' cat("File names with cycle number 124:", paste(index12A[["file"]]), "\n")
 #' cat("File names with cycle number between 0 and 2:", paste(index12B[["file"]]), "\n")
-#'}
 #'
 #' # Example 13: subset by direction
+#' # This example requires downloading.
 #' \donttest{
 #' library(argoFloats)
 #' index13A <- subset(getIndex(), deep=TRUE)
@@ -256,6 +260,7 @@
 #'}
 #'
 #' # Example 14: subset by profile (for argos type)
+#' # This example requires downloading.
 #' \donttest{
 #' library(argoFloats)
 #' index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
@@ -267,6 +272,7 @@
 #'}
 #'
 #' # Example 15: subset by cycle (for argos type) to create TS diagram
+#' # This example requires downloading.
 #' \donttest{
 #' data("index")
 #' index15 <- subset(index, ID="1901584")
@@ -276,6 +282,7 @@
 #'}
 #'
 #' # Example 16: subset by dataStateIndicator
+#' # This example requires downloading.
 #' \donttest{
 #' data("index")
 #' index16 <- subset(index, 1:40)

@@ -63,8 +63,7 @@
 #' `doi:10.13155/29825`
 #'
 #' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
-#' Argo data. Frontiers in Marine Science, (8), 636922.
-#' \doi{10.3389/fmars.2021.635922}
+#' Argo data. Frontiers in Marine Science, (8), 636922. \doi{10.3389/fmars.2021.635922}
 #'
 #' @export
 #' @author Dan Kelley

@@ -43,6 +43,7 @@
 #'
 #' @examples
 #' # Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
+#' # This example requires downloading.
 #'\donttest{
 #' library(argoFloats)
 #' data(index)
