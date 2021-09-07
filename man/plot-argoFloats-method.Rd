@@ -37,7 +37,7 @@ see \dQuote{Details}.}
 
 \item{bathymetry}{an argument used only if \code{which="map"}, to control
 whether (and how) to indicate water depth. See \dQuote{Details} for details,
-and see Example 4 for an example of how to compensate for the margin
+and Example 4 for a hint on compensating for the margin
 adjustment done if an image is used to show bathymetry.}
 
 \item{geographical}{flag indicating the style of axes
@@ -103,7 +103,7 @@ then \code{\link[oce:mapLocator]{oce::mapLocator()}} must be used instead of \co
 is not contained in \code{mapControl}, it defaults to \code{FALSE}, and if \code{projection}
 is not supplied, it defaults to \code{FALSE}.  Note that \code{mapControl} takes
 precedence over the \code{bathymetry} argument, if both are provided.
-See Example 5D for a case with Mollweide projection.}
+Also note that, at present, bathymetry cannot be shown with map projections.}
 
 \item{profileControl}{a list that permits control of the \code{which="profile"}
 case.  If provided, it may contain elements named \code{parameter} (a character value
@@ -162,7 +162,7 @@ see \dQuote{Details}. These are basic plot styles, with
 somewhat limited scope for customization. Since the data with
 \linkS4class{argoFloats} objects are easy to extract, users should
 not find it difficult to create their own plots to meet a
-particular aesthetic. See Example 5 and Kelley et al. (2021)
+particular aesthetic. See Examples and Kelley et al. (2021)
 for more plotting examples.
 }
 \details{
@@ -190,24 +190,24 @@ Example 4 illustrates this, and also shows how to adjust
 the margins after the plot, in case there is a need to add
 extra graphical elements using \code{\link[=points]{points()}}, \code{\link[=lines]{lines()}}, etc.
 \item A list with items controlling both the bathymetry data and its
-representation in the plot, as in Example 5.  Those items are:
+representation in the plot.  Those items are:
 \enumerate{
 \item \code{source}, a mandatory value that is either
 (a) the string \code{"auto"} (the default) to use
 \code{\link[oce:download.topo]{oce::download.topo()}} to download the data
 or (b) a value returned by \code{\link[oce:read.topo]{oce::read.topo()}}.
 \item \code{contour}, an optional logical value (with \code{FALSE} as the default)
-indicating (as in Examples 5A and 5B) whether to represent
+indicating whether to represent
 bathymetry with contours (with depths of 100m, 200m, 500m shown,
 along with 1km, 2km up to 10km), as opposed to an image;
 \item \code{colormap}, ignored if \code{contour} is \code{TRUE},
 an optional value that is either the string \code{"auto"} (the default)
-for a form of GEBCO colors (as in Example 5C) computed with
+for a form of GEBCO colors computed with
 \code{\link[oce:oceColorsGebco]{oce::oceColorsGebco()}}, or a value computed with \code{\link[oce:colormap]{oce::colormap()}}
 applied to the bathymetry data; and
 \item \code{palette}, ignored if \code{contour} is \code{TRUE},
 an optional logical value (with \code{TRUE} as the default)
-indicating (again, as in Example 5C) whether to draw a depth-color
+indicating whether to draw a depth-color
 palette to the right of the plot.
 }
 }
@@ -269,9 +269,6 @@ f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
 a <- readProfiles(f)
 par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 plot(a, which="TS")
-
-# Wrap other tests in donttest, because they do not complete in under 5s,
-# as is required for CRAN submission.
 \donttest{
 # Example 4: map with bathymetry. Note that par(mar) is adjusted
 # for the bathymetry palette, so if must be adjusted again after
@@ -291,20 +288,14 @@ par(mar=par("mar") + c(0, 0, 0, 2.75))
 points(index[["longitude"]], index[["latitude"]],
     cex=0.6, pch=20, col="red")
 
-# Example 5A. Simple contour version, using coarse dataset (ok on basin-scale).
+# Example 5. Simple contour version, using coarse dataset (ok on basin-scale).
 # Hint: use oce::download.topo() to download high-resolution datasets to
 # use instead of topoWorld.
 par(mar=c(2, 2, 1, 1))
 data(topoWorld, package="oce")
 plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 
-# Example 5B. World view with Mollweide projection (Canada Day, 2020)
-jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
-par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0)) # narrow margins for a map
-plot(jul1, which="map", mapControl=list(projection=TRUE), bathymetry=FALSE,
-     pch=20, col=4, cex=0.75)
-
-# Example 5C. Customized map, sidestepping plot,argoFloats-method().
+# Example 6. Customized map, sidestepping plot,argoFloats-method().
 lon <- topoWorld[["longitude"]]
 lat <- topoWorld[["latitude"]]
 asp <- 1/cos(pi/180*mean(lat))
@@ -322,20 +313,10 @@ polygon(coastlineWorldFine[["longitude"]],
 # Indicate float positions.
 points(index[["longitude"]], index[["latitude"]], pch=20)
 
-# Example 6: TS plot for a particular argo
+# Example 7: TS plot for a particular argo
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 plot(a, which="TS")
-
-# Example 7: Temperature QC plot for 25 cycles of a float in the Arabian Sea
-ais <- getIndex(filename="synthetic")
-sub <- subset(subset(ais, ID='2902123'), 50:75)
-profiles <- getProfiles(sub)
-argos <- readProfiles(profiles)
-par(mar=c(3.3, 3.3, 2, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
-plot(argos, which="QC") # defaults to temperature
-plot(argos, which="QC", QCControl=list(parameter="salinity"))
-plot(argos, which="QC", QCControl=list(parameter="salinity",dataStateIndicator=TRUE))
 
 # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
@@ -350,10 +331,6 @@ par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sigma0"))
 
-# Example 10: Summary plot
-par(mar=c(2, 3.3, 2, 1))
-a <- readProfiles(getProfiles(subset(getIndex(), ID=1901584)))
-plot(a, which="summary")
 }
 
 }

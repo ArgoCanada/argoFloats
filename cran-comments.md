@@ -15,12 +15,11 @@ In response to a detailed, informative and helpful review by Julia Haider, the
 following changes were made to the version (1.0.0) submitted to CRAN, with the
 new version being labeled 1.0.1.
 
-1. DESCRIPTION no longer starts with "The argoFloats package".
+1. The DESCRIPTION no longer starts with "The argoFloats package", and its
+   literature citation is now in the suggested format.
 
-2. DESCRIPTION refers to a published paper using the suggested format.
-
-3. \value added to the documentation of all functions. A list of affected files
-   is as below. Please note that last two items were found using
+2. \value was added to the documentation of all functions. A list of affected
+   files is as below. Please note that last two items were found using
        grep -L '\\value' $(git grep -l '\\usage' *Rd)|sort
    with the others having been listed in the review.
       * argoFloatsDebug.Rd
@@ -34,16 +33,12 @@ new version being labeled 1.0.1.
       * argoFloats-methods.Rd
       * sub-sub-argoFloats-method.Rd
 
-4. Describe the output class.
+3. Describe the output class in more detail.
 
-5. Change \dontrun entries to \donttest.
+4. Reduce the use of dontrun in examples, relying on the more appropriate
+   donttest, and narrow the focus of examples. (Thanks, particularly, for
+   noting this.)
 
-6. Expose a few more plot() examples, but not the whole list, because doing so
-   causes testing to exceed the 5-second limit.
-
-7. Ensure that plotting functions use on.exit() to reset par() values, and
-   adjust some documentation entries appropriately, to get margins that are
-   closer to oceanographic norms. (For example, oceanographers draw the x axis
-   at the top of a so-called "profile" plot, so space is reallocated from the
-   bottom margin to the top one.)
+5. Plotting functions now use on.exit() to reset par() values, so that the
+   user's setup is not altered by the plot() call.
 

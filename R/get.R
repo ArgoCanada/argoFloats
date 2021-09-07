@@ -73,32 +73,40 @@ argoFloatsStoreInCache <- function(name, value, debug=0)
 #' @return A character value naming the local location of the downloaded file,
 #' or `NULL` if the file could not be downloaded.
 #'
-#' @examples
-#'\donttest{
-#' # These examples assume that the ~/data/argo directory exists.
-#' library(argoFloats)
-#' library(oce)
-#'
-#' # Example 1: a particular file
-#' url <- "ftp://ftp.ifremer.fr/ifremer/argo/dac/nmdis/2901633/profiles/R2901633_071.nc"
-#' file <- getProfileFromUrl(url=url)
-#' argo <- read.argo(file)
-#' # Note that oce::plot() changes par(mfrow) and par(mar).
-#' oce::plot(argo, which=c(1, 4, 6, 5))
-#'
-#' # Example 2: argo profile nearest Sable Island
-#' index <- getIndex()
-#' lon0 <- -59.9149
-#' lat0 <- 43.9337
-#'
-#' dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
-#' w <- which.min(dist)
-#' url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
-#' fileSable <- getProfileFromUrl(url=url)
-#' argoSable <- read.oce(fileSable)
-#' # Note that oce::plot() changes par(mfrow) and par(mar).
-#' plot(argoSable, which=c(1, 4, 6, 5))
-#' }
+## NOTE: this will take longer than 5s, so I had marked it dontrun on an initial
+## CRAN submission.  THe CRAN review suggested marking it donttest instead, but
+## when I do that, rhub::check_for_cran() gives an error on the getIndex, relating
+## to the non-existence of ~/data/argo.  But, really, what's the point of these
+## examples?  The docs are really quite straightforward, and we have a paper,
+## besides. I don't see that these examples illustrate anything that the docs
+## don't already illustrate, and so I have removed them. --DK
+## @examples
+##\dontrun{
+## # This is not run, because it takes longer than 5s to complete.
+## # These examples assume that the ~/data/argo directory exists.
+## library(argoFloats)
+## library(oce)
+##
+## # Example 1: a particular file
+## url <- "ftp://ftp.ifremer.fr/ifremer/argo/dac/nmdis/2901633/profiles/R2901633_071.nc"
+## file <- getProfileFromUrl(url=url)
+## argo <- read.argo(file)
+## # Note that oce::plot() changes par(mfrow) and par(mar).
+## oce::plot(argo, which=c(1, 4, 6, 5))
+##
+## # Example 2: argo profile nearest Sable Island
+## index <- getIndex()
+## lon0 <- -59.9149
+## lat0 <- 43.9337
+##
+## dist <- oce::geodDist(index[["longitude"]], index[["latitude"]], lon0, lat0)
+## w <- which.min(dist)
+## url <- paste0(index[["metadata"]][["ftpRoot"]][1], "/", index[["file"]][w])
+## fileSable <- getProfileFromUrl(url=url)
+## argoSable <- read.oce(fileSable)
+## # Note that oce::plot() changes par(mfrow) and par(mar).
+## plot(argoSable, which=c(1, 4, 6, 5))
+##}
 #'
 #' @export
 #'
@@ -232,14 +240,22 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' @return An object of class [`argoFloats-class`] with type=`"index"`, which
 #' is suitable as the first argument of [getProfiles()].
 #'
-#' @examples
-#'\donttest{
-#' # Download an index of synthetic Argo/BGC-Argo floats, and plot temporal coverage.
-#' library(argoFloats)
-#' i <- getIndex("synthetic")
-#' summary(i)
-#' hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
-#' }
+## NOTE: this will take longer than 5s, so I had marked it dontrun on an initial
+## CRAN submission.  THe CRAN review suggested marking it donttest instead, but
+## when I do that, rhub::check_for_cran() gives an error on the getIndex, relating
+## to the non-existence of ~/data/argo.  But, really, what's the point of these
+## examples?  The docs are really quite straightforward, and we have a paper,
+## besides. I don't see that these examples illustrate anything that the docs
+## don't already illustrate, and so I have removed them. --DK
+## @examples
+##\dontrun{
+## # This is not run, because it takes longer than 5s to complete.
+## # Download an index of synthetic Argo/BGC-Argo floats, and plot temporal coverage.
+## library(argoFloats)
+## i <- getIndex("synthetic")
+## summary(i)
+## hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
+##}
 #'
 #' @references
 #' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
@@ -572,11 +588,16 @@ getIndex <- function(filename="core",
 #' holds the path names of the downloaded files; the latter
 #' is used by [readProfiles()].
 #'
-## This example was removed because (a) it's not very informative and
-## (b) it might fail on a CRAN test that disallows downloads to userspace.
+## NOTE: this will take longer than 5s, so I had marked it dontrun on an initial
+## CRAN submission.  THe CRAN review suggested marking it donttest instead, but
+## when I do that, rhub::check_for_cran() gives an error on the getIndex, relating
+## to the non-existence of ~/data/argo.  But, really, what's the point of these
+## examples?  The docs are really quite straightforward, and we have a paper,
+## besides. I don't see that these examples illustrate anything that the docs
+## don't already illustrate, and so I have removed them. --DK
 ## @examples
-## # Download some Argo data files.
-##\donttest{
+##\dontrun{
+## # This is not run, because it takes longer than 5s to complete.
 ## library(argoFloats)
 ## data(index)
 ## index2 <- subset(index, 1:2)
