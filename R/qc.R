@@ -46,18 +46,16 @@
 #' `data` slot having been passed through [oce::handleFlags,argo-method()].
 #'
 #' @examples
-#'\donttest{
+#' # Demonstrate applyQC to a built-in file
 #' library(argoFloats)
-#' # Contrast TS diagrams for raw and flag-handled data
-#' data(index)
-#' i <- subset(index, 1:5) # first 5 profiles
-#' raw <- readProfiles(getProfiles(i))
+#' f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
+#' raw <- readProfiles(f)
 #' clean <- applyQC(raw)
-#' par(mfrow=c(1, 2))
-#' # Note that oce::plot() changes par(mfrow) and par(mar).
-#' plot(raw, which="TS")
-#' plot(clean, which="TS")
-#'}
+#' par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0))
+#' plot(raw, col="red", which="TS")
+#' points(clean[[1]][["SA"]], clean[[1]][["CT"]], pch=20)
+#' legend("topleft", pch=20, cex=1,
+#'     col=c("black", "red"), legend=c("OK", "Flagged"), bg="white")
 #'
 #' @references
 #' Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
