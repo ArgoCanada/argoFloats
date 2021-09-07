@@ -162,7 +162,7 @@
 #' index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 #'
 #' # Exampe 2B: subset a 300 km radius around Panama using "maps" package
-#' \dontrun{
+#' \donttest{
 #' library("maps")
 #' data(world.cities)
 #' ai <- getIndex()
@@ -204,19 +204,19 @@
 #' index7 <- subset(index, institution="ME")
 #'
 #' # Example 8: subset to a specific ID
-#' \dontrun{
+#' \donttest{
 #' ai <- getIndex(filename="synthetic")
 #' index9 <- subset(ai, ID="1900722")
 #'}
 #'
 #' # Example 9: subset data to only include deep argo
-#' \dontrun{
+#' \donttest{
 #' ai <- getIndex(filename="synthetic")
 #' index8 <- subset(ai, deep=TRUE)
 #'}
 #'
 #' # Example 10: subset data by ocean
-#' \dontrun{
+#' \donttest{
 #' ai <- getIndex()
 #' index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
 #' plot(index10, which="map", bathymetry=FALSE)
@@ -227,7 +227,7 @@
 #'}
 #'
 #' # Example 11: subset by delayed time
-#' \dontrun{
+#' \donttest{
 #' data(indexBgc)
 #' index11 <- subset(indexBgc, dataMode="delayed")
 #' profiles <- getProfiles(index11)
@@ -239,7 +239,7 @@
 #'}
 #'
 #' # Example 12: subset by cycle
-#' \dontrun{
+#' \donttest{
 #' data(index)
 #' index12A <- subset(index, cycle="124")
 #' index12B <- subset(index, cycle=0:2)
@@ -248,7 +248,7 @@
 #'}
 #'
 #' # Example 13: subset by direction
-#' \dontrun{
+#' \donttest{
 #' library(argoFloats)
 #' index13A <- subset(getIndex(), deep=TRUE)
 #' index13B <- subset(index13A, direction="descent")
@@ -256,7 +256,7 @@
 #'}
 #'
 #' # Example 14: subset by profile (for argos type)
-#' \dontrun{
+#' \donttest{
 #' library(argoFloats)
 #' index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
 #' index14B <- subset(index14A, cycle="074")
@@ -267,7 +267,7 @@
 #'}
 #'
 #' # Example 15: subset by cycle (for argos type) to create TS diagram
-#' \dontrun{
+#' \donttest{
 #' data("index")
 #' index15 <- subset(index, ID="1901584")
 #' profiles <- getProfiles(index15)
@@ -276,7 +276,7 @@
 #'}
 #'
 #' # Example 16: subset by dataStateIndicator
-#' \dontrun{
+#' \donttest{
 #' data("index")
 #' index16 <- subset(index, 1:40)
 #' argos <- readProfiles(getProfiles(index16))
@@ -304,9 +304,10 @@
 #' \doi{10.3389/fmars.2021.635922}
 #'
 #' @importFrom stats approx
+#'
 #' @importFrom oce geodDist
-## @importFrom sf st_is_valid st_polygon st_intersection
-## @importFrom s2 as_s2_geography s2_dwithin s2_make_line
+#'
+#' @return An [`argoFloats-class`] object, restricted as indicated.
 #'
 #' @export
 #'

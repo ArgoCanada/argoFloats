@@ -18,8 +18,6 @@
   col = NULL,
   pch = NULL,
   bg = NULL,
-  mar = NULL,
-  mgp = NULL,
   eos = "gsw",
   mapControl = NULL,
   profileControl = NULL,
@@ -38,25 +36,28 @@ choices are \code{"map"}, \code{"profile"}, \code{"QC"}, \code{"summary"} and \c
 see \dQuote{Details}.}
 
 \item{bathymetry}{an argument used only if \code{which="map"}, to control
-whether (and how) to indicate water depth; see \dQuote{Details}.}
+whether (and how) to indicate water depth. See \dQuote{Details} for details,
+and see Example 4 for an example of how to compensate for the margin
+adjustment done if an image is used to show bathymetry.}
 
 \item{geographical}{flag indicating the style of axes
 for the \code{which="map"} case, but only if no projection is called
-for in the \code{mapControl} argument.  With
-\code{geographical=0} (which is the default),
-the axis ticks are labeled with signed longitudes and latitudes, measured in
-degrees. The signs are dropped with \code{geographical=1}.
+for in the \code{mapControl} argument.  With \code{geographical=0} (which
+is the default), the axis ticks are labeled with signed
+longitudes and latitudes, measured in degrees. The signs are dropped
+with \code{geographical=1}.
 In the \code{geographical=4} case, signs are also dropped, but hemispheres
-are indicated by writing \code{S}, \code{N}, \code{W} or \code{E} after axis tick labels, except
-at the equator and prime meridian.
-Note that this scheme mimics that
-used by \code{\link[oce:plot-coastline-method]{oce::plot,coastline-method()}}, although the
-latter also takes values 2 and 3, which cause a display of angles in degrees,
-minutes and seconds, which seldom makes sense for large-scale argo maps.}
+are indicated by writing \code{S}, \code{N}, \code{W} or \code{E} after axis tick labels,
+except at the equator and prime meridian.
+Note that this scheme mimics that used by \code{\link[oce:plot-coastline-method]{oce::plot,coastline-method()}},
+although the latter also takes values 2 and 3, which cause a display
+of angles in degrees, minutes and seconds, although such fine
+resolution is unlikely to be required argo maps, which typically
+show  large-scale views.}
 
 \item{xlim, ylim}{numerical values, each a two-element vector, that
-set the \code{x} and \code{y} limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and other conventional
-plotting functions.}
+set the \code{x} and \code{y} limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and
+other conventional plotting functions.}
 
 \item{xlab}{a character value indicating the name for the horizontal axis, or
 \code{NULL}, which indicates that this function should choose an appropriate name
@@ -73,24 +74,16 @@ see the docs for \code{\link[=par]{par()}}, If \code{type} not specified, it def
 value that depends on the value of \code{which}.}
 
 \item{col}{the colour to be used for plot symbols, or \code{NULL}, to get an value
-that depends on the value of \code{which} (see \dQuote{Details}).  If \code{which="TS"}, then the
-\code{TSControl} argument takes precedence over \code{col}.}
+that depends on the value of \code{which} (see \dQuote{Details}).  If \code{which="TS"},
+then the \code{TSControl} argument takes precedence over \code{col}.}
 
-\item{pch}{an integer or character value indicating the type of plot symbol, or \code{NULL},
-to get a value that depends on the value of \code{which}.
+\item{pch}{an integer or character value indicating the type of plot symbol,
+or \code{NULL}, to get a value that depends on the value of \code{which}.
 (See \code{\link[=par]{par()}} for more on specifying \code{pch}.)}
 
 \item{bg}{the colour to be used for plot symbol interior, for \code{pch}
 values that distinguish between the interior of the symbol and the
 border, e.g. for \code{pch=21}.}
-
-\item{mar}{either a four-element vector giving the margins to be used for
-the plot (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
-\link{par}\code{("mar")}.}
-
-\item{mgp}{either a three-element vector giving the geometry for
-axis labels (see \code{\link[=par]{par()}} for details), or \code{NULL}, which means to use
-\link{par}\code{("mgp")}.}
 
 \item{eos}{a character value indicating the equation of state to use
 if \code{which="TS"}.  This must be \code{"gsw"} (the default) or \code{"unesco"};
@@ -98,7 +91,8 @@ see \code{\link[oce:plotTS]{oce::plotTS()}}.}
 
 \item{mapControl}{a list that permits particular control of the \code{which="map"}
 case.  If provided, it may contain elements named \code{bathymetry} (which
-has the same effect as the parameter \code{bathymetry}), \code{colLand} (which indicates the colour of the land), and \code{projection} (which
+has the same effect as the parameter \code{bathymetry}), \code{colLand}
+(which indicates the colour of the land), and \code{projection} (which
 may be \code{FALSE}, meaning to plot longitude and latitude on rectilinear axes,
 \code{TRUE}, meaning to plot with \code{\link[oce:mapPlot]{oce::mapPlot()}}, using Mollweide projection that
 is suitable mainly for world-scale views, or a character value that will be
@@ -158,6 +152,9 @@ elements in \code{colByCycle}.}
 \item{\dots}{extra arguments passed to the plot calls that are made
 within this function.}
 }
+\value{
+None (invisible NULL).
+}
 \description{
 The action depends on the \code{type} of the object, and
 this is set up by the function that created the object;
@@ -165,8 +162,8 @@ see \dQuote{Details}. These are basic plot styles, with
 somewhat limited scope for customization. Since the data with
 \linkS4class{argoFloats} objects are easy to extract, users should
 not find it difficult to create their own plots to meet a
-particular aesthetic; Example 5C provides an example for
-maps. For more plotting examples see Kelley et al. (2021).
+particular aesthetic. See Example 5 and Kelley et al. (2021)
+for more plotting examples.
 }
 \details{
 The various plot types are as follows.
@@ -187,8 +184,11 @@ The \code{bathymetry} argument controls whether (and how) to draw a map underlay
 that shows water depth. There are three possible values for \code{bathymetry}:
 \enumerate{
 \item \code{FALSE}, meaning not to draw bathymetry;
-\item \code{TRUE} (the default), meaning to draw bathymetry using
-data downloaded with \code{\link[oce:download.topo]{oce::download.topo()}}, as in Example 4;
+\item \code{TRUE} (the default), meaning to draw bathymetry as an
+image, using data downloaded with \code{\link[oce:download.topo]{oce::download.topo()}}.
+Example 4 illustrates this, and also shows how to adjust
+the margins after the plot, in case there is a need to add
+extra graphical elements using \code{\link[=points]{points()}}, \code{\link[=lines]{lines()}}, etc.
 \item A list with items controlling both the bathymetry data and its
 representation in the plot, as in Example 5.  Those items are:
 \enumerate{
@@ -196,22 +196,24 @@ representation in the plot, as in Example 5.  Those items are:
 (a) the string \code{"auto"} (the default) to use
 \code{\link[oce:download.topo]{oce::download.topo()}} to download the data
 or (b) a value returned by \code{\link[oce:read.topo]{oce::read.topo()}}.
-\item \code{contour}, an optional logical value (with \code{FALSE} as the default) indicating
-(as in Examples 5A and 5B) whether to represent bathymetry with contours
-(with depths of 100m, 200m, 500m shown, along with 1km, 2km up to 10km),
-as opposed to an image;
+\item \code{contour}, an optional logical value (with \code{FALSE} as the default)
+indicating (as in Examples 5A and 5B) whether to represent
+bathymetry with contours (with depths of 100m, 200m, 500m shown,
+along with 1km, 2km up to 10km), as opposed to an image;
 \item \code{colormap}, ignored if \code{contour} is \code{TRUE},
 an optional value that is either the string \code{"auto"} (the default)
-for a form of GEBCO colors (as in Example 5C) computed with \code{\link[oce:oceColorsGebco]{oce::oceColorsGebco()}}, or a value
-computed with \code{\link[oce:colormap]{oce::colormap()}} applied to the bathymetry data; and
+for a form of GEBCO colors (as in Example 5C) computed with
+\code{\link[oce:oceColorsGebco]{oce::oceColorsGebco()}}, or a value computed with \code{\link[oce:colormap]{oce::colormap()}}
+applied to the bathymetry data; and
 \item \code{palette}, ignored if \code{contour} is \code{TRUE},
 an optional logical value (with \code{TRUE} as the default)
-indicating (again, as in Example 5C) whether to draw a depth-color palette to the right of the plot.
+indicating (again, as in Example 5C) whether to draw a depth-color
+palette to the right of the plot.
 }
 }
-\item For \code{which="profile"}, a profile plot is created, showing the variation of some quantity
-with pressure or potential density anomaly, as specified by the \code{profileControl} argument;
-see Examples 8 and 9.
+\item For \code{which="profile"}, a profile plot is created, showing the variation of
+some quantity with pressure or potential density anomaly, as specified by the
+\code{profileControl} argument; see Examples 8 and 9.
 \item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{parameter} must be given, to name the
@@ -236,7 +238,8 @@ is an \linkS4class{argoFloats} object of type \code{"argos"}, i.e. if it was
 created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
 can be altered by putting \code{Slim} and \code{Tlim} arguments in the \code{...} list; see
 the documentation for \code{\link[oce:plotTS]{oce::plotTS()}} for other arguments that can be
-provided. This plot has a default color code to represent bad, good, and not assessed data.
+provided. This plot has a default color code to represent bad, good,
+and unassessed data.
 This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
 data are considered bad if flagged 3, 4, 6, or 7, good
 if flagged 1, 2, 5, or 8, and not accessed if flagged 0; good values are plotted
@@ -245,64 +248,73 @@ are plotted with gray symbols.
 }
 }
 \examples{
-# Example 1: map profiles in index, highlighting a neighborhood of 30
+# Example 1: map profiles in index
 library(argoFloats)
 data(index)
 plot(index, bathymetry=FALSE)
+
+# Example 2: as Example 1, but narrow the margins and highlight floats
+# within a circular region of diameter 100 km.
+par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0))
+plot(index, bathymetry=FALSE)
 lon <- index[["longitude"]]
 lat <- index[["latitude"]]
-dist <- oce::geodDist(lon, lat, -77.06, 26.54)
-o <- order(dist)
-index30 <- subset(index, o[1:30])
-points(index30[["longitude"]], index30[["latitude"]], pch=20, col="blue")
+near <- oce::geodDist(lon, lat, -77.06, 26.54) < 100
+R <- subset(index, near)
+points(R[["longitude"]], R[["latitude"]],
+    cex=0.6, pch=20, col="red")
 
-# Example 3: TS of first 10 profiles
-# (Slow, so not run by default.)
-\dontrun{
+# The rest of the examples are slow and/or require file downloads, so
+# they are not tested by default.
+\donttest{
+
+# Example 3: TS of first 10 profiles.
 index10 <- subset(index, 1:10)
 profiles10 <- getProfiles(index10)
 argos10 <- readProfiles(profiles10)
+par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 plot(argos10, which="TS")
-}
 
-# Example 4: map with bathymetry
-# (Slow, so not run by default.)
-\dontrun{
-par(mar=c(3, 3, 1, 2))
-plot(index, bathymetry=TRUE)
-}
+# Example 4: map with bathymetry. Note that par(mar) is adjusted
+# for the bathymetry palette, so if must be adjusted again after
+# the plot(), in order to add new plot elements.
+# This example specifies a coarse bathymetry dataset that is provided
+# by the 'oce' package.  In typical applications, the user will use
+# a finer-scale dataset, either by using bathymetry=TRUE (which
+# downloads a file appropriate for the plot view), or by using
+# an already-downloaded file.
+data(topoWorld, package="oce")
+par(mar=c(2, 2, 1, 3), mgp=c(2, 0.7, 0)) # narrow margins for a map
+plot(index, bathymetry=list(source=topoWorld))
+# For bathymetry plots that use images, plot() temporarily
+# adds 2.75 to par("mar")[4] so the same must be done, in order
+# to correctly position additional points (shown as black rings).
+par(mar=par("mar") + c(0, 0, 0, 2.75))
+points(index[["longitude"]], index[["latitude"]],
+    cex=0.6, pch=20, col="red")
 
-# Example 5: map with fine-grained bathymetry control
-# (Slow, so not run by default.)
-\dontrun{
+# Example 5A. Simple contour version, using coarse dataset (ok on basin-scale).
+# Hint: use oce::download.topo() to download high-resolution datasets to
+# use instead of topoWorld.
 par(mar=c(2, 2, 1, 1))
-topoFile <- oce::download.topo(-82, -71, 23, 30, 2)
-topo <- oce::read.topo(topoFile)
-
-# Example 5A. Simple contour version.
-plot(index, bathymetry=list(source=topo, contour=TRUE))
-
-# Example 5B. Simple contour version, using coarse dataset (ok on basin-scale).
 data(topoWorld, package="oce")
 plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
 
-# Example 5C. Simple colour version.
-plot(index, bathymetry=list(source=topo))
-
-# Example 5D. World view with Mollweide projection (Canada Day, 2020)
+# Example 5B. World view with Mollweide projection (Canada Day, 2020)
 jul1 <- subset(getIndex(), time=list(from="2020-09-01", to="2020-09-02"))
+par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0)) # narrow margins for a map
 plot(jul1, which="map", mapControl=list(projection=TRUE), bathymetry=FALSE,
      pch=20, col=4, cex=0.75)
 
-# Example 5E. Customized map, sidestepping this function.
-lon <- topo[["longitude"]]
-lat <- topo[["latitude"]]
+# Example 5C. Customized map, sidestepping plot,argoFloats-method().
+lon <- topoWorld[["longitude"]]
+lat <- topoWorld[["latitude"]]
 asp <- 1/cos(pi/180*mean(lat))
 # Limit plot region to float region.
 xlim <- range(index[["longitude"]])
 ylim <- range(index[["latitude"]])
 # Colourize 1km, 2km, etc, isobaths.
-contour(x=lon, y=lat, z=topo[["z"]], xlab="", ylab="",
+contour(x=lon, y=lat, z=topoWorld[["z"]], xlab="", ylab="",
         xlim=xlim, ylim=ylim, asp=asp,
         col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 # Show land
@@ -310,27 +322,24 @@ data(coastlineWorldFine, package="ocedata")
 polygon(coastlineWorldFine[["longitude"]],
         coastlineWorldFine[["latitude"]], col="lightgray")
 # Indicate float positions.
-points(index[["longitude"]], index[["latitude"]], pch=20)}
+points(index[["longitude"]], index[["latitude"]], pch=20)
 
 # Example 6: TS plot for a particular argo
-library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 plot(a, which="TS")
 
 # Example 7: Temperature QC plot for 25 cycles of a float in the Arabian Sea
-\dontrun{
-library(argoFloats)
 ais <- getIndex(filename="synthetic")
 sub <- subset(subset(ais, ID='2902123'), 50:75)
 profiles <- getProfiles(sub)
 argos <- readProfiles(profiles)
+par(mar=c(3.3, 3.3, 2, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 plot(argos, which="QC") # defaults to temperature
 plot(argos, which="QC", QCControl=list(parameter="salinity"))
 plot(argos, which="QC", QCControl=list(parameter="salinity",dataStateIndicator=TRUE))
-}
 
 # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
-library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 par(mfrow=c(1, 1))
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
@@ -338,15 +347,13 @@ par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 plot(a, which="profile")
 
 # Example 9: As Example 8, but showing temperature dependence on potential density anomaly.
-library(argoFloats)
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sigma0"))
 
 # Example 10: Summary plot
-\dontrun{
-library(argoFloats)
+par(mar=c(2, 3.3, 2, 1))
 a <- readProfiles(getProfiles(subset(getIndex(), ID=1901584)))
 plot(a, which="summary")
 }

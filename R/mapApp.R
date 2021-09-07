@@ -54,12 +54,15 @@
 #' Argo data. Frontiers in Marine Science, (8), 636922.
 #' \doi{10.3389/fmars.2021.635922}
 #'
+#' @return `mapApp` has no return value, since it creates a shiny app by passing
+#' control to [shiny::runApp()], which never returns.
+#'
 #' @author Dan Kelley and Jaimie Harbin
 #'
-## @importFrom shiny shinyApp shinyOptions
 #' @importFrom graphics arrows image lines mtext
 #' @importFrom grDevices col2rgb grey
 #' @importFrom utils write.table
+#'
 #' @export
 mapApp <- function(age=argoDefaultIndexAge(),
     server=argoDefaultServer(),
@@ -83,7 +86,6 @@ mapApp <- function(age=argoDefaultIndexAge(),
     dir <- system.file("shiny", "mapApp/app.R", package="argoFloats")
     if (!nchar(dir))
         stop("The app could not be located.", call.=FALSE)
-    message(dir)
     shiny::runApp(dir, display.mode="normal")
 }
 

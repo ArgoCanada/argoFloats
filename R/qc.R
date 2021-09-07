@@ -46,7 +46,7 @@
 #' `data` slot having been passed through [oce::handleFlags,argo-method()].
 #'
 #' @examples
-#'\dontrun{
+#'\donttest{
 #' library(argoFloats)
 #' # Contrast TS diagrams for raw and flag-handled data
 #' data(index)
@@ -54,6 +54,7 @@
 #' raw <- readProfiles(getProfiles(i))
 #' clean <- applyQC(raw)
 #' par(mfrow=c(1, 2))
+#' # Note that oce::plot() changes par(mfrow) and par(mar).
 #' plot(raw, which="TS")
 #' plot(clean, which="TS")
 #'}

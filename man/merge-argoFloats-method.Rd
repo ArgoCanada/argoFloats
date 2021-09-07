@@ -30,7 +30,7 @@ latRect <- c(26.5, 27.5)
 R <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
 
 RC <- merge(C, R)
-\dontrun{
+\donttest{
 plot(RC, bathymetry=FALSE)
 }
 

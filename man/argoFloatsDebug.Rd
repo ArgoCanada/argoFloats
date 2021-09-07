@@ -34,6 +34,9 @@ interests of brevity.}
 \item{unindent}{integer specifying the degree of reverse indentation
 to be done, as explained in the \dQuote{Details} section.}
 }
+\value{
+None (invisible NULL).
+}
 \description{
 This function is intended mainly for use within the package, but users may
 also call it directly in their own code.  Within the package, the value
@@ -42,7 +45,7 @@ to indented messages. Most functions start and end with a call to
 \code{\link[=argoFloatsDebug]{argoFloatsDebug()}} that has \code{style="bold"} and \code{unindent=1}.
 }
 \examples{
-\dontrun{
+\donttest{
 argoFloatsDebug(1, "plain text\n")
 argoFloatsDebug(1, "red text\n", style="red")
 argoFloatsDebug(1, "blue text\n", style="blue")

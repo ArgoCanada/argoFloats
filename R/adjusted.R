@@ -158,8 +158,8 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 
 #' Switch [[ and Plot to Focus on Adjusted Data, if Available
 #'
-#' `useAdjusted` returns a copy of an `argos`-type object (as created with the
-#' [readProfiles()] function), in which the individual
+#' `useAdjusted` returns a copy of an [`argoFloats-class`] object
+#' within which the individual
 #' [oce::argo-class] objects may have been modified so that future calls to
 #' \code{\link{[[,argoFloats-method}}
 #' or \code{\link{plot,argoFloats-method}}
@@ -223,6 +223,11 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 #' 2. Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
 #' Argo data. Frontiers in Marine Science, (8), 636922.
 #' \doi{10.3389/fmars.2021.635922}
+#'
+#' @return `useAdjusted` returns an [`argoFloats-class`] object that is similar to
+#' its first argument, but which is set up so that future calls to
+#' \code{\link{[[,argoFloats-method}} or \code{\link{plot,argoFloats-method}}
+#' will focus on the "adjusted" data stream.
 #'
 #' @importFrom utils str
 #' @export

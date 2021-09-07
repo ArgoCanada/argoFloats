@@ -33,7 +33,7 @@ marmap_coord.*csv
 ^exampleTS\.png$
 ^logo$
 ^\.travis\.yml$
-^topo.*\.nc$
+^topo_.*$
 ^R/.*\.nc$
 ^tests/.*\.nc$
 ^tests/.*/.*\.nc$
