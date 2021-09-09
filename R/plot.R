@@ -253,7 +253,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' # downloads a file appropriate for the plot view), or by using
 #' # an already-downloaded file.
 #' data(topoWorld, package="oce")
-#' par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0)) # narrow margins for a map
+#' par(mar=c(2, 2, 1, 2), mgp=c(2, 0.7, 0)) # narrow margins for a map
 #' plot(index, bathymetry=list(source=topoWorld))
 #' # For bathymetry plots that use images, plot() temporarily
 #' # adds 2.75 to par("mar")[4] so the same must be done, in order
