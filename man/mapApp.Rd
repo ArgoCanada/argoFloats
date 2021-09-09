@@ -63,7 +63,7 @@ it can determine the Argo type for each profile (or cycle).
 
 The \code{hi-res} button will only affect the coastline, not the topography,
 unless there is a local file named \code{topoWorldFine.rda} that contains
-an alternative topographic information. Here is how to create such a file:\if{html}{\out{<div class="R">}}\preformatted{library(oce)
+an alternative topographic information. Here is how to create such a file:\if{html}{\out{<div class="sourceCode R">}}\preformatted{library(oce)
 topoFile <- download.topo(west=-180, east=180,
                           south=-90, north=90,
                           resolution=10,
