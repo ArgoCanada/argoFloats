@@ -143,16 +143,6 @@ index, and this is typically followed by a call to
 an object that can be plotted or analyzed in other ways.
 For more on this function, see section 2 of Kelley et al. (2021).
 }
-\examples{
-\donttest{
-# Download an index of synthetic Argo/BGC-Argo floats, and plot temporal coverage.
-library(argoFloats)
-i <- getIndex("synthetic")
-summary(i)
-hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
-}
-
-}
 \references{
 Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
 Argo data. Frontiers in Marine Science, (8), 636922.

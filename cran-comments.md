@@ -11,19 +11,17 @@
 
 # Changes since first CRAN submission
 
-In response to a detailed, informative and helpful review by Julia Haider, the
-following changes were made to the version (1.0.0) submitted to CRAN, with the
-new version being labeled 1.0.1.
+In response to Julia Haider's informative and helpful review of argoFloats
+version 1.0.0, the following changes were made, yielding version 1.0.1, which
+is being submitted now.
 
-1. DESCRIPTION no longer starts with "The argoFloats package".
+1. The DESCRIPTION no longer starts with "The argoFloats package", and its
+   literature citation is now in the suggested format.
 
-2. DESCRIPTION refers to a literature item paper using the suggested,
-   abbreviated, format.
-
-3. \value added to the documentation of all functions. A list of affected files
-   is as below. Please note that last two items were found using
+2. \value was added to the documentation of all functions. A list of affected
+   files is as below. Please note that last two items were found using
        grep -L '\\value' $(git grep -l '\\usage' *Rd)|sort
-   with the others having been listed in the review.
+   with the others were listed in the review.
       * argoFloatsDebug.Rd
       * argoFloatsGetFromCache.Rd
       * argoFloatsIsCached.Rd
@@ -35,9 +33,13 @@ new version being labeled 1.0.1.
       * argoFloats-methods.Rd
       * sub-sub-argoFloats-method.Rd
 
-4. Describe the output class.
+3. We now describe the output class in more detail.
 
-5. change \dontrun entries to \donttest
+4. We have reduced the use of dontrun in examples, relying on the more
+   appropriate donttest.  We have also removed some examples that were
+   slow-running or that were not required for illustration.  (We are
+   particularly thankful for pointing this out.)
 
-6. Ensure that plotting functions use on.exit() to reset par() values.
+5. The plotting functions now use on.exit() to reset par() values, so that the
+   user's values for par("mar"), etc., are not altered by the plot() call.
 

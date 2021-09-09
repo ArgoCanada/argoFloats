@@ -18,17 +18,17 @@
 #'
 #' The possibilities for the `...` argument are as follows.
 #'
-#' 1. An integer vector giving indices to keep. See example 1.
+#' 1. An integer vector giving indices to keep.
 #'
 #' 2. A list named `circle` with numeric elements named `longitude`,
 #' `latitude` and `radius`.  The first two give the center of
 #' the subset region, and the third gives the radius of
-#' that region, in kilometers. See example 2A and 2B.
+#' that region, in kilometers.
 #'
 #' 3. A list named `rectangle` that has elements named
 #' `longitude` and `latitude`, two-element numeric vectors
 #' giving the western and eastern, and southern and northern
-#' limits of the selection region. See example 3.
+#' limits of the selection region.
 #'
 #' 4. A list named `polygon` that has elements named `longitude` and `latitude`
 #' that are numeric vectors specifying a polygon within which profiles
@@ -36,16 +36,14 @@
 #' and an error message will be issued if it is.  If the polygon is not closed
 #' (i.e. if the first and last points do not coincide) the first point is pasted
 #' onto the end, to close it.
-#' See example 4.
 #'
 #' 5. A vector or list named `parameter` that holds character values that
 #' specify the names of measured parameters to keep. See section 3.3 of
 #' Reference 1 for a list of parameters.
-#' See example 5.
 #'
 #' 6. A list named `time` that has elements `from` and `to` that are either
 #' POSIXt times, or character strings that `subset()` will convert to
-#' POSIXt times using [as.POSIXct()] with `tz="UTC"`. See example 6.
+#' POSIXt times using [as.POSIXct()] with `tz="UTC"`.
 #'
 #' 7. A list named `institution` that holds a single character element that
 #' names the institution.  The permitted values are:
@@ -60,20 +58,17 @@
 #' `"KO"` for Korea Ocean Research and Development Institute;
 #' `"ME"` for Marine Environment Data Section; and
 #' `"NM"` for National Marine Data & Information Service.
-#' See example 7.
 #'
 #' 8. A list named `deep` that holds a logical value indicating whether argo floats
-#' are deep argo (i.e. `profiler_type` 849, 862, and 864). See example 8.
+#' are deep argo (i.e. `profiler_type` 849, 862, and 864).
 #'
 #' 9. A list named `ID` that holds a character value specifying a float identifier.
-#' See example 9.
 #'
 #' 10. A list named `ocean` that  holds a single character element that names the
 #' ocean. The permitted values are:
 #' `"A"` for Atlantic Ocean Area, from 70 W to 20 E,
 #' `"P"` for Pacific Ocean Area, from 145 E to 70 W, and
 #' `"I"` for Indian Ocean Area, from 20 E to 145 E.
-#' See example 10.
 #'
 #' 11. A character value named `dataMode`, equal to either `realtime` or `delayed`,
 #' that selects whether to retain real-time data or delayed data.  There are two
@@ -81,7 +76,7 @@
 #' **Case 1.** If `x` is of `type="index"`, then the subset is done by looking for the letters
 #' `R` or `D` in the source filename. Note that a file in the
 #' latter category may contain some profiles that are of delayed mode *and also*
-#' some profiles that are of `realtime` or `adjusted` mode.  See example 11.
+#' some profiles that are of `realtime` or `adjusted` mode.
 #' **Case 2.** If `x` is
 #' of type `argos`, then the subset operation is done for each profile within
 #' the dataset. Sometimes this will yield data arrays with zero columns.
@@ -93,26 +88,21 @@
 #' component that is either blank or the character `"D"` (which designates a
 #' descending profile).  Thus, `001` will match both `*_001.nc` and `*_001D.nc`.
 #' Note this can be used for both `"index"` and `"argos"` types.
-#' See example 12.
 #'
 #' 13. A character value named `direction`, equal to either "descent" or "ascent",
 #' that selects whether to retain data from the ascent or decent phase.
-#' See example 13.
 #'
 #' 14. An integer value named `profile` that selects which profiles
 #' to retain.  Note that this type of subset is possible only
 #' for objects of type `"argos"`.
-#' See example 14.
 #'
 #' 15. An integer value named `cycle` that selects which cycles
 #' to retain.
-#' See example 15.
 #'
 #' 16. A character value named `dataStateIndicator`, equal to either "0A", "1A",
 #' "2B", "2B+", "2C", "2C+", "3B", or "3C" that selects which `dataStateIndicator`
 #' to keep (see table 6 of Reference 1 for details of these codes).
 #' This operation only works for objects of type `"argos"`.
-#' See example 16.
 #'
 #' 17. A list named `section` that  has four elements:
 #' `longitude`,`latitude`, `width`, and `segments`. The first two of these
@@ -125,7 +115,6 @@
 #' to be computed along a great-circle route.  By contrast, if `segments` is an
 #' integer, then the spine is traced using `stats::approx()`, creating
 #' `segments` new points.  If `segments` is not provided, it defaults to 100.
-#' See example 17.
 #'
 #' In all cases, the notation is that longitude is positive
 #' for degrees East and negative for degrees West, and that latitude
@@ -148,152 +137,186 @@
 #' during the subsetting operation.
 #' See \dQuote{Details} and \dQuote{Examples}.
 #'
-#' @return An [`argoFloats-class`] object.
+#' @return An [`argoFloats-class`] object, restricted as indicated.
 #'
 #' @examples
 #' library(argoFloats)
 #' data(index)
-#'
-#' # Example 1: subset to the first 3 profiles in the (built-in) index
-#' index1 <- subset(index, 1:3)
-#' cat("First 3 longitudes:", paste(index1[["longitude"]]), "\n")
-#'
-#' # Example 2A: subset to a circle near Abaca Island
-#' index2 <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
-#'
-#' # Exampe 2B: subset a 300 km radius around Panama using "maps" package
-#' \donttest{
-#' library("maps")
-#' data(world.cities)
-#' ai <- getIndex()
-#' panama <- subset(world.cities, name=="Panama")
-#' index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
-#'}
-#'
-#' # Example 3: subset to a rectangle near Abaca Island
-#' lonRect <- c(-76.5, -76)
-#' latRect <- c(26.5, 27.5)
-#' index3 <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
-#'
-#' # Example 4: subset to a polygon to near Abaco Island
-#' poly <- list(longitude=c(-77.492, -78.219, -77.904, -77.213, -76.728, -77.492),
-#'              latitude=c(26.244, 25.247, 24.749, 24.987, 25.421, 26.244))
-#' index4 <- subset(index, polygon=poly)
-#'
-#' # Show some of these subsets on a map
-#' plot(index, bathymetry=FALSE)
-#' points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
-#' points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
-#' rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
-#' points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
-#' polygon(poly$longitude, poly$latitude, border=4)
-#'
-#' # Example 5: subset synthetic data containing "DOXY" parameters
-#' # Data containing "DOXY" data
 #' data(indexSynthetic)
-#' index5A <- subset(indexSynthetic, parameter="DOXY")
-#' # Data containing both "PSAL" and "DOWN_IRRADIANCE380" data
-#' data(indexSynthetic)
-#' index5B <- subset(indexSynthetic, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
 #'
-#' # Example 6: subset data for the year 2019
-#' data(index)
-#' index6 <- subset(index, time=list(from="2019-01-01", to="2019-12-31"))
+#' # Subset to the first 3 profiles in the (built-in) index
+#' indexFirst3 <- subset(index, 1:3)
 #'
-#' # Example 7: subset to the Canadian MEDS data
-#' index7 <- subset(index, institution="ME")
+#' # Subset to a circle near Abaco Island
+#' indexCircle <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+##
+## # NOTE: this example was removed because it requires using tempdir, which
+## # is not something we want to encourage, since it goes against the whole idea
+## # of caching.
+## # Example 2B: subset a 300 km radius around Panama using "maps" package
+## # This example requires downloading.
+## \donttest{
+## library("maps")
+## data(world.cities)
+## ai <- getIndex()
+## panama <- subset(world.cities, name=="Panama")
+## index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
+##}
 #'
-#' # Example 8: subset to a specific ID
-#' \donttest{
-#' ai <- getIndex(filename="synthetic")
-#' index9 <- subset(ai, ID="1900722")
-#'}
+#' # Subset to a rectangle near Abac0 Island
+#' lonlim <- c(-76.5, -76)
+#' latlim <- c(26.5, 27.5)
+#' indexRectangle <- subset(index, rectangle=list(longitude=lonlim, latitude=latlim))
 #'
-#' # Example 9: subset data to only include deep argo
-#' \donttest{
-#' ai <- getIndex(filename="synthetic")
-#' index8 <- subset(ai, deep=TRUE)
-#'}
+#' # Subset to a polygon near Abaco Island
+#' lonp <- c(-77.492, -78.219, -77.904, -77.213, -76.728, -77.492)
+#' latp <- c( 26.244,  25.247,  24.749,  24.987,  25.421,  26.244)
+#' indexPolygon <- subset(index, polygon=list(longitude=lonp, latitude=latp))
+##
+## # Show some of these subsets on a map
+## plot(index, bathymetry=FALSE)
+## points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
+## points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
+## rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
+## points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
+## polygon(p$longitude, p$latitude, border=4)
 #'
-#' # Example 10: subset data by ocean
-#' \donttest{
-#' ai <- getIndex()
-#' index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
-#' plot(index10, which="map", bathymetry=FALSE)
-#' atlantic <- subset(index10, ocean="A") # Subsetting for Atlantic Ocean
-#' pacific <- subset(index10, ocean="P")
-#' points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2)
-#' points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3)
-#'}
+#' # Subset to year 2019
+#' index2019 <- subset(index, time=list(from="2019-01-01", to="2019-12-31"))
 #'
-#' # Example 11: subset by delayed time
-#' \donttest{
-#' data(indexBgc)
-#' index11 <- subset(indexBgc, dataMode="delayed")
-#' profiles <- getProfiles(index11)
-#' argos <- readProfiles(profiles)
-#' oxygen <- argos[["oxygen"]][[3]]
-#' pressure <- argos[["pressure"]][[3]]
-#' plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
-#'      ylab="Pressure (dbar)", xlab="Oxygen (umol/kg)")
-#'}
+#' # Subset to Canadian MEDS data
+#' indexMEDS <- subset(index, institution="ME")
+##
+## # NOTE: this example was removed because it requires using tempdir, which
+## # is not something we want to encourage, since it goes against the whole idea
+## # of caching.
+## # Example 8: subset to a specific ID
+## # This example requires downloading.
+## \donttest{
+## ai <- getIndex(filename="synthetic")
+## index9 <- subset(ai, ID="1900722")
+##}
+##
+## # NOTE: this example was removed because it requires using tempdir, which
+## # is not something we want to encourage, since it goes against the whole idea
+## # of caching.
+## # Example 9: subset data to only include deep argo
+## # This example requires downloading.
+## \donttest{
+## ai <- getIndex(filename="synthetic")
+## index8 <- subset(ai, deep=TRUE)
+##}
+##
+## # NOTE: this example was removed because it requires using tempdir, which
+## # is not something we want to encourage, since it goes against the whole idea
+## # of caching.
+## # Example 10: subset data by ocean
+## # This example requires downloading.
+## \donttest{
+## ai <- getIndex()
+## index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
+## plot(index10, which="map", bathymetry=FALSE)
+## atlantic <- subset(index10, ocean="A") # Subsetting for Atlantic Ocean
+## pacific <- subset(index10, ocean="P")
+## points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2)
+## points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3)
+##}
+##
+## # NOTE: there is no example 11.
+##
+## # NOTE: this example was removed because it requires using tempdir, which
+## # is not something we want to encourage, since it goes against the whole idea
+## # of caching.
+## # Example 11: subset by delayed time
+## # This example requires downloading.
+## \donttest{
+## data(indexBgc)
+## index11 <- subset(indexBgc, dataMode="delayed")
+## profiles <- getProfiles(index11)
+## argos <- readProfiles(profiles)
+## oxygen <- argos[["oxygen"]][[3]]
+## pressure <- argos[["pressure"]][[3]]
+## plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
+##      ylab="Pressure (dbar)", xlab="Oxygen (umol/kg)")
+##}
+##
+## # Example 12: subset by cycle
+## data(index)
+## index12A <- subset(index, cycle="124")
+## index12B <- subset(index, cycle=0:2)
+## cat("File names with cycle number 124:", paste(index12A[["file"]]), "\n")
+## cat("File names with cycle number between 0 and 2:", paste(index12B[["file"]]), "\n")
+##
+##
+## # NOTE: this example was removed because it requires using tempdir, which
+## # is not something we want to encourage, since it goes against the whole idea
+## # of caching.
+## # Example 13: subset by direction
+## # This example requires downloading.
+## \donttest{
+## library(argoFloats)
+## index13A <- subset(getIndex(), deep=TRUE)
+## index13B <- subset(index13A, direction="descent")
+## head(index13B[["file"]])
+##}
+##
+## # NOTE: this example was removed because it requires using tempdir, which
+## # is not something we want to encourage, since it goes against the whole idea
+## # of caching.
+## # Example 14: subset by profile (for argos type)
+## # This example requires downloading.
+## \donttest{
+## library(argoFloats)
+## index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
+## index14B <- subset(index14A, cycle="074")
+## argos14A <- readProfiles(getProfiles(index14B))
+## argos14B <- subset(argos14A, profile=1)
+## D <- data.frame(Oxygen = argos14A[["oxygen"]],
+## col1= argos14B[["oxygen"]][[1]])
+##}
+##
+## # NOTE: this example was removed because it requires using tempdir, which
+## # is not something we want to encourage, since it goes against the whole idea
+## # of caching.
+## # Example 15: subset by cycle (for argos type) to create TS diagram
+## # This example requires downloading.
+## \donttest{
+## data("index")
+## index15 <- subset(index, ID="1901584")
+## profiles <- getProfiles(index15)
+## argos <- readProfiles(profiles)
+## plot(subset(argos, cycle="147"), which="TS")
+##}
+##
+## # NOTE: this example was removed because it requires using tempdir, which
+## # is not something we want to encourage, since it goes against the whole idea
+## # of caching.
+## # Example 16: subset by dataStateIndicator
+## # This example requires downloading.
+## \donttest{
+## data("index")
+## index16 <- subset(index, 1:40)
+## argos <- readProfiles(getProfiles(index16))
+## argos16A <- subset(argos, dataStateIndicator="2C")
+## argos16B <- subset(argos, dataStateIndicator="2B")
+##}
+##
+## # Example 17: subset by section to create a map plot
+## if (requireNamespace("s2")) {
+##     data("index")
+##     lon <- c(-78, -77, -76)
+##     lat <-c(27.5,27.5,26.5)
+##     index17 <- subset(index,
+##                       section=list(longitude=lon, latitude=lat, width=50))
+##     plot(index17, bathymetry=FALSE)
+##     points(lon, lat, pch=21, col="black", bg="red", type="o", lwd=3)
+##}
 #'
-#' # Example 12: subset by cycle
-#' \donttest{
-#' data(index)
-#' index12A <- subset(index, cycle="124")
-#' index12B <- subset(index, cycle=0:2)
-#' cat("File names with cycle number 124:", paste(index12A[["file"]]), "\n")
-#' cat("File names with cycle number between 0 and 2:", paste(index12B[["file"]]), "\n")
-#'}
+#' # Subset to profiles with oxygen data
+#' indexOxygen <- subset(indexSynthetic, parameter="DOXY")
 #'
-#' # Example 13: subset by direction
-#' \donttest{
-#' library(argoFloats)
-#' index13A <- subset(getIndex(), deep=TRUE)
-#' index13B <- subset(index13A, direction="descent")
-#' head(index13B[["file"]])
-#'}
-#'
-#' # Example 14: subset by profile (for argos type)
-#' \donttest{
-#' library(argoFloats)
-#' index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
-#' index14B <- subset(index14A, cycle="074")
-#' argos14A <- readProfiles(getProfiles(index14B))
-#' argos14B <- subset(argos14A, profile=1)
-#' D <- data.frame(Oxygen = argos14A[["oxygen"]],
-#' col1= argos14B[["oxygen"]][[1]])
-#'}
-#'
-#' # Example 15: subset by cycle (for argos type) to create TS diagram
-#' \donttest{
-#' data("index")
-#' index15 <- subset(index, ID="1901584")
-#' profiles <- getProfiles(index15)
-#' argos <- readProfiles(profiles)
-#' plot(subset(argos, cycle="147"), which="TS")
-#'}
-#'
-#' # Example 16: subset by dataStateIndicator
-#' \donttest{
-#' data("index")
-#' index16 <- subset(index, 1:40)
-#' argos <- readProfiles(getProfiles(index16))
-#' argos16A <- subset(argos, dataStateIndicator="2C")
-#' argos16B <- subset(argos, dataStateIndicator="2B")
-#'}
-#'
-#' # Example 17: subset by section to create a map plot
-#' if (requireNamespace("s2")) {
-#'     data("index")
-#'     lon <- c(-78, -77, -76)
-#'     lat <-c(27.5,27.5,26.5)
-#'     index17 <- subset(index,
-#'                       section=list(longitude=lon, latitude=lat, width=50))
-#'     plot(index17, bathymetry=FALSE)
-#'     points(lon, lat, pch=21, col="black", bg="red", type="o", lwd=3)
-#'}
+#' # Subset to profiles with both salinity and 380-nm downward irradiance data
+#' indexSalinityIrradiance <- subset(indexSynthetic, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
 #'
 #' @references
 #' 1. Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
@@ -306,8 +329,6 @@
 #' @importFrom stats approx
 #'
 #' @importFrom oce geodDist
-#'
-#' @return An [`argoFloats-class`] object, restricted as indicated.
 #'
 #' @export
 #'

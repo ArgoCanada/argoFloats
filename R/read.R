@@ -42,35 +42,37 @@
 #' that are created by [oce::read.argo()].
 #'
 #' @examples
-#' # Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
-#'\donttest{
-#' library(argoFloats)
-#' data(index)
-#' index1 <- subset(index, 1)
-#' profiles <- getProfiles(index1)
-#' raw <- readProfiles(profiles)
-#' clean <- applyQC(raw)
-#' par(mfrow=c(1, 2))
-#' file <- gsub(".*/", "",  profiles[[1]])
-#' aWithNA <- clean[[1]]
-#' oce::plotTS(raw[[1]], eos="unesco", type="o")
-#' mtext(file, cex=0.7*par("cex"))
-#' aWithoutNA <- raw[[1]]
-#' oce::plotTS(clean[[1]], eos="unesco", type="o")
-#' mtext(paste(file, "\n (after applying QC)"), cex=0.7*par("cex"))
-#'}
-#'
-#' # Example 2: read from a URI
-#'\donttest{
-#' u <- "ftp://usgodae.org/pub/outgoing/argo/dac/aoml/5903586/profiles/BD5903586_001.nc"
-#' p <- readProfiles(u)
-#'}
+## # Omit this, because rhub errors out, evidently because it is running donttest blocks.
+## # Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
+## # This example involves downloading to a local repository, so it is not run on CRAN.
+##\donttest{
+## library(argoFloats)
+## data(index)
+## index1 <- subset(index, 1)
+## profiles <- getProfiles(index1)
+## raw <- readProfiles(profiles)
+## clean <- applyQC(raw)
+## par(mfrow=c(1, 2))
+## file <- gsub(".*/", "",  profiles[[1]])
+## aWithNA <- clean[[1]]
+## oce::plotTS(raw[[1]], eos="unesco", type="o")
+## mtext(file, cex=0.7*par("cex"))
+## aWithoutNA <- raw[[1]]
+## oce::plotTS(clean[[1]], eos="unesco", type="o")
+## mtext(paste(file, "\n (after applying QC)"), cex=0.7*par("cex"))
+##}
+##
+#' # Read from a local file
+#' f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
+#' p <- readProfiles(f)
 #'
 #' @references
 #' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
 #' Argo data. Frontiers in Marine Science, (8), 636922.
 #' \doi{10.3389/fmars.2021.635922}
+#'
 #' @export
+#'
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #'
 #' @author Dan Kelley
