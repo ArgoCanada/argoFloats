@@ -53,7 +53,7 @@ see &amp;#8220;Details&amp;#8221;. These are basic plot styles, with
 somewhat limited scope for customization. Since the data with
 argoFloats objects are easy to extract, users should
 not find it difficult to create their own plots to meet a
-particular aesthetic. See Examples and Kelley et al. (2021)
+particular aesthetic. See &amp;#8220;Examples&amp;#8221; and Kelley et al. (2021)
 for more plotting examples." />
 
 
@@ -152,7 +152,7 @@ see &#8220;Details&#8221;. These are basic plot styles, with
 somewhat limited scope for customization. Since the data with
 <a href='argoFloats-class.html'>argoFloats</a> objects are easy to extract, users should
 not find it difficult to create their own plots to meet a
-particular aesthetic. See Examples and Kelley et al. (2021)
+particular aesthetic. See &#8220;Examples&#8221; and Kelley et al. (2021)
 for more plotting examples.</p>
     </div>
 
@@ -212,11 +212,7 @@ with <code>geographical=1</code>.
 In the <code>geographical=4</code> case, signs are also dropped, but hemispheres
 are indicated by writing <code>S</code>, <code>N</code>, <code>W</code> or <code>E</code> after axis tick labels,
 except at the equator and prime meridian.
-Note that this scheme mimics that used by <code>oce::plot,coastline-method()</code>,
-although the latter also takes values 2 and 3, which cause a display
-of angles in degrees, minutes and seconds, although such fine
-resolution is unlikely to be required argo maps, which typically
-show  large-scale views.</p></td>
+Note that this scheme mimics that used by <code>oce::plot,coastline-method()</code>.</p></td>
     </tr>
     <tr>
       <th>xlim, ylim</th>
@@ -308,8 +304,8 @@ case.  If provided, it may contain an element named <code>parameter</code>, a ch
 value naming the quantity for which the quality-control information is
 to be plotted, and an element named <code>dataStateIndicator</code>, a logical
 value controlling whether to add a panel showing this quantity
-(see Reference Table 6 of Carval et al, 2019, for more information
-on the information encoded in <code>dataStateIndicator</code>).
+(see Reference Table 6 of Carval et al, 2019 to learn more
+about what is encoded in <code>dataStateIndicator</code>).
 If not provided, <code>QCControl</code> defaults to
 <code><a href='https://rdrr.io/r/base/list.html'>list(parameter="temperature",dataStateIndicator=FALSE)</a></code>.</p></td>
     </tr>
@@ -398,7 +394,7 @@ palette to the right of the plot.</p></li>
 </ol></li>
 <li><p>For <code>which="profile"</code>, a profile plot is created, showing the variation of
 some quantity with pressure or potential density anomaly, as specified by the
-<code>profileControl</code> argument; see Examples 8 and 9.</p></li>
+<code>profileControl</code> argument.</p></li>
 <li><p>For <code>which="QC"</code>, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named <code>parameter</code> must be given, to name the
@@ -413,11 +409,11 @@ Thus, low values on the top panel reveal
 profiles that are questionable. Note that if all of data at a given time
 have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 time. The bottom panel shows the mean value of the parameter in question
-regardless of the flag value. See Example 7.</p></li>
+regardless of the flag value.</p></li>
 <li><p>For <code>which="summary"</code>, one or more time-series panels are shown
 in a vertical stack.  If there is only one ID in <code>x</code>, then the cycle
 values are indicated along the top axis of the top panel. The choice
-of panels is set by the <code>summaryControl</code> argument.  See Example 10.</p></li>
+of panels is set by the <code>summaryControl</code> argument.</p></li>
 <li><p>For <code>which="TS"</code>,  an overall TS plot is created.  This only works if <code>x</code>
 is an <a href='argoFloats-class.html'>argoFloats</a> object of type <code>"argos"</code>, i.e. if it was
 created by <code><a href='readProfiles.html'>readProfiles()</a></code>. The scales for the plot
@@ -480,7 +476,7 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"TS"</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-argoFloats-method-3.png' alt='' width='672' height='672' /></div><div class='input'><span class='co'># \donttest{</span>
 <span class='co'># Example 4: map with bathymetry. Note that par(mar) is adjusted</span>
-<span class='co'># for the bathymetry palette, so if must be adjusted again after</span>
+<span class='co'># for the bathymetry palette, so it must be adjusted again after</span>
 <span class='co'># the plot(), in order to add new plot elements.</span>
 <span class='co'># This example specifies a coarse bathymetry dataset that is provided</span>
 <span class='co'># by the 'oce' package.  In typical applications, the user will use</span>
@@ -522,20 +518,8 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
 </div><div class='input'><span class='co'># Indicate float positions.</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>20</span><span class='op'>)</span>
 </div><div class='img'><img src='plot-argoFloats-method-6.png' alt='' width='672' height='672' /></div><div class='input'>
-<span class='co'># Example 7: TS plot for a particular argo</span>
-<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3.3</span>, <span class='fl'>3.3</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># wide margins for axis names</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"TS"</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-7.png' alt='' width='672' height='672' /></div><div class='input'>
-<span class='co'># Example 8: Temperature profile of the 131st cycle of float with ID 2902204</span>
+
+<span class='co'># Example 7: Temperature profile of the 131st cycle of float with ID 2902204</span>
 <span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
 #&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
@@ -549,8 +533,8 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># mimic the oce::plotProfile() default</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3.5</span>,<span class='fl'>3.5</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># mimic the oce::plotProfile() default</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"profile"</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-8.png' alt='' width='672' height='672' /></div><div class='input'>
-<span class='co'># Example 9: As Example 8, but showing temperature dependence on potential density anomaly.</span>
+</div><div class='img'><img src='plot-argoFloats-method-7.png' alt='' width='672' height='672' /></div><div class='input'>
+<span class='co'># Example 8: As Example 7, but showing temperature dependence on potential density anomaly.</span>
 <span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
 #&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
@@ -563,7 +547,7 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
 #&gt; <span class='warning'>    1</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># mimic the oce::plotProfile() default</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3.5</span>,<span class='fl'>3.5</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># mimic the oce::plotProfile() default</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"profile"</span>, profileControl<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>parameter<span class='op'>=</span><span class='st'>"temperature"</span>, ytype<span class='op'>=</span><span class='st'>"sigma0"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-9.png' alt='' width='672' height='672' /></div><div class='input'>
+</div><div class='img'><img src='plot-argoFloats-method-8.png' alt='' width='672' height='672' /></div><div class='input'>
 <span class='co'># }</span>
 
 </div></pre>
