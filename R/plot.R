@@ -10,7 +10,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' somewhat limited scope for customization. Since the data with
 #' [argoFloats-class] objects are easy to extract, users should
 #' not find it difficult to create their own plots to meet a
-#' particular aesthetic. See Examples and Kelley et al. (2021)
+#' particular aesthetic. See \dQuote{Examples} and Kelley et al. (2021)
 #' for more plotting examples.
 #'
 #' The various plot types are as follows.
@@ -58,7 +58,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'
 #' * For `which="profile"`, a profile plot is created, showing the variation of
 #' some quantity with pressure or potential density anomaly, as specified by the
-#' `profileControl` argument; see Examples 8 and 9.
+#' `profileControl` argument.
 #'
 #' * For `which="QC"`, two time-series panels are shown, with
 #' time being that recorded in the individual profile in the dataset.
@@ -74,12 +74,12 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' profiles that are questionable. Note that if all of data at a given time
 #' have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 #' time. The bottom panel shows the mean value of the parameter in question
-#' regardless of the flag value. See Example 7.
+#' regardless of the flag value.
 #'
 #' * For `which="summary"`, one or more time-series panels are shown
 #' in a vertical stack.  If there is only one ID in `x`, then the cycle
 #' values are indicated along the top axis of the top panel. The choice
-#' of panels is set by the `summaryControl` argument.  See Example 10.
+#' of panels is set by the `summaryControl` argument.
 #'
 #' * For `which="TS"`,  an overall TS plot is created.  This only works if `x`
 #' is an [argoFloats-class] object of type `"argos"`, i.e. if it was
@@ -114,11 +114,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' In the `geographical=4` case, signs are also dropped, but hemispheres
 #' are indicated by writing `S`, `N`, `W` or `E` after axis tick labels,
 #' except at the equator and prime meridian.
-#' Note that this scheme mimics that used by [oce::plot,coastline-method()],
-#' although the latter also takes values 2 and 3, which cause a display
-#' of angles in degrees, minutes and seconds, although such fine
-#' resolution is unlikely to be required argo maps, which typically
-#' show  large-scale views.
+#' Note that this scheme mimics that used by [oce::plot,coastline-method()].
 #'
 #' @param xlim,ylim numerical values, each a two-element vector, that
 #' set the `x` and `y` limits of plot axes, as for [plot.default()] and
@@ -194,8 +190,8 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' value naming the quantity for which the quality-control information is
 #' to be plotted, and an element named `dataStateIndicator`, a logical
 #' value controlling whether to add a panel showing this quantity
-#' (see Reference Table 6 of Carval et al, 2019, for more information
-#' on the information encoded in `dataStateIndicator`).
+#' (see Reference Table 6 of Carval et al, 2019 to learn more
+#' about what is encoded in `dataStateIndicator`).
 #' If not provided, `QCControl` defaults to
 #' `list(parameter="temperature",dataStateIndicator=FALSE)`.
 #'
@@ -249,7 +245,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' plot(a, which="TS")
 #'\donttest{
 #' # Example 4: map with bathymetry. Note that par(mar) is adjusted
-#' # for the bathymetry palette, so if must be adjusted again after
+#' # for the bathymetry palette, so it must be adjusted again after
 #' # the plot(), in order to add new plot elements.
 #' # This example specifies a coarse bathymetry dataset that is provided
 #' # by the 'oce' package.  In typical applications, the user will use
@@ -301,10 +297,10 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' # Indicate float positions.
 #' points(index[["longitude"]], index[["latitude"]], pch=20)
 #'
-#' # Example 7: TS plot for a particular argo
-#' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-#' par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
-#' plot(a, which="TS")
+## # Example 7: TS plot for a particular Argo
+## a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+## par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
+## plot(a, which="TS")
 ##
 ## # NOTE: removed this for CRAN submission, because it's very slow, not
 ## # especially informative, and would require using tempdir() for saving
@@ -320,14 +316,14 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 ## plot(argos, which="QC", QCControl=list(parameter="salinity"))
 ## plot(argos, which="QC", QCControl=list(parameter="salinity",dataStateIndicator=TRUE))
 #'
-#' # Example 8: Temperature profile of the 131st cycle of float with ID 2902204
+#' # Example 7: Temperature profile of the 131st cycle of float with ID 2902204
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' par(mfrow=c(1, 1))
 #' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 #' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 #' plot(a, which="profile")
 #'
-#' # Example 9: As Example 8, but showing temperature dependence on potential density anomaly.
+#' # Example 8: As Example 7, but showing temperature dependence on potential density anomaly.
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 #' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 #' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default

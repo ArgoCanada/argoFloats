@@ -49,11 +49,7 @@ with \code{geographical=1}.
 In the \code{geographical=4} case, signs are also dropped, but hemispheres
 are indicated by writing \code{S}, \code{N}, \code{W} or \code{E} after axis tick labels,
 except at the equator and prime meridian.
-Note that this scheme mimics that used by \code{\link[oce:plot-coastline-method]{oce::plot,coastline-method()}},
-although the latter also takes values 2 and 3, which cause a display
-of angles in degrees, minutes and seconds, although such fine
-resolution is unlikely to be required argo maps, which typically
-show  large-scale views.}
+Note that this scheme mimics that used by \code{\link[oce:plot-coastline-method]{oce::plot,coastline-method()}}.}
 
 \item{xlim, ylim}{numerical values, each a two-element vector, that
 set the \code{x} and \code{y} limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and
@@ -121,8 +117,8 @@ case.  If provided, it may contain an element named \code{parameter}, a characte
 value naming the quantity for which the quality-control information is
 to be plotted, and an element named \code{dataStateIndicator}, a logical
 value controlling whether to add a panel showing this quantity
-(see Reference Table 6 of Carval et al, 2019, for more information
-on the information encoded in \code{dataStateIndicator}).
+(see Reference Table 6 of Carval et al, 2019 to learn more
+about what is encoded in \code{dataStateIndicator}).
 If not provided, \code{QCControl} defaults to
 \code{list(parameter="temperature",dataStateIndicator=FALSE)}.}
 
@@ -162,7 +158,7 @@ see \dQuote{Details}. These are basic plot styles, with
 somewhat limited scope for customization. Since the data with
 \linkS4class{argoFloats} objects are easy to extract, users should
 not find it difficult to create their own plots to meet a
-particular aesthetic. See Examples and Kelley et al. (2021)
+particular aesthetic. See \dQuote{Examples} and Kelley et al. (2021)
 for more plotting examples.
 }
 \details{
@@ -213,7 +209,7 @@ palette to the right of the plot.
 }
 \item For \code{which="profile"}, a profile plot is created, showing the variation of
 some quantity with pressure or potential density anomaly, as specified by the
-\code{profileControl} argument; see Examples 8 and 9.
+\code{profileControl} argument.
 \item For \code{which="QC"}, two time-series panels are shown, with
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{parameter} must be given, to name the
@@ -228,11 +224,11 @@ Thus, low values on the top panel reveal
 profiles that are questionable. Note that if all of data at a given time
 have flag 0, meaning not assessed, then a quality of 0 is plotted at that
 time. The bottom panel shows the mean value of the parameter in question
-regardless of the flag value. See Example 7.
+regardless of the flag value.
 \item For \code{which="summary"}, one or more time-series panels are shown
 in a vertical stack.  If there is only one ID in \code{x}, then the cycle
 values are indicated along the top axis of the top panel. The choice
-of panels is set by the \code{summaryControl} argument.  See Example 10.
+of panels is set by the \code{summaryControl} argument.
 \item For \code{which="TS"},  an overall TS plot is created.  This only works if \code{x}
 is an \linkS4class{argoFloats} object of type \code{"argos"}, i.e. if it was
 created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
@@ -271,7 +267,7 @@ par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 plot(a, which="TS")
 \donttest{
 # Example 4: map with bathymetry. Note that par(mar) is adjusted
-# for the bathymetry palette, so if must be adjusted again after
+# for the bathymetry palette, so it must be adjusted again after
 # the plot(), in order to add new plot elements.
 # This example specifies a coarse bathymetry dataset that is provided
 # by the 'oce' package.  In typical applications, the user will use
@@ -313,19 +309,15 @@ polygon(coastlineWorldFine[["longitude"]],
 # Indicate float positions.
 points(index[["longitude"]], index[["latitude"]], pch=20)
 
-# Example 7: TS plot for a particular argo
-a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
-plot(a, which="TS")
 
-# Example 8: Temperature profile of the 131st cycle of float with ID 2902204
+# Example 7: Temperature profile of the 131st cycle of float with ID 2902204
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 par(mfrow=c(1, 1))
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 plot(a, which="profile")
 
-# Example 9: As Example 8, but showing temperature dependence on potential density anomaly.
+# Example 8: As Example 7, but showing temperature dependence on potential density anomaly.
 a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
 par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
