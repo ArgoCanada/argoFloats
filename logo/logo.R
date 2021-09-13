@@ -22,6 +22,7 @@ bg <- bright
 
 a <- function()
 {
+    oldpar <- par(no.readonly=TRUE)
     par(mar=c(0,0,0,0), cex=0.6, mgp=c(1.8, 0.7, 0), font=2, lwd=0.8)
     data("index")
     lon <- index[["longitude"]]
@@ -58,6 +59,7 @@ a <- function()
     par(xpd=NA)
     if (drawR)
         mtext("R", col=fg, cex=1.8, font=2, side=3, line=3)
+    par(oldpar)
 }
 
 sticker(~a(), package="argoFloats",
