@@ -18,11 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@v1
-          
+      - uses: r-lib/actions/setup-pandoc@v1
       - name: Install dependencies
         run: |
           options(pkgType = "binary")
-          install.packages(c("pandoc", "remotes", "rcmdcheck"))
+          install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       ## A refresh of the cache can be forced by incrementing
