@@ -13,7 +13,7 @@ textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New R
     rect(x+tweakx, y-h, x+tweakx+1.1*w, y+h, border=col)
     invisible(list(w=w, h=h))
 }
-omar <- par("mar")
+oldpar <- par(no.readonly=TRUE)
 par(mar=c(0,1,0,0))
 plot(c(0, 1), c(0.4, 1), type="n", xlab="", ylab="", axes=FALSE)
 x0 <- 0.25
@@ -39,4 +39,6 @@ textInBox(x0, y0, "applyQC()  ", family="sans", col=colCode)
 arrows(xarrow, y0-h, xarrow, y0-dy+h, length=0.1)
 y0 <- y0 - dy
 textInBox(x0, y0, "showQCTests() ", family="sans", col=colCode)
+par(oldpar)
+
 if (!interactive()) dev.off()

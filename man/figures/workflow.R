@@ -17,6 +17,7 @@ textInBox <- function(x, y, text, cex=1, pos=4, center=TRUE, family="Times New R
     invisible(list(w=w, h=h))
 }
 if (PNG) png("workflow.png", width=3.5, height=2, unit="in", res=130, pointsize=8)
+oldpar <- par(no.readonly=TRUE)
 par(mar=rep(0,4))
 plot(c(0, 1), c(0, 1), type="n", xlab="", ylab="", axes=FALSE)
 x0 <- 0.3
@@ -55,6 +56,7 @@ textInBox(x0, y0, "readProfiles()    ", family="sans", col=colCode)
 arrows(x0, y0-h, x0, y0-dy+h, length=length)
 y0 <- y0 - dy
 textInBox(x0, y0, " ...      ", family="sans", col=colCode)
+par(oldpar)
 
 if (PNG) dev.off()
 

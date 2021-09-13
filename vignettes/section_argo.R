@@ -1,6 +1,7 @@
 if (!interactive()) png("01_section_argo.png")
 library(oce)
 library(argoFloats)
+oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(2,1))
 data(section, package="oce")
 #getIndex()
@@ -17,4 +18,5 @@ plot(index2,bathymetry=FALSE, mar=par("mar"),  asp= 1 / cos(mean(range(unlist(in
 )
 points(lonlim, latlim, pch=21, col="black", bg="red", type="o")
 plot(section, which="map", mar=par("mar"), col="tan")
+par(oldpar)
 if (!interactive()) dev.off()
