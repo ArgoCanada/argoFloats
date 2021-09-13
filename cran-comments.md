@@ -16,7 +16,7 @@ second 1.0.1, and our third (the present one) 1.0.2.
 
 We are indebted to Julia Haider and Gregor Seyer, whose helpful and informative
 reviews led to changes as summarized below (items 1 through 5 being in response
-to JH, and item 6 being in response to GS).
+to Haider, and item 6 being in response to Seyer).
 
 1. The DESCRIPTION no longer starts with "The argoFloats package", and its
    literature citation is now in the suggested format.
@@ -46,8 +46,8 @@ to JH, and item 6 being in response to GS).
 5. The plotting functions now use on.exit() to reset par() values, so that the
    user's values for par("mar"), etc., are not altered by the plot() call.
 
-6. Examples and vignettes reset par() values to their initial state. (GS also
-   commented on options(), but the package does not set those, except in tests,
-   where setting and checking is part of the test.)
+6. Examples and vignettes reset par() values to their initial state. (Seyer
+   also commented on options(), but the package does not set those, except in
+   tests, where setting and checking is part of the test.)
 
 
