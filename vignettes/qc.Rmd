@@ -188,9 +188,11 @@ useful is when looking at TS diagrams as shown below:
 
 ```{r, message=FALSE, error=FALSE, warning=FALSE, eval=FALSE}
 clean <- applyQC(argos)
+oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(1, 2))
 plot(argos, which="TS")
 plot(clean, which="TS")
+par(oldpar)
 ```
 
 ![Figure 3: argoFloats applyQC() function used on float with `ID` 1901584.](applyQC.png)
@@ -335,9 +337,11 @@ data(indexSynthetic)
 index1 <- subset(indexSynthetic, ID="4900845")
 argos <- readProfiles(getProfiles(index1))
 clean <- applyQC(argos)
+oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(1, 2))
 plot(argos, which="TS")
 plot(clean, which="TS")
+par(oldpar)
 ```
 As shown by the plot, the plot containing "good" data and the plot containing
 "bad" data look the same. Using basic R functions as follows verifies that the

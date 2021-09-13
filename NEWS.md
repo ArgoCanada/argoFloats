@@ -1,5 +1,13 @@
 # argoFloats (development version)
 
+## argoFloats 1.0.2
+
+* Examples now reset par() values to their initial states.
+
+## argoFloats 1.0.1
+
+* Functions now reset par() values to their initial states.
+
 ## argoFloats 1.0.0
 
 * Improve documentation for a CRAN release

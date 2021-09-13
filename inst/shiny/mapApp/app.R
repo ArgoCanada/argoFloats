@@ -703,9 +703,9 @@ serverMapApp <- function(input, output, session)
             }
             topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
             #notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
-            omar <- par("mar")
+            oldpar <- par(no.readonly=TRUE)
             par(mar=c(2.5, 2.5, 2, 1.5))
-            on.exit(par(mar=omar))
+            on.exit(par(oldpar)
             plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
             if ("topo" %in% state$view) {
                 image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
@@ -762,9 +762,6 @@ serverMapApp <- function(input, output, session)
                                 points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                             }
                         if ("path" %in% state$view) {
-                            ##> ## Turn off warnings for zero-length arrows
-                            ##> owarn <- options("warn")$warn
-                            ##> options(warn = -1)
                             for (ID in unique(lonlat$ID)) {
                                 LONLAT <- lonlat[lonlat$ID==ID,]
                                 ## Sort by time instead of relying on the order in the repository

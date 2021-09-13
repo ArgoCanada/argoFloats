@@ -146,14 +146,6 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' or `NULL`, to get a value that depends on the value of `which`.
 #' (See [par()] for more on specifying `pch`.)
 #'
-##<old> @param mar either a four-element vector giving the margins to be used for
-##<old> the plot (see [par()] for details), or `NULL`, which means to use
-##<old> [par]`("mar")`.
-##<old>
-##<old> @param mgp either a three-element vector giving the geometry for
-##<old> axis labels (see [par()] for details), or `NULL`, which means to use
-##<old> [par]`("mgp")`.
-#'
 #' @param eos a character value indicating the equation of state to use
 #' if `which="TS"`.  This must be `"gsw"` (the default) or `"unesco"`;
 #' see [oce::plotTS()].
@@ -229,6 +221,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'
 #' # Example 2: as Example 1, but narrow the margins and highlight floats
 #' # within a circular region of diameter 100 km.
+#' oldpar <- par(no.readonly=TRUE)
 #' par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0))
 #' plot(index, bathymetry=FALSE)
 #' lon <- index[["longitude"]]
@@ -237,12 +230,15 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' R <- subset(index, near)
 #' points(R[["longitude"]], R[["latitude"]],
 #'     cex=0.6, pch=20, col="red")
+#' par(oldpar)
 #'
 #' # Example 3: TS of a built-in data file.
 #' f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
 #' a <- readProfiles(f)
+#' oldpar <- par(no.readonly=TRUE)
 #' par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
 #' plot(a, which="TS")
+#' par(oldpar)
 #'\donttest{
 #' # Example 4: map with bathymetry. Note that par(mar) is adjusted
 #' # for the bathymetry palette, so it must be adjusted again after
@@ -253,6 +249,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' # downloads a file appropriate for the plot view), or by using
 #' # an already-downloaded file.
 #' data(topoWorld, package="oce")
+#' oldpar <- par(no.readonly=TRUE)
 #' par(mar=c(2, 2, 1, 2), mgp=c(2, 0.7, 0)) # narrow margins for a map
 #' plot(index, bathymetry=list(source=topoWorld))
 #' # For bathymetry plots that use images, plot() temporarily
@@ -261,13 +258,16 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' par(mar=par("mar") + c(0, 0, 0, 2.75))
 #' points(index[["longitude"]], index[["latitude"]],
 #'     cex=0.6, pch=20, col="red")
+#' par(oldpar)
 #'
 #' # Example 5. Simple contour version, using coarse dataset (ok on basin-scale).
 #' # Hint: use oce::download.topo() to download high-resolution datasets to
 #' # use instead of topoWorld.
+#' oldpar <- par(no.readonly=TRUE)
 #' par(mar=c(2, 2, 1, 1))
 #' data(topoWorld, package="oce")
 #' plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
+#' par(oldpar)
 ##
 ## # NOTE: removed this for CRAN submission, because it's very slow, not
 ## # especially informative, and would require using tempdir() for saving
@@ -318,16 +318,20 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'
 #' # Example 7: Temperature profile of the 131st cycle of float with ID 2902204
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+#' oldpar <- par(no.readonly=TRUE)
 #' par(mfrow=c(1, 1))
 #' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 #' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 #' plot(a, which="profile")
+#' par(oldpar)
 #'
 #' # Example 8: As Example 7, but showing temperature dependence on potential density anomaly.
 #' a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+#' oldpar <- par(no.readonly=TRUE)
 #' par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
 #' par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
 #' plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sigma0"))
+#' par(oldpar)
 #'
 ## # NOTE: removed this for CRAN submission, because it's very slow, not
 ## # especially informative, and would require using tempdir() for saving
@@ -370,7 +374,6 @@ setMethod(f="plot",
                               xlim=NULL, ylim=NULL,
                               xlab=NULL, ylab=NULL,
                               type=NULL, cex=NULL, col=NULL, pch=NULL, bg=NULL,
-                              #<old> mar=NULL, mgp=NULL,
                               eos="gsw",
                               mapControl=NULL,
                               profileControl=NULL,
@@ -382,8 +385,6 @@ setMethod(f="plot",
           {
               if (!requireNamespace("oce", quietly=TRUE))
                   stop("must install.packages(\"oce\") for plot() to work")
-              #<old> marGiven <- !is.null(mar)
-              #<old> mgpGiven <- !is.null(mgp)
               debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
               argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1, style="bold")
               dots <- list(...)
@@ -393,13 +394,6 @@ setMethod(f="plot",
                   stop("\"which\" must contain only one item")
               if (!geographical %in% c(0, 1, 4))
                   stop("In plot() : \"geographical\" must be 0, 1, or 4", call.=FALSE)
-              #<old> omgp <- par("mgp")
-              #<old> if (is.null(mgp))
-              #<old>     mgp <- c(2, 0.7, 0)
-              #<old> omar <- par("mar")
-              #<old> if (is.null(mar))
-              #<old>     mar <- par("mar") #c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
-              #<old> par(mar=mar, mgp=mgp)
               istraj <- identical(x@metadata$subtype, "trajectories")
               if (which == "map") {
                   data("coastlineWorld", package="oce", envir=environment())
@@ -501,16 +495,6 @@ setMethod(f="plot",
                       bathy <- NULL
                       if (is.character(bathymetry$source) && bathymetry$source == "auto") {
                           argoFloatsDebug(debug, "must either download bathymetry or use existing file\n", sep="")
-                          #<old>argoFloatsDebug(debug, "before using plot.window(), mar=c(", paste(round(mar, 4), collapse=", "), ")\n", sep="")
-                          ## Do plot calculations so we will know usr, needed to determine
-                          ## range of longitude and latitude for downloading. Note that we
-                          ## need to set mar temporarily, to match what will later be used
-                          ## for the actual plot.
-                          ## > A<-par("mar")
-                          ## > drawPalette()
-                          ## > B<-par("mar")
-                          ## > A-B
-                          ## [1] -8.881784e-16  0.000000e+00  0.000000e+00 -2.750000e+00
                           if (!bathymetry$contour && bathymetry$palette) {
                               omar <- par("mar")
                               par(mar=omar + c(0, 0, 0, 2.75))
@@ -527,10 +511,6 @@ setMethod(f="plot",
                                       xaxs="i", yaxs="i",
                                       asp=asp,
                                       xlab=xlab, ylab=ylab)
-                          #<old> if (!bathymetry$contour && bathymetry$palette) {
-                          #<old>     argoFloatsDebug(debug, "setting mar to ", paste(tmpmar, collapse=" "), "\n")
-                          #<old>     par(mar=tmpmar)
-                          #<old> }
                           usr <- par("usr")
                           argoFloatsDebug(debug, "after using plot.window(), usr=c(", paste(round(usr, 4), collapse=", "), ")\n", sep="")
                           latitudeSpan <- usr[4] - usr[3]
@@ -771,7 +751,6 @@ setMethod(f="plot",
                       coastlineWorld <- get("coastlineWorld")
                       polygon(coastlineWorld[["longitude"]], coastlineWorld[["latitude"]], col=col)
                   }
-                  #<old> par(mar=omar, mgp=omgp)
               } else if (which == "summary" && !istraj) {
                   argoFloatsDebug(debug, "summary plot\n", sep="")
                   if (x[["length"]] < 2)
@@ -791,10 +770,6 @@ setMethod(f="plot",
                       o <- order(time)
                       for (iitem in seq_len(nitems)) {
                           argoFloatsDebug(debug, "items[", iitem, "]=\"", items[iitem], "\"\n", sep="")
-                          #<old> if (!marGiven) # top panel needs space for ticks
-                          #<old>     mar <- if (iitem==1) c(1.7,3,2,1) else c(1.7,3,1.5,1)
-                          #<old> if (!mgpGiven)
-                          #<old>     mgp <- c(2, 0.7, 0)
                           if (items[iitem] == "dataStateIndicator") {
                               y <- unlist(x[["dataStateIndicator"]])
                               argoFloatsDebug(debug, oce::vectorShow(y))
@@ -894,13 +869,6 @@ setMethod(f="plot",
                       pch <- 20
                       argoFloatsDebug(debug, "TS plot defaulting to pch=", pch, "\n")
                   }
-                  #<old> omgp <- par("mgp")
-                  #<old> if (is.null(mgp))
-                  #<old>     mgp <- c(2, 0.7, 0)
-                  #<old> omar <- par("mar")
-                  #<old> if (is.null(mar))
-                  #<old>     mar <- par("mar") # c(mgp[1] + 1.5, mgp[1] + 1.5, mgp[1], mgp[1])
-                  #<old> par(mar=mar, mgp=mgp)
                   if (col[1] == "flags") {
                       argoFloatsDebug(debug, "col is \"flags\"\n")
                       salinityFlag <- unlist(x[["salinityFlag"]])
@@ -968,8 +936,6 @@ setMethod(f="plot",
                   on.exit(par(mfrow=omfrow))
                   if (any(is.finite(q))) {
                       o <- order(time) # cycles are not time-ordered in index files
-                      ## Tighten bottom axis spacing, since there's no need to say "Time" there
-                      #<old>mar <- c(mgp[1], mgp[1] + 1.5, mgp[2] + 1, mgp[2] + 3/4)
                       oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange=FALSE, type="l", mar=par("mar"), xaxs="i")
                       points(time[o], q[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                       abline(h=50, col="red", lty="dashed")

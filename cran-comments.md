@@ -9,11 +9,14 @@
 
 * Release status: revision to first submission (details follow)
 
-# Changes since first CRAN submission
+# Changes since first two CRAN submissions
 
-In response to Julia Haider's informative and helpful review of argoFloats
-version 1.0.0, the following changes were made, yielding version 1.0.1, which
-is being submitted now.
+This is the third submission.  Our first submission was numbered 1.0.0, our
+second 1.0.1, and our third (the present one) 1.0.2.
+
+We are indebted to Julia Haider and Gregor Seyer, whose helpful and informative
+reviews led to changes as summarized below (items 1 through 5 being in response
+to JH, and item 6 being in response to GS).
 
 1. The DESCRIPTION no longer starts with "The argoFloats package", and its
    literature citation is now in the suggested format.
@@ -42,4 +45,9 @@ is being submitted now.
 
 5. The plotting functions now use on.exit() to reset par() values, so that the
    user's values for par("mar"), etc., are not altered by the plot() call.
+
+6. Examples and vignettes reset par() values to their initial state. (GS also
+   commented on options(), but the package does not set those, except in tests,
+   where setting and checking is part of the test.)
+
 

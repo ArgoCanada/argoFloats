@@ -195,6 +195,7 @@ As of March, 2021, a subset by `section` was developed to create a section of Ar
 ```{r fig.cap="Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 49 samples from 2020-09-23 to 2020-10-25 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package", eval=FALSE}
 library(oce)
 library(argoFloats)
+oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(2,1))
 data(section, package="oce")
 #getIndex()
@@ -207,10 +208,11 @@ index1 <- subset(ai, section=list(longitude=lonlim, latitude=latlim, width=100))
 from <- as.POSIXct("2020-09-23", tz="UTC")
 to <- as.POSIXct("2020-10-25", tz="UTC")
 index2 <- subset(index1, time=list(from=from, to=to))
-plot(index2,bathymetry=FALSE, mar=par("mar"),  asp= 1 / cos(mean(range(unlist(index2[["latitude"]]), na.rm=TRUE))*pi/180),  mgp=getOption("oceMgp")
+plot(index2, bathymetry=FALSE,  asp=1/cos(mean(range(unlist(index2[["latitude"]]), na.rm=TRUE))*pi/180),  mgp=getOption("oceMgp")
 )
 points(lonlim, latlim, pch=21, col="black", bg="red", type="o")
-plot(section, which="map", mar=par("mar"), col="tan")
+plot(section, which="map", col="tan")
+par(oldpar)
 ```
 
 ![Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 49 samples from 2020-09-23 to 2020-10-25 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package](01_section_argo.png)
