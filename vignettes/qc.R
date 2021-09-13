@@ -31,9 +31,11 @@ ID <- "1901584"
 
 ## ---- message=FALSE, error=FALSE, warning=FALSE, eval=FALSE-------------------
 #  clean <- applyQC(argos)
+#  oldpar <- par(no.readonly=TRUE)
 #  par(mfrow=c(1, 2))
 #  plot(argos, which="TS")
 #  plot(clean, which="TS")
+#  par(oldpar)
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  remotes::install_github("dankelley/oce", ref="develop")
@@ -104,9 +106,11 @@ if (packageVersion("oce") > "1.2.0") {
 #  index1 <- subset(indexSynthetic, ID="4900845")
 #  argos <- readProfiles(getProfiles(index1))
 #  clean <- applyQC(argos)
+#  oldpar <- par(no.readonly=TRUE)
 #  par(mfrow=c(1, 2))
 #  plot(argos, which="TS")
 #  plot(clean, which="TS")
+#  par(oldpar)
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  summary(unlist(argos[["temperature"]]))
