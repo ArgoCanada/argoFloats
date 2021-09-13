@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           options(pkgType = "binary")
-          install.packages(c("remotes", "rcmdcheck"))
+          install.packages(c("pandoc", "remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       ## A refresh of the cache can be forced by incrementing
