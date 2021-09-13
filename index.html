@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -120,12 +120,15 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/">oce</a></span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: gsw</span>
+<span class="co">#&gt; Loading required package: sf</span>
+<span class="co">#&gt; Linking to GEOS 3.9.1, GDAL 3.3.1, PROJ 7.2.1</span>
+<span class="co">#&gt; Loading required package: testthat</span>
 <span class="co">## 1. Get worldwide float-profile index, saving to ~/data/argo by default.</span>
 <span class="va">indexAll</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.</span>
 <span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">indexAll</span>,
                 circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.06</span>,latitude<span class="op">=</span><span class="fl">26.54</span>,radius<span class="op">=</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Kept 41 cycles (0.00164%)</span>
+<span class="co">#&gt; Kept 41 cycles (0.00163%)</span>
 <span class="co">## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.</span>
 <span class="va">profiles</span>  <span class="op">&lt;-</span> <span class="fu"><a href="reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">index</span><span class="op">)</span>
 <span class="co">## 4. Read the NetCDF files.</span>
@@ -144,15 +147,20 @@
 <span class="co">#&gt;     3 7 13</span>
 <span class="co">## 5. Examine QC flags, and set questionable data to NA.</span>
 <span class="va">argosClean</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/applyQC.html">applyQC</a></span><span class="op">(</span><span class="va">argos</span><span class="op">)</span>
+<span class="va">oldpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>no.readonly<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>                     <span class="co"># want two-panel plot</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">2.0</span>, <span class="fl">2.0</span><span class="op">)</span><span class="op">)</span>         <span class="co"># tighten margins</span>
-<span class="co">## 6. Plot a map with bathymetry, indicating number of profiles.</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">index</span>, which<span class="op">=</span><span class="st">"map"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3.5</span>, <span class="fl">2.0</span>, <span class="fl">2.0</span>, <span class="fl">2.0</span><span class="op">)</span><span class="op">)</span>         <span class="co"># maps do not get axis names</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mgp<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">0.7</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># tighten axes</span>
+<span class="co">## 6. Plot a map of profile locations.</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">index</span>, which<span class="op">=</span><span class="st">"map"</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="op">-</span><span class="fl">77.06</span>, <span class="fl">26.54</span>, pch<span class="op">=</span><span class="st">"*"</span>, cex<span class="op">=</span><span class="fl">3</span><span class="op">)</span>  <span class="co"># show centre of focus</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/mtext.html">mtext</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">argosClean</span><span class="op">[[</span><span class="st">"length"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"profiles"</span><span class="op">)</span>, line<span class="op">=</span><span class="fl">1.0</span><span class="op">)</span>
 <span class="co">## 7. Plot a TS diagram</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">2.0</span>, <span class="fl">1.0</span><span class="op">)</span><span class="op">)</span>         <span class="co"># increase left margin for name</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"TS"</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="80%"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></code></pre></div>
 </div>
   </div>
 
