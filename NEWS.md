@@ -2,11 +2,14 @@
 
 ## argoFloats 1.0.2
 
-* Examples now reset par() values to their initial states.
+* Examples reset par() to its initial state.
 
 ## argoFloats 1.0.1
 
-* Functions now reset par() values to their initial states.
+* DESCRIPTION improved
+* Document return values of all functions
+* Describe base class.
+* plot() resets par() to its initial state before returning.
 
 ## argoFloats 1.0.0
 
