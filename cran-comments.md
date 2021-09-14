@@ -11,12 +11,20 @@
 
 # Changes since first two CRAN submissions
 
-This is the third submission.  Our first submission was numbered 1.0.0, our
-second 1.0.1, and our third (the present one) 1.0.2.
+This is the third submission.  We thank Julia Haider and Gregor for their
+helpful reviews of our first and second submissions, respectively. The changes
+are outlined in the next two subsections, in reverse order of time.
 
-We are indebted to Julia Haider and Gregor Seyer, whose helpful and informative
-reviews led to changes as summarized below (items 1 through 5 being in response
-to Haider, and item 6 being in response to Seyer).
+## Changes in 1.0.2, in response to Gregor Seyer's review of version 1.0.1
+
+1. Examples and vignettes reset par() values to their initial state. (Gregor
+   Seyer also commented about resetting options(), but the package only sets
+   options in tests/testthat/test_defaults.R, where setting and checking is
+   part of the test.)
+
+## Changes in 1.0.1, in response to Julia Haider's review of version 1.0.0
+
+These changes were incorporated in version 1.0.1, as reviewed by Gregor Seyer.
 
 1. The DESCRIPTION no longer starts with "The argoFloats package", and its
    literature citation is now in the suggested format.
@@ -46,8 +54,5 @@ to Haider, and item 6 being in response to Seyer).
 5. The plotting functions now use on.exit() to reset par() values, so that the
    user's values for par("mar"), etc., are not altered by the plot() call.
 
-6. Examples and vignettes reset par() values to their initial state. (Seyer
-   also commented on options(), but the package does not set those, except in
-   tests, where setting and checking is part of the test.)
 
 
