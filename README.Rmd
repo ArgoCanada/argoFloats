@@ -27,12 +27,12 @@ analyzing collections of oceanographic Argo float datasets.  Its developers are
 * Clark Richards, Bedford Institute of Oceanography
 * Dewey Dunnington, Bedford Institute of Oceanography
 
-Once argoFloats appears on CRAN, it may be installed with
+The CRAN version may be installed with
 ```{r eval=FALSE}
 install.packages("argoFloats")
 ```
 
-Until then, and even later, to get the development version, it may be installed with
+The development version may be installed with
 ```{r eval=FALSE}
 library(devtools)
 install_github("ArgoCanada/argoFloats", ref="develop")

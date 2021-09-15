@@ -1,6 +1,10 @@
 # argoFloats (development version)
 
-## argoFloats 1.0.2
+## argoFloats 1.0.3
+
+* TBA
+
+## argoFloats 1.0.2 (on CRAN)
 
 * Examples reset par() to its initial state.
 
