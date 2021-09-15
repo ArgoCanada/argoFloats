@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -96,10 +96,10 @@
 <!-- badges: start -->
 
 <p>The argoFloats package for the R language provides tools for downloading and analyzing collections of oceanographic Argo float datasets. Its developers are * Dan Kelley, Dalhousie University * Jaimie Harbin, Bedford Institute of Oceanography and Dalhousie University * Clark Richards, Bedford Institute of Oceanography * Dewey Dunnington, Bedford Institute of Oceanography</p>
-<p>Once argoFloats appears on CRAN, it may be installed with</p>
+<p>The CRAN version may be installed with</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"argoFloats"</span><span class="op">)</span></code></pre></div>
-<p>Until then, and even later, to get the development version, it may be installed with</p>
+<p>The development version may be installed with</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span>
 <span class="fu">install_github</span><span class="op">(</span><span class="st">"ArgoCanada/argoFloats"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></code></pre></div>
@@ -120,11 +120,9 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats">argoFloats</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/">oce</a></span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: gsw</span>
-<span class="co">#&gt; Loading required package: sf</span>
-<span class="co">#&gt; Linking to GEOS 3.9.1, GDAL 3.3.1, PROJ 7.2.1</span>
-<span class="co">#&gt; Loading required package: testthat</span>
 <span class="co">## 1. Get worldwide float-profile index, saving to ~/data/argo by default.</span>
 <span class="va">indexAll</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Downloading 'https://data-argo.ifremer.fr/ar_index_global_prof.txt.gz'</span>
 <span class="co">## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.</span>
 <span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">indexAll</span>,
                 circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.06</span>,latitude<span class="op">=</span><span class="fl">26.54</span>,radius<span class="op">=</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span>
