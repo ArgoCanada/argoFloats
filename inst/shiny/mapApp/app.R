@@ -705,7 +705,7 @@ serverMapApp <- function(input, output, session)
             #notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
             oldpar <- par(no.readonly=TRUE)
             par(mar=c(2.5, 2.5, 2, 1.5))
-            on.exit(par(oldpar)
+            on.exit(par(oldpar))
             plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
             if ("topo" %in% state$view) {
                 image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
