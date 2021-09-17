@@ -288,10 +288,11 @@ serverMapApp <- function(input, output, session)
     output$UIinfo <- shiny::renderUI({
         if (argoFloatsIsCached("argo")) {
             shiny::fluidRow(shiny::verbatimTextOutput("info"),
-                if (state$hoverIsPasted == TRUE)
-                    tags$head(tags$style("#info{color: red}"
-                    )
-                    )
+                if (state$hoverIsPasted == TRUE) {
+                    tags$head(tags$style("#info{color: red}"))
+                } else {
+                    tags$head(tags$style("#info{color: black}"))
+                }
             )
         }
     })
@@ -688,22 +689,22 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
-        message("in plotMapp")
+        #>>>message("in plotMapp")
         if (state$startTime > state$endTime) {
             shiny::showNotification(
                 paste0("Start must precede End, but got Start=",
                     format(state$startTime, "%Y-%m-%d"), " and End=",
                     format(state$endTime, "%Y-%m-%d.")), type="error")
         } else {
-            message("plotMap, before brush handling:")
+          #>>>  message("plotMap, before brush handling:")
             if (!is.null(input$brush)) {
-                message("plotMap, in brush handling:")
-                message("  xmin=", input$brush$xmin)
-                message("  xmax=", input$brush$xmax)
-                message("  ymin=", input$brush$ymin)
-                message("  ymax=", input$brush$ymax)
-                message("  state$xlim=", paste(state$xlim, collapse=" "))
-                message("  state$ylim=", paste(state$ylim, collapse=" "))
+          #>>>      message("plotMap, in brush handling:")
+          #>>>      message("  xmin=", input$brush$xmin)
+          #>>>      message("  xmax=", input$brush$xmax)
+          #>>>      message("  ymin=", input$brush$ymin)
+          #>>>      message("  ymax=", input$brush$ymax)
+          #>>>      message("  state$xlim=", paste(state$xlim, collapse=" "))
+          #>>>      message("  state$ylim=", paste(state$ylim, collapse=" "))
                 ## Require a minimum size, to avoid mixups with minor click-slide
                 if ((input$brush$xmax - input$brush$xmin) > 0.5 && (input$brush$ymax - input$brush$ymin) > 0.5) {
                     state$xlim <<- c(input$brush$xmin, input$brush$xmax)
