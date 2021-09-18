@@ -1060,6 +1060,9 @@ setMethod(f="plot",
                   axis(3)
                   ylab <- oce::resizableLabel(if (profileControl$ytype == "pressure") "p" else "sigma0", axis="y")
                   mtext(ylab, side=2, line=par("mgp")[1], cex=par("cex"))
+                  # Rename for oce::resizableLabel()
+                  if (profileControl$parameter == "salinity")
+                      profileControl$parameter <- "S"
                   xlab <- oce::resizableLabel(if (profileControl$parameter == "oxygen") "oxygen umol/kg" else profileControl$parameter, axis="x")
                   mtext(xlab, side=3, line=par("mgp")[1], cex=par("cex"))
               } else {
