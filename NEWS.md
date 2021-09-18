@@ -1,5 +1,9 @@
 # argoFloats (development version)
 
+## argoFloats 1.0.3
+
+* Fix a mapApp() problem in handling mouse brush events.
+
 ## argoFloats 1.0.2
 
 * Examples reset par() to its initial state.

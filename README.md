@@ -17,14 +17,13 @@ Bedford Institute of Oceanography and Dalhousie University \* Clark
 Richards, Bedford Institute of Oceanography \* Dewey Dunnington, Bedford
 Institute of Oceanography
 
-Once argoFloats appears on CRAN, it may be installed with
+The CRAN version may be installed with
 
 ``` r
 install.packages("argoFloats")
 ```
 
-Until then, and even later, to get the development version, it may be
-installed with
+The development version may be installed with
 
 ``` r
 library(devtools)
@@ -83,11 +82,9 @@ necessary.
 library(argoFloats)
 library(oce)
 #> Loading required package: gsw
-#> Loading required package: sf
-#> Linking to GEOS 3.9.1, GDAL 3.3.1, PROJ 7.2.1
-#> Loading required package: testthat
 ## 1. Get worldwide float-profile index, saving to ~/data/argo by default.
 indexAll <- getIndex()
+#> Downloading 'https://data-argo.ifremer.fr/ar_index_global_prof.txt.gz'
 ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))
