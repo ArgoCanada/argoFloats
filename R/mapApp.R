@@ -1,14 +1,19 @@
 #' Interactive App For Viewing Argo Float Positions
 #'
-#' The GUI permits specifying a spatial-temporal region of interest, a set
-#' of float types to show, etc.  The interface ought to be reasonably
-#' straightforward, especially for those who take a moment to click on the
-#' Help button and to read the popup window that it creates.
+#' [mapApp()] sets up an interactive "shiny app" session for exploring
+#' the spatial-temporal distribution of Argo profiles.  The graphical
+#' user interface (GUI) is meant to be reasonably self-explanatory,
+#' and a button labelled Help provides details that might not
+#' be evident at first glance.
+#' More details are provided in the rest of this documentation
+#' page, and in Section 4 of Kelley et al. (2021).
 #'
-#' This app will use [getIndex()] to download index files from the Argo server
-#' the first time it runs, and this make take up to a minute or so.  Then it will combine
-#' information from the core-Argo and BGC-Argo index tables, cross-indexing so
-#' it can determine the Argo type for each profile (or cycle).
+#' [mapApp()] uses [getIndex()] to download index files from an Argo server
+#' the first time it runs.  This can be slow, taking a minute or more, depending
+#' on the internet connection and load on the server.  Once the index
+#' files are downloaded, [mapApp()] categorizes profiles as Core,
+#' BGC, or Deep (which may be displayed in any combination, using
+#' GUI elements).
 #'
 #' The `hi-res` button will only affect the coastline, not the topography,
 #' unless there is a local file named `topoWorldFine.rda` that contains
@@ -23,7 +28,6 @@
 #' save(topoWorldFine, file="topoWorldFine.rda")
 #' unlink(topoFile) # clean up
 #'```
-#' For more on this app, see section 4 of Kelley et al. (2021).
 #'
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
@@ -50,8 +54,9 @@
 #' }
 #'
 #' @references
-#' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
-#' Argo data. Frontiers in Marine Science, (8), 636922.
+#' Kelley, D. E., Harbin, J., & Richards, C. (2021).
+#' argoFloats: An R package for analyzing Argo data.
+#' Frontiers in Marine Science, (8), 636922.
 #' \doi{10.3389/fmars.2021.635922}
 #'
 #' @return `mapApp` has no return value, since it creates a shiny app by passing
