@@ -3,7 +3,8 @@
 #' [mapApp()] sets up an interactive "shiny app" session for exploring
 #' the spatial-temporal distribution of Argo profiles.  The graphical
 #' user interface (GUI) is meant to be reasonably self-explanatory,
-#' and a button labelled Help provides details that might not
+#' and a button labelled Help yields a pop-up window with
+#' more information that might not
 #' be evident at first glance.
 #' More details are provided in the rest of this documentation
 #' page, and in Section 4 of Kelley et al. (2021).
