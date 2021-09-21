@@ -47,10 +47,13 @@
 
 
 <meta property="og:title" content="Interactive App For Viewing Argo Float Positions — mapApp" />
-<meta property="og:description" content="The GUI permits specifying a spatial-temporal region of interest, a set
-of float types to show, etc.  The interface ought to be reasonably
-straightforward, especially for those who take a moment to click on the
-Help button and to read the popup window that it creates." />
+<meta property="og:description" content="mapApp() sets up an interactive &quot;shiny app&quot; session for exploring
+the spatial-temporal distribution of Argo profiles.  The graphical
+user interface (GUI) is meant to be reasonably self-explanatory,
+and a button labelled Help provides details that might not
+be evident at first glance.
+More details are provided in the rest of this documentation
+page, and in Section 4 of Kelley et al. (2021)." />
 
 
 
@@ -142,10 +145,13 @@ Help button and to read the popup window that it creates." />
     </div>
 
     <div class="ref-description">
-    <p>The GUI permits specifying a spatial-temporal region of interest, a set
-of float types to show, etc.  The interface ought to be reasonably
-straightforward, especially for those who take a moment to click on the
-Help button and to read the popup window that it creates.</p>
+    <p><code>mapApp()</code> sets up an interactive "shiny app" session for exploring
+the spatial-temporal distribution of Argo profiles.  The graphical
+user interface (GUI) is meant to be reasonably self-explanatory,
+and a button labelled Help provides details that might not
+be evident at first glance.
+More details are provided in the rest of this documentation
+page, and in Section 4 of Kelley et al. (2021).</p>
     </div>
 
     <pre class="usage"><span class='fu'>mapApp</span><span class='op'>(</span>
@@ -209,10 +215,12 @@ can be helpful in diagnosing problems or bottlenecks.</p></td>
 control to <code><a href='https://rdrr.io/pkg/shiny/man/runApp.html'>shiny::runApp()</a></code>, which never returns.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This app will use <code><a href='getIndex.html'>getIndex()</a></code> to download index files from the Argo server
-the first time it runs, and this make take up to a minute or so.  Then it will combine
-information from the core-Argo and BGC-Argo index tables, cross-indexing so
-it can determine the Argo type for each profile (or cycle).</p>
+    <p><code>mapApp()</code> uses <code><a href='getIndex.html'>getIndex()</a></code> to download index files from an Argo server
+the first time it runs.  This can be slow, taking a minute or more, depending
+on the internet connection and load on the server.  Once the index
+files are downloaded, <code>mapApp()</code> categorizes profiles as Core,
+BGC, or Deep (which may be displayed in any combination, using
+GUI elements).</p>
 <p>The <code>hi-res</code> button will only affect the coastline, not the topography,
 unless there is a local file named <code>topoWorldFine.rda</code> that contains
 an alternative topographic information. Here is how to create such a file:<div class="sourceCode R"></p><pre><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dankelley.github.io/oce/'>oce</a></span><span class='op'>)</span>
@@ -224,11 +232,11 @@ an alternative topographic information. Here is how to create such a file:<div c
 <span class='fu'><a href='https://rdrr.io/r/base/save.html'>save</a></span><span class='op'>(</span><span class='va'>topoWorldFine</span>, file<span class='op'>=</span><span class='st'>"topoWorldFine.rda"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>topoFile</span><span class='op'>)</span> <span class='co'># clean up</span>
 </pre><p></div></p>
-<p>For more on this app, see section 4 of Kelley et al. (2021).</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Kelley, D. E., Harbin, J., &amp; Richards, C. (2021). argoFloats: An R package for analyzing
-Argo data. Frontiers in Marine Science, (8), 636922.
+    <p>Kelley, D. E., Harbin, J., &amp; Richards, C. (2021).
+argoFloats: An R package for analyzing Argo data.
+Frontiers in Marine Science, (8), 636922.
 doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.635922</a></p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
