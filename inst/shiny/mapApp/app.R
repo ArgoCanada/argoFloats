@@ -72,7 +72,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(3,
                     colourpicker::colourInput("CPcolour", "Colour", colDefaults$core)),
-                shiny::column(3, shiny::sliderInput("CPwidth", "Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("CPwidth", "Width", min=0.5, max=2.5, value=1.4, step=0.1))))),
 
     shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
         shiny::mainPanel(
@@ -96,7 +96,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(3,
                     colourpicker::colourInput("BPcolour", "Colour", colDefaults$bgc)),
-                shiny::column(3, shiny::sliderInput("BPwidth", "Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("BPwidth", "Width", min=0.5, max=2.5, value=1.4, step=0.1))))),
 
     shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
         shiny::mainPanel(
@@ -120,7 +120,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(3,
                     colourpicker::colourInput("DPcolour", "Colour", colDefaults$deep)),
-                shiny::column(3, shiny::sliderInput("DPwidth", "Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("DPwidth", "Width", min=0.5, max=2.5, value=1.4, step=0.1))))),
 
     shiny::conditionalPanel("input.tabselected!=3",
         shiny::fluidRow(shiny::plotOutput("plotMap",
