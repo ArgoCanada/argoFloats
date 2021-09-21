@@ -163,7 +163,7 @@
 ## index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
 ##}
 #'
-#' # Subset to a rectangle near Abac0 Island
+#' # Subset to a rectangle near Abaco Island
 #' lonlim <- c(-76.5, -76)
 #' latlim <- c(26.5, 27.5)
 #' indexRectangle <- subset(index, rectangle=list(longitude=lonlim, latitude=latlim))
