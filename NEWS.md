@@ -2,6 +2,7 @@
 
 ## argoFloats 1.0.3
 
+* Fix a mapApp() problem with paths that cross the dateline.
 * Fix a mapApp() problem in handling mouse brush events.
 
 ## argoFloats 1.0.2
