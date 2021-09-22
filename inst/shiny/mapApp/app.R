@@ -785,8 +785,24 @@ serverMapApp <- function(input, output, session)
                                     pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
                                     LONLAT <<- LONLAT[o, ]
                                     #message(pathColour[[view]], " is the path color")
-                                    lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
-                                    ## as opposed to maybe 3 months of data for a set of floats).
+                                    # Chop data at the dateline
+                                    # https://github.com/ArgoCanada/argoFloats/issues/503
+                                    LONLAT2 <- sf::st_sfc(sf::st_linestring(cbind(LONLAT$lon, LONLAT$lat)), crs="OGC:CRS84")
+                                    LONLAT3 <- sf::st_wrap_dateline(LONLAT2)[[1]]
+                                    #> message("class(lonlatSegments): ", paste(class(lonlatSegments), collapse=" "))
+                                    # Examinination with the above indicates two choices: LINESTRING and MULTILINESTRING
+                                    if (inherits(LONLAT3, "LINESTRING")) {
+                                        lines(LONLAT3[,1], LONLAT3[,2],
+                                            col=pathColour[[view]], lwd=1.4)
+                                    } else if (inherits(LONLAT3, "MULTILINESTRING")) {
+                                        #> message("should handle multilinestring now")
+                                        for (segment in seq_along(LONLAT3)) {
+                                            #> message("segment=", segment, " of ", length(LONLAT3))
+                                            lines(LONLAT3[[segment]][,1], LONLAT3[[segment]][,2],
+                                                col=pathColour[[view]], lwd=1.4)
+                                        }
+                                    }
+                                    #> lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
                                     if ("start" %in% state$action)
                                         points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=1, lwd=1.4)
                                     if ("end" %in% state$action)
