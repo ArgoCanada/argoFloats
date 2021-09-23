@@ -141,7 +141,7 @@ indexFirst3 <- subset(index, 1:3)
 # Subset to a circle near Abaco Island
 indexCircle <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
 
-# Subset to a rectangle near Abac0 Island
+# Subset to a rectangle near Abaco Island
 lonlim <- c(-76.5, -76)
 latlim <- c(26.5, 27.5)
 indexRectangle <- subset(index, rectangle=list(longitude=lonlim, latitude=latlim))
