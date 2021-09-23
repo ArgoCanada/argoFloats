@@ -560,16 +560,16 @@ serverMapApp <- function(input, output, session)
             }
             i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
             if (argo$type[i] %in% state$view) {
-            state$focusID <<- argo$ID[i]
-            shiny::updateTextInput(session, "ID", value=state$focusID)
-            shiny::updateSelectInput(session, "focus", selected="single")
-            msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
-                argo$ID[i],
-                argo$cycle[i],
-                format(argo$time[i], "%Y-%m-%d"),
-                argo$longitude[i],
-                argo$latitude[i])
-            shiny::showNotification(shiny::HTML(msg), duration=NULL)
+                state$focusID <<- argo$ID[i]
+                shiny::updateTextInput(session, "ID", value=state$focusID)
+                shiny::updateSelectInput(session, "focus", selected="single")
+                msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
+                    argo$ID[i],
+                    argo$cycle[i],
+                    format(argo$time[i], "%Y-%m-%d"),
+                    argo$longitude[i],
+                    argo$latitude[i])
+                shiny::showNotification(shiny::HTML(msg), duration=NULL)
             }
         })
 
