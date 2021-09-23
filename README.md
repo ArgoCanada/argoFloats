@@ -17,14 +17,13 @@ Bedford Institute of Oceanography and Dalhousie University \* Clark
 Richards, Bedford Institute of Oceanography \* Dewey Dunnington, Bedford
 Institute of Oceanography
 
-Once argoFloats appears on CRAN, it may be installed with
+The CRAN version may be installed with
 
 ``` r
 install.packages("argoFloats")
 ```
 
-Until then, and even later, to get the development version, it may be
-installed with
+The development version may be installed with
 
 ``` r
 library(devtools)
@@ -85,10 +84,11 @@ library(oce)
 #> Loading required package: gsw
 ## 1. Get worldwide float-profile index, saving to ~/data/argo by default.
 indexAll <- getIndex()
+#> Downloading 'https://data-argo.ifremer.fr/ar_index_global_prof.txt.gz'
 ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))
-#> Kept 41 cycles (0.00164%)
+#> Kept 41 cycles (0.00163%)
 ## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
 profiles  <- getProfiles(index)
 ## 4. Read the NetCDF files.
@@ -107,14 +107,21 @@ argos <- readProfiles(profiles)
 #>     3 7 13
 ## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)
+oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(1, 2))                     # want two-panel plot
-par(mar=c(3.5, 3.5, 2.0, 2.0))         # tighten margins
-## 6. Plot a map with bathymetry, indicating number of profiles.
-plot(index, which="map")
+par(mar=c(3.5, 2.0, 2.0, 2.0))         # maps do not get axis names
+par(mgp=c(2,0.7,0))                    # tighten axes
+## 6. Plot a map of profile locations.
+plot(index, which="map", bathymetry=FALSE)
 points(-77.06, 26.54, pch="*", cex=3)  # show centre of focus
 mtext(paste(argosClean[["length"]], "profiles"), line=1.0)
 ## 7. Plot a TS diagram
+par(mar=c(3.5, 3.5, 2.0, 1.0))         # increase left margin for name
 plot(argosClean, which="TS")
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="80%" />
+
+``` r
+par(oldpar)
+```

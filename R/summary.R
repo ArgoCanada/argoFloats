@@ -12,9 +12,11 @@
 #' data(index)
 #' summary(index)
 #'
-## @importFrom oce processingLogShow vectorShow
 #' @importFrom utils head
+#'
 #' @export
+#'
+#' @return None (invisible NULL).
 #'
 #' @author Dan Kelley
 setMethod(f="summary",

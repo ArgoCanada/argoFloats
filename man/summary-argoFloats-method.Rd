@@ -11,6 +11,9 @@
 
 \item{...}{Further arguments passed to or from other methods.}
 }
+\value{
+None (invisible NULL).
+}
 \description{
 Show some key facts about an \code{\linkS4class{argoFloats}} object.
 }

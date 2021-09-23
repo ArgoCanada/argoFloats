@@ -13,6 +13,9 @@ argoFloatsStoreInCache(name, value, debug = 0)
 
 \item{debug}{an integer, passed to \code{\link[=argoFloatsDebug]{argoFloatsDebug()}}.}
 }
+\value{
+None (invisible NULL).
+}
 \description{
 Store an Item in the Cache
 }

@@ -72,7 +72,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(3,
                     colourpicker::colourInput("CPcolour", "Colour", colDefaults$core)),
-                shiny::column(3, shiny::sliderInput("CPwidth", "Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("CPwidth", "Width", min=0.5, max=2.5, value=1.4, step=0.1))))),
 
     shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
         shiny::mainPanel(
@@ -96,7 +96,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(3,
                     colourpicker::colourInput("BPcolour", "Colour", colDefaults$bgc)),
-                shiny::column(3, shiny::sliderInput("BPwidth", "Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("BPwidth", "Width", min=0.5, max=2.5, value=1.4, step=0.1))))),
 
     shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
         shiny::mainPanel(
@@ -120,7 +120,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(3,
                     colourpicker::colourInput("DPcolour", "Colour", colDefaults$deep)),
-                shiny::column(3, shiny::sliderInput("DPwidth", "Width", min=0.5, max=2.5, value=1, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("DPwidth", "Width", min=0.5, max=2.5, value=1.4, step=0.1))))),
 
     shiny::conditionalPanel("input.tabselected!=3",
         shiny::fluidRow(shiny::plotOutput("plotMap",
@@ -288,10 +288,11 @@ serverMapApp <- function(input, output, session)
     output$UIinfo <- shiny::renderUI({
         if (argoFloatsIsCached("argo")) {
             shiny::fluidRow(shiny::verbatimTextOutput("info"),
-                if (state$hoverIsPasted == TRUE)
-                    tags$head(tags$style("#info{color: red}"
-                    )
-                    )
+                if (state$hoverIsPasted == TRUE) {
+                    tags$head(tags$style("#info{color: red}"))
+                } else {
+                    tags$head(tags$style("#info{color: black}"))
+                }
             )
         }
     })
@@ -558,16 +559,18 @@ serverMapApp <- function(input, output, session)
                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
             }
             i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
-            state$focusID <<- argo$ID[i]
-            shiny::updateTextInput(session, "ID", value=state$focusID)
-            shiny::updateSelectInput(session, "focus", selected="single")
-            msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
-                argo$ID[i],
-                argo$cycle[i],
-                format(argo$time[i], "%Y-%m-%d"),
-                argo$longitude[i],
-                argo$latitude[i])
-            shiny::showNotification(shiny::HTML(msg), duration=NULL)
+            if (argo$type[i] %in% state$view) {
+                state$focusID <<- argo$ID[i]
+                shiny::updateTextInput(session, "ID", value=state$focusID)
+                shiny::updateSelectInput(session, "focus", selected="single")
+                msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
+                    argo$ID[i],
+                    argo$cycle[i],
+                    format(argo$time[i], "%Y-%m-%d"),
+                    argo$longitude[i],
+                    argo$latitude[i])
+                shiny::showNotification(shiny::HTML(msg), duration=NULL)
+            }
         })
 
     shiny::observeEvent(input$start,
@@ -688,13 +691,22 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
+        #>>>message("in plotMapp")
         if (state$startTime > state$endTime) {
             shiny::showNotification(
                 paste0("Start must precede End, but got Start=",
                     format(state$startTime, "%Y-%m-%d"), " and End=",
                     format(state$endTime, "%Y-%m-%d.")), type="error")
         } else {
+          #>>>  message("plotMap, before brush handling:")
             if (!is.null(input$brush)) {
+          #>>>      message("plotMap, in brush handling:")
+          #>>>      message("  xmin=", input$brush$xmin)
+          #>>>      message("  xmax=", input$brush$xmax)
+          #>>>      message("  ymin=", input$brush$ymin)
+          #>>>      message("  ymax=", input$brush$ymax)
+          #>>>      message("  state$xlim=", paste(state$xlim, collapse=" "))
+          #>>>      message("  state$ylim=", paste(state$ylim, collapse=" "))
                 ## Require a minimum size, to avoid mixups with minor click-slide
                 if ((input$brush$xmax - input$brush$xmin) > 0.5 && (input$brush$ymax - input$brush$ymin) > 0.5) {
                     state$xlim <<- c(input$brush$xmin, input$brush$xmax)
@@ -703,7 +715,9 @@ serverMapApp <- function(input, output, session)
             }
             topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
             #notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
-            par(mar=c(2.5, 2.5, 2, 1.5))
+            #>>> oldpar <- par(no.readonly=TRUE)
+            #>>> par(mar=c(2.5, 2.5, 2, 1.5))
+            #>>> on.exit(par(oldpar))
             plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
             if ("topo" %in% state$view) {
                 image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
@@ -760,9 +774,6 @@ serverMapApp <- function(input, output, session)
                                 points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                             }
                         if ("path" %in% state$view) {
-                            ##> ## Turn off warnings for zero-length arrows
-                            ##> owarn <- options("warn")$warn
-                            ##> options(warn = -1)
                             for (ID in unique(lonlat$ID)) {
                                 LONLAT <- lonlat[lonlat$ID==ID,]
                                 ## Sort by time instead of relying on the order in the repository
@@ -776,12 +787,28 @@ serverMapApp <- function(input, output, session)
                                     pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
                                     LONLAT <<- LONLAT[o, ]
                                     #message(pathColour[[view]], " is the path color")
-                                    lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
-                                    ## as opposed to maybe 3 months of data for a set of floats).
+                                    # Chop data at the dateline
+                                    # https://github.com/ArgoCanada/argoFloats/issues/503
+                                    LONLAT2 <- sf::st_sfc(sf::st_linestring(cbind(LONLAT$lon, LONLAT$lat)), crs="OGC:CRS84")
+                                    LONLAT3 <- sf::st_wrap_dateline(LONLAT2)[[1]]
+                                    #> message("class(lonlatSegments): ", paste(class(lonlatSegments), collapse=" "))
+                                    # Examinination with the above indicates two choices: LINESTRING and MULTILINESTRING
+                                    if (inherits(LONLAT3, "LINESTRING")) {
+                                        lines(LONLAT3[,1], LONLAT3[,2],
+                                            col=pathColour[[view]], lwd=1.4)
+                                    } else if (inherits(LONLAT3, "MULTILINESTRING")) {
+                                        #> message("should handle multilinestring now")
+                                        for (segment in seq_along(LONLAT3)) {
+                                            #> message("segment=", segment, " of ", length(LONLAT3))
+                                            lines(LONLAT3[[segment]][,1], LONLAT3[[segment]][,2],
+                                                col=pathColour[[view]], lwd=1.4)
+                                        }
+                                    }
+                                    #> lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
                                     if ("start" %in% state$action)
-                                        points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=if (no > 10) 2 else 1, lwd=1.4)
+                                        points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=1, lwd=1.4)
                                     if ("end" %in% state$action)
-                                        points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=if (no > 10) 2 else 1, lwd=1.4)
+                                        points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=1, lwd=1.4)
                                 }
                             }
                         }

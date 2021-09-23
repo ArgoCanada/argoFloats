@@ -45,21 +45,31 @@ to the console as it works.  The default value of 0 leads to a fairly limited
 amount of printing, while higher values lead to more information. This information
 can be helpful in diagnosing problems or bottlenecks.}
 }
+\value{
+\code{mapApp} has no return value, since it creates a shiny app by passing
+control to \code{\link[shiny:runApp]{shiny::runApp()}}, which never returns.
+}
 \description{
-The GUI permits specifying a spatial-temporal region of interest, a set
-of float types to show, etc.  The interface ought to be reasonably
-straightforward, especially for those who take a moment to click on the
-Help button and to read the popup window that it creates.
+\code{\link[=mapApp]{mapApp()}} sets up an interactive "shiny app" session for exploring
+the spatial-temporal distribution of Argo profiles.  The graphical
+user interface (GUI) is meant to be reasonably self-explanatory,
+and a button labelled Help yields a pop-up window with
+more information that might not
+be evident at first glance.
+More details are provided in the rest of this documentation
+page, and in Section 4 of Kelley et al. (2021).
 }
 \details{
-This app will use \code{\link[=getIndex]{getIndex()}} to download index files from the Argo server
-the first time it runs, and this make take up to a minute or so.  Then it will combine
-information from the core-Argo and BGC-Argo index tables, cross-indexing so
-it can determine the Argo type for each profile (or cycle).
+\code{\link[=mapApp]{mapApp()}} uses \code{\link[=getIndex]{getIndex()}} to download index files from an Argo server
+the first time it runs.  This can be slow, taking a minute or more, depending
+on the internet connection and load on the server.  Once the index
+files are downloaded, \code{\link[=mapApp]{mapApp()}} categorizes profiles as Core,
+BGC, or Deep (which may be displayed in any combination, using
+GUI elements).
 
 The \code{hi-res} button will only affect the coastline, not the topography,
 unless there is a local file named \code{topoWorldFine.rda} that contains
-an alternative topographic information. Here is how to create such a file:\if{html}{\out{<div class="R">}}\preformatted{library(oce)
+an alternative topographic information. Here is how to create such a file:\if{html}{\out{<div class="sourceCode R">}}\preformatted{library(oce)
 topoFile <- download.topo(west=-180, east=180,
                           south=-90, north=90,
                           resolution=10,
@@ -68,8 +78,6 @@ topoWorldFine <- read.topo(topoFile)
 save(topoWorldFine, file="topoWorldFine.rda")
 unlink(topoFile) # clean up
 }\if{html}{\out{</div>}}
-
-For more on this app, see section 4 of Kelley et al. (2021).
 }
 \examples{
 if (interactive()) {
@@ -79,8 +87,9 @@ if (interactive()) {
 
 }
 \references{
-Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
-Argo data. Frontiers in Marine Science, (8), 636922.
+Kelley, D. E., Harbin, J., & Richards, C. (2021).
+argoFloats: An R package for analyzing Argo data.
+Frontiers in Marine Science, (8), 636922.
 \doi{10.3389/fmars.2021.635922}
 }
 \author{

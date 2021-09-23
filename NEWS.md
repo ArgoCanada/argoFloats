@@ -1,5 +1,21 @@
 # argoFloats (development version)
 
+## argoFloats 1.0.3
+
+* Fix a mapApp() problem with paths that cross the dateline.
+* Fix a mapApp() problem in handling mouse brush events.
+
+## argoFloats 1.0.2
+
+* Examples reset par() to its initial state.
+
+## argoFloats 1.0.1
+
+* DESCRIPTION improved
+* Document return values of all functions
+* Describe base class.
+* plot() resets par() to its initial state before returning.
+
 ## argoFloats 1.0.0
 
 * Improve documentation for a CRAN release

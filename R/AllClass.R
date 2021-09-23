@@ -345,12 +345,16 @@ setMethod(f="initialize",
 #' Argo data. Frontiers in Marine Science, (8), 636922.
 #' \doi{10.3389/fmars.2021.635922}
 #'
-#' @author Dan Kelley
+#' @return the indicated item, or NULL if it is neither stored within the first argument
+#' nor computable from its contents.
 #'
-## @importFrom oce as.ctd
 #' @export
+#'
 #' @docType methods
+#'
 #' @aliases [[,argoFloats-method
+#'
+#' @author Dan Kelley
 setMethod(f="[[",
           signature(x="argoFloats", i="ANY", j="ANY"),
           definition=function(x, i, j, ...) {

@@ -54,17 +54,18 @@ the object needs to be specified, for the default actions coincide with
 common conventions for flags in Argo data.
 }
 \examples{
-\dontrun{
+# Demonstrate applyQC to a built-in file
 library(argoFloats)
-# Contrast TS diagrams for raw and flag-handled data
-data(index)
-i <- subset(index, 1:5) # first 5 profiles
-raw <- readProfiles(getProfiles(i))
+f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
+raw <- readProfiles(f)
 clean <- applyQC(raw)
-par(mfrow=c(1, 2))
-plot(raw, which="TS")
-plot(clean, which="TS")
-}
+oldpar <- par(no.readonly=TRUE)
+par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0))
+plot(raw, col="red", which="TS")
+points(clean[[1]][["SA"]], clean[[1]][["CT"]], pch=20)
+legend("topleft", pch=20, cex=1,
+    col=c("black", "red"), legend=c("OK", "Flagged"), bg="white")
+par(oldpar)
 
 }
 \references{
@@ -73,8 +74,7 @@ Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 \code{doi:10.13155/29825}
 
 Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
-Argo data. Frontiers in Marine Science, (8), 636922.
-\doi{10.3389/fmars.2021.635922}
+Argo data. Frontiers in Marine Science, (8), 636922. \doi{10.3389/fmars.2021.635922}
 }
 \author{
 Dan Kelley

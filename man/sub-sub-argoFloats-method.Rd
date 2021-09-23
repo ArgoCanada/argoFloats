@@ -18,6 +18,10 @@ and \code{i} values; see \dQuote{Details}.}
 
 \item{...}{ignored.}
 }
+\value{
+the indicated item, or NULL if it is neither stored within the first argument
+nor computable from its contents.
+}
 \description{
 This function provides an easy way to look up values within an \code{\linkS4class{argoFloats}}
 object, without the need to know the exact structure of the data. The action

@@ -27,12 +27,12 @@ analyzing collections of oceanographic Argo float datasets.  Its developers are
 * Clark Richards, Bedford Institute of Oceanography
 * Dewey Dunnington, Bedford Institute of Oceanography
 
-Once argoFloats appears on CRAN, it may be installed with
+The CRAN version may be installed with
 ```{r eval=FALSE}
 install.packages("argoFloats")
 ```
 
-Until then, and even later, to get the development version, it may be installed with
+The development version may be installed with
 ```{r eval=FALSE}
 library(devtools)
 install_github("ArgoCanada/argoFloats", ref="develop")
@@ -96,14 +96,18 @@ profiles  <- getProfiles(index)
 argos <- readProfiles(profiles)
 ## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)
+oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(1, 2))                     # want two-panel plot
-par(mar=c(3.5, 3.5, 2.0, 2.0))         # tighten margins
-## 6. Plot a map with bathymetry, indicating number of profiles.
-plot(index, which="map")
+par(mar=c(3.5, 2.0, 2.0, 2.0))         # maps do not get axis names
+par(mgp=c(2,0.7,0))                    # tighten axes
+## 6. Plot a map of profile locations.
+plot(index, which="map", bathymetry=FALSE)
 points(-77.06, 26.54, pch="*", cex=3)  # show centre of focus
 mtext(paste(argosClean[["length"]], "profiles"), line=1.0)
 ## 7. Plot a TS diagram
+par(mar=c(3.5, 3.5, 2.0, 1.0))         # increase left margin for name
 plot(argosClean, which="TS")
+par(oldpar)
 ```
 
 

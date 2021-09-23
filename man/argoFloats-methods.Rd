@@ -10,6 +10,9 @@
 \arguments{
 \item{object}{an \code{\linkS4class{argoFloats}} object.}
 }
+\value{
+None (invisible NULL).
+}
 \description{
 This produces a one-line explanation of the contents of the object,
 that typically indicates the type and the number of items referenced
