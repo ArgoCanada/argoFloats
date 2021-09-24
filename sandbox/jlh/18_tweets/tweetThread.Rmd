@@ -1,6 +1,8 @@
 ---
 title: "Tweet Thread"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 # Tweet 1
@@ -90,7 +92,7 @@ In addition to flags, some datasets undergo adjustments that are made in recogni
 # Tweet 16
 useAdjusted can be a fairly complicated process; the following diagram demonstrates the actions taken when a user specifies `which=ALL` or `which=<param>`.
 
-![](../../../man/figures/useAdjustedDiagram.png)
+![](useAdjustedDiagram.png) 
 
 # Tweet 17
 The useAdjusted function is handy when dealing with oxygen data, which may be adjusted due to sensor recalibration, etc.
@@ -101,3 +103,7 @@ The useAdjusted function is handy when dealing with oxygen data, which may be ad
 # Tweet 18
 Lastly, typing mapApp() opens a interactive app to analyze specific regions, floats, time, etc.
 
+![](mapApp.png)
+
+# Tweet 19
+For more information read our paper, argoFloats: an R package for Analyzing Argo Data
