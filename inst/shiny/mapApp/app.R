@@ -795,7 +795,7 @@ serverMapApp <- function(input, output, session)
                                     # Examinination with the above indicates two choices: LINESTRING and MULTILINESTRING
                                     if (inherits(LONLAT3, "LINESTRING")) {
                                         lines(LONLAT3[,1], LONLAT3[,2],
-                                            col=pathColour[[view]], lwd=1.4)
+                                            col=pathColour[[view]], lwd=pathWidth[[view]])
                                     } else if (inherits(LONLAT3, "MULTILINESTRING")) {
                                         #> message("should handle multilinestring now")
                                         for (segment in seq_along(LONLAT3)) {
