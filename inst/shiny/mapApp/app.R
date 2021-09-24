@@ -504,9 +504,9 @@ serverMapApp <- function(input, output, session)
                     state$focusID <<- input$ID
                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                    if (state$focus == "all")
-                        shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
-                            type="message", duration=10)
+                    #> if (state$focus == "all")
+                    #>     shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
+                    #>         type="message", duration=10)
                 } else {
                     shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
                 }
@@ -575,7 +575,7 @@ serverMapApp <- function(input, output, session)
                     format(argo$time[i], "%Y-%m-%d"),
                     argo$longitude[i],
                     argo$latitude[i])
-                shiny::showNotification(shiny::HTML(msg), duration=NULL)
+                shiny::showNotification(shiny::HTML(msg), duration=5)
             }
         })
 
@@ -703,7 +703,7 @@ serverMapApp <- function(input, output, session)
         #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ")")
         omar <- par("mar")
         omgp <- par("mgp")
-        par(mar=c(1.5, 1.5, 1.0, 1.0), mgp=c(2, 0.75, 0))
+        par(mar=c(2.0, 2.0, 1.0, 1.0), mgp=c(2, 0.75, 0))
         #> message("in mapApp() change to mar=c(",
         #>     paste0(par("mar"), collapse=","),
         #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ") -- will reset to omar and omgp on exit")
