@@ -822,7 +822,7 @@ serverMapApp <- function(input, output, session)
                                     }
                                     #> lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
                                     if ("start" %in% state$action)
-                                        points(LONLAT[1,1], LONLAT[1,1], pch=2, cex=1, lwd=1.4)
+                                        points(LONLAT[1,1], LONLAT[1,2], pch=2, cex=1, lwd=1.4)
                                     if ("end" %in% state$action)
                                         points(LONLAT[no,1], LONLAT[no,2], pch=0, cex=1, lwd=1.4)
                                 }
