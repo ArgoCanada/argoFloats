@@ -703,7 +703,7 @@ serverMapApp <- function(input, output, session)
         #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ")")
         omar <- par("mar")
         omgp <- par("mgp")
-        par(mar=c(2.0, 2.0, 1.5, 1.5), mgp=c(2, 0.75, 0))
+        par(mar=c(1.5, 1.5, 1.0, 1.0), mgp=c(2, 0.75, 0))
         #> message("in mapApp() change to mar=c(",
         #>     paste0(par("mar"), collapse=","),
         #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ") -- will reset to omar and omgp on exit")
@@ -842,13 +842,13 @@ serverMapApp <- function(input, output, session)
                             state$focusID,
                             format(state$startTime, "%Y-%m-%d", tz="UTC"),
                             format(state$endTime, "%Y-%m-%d", tz="UTC")),
-                        side=3, cex=0.8 * par("cex"), line=0.25)
+                        side=3, cex=0.8 * par("cex"), line=0)
                 } else {
                     mtext(sprintf("%s to %s: %d Argo profiles",
                             format(state$startTime, "%Y-%m-%d", tz="UTC"),
                             format(state$endTime, "%Y-%m-%d", tz="UTC"),
                             sum(visible)),
-                        side=3, line=0.25, cex=0.8 * par("cex"))
+                        side=3, line=0, cex=0.8 * par("cex"))
                     if (diff(range(state$ylim)) < 90 && sum(visible)) {
                         oce::mapScalebar(x="topright") }
                 }
