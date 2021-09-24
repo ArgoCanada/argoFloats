@@ -28,15 +28,19 @@ overallHelp <- "<p>This app responds to keystroke actions and GUI actions.</p><p
 
 
 uiMapApp <- shiny::fluidPage(
-
     # Header Panel
     shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
     shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
-    style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
+    #style="text-indent:1em; line-height:1.2; background:#e6f3ff; .btn{ padding: 2px 9px; }; .form-group { margin-top: 0; margin-bottom: 0 }",
+    # margin-top works, but not sure if either pre{} or formgroup{} work.
+    style="text-indent:1em; line-height:1.2; background:#e6f3ff; margin-top: -2ex; pre { line-height: 0.5; }; .form-group { margin-top: 3px; margin-bottom: 3px; };",
     shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
     shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
         shiny::column(2, shiny::uiOutput(outputId="UIID")),
         shiny::column(3, shiny::uiOutput(outputId="UIfocus"))),
+    # These trials (of removing vertical space) did nothing
+    # shiny::div(style = "margin-top:-15px"),
+    # shiny::fluidRow(shiny::uiOutput(outputId="UIinfo"), style="margin-top: -3ex;"),
     shiny::fluidRow(shiny::uiOutput(outputId="UIinfo")),
 
     # Main Panel
@@ -254,8 +258,10 @@ serverMapApp <- function(input, output, session)
                 shiny::actionButton("goE", shiny::HTML("&rarr;")),
                 shiny::actionButton("zoomIn", "+"),
                 shiny::actionButton("zoomOut", "-"),
-                shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
-                shiny::div(style="display: inline-block;vertical-align:top; width: 8em;", shiny::dateInput(inputId="end", label="End", value=state$endTime)))
+                shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",
+                    shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
+                shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                    shiny::dateInput(inputId="end", label="End", value=state$endTime)))
         }
     })
 
@@ -683,7 +689,7 @@ serverMapApp <- function(input, output, session)
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
                 shiny::updateSelectInput(session, "focus", selected="all")
-                    shine::updateCheckboxGroupInput(session, "show", selected=character(0))
+                    shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
@@ -691,7 +697,17 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
-        #>>>message("in plotMapp")
+        #> message("in output$plotMap:",
+        #>     "mar=c(",
+        #>     paste0(par("mar"), collapse=","),
+        #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ")")
+        omar <- par("mar")
+        omgp <- par("mgp")
+        par(mar=c(2.0, 2.0, 1.5, 1.5), mgp=c(2, 0.75, 0))
+        #> message("in mapApp() change to mar=c(",
+        #>     paste0(par("mar"), collapse=","),
+        #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ") -- will reset to omar and omgp on exit")
+        on.exit(par(mar=omar, mgp=omgp))
         if (state$startTime > state$endTime) {
             shiny::showNotification(
                 paste0("Start must precede End, but got Start=",
@@ -838,7 +854,7 @@ serverMapApp <- function(input, output, session)
                 }
             }                          # if (sum(c("core", "deep", "bgc") %in% state$view) > 0)
         }
-    }, height=500, pointsize=18)       # plotMap
+    }, execOnResize=TRUE, pointsize=18) # plotMap
 }                                      # serverMapApp
 
 shiny::shinyApp(ui=uiMapApp, server=serverMapApp)
