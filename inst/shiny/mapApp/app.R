@@ -28,15 +28,19 @@ overallHelp <- "<p>This app responds to keystroke actions and GUI actions.</p><p
 
 
 uiMapApp <- shiny::fluidPage(
-
     # Header Panel
     shiny::headerPanel(title="", windowTitle="argoFloats mapApp"),
     shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
-    style="text-indent:1em; background:#e6f3ff ; .btn.disabled { background-color: red; }",
+    #style="text-indent:1em; line-height:1.2; background:#e6f3ff; .btn{ padding: 2px 9px; }; .form-group { margin-top: 0; margin-bottom: 0 }",
+    # margin-top works, but not sure if either pre{} or formgroup{} work.
+    style="text-indent:1em; line-height:1.2; background:#e6f3ff; margin-top: -2ex; pre { line-height: 0.5; }; .form-group { margin-top: 3px; margin-bottom: 3px; };",
     shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
     shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
         shiny::column(2, shiny::uiOutput(outputId="UIID")),
         shiny::column(3, shiny::uiOutput(outputId="UIfocus"))),
+    # These trials (of removing vertical space) did nothing
+    # shiny::div(style = "margin-top:-15px"),
+    # shiny::fluidRow(shiny::uiOutput(outputId="UIinfo"), style="margin-top: -3ex;"),
     shiny::fluidRow(shiny::uiOutput(outputId="UIinfo")),
 
     # Main Panel
@@ -254,8 +258,10 @@ serverMapApp <- function(input, output, session)
                 shiny::actionButton("goE", shiny::HTML("&rarr;")),
                 shiny::actionButton("zoomIn", "+"),
                 shiny::actionButton("zoomOut", "-"),
-                shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
-                shiny::div(style="display: inline-block;vertical-align:top; width: 8em;", shiny::dateInput(inputId="end", label="End", value=state$endTime)))
+                shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",
+                    shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
+                shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                    shiny::dateInput(inputId="end", label="End", value=state$endTime)))
         }
     })
 
@@ -683,7 +689,7 @@ serverMapApp <- function(input, output, session)
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
                 shiny::updateSelectInput(session, "focus", selected="all")
-                    shine::updateCheckboxGroupInput(session, "show", selected=character(0))
+                    shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
@@ -691,7 +697,17 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
-        #>>>message("in plotMapp")
+        #> message("in output$plotMap:",
+        #>     "mar=c(",
+        #>     paste0(par("mar"), collapse=","),
+        #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ")")
+        omar <- par("mar")
+        omgp <- par("mgp")
+        par(mar=c(1.5, 1.5, 1.0, 1.0), mgp=c(2, 0.75, 0))
+        #> message("in mapApp() change to mar=c(",
+        #>     paste0(par("mar"), collapse=","),
+        #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ") -- will reset to omar and omgp on exit")
+        on.exit(par(mar=omar, mgp=omgp))
         if (state$startTime > state$endTime) {
             shiny::showNotification(
                 paste0("Start must precede End, but got Start=",
@@ -785,30 +801,30 @@ serverMapApp <- function(input, output, session)
                                         bgc=if (input$BPcolour == "default") colDefaults$bgc else input$BPcolour,
                                         deep=if (input$DPcolour == "default") colDefaults$deep else input$DPcolour)
                                     pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
-                                    LONLAT <<- LONLAT[o, ]
+                                    LONLAT <- LONLAT[o, ]
                                     #message(pathColour[[view]], " is the path color")
                                     # Chop data at the dateline
                                     # https://github.com/ArgoCanada/argoFloats/issues/503
-                                    LONLAT2 <- sf::st_sfc(sf::st_linestring(cbind(LONLAT$lon, LONLAT$lat)), crs="OGC:CRS84")
-                                    LONLAT3 <- sf::st_wrap_dateline(LONLAT2)[[1]]
+                                    LONLAT <- sf::st_sfc(sf::st_linestring(cbind(LONLAT$lon, LONLAT$lat)), crs="OGC:CRS84")
+                                    LONLAT <- sf::st_wrap_dateline(LONLAT)[[1]]
                                     #> message("class(lonlatSegments): ", paste(class(lonlatSegments), collapse=" "))
                                     # Examinination with the above indicates two choices: LINESTRING and MULTILINESTRING
-                                    if (inherits(LONLAT3, "LINESTRING")) {
-                                        lines(LONLAT3[,1], LONLAT3[,2],
+                                    if (inherits(LONLAT, "LINESTRING")) {
+                                        lines(LONLAT[,1], LONLAT[,2],
                                             col=pathColour[[view]], lwd=pathWidth[[view]])
-                                    } else if (inherits(LONLAT3, "MULTILINESTRING")) {
+                                    } else if (inherits(LONLAT, "MULTILINESTRING")) {
                                         #> message("should handle multilinestring now")
-                                        for (segment in seq_along(LONLAT3)) {
-                                            #> message("segment=", segment, " of ", length(LONLAT3))
-                                            lines(LONLAT3[[segment]][,1], LONLAT3[[segment]][,2],
+                                        for (segment in seq_along(LONLAT)) {
+                                            #> message("segment=", segment, " of ", length(LONLAT))
+                                            lines(LONLAT[[segment]][,1], LONLAT[[segment]][,2],
                                                 col=pathColour[[view]], lwd=1.4)
                                         }
                                     }
                                     #> lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
                                     if ("start" %in% state$action)
-                                        points(LONLAT$lon[1], LONLAT$lat[1], pch=2, cex=1, lwd=1.4)
+                                        points(LONLAT[1,1], LONLAT[1,2], pch=2, cex=1, lwd=1.4)
                                     if ("end" %in% state$action)
-                                        points(LONLAT$lon[no], LONLAT$lat[no], pch=0, cex=1, lwd=1.4)
+                                        points(LONLAT[no,1], LONLAT[no,2], pch=0, cex=1, lwd=1.4)
                                 }
                             }
                         }
@@ -826,19 +842,19 @@ serverMapApp <- function(input, output, session)
                             state$focusID,
                             format(state$startTime, "%Y-%m-%d", tz="UTC"),
                             format(state$endTime, "%Y-%m-%d", tz="UTC")),
-                        side=3, cex=0.8 * par("cex"), line=0.25)
+                        side=3, cex=0.8 * par("cex"), line=0)
                 } else {
                     mtext(sprintf("%s to %s: %d Argo profiles",
                             format(state$startTime, "%Y-%m-%d", tz="UTC"),
                             format(state$endTime, "%Y-%m-%d", tz="UTC"),
                             sum(visible)),
-                        side=3, line=0.25, cex=0.8 * par("cex"))
+                        side=3, line=0, cex=0.8 * par("cex"))
                     if (diff(range(state$ylim)) < 90 && sum(visible)) {
                         oce::mapScalebar(x="topright") }
                 }
             }                          # if (sum(c("core", "deep", "bgc") %in% state$view) > 0)
         }
-    }, height=500, pointsize=18)       # plotMap
+    }, execOnResize=TRUE, pointsize=18) # plotMap
 }                                      # serverMapApp
 
 shiny::shinyApp(ui=uiMapApp, server=serverMapApp)
