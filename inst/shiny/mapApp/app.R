@@ -688,6 +688,27 @@ serverMapApp <- function(input, output, session)
                 shiny::updateDateInput(session, inputId="end", label="End", value=endTime)
                 state$view <<- c("core", "deep", "bgc")
                 state$action <<- NULL
+                # core
+                colourpicker::updateColourInput(session, inputId="Ccolour", value=colDefaults$core)
+                colourpicker::updateColourInput(session, inputId="Cborder", value="black")
+                colourpicker::updateColourInput(session, inputId="CPcolour", value=colDefaults$core)
+                shiny::updateNumericInput(session, inputId="Csymbol", value=21)
+                shiny::updateSliderInput(session, inputId="Csize", value=0.9)
+                shiny::updateSliderInput(session, inputId="CPwidth", value=1.4)
+                # bgc
+                colourpicker::updateColourInput(session, inputId="Bcolour", value=colDefaults$bgc)
+                colourpicker::updateColourInput(session, inputId="Bborder", value="black")
+                colourpicker::updateColourInput(session, inputId="BPcolour", value=colDefaults$bgc)
+                shiny::updateNumericInput(session, inputId="Bsymbol", value=21)
+                shiny::updateSliderInput(session, inputId="Bsize", value=0.9)
+                shiny::updateSliderInput(session, inputId="BPwidth", value=1.4)
+                # deep
+                colourpicker::updateColourInput(session, inputId="Dcolour", value=colDefaults$deep)
+                colourpicker::updateColourInput(session, inputId="Dborder", value="black")
+                colourpicker::updateColourInput(session, inputId="DPcolour", value=colDefaults$deep)
+                shiny::updateNumericInput(session, inputId="Dsymbol", value=21)
+                shiny::updateSliderInput(session, inputId="Dsize", value=0.9)
+                shiny::updateSliderInput(session, inputId="DPwidth", value=1.4)
             } else if (key == "0") { # Unzoom an area and keep same time scale
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
