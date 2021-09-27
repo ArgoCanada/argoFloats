@@ -3,6 +3,7 @@
 appName <- "mapApp"
 #appVersion <- "0.1"
 
+viewDefaults <- list("core", "deep", "bgc")
 colDefaults <- list(core="#F5C710", bgc="#05f076", deep="#CD0BBC")
 
 ## Default start and end times
@@ -152,7 +153,7 @@ serverMapApp <- function(input, output, session)
         focus="all",
         action=NULL,
         focusID=NULL,
-        view=c("core", "deep", "bgc"),
+        view=viewDefaults,
         hoverIsPasted=FALSE)
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
@@ -242,7 +243,7 @@ serverMapApp <- function(input, output, session)
                     shiny::tags$span("Path", style="color:black;"),
                     shiny::tags$span("Contour", style="color:black;")),
                 choiceValues=list("core", "deep", "bgc", "hires", "topo", "path", "contour"),
-                selected=state$view,
+                selected=viewDefaults,
                 inline=TRUE)
         }
     })
@@ -340,8 +341,10 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$view,
         {
+            #> message("observing input$view; view=c(\"", paste(input$view, collapse=", "), "\")\n")
             state$view <<- input$view
-        })
+            #> })
+        }, ignoreNULL=FALSE)
 
     shiny::observeEvent(input$action,
         {
@@ -828,9 +831,6 @@ serverMapApp <- function(input, output, session)
                                 }
                             }
                         }
-                        if ("contour" %in% state$view){
-                            contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]], levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
-                        }
                     }
                 }
                 ## Draw the inspection rectangle as a thick gray line, but only if zoomed
@@ -849,10 +849,16 @@ serverMapApp <- function(input, output, session)
                             format(state$endTime, "%Y-%m-%d", tz="UTC"),
                             sum(visible)),
                         side=3, line=0, cex=0.8 * par("cex"))
-                    if (diff(range(state$ylim)) < 90 && sum(visible)) {
-                        oce::mapScalebar(x="topright") }
                 }
             }                          # if (sum(c("core", "deep", "bgc") %in% state$view) > 0)
+            # Add depth contours, if requested.
+            if ("contour" %in% state$view)
+                contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]],
+                    levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
+            # Add a scalebar, if we are zoomed in sufficiently. This whites-out below, so 
+            # we must do this as the last step of drawing.
+            if (diff(range(state$ylim)) < 90 && sum(visible)) {
+                oce::mapScalebar(x="topright") }
         }
     }, execOnResize=TRUE, pointsize=18) # plotMap
 }                                      # serverMapApp
