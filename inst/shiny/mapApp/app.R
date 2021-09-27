@@ -93,7 +93,7 @@ uiMapApp <- shiny::fluidPage(
                     colourpicker::colourInput("Bcolour", "Colour", colDefaults$bgc)),
                 shiny::column(2, shiny::numericInput("Bsymbol", "Type", value=21, min=0, max=25)),
                 shiny::column(3, shiny::sliderInput("Bsize", "Size", min=0, max=1, value=0.9, step=0.05)),
-                shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
+                shiny::column(3, shiny::conditionalPanel("input.Bsymbol== 21",
                         colourpicker::colourInput("Bborder", "Border Colour", "black")))),
             shiny::fluidRow(
                 shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
@@ -117,7 +117,7 @@ uiMapApp <- shiny::fluidPage(
                     colourpicker::colourInput("Dcolour", "Colour", colDefaults$deep)),
                 shiny::column(2, shiny::numericInput("Dsymbol", "Type", value=21, min=0, max=25)),
                 shiny::column(3, shiny::sliderInput("Dsize", "Size", min=0, max=1, value=0.9, step=0.05)),
-                shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
+                shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
                         colourpicker::colourInput("Dborder", "Border Colour", "black")))),
             shiny::fluidRow(
                 shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
