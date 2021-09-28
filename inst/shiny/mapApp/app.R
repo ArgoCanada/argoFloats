@@ -498,21 +498,23 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$ID,
         {
+            #> message(paste0("ID='", input$ID, "' given"))
             if (0 == nchar(input$ID)) {
                 state$focusID <<- NULL
                 shiny::updateTextInput(session, "focus", value="all")
             } else {
                 k <- which(argo$ID == input$ID)
-                if (length(k)) {
+                if (length(k) > 0L) {
                     state$focusID <<- input$ID
                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                    #> if (state$focus == "all")
-                    #>     shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
-                    #>         type="message", duration=10)
                 } else {
                     shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
                 }
+                if (state$focus == "all")
+                    shiny::updateSelectInput(session, "focus", selected="single")
+                    #> shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
+                    #>    type="message", duration=10)
             }
         })
 
@@ -721,166 +723,141 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
-        #> message("in output$plotMap:",
-        #>     "mar=c(",
-        #>     paste0(par("mar"), collapse=","),
-        #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ")")
+        validate(need(state$startTime < state$endTime,
+                "The Start time must precede the End time."))
         omar <- par("mar")
         omgp <- par("mgp")
         par(mar=c(2.0, 2.0, 1.0, 1.0), mgp=c(2, 0.75, 0))
-        #> message("in mapApp() change to mar=c(",
-        #>     paste0(par("mar"), collapse=","),
-        #>     ") and mgp=c(", paste(par("mgp"), collapse=","), ") -- will reset to omar and omgp on exit")
         on.exit(par(mar=omar, mgp=omgp))
-        if (state$startTime > state$endTime) {
-            shiny::showNotification(
-                paste0("Start must precede End, but got Start=",
-                    format(state$startTime, "%Y-%m-%d"), " and End=",
-                    format(state$endTime, "%Y-%m-%d.")), type="error")
-        } else {
-          #>>>  message("plotMap, before brush handling:")
-            if (!is.null(input$brush)) {
-          #>>>      message("plotMap, in brush handling:")
-          #>>>      message("  xmin=", input$brush$xmin)
-          #>>>      message("  xmax=", input$brush$xmax)
-          #>>>      message("  ymin=", input$brush$ymin)
-          #>>>      message("  ymax=", input$brush$ymax)
-          #>>>      message("  state$xlim=", paste(state$xlim, collapse=" "))
-          #>>>      message("  state$ylim=", paste(state$ylim, collapse=" "))
-                ## Require a minimum size, to avoid mixups with minor click-slide
-                if ((input$brush$xmax - input$brush$xmin) > 0.5 && (input$brush$ymax - input$brush$ymin) > 0.5) {
-                    state$xlim <<- c(input$brush$xmin, input$brush$xmax)
-                    state$ylim <<- c(input$brush$ymin, input$brush$ymax)
-                }
+        if (!is.null(input$brush)) {
+            if ((input$brush$xmax - input$brush$xmin) > 0.5 && (input$brush$ymax - input$brush$ymin) > 0.5) {
+                state$xlim <<- c(input$brush$xmin, input$brush$xmax)
+                state$ylim <<- c(input$brush$ymin, input$brush$ymax)
             }
-            topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
-            #notificationId <- shiny::showNotification("Step 5/5: Creating plot", type="message", duration=2)
-            #>>> oldpar <- par(no.readonly=TRUE)
-            #>>> par(mar=c(2.5, 2.5, 2, 1.5))
-            #>>> on.exit(par(oldpar))
-            plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
-            if ("topo" %in% state$view) {
-                image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
-            }
-            usr <- par("usr")
-            usr[1] <- pinlon(usr[1])
-            usr[2] <- pinlon(usr[2])
-            usr[3] <- pinlat(usr[3])
-            usr[4] <- pinlat(usr[4])
-            at <- pretty(usr[1:2], 10)
-            at <- at[usr[1] < at & at < usr[2]]
-            labels <- paste(abs(at), ifelse(at < 0, "W", ifelse(at > 0, "E", "")), sep="")
-            axis(1, pos=pinlat(usr[3]), at=at, labels=labels, lwd=1, cex.axis=0.8)
-            at <- pretty(usr[3:4], 10)
-            at <- at[usr[3] < at & at < usr[4]]
-            labels <- paste(abs(at), ifelse(at < 0, "S", ifelse(at > 0, "N", "")), sep="")
-            axis(2, pos=pinlon(usr[1]), at=at, labels=labels, lwd=1, cex.axis=0.8)
-            coastline <- if ("hires" %in% state$view) coastlineWorldFine else coastlineWorld
-            polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
-            rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
-            ## For focusID mode, we do not trim by time or space
-            keep <- if (state$focus == "single" && !is.null(state$focusID)) {
-                argo$ID == state$focusID
-            }  else {
-                rep(TRUE, length(argo$ID))
-            }
-            argoFloatsDebug(debug, "about to subset, start time = ", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
-            argoFloatsDebug(debug, "about to subset, end time = ", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
-            keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
-            keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
-            keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
-            cex <- 0.9
-            if (sum(c("core", "deep", "bgc") %in% state$view) > 0) {
-                ## Draw points, optionally connecting paths (and indicating start points)
-                visible <<- rep(FALSE, length(argo$lon))
-                for (view in c("core", "deep", "bgc")) {
-                    if (view %in% state$view) {
-                        k <- keep & argo$type == view
-                        visible <<- visible | k
-                        lonlat <- argo[k,]
-                        argoFloatsDebug(debug, "view= ", view, " , sum(k)= ", sum(k), ", length(k)= ",length(k),"\n")
-                        colSettings <- list(core=if (input$Ccolour == "default") colDefaults$core else input$Ccolour,
-                            bgc=if (input$Bcolour == "default") colDefaults$bgc else input$Bcolour,
-                            deep=if (input$Dcolour == "default") colDefaults$deep else input$Dcolour)
-                        symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
-                        borderSettings <- list(core=input$Cborder, bgc=input$Bborder, deep=input$Dborder)
-                        sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
-                        #message("the symbSettings are", symbSettings)
-                        #message("the colSettings are", colSettings)
-                        if (!"lines" %in% state$action)
-                            if (symbSettings[[view]] == 21) {
-                                points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], bg=colSettings[[view]], col=borderSettings[[view]], lwd=0.5)
-                            } else {
-                                points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
-                            }
-                        if ("path" %in% state$view) {
-                            for (ID in unique(lonlat$ID)) {
-                                LONLAT <- lonlat[lonlat$ID==ID,]
-                                ## Sort by time instead of relying on the order in the repository
-                                o <- order(LONLAT$time)
-                                no <- length(o)
-                                if (no > 1) {
-                                    #message("view = '", view, "' jaimie")
-                                    pathColour <- list(core=if (input$CPcolour == "default") colDefaults$core else input$CPcolour,
-                                        bgc=if (input$BPcolour == "default") colDefaults$bgc else input$BPcolour,
-                                        deep=if (input$DPcolour == "default") colDefaults$deep else input$DPcolour)
-                                    pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
-                                    LONLAT <- LONLAT[o, ]
-                                    #message(pathColour[[view]], " is the path color")
-                                    # Chop data at the dateline
-                                    # https://github.com/ArgoCanada/argoFloats/issues/503
-                                    LONLAT <- sf::st_sfc(sf::st_linestring(cbind(LONLAT$lon, LONLAT$lat)), crs="OGC:CRS84")
-                                    LONLAT <- sf::st_wrap_dateline(LONLAT)[[1]]
-                                    #> message("class(lonlatSegments): ", paste(class(lonlatSegments), collapse=" "))
-                                    # Examinination with the above indicates two choices: LINESTRING and MULTILINESTRING
-                                    if (inherits(LONLAT, "LINESTRING")) {
-                                        lines(LONLAT[,1], LONLAT[,2],
-                                            col=pathColour[[view]], lwd=pathWidth[[view]])
-                                    } else if (inherits(LONLAT, "MULTILINESTRING")) {
-                                        #> message("should handle multilinestring now")
-                                        for (segment in seq_along(LONLAT)) {
-                                            #> message("segment=", segment, " of ", length(LONLAT))
-                                            lines(LONLAT[[segment]][,1], LONLAT[[segment]][,2],
-                                                col=pathColour[[view]], lwd=1.4)
-                                        }
+        }
+        topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
+        plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
+        if ("topo" %in% state$view) {
+            image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
+        }
+        usr <- par("usr")
+        usr[1] <- pinlon(usr[1])
+        usr[2] <- pinlon(usr[2])
+        usr[3] <- pinlat(usr[3])
+        usr[4] <- pinlat(usr[4])
+        at <- pretty(usr[1:2], 10)
+        at <- at[usr[1] < at & at < usr[2]]
+        labels <- paste(abs(at), ifelse(at < 0, "W", ifelse(at > 0, "E", "")), sep="")
+        axis(1, pos=pinlat(usr[3]), at=at, labels=labels, lwd=1, cex.axis=0.8)
+        at <- pretty(usr[3:4], 10)
+        at <- at[usr[3] < at & at < usr[4]]
+        labels <- paste(abs(at), ifelse(at < 0, "S", ifelse(at > 0, "N", "")), sep="")
+        axis(2, pos=pinlon(usr[1]), at=at, labels=labels, lwd=1, cex.axis=0.8)
+        coastline <- if ("hires" %in% state$view) coastlineWorldFine else coastlineWorld
+        polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
+        rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
+        ## For focusID mode, we do not trim by time or space
+        keep <- if (state$focus == "single" && !is.null(state$focusID)) {
+            argo$ID == state$focusID
+        }  else {
+            rep(TRUE, length(argo$ID))
+        }
+        argoFloatsDebug(debug, "about to subset, start time = ", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
+        argoFloatsDebug(debug, "about to subset, end time = ", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
+        keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
+        keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
+        keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
+        cex <- 0.9
+        if (sum(c("core", "deep", "bgc") %in% state$view) > 0) {
+            ## Draw points, optionally connecting paths (and indicating start points)
+            visible <<- rep(FALSE, length(argo$lon))
+            for (view in c("core", "deep", "bgc")) {
+                if (view %in% state$view) {
+                    k <- keep & argo$type == view
+                    visible <<- visible | k
+                    lonlat <- argo[k,]
+                    argoFloatsDebug(debug, "view= ", view, " , sum(k)= ", sum(k), ", length(k)= ",length(k),"\n")
+                    colSettings <- list(core=if (input$Ccolour == "default") colDefaults$core else input$Ccolour,
+                        bgc=if (input$Bcolour == "default") colDefaults$bgc else input$Bcolour,
+                        deep=if (input$Dcolour == "default") colDefaults$deep else input$Dcolour)
+                    symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
+                    borderSettings <- list(core=input$Cborder, bgc=input$Bborder, deep=input$Dborder)
+                    sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
+                    #message("the symbSettings are", symbSettings)
+                    #message("the colSettings are", colSettings)
+                    if (!"lines" %in% state$action)
+                        if (symbSettings[[view]] == 21) {
+                            points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], bg=colSettings[[view]], col=borderSettings[[view]], lwd=0.5)
+                        } else {
+                            points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
+                        }
+                    if ("path" %in% state$view) {
+                        for (ID in unique(lonlat$ID)) {
+                            LONLAT <- lonlat[lonlat$ID==ID,]
+                            ## Sort by time instead of relying on the order in the repository
+                            o <- order(LONLAT$time)
+                            no <- length(o)
+                            if (no > 1) {
+                                #message("view = '", view, "' jaimie")
+                                pathColour <- list(core=if (input$CPcolour == "default") colDefaults$core else input$CPcolour,
+                                    bgc=if (input$BPcolour == "default") colDefaults$bgc else input$BPcolour,
+                                    deep=if (input$DPcolour == "default") colDefaults$deep else input$DPcolour)
+                                pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
+                                LONLAT <- LONLAT[o, ]
+                                #message(pathColour[[view]], " is the path color")
+                                # Chop data at the dateline
+                                # https://github.com/ArgoCanada/argoFloats/issues/503
+                                LONLAT <- sf::st_sfc(sf::st_linestring(cbind(LONLAT$lon, LONLAT$lat)), crs="OGC:CRS84")
+                                LONLAT <- sf::st_wrap_dateline(LONLAT)[[1]]
+                                #> message("class(lonlatSegments): ", paste(class(lonlatSegments), collapse=" "))
+                                # Examinination with the above indicates two choices: LINESTRING and MULTILINESTRING
+                                if (inherits(LONLAT, "LINESTRING")) {
+                                    lines(LONLAT[,1], LONLAT[,2],
+                                        col=pathColour[[view]], lwd=pathWidth[[view]])
+                                } else if (inherits(LONLAT, "MULTILINESTRING")) {
+                                    #> message("should handle multilinestring now")
+                                    for (segment in seq_along(LONLAT)) {
+                                        #> message("segment=", segment, " of ", length(LONLAT))
+                                        lines(LONLAT[[segment]][,1], LONLAT[[segment]][,2],
+                                            col=pathColour[[view]], lwd=1.4)
                                     }
-                                    #> lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
-                                    if ("start" %in% state$action)
-                                        points(LONLAT[1,1], LONLAT[1,2], pch=2, cex=1, lwd=1.4)
-                                    if ("end" %in% state$action)
-                                        points(LONLAT[no,1], LONLAT[no,2], pch=0, cex=1, lwd=1.4)
                                 }
+                                #> lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
+                                if ("start" %in% state$action)
+                                    points(LONLAT[1,1], LONLAT[1,2], pch=2, cex=1, lwd=1.4)
+                                if ("end" %in% state$action)
+                                    points(LONLAT[no,1], LONLAT[no,2], pch=0, cex=1, lwd=1.4)
                             }
                         }
                     }
                 }
-                ## Draw the inspection rectangle as a thick gray line, but only if zoomed
-                if (-180 < state$xlim[1] || state$xlim[2] < 180 || -90 < state$ylim[1] || state$ylim[2] < 90)
-                    rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
-                ## Write a margin comment
-                if (state$focus == "single" && !is.null(state$focusID)) {
-                    mtext(sprintf("Float %s: %s to %s",
-                            state$focusID,
-                            format(state$startTime, "%Y-%m-%d", tz="UTC"),
-                            format(state$endTime, "%Y-%m-%d", tz="UTC")),
-                        side=3, cex=0.8 * par("cex"), line=0)
-                } else {
-                    mtext(sprintf("%s to %s: %d Argo profiles",
-                            format(state$startTime, "%Y-%m-%d", tz="UTC"),
-                            format(state$endTime, "%Y-%m-%d", tz="UTC"),
-                            sum(visible)),
-                        side=3, line=0, cex=0.8 * par("cex"))
-                }
-            }                          # if (sum(c("core", "deep", "bgc") %in% state$view) > 0)
-            # Add depth contours, if requested.
-            if ("contour" %in% state$view)
-                contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]],
-                    levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
-            # Add a scalebar, if we are zoomed in sufficiently. This whites-out below, so 
-            # we must do this as the last step of drawing.
-            if (diff(range(state$ylim)) < 90 && sum(visible)) {
-                oce::mapScalebar(x="topright") }
-        }
+            }
+            ## Draw the inspection rectangle as a thick gray line, but only if zoomed
+            if (-180 < state$xlim[1] || state$xlim[2] < 180 || -90 < state$ylim[1] || state$ylim[2] < 90)
+                rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
+            ## Write a margin comment
+            if (state$focus == "single" && !is.null(state$focusID)) {
+                mtext(sprintf("Float %s: %s to %s",
+                        state$focusID,
+                        format(state$startTime, "%Y-%m-%d", tz="UTC"),
+                        format(state$endTime, "%Y-%m-%d", tz="UTC")),
+                    side=3, cex=0.8 * par("cex"), line=0)
+            } else {
+                mtext(sprintf("%s to %s: %d Argo profiles",
+                        format(state$startTime, "%Y-%m-%d", tz="UTC"),
+                        format(state$endTime, "%Y-%m-%d", tz="UTC"),
+                        sum(visible)),
+                    side=3, line=0, cex=0.8 * par("cex"))
+            }
+        }                          # if (sum(c("core", "deep", "bgc") %in% state$view) > 0)
+        # Add depth contours, if requested.
+        if ("contour" %in% state$view)
+            contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]],
+                levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
+        # Add a scalebar, if we are zoomed in sufficiently. This whites-out below, so 
+        # we must do this as the last step of drawing.
+        if (diff(range(state$ylim)) < 90 && sum(visible)) {
+            oce::mapScalebar(x="topright") }
     }, execOnResize=TRUE, pointsize=18) # plotMap
 }                                      # serverMapApp
 
