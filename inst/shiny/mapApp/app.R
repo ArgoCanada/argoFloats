@@ -498,21 +498,23 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$ID,
         {
+            #> message(paste0("ID='", input$ID, "' given"))
             if (0 == nchar(input$ID)) {
                 state$focusID <<- NULL
                 shiny::updateTextInput(session, "focus", value="all")
             } else {
                 k <- which(argo$ID == input$ID)
-                if (length(k)) {
+                if (length(k) > 0L) {
                     state$focusID <<- input$ID
                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                    #> if (state$focus == "all")
-                    #>     shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
-                    #>         type="message", duration=10)
                 } else {
-                    shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error", duration=NULL)
+                    shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
                 }
+                if (state$focus == "all")
+                    shiny::updateSelectInput(session, "focus", selected="single")
+                    #> shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
+                    #>    type="message", duration=10)
             }
         })
 
@@ -721,7 +723,8 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
-        validate(need(state$startTime < state$endTime, "The Start time must precede the End time."))
+        validate(need(state$startTime < state$endTime,
+                "The Start time must precede the End time."))
         omar <- par("mar")
         omgp <- par("mgp")
         par(mar=c(2.0, 2.0, 1.0, 1.0), mgp=c(2, 0.75, 0))
