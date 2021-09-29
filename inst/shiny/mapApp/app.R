@@ -525,8 +525,7 @@ serverMapApp <- function(input, output, session)
                 if (is.null(state$focusID)) {
                     shiny::showNotification(
                         "Double-click on a point or type an ID in the 'Float ID' box, to single out a focus float",
-                        type = "error",
-                        duration = NULL)
+                        type = "error")
                 } else {
                     state$focus <<- input$focus
                     k <- argo$ID == state$focusID
