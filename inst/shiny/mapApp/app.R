@@ -146,7 +146,9 @@ serverMapApp <- function(input, output, session)
     if (!requireNamespace("colourpicker", quietly=TRUE))
         stop("must install.packages('colourpicker') for mapApp() to work")
     ## State variable: reactive!
-    state <- shiny::reactiveValues(xlim=c(-180, 180),
+    state <- shiny::reactiveValues(
+        begin=TRUE,
+        xlim=c(-180, 180),
         ylim=c(-90, 90),
         startTime=startTime,
         endTime=endTime,
@@ -228,6 +230,7 @@ serverMapApp <- function(input, output, session)
         ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
 
     output$UIview <- shiny::renderUI({
+        message("UIview: state$view='", paste(state$view, collapse=" "), "'")
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
             shiny::removeNotification(notificationId)
             #notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
@@ -243,7 +246,8 @@ serverMapApp <- function(input, output, session)
                     shiny::tags$span("Path", style="color:black;"),
                     shiny::tags$span("Contour", style="color:black;")),
                 choiceValues=list("core", "deep", "bgc", "hires", "topo", "path", "contour"),
-                selected=viewDefaults,
+                selected=state$view,
+                #? selected=viewDefaults,
                 inline=TRUE)
         }
     })
@@ -725,6 +729,10 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
+        message("in output$plotMap with state$begin=", state$begin)
+        if (state$begin)
+            state$view <<- viewDefaults
+        state$begin <<- FALSE
         validate(need(state$startTime < state$endTime,
                 "The Start time must precede the End time."))
         omar <- par("mar")
