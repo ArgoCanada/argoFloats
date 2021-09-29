@@ -686,6 +686,8 @@ serverMapApp <- function(input, output, session)
                 state$hoverIsPasted <<- FALSE
                 shiny::updateSelectInput(session, "focus", selected="all")
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
+                shiny::updateCheckboxGroupInput(session, "view", selected=c("core", "deep", "bgc"))
+                shiny::updateSelectInput(session, "action", selected=NULL)
                 shiny::updateDateInput(session, inputId="start", label="Start", value=startTime)
                 shiny::updateDateInput(session, inputId="end", label="End", value=endTime)
                 state$view <<- c("core", "deep", "bgc")
