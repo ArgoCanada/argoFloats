@@ -10,6 +10,57 @@ colDefaults <- list(core="#F5C710", bgc="#05f076", deep="#CD0BBC")
 endTime <- as.POSIXlt(Sys.time(), tz="UTC")
 startTime <- as.POSIXlt(endTime - 10 * 86400)
 
+stateStack <- list()
+pushState <- function(state)
+{
+    message("pushState() with stack initially of length ", length(stateStack), "...")
+    nss <- sizeState()
+    if (nss == 0L || !identical(state, stateStack[[nss]])) {
+        stateStack[[nss + 1L]] <<- state
+        printState()
+    }
+}
+getState <- function()
+{
+    message("getState() with stack initially of length ", length(stateStack), "...")
+    nss <- length(stateStack)
+    if (nss > 0L) stateStack[[nss]] else NULL
+}
+popState <- function()
+{
+    message("popState() with stack initially of length ", length(stateStack), "...")
+    nss <- length(stateStack)
+    if (nss > 1L)
+        stateStack[[nss]] <<- NULL
+}
+topState <- function()
+{
+    message("topState() with stack of length ", length(stateStack), "...")
+    nss <- length(stateStack)
+    if (nss > 0L) stateStack[[nss]] else NULL
+}
+sizeState <- function()
+{
+    length(stateStack)
+}
+emptyState <- function()
+{
+    length(stateStack) > 0L
+}
+printState <- function()
+{
+    nss <- sizeState()
+    if (nss > 0L) {
+        cat("stateStack holds ", nss, " elements, the most recent being as follows.\n", file=stderr(), sep="")
+        topOfStack <- stateStack[[nss]]
+        for (name in sort(names(topOfStack)))
+            cat("    ", name, ": ",format(paste(topOfStack[[name]], collapse=" ")), "\n", file=stderr(), sep="")
+    } else {
+        cat("stateStack is empty\n", file=stderr())
+    }
+}
+
+
 pi180 <- pi / 180                      # degree/radian conversion factor
 
 keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
@@ -157,6 +208,7 @@ serverMapApp <- function(input, output, session)
         focusID=NULL,
         view=viewDefaults,
         hoverIsPasted=FALSE)
+    pushState(isolate(reactiveValuesToList(state)))
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
@@ -517,9 +569,8 @@ serverMapApp <- function(input, output, session)
                 }
                 if (state$focus == "all")
                     shiny::updateSelectInput(session, "focus", selected="single")
-                    #> shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
-                    #>    type="message", duration=10)
             }
+            pushState(isolate(reactiveValuesToList(state)))
         })
 
     shiny::observeEvent(input$focus,
@@ -543,6 +594,7 @@ serverMapApp <- function(input, output, session)
                     ## https://github.com/ArgoCanada/argoFloats/issues/283.
                     state$startTime <<- min(argo$time[k])
                     state$endTime <<- max(argo$time[k])
+                    pushState(isolate(reactiveValuesToList(state)))
                     #message("setting box")
                     shiny::updateTextInput(session, "start",
                         value=format(state$startTime, "%Y-%m-%d"))
@@ -555,6 +607,7 @@ serverMapApp <- function(input, output, session)
                 state$focusID <<- NULL
                 state$startTime <<- startTime
                 state$endTime <<- endTime
+                pushState(isolate(reactiveValuesToList(state)))
                 shiny::updateTextInput(session, "start",
                     value=format(state$startTime, "%Y-%m-%d"))
                 shiny::updateTextInput(session, "end",
@@ -576,6 +629,7 @@ serverMapApp <- function(input, output, session)
             i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
             if (argo$type[i] %in% state$view) {
                 state$focusID <<- argo$ID[i]
+                pushState(isolate(reactiveValuesToList(state)))
                 shiny::updateTextInput(session, "ID", value=state$focusID)
                 shiny::updateSelectInput(session, "focus", selected="single")
                 msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
@@ -592,6 +646,7 @@ serverMapApp <- function(input, output, session)
         {
             if (0 == nchar(input$start)) {
                 state$startTime <<- min(argo$time, na.rm=TRUE)
+                pushState(isolate(reactiveValuesToList(state)))
             } else {
                 t <- try(as.POSIXct(format(input$start, "%Y-%m-%d 00:00:00"), tz="UTC"), silent=TRUE)
                 if (inherits(t, "try-error")) {
@@ -600,6 +655,7 @@ serverMapApp <- function(input, output, session)
                             "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type="error")
                 } else {
                     state$startTime <<- t
+                    pushState(isolate(reactiveValuesToList(state)))
                     argoFloatsDebug(debug, "User selected start time ", format(t, "%Y-%m-%d %H:%M:%S %z"), "\n")
                 }
             }
@@ -609,12 +665,14 @@ serverMapApp <- function(input, output, session)
         {
             if (0 == nchar(input$end)) {
                 state$endTime <<- max(argo$time, na.rm = TRUE)
+                pushState(isolate(reactiveValuesToList(state)))
             } else {
                 t <- try(as.POSIXct(format(input$end, "%Y-%m-%d 00:00:00"), tz="UTC"), silent=TRUE)
                 if (inherits(t, "try-error")) {
                     shiny::showNotification(paste0( "End time \"", input$end, "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type = "error")
                 } else {
                     state$endTime <<- t
+                    pushState(isolate(reactiveValuesToList(state)))
                     argoFloatsDebug(debug, "User selected end time ", format(t, "%Y-%m-%d %H:%M:%S %z"), "\n")
                 }
             }
@@ -652,35 +710,54 @@ serverMapApp <- function(input, output, session)
             if (key == "n") { # go north
                 dy <- diff(state$ylim)
                 state$ylim <<- pinlat(state$ylim + dy / 4)
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "s") { # go south
                 dy <- diff(state$ylim)
                 state$ylim <<- pinlat(state$ylim - dy / 4)
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "e") { # go east
                 dx <- diff(state$xlim)
                 state$xlim <<- pinlon(state$xlim + dx / 4)
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "w") { # go west
                 dx <- diff(state$xlim)
                 state$xlim <<- pinlon(state$xlim - dx / 4)
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "f") { # forward in time
                 interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
                 state$startTime <<- state$startTime + interval
                 state$endTime <<- state$endTime + interval
                 shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                 shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "b") { # backward in time
                 interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
                 state$startTime <<- state$startTime - interval
                 state$endTime <<- state$endTime - interval
                 shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                 shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "i") { # zoom in
                 state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
                 state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "o") { # zoom out
                 state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "h") { # paste hover message
                 state$hoverIsPasted <<- !state$hoverIsPasted
+            } else if (key == "S") { # TEMPORARY: show state stack
+                printState()
+            } else if (key == "U") { # TEMPORARY: undo the state stack
+                message("'U' for UNDO: not well-tested yet (stack length: ", length(stateStack), ")")
+                popState()
+                previousState <- topState()
+                #. print(previousState, file=stderr())
+                #. DAN<<-previousState
+                #. DANstate<<-state
+                for (name in names(previousState))
+                    state[[name]] <- previousState[[name]]
             } else if (key == "r") { # reset to start
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
@@ -717,12 +794,14 @@ serverMapApp <- function(input, output, session)
                 shiny::updateNumericInput(session, inputId="Dsymbol", value=21)
                 shiny::updateSliderInput(session, inputId="Dsize", value=0.9)
                 shiny::updateSliderInput(session, inputId="DPwidth", value=1.4)
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "0") { # Unzoom an area and keep same time scale
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
                 shiny::updateSelectInput(session, "focus", selected="all")
-                    shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
-                } else if (key == "?") { # show help on keystrokes
+                shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
+                pushState(isolate(reactiveValuesToList(state)))
+            } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
             }
@@ -743,6 +822,7 @@ serverMapApp <- function(input, output, session)
             if ((input$brush$xmax - input$brush$xmin) > 0.5 && (input$brush$ymax - input$brush$ymin) > 0.5) {
                 state$xlim <<- c(input$brush$xmin, input$brush$xmax)
                 state$ylim <<- c(input$brush$ymin, input$brush$ymax)
+                pushState(isolate(reactiveValuesToList(state)))
             }
         }
         topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
