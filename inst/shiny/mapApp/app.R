@@ -20,32 +20,23 @@ pushState <- function(state)
         printState()
     }
 }
-getState <- function()
-{
-    message("getState() with stack initially of length ", length(stateStack), "...")
-    nss <- length(stateStack)
-    if (nss > 0L) stateStack[[nss]] else NULL
-}
 popState <- function()
 {
     message("popState() with stack initially of length ", length(stateStack), "...")
-    nss <- length(stateStack)
+    nss <- sizeState()
     if (nss > 1L)
         stateStack[[nss]] <<- NULL
+    printState()
 }
 topState <- function()
 {
     message("topState() with stack of length ", length(stateStack), "...")
-    nss <- length(stateStack)
+    nss <- sizeState()
     if (nss > 0L) stateStack[[nss]] else NULL
 }
 sizeState <- function()
 {
     length(stateStack)
-}
-emptyState <- function()
-{
-    length(stateStack) > 0L
 }
 printState <- function()
 {
@@ -750,12 +741,8 @@ serverMapApp <- function(input, output, session)
             } else if (key == "S") { # TEMPORARY: show state stack
                 printState()
             } else if (key == "U") { # TEMPORARY: undo the state stack
-                message("'U' for UNDO: not well-tested yet (stack length: ", length(stateStack), ")")
                 popState()
                 previousState <- topState()
-                #. print(previousState, file=stderr())
-                #. DAN<<-previousState
-                #. DANstate<<-state
                 for (name in names(previousState))
                     state[[name]] <- previousState[[name]]
             } else if (key == "r") { # reset to start
