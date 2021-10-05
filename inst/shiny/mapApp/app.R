@@ -37,8 +37,7 @@ uiMapApp <- shiny::fluidPage(
     style="text-indent:1em; line-height:1.2; background:#e6f3ff; margin-top: -2ex; pre { line-height: 0.5; }; .form-group { margin-top: 3px; margin-bottom: 3px; };",
     shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
     shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
-        shiny::column(2, shiny::uiOutput(outputId="UIID")),
-        shiny::column(3, shiny::uiOutput(outputId="UIfocus"))),
+        shiny::column(2, shiny::uiOutput(outputId="UIID"))),
     # These trials (of removing vertical space) did nothing
     # shiny::div(style = "margin-top:-15px"),
     # shiny::fluidRow(shiny::uiOutput(outputId="UIinfo"), style="margin-top: -3ex;"),
@@ -152,7 +151,6 @@ serverMapApp <- function(input, output, session)
         ylim=c(-90, 90),
         startTime=startTime,
         endTime=endTime,
-        focus="all",
         action=NULL,
         focusID=NULL,
         view=viewDefaults,
@@ -290,12 +288,6 @@ serverMapApp <- function(input, output, session)
         }
     })
 
-    output$UIfocus <- shiny::renderUI({
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-            shiny::selectInput("focus", "Focus", choices=c("All"="all", "Single"="single"), selected=state$focus, width="10em")
-        }
-    })
-
     output$UIinfo <- shiny::renderUI({
         if (argoFloatsIsCached("argo")) {
             shiny::fluidRow(shiny::verbatimTextOutput("info"),
@@ -315,7 +307,7 @@ serverMapApp <- function(input, output, session)
         x <- input$hover$x
         y <- input$hover$y
         if (is.null(x) && input$tabselected == 1)
-            return("Hover mouse in plot to see locations; click-slide to select regions.")
+            return("Hover mouse in plot to see locations; click-slide to select regions; double click point to focus.")
         lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
         latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
         rval <- ""
@@ -443,7 +435,7 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, sprintf("rect <- list(longitude=c(%.4f,%.4f), latitude=c(%.4f,%.4f))<br>",
                                       lonRect[1], lonRect[2], latRect[1], latRect[2]))
             msg <- paste(msg, "subset2 <- subset(subset1, rectangle=rect)<br>")
-            if ("single" %in% state$focus && nchar(state$focusID) > 0){
+            if (!is.null(state$focusID)) {
                 msg <- paste0(msg, sprintf("subset2 <- subset(subset2, ID=%2s)<br>", state$focusID))
             }
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
@@ -502,63 +494,24 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$ID,
         {
-            #> message(paste0("ID='", input$ID, "' given"))
             if (0 == nchar(input$ID)) {
                 state$focusID <<- NULL
-                shiny::updateTextInput(session, "focus", value="all")
             } else {
                 k <- which(argo$ID == input$ID)
                 if (length(k) > 0L) {
                     state$focusID <<- input$ID
                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                } else {
-                    shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
-                }
-                if (state$focus == "all")
-                    shiny::updateSelectInput(session, "focus", selected="single")
-                    #> shiny::showNotification(paste0("Since you entered a float ID (", input$ID, "), you might want to change Focus to \"Single\""),
-                    #>    type="message", duration=10)
-            }
-        })
-
-    shiny::observeEvent(input$focus,
-        {
-            state$focus <<- input$focus
-            if (input$focus == "single") {
-                if (is.null(state$focusID)) {
-                    shiny::showNotification(
-                        "Double-click on a point or type an ID in the 'Float ID' box, to single out a focus float",
-                        type = "error",
-                        duration = NULL)
-                } else {
-                    state$focus <<- input$focus
-                    k <- argo$ID == state$focusID
-                    ## Extend the range 3X more than the default, because I almost always
-                    ## end up typing "-" a few times to zoom out
-                    state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
-                    state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                    ## Note: extending time range to avoid problems with day transitions,
-                    ## which might cause missing cycles at the start and end; see
-                    ## https://github.com/ArgoCanada/argoFloats/issues/283.
                     state$startTime <<- min(argo$time[k])
                     state$endTime <<- max(argo$time[k])
-                    #message("setting box")
                     shiny::updateTextInput(session, "start",
                         value=format(state$startTime, "%Y-%m-%d"))
                     shiny::updateTextInput(session, "end",
                         value=format(state$endTime, "%Y-%m-%d"))
+
+                } else {
+                    shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
                 }
-            } else {
-                # "all"
-                shiny::updateTextInput(session, "ID", value="")
-                state$focusID <<- NULL
-                state$startTime <<- startTime
-                state$endTime <<- endTime
-                shiny::updateTextInput(session, "start",
-                    value=format(state$startTime, "%Y-%m-%d"))
-                shiny::updateTextInput(session, "end",
-                    value=format(state$endTime, "%Y-%m-%d"))
             }
         })
 
@@ -567,7 +520,7 @@ serverMapApp <- function(input, output, session)
             x <- input$dblclick$x
             y <- input$dblclick$y
             fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
-            if (state$focus == "single" && !is.null(state$focusID)) {
+            if (!is.null(state$focusID)) {
                 keep <- argo$ID == state$focusID
             } else {
                 ## Restrict search to the present time window
@@ -577,7 +530,6 @@ serverMapApp <- function(input, output, session)
             if (argo$type[i] %in% state$view) {
                 state$focusID <<- argo$ID[i]
                 shiny::updateTextInput(session, "ID", value=state$focusID)
-                shiny::updateSelectInput(session, "focus", selected="single")
                 msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
                     argo$ID[i],
                     argo$cycle[i],
@@ -688,7 +640,6 @@ serverMapApp <- function(input, output, session)
                 state$endTime <<- endTime
                 state$focusID <<- NULL
                 state$hoverIsPasted <<- FALSE
-                shiny::updateSelectInput(session, "focus", selected="all")
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 shiny::updateCheckboxGroupInput(session, "view", selected=c("core", "deep", "bgc"))
                 shiny::updateSelectInput(session, "action", selected=NULL)
@@ -720,9 +671,8 @@ serverMapApp <- function(input, output, session)
             } else if (key == "0") { # Unzoom an area and keep same time scale
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
-                shiny::updateSelectInput(session, "focus", selected="all")
-                    shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
-                } else if (key == "?") { # show help on keystrokes
+                shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
+            } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
             }
@@ -767,7 +717,7 @@ serverMapApp <- function(input, output, session)
         polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
         rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
         ## For focusID mode, we do not trim by time or space
-        keep <- if (state$focus == "single" && !is.null(state$focusID)) {
+        keep <- if (!is.null(state$focusID)) {
             argo$ID == state$focusID
         }  else {
             rep(TRUE, length(argo$ID))
@@ -846,7 +796,7 @@ serverMapApp <- function(input, output, session)
             if (-180 < state$xlim[1] || state$xlim[2] < 180 || -90 < state$ylim[1] || state$ylim[2] < 90)
                 rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
             ## Write a margin comment
-            if (state$focus == "single" && !is.null(state$focusID)) {
+            if (!is.null(state$focusID)) {
                 mtext(sprintf("Float %s: %s to %s",
                         state$focusID,
                         format(state$startTime, "%Y-%m-%d", tz="UTC"),
