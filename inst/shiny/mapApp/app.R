@@ -307,7 +307,7 @@ serverMapApp <- function(input, output, session)
         x <- input$hover$x
         y <- input$hover$y
         if (is.null(x) && input$tabselected == 1)
-            return("Hover mouse in plot to see locations; click-slide to select regions; double click point to focus.")
+            return("Hover to see location/cycle; brush to select region; double-click to restrict ID.")
         lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
         latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
         rval <- ""
