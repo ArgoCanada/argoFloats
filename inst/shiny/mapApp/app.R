@@ -196,6 +196,24 @@ serverMapApp <- function(input, output, session)
         action=NULL,
         focusID=NULL,
         view=viewDefaults,
+        Ccolour=colDefaults$core,
+        Csymbol=21,
+        Csize=0.9,
+        Cborder="black",
+        CPcolour=colDefaults$core,
+        CPwidth=1.4,
+        Bcolour=colDefaults$bgc,
+        Bsymbol=21,
+        Bsize=0.9,
+        Bborder="black",
+        BPcolour=colDefaults$bgc,
+        BPwidth=1.4,
+        Dcolour=colDefaults$deep,
+        Dsymbol=21,
+        Dsize=0.9,
+        Dborder="black",
+        DPcolour=colDefaults$deep,
+        DPwidth=1.4,
         hoverIsPasted=FALSE)
     pushState(isolate(reactiveValuesToList(state)))
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
@@ -277,11 +295,11 @@ serverMapApp <- function(input, output, session)
             #notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
             shiny::checkboxGroupInput("view",
                 label="View",
-                choiceNames=list(shiny::tags$span("Core",style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Ccolour == "default", colDefaults$core, input$Ccolour)))), collapse=''))),
+                choiceNames=list(shiny::tags$span("Core",style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(state$Ccolour == "default", colDefaults$core, state$Ccolour)))), collapse=''))),
                     shiny::tags$span("Deep",
-                        style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Dcolour == "default", colDefaults$deep, input$Dcolour)))), collapse=''))),
+                        style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(state$Dcolour == "default", colDefaults$deep, state$Dcolour)))), collapse=''))),
                     shiny::tags$span("BGC",
-                        style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Bcolour == "default", colDefaults$bgc, input$Bcolour)))), collapse=''))),
+                        style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(state$Bcolour == "default", colDefaults$bgc, state$Bcolour)))), collapse=''))),
                     shiny::tags$span("HiRes", style="color: black;"),
                     shiny::tags$span("Topo", style="color: black;"),
                     shiny::tags$span("Path", style="color:black;"),
@@ -377,6 +395,97 @@ serverMapApp <- function(input, output, session)
         lastHoverMessage <<- rval
         rval
     })
+
+    shiny::observeEvent(input$Ccolour,
+        {
+            state$Ccolour <<- input$Ccolour
+        })
+
+    shiny::observeEvent(input$Csymbol,
+        {
+            state$Csymbol <<- input$Csymbol
+        })
+
+    shiny::observeEvent(input$Csize,
+        {
+            state$Csize <<- input$Csize
+        })
+
+    shiny::observeEvent(input$Cborder,
+        {
+            state$Cborder <<- input$Cborder
+        })
+
+    shiny::observeEvent(input$CPcolour,
+        {
+            state$CPcolour <<- input$CPcolour
+        })
+
+    shiny::observeEvent(input$CPwidth,
+        {
+            state$CPwidth <<- input$CPwidth
+        })
+
+
+ shiny::observeEvent(input$Bcolour,
+        {
+            state$Bcolour <<- input$Bcolour
+        })
+
+    shiny::observeEvent(input$Bsymbol,
+        {
+            state$Bsymbol <<- input$Bsymbol
+        })
+
+    shiny::observeEvent(input$Bsize,
+        {
+            state$Bsize <<- input$Bsize
+        })
+
+    shiny::observeEvent(input$Bborder,
+        {
+            state$Bborder <<- input$Bborder
+        })
+
+    shiny::observeEvent(input$BPcolour,
+        {
+            state$BPcolour <<- input$BPcolour
+        })
+
+    shiny::observeEvent(input$BPwidth,
+        {
+            state$BPwidth <<- input$BPwidth
+        })
+
+ shiny::observeEvent(input$Dcolour,
+        {
+            state$Dcolour <<- input$Dcolour
+        })
+
+    shiny::observeEvent(input$Dsymbol,
+        {
+            state$Dsymbol <<- input$Dsymbol
+        })
+
+    shiny::observeEvent(input$Dsize,
+        {
+            state$Dsize <<- input$Dsize
+        })
+
+    shiny::observeEvent(input$Dborder,
+        {
+            state$Dborder <<- input$Dborder
+        })
+
+    shiny::observeEvent(input$DPcolour,
+        {
+            state$DPcolour <<- input$DPcolour
+        })
+
+    shiny::observeEvent(input$DPwidth,
+        {
+            state$DPwidth <<- input$DPwidth
+        })
 
     shiny::observeEvent(input$view,
         {
@@ -803,12 +912,12 @@ serverMapApp <- function(input, output, session)
                     visible <<- visible | k
                     lonlat <- argo[k,]
                     argoFloatsDebug(debug, "view= ", view, " , sum(k)= ", sum(k), ", length(k)= ",length(k),"\n")
-                    colSettings <- list(core=if (input$Ccolour == "default") colDefaults$core else input$Ccolour,
-                        bgc=if (input$Bcolour == "default") colDefaults$bgc else input$Bcolour,
-                        deep=if (input$Dcolour == "default") colDefaults$deep else input$Dcolour)
-                    symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
-                    borderSettings <- list(core=input$Cborder, bgc=input$Bborder, deep=input$Dborder)
-                    sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
+                    colSettings <- list(core=if (state$Ccolour == "default") colDefaults$core else state$Ccolour,
+                        bgc=if (state$Bcolour == "default") colDefaults$bgc else state$Bcolour,
+                        deep=if (state$Dcolour == "default") colDefaults$deep else state$Dcolour)
+                    symbSettings <- list(core=state$Csymbol, bgc=state$Bsymbol, deep=state$Dsymbol)
+                    borderSettings <- list(core=state$Cborder, bgc=state$Bborder, deep=state$Dborder)
+                    sizeSettings <- list(core=state$Csize, bgc=state$Bsize, deep=state$Dsize)
                     #message("the symbSettings are", symbSettings)
                     #message("the colSettings are", colSettings)
                     if (!"lines" %in% state$action)
@@ -825,10 +934,10 @@ serverMapApp <- function(input, output, session)
                             no <- length(o)
                             if (no > 1) {
                                 #message("view = '", view, "' jaimie")
-                                pathColour <- list(core=if (input$CPcolour == "default") colDefaults$core else input$CPcolour,
-                                    bgc=if (input$BPcolour == "default") colDefaults$bgc else input$BPcolour,
-                                    deep=if (input$DPcolour == "default") colDefaults$deep else input$DPcolour)
-                                pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
+                                pathColour <- list(core=if (state$CPcolour == "default") colDefaults$core else state$CPcolour,
+                                    bgc=if (state$BPcolour == "default") colDefaults$bgc else state$BPcolour,
+                                    deep=if (state$DPcolour == "default") colDefaults$deep else state$DPcolour)
+                                pathWidth <- list(core=state$CPwidth, bgc=state$BPwidth, deep=state$DPwidth)
                                 LONLAT <- LONLAT[o, ]
                                 #message(pathColour[[view]], " is the path color")
                                 # Chop data at the dateline
