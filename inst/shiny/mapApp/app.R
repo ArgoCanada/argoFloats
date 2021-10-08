@@ -186,7 +186,7 @@ serverMapApp <- function(input, output, session)
         stop("must install.packages('shiny') for mapApp() to work")
     if (!requireNamespace("colourpicker", quietly=TRUE))
         stop("must install.packages('colourpicker') for mapApp() to work")
-    ## State variable: reactive!
+    # State: reactive
     state <- shiny::reactiveValues(
         begin=TRUE,
         xlim=c(-180, 180),
@@ -656,7 +656,7 @@ serverMapApp <- function(input, output, session)
                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
                     state$startTime <<- min(argo$time[k])
                     state$endTime <<- max(argo$time[k])
-                    if (FALSE) { # DEK: testing
+                    if (!FALSE) { # DEK: testing
                         shiny::updateTextInput(session, "start",
                             value=format(state$startTime, "%Y-%m-%d"))
                         shiny::updateTextInput(session, "end",
@@ -675,11 +675,11 @@ serverMapApp <- function(input, output, session)
             y <- input$dblclick$y
             fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
             if (!is.null(state$focusID)) {
-                message("*** observing dblclick: state$focusID is not NULL ***")
+                #> message("*** observing dblclick: state$focusID is not NULL ***")
                 keep <- argo$ID == state$focusID
             } else {
                 ## Restrict search to the present time window
-                message("*** observing dblclick: state$focusID is NULL ***")
+                #> message("*** observing dblclick: state$focusID is NULL ***")
                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
             }
             i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
@@ -692,7 +692,7 @@ serverMapApp <- function(input, output, session)
                 #> # DK: I don't see any need to show this anymore, now that we got
                 #> # rid of the Focus GUI element.  Besides, the lon and lat are
                 #> # incorrect, so we are displaying the whole history of the float.
-                #> # I am commenting it out for now, but eventually we ought to 
+                #> # I am commenting it out for now, but eventually we ought to
                 #> # delete it, for code clarity.
                 #> msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
                 #>     argo$ID[i],
