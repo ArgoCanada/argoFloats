@@ -655,14 +655,12 @@ serverMapApp <- function(input, output, session)
                     state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
                     state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
                     state$startTime <<- min(argo$time[k])
-                    state$endTime <<- max(argo$time[k])
-                    if (!FALSE) { # DEK: testing
-                        shiny::updateTextInput(session, "start",
-                            value=format(state$startTime, "%Y-%m-%d"))
-                        shiny::updateTextInput(session, "end",
-                            value=format(state$endTime, "%Y-%m-%d"))
-                    }
-
+                    # Add a day to endTime to retain profiles from that day
+                    state$endTime <<- max(argo$time[k]) + 86400
+                    shiny::updateTextInput(session, "start",
+                        value=format(state$startTime, "%Y-%m-%d"))
+                    shiny::updateTextInput(session, "end",
+                        value=format(state$endTime, "%Y-%m-%d"))
                 } else {
                     shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
                 }
