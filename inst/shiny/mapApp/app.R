@@ -3,6 +3,14 @@
 plotCounter <- 1L
 debug <- FALSE
 
+# Set debugDeveloper to FALSE to turn off these dmsg() messages.
+debugDeveloper <- TRUE
+dmsg <- function(...)
+{
+    if (debugDeveloper)
+        message(...)
+}
+
 appName <- "mapApp"
 #appVersion <- "0.1"
 
@@ -42,15 +50,15 @@ pushState <- function(state)
     nss <- sizeState()
     if (nss == 0L || !identical(state, stateStack[[nss]])) {
         stateStack[[nss + 1L]] <<- state
-        message("pushState() onto stack of length ", nss, "...")
+        dmsg("pushState() onto stack of length ", nss, "...")
         printState()
     } else {
-        message("pushState() ignoring duplicate entry (stack length still ", nss, ")")
+        dmsg("pushState() ignoring duplicate entry (stack length still ", nss, ")")
     }
 }
 popState <- function()
 {
-    message("popState() from stack of length ", length(stateStack), "...")
+    dmsg("popState() from stack of length ", length(stateStack), "...")
     nss <- sizeState()
     if (nss > 1L)
         stateStack[[nss]] <<- NULL
@@ -58,7 +66,7 @@ popState <- function()
 }
 topState <- function()
 {
-    message("topState() for stack of length ", length(stateStack), "...")
+    dmsg("topState() for stack of length ", length(stateStack), "...")
     nss <- sizeState()
     if (nss > 0L) stateStack[[nss]] else NULL
 }
@@ -68,15 +76,18 @@ sizeState <- function()
 }
 printState <- function()
 {
-    if (debug) {
+    if (debugDeveloper) {
         nss <- sizeState()
         if (nss > 0L) {
-            cat("stateStack holds ", nss, " elements, the most recent being as follows.\n", file=stderr(), sep="")
-            topOfStack <- stateStack[[nss]]
-            for (name in sort(names(topOfStack)))
-                cat("    ", name, ": ",format(paste(topOfStack[[name]], collapse=" ")), "\n", file=stderr(), sep="")
+            dmsg("stateStack holds ", nss, " elements")
+            if (FALSE) {
+                dmsg("  top element:")
+                topOfStack <- stateStack[[nss]]
+                for (name in sort(names(topOfStack)))
+                    dmsg("    ", name, ": ",format(paste(topOfStack[[name]], collapse=" ")))
+            }
         } else {
-            cat("stateStack is empty\n", file=stderr())
+            dmsg("stateStack is empty")
         }
     }
 }
@@ -694,14 +705,14 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$ID,
         {
-            message("")
-            message("observeEvent(input$ID) {")
+            dmsg("")
+            dmsg("observeEvent(input$ID) {")
             if (0 == nchar(input$ID)) {
-                message("    input$ID is empty, so setting state$focusID to NULL and doing nothing else")
+                dmsg("    input$ID is empty, so setting state$focusID to NULL and doing nothing else")
                 state$focusID <<- NULL
             } else {
                 k <- which(argo$ID == input$ID)
-                message("    have ", length(k), " cycles for input$ID='", input$ID, "'")
+                dmsg("    have ", length(k), " cycles for input$ID='", input$ID, "'")
                 if (length(k) > 0L) {
                     state$focusID <<- input$ID
                     state$xlim <<- pinlon(extendrange(argo$lon[k], f=0.15))
@@ -712,51 +723,51 @@ serverMapApp <- function(input, output, session)
                         value=format(state$startTime, "%Y-%m-%d"))
                     shiny::updateTextInput(session, "end",
                         value=format(state$endTime, "%Y-%m-%d"))
-                    message("    set xlim:      ", state$xlim[1], " to ", state$xlim[2])
-                    message("    set ylim:      ", state$ylim[1], " to ", state$ylim[2])
-                    message("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
-                    message("    set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"))
+                    dmsg("    set xlim:      ", state$xlim[1], " to ", state$xlim[2])
+                    dmsg("    set ylim:      ", state$ylim[1], " to ", state$ylim[2])
+                    dmsg("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
+                    dmsg("    set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"))
                 } else {
                     shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
                 }
             }
-            message("} # observeEvent(input$ID)")
+            dmsg("} # observeEvent(input$ID)")
         })
 
     shiny::observeEvent(input$dblclick,
         {
-            message("")
-            message("observeEvent(input$dblclick) {")
+            dmsg("")
+            dmsg("observeEvent(input$dblclick) {")
             x <- input$dblclick$x
             y <- input$dblclick$y
             fac2 <- 1.0/cos(pi180*y)^2 # for deltaLon^2 compared with deltaLat^2
             if (!is.null(state$focusID)) {
-                message("    state$focusID is NULL")
+                dmsg("    state$focusID is NULL")
                 keep <- argo$ID == state$focusID
             } else {
                 ## Restrict search to the present time window
-                message("    state$focusID='", state$focusID, "'")
+                dmsg("    state$focusID='", state$focusID, "'")
                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
             }
             i <- which.min(ifelse(keep, fac2*(x-argo$longitude)^2+(y-argo$latitude)^2, 1000))
             if (argo$type[i] %in% state$view) {
                 state$focusID <<- argo$ID[i]
                 k <- which(argo$ID == argo$ID[i])
-                message("    have ", length(k), " cycles for inferred ID='", argo$ID[i], "'")
+                dmsg("    have ", length(k), " cycles for inferred ID='", argo$ID[i], "'")
                 state$xlim <<- pinlon(extendrange(argo$lon[k], f=0.15))
                 state$ylim <<- pinlat(extendrange(argo$lat[k], f=0.15))
                 state$startTime <<- dayStart(min(argo$time[k]))
                 state$endTime <<- dayEnd(max(argo$time[k]))
-                message("    set xlim:      ", state$xlim[1], " to ", state$xlim[2])
-                message("    set ylim:      ", state$ylim[1], " to ", state$ylim[2])
-                message("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
-                message("    set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"))
+                dmsg("    set xlim:      ", state$xlim[1], " to ", state$xlim[2])
+                dmsg("    set ylim:      ", state$ylim[1], " to ", state$ylim[2])
+                dmsg("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
+                dmsg("    set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"))
                 ### pushState(isolate(reactiveValuesToList(state)))
                 #??? shiny::updateTextInput(session, "ID", value=state$focusID)
             } else {
-                message("    float ID='", state$focusID, " is NOT in view")
+                dmsg("    float ID='", state$focusID, " is NOT in view")
             }
-            message("} # observeEvent(input$dblclick)")
+            dmsg("} # observeEvent(input$dblclick)")
         })
 
     shiny::observeEvent(input$start,
@@ -827,6 +838,9 @@ serverMapApp <- function(input, output, session)
             if (key == "d") { # toggle debug
                 debug <<- !debug
                 message("switched debug to ", debug)
+            } else if (key == "D") { # toggle debugDeveloper
+                debugDeveloper <<- !debugDeveloper
+                message("switched debugDeveloper to ", debugDeveloper)
             } else if (key == "n") { # go north
                 dy <- diff(state$ylim)
                 state$ylim <<- pinlat(state$ylim + dy / 4)
@@ -922,8 +936,8 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
-        message("")
-        message("plotMap() with plotCounter=", plotCounter)
+        dmsg("")
+        dmsg("plotMap() with plotCounter=", plotCounter)
         plotCounter <<- plotCounter + 1L
         #> message("in output$plotMap with state$begin=", state$begin)
         if (state$begin)
@@ -1044,14 +1058,14 @@ serverMapApp <- function(input, output, session)
                 rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
             ## Write a margin comment
             if (!is.null(state$focusID)) {
-                message("    single-ID with ", sum(visible), " profiles from ", state$startTime, " to ", state$endTime)
+                dmsg("    single-ID with ", sum(visible), " profiles from ", state$startTime, " to ", state$endTime)
                 mtext(sprintf("Float %s: %s to %s",
                         state$focusID,
                         format(state$startTime, "%Y-%m-%d", tz="UTC"),
                         format(state$endTime, "%Y-%m-%d", tz="UTC")),
                     side=3, cex=0.8 * par("cex"), line=0)
             } else {
-                message("    multi-ID with ", sum(visible), " profiles from ", state$startTime, " to ", state$endTime)
+                dmsg("    multi-ID with ", sum(visible), " profiles from ", state$startTime, " to ", state$endTime)
                 mtext(sprintf("%s to %s: %d Argo profiles",
                         format(state$startTime, "%Y-%m-%d", tz="UTC"),
                         format(state$endTime, "%Y-%m-%d", tz="UTC"),
