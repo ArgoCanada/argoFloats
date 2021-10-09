@@ -11,18 +11,41 @@ colDefaults <- list(core="#F5C710", bgc="#05f076", deep="#CD0BBC")
 
 # Default start and end times. We must extend present time because
 # it gets stored as a date, so otherwise we miss all profiles taken "today".
+dayStart <- function(t)
+{
+    t <- as.POSIXlt(t, tz="UTC")
+    t$hour <- 0L
+    t$min <- 0L
+    t$sec <- 0.0
+    t
+}
+dayEnd <- function(t)
+{
+    t <- as.POSIXlt(as.POSIXct(t, tz="UTC") + 86400, tz="UTC")
+    t$hour <- 0L
+    t$min <- 0L
+    t$sec <- 0.0
+    t
+}
 secondsPerDay <- 86400
-endTime <- as.POSIXlt(Sys.time(), tz="UTC") + secondsPerDay
-startTime <- as.POSIXlt(endTime - 11 * secondsPerDay)
+now <- Sys.time()
+endTime <- dayEnd(now)
+startTime <- dayStart(now - 10 * secondsPerDay)
+#checking dput(now)
+#checking dput(startTime)
+#checking dput(endTime)
+#checking endTime-startTime
 
 stateStack <- list()
 pushState <- function(state)
 {
-    message("pushState() onto stack of length ", length(stateStack), "...")
     nss <- sizeState()
     if (nss == 0L || !identical(state, stateStack[[nss]])) {
         stateStack[[nss + 1L]] <<- state
+        message("pushState() onto stack of length ", nss, "...")
         printState()
+    } else {
+        message("pushState() ignoring duplicate entry (stack length still ", nss, ")")
     }
 }
 popState <- function()
@@ -91,6 +114,8 @@ uiMapApp <- shiny::fluidPage(
     shiny::fluidRow(
         shiny::column(9, shiny::uiOutput(outputId="UIview")),
         shiny::column(2, shiny::uiOutput(outputId="UIID"))),
+    shiny::fluidRow(
+        shiny::uiOutput(outputId="UItrajectory")),
     # These trials (of removing vertical space) did nothing
     # shiny::div(style = "margin-top:-15px"),
     # shiny::fluidRow(shiny::uiOutput(outputId="UIinfo"), style="margin-top: -3ex;"),
@@ -106,7 +131,6 @@ uiMapApp <- shiny::fluidPage(
                     shiny::tabPanel("Deep", value=6),
                     id="settab")),
             id="tabselected")),
-    shiny::uiOutput(outputId="UItrajectory"),
 
     shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
         shiny::mainPanel(
@@ -357,9 +381,9 @@ serverMapApp <- function(input, output, session)
     output$UItrajectory <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1) && "path" %in% state$view) {
             shiny::fluidRow(shiny::column(6,
-                    style="padding-left:0px;",
+                    style="text-indent:1em;",
                     shiny::checkboxGroupInput("action",
-                        label="",
+                        label="Path Properties",
                         choiceNames=list(shiny::tags$span("Start", style="color: black;"),
                             shiny::tags$span("End", style="color: black;"),
                             shiny::tags$span("Without Profiles", style="color: black;")),
@@ -670,44 +694,69 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$ID,
         {
+            message("")
+            message("observeEvent(input$ID) {")
             if (0 == nchar(input$ID)) {
+                message("    input$ID is empty, so setting state$focusID to NULL and doing nothing else")
                 state$focusID <<- NULL
             } else {
                 k <- which(argo$ID == input$ID)
+                message("    have ", length(k), " cycles for input$ID='", input$ID, "'")
                 if (length(k) > 0L) {
                     state$focusID <<- input$ID
-                    state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
-                    state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                    state$startTime <<- min(argo$time[k])
-                    # Add a day to endTime to retain profiles from that day
-                    state$endTime <<- max(argo$time[k]) + secondsPerDay
+                    state$xlim <<- pinlon(extendrange(argo$lon[k], f=0.15))
+                    state$ylim <<- pinlat(extendrange(argo$lat[k], f=0.15))
+                    state$startTime <<- dayStart(min(argo$time[k]))
+                    state$endTime <<- dayEnd(max(argo$time[k]))
                     shiny::updateTextInput(session, "start",
                         value=format(state$startTime, "%Y-%m-%d"))
                     shiny::updateTextInput(session, "end",
                         value=format(state$endTime, "%Y-%m-%d"))
+                    message("    set xlim:      ", state$xlim[1], " to ", state$xlim[2])
+                    message("    set ylim:      ", state$ylim[1], " to ", state$ylim[2])
+                    message("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
+                    message("    set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"))
                 } else {
                     shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
                 }
             }
+            message("} # observeEvent(input$ID)")
         })
 
     shiny::observeEvent(input$dblclick,
         {
+            message("")
+            message("observeEvent(input$dblclick) {")
             x <- input$dblclick$x
             y <- input$dblclick$y
             fac2 <- 1.0/cos(pi180*y)^2 # for deltaLon^2 compared with deltaLat^2
             if (!is.null(state$focusID)) {
+                message("    state$focusID is NULL")
                 keep <- argo$ID == state$focusID
             } else {
                 ## Restrict search to the present time window
+                message("    state$focusID='", state$focusID, "'")
                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
             }
             i <- which.min(ifelse(keep, fac2*(x-argo$longitude)^2+(y-argo$latitude)^2, 1000))
             if (argo$type[i] %in% state$view) {
                 state$focusID <<- argo$ID[i]
+                k <- which(argo$ID == argo$ID[i])
+                message("    have ", length(k), " cycles for inferred ID='", argo$ID[i], "'")
+                state$xlim <<- pinlon(extendrange(argo$lon[k], f=0.15))
+                state$ylim <<- pinlat(extendrange(argo$lat[k], f=0.15))
+                state$startTime <<- dayStart(min(argo$time[k]))
+                state$endTime <<- dayEnd(max(argo$time[k]))
+                message("    set xlim:      ", state$xlim[1], " to ", state$xlim[2])
+                message("    set ylim:      ", state$ylim[1], " to ", state$ylim[2])
+                message("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
+                message("    set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"))
                 ### pushState(isolate(reactiveValuesToList(state)))
-                shiny::updateTextInput(session, "ID", value=state$focusID)
+                #??? shiny::updateTextInput(session, "ID", value=state$focusID)
+            } else {
+                message("    float ID='", state$focusID, " is NOT in view")
             }
+            message("} # observeEvent(input$dblclick)")
         })
 
     shiny::observeEvent(input$start,
@@ -777,6 +826,7 @@ serverMapApp <- function(input, output, session)
             #message(key)
             if (key == "d") { # toggle debug
                 debug <<- !debug
+                message("switched debug to ", debug)
             } else if (key == "n") { # go north
                 dy <- diff(state$ylim)
                 state$ylim <<- pinlat(state$ylim + dy / 4)
@@ -872,6 +922,7 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
+        message("")
         message("plotMap() with plotCounter=", plotCounter)
         plotCounter <<- plotCounter + 1L
         #> message("in output$plotMap with state$begin=", state$begin)
