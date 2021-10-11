@@ -719,10 +719,14 @@ serverMapApp <- function(input, output, session)
                     state$ylim <<- pinlat(extendrange(argo$lat[k], f=0.15))
                     state$startTime <<- dayStart(min(argo$time[k]))
                     state$endTime <<- dayEnd(max(argo$time[k]))
-                    shiny::updateTextInput(session, "start",
-                        value=format(state$startTime, "%Y-%m-%d"))
-                    shiny::updateTextInput(session, "end",
-                        value=format(state$endTime, "%Y-%m-%d"))
+                    #?? # Q: does skipping the updates fix the redrawing problem?
+                    #?? # A: no, but it doesn't seem to cause any effect so let's skip it.
+                    #?? if (FALSE) {
+                    #??     shiny::updateTextInput(session, "start",
+                    #??         value=format(state$startTime, "%Y-%m-%d"))
+                    #??     shiny::updateTextInput(session, "end",
+                    #??         value=format(state$endTime, "%Y-%m-%d"))
+                    #?? }
                     dmsg("    set xlim:      ", state$xlim[1], " to ", state$xlim[2])
                     dmsg("    set ylim:      ", state$ylim[1], " to ", state$ylim[2])
                     dmsg("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
