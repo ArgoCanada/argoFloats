@@ -3,7 +3,7 @@
 plotCounter <- 1L
 
 # Set debug to FALSE to turn off these dmsg() messages.
-debug <- FALSE
+debug <- 0
 dmsg <- function(...)
 {
     if (debug)
