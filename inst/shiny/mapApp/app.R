@@ -818,6 +818,10 @@ serverMapApp <- function(input, output, session)
             previousState <- topState()
             for (name in names(previousState))
                 state[[name]] <- previousState[[name]]
+
+            if (sizeState() == 1) {
+                notificationId <- shiny::showNotification("Already at oldest change.", type="message", duration=4)
+            }
         })
 
     shiny::observeEvent(input$CsymbolGallery,
@@ -891,6 +895,10 @@ serverMapApp <- function(input, output, session)
                 previousState <- topState()
                 for (name in names(previousState))
                     state[[name]] <- previousState[[name]]
+
+                if (sizeState() == 1) {
+                    notificationId <- shiny::showNotification("Already at oldest change.", type="message", duration=4)
+                }
             } else if (key == "r") { # reset to start
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
