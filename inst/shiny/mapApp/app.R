@@ -1,13 +1,12 @@
 # vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 plotCounter <- 1L
-debug <- FALSE
 
-# Set debugDeveloper to FALSE to turn off these dmsg() messages.
-debugDeveloper <- TRUE
+# Set debug to FALSE to turn off these dmsg() messages.
+debug <- FALSE
 dmsg <- function(...)
 {
-    if (debugDeveloper)
+    if (debug)
         message(...)
 }
 
@@ -76,7 +75,7 @@ sizeState <- function()
 }
 printState <- function()
 {
-    if (debugDeveloper) {
+    if (debug) {
         nss <- sizeState()
         if (nss > 0L) {
             dmsg("stateStack holds ", nss, " elements")
@@ -96,8 +95,7 @@ printState <- function()
 pi180 <- pi / 180                      # degree/radian conversion factor
 
 keyPressHelp <- "<ul>
-<li> '<b>U</b>': <b>u</b>ndo previous actions</li>
-<li> '<b>d</b>': toggle <b>d</b>ebugging flag</li>
+<li> '<b>u</b>': <b>u</b>ndo previous actions</li>
 <li> '<b>i</b>': zoom <b>i</b>n</li>
 <li> '<b>o</b>': zoom <b>o</b>ut</li>
 <li> '<b>n</b>': go <b>n</b>orth</li>
@@ -109,9 +107,10 @@ keyPressHelp <- "<ul>
 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
 <li> '<b>h</b>': hold active hover message (press <b>h</b> again to undo)</li>
 <li> '<b>0</b>': unzoom an area</li>
+<li> '<b>d</b>': toggle <b>d</b>ebugging flag</li>
 <li> '<b>?</b>': display this message</li> </ul>"
 
-overallHelp <- "<p>This app responds to keystroke actions and GUI actions.</p><p>The permitted <u>keystroke actions</u> will be shown in a pop-up window if the <b>?</b> key is pressed. There are keys for zooming in and out, for moving the focus region through space and time, for controlling updates to an information box that displays mouse location and aspects of a nearby float, and undoing previous actions.</p><p>The <u>GUI actions</u> are reasonably self-explanatory. On the <i>Main tab</i>, users may enter values in the \"Start\" and \"End\" boxes to set the time range of the display, or empty either box to use the data range. The checkboxes of the \"View\" grouping may be used to choose whether to show 'Core', 'Deep' or 'BGC' data, whether to draw a high-resolution coastline, whether to draw connecting line segments to indicate the path of individual floats, and whether to indicate water depth using contour lines. If a path is displayed, there are options to highlight its start and end points, or to hide all points. The focus region may be selected by pressing the mouse at one location, sliding it to a new location, and then releasing it. Double-clicking on a particular float location creates a pop-up window that provides information on that profile. There is a way to focus on an individual float, to the exclusion of others.  Experimenting with the interface will reveal other capabilities; for example, it is worth exploring the <i>Settings tab</i>, which provides control over several aesthetic properties.<p>A text box above the plot shows the mouse position in longitude and latitude as well as information about the nearest profile, if it is within 100km of the mouse location (typing <b>h</b> toggles a setting that causes this information to track the mouse).</p><p>The \"R code\" button brings up a window showing R code that will approximate the view shown in the app, and that hints at some other operations that might be useful in analysis.</p><p>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.</p>"
+overallHelp <- "<p>This app responds to keystroke actions and GUI actions.</p><p>The permitted <u>keystroke actions</u> will be shown in a pop-up window if the <b>?</b> key is pressed. There are keys for zooming in and out, for moving the focus region through space and time, for controlling updates to an information box that displays mouse location and aspects of a nearby float, undoing previous actions, and turning on a developer mode in which information about processing is printed to the R console.</p><p>The <u>GUI actions</u> are reasonably self-explanatory. On the <i>Main tab</i>, users may enter values in the \"Start\" and \"End\" boxes to set the time range of the display, or empty either box to use the data range. The checkboxes of the \"View\" grouping may be used to choose whether to show 'Core', 'Deep' or 'BGC' data, whether to draw a high-resolution coastline, whether to draw connecting line segments to indicate the path of individual floats, and whether to indicate water depth using contour lines. If a path is displayed, there are options to highlight its start and end points, or to hide all points. The focus region may be selected by pressing the mouse at one location, sliding it to a new location, and then releasing it. Double-clicking on a particular float location creates a pop-up window that provides information on that profile. There is a way to focus on an individual float, to the exclusion of others.  Experimenting with the interface will reveal other capabilities; for example, it is worth exploring the <i>Settings tab</i>, which provides control over several aesthetic properties.<p>A text box above the plot shows the mouse position in longitude and latitude as well as information about the nearest profile, if it is within 100km of the mouse location (typing <b>h</b> toggles a setting that causes this information to track the mouse).</p><p>The \"R code\" button brings up a window showing R code that will approximate the view shown in the app, and that hints at some other operations that might be useful in analysis.</p><p>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.</p>"
 
 
 uiMapApp <- shiny::fluidPage(
@@ -814,7 +813,7 @@ serverMapApp <- function(input, output, session)
     shiny::observeEvent(input$help,
         {
             msg <- shiny::HTML(overallHelp)
-            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using mapApp()", size="l"))
         })
 
     shiny::observeEvent(input$CsymbolGallery,
@@ -843,9 +842,6 @@ serverMapApp <- function(input, output, session)
             if (key == "d") { # toggle debug
                 debug <<- !debug
                 message("switched debug to ", debug)
-            } else if (key == "D") { # toggle debugDeveloper
-                debugDeveloper <<- !debugDeveloper
-                message("switched debugDeveloper to ", debugDeveloper)
             } else if (key == "n") { # go north
                 dy <- diff(state$ylim)
                 state$ylim <<- pinlat(state$ylim + dy / 4)
@@ -886,9 +882,7 @@ serverMapApp <- function(input, output, session)
                 ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "h") { # paste hover message
                 state$hoverIsPasted <<- !state$hoverIsPasted
-            } else if (key == "S") { # TEMPORARY: show state stack
-                printState()
-            } else if (key == "U") { # TEMPORARY: undo the state stack
+            } else if (key == "u") { # TEMPORARY: undo the state stack
                 popState()
                 previousState <- topState()
                 for (name in names(previousState))
