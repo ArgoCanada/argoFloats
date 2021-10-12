@@ -1,18 +1,102 @@
 # vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
+plotCounter <- 1L
+
+# Set debug to FALSE to turn off these dmsg() messages.
+debug <- FALSE
+dmsg <- function(...)
+{
+    if (debug)
+        message(...)
+}
+
 appName <- "mapApp"
 #appVersion <- "0.1"
 
 viewDefaults <- list("core", "deep", "bgc")
 colDefaults <- list(core="#F5C710", bgc="#05f076", deep="#CD0BBC")
 
-## Default start and end times
-endTime <- as.POSIXlt(Sys.time(), tz="UTC")
-startTime <- as.POSIXlt(endTime - 10 * 86400)
+# Default start and end times. We must extend present time because
+# it gets stored as a date, so otherwise we miss all profiles taken "today".
+dayStart <- function(t)
+{
+    t <- as.POSIXlt(t, tz="UTC")
+    t$hour <- 0L
+    t$min <- 0L
+    t$sec <- 0.0
+    t
+}
+dayEnd <- function(t)
+{
+    t <- as.POSIXlt(as.POSIXct(t, tz="UTC") + 86400, tz="UTC")
+    t$hour <- 0L
+    t$min <- 0L
+    t$sec <- 0.0
+    t
+}
+secondsPerDay <- 86400
+now <- Sys.time()
+endTime <- dayEnd(now)
+startTime <- dayStart(now - 10 * secondsPerDay)
+#checking dput(now)
+#checking dput(startTime)
+#checking dput(endTime)
+#checking endTime-startTime
+
+stateStack <- list()
+pushState <- function(state)
+{
+    nss <- sizeState()
+    if (nss == 0L || !identical(state, stateStack[[nss]])) {
+        stateStack[[nss + 1L]] <<- state
+        dmsg("pushState() onto stack of length ", nss, "...")
+        printState()
+    } else {
+        dmsg("pushState() ignoring duplicate entry (stack length still ", nss, ")")
+    }
+}
+popState <- function()
+{
+    dmsg("popState() from stack of length ", length(stateStack), "...")
+    nss <- sizeState()
+    if (nss > 1L)
+        stateStack[[nss]] <<- NULL
+    printState()
+}
+topState <- function()
+{
+    dmsg("topState() for stack of length ", length(stateStack), "...")
+    nss <- sizeState()
+    if (nss > 0L) stateStack[[nss]] else NULL
+}
+sizeState <- function()
+{
+    length(stateStack)
+}
+printState <- function()
+{
+    if (debug) {
+        nss <- sizeState()
+        if (nss > 0L) {
+            dmsg("stateStack holds ", nss, " elements")
+            if (FALSE) {
+                dmsg("  top element:")
+                topOfStack <- stateStack[[nss]]
+                for (name in sort(names(topOfStack)))
+                    dmsg("    ", name, ": ",format(paste(topOfStack[[name]], collapse=" ")))
+            }
+        } else {
+            dmsg("stateStack is empty")
+        }
+    }
+}
+
 
 pi180 <- pi / 180                      # degree/radian conversion factor
 
-keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
+keyPressHelp <- "<ul>
+<li> '<b>u</b>': <b>u</b>ndo previous actions</li>
+<li> '<b>i</b>': zoom <b>i</b>n</li>
 <li> '<b>o</b>': zoom <b>o</b>ut</li>
 <li> '<b>n</b>': go <b>n</b>orth</li>
 <li> '<b>e</b>': go <b>e</b>ast</li>
@@ -23,9 +107,10 @@ keyPressHelp <- "<ul> <li> '<b>i</b>': zoom <b>i</b>n</li>
 <li> '<b>r</b>': <b>r</b>eset to initial state</li>
 <li> '<b>h</b>': hold active hover message (press <b>h</b> again to undo)</li>
 <li> '<b>0</b>': unzoom an area</li>
+<li> '<b>d</b>': toggle <b>d</b>ebugging flag</li>
 <li> '<b>?</b>': display this message</li> </ul>"
 
-overallHelp <- "<p>This app responds to keystroke actions and GUI actions.</p><p>The permitted <u>keystroke actions</u> will be shown in a pop-up window if the <b>?</b> key is pressed. There are keys for zooming in and out, for moving the focus region through space and time, and for controlling updates to an information box that displays mouse location and aspects of a nearby float.</p><p>The <u>GUI actions</u> are reasonably self-explanatory. On the <i>Main tab</i>, users may enter values in the \"Start\" and \"End\" boxes to set the time range of the display, or empty either box to use the data range. The checkboxes of the \"View\" grouping may be used to choose whether to show 'Core', 'Deep' or 'BGC' data, whether to draw a high-resolution coastline, whether to draw connecting line segments to indicate the path of individual floats, and whether to indicate water depth using contour lines. If a path is displayed, there are options to highlight its start and end points, or to hide all points. The focus region may be selected by pressing the mouse at one location, sliding it to a new location, and then releasing it. Double-clicking on a particular float location creates a pop-up window that provides information on that profile. There is a way to focus on an individual float, to the exclusion of others.  Experimenting with the interface will reveal other capabilities; for example, it is worth exploring the <i>Settings tab</i>, which provides control over several aesthetic properties.<p>A text box above the plot shows the mouse position in longitude and latitude as well as information about the nearest profile, if it is within 100km of the mouse location (typing <b>h</b> toggles a setting that causes this information to track the mouse).</p><p>The \"R code\" button brings up a window showing R code that will approximate the view shown in the app, and that hints at some other operations that might be useful in analysis.</p><p>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.</p>"
+overallHelp <- "<p>This app responds to keystroke actions and GUI actions.</p><p>The permitted <u>keystroke actions</u> will be shown in a pop-up window if the <b>?</b> key is pressed. There are keys for zooming in and out, for moving the focus region through space and time, for controlling updates to an information box that displays mouse location and aspects of a nearby float, undoing previous actions, and turning on a developer mode in which information about processing is printed to the R console.</p><p>The <u>GUI actions</u> are reasonably self-explanatory. On the <i>Main tab</i>, users may enter values in the \"Start\" and \"End\" boxes to set the time range of the display, or empty either box to use the data range. The checkboxes of the \"View\" grouping may be used to choose whether to show 'Core', 'Deep' or 'BGC' data, whether to draw a high-resolution coastline, whether to draw connecting line segments to indicate the path of individual floats, and whether to indicate water depth using contour lines. If a path is displayed, there are options to highlight its start and end points, or to hide all points. The focus region may be selected by pressing the mouse at one location, sliding it to a new location, and then releasing it. Double-clicking on a particular float location creates a pop-up window that provides information on that profile. There is a way to focus on an individual float, to the exclusion of others.  Experimenting with the interface will reveal other capabilities; for example, it is worth exploring the <i>Settings tab</i>, which provides control over several aesthetic properties.<p>A text box above the plot shows the mouse position in longitude and latitude as well as information about the nearest profile, if it is within 100km of the mouse location (typing <b>h</b> toggles a setting that causes this information to track the mouse).</p><p>The \"R code\" button brings up a window showing R code that will approximate the view shown in the app, and that hints at some other operations that might be useful in analysis.</p><p>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.</p>"
 
 
 uiMapApp <- shiny::fluidPage(
@@ -35,13 +120,18 @@ uiMapApp <- shiny::fluidPage(
     #style="text-indent:1em; line-height:1.2; background:#e6f3ff; .btn{ padding: 2px 9px; }; .form-group { margin-top: 0; margin-bottom: 0 }",
     # margin-top works, but not sure if either pre{} or formgroup{} work.
     style="text-indent:1em; line-height:1.2; background:#e6f3ff; margin-top: -2ex; pre { line-height: 0.5; }; .form-group { margin-top: 3px; margin-bottom: 3px; };",
-    shiny::fluidRow(shiny::uiOutput(outputId="UIwidget")),
-    shiny::fluidRow(shiny::column(7, shiny::uiOutput(outputId="UIview")),
+    shiny::fluidRow(
+        shiny::uiOutput(outputId="UIwidget")),
+    shiny::fluidRow(
+        shiny::column(9, shiny::uiOutput(outputId="UIview")),
         shiny::column(2, shiny::uiOutput(outputId="UIID"))),
+    shiny::fluidRow(
+        shiny::uiOutput(outputId="UItrajectory")),
     # These trials (of removing vertical space) did nothing
     # shiny::div(style = "margin-top:-15px"),
     # shiny::fluidRow(shiny::uiOutput(outputId="UIinfo"), style="margin-top: -3ex;"),
-    shiny::fluidRow(shiny::uiOutput(outputId="UIinfo")),
+    shiny::fluidRow(
+        shiny::uiOutput(outputId="UIinfo")),
 
     # Main Panel
     shiny::mainPanel(shiny::tabsetPanel(type="tab",
@@ -52,7 +142,6 @@ uiMapApp <- shiny::fluidPage(
                     shiny::tabPanel("Deep", value=6),
                     id="settab")),
             id="tabselected")),
-    shiny::uiOutput(outputId="UItrajectory"),
 
     shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==3",
         shiny::mainPanel(
@@ -139,12 +228,12 @@ serverMapApp <- function(input, output, session)
     destdir <- shiny::getShinyOption("destdir")
     argoServer <- shiny::getShinyOption("argoServer")
     colLand <- shiny::getShinyOption("colLand")
-    debug <- shiny::getShinyOption("debug")
+    debug <<- shiny::getShinyOption("debug")
     if (!requireNamespace("shiny", quietly=TRUE))
         stop("must install.packages('shiny') for mapApp() to work")
     if (!requireNamespace("colourpicker", quietly=TRUE))
         stop("must install.packages('colourpicker') for mapApp() to work")
-    ## State variable: reactive!
+    # State: reactive
     state <- shiny::reactiveValues(
         begin=TRUE,
         xlim=c(-180, 180),
@@ -154,7 +243,26 @@ serverMapApp <- function(input, output, session)
         action=NULL,
         focusID=NULL,
         view=viewDefaults,
+        Ccolour=colDefaults$core,
+        Csymbol=21,
+        Csize=0.9,
+        Cborder="black",
+        CPcolour=colDefaults$core,
+        CPwidth=1.4,
+        Bcolour=colDefaults$bgc,
+        Bsymbol=21,
+        Bsize=0.9,
+        Bborder="black",
+        BPcolour=colDefaults$bgc,
+        BPwidth=1.4,
+        Dcolour=colDefaults$deep,
+        Dsymbol=21,
+        Dsize=0.9,
+        Dborder="black",
+        DPcolour=colDefaults$deep,
+        DPwidth=1.4,
         hoverIsPasted=FALSE)
+    pushState(isolate(reactiveValuesToList(state)))
     ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
@@ -234,16 +342,29 @@ serverMapApp <- function(input, output, session)
             #notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
             shiny::checkboxGroupInput("view",
                 label="View",
-                choiceNames=list(shiny::tags$span("Core",style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Ccolour == "default", colDefaults$core, input$Ccolour)))), collapse=''))),
+                choiceNames=list(
+                    shiny::tags$span("Core",style=paste0('font-weight:bold; color:#',
+                            paste(as.raw(as.vector(col2rgb(ifelse(state$Ccolour == "default",
+                                                colDefaults$core,
+                                                state$Ccolour)))),
+                                collapse=""))),
                     shiny::tags$span("Deep",
-                        style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Dcolour == "default", colDefaults$deep, input$Dcolour)))), collapse=''))),
+                        style=paste0('font-weight:bold; color:#',
+                            paste(as.raw(as.vector(col2rgb(ifelse(state$Dcolour == "default",
+                                                colDefaults$deep,
+                                                state$Dcolour)))),
+                                collapse=""))),
                     shiny::tags$span("BGC",
-                        style=paste0('font-weight:bold; color:#',paste(as.raw(as.vector(col2rgb(ifelse(input$Bcolour == "default", colDefaults$bgc, input$Bcolour)))), collapse=''))),
+                        style=paste0('font-weight:bold; color:#',
+                            paste(as.raw(as.vector(col2rgb(ifelse(state$Bcolour == "default",
+                                                colDefaults$bgc,
+                                                state$Bcolour)))),
+                                collapse=""))),
                     shiny::tags$span("HiRes", style="color: black;"),
                     shiny::tags$span("Topo", style="color: black;"),
-                    shiny::tags$span("Path", style="color:black;"),
-                    shiny::tags$span("Contour", style="color:black;")),
-                choiceValues=list("core", "deep", "bgc", "hires", "topo", "path", "contour"),
+                    shiny::tags$span("Contour", style="color:black;"),
+                    shiny::tags$span("Path", style="color:black;")),
+                choiceValues=list("core", "deep", "bgc", "hires", "topo", "contour", "path"),
                 selected=state$view,
                 #? selected=viewDefaults,
                 inline=TRUE)
@@ -271,9 +392,9 @@ serverMapApp <- function(input, output, session)
     output$UItrajectory <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1) && "path" %in% state$view) {
             shiny::fluidRow(shiny::column(6,
-                    style="padding-left:0px;",
+                    style="text-indent:1em;",
                     shiny::checkboxGroupInput("action",
-                        label="",
+                        label="Path Properties",
                         choiceNames=list(shiny::tags$span("Start", style="color: black;"),
                             shiny::tags$span("End", style="color: black;"),
                             shiny::tags$span("Without Profiles", style="color: black;")),
@@ -312,7 +433,7 @@ serverMapApp <- function(input, output, session)
         latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
         rval <- ""
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
-            fac <- cos(y * pi180)      # account for meridional convergence
+            fac <- cos(pi180 * y)      # account for meridional convergence
             dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
             i <- which.min(dist2)
             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
@@ -335,11 +456,101 @@ serverMapApp <- function(input, output, session)
         rval
     })
 
+    shiny::observeEvent(input$Ccolour,
+        {
+            state$Ccolour <<- input$Ccolour
+        })
+
+    shiny::observeEvent(input$Csymbol,
+        {
+            state$Csymbol <<- input$Csymbol
+        })
+
+    shiny::observeEvent(input$Csize,
+        {
+            state$Csize <<- input$Csize
+        })
+
+    shiny::observeEvent(input$Cborder,
+        {
+            state$Cborder <<- input$Cborder
+        })
+
+    shiny::observeEvent(input$CPcolour,
+        {
+            state$CPcolour <<- input$CPcolour
+        })
+
+    shiny::observeEvent(input$CPwidth,
+        {
+            state$CPwidth <<- input$CPwidth
+        })
+
+
+ shiny::observeEvent(input$Bcolour,
+        {
+            state$Bcolour <<- input$Bcolour
+        })
+
+    shiny::observeEvent(input$Bsymbol,
+        {
+            state$Bsymbol <<- input$Bsymbol
+        })
+
+    shiny::observeEvent(input$Bsize,
+        {
+            state$Bsize <<- input$Bsize
+        })
+
+    shiny::observeEvent(input$Bborder,
+        {
+            state$Bborder <<- input$Bborder
+        })
+
+    shiny::observeEvent(input$BPcolour,
+        {
+            state$BPcolour <<- input$BPcolour
+        })
+
+    shiny::observeEvent(input$BPwidth,
+        {
+            state$BPwidth <<- input$BPwidth
+        })
+
+ shiny::observeEvent(input$Dcolour,
+        {
+            state$Dcolour <<- input$Dcolour
+        })
+
+    shiny::observeEvent(input$Dsymbol,
+        {
+            state$Dsymbol <<- input$Dsymbol
+        })
+
+    shiny::observeEvent(input$Dsize,
+        {
+            state$Dsize <<- input$Dsize
+        })
+
+    shiny::observeEvent(input$Dborder,
+        {
+            state$Dborder <<- input$Dborder
+        })
+
+    shiny::observeEvent(input$DPcolour,
+        {
+            state$DPcolour <<- input$DPcolour
+        })
+
+    shiny::observeEvent(input$DPwidth,
+        {
+            state$DPwidth <<- input$DPwidth
+        })
+
     shiny::observeEvent(input$view,
         {
-            #> message("observing input$view; view=c(\"", paste(input$view, collapse=", "), "\")\n")
+            # message("observing input$view; view=c(\"", paste(input$view, collapse="\", \""), "\")\n")
             state$view <<- input$view
-            #> })
         }, ignoreNULL=FALSE)
 
     shiny::observeEvent(input$action,
@@ -494,56 +705,80 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$ID,
         {
+            dmsg("")
+            dmsg("observeEvent(input$ID) {")
             if (0 == nchar(input$ID)) {
+                dmsg("    input$ID is empty, so setting state$focusID to NULL and doing nothing else")
                 state$focusID <<- NULL
             } else {
                 k <- which(argo$ID == input$ID)
+                dmsg("    have ", length(k), " cycles for input$ID='", input$ID, "'")
                 if (length(k) > 0L) {
                     state$focusID <<- input$ID
-                    state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
-                    state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
-                    state$startTime <<- min(argo$time[k])
-                    # Add a day to endTime to retain profiles from that day
-                    state$endTime <<- max(argo$time[k]) + 86400
-                    shiny::updateTextInput(session, "start",
-                        value=format(state$startTime, "%Y-%m-%d"))
-                    shiny::updateTextInput(session, "end",
-                        value=format(state$endTime, "%Y-%m-%d"))
+                    state$xlim <<- pinlon(extendrange(argo$lon[k], f=0.15))
+                    state$ylim <<- pinlat(extendrange(argo$lat[k], f=0.15))
+                    state$startTime <<- dayStart(min(argo$time[k]))
+                    state$endTime <<- dayEnd(max(argo$time[k]))
+                    #?? # Q: does skipping the updates fix the redrawing problem?
+                    #?? # A: no, but it doesn't seem to cause any effect so let's skip it.
+                    #?? if (FALSE) {
+                    #??     shiny::updateTextInput(session, "start",
+                    #??         value=format(state$startTime, "%Y-%m-%d"))
+                    #??     shiny::updateTextInput(session, "end",
+                    #??         value=format(state$endTime, "%Y-%m-%d"))
+                    #?? }
+                    dmsg("    set xlim:      ", state$xlim[1], " to ", state$xlim[2])
+                    dmsg("    set ylim:      ", state$ylim[1], " to ", state$ylim[2])
+                    dmsg("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
+                    dmsg("    set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"))
                 } else {
                     shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
                 }
             }
+            dmsg("} # observeEvent(input$ID)")
         })
 
     shiny::observeEvent(input$dblclick,
         {
+            dmsg("")
+            dmsg("observeEvent(input$dblclick) {")
             x <- input$dblclick$x
             y <- input$dblclick$y
-            fac <- 1 / cos(y * pi / 180) ^ 2 # for deltaLon^2 compared with deltaLat^2
+            fac2 <- 1.0/cos(pi180*y)^2 # for deltaLon^2 compared with deltaLat^2
             if (!is.null(state$focusID)) {
+                dmsg("    state$focusID is NULL")
                 keep <- argo$ID == state$focusID
             } else {
                 ## Restrict search to the present time window
+                dmsg("    state$focusID='", state$focusID, "'")
                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
             }
-            i <- which.min(ifelse(keep, fac * (x - argo$longitude) ^ 2 + (y - argo$latitude)^2, 1000))
+            i <- which.min(ifelse(keep, fac2*(x-argo$longitude)^2+(y-argo$latitude)^2, 1000))
             if (argo$type[i] %in% state$view) {
                 state$focusID <<- argo$ID[i]
-                shiny::updateTextInput(session, "ID", value=state$focusID)
-                msg <- sprintf("ID %s, cycle %s<br>%s %.3fE %.3fN",
-                    argo$ID[i],
-                    argo$cycle[i],
-                    format(argo$time[i], "%Y-%m-%d"),
-                    argo$longitude[i],
-                    argo$latitude[i])
-                shiny::showNotification(shiny::HTML(msg), duration=5)
+                k <- which(argo$ID == argo$ID[i])
+                dmsg("    have ", length(k), " cycles for inferred ID='", argo$ID[i], "'")
+                state$xlim <<- pinlon(extendrange(argo$lon[k], f=0.15))
+                state$ylim <<- pinlat(extendrange(argo$lat[k], f=0.15))
+                state$startTime <<- dayStart(min(argo$time[k]))
+                state$endTime <<- dayEnd(max(argo$time[k]))
+                dmsg("    set xlim:      ", state$xlim[1], " to ", state$xlim[2])
+                dmsg("    set ylim:      ", state$ylim[1], " to ", state$ylim[2])
+                dmsg("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
+                dmsg("    set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"))
+                ### pushState(isolate(reactiveValuesToList(state)))
+                #??? shiny::updateTextInput(session, "ID", value=state$focusID)
+            } else {
+                dmsg("    float ID='", state$focusID, " is NOT in view")
             }
+            dmsg("} # observeEvent(input$dblclick)")
         })
 
     shiny::observeEvent(input$start,
         {
             if (0 == nchar(input$start)) {
                 state$startTime <<- min(argo$time, na.rm=TRUE)
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else {
                 t <- try(as.POSIXct(format(input$start, "%Y-%m-%d 00:00:00"), tz="UTC"), silent=TRUE)
                 if (inherits(t, "try-error")) {
@@ -552,6 +787,7 @@ serverMapApp <- function(input, output, session)
                             "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type="error")
                 } else {
                     state$startTime <<- t
+                    ### pushState(isolate(reactiveValuesToList(state)))
                     argoFloatsDebug(debug, "User selected start time ", format(t, "%Y-%m-%d %H:%M:%S %z"), "\n")
                 }
             }
@@ -561,12 +797,14 @@ serverMapApp <- function(input, output, session)
         {
             if (0 == nchar(input$end)) {
                 state$endTime <<- max(argo$time, na.rm = TRUE)
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else {
                 t <- try(as.POSIXct(format(input$end, "%Y-%m-%d 00:00:00"), tz="UTC"), silent=TRUE)
                 if (inherits(t, "try-error")) {
                     shiny::showNotification(paste0( "End time \"", input$end, "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type = "error")
                 } else {
                     state$endTime <<- t
+                    ### pushState(isolate(reactiveValuesToList(state)))
                     argoFloatsDebug(debug, "User selected end time ", format(t, "%Y-%m-%d %H:%M:%S %z"), "\n")
                 }
             }
@@ -575,7 +813,7 @@ serverMapApp <- function(input, output, session)
     shiny::observeEvent(input$help,
         {
             msg <- shiny::HTML(overallHelp)
-            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using this application", size="l"))
+            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using mapApp()", size="l"))
         })
 
     shiny::observeEvent(input$CsymbolGallery,
@@ -601,38 +839,54 @@ serverMapApp <- function(input, output, session)
             key <- intToUtf8(input$keypress)
             #message(input$keypress)
             #message(key)
-            if (key == "n") { # go north
+            if (key == "d") { # toggle debug
+                debug <<- !debug
+                message("switched debug to ", debug)
+            } else if (key == "n") { # go north
                 dy <- diff(state$ylim)
                 state$ylim <<- pinlat(state$ylim + dy / 4)
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "s") { # go south
                 dy <- diff(state$ylim)
                 state$ylim <<- pinlat(state$ylim - dy / 4)
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "e") { # go east
                 dx <- diff(state$xlim)
                 state$xlim <<- pinlon(state$xlim + dx / 4)
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "w") { # go west
                 dx <- diff(state$xlim)
                 state$xlim <<- pinlon(state$xlim - dx / 4)
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "f") { # forward in time
                 interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
                 state$startTime <<- state$startTime + interval
                 state$endTime <<- state$endTime + interval
                 shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                 shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "b") { # backward in time
                 interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
                 state$startTime <<- state$startTime - interval
                 state$endTime <<- state$endTime - interval
                 shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                 shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "i") { # zoom in
                 state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
                 state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "o") { # zoom out
                 state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "h") { # paste hover message
                 state$hoverIsPasted <<- !state$hoverIsPasted
+            } else if (key == "u") { # TEMPORARY: undo the state stack
+                popState()
+                previousState <- topState()
+                for (name in names(previousState))
+                    state[[name]] <- previousState[[name]]
             } else if (key == "r") { # reset to start
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
@@ -668,10 +922,12 @@ serverMapApp <- function(input, output, session)
                 shiny::updateNumericInput(session, inputId="Dsymbol", value=21)
                 shiny::updateSliderInput(session, inputId="Dsize", value=0.9)
                 shiny::updateSliderInput(session, inputId="DPwidth", value=1.4)
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "0") { # Unzoom an area and keep same time scale
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
+                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
@@ -679,6 +935,9 @@ serverMapApp <- function(input, output, session)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
+        dmsg("")
+        dmsg("plotMap() with plotCounter=", plotCounter)
+        plotCounter <<- plotCounter + 1L
         #> message("in output$plotMap with state$begin=", state$begin)
         if (state$begin)
             state$view <<- viewDefaults
@@ -693,10 +952,11 @@ serverMapApp <- function(input, output, session)
             if ((input$brush$xmax - input$brush$xmin) > 0.5 && (input$brush$ymax - input$brush$ymin) > 0.5) {
                 state$xlim <<- c(input$brush$xmin, input$brush$xmax)
                 state$ylim <<- c(input$brush$ymin, input$brush$ymax)
+                ### pushState(isolate(reactiveValuesToList(state)))
             }
         }
         topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
-        plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi / 180 * mean(state$ylim)))
+        plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi180 * mean(state$ylim)))
         if ("topo" %in% state$view) {
             image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
         }
@@ -737,12 +997,12 @@ serverMapApp <- function(input, output, session)
                     visible <<- visible | k
                     lonlat <- argo[k,]
                     argoFloatsDebug(debug, "view= ", view, " , sum(k)= ", sum(k), ", length(k)= ",length(k),"\n")
-                    colSettings <- list(core=if (input$Ccolour == "default") colDefaults$core else input$Ccolour,
-                        bgc=if (input$Bcolour == "default") colDefaults$bgc else input$Bcolour,
-                        deep=if (input$Dcolour == "default") colDefaults$deep else input$Dcolour)
-                    symbSettings <- list(core=input$Csymbol, bgc=input$Bsymbol, deep=input$Dsymbol)
-                    borderSettings <- list(core=input$Cborder, bgc=input$Bborder, deep=input$Dborder)
-                    sizeSettings <- list(core=input$Csize, bgc=input$Bsize, deep=input$Dsize)
+                    colSettings <- list(core=if (state$Ccolour == "default") colDefaults$core else state$Ccolour,
+                        bgc=if (state$Bcolour == "default") colDefaults$bgc else state$Bcolour,
+                        deep=if (state$Dcolour == "default") colDefaults$deep else state$Dcolour)
+                    symbSettings <- list(core=state$Csymbol, bgc=state$Bsymbol, deep=state$Dsymbol)
+                    borderSettings <- list(core=state$Cborder, bgc=state$Bborder, deep=state$Dborder)
+                    sizeSettings <- list(core=state$Csize, bgc=state$Bsize, deep=state$Dsize)
                     #message("the symbSettings are", symbSettings)
                     #message("the colSettings are", colSettings)
                     if (!"lines" %in% state$action)
@@ -759,10 +1019,10 @@ serverMapApp <- function(input, output, session)
                             no <- length(o)
                             if (no > 1) {
                                 #message("view = '", view, "' jaimie")
-                                pathColour <- list(core=if (input$CPcolour == "default") colDefaults$core else input$CPcolour,
-                                    bgc=if (input$BPcolour == "default") colDefaults$bgc else input$BPcolour,
-                                    deep=if (input$DPcolour == "default") colDefaults$deep else input$DPcolour)
-                                pathWidth <- list(core=input$CPwidth, bgc=input$BPwidth, deep=input$DPwidth)
+                                pathColour <- list(core=if (state$CPcolour == "default") colDefaults$core else state$CPcolour,
+                                    bgc=if (state$BPcolour == "default") colDefaults$bgc else state$BPcolour,
+                                    deep=if (state$DPcolour == "default") colDefaults$deep else state$DPcolour)
+                                pathWidth <- list(core=state$CPwidth, bgc=state$BPwidth, deep=state$DPwidth)
                                 LONLAT <- LONLAT[o, ]
                                 #message(pathColour[[view]], " is the path color")
                                 # Chop data at the dateline
@@ -797,12 +1057,14 @@ serverMapApp <- function(input, output, session)
                 rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
             ## Write a margin comment
             if (!is.null(state$focusID)) {
+                dmsg("    single-ID with ", sum(visible), " profiles from ", state$startTime, " to ", state$endTime)
                 mtext(sprintf("Float %s: %s to %s",
                         state$focusID,
                         format(state$startTime, "%Y-%m-%d", tz="UTC"),
                         format(state$endTime, "%Y-%m-%d", tz="UTC")),
                     side=3, cex=0.8 * par("cex"), line=0)
             } else {
+                dmsg("    multi-ID with ", sum(visible), " profiles from ", state$startTime, " to ", state$endTime)
                 mtext(sprintf("%s to %s: %d Argo profiles",
                         format(state$startTime, "%Y-%m-%d", tz="UTC"),
                         format(state$endTime, "%Y-%m-%d", tz="UTC"),
@@ -814,12 +1076,12 @@ serverMapApp <- function(input, output, session)
         if ("contour" %in% state$view)
             contour(topo[["longitude"]], topo[["latitude"]], topo[["z"]],
                 levels=-1000*(1:10), drawlabels=FALSE, add=TRUE)
-        # Add a scalebar, if we are zoomed in sufficiently. This whites-out below, so 
+        # Add a scalebar, if we are zoomed in sufficiently. This whites-out below, so
         # we must do this as the last step of drawing.
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
             oce::mapScalebar(x="topright") }
+        pushState(isolate(reactiveValuesToList(state)))
     }, execOnResize=TRUE, pointsize=18) # plotMap
 }                                      # serverMapApp
 
 shiny::shinyApp(ui=uiMapApp, server=serverMapApp)
-
