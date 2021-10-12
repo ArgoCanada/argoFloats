@@ -10,9 +10,6 @@ dmsg <- function(...)
         message(...)
 }
 
-appName <- "mapApp"
-#appVersion <- "0.1"
-
 viewDefaults <- list("core", "deep", "bgc")
 colDefaults <- list(core="#F5C710", bgc="#05f076", deep="#CD0BBC")
 
@@ -119,7 +116,7 @@ uiMapApp <- shiny::fluidPage(
     shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
     #style="text-indent:1em; line-height:1.2; background:#e6f3ff; .btn{ padding: 2px 9px; }; .form-group { margin-top: 0; margin-bottom: 0 }",
     # margin-top works, but not sure if either pre{} or formgroup{} work.
-    style="text-indent:1em; line-height:1.2; background:#e6f3ff; margin-top: -2ex; pre { line-height: 0.5; }; .form-group { margin-top: 3px; margin-bottom: 3px; };",
+    style="text-indent:1em; line-height:1.2; background:#e6f3ff; margin-top: -2ex; pre { line-height: 0.5; }; .form-group { margin-top: 3px; margin-bottom: 3px;};",
     shiny::fluidRow(
         shiny::uiOutput(outputId="UIwidget")),
     shiny::fluidRow(
@@ -373,7 +370,7 @@ serverMapApp <- function(input, output, session)
 
     output$UIwidget <- shiny::renderUI({
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-            shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:2em;\">  ",appName, "</b>"))),
+            shiny::fluidRow(
                 shiny::actionButton("help", "Help"),
                 shiny::actionButton("undo", "Undo"),
                 shiny::actionButton("code", "Code"),
@@ -386,7 +383,7 @@ serverMapApp <- function(input, output, session)
                 shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",
                     shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                    shiny::dateInput(inputId="end", label="End", value=state$endTime)))
+                    shiny::dateInput(inputId="end", label="End", value=state$endTime)), style="margin-left:2em;")
         }
     })
 
