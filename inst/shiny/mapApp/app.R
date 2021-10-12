@@ -386,7 +386,7 @@ serverMapApp <- function(input, output, session)
                 shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                     shiny::textInput("ID", "Float ID", value=state$focusID, width="8em")),
                     #shiny::dateInput(inputId="end", label="End", value=state$endTime)),
-                style="margin-left:2em;")
+                style="margin-left:0.5em;")
         }
     })
 
