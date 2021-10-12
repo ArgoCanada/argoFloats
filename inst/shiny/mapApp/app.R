@@ -375,6 +375,7 @@ serverMapApp <- function(input, output, session)
         if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
             shiny::fluidRow(shiny::span(shiny::HTML(paste("<b style=\"color:blue; margin-left:2em;\">  ",appName, "</b>"))),
                 shiny::actionButton("help", "Help"),
+                shiny::actionButton("undo", "Undo"),
                 shiny::actionButton("code", "Code"),
                 shiny::actionButton("goW", shiny::HTML("&larr;")),
                 shiny::actionButton("goN", shiny::HTML("&uarr;")),
@@ -814,6 +815,15 @@ serverMapApp <- function(input, output, session)
         {
             msg <- shiny::HTML(overallHelp)
             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="Using mapApp()", size="l"))
+        })
+
+
+    shiny::observeEvent(input$undo,
+        {
+            popState()
+            previousState <- topState()
+            for (name in names(previousState))
+                state[[name]] <- previousState[[name]]
         })
 
     shiny::observeEvent(input$CsymbolGallery,
