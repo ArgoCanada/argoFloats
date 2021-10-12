@@ -120,8 +120,7 @@ uiMapApp <- shiny::fluidPage(
     shiny::fluidRow(
         shiny::uiOutput(outputId="UIwidget")),
     shiny::fluidRow(
-        shiny::column(9, shiny::uiOutput(outputId="UIview")),
-        shiny::column(2, shiny::uiOutput(outputId="UIID"))),
+        shiny::column(9, shiny::uiOutput(outputId="UIview"))),
     shiny::fluidRow(
         shiny::uiOutput(outputId="UItrajectory")),
     # These trials (of removing vertical space) did nothing
@@ -383,7 +382,11 @@ serverMapApp <- function(input, output, session)
                 shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",
                     shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
-                    shiny::dateInput(inputId="end", label="End", value=state$endTime)), style="margin-left:2em;")
+                    shiny::dateInput(inputId="end", label="End", value=state$endTime)),
+                shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
+                    shiny::textInput("ID", "Float ID", value=state$focusID, width="8em")),
+                    #shiny::dateInput(inputId="end", label="End", value=state$endTime)),
+                style="margin-left:2em;")
         }
     })
 
@@ -398,12 +401,6 @@ serverMapApp <- function(input, output, session)
                             shiny::tags$span("Without Profiles", style="color: black;")),
                         choiceValues=list( "start", "end", "lines"), selected=state$action,
                         inline=TRUE)))
-        }
-    })
-
-    output$UIID <- shiny::renderUI({
-        if (argoFloatsIsCached("argo") && input$tabselected %in% c(1)) {
-            shiny::textInput("ID", "Float ID", value=state$focusID, width="8em")
         }
     })
 
