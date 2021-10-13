@@ -814,14 +814,14 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$undo,
         {
-            if (sizeState() > 2) {
+            if (sizeState() > 2L) {
                 popState()
                 previousState <- topState()
                 for (name in names(previousState))
                     state[[name]] <- previousState[[name]]
             }
 
-            if (sizeState() == 2) {
+            if (sizeState() == 2L) {
                 notificationId <- shiny::showNotification("Already at oldest change.", type="message", duration=4)
             }
         })
@@ -892,15 +892,15 @@ serverMapApp <- function(input, output, session)
                 ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "h") { # paste hover message
                 state$hoverIsPasted <<- !state$hoverIsPasted
-            } else if (key == "u") { # TEMPORARY: undo the state stack
-                if (sizeState() > 2) {
+            } else if (key == "u") {
+                if (sizeState() > 2L) {
                     popState()
                     previousState <- topState()
                     for (name in names(previousState))
                         state[[name]] <- previousState[[name]]
                 }
 
-                if (sizeState() == 2) {
+                if (sizeState() == 2L) {
                     notificationId <- shiny::showNotification("Already at oldest change.", type="message", duration=4)
                 }
             } else if (key == "r") { # reset to start
