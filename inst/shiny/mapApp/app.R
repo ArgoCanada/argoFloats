@@ -1027,8 +1027,8 @@ serverMapApp <- function(input, output, session)
         }  else {
             rep(TRUE, length(argo$ID))
         }
-        argoFloatsDebug(debug, "about to subset, start time = ", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
-        argoFloatsDebug(debug, "about to subset, end time = ", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
+        argoFloatsDebug(debug+1, "about to subset, start time = ", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
+        argoFloatsDebug(debug+1, "about to subset, end time = ", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
         keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
         keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
         keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
@@ -1050,25 +1050,37 @@ serverMapApp <- function(input, output, session)
                     sizeSettings <- list(core=state$Csize, bgc=state$Bsize, deep=state$Dsize)
                     #message("the symbSettings are", symbSettings)
                     #message("the colSettings are", colSettings)
-                    if (!"lines" %in% state$action)
+                    if (!"lines" %in% state$action) {
                         if (symbSettings[[view]] == 21) {
                             points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], bg=colSettings[[view]], col=borderSettings[[view]], lwd=0.5)
                         } else {
                             points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                         }
+                    }
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
                             LONLAT <- lonlat[lonlat$ID==ID,]
+                            message("LONLAT length ", length(LONLAT$lon))
                             ## Sort by time instead of relying on the order in the repository
                             o <- order(LONLAT$time)
+                            message("o: "); print(o)
+                            LONLAT <- LONLAT[o, ]
                             no <- length(o)
+                            startCycle <- list(longitude=head(LONLAT$lon, 1),
+                                latitude=head(LONLAT$lat, 1),
+                                cycle=head(LONLAT$cycle, 1))
+                            endCycle <- list(longitude=tail(LONLAT$lon, 1),
+                                latitude=tail(LONLAT$lat, 1),
+                                cycle=tail(LONLAT$cycle, 1))
+                            message("startCycle:");print(startCycle)
+                            message("endCycle:");print(endCycle)
+                            DAN<<-list(LONLAT=LONLAT,start=startCycle,end=endCycle)
                             if (no > 1) {
                                 #message("view = '", view, "' jaimie")
                                 pathColour <- list(core=if (state$CPcolour == "default") colDefaults$core else state$CPcolour,
                                     bgc=if (state$BPcolour == "default") colDefaults$bgc else state$BPcolour,
                                     deep=if (state$DPcolour == "default") colDefaults$deep else state$DPcolour)
                                 pathWidth <- list(core=state$CPwidth, bgc=state$BPwidth, deep=state$DPwidth)
-                                LONLAT <- LONLAT[o, ]
                                 #message(pathColour[[view]], " is the path color")
                                 # Chop data at the dateline
                                 # https://github.com/ArgoCanada/argoFloats/issues/503
@@ -1080,18 +1092,19 @@ serverMapApp <- function(input, output, session)
                                     lines(LONLAT[,1], LONLAT[,2],
                                         col=pathColour[[view]], lwd=pathWidth[[view]])
                                     if ("start" %in% state$action)
-                                        points(LONLAT[1,1], LONLAT[1,2], pch=2, cex=1, lwd=1.4)
+                                        points(startCycle$longitude, startCycle$latitude, pch=2, cex=1, lwd=1.4)
                                     if ("end" %in% state$action)
-                                        points(LONLAT[no,1], LONLAT[no,2], pch=0, cex=1, lwd=1.4)
+                                        points(endCycle$longitude, endCycle$latitude, pch=0, cex=1, lwd=1.4)
                                 } else if (inherits(LONLAT, "MULTILINESTRING")) {
-                                    for (segment in seq_along(LONLAT)) {
-                                        lines(LONLAT[[segment]][,1], LONLAT[[segment]][,2],
-                                            col=pathColour[[view]], lwd=1.4)
-                                    }
+                                    for (seg in LONLAT) {
+                                        lines(seg[,1], seg[,2], col=pathColour[[view]], lwd=1.4)
                                         if ("start" %in% state$action)
-                                            points(LONLAT[[1]][,1][1], LONLAT[[1]][,2][1], pch=2, cex=1, lwd=1.4)
+                                            points(startCycle$longitude, startCycle$latitude, pch=2, cex=1, lwd=1.4)
                                         if ("end" %in% state$action)
-                                            points(LONLAT[[1]][,1][no], LONLAT[[1]][,2][no], pch=2, cex=1, lwd=1.4)
+                                            points(endCycle$longitude, endCycle$latitude, pch=0, cex=.7, lwd=1.4)
+                                        message("when plotting, startCycle:");print(startCycle)
+                                        message("when plotting, endCycle:");print(endCycle)
+                                    }
                                 }
                             }
                         }
