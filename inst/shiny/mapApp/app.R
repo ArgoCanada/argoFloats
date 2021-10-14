@@ -1074,24 +1074,25 @@ serverMapApp <- function(input, output, session)
                                 # https://github.com/ArgoCanada/argoFloats/issues/503
                                 LONLAT <- sf::st_sfc(sf::st_linestring(cbind(LONLAT$lon, LONLAT$lat)), crs="OGC:CRS84")
                                 LONLAT <- sf::st_wrap_dateline(LONLAT)[[1]]
-                                #> message("class(lonlatSegments): ", paste(class(lonlatSegments), collapse=" "))
+                                # message("class(lonlatSegments): ", paste(class(lonlatSegments), collapse=" "))
                                 # Examinination with the above indicates two choices: LINESTRING and MULTILINESTRING
                                 if (inherits(LONLAT, "LINESTRING")) {
                                     lines(LONLAT[,1], LONLAT[,2],
                                         col=pathColour[[view]], lwd=pathWidth[[view]])
+                                    if ("start" %in% state$action)
+                                        points(LONLAT[1,1], LONLAT[1,2], pch=2, cex=1, lwd=1.4)
+                                    if ("end" %in% state$action)
+                                        points(LONLAT[no,1], LONLAT[no,2], pch=0, cex=1, lwd=1.4)
                                 } else if (inherits(LONLAT, "MULTILINESTRING")) {
-                                    #> message("should handle multilinestring now")
                                     for (segment in seq_along(LONLAT)) {
-                                        #> message("segment=", segment, " of ", length(LONLAT))
                                         lines(LONLAT[[segment]][,1], LONLAT[[segment]][,2],
                                             col=pathColour[[view]], lwd=1.4)
+                                        # if ("start" %in% state$action)
+                                        #     #points(LONLAT[[1]], LONLAT[[1]], pch=2, cex=1, lwd=1.4)
+                                        #if ("end" %in% state$action)
+                                        #    points(LONLAT[no,1], LONLAT[no,2], pch=0, cex=1, lwd=1.4)
                                     }
                                 }
-                                #> lines(LONLAT$lon, LONLAT$lat, lwd=pathWidth[[view]], col=pathColour[[view]])
-                                if ("start" %in% state$action)
-                                    points(LONLAT[1,1], LONLAT[1,2], pch=2, cex=1, lwd=1.4)
-                                if ("end" %in% state$action)
-                                    points(LONLAT[no,1], LONLAT[no,2], pch=0, cex=1, lwd=1.4)
                             }
                         }
                     }
