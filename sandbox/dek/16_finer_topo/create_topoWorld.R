@@ -3,7 +3,7 @@ library(testthat)
 data(topoWorld) # for checking for consistency, after updates
 data(coastlineWorldFine, package="ocedata")
 topoWorldOld <- topoWorld
-res <- 20
+res <- 15
 
 topoFile <- download.topo(west=-180, east=180, south=-90, north=90,
     resolution=res, format="netcdf", destdir=".")
@@ -11,7 +11,7 @@ topoFile <- download.topo(west=-180, east=180, south=-90, north=90,
 topoWorld <- read.topo(topoFile, debug=5)
 
 if (!interactive()) png("create_topoWorld.png", unit="in",
-    res=100, width=7, height=7, pointsize=9)
+    res=150, width=7, height=7, pointsize=9)
 par(mfrow=c(2, 1), mar=c(1,1,1,1), mgp=c(2,0.7,0))
 xlim <- c(-70, -30)
 ylim <- c(30, 60)
