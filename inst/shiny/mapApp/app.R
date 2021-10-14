@@ -1059,7 +1059,7 @@ serverMapApp <- function(input, output, session)
                     }
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
-                            LONLAT <- lonlat[lonlat$ID==ID,]
+                            LONLAT <- lonlat[lonlat$ID==ID,] # will be redefined in this loop
                             message("LONLAT length ", length(LONLAT$lon))
                             ## Sort by time instead of relying on the order in the repository
                             o <- order(LONLAT$time)
@@ -1084,10 +1084,12 @@ serverMapApp <- function(input, output, session)
                                 #message(pathColour[[view]], " is the path color")
                                 # Chop data at the dateline
                                 # https://github.com/ArgoCanada/argoFloats/issues/503
-                                LONLAT <- sf::st_sfc(sf::st_linestring(cbind(LONLAT$lon, LONLAT$lat)), crs="OGC:CRS84")
-                                LONLAT <- sf::st_wrap_dateline(LONLAT)[[1]]
+                                LONLAT <- sf::st_wrap_dateline(
+                                    sf::st_sfc(
+                                        sf::st_linestring(cbind(LONLAT$lon, LONLAT$lat)),
+                                        crs="OGC:CRS84"))[[1]]
                                 # message("class(lonlatSegments): ", paste(class(lonlatSegments), collapse=" "))
-                                # Examinination with the above indicates two choices: LINESTRING and MULTILINESTRING
+                                # Examination with the above indicates two choices: LINESTRING and MULTILINESTRING
                                 if (inherits(LONLAT, "LINESTRING")) {
                                     lines(LONLAT[,1], LONLAT[,2],
                                         col=pathColour[[view]], lwd=pathWidth[[view]])
