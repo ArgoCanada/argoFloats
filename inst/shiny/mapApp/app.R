@@ -161,7 +161,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(3,
                     colourpicker::colourInput("CPcolour", "Colour", colDefaults$core)),
-                shiny::column(3, shiny::sliderInput("CPwidth", "Width", min=0.5, max=2.5, value=1.4, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("CPwidth", "Width", min=0.5, max=6, value=2, step=0.5))))),
 
     shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==3",
         shiny::mainPanel(
@@ -185,7 +185,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(3,
                     colourpicker::colourInput("BPcolour", "Colour", colDefaults$bgc)),
-                shiny::column(3, shiny::sliderInput("BPwidth", "Width", min=0.5, max=2.5, value=1.4, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("BPwidth", "Width", min=0.5, max=6, value=2, step=0.5))))),
 
     shiny::conditionalPanel(condition="input.settab==6 && input.tabselected==3",
         shiny::mainPanel(
@@ -209,7 +209,7 @@ uiMapApp <- shiny::fluidPage(
             shiny::fluidRow(
                 shiny::column(3,
                     colourpicker::colourInput("DPcolour", "Colour", colDefaults$deep)),
-                shiny::column(3, shiny::sliderInput("DPwidth", "Width", min=0.5, max=2.5, value=1.4, step=0.1))))),
+                shiny::column(3, shiny::sliderInput("DPwidth", "Width", min=0.5, max=6, value=2, step=0.5))))),
 
     shiny::conditionalPanel("input.tabselected!=3",
         shiny::fluidRow(shiny::plotOutput("plotMap",
@@ -828,18 +828,15 @@ serverMapApp <- function(input, output, session)
                 colourpicker::updateColourInput(session, inputId="DPcolour", value=previousState$DPcolour)
                 shiny::updateNumericInput(session, inputId="Csymbol", value=previousState$Csymbol)
                 shiny::updateSliderInput(session, inputId="Csize", value=previousState$Csize)
-                shiny::updateSliderInput(session, inputId="CPwidth", value=previousState$CPWidth)
+                shiny::updateSliderInput(session, inputId="CPwidth", value=previousState$CPwidth)
                 shiny::updateNumericInput(session, inputId="Bsymbol", value=previousState$Bsymbol)
                 shiny::updateSliderInput(session, inputId="Bsize", value=previousState$Bsize)
-                shiny::updateSliderInput(session, inputId="BPwidth", value=previousState$BPWidth)
+                shiny::updateSliderInput(session, inputId="BPwidth", value=previousState$BPwidth)
                 shiny::updateNumericInput(session, inputId="Dsymbol", value=previousState$Dsymbol)
                 shiny::updateSliderInput(session, inputId="Dsize", value=previousState$Dsize)
-                shiny::updateSliderInput(session, inputId="DPwidth", value=previousState$DPWidth)
+                shiny::updateSliderInput(session, inputId="DPwidth", value=previousState$DPwidth)
                 for (name in names(previousState))
                     state[[name]] <- previousState[[name]]
-            }
-            if (sizeState() == 2L) {
-                notificationId <- shiny::showNotification("Already at oldest change.", type="message", duration=4)
             }
         })
 
@@ -924,20 +921,17 @@ serverMapApp <- function(input, output, session)
                     colourpicker::updateColourInput(session, inputId="DPcolour", value=previousState$DPcolour)
                     shiny::updateNumericInput(session, inputId="Csymbol", value=previousState$Csymbol)
                     shiny::updateSliderInput(session, inputId="Csize", value=previousState$Csize)
-                    shiny::updateSliderInput(session, inputId="CPwidth", value=previousState$CPWidth)
+                    shiny::updateSliderInput(session, inputId="CPwidth", value=previousState$CPwidth)
                     shiny::updateNumericInput(session, inputId="Bsymbol", value=previousState$Bsymbol)
                     shiny::updateSliderInput(session, inputId="Bsize", value=previousState$Bsize)
-                    shiny::updateSliderInput(session, inputId="BPwidth", value=previousState$BPWidth)
+                    shiny::updateSliderInput(session, inputId="BPwidth", value=previousState$BPwidth)
                     shiny::updateNumericInput(session, inputId="Dsymbol", value=previousState$Dsymbol)
                     shiny::updateSliderInput(session, inputId="Dsize", value=previousState$Dsize)
-                    shiny::updateSliderInput(session, inputId="DPwidth", value=previousState$DPWidth)
+                    shiny::updateSliderInput(session, inputId="DPwidth", value=previousState$DPwidth)
                     for (name in names(previousState))
                         state[[name]] <- previousState[[name]]
                 }
 
-                if (sizeState() == 2L) {
-                    notificationId <- shiny::showNotification("Already at oldest change.", type="message", duration=4)
-                }
             } else if (key == "r") { # reset to start
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
@@ -1130,7 +1124,7 @@ serverMapApp <- function(input, output, session)
         # Add a scalebar, if we are zoomed in sufficiently. This whites-out below, so
         # we must do this as the last step of drawing.
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
-            oce::mapScalebar(x="topright") }
+            oce::mapScalebar(x="topright", cex=0.8) }
         pushState(isolate(reactiveValuesToList(state)))
     }, execOnResize=TRUE, pointsize=18) # plotMap
 }                                      # serverMapApp
