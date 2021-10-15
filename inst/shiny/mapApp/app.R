@@ -906,6 +906,7 @@ serverMapApp <- function(input, output, session)
                 ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "h") { # paste hover message
                 state$hoverIsPasted <<- !state$hoverIsPasted
+                pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "u") {
                 if (sizeState() > 2L) {
                     popState()
