@@ -1048,6 +1048,9 @@ serverMapApp <- function(input, output, session)
                     symbSettings <- list(core=state$Csymbol, bgc=state$Bsymbol, deep=state$Dsymbol)
                     borderSettings <- list(core=state$Cborder, bgc=state$Bborder, deep=state$Dborder)
                     sizeSettings <- list(core=state$Csize, bgc=state$Bsize, deep=state$Dsize)
+                    if ("lines" %in% state$action && !"path" %in% state$view) {
+                        state$action <- NULL
+                    }
                     if (!"lines" %in% state$action) {
                         if (symbSettings[[view]] == 21) {
                             points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], bg=colSettings[[view]], col=borderSettings[[view]], lwd=0.5)
