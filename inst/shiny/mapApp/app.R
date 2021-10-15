@@ -1095,7 +1095,7 @@ serverMapApp <- function(input, output, session)
                                         if ("start" %in% state$action)
                                             points(startCycle$longitude, startCycle$latitude, pch=2, cex=1, lwd=1.4)
                                         if ("end" %in% state$action)
-                                            points(endCycle$longitude, endCycle$latitude, pch=23, cex=.7, lwd=1.4)
+                                            points(endCycle$longitude, endCycle$latitude, pch=23, cex=1, lwd=1.4)
                                     }
                                 }
                             }
