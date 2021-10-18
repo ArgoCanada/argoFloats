@@ -11,10 +11,7 @@
 
 # Changes since previous CRAN submission
 
-This version, numbered 1.0.3, addresses an error with the mapApp() Shiny app.
-We were resetting a par(mar) call within the plot function of mapApp(), and
-that caused a problem in subsequent interpretation of a mouse "brush"
-operation.
+This version, numbered 1.0.3, addresses (FIXME: add new features here).
 
 
 
