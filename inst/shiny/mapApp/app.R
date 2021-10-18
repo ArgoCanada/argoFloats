@@ -695,7 +695,7 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, "&nbsp;&nbsp; argos <- readProfiles(profiles)<br>")
             msg <- paste( msg, "&nbsp;&nbsp; plot(applyQC(argos), which=\"TS\", TSControl=list(colByCycle=1:8))<br>")
             msg <- paste(msg, "}<br>")
-            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="R code", size="l"))
+            shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="R code hints", size="l"))
         })
 
     shiny::observeEvent(input$ID,
