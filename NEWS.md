@@ -2,7 +2,7 @@
 
 ## argoFloats 1.0.4
 
-- no changes yet
+* Improve index[["ID"]] speed by 3X.
 
 ## argoFloats 1.0.3 (on CRAN)
 
