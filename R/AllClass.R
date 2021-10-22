@@ -394,7 +394,7 @@ setMethod(f="[[",
                       ## cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
                       ## return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "cycle" && !istraj) {
-                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file)
+                      cycle <- gsub("^.*[/\\\\][A-Z]*[0-9]*_([0-9]{3,4}[D]{0,1})\\.nc$", "\\1", x@data$index$file, perl=TRUE)
                       return(as.vector(if (missing(j)) cycle else cycle[j]))
                   } else if (length(i) == 1 && i == "ID" && !istraj) {
                       ID <- gsub("^.*[/\\\\][A-Z]*([0-9]*)_[0-9]{3,4}[A-Z]*\\.nc$", "\\1", x@data$index$file, perl=TRUE)
