@@ -24,7 +24,7 @@ of results.
 \description{
 \code{showQCTests} prints a summary of the quality-control (QC) tests
 (if any) that were performed on an Argo profile in real-time (\strong{Caution}: any tests completed and/or failed on delayed
-mode data are not recorded. showQCTests also assumes tests performed
+mode data are not recorded. This function also assumes tests performed
 or failed are recorded once, otherwise it produces
 a warning).  It uses
 \code{\link[=hexToBits]{hexToBits()}} to decode the hexadecimal  values that may
