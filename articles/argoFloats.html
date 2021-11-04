@@ -94,7 +94,7 @@
       <h1 data-toc-skip>Introduction to argoFloats</h1>
                         <h4 class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 class="date">2021-10-25</h4>
+            <h4 class="date">2021-11-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/master/vignettes/argoFloats.Rmd"><code>vignettes/argoFloats.Rmd</code></a></small>
       <div class="hidden name"><code>argoFloats.Rmd</code></div>
@@ -217,7 +217,7 @@
 <a href="#preliminary-setup" class="anchor"></a>Preliminary Setup</h1>
 <p>Since argoFloats is in an active phase of development, it is not yet available on CRAN. Still, it is easily installed in R with</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
 <span class="fu">install_github</span><span class="op">(</span><span class="st">"ArgoCanada/argoFloats"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></code></pre></div>
 <p>` where, of course, the devtools package must be installed first, if it is not already present on the user’s system.</p>
 </div>
@@ -239,7 +239,7 @@
 <p>To access the embedded index within <code>argoFloats</code>, the following code is used:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"index"</span><span class="op">)</span></code></pre></div>
-<p>It is now possible to process the downloaded index using the <code>argoFloats</code> specialized versions of R “generic” functions, <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>, <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code>, <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>, and <code>show()</code> as shown below.</p>
+<p>It is now possible to process the downloaded index using the <code>argoFloats</code> specialized versions of R “generic” functions, <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code>, <code>[[</code>, <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>, and <code><a href="https://rdrr.io/r/methods/show.html">show()</a></code> as shown below.</p>
 </div>
 <div id="processing-steps" class="section level1">
 <h1 class="hasAnchor">
@@ -248,9 +248,9 @@
 <div id="plotting" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plotting" class="anchor"></a>Plotting</h2>
-<p>The specialized <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> command within the <code>argoFloats</code> package provides simple ways to plot aspects of <code>argoFloats-class</code> objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:</p>
+<p>The specialized <code><a href="https://r-spatial.github.io/sf/reference/plot.html">plot()</a></code> command within the <code>argoFloats</code> package provides simple ways to plot aspects of <code>argoFloats-class</code> objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">index</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">index</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
 <div class="figure">
 <img src="argoFloats_files/figure-html/unnamed-chunk-5-1.png" alt="Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Bahamas." width="672"><p class="caption">
 Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Bahamas.
@@ -260,7 +260,7 @@ Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Ba
 <div id="extracting-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#extracting-data" class="anchor"></a>Extracting Data</h2>
-<p>Furthermore, the <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code> command provides a way to extract items from <code>argoFloats</code> objects, without getting lost in the details of storage. For example, if the user wanted to extract the <code>file</code> within the <code>index</code> data set, instead of doing <code>index@data$index$file</code>, instead they can simply do <code>index[["file"]]</code>. (Note that <code>[[&lt;-</code> is <em>not</em> specialized, since the user is highly discouraged from altering values within <code>argoFloats</code> objects).</p>
+<p>Furthermore, the <code>[[</code> command provides a way to extract items from <code>argoFloats</code> objects, without getting lost in the details of storage. For example, if the user wanted to extract the <code>file</code> within the <code>index</code> data set, instead of doing <code>index@data$index$file</code>, instead they can simply do <code>index[["file"]]</code>. (Note that <code>[[&lt;-</code> is <em>not</em> specialized, since the user is highly discouraged from altering values within <code>argoFloats</code> objects).</p>
 </div>
 <div id="summarizing" class="section level2">
 <h2 class="hasAnchor">
@@ -270,7 +270,7 @@ Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Ba
 <div id="printing" class="section level2">
 <h2 class="hasAnchor">
 <a href="#printing" class="anchor"></a>Printing</h2>
-<p>Lastly, the <code>show()</code> command provides a one-line sketch of <code>argoFloats-class</code> objects. This gets used by the <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> function. For example if the user types in:</p>
+<p>Lastly, the <code><a href="https://rdrr.io/r/methods/show.html">show()</a></code> command provides a one-line sketch of <code>argoFloats-class</code> objects. This gets used by the <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> function. For example if the user types in:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">index</span></code></pre></div>
 <p>The following output occurs:</p>
@@ -344,7 +344,7 @@ Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Ba
 </tr>
 </tbody>
 </table>
-<p>Additionally, the <code>destdir</code> argument has a default of <code>~/data/argo</code>, where it should be noted that <code><a href="https://rdrr.io/r/base/tilde.html">~</a></code> is a short cut for <code>C:\Users\</code>. See <code>?getIndex()</code> for further description about the additional arguments for this command.</p>
+<p>Additionally, the <code>destdir</code> argument has a default of <code>~/data/argo</code>, where it should be noted that <code>~</code> is a short cut for <code>C:\Users\</code>. See <code>?getIndex()</code> for further description about the additional arguments for this command.</p>
 <p>To get the index from the Ifremer server, the following code is used:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"core"</span><span class="op">)</span></code></pre></div>
@@ -364,7 +364,7 @@ Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Ba
 <span class="va">aiPoly</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">ai</span>, polygon<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="va">lonPoly</span>, latitude<span class="op">=</span><span class="va">latPoly</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Plotting the subsets together</span>
 <span class="va">CP</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span><span class="va">aiCircle</span>, <span class="va">aiPoly</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">CP</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>             <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">CP</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>             <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
 <div class="figure">
 <img src="argoFloats_files/figure-html/unnamed-chunk-9-1.png" alt="Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the coast of Bahamas" width="672"><p class="caption">
 Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the coast of Bahamas
@@ -389,10 +389,10 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <span class="va">from</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="st">"2020-09-23"</span>, tz<span class="op">=</span><span class="st">"UTC"</span><span class="op">)</span>
 <span class="va">to</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html">as.POSIXct</a></span><span class="op">(</span><span class="st">"2020-10-25"</span>, tz<span class="op">=</span><span class="st">"UTC"</span><span class="op">)</span>
 <span class="va">index2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">index1</span>, time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>from<span class="op">=</span><span class="va">from</span>, to<span class="op">=</span><span class="va">to</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">index2</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span>,  asp<span class="op">=</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html">cos</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">index2</span><span class="op">[[</span><span class="st">"latitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="va">pi</span><span class="op">/</span><span class="fl">180</span><span class="op">)</span>,  mgp<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/options.html">getOption</a></span><span class="op">(</span><span class="st">"oceMgp"</span><span class="op">)</span>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">index2</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span>,  asp<span class="op">=</span><span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html">cos</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">index2</span><span class="op">[[</span><span class="st">"latitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="va">pi</span><span class="op">/</span><span class="fl">180</span><span class="op">)</span>,  mgp<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/options.html">getOption</a></span><span class="op">(</span><span class="st">"oceMgp"</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">lonlim</span>, <span class="va">latlim</span>, pch<span class="op">=</span><span class="fl">21</span>, col<span class="op">=</span><span class="st">"black"</span>, bg<span class="op">=</span><span class="st">"red"</span>, type<span class="op">=</span><span class="st">"o"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">section</span>, which<span class="op">=</span><span class="st">"map"</span>, col<span class="op">=</span><span class="st">"tan"</span><span class="op">)</span>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">section</span>, which<span class="op">=</span><span class="st">"map"</span>, col<span class="op">=</span><span class="st">"tan"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="01_section_argo.png" alt=""><p class="caption">Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 49 samples from 2020-09-23 to 2020-10-25 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package</p>
@@ -413,7 +413,7 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">index1</span><span class="op">)</span>
 <span class="va">argos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="va">profiles</span><span class="op">)</span>
 <span class="va">argosClean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/applyQC.html">applyQC</a></span><span class="op">(</span><span class="va">argos</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"profile"</span>, type<span class="op">=</span><span class="st">"p"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"profile"</span>, type<span class="op">=</span><span class="st">"p"</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <img src="readProfiles.png" alt=""><p class="caption">Figure 5: Temperature profile created using argoFloats readProfiles function</p>
 </div>
@@ -443,7 +443,7 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <span class="co"># Subset for year 2012-2020</span>
 <span class="va">index6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">index5</span>, time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>from<span class="op">=</span><span class="st">"2012-01-01"</span>, to<span class="op">=</span><span class="st">"2020-01-01"</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># Plot data</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">index6</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>             <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">index6</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>             <span class="co"># also, try using bathymetry=TRUE</span></code></pre></div>
 <p><strong>Exercise 2:</strong> Use the information from Figure 4 to compare Argo and CTD section sampling efforts.</p>
 <p>Figure 4 reveals that it takes almost 3 months of Argo sampling to reproduce a 1 month CTD section cruise. Additionally, it displayed that there are geographical gaps within the Argo data. On the other hand, it should be noted that by extending the latitude range, these gaps are quickly filled in. In conclusion, Argo sampling is much more cost effective, and it can allow for collection of more information (i.e. nutrients, oxygen, backscattering, etc.) if such thing is desired.</p>
 <p><strong>Exercise 3:</strong> Using the profile in the previous example, plot a TS diagram.</p>
@@ -454,7 +454,7 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">sub</span><span class="op">)</span>
 <span class="va">argos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="va">profiles</span><span class="op">)</span>
 <span class="va">argosClean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/applyQC.html">applyQC</a></span><span class="op">(</span><span class="va">argos</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"TS"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"TS"</span><span class="op">)</span></code></pre></div>
 </div>
   </div>
 

@@ -181,7 +181,7 @@ download, regardless of the age of the local file.</p></td>
       <td><p>character value, or vector of character values, indicating the name of
 servers that supply argo data to be acquired with <code><a href='getIndex.html'>getIndex()</a></code>.  If not supplied,
 the default will be determined with <code><a href='argoDefaultDestdir.html'>argoDefaultServer()</a></code>, which uses
-a value set by <code><a href='https://rdrr.io/r/base/options.html'>options("argoFloats.server"=URL)</a></code>
+a value set by <code>options("argoFloats.server"=URL)</code>
 where <code>URL</code> is an appropriate URL, or <code>"ifremer-https"</code> if no such option was
 set.</p></td>
     </tr>
@@ -245,12 +245,12 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
     <p>Dan Kelley and Jaimie Harbin</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
-    <span class='fu'>mapApp</span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>    <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span></span>
+<span class='r-in'>    <span class='fu'>mapApp</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -158,87 +158,93 @@ As its filename indicates, it holds the "synthetic" version of "real-time" data.
 <code><a href='SD5903586_001.nc.html'>SD5903586_001.nc</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
-<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; argoFloats summary
-#&gt; ------------------
-#&gt; 
-#&gt; * type:        argos
-#&gt; * contains 1 objects
-#&gt; * hint: access list of oce::argo objects with x[["argos"]] or a single one with e.g. x[[1]]
-#&gt; * Processing Log
-#&gt; 
-#&gt;     - 2021-10-25 11:53:10 UTC: `create 'argoFloats' object`
-#&gt;     - 2021-10-25 11:53:10 UTC: `readProfiles(profiles = system.file("extdata", "SR2902204_131.nc",     package = "argoFloats"))`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Argo Summary
-#&gt; ------------
-#&gt; 
-#&gt; * Source:              "/Users/runner/work/_temp/Library/argoFloats/extdata/SR2902204_131.nc"
-#&gt; * id:                  "2902204"
-#&gt; * feature type:        "trajectoryProfile"
-#&gt; * Profiles:            0 delayed; 0 adjusted; 0 realtime
-#&gt; * Time:                2018-01-23 18:18:35
-#&gt; * Data Overview
-#&gt; 
-#&gt;                                                 Min.       Mean      Max.  Dim. NAs          OriginalName
-#&gt;     latitude [°N]                             21.041     21.041    21.041     1   0              LATITUDE
-#&gt;     longitude [°E]                             66.67      66.67     66.67     1   0             LONGITUDE
-#&gt;     pressure [dbar]                             3.99     253.15     528.2 335x1   0                  PRES
-#&gt;     pressureAdjusted [dbar]                     4.03     253.19    528.24 335x1   0         PRES_ADJUSTED
-#&gt;     pressureAdjustedError [dbar]                  NA         NA        NA 335x1 335   PRES_ADJUSTED_ERROR
-#&gt;     temperature [°C, ITS-90]                  12.826     17.617    24.504 335x1   0                  TEMP
-#&gt;     temperatureAdjusted [°C, ITS-90]          12.826     17.617    24.504 335x1   0         TEMP_ADJUSTED
-#&gt;     temperatureAdjustedError [°C, ITS-90]         NA         NA        NA 335x1 335   TEMP_ADJUSTED_ERROR
-#&gt;     salinity [PSS-78]                         35.582      35.94    36.224 335x1   0                  PSAL
-#&gt;     salinityAdjusted [PSS-78]                 35.582      35.94    36.224 335x1   0         PSAL_ADJUSTED
-#&gt;     salinityAdjustedError [PSS-78]                NA         NA        NA 335x1 335   PSAL_ADJUSTED_ERROR
-#&gt;     oxygen [μmol/kg]                        -0.65686     35.741    200.11 335x1 263                  DOXY
-#&gt;     oxygenAdjusted [μmol/kg]                      NA         NA        NA 335x1 335         DOXY_ADJUSTED
-#&gt;     oxygenAdjustedError [μmol/kg]                 NA         NA        NA 335x1 335   DOXY_ADJUSTED_ERROR
-#&gt;     chlorophyllA                              0.0511    0.35557    2.0878 335x1 263                  CHLA
-#&gt;     chlorophyllAAdjusted                          NA         NA        NA 335x1 335         CHLA_ADJUSTED
-#&gt;     chlorophyllAAdjustedError                     NA         NA        NA 335x1 335   CHLA_ADJUSTED_ERROR
-#&gt;     BBP700                                0.00032344 0.00070775 0.0018912 335x1 263                BBP700
-#&gt;     BBP700Adjusted                                NA         NA        NA 335x1 335       BBP700_ADJUSTED
-#&gt;     BBP700AdjustedError                           NA         NA        NA 335x1 335 BBP700_ADJUSTED_ERROR
-#&gt; 
-#&gt; * Data-quality Flag Scheme
-#&gt; 
-#&gt;     name    "argo"
-#&gt;     mapping list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)
-#&gt;     default c(0, 3, 4, 6, 7, 9)
-#&gt; 
-#&gt; * Data-quality Flags
-#&gt; 
-#&gt;     pressure:             "1" 263, "3" 72
-#&gt;     pressureAdjusted:     "1" 263, "3" 1, "8" 71
-#&gt;     temperature:          "1" 263, "3" 1, "8" 71
-#&gt;     temperatureAdjusted:  "1" 263, "3" 1, "8" 71
-#&gt;     salinity:             "1" 263, "3" 1, "8" 71
-#&gt;     salinityAdjusted:     "1" 263, "3" 1, "8" 71
-#&gt;     oxygen:               "1" 37, "3" 1, "4" 34
-#&gt;     oxygenAdjusted:       NA 335 
-#&gt;     chlorophyllA:         "0" 72
-#&gt;     chlorophyllAAdjusted: NA 335 
-#&gt;     BBP700:               "0" 72
-#&gt;     BBP700Adjusted:       NA 335 
-#&gt; 
-#&gt; * Processing Log
-#&gt; 
-#&gt;     - 2021-10-25 11:53:10 UTC: `create 'argo' object`
-#&gt;     - 2021-10-25 11:53:10 UTC: `initializeFlagScheme(object, name="argo", mapping=list(not_assessed=0,passed_all_tests=1,probably_good=2,probably_bad=3,bad=4,changed=5,not_used_6=6,not_used_7=7,estimated=8,missing=9)), default=c(0,3,4,9))`
-#&gt;     - 2021-10-25 11:53:10 UTC: `read.argo(file="/Users/runner/work/_temp/Library/argoFloats/extdata/SR2902204_131.nc")`
-#&gt;     - 2021-10-25 11:53:10 UTC: `override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)`</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> argoFloats summary</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * type:        argos</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * contains 1 objects</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * hint: access list of oce::argo objects with x[["argos"]] or a single one with e.g. x[[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Processing Log</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:14 UTC: `create 'argoFloats' object`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:14 UTC: `readProfiles(profiles = system.file("extdata", "SR2902204_131.nc",     package = "argoFloats"))`</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Argo Summary</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Source:              "/Users/runner/work/_temp/Library/argoFloats/extdata/SR2902204_131.nc"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * id:                  "2902204"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * feature type:        "trajectoryProfile"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Profiles:            0 delayed; 0 adjusted; 0 realtime</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Time:                2018-01-23 18:18:35</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Data Overview</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                                 Min.       Mean      Max.  Dim. NAs          OriginalName</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     latitude [°N]                             21.041     21.041    21.041     1   0              LATITUDE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     longitude [°E]                             66.67      66.67     66.67     1   0             LONGITUDE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressure [dbar]                             3.99     253.15     528.2 335x1   0                  PRES</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressureAdjusted [dbar]                     4.03     253.19    528.24 335x1   0         PRES_ADJUSTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressureAdjustedError [dbar]                  NA         NA        NA 335x1 335   PRES_ADJUSTED_ERROR</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperature [°C, ITS-90]                  12.826     17.617    24.504 335x1   0                  TEMP</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperatureAdjusted [°C, ITS-90]          12.826     17.617    24.504 335x1   0         TEMP_ADJUSTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperatureAdjustedError [°C, ITS-90]         NA         NA        NA 335x1 335   TEMP_ADJUSTED_ERROR</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinity [PSS-78]                         35.582      35.94    36.224 335x1   0                  PSAL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinityAdjusted [PSS-78]                 35.582      35.94    36.224 335x1   0         PSAL_ADJUSTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinityAdjustedError [PSS-78]                NA         NA        NA 335x1 335   PSAL_ADJUSTED_ERROR</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     oxygen [μmol/kg]                        -0.65686     35.741    200.11 335x1 263                  DOXY</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     oxygenAdjusted [μmol/kg]                      NA         NA        NA 335x1 335         DOXY_ADJUSTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     oxygenAdjustedError [μmol/kg]                 NA         NA        NA 335x1 335   DOXY_ADJUSTED_ERROR</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     chlorophyllA                              0.0511    0.35557    2.0878 335x1 263                  CHLA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     chlorophyllAAdjusted                          NA         NA        NA 335x1 335         CHLA_ADJUSTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     chlorophyllAAdjustedError                     NA         NA        NA 335x1 335   CHLA_ADJUSTED_ERROR</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     BBP700                                0.00032344 0.00070775 0.0018912 335x1 263                BBP700</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     BBP700Adjusted                                NA         NA        NA 335x1 335       BBP700_ADJUSTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     BBP700AdjustedError                           NA         NA        NA 335x1 335 BBP700_ADJUSTED_ERROR</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Data-quality Flag Scheme</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     name    "argo"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     mapping list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     default c(0, 3, 4, 6, 7, 9)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Data-quality Flags</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressure:             "1" 263, "3" 72</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressureAdjusted:     "1" 263, "3" 1, "8" 71</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperature:          "1" 263, "3" 1, "8" 71</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperatureAdjusted:  "1" 263, "3" 1, "8" 71</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinity:             "1" 263, "3" 1, "8" 71</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinityAdjusted:     "1" 263, "3" 1, "8" 71</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     oxygen:               "1" 37, "3" 1, "4" 34</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     oxygenAdjusted:       NA 335 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     chlorophyllA:         "0" 72</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     chlorophyllAAdjusted: NA 335 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     BBP700:               "0" 72</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     BBP700Adjusted:       NA 335 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Processing Log</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:14 UTC: `create 'argo' object`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:14 UTC: `initializeFlagScheme(object, name="argo", mapping=list(not_assessed=0,passed_all_tests=1,probably_good=2,probably_bad=3,bad=4,changed=5,not_used_6=6,not_used_7=7,estimated=8,missing=9)), default=c(0,3,4,9))`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:14 UTC: `read.argo(file="/Users/runner/work/_temp/Library/argoFloats/extdata/SR2902204_131.nc")`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:14 UTC: `override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)`</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

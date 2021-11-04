@@ -162,23 +162,27 @@ is shown here, and in the documentation for <code><a href='useAdjusted.html'>use
 <code><a href='SR2902204_131.nc.html'>SR2902204_131.nc</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
-<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SD5903586_001.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='input'><span class='va'>a1</span> <span class='op'>&lt;-</span> <span class='va'>a</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
-<span class='co'># Illustrate oxygen adjustment</span>
-<span class='va'>p</span> <span class='op'>&lt;-</span> <span class='va'>a1</span><span class='op'>[[</span><span class='st'>"pressure"</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>O</span> <span class='op'>&lt;-</span> <span class='va'>a1</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>Oa</span>  <span class='op'>&lt;-</span> <span class='va'>a1</span><span class='op'>[[</span><span class='st'>"oxygenAdjusted"</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>Percent</span> <span class='op'>&lt;-</span> <span class='fl'>100</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>Oa</span> <span class='op'>-</span> <span class='va'>O</span><span class='op'>)</span> <span class='op'>/</span> <span class='va'>O</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>Percent</span>, main<span class='op'>=</span><span class='st'>"Oxygen adjustment"</span><span class='op'>)</span>
-</div><div class='img'><img src='SD5903586_001.nc-1.png' alt='' width='672' height='672' /></div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SD5903586_001.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-in'><span class='va'>a1</span> <span class='op'>&lt;-</span> <span class='va'>a</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span></span>
+<span class='r-in'><span class='co'># Illustrate oxygen adjustment</span></span>
+<span class='r-in'><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='va'>a1</span><span class='op'>[[</span><span class='st'>"pressure"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>O</span> <span class='op'>&lt;-</span> <span class='va'>a1</span><span class='op'>[[</span><span class='st'>"oxygen"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>Oa</span>  <span class='op'>&lt;-</span> <span class='va'>a1</span><span class='op'>[[</span><span class='st'>"oxygenAdjusted"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>Percent</span> <span class='op'>&lt;-</span> <span class='fl'>100</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>Oa</span> <span class='op'>-</span> <span class='va'>O</span><span class='op'>)</span> <span class='op'>/</span> <span class='va'>O</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>Percent</span>, main<span class='op'>=</span><span class='st'>"Oxygen adjustment"</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='SD5903586_001.nc-1.png' alt='' width='672' height='672' /></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -145,7 +145,7 @@ value of i and, in some cases, on the value of j; see &amp;#8220;Details&amp;#82
     <div class="ref-description">
     <p>This function provides an easy way to look up values within an <code><a href='argoFloats-class.html'>argoFloats</a></code>
 object, without the need to know the exact structure of the data. The action
-taken by <code><a href='https://rdrr.io/r/base/Extract.html'>[[</a></code> depends on the <code>type</code> element in the <code>metadata</code> slot of
+taken by <code>[[</code> depends on the <code>type</code> element in the <code>metadata</code> slot of
 the object (which is set by the function that created the object), on the
 value of <code>i</code> and, in some cases, on the value of <code>j</code>; see &#8220;Details&#8221;.</p>
     </div>
@@ -282,22 +282,25 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
     <p>Dan Kelley</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
-<span class='co'># Full remote filename for first two item in index</span>
-<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"server"</span><span class='op'>]</span><span class='op'>]</span>, <span class='st'>"/dac/"</span>, <span class='va'>index</span><span class='op'>[[</span><span class='st'>"cycle"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "https://data-argo.ifremer.fr/dac/124"
-#&gt; [2] "https://data-argo.ifremer.fr/dac/125"</div><div class='input'><span class='co'># File names and geographical locations of first 5 items in index</span>
-<span class='va'>index5</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 5 cycles (0.496%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>file<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span><span class='op'>(</span><span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='va'>index5</span><span class='op'>[[</span><span class='st'>"file"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>,
-           lon<span class='op'>=</span><span class='va'>index5</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>,
-           lat<span class='op'>=</span><span class='va'>index5</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;              file     lon    lat
-#&gt; 1 D1901584_124.nc -76.231 27.705
-#&gt; 2 D1901584_124.nc -76.024 27.773
-#&gt; 3 D1901584_124.nc -76.320 28.064
-#&gt; 4 D1901584_124.nc -76.520 28.101
-#&gt; 5 D1901584_124.nc -77.108 27.794</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Full remote filename for first two item in index</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"server"</span><span class='op'>]</span><span class='op'>]</span>, <span class='st'>"/dac/"</span>, <span class='va'>index</span><span class='op'>[[</span><span class='st'>"cycle"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "https://data-argo.ifremer.fr/dac/124"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [2] "https://data-argo.ifremer.fr/dac/125"</span>
+<span class='r-in'><span class='co'># File names and geographical locations of first 5 items in index</span></span>
+<span class='r-in'><span class='va'>index5</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Kept 5 cycles (0.496%)</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>file<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>gsub</a></span><span class='op'>(</span><span class='st'>".*/"</span>, <span class='st'>""</span>, <span class='va'>index5</span><span class='op'>[[</span><span class='st'>"file"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>,</span>
+<span class='r-in'>           lon<span class='op'>=</span><span class='va'>index5</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span class='r-in'>           lat<span class='op'>=</span><span class='va'>index5</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>              file     lon    lat</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 D1901584_124.nc -76.231 27.705</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2 D1901584_124.nc -76.024 27.773</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 D1901584_124.nc -76.320 28.064</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4 D1901584_124.nc -76.520 28.101</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5 D1901584_124.nc -77.108 27.794</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -156,64 +156,66 @@ on 2021 March 7.</p>
 <code><a href='SR2902204_131.nc.html'>SR2902204_131.nc</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
-<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"R3901602_163.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; argoFloats summary
-#&gt; ------------------
-#&gt; 
-#&gt; * type:        argos
-#&gt; * contains 1 objects
-#&gt; * hint: access list of oce::argo objects with x[["argos"]] or a single one with e.g. x[[1]]
-#&gt; * Processing Log
-#&gt; 
-#&gt;     - 2021-10-25 11:53:08 UTC: `create 'argoFloats' object`
-#&gt;     - 2021-10-25 11:53:09 UTC: `readProfiles(profiles = system.file("extdata", "R3901602_163.nc",     package = "argoFloats"))`</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Argo Summary
-#&gt; ------------
-#&gt; 
-#&gt; * Source:              "/Users/runner/work/_temp/Library/argoFloats/extdata/R3901602_163.nc"
-#&gt; * id:                  "3901602"
-#&gt; * feature type:        "trajectoryProfile"
-#&gt; * Profiles:            0 delayed; 1 adjusted; 0 realtime
-#&gt; * Time:                2021-02-25 13:50:28
-#&gt; * Data Overview
-#&gt; 
-#&gt;                                              Min.    Mean    Max. Dim. NAs        OriginalName
-#&gt;     latitude [°N]                          43.806  43.806  43.806    1   0            LATITUDE
-#&gt;     longitude [°E]                        -58.751 -58.751 -58.751    1   0           LONGITUDE
-#&gt;     pressure [dbar]                           5.1  529.15  1749.9 76x1   0                PRES
-#&gt;     pressureAdjusted [dbar]                   5.3  529.35  1750.1 76x1   0       PRES_ADJUSTED
-#&gt;     pressureAdjustedError [dbar]               NA      NA      NA 76x1  76 PRES_ADJUSTED_ERROR
-#&gt;     temperature [°C, ITS-90]                3.859  8.3181  13.685 76x1   0                TEMP
-#&gt;     temperatureAdjusted [°C, ITS-90]        3.859  8.3181  13.685 76x1   0       TEMP_ADJUSTED
-#&gt;     temperatureAdjustedError [°C, ITS-90]      NA      NA      NA 76x1  76 TEMP_ADJUSTED_ERROR
-#&gt;     salinity [PSS-78]                      34.675  35.101  35.664 76x1   0                PSAL
-#&gt;     salinityAdjusted [PSS-78]              34.675  35.101  35.664 76x1   0       PSAL_ADJUSTED
-#&gt;     salinityAdjustedError [PSS-78]             NA      NA      NA 76x1  76 PSAL_ADJUSTED_ERROR
-#&gt; 
-#&gt; * Data-quality Flag Scheme
-#&gt; 
-#&gt;     name    "argo"
-#&gt;     mapping list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)
-#&gt;     default c(0, 3, 4, 6, 7, 9)
-#&gt; 
-#&gt; * Data-quality Flags
-#&gt; 
-#&gt;     pressure:            "1" 76
-#&gt;     pressureAdjusted:    "1" 76
-#&gt;     temperature:         "1" 76
-#&gt;     temperatureAdjusted: "1" 76
-#&gt;     salinity:            "1" 76
-#&gt;     salinityAdjusted:    "1" 76
-#&gt; 
-#&gt; * Processing Log
-#&gt; 
-#&gt;     - 2021-10-25 11:53:09 UTC: `create 'argo' object`
-#&gt;     - 2021-10-25 11:53:09 UTC: `initializeFlagScheme(object, name="argo", mapping=list(not_assessed=0,passed_all_tests=1,probably_good=2,probably_bad=3,bad=4,changed=5,not_used_6=6,not_used_7=7,estimated=8,missing=9)), default=c(0,3,4,9))`
-#&gt;     - 2021-10-25 11:53:09 UTC: `read.argo(file="/Users/runner/work/_temp/Library/argoFloats/extdata/R3901602_163.nc")`
-#&gt;     - 2021-10-25 11:53:09 UTC: `override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)`</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"R3901602_163.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> argoFloats summary</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * type:        argos</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * contains 1 objects</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * hint: access list of oce::argo objects with x[["argos"]] or a single one with e.g. x[[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Processing Log</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:13 UTC: `create 'argoFloats' object`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:13 UTC: `readProfiles(profiles = system.file("extdata", "R3901602_163.nc",     package = "argoFloats"))`</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>a</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Argo Summary</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Source:              "/Users/runner/work/_temp/Library/argoFloats/extdata/R3901602_163.nc"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * id:                  "3901602"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * feature type:        "trajectoryProfile"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Profiles:            0 delayed; 1 adjusted; 0 realtime</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Time:                2021-02-25 13:50:28</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Data Overview</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                              Min.    Mean    Max. Dim. NAs        OriginalName</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     latitude [°N]                          43.806  43.806  43.806    1   0            LATITUDE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     longitude [°E]                        -58.751 -58.751 -58.751    1   0           LONGITUDE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressure [dbar]                           5.1  529.15  1749.9 76x1   0                PRES</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressureAdjusted [dbar]                   5.3  529.35  1750.1 76x1   0       PRES_ADJUSTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressureAdjustedError [dbar]               NA      NA      NA 76x1  76 PRES_ADJUSTED_ERROR</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperature [°C, ITS-90]                3.859  8.3181  13.685 76x1   0                TEMP</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperatureAdjusted [°C, ITS-90]        3.859  8.3181  13.685 76x1   0       TEMP_ADJUSTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperatureAdjustedError [°C, ITS-90]      NA      NA      NA 76x1  76 TEMP_ADJUSTED_ERROR</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinity [PSS-78]                      34.675  35.101  35.664 76x1   0                PSAL</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinityAdjusted [PSS-78]              34.675  35.101  35.664 76x1   0       PSAL_ADJUSTED</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinityAdjustedError [PSS-78]             NA      NA      NA 76x1  76 PSAL_ADJUSTED_ERROR</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Data-quality Flag Scheme</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     name    "argo"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     mapping list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     default c(0, 3, 4, 6, 7, 9)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Data-quality Flags</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressure:            "1" 76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     pressureAdjusted:    "1" 76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperature:         "1" 76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     temperatureAdjusted: "1" 76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinity:            "1" 76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     salinityAdjusted:    "1" 76</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Processing Log</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:13 UTC: `create 'argo' object`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:13 UTC: `initializeFlagScheme(object, name="argo", mapping=list(not_assessed=0,passed_all_tests=1,probably_good=2,probably_bad=3,bad=4,changed=5,not_used_6=6,not_used_7=7,estimated=8,missing=9)), default=c(0,3,4,9))`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:13 UTC: `read.argo(file="/Users/runner/work/_temp/Library/argoFloats/extdata/R3901602_163.nc")`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2021-11-04 11:04:13 UTC: `override existing flagScheme to be mapping=list(not_assessed=0, passed_all_tests=1, probably_good=2, probably_bad=3, bad=4, changed=5, not_used_6=6, not_used_7=7, estimated=8, missing=9)),  default=c(0, 3, 4, 9)`</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

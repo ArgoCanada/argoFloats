@@ -166,35 +166,36 @@
     <p>Dan Kelley</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; argoFloats summary
-#&gt; ------------------
-#&gt; 
-#&gt; * type:        index
-#&gt; * server:      "https://data-argo.ifremer.fr"
-#&gt; * file:        
-#&gt; * url:         https://data-argo.ifremer.fr/ar_index_global_prof.txt.gz
-#&gt; * ftpRoot:     c("ftp://ftp.ifremer.fr/ifremer/argo/dac",
-#&gt;                  "ftp://usgodae.org/pub/outgoing/argo/dac")
-#&gt; * destfileRda: 
-#&gt; * header:
-#&gt;     # Title : Profile directory file of the Argo Global Data Assembly Center
-#&gt;     # Description : The directory file describes all individual profile files of the argo GDAC ftp site.
-#&gt;     # Project : ARGO
-#&gt;     # Format version : 2.0
-#&gt;     # Date of update : 20201231182423
-#&gt;     # FTP root number 1 : ftp://ftp.ifremer.fr/ifremer/argo/dac
-#&gt;     # FTP root number 2 : ftp://usgodae.org/pub/outgoing/argo/dac
-#&gt;     # GDAC node : CORIOLIS
-#&gt; * index with 1008 rows and column names: "file", "date", "latitude", "longitude", "ocean", "profiler_type", "institution" and "date_update"
-#&gt; * hint: use getProfiles() to download these files from the repository
-#&gt; * Processing Log
-#&gt; 
-#&gt;     - 2020-12-31 18:50:10 UTC: `create 'argoFloats' object`
-#&gt;     - 2020-12-31 18:51:01 UTC: `getIndex(server="ifremer-https", filename='ar_index_global_prof.txt.gz", age=0)`</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> argoFloats summary</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ------------------</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * type:        index</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * server:      "https://data-argo.ifremer.fr"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * file:        </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * url:         https://data-argo.ifremer.fr/ar_index_global_prof.txt.gz</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * ftpRoot:     c("ftp://ftp.ifremer.fr/ifremer/argo/dac",</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                  "ftp://usgodae.org/pub/outgoing/argo/dac")</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * destfileRda: </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * header:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     # Title : Profile directory file of the Argo Global Data Assembly Center</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     # Description : The directory file describes all individual profile files of the argo GDAC ftp site.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     # Project : ARGO</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     # Format version : 2.0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     # Date of update : 20201231182423</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     # FTP root number 1 : ftp://ftp.ifremer.fr/ifremer/argo/dac</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     # FTP root number 2 : ftp://usgodae.org/pub/outgoing/argo/dac</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     # GDAC node : CORIOLIS</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * index with 1008 rows and column names: "file", "date", "latitude", "longitude", "ocean", "profiler_type", "institution" and "date_update"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * hint: use getProfiles() to download these files from the repository</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> * Processing Log</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2020-12-31 18:50:10 UTC: `create 'argoFloats' object`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     - 2020-12-31 18:51:01 UTC: `getIndex(server="ifremer-https", filename='ar_index_global_prof.txt.gz", age=0)`</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

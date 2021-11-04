@@ -157,7 +157,7 @@ for more plotting examples.</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for argoFloats</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span>
   <span class='va'>x</span>,
   which <span class='op'>=</span> <span class='st'>"map"</span>,
   bathymetry <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -293,7 +293,7 @@ either <code>"pressure"</code> or <code>"sigma0"</code>) and <code>connect</code
 whether to skip across <code>NA</code> values if the <code>type</code> argument is <code>"l"</code>, <code>"o"</code>,
 or <code>"b"</code>).
 If <code>profileControl</code> is not provided, it defaults to
-<code><a href='https://rdrr.io/r/base/list.html'>list(parameter="temperature", ytype="pressure", connect=FALSE)</a></code>. Alternatively,
+<code>list(parameter="temperature", ytype="pressure", connect=FALSE)</code>. Alternatively,
 if <code>profileControl</code> is missing any of the three elements, then they are
 given defaults as in the previous sentence.</p></td>
     </tr>
@@ -307,7 +307,7 @@ value controlling whether to add a panel showing this quantity
 (see Reference Table 6 of Carval et al, 2019 to learn more
 about what is encoded in <code>dataStateIndicator</code>).
 If not provided, <code>QCControl</code> defaults to
-<code><a href='https://rdrr.io/r/base/list.html'>list(parameter="temperature",dataStateIndicator=FALSE)</a></code>.</p></td>
+<code>list(parameter="temperature",dataStateIndicator=FALSE)</code>.</p></td>
     </tr>
     <tr>
       <th>summaryControl</th>
@@ -445,124 +445,145 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
     <p>Dan Kelley and Jaimie Harbin</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Example 1: map profiles in index</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-1.png' alt='' width='672' height='672' /></div><div class='input'>
-<span class='co'># Example 2: as Example 1, but narrow the margins and highlight floats</span>
-<span class='co'># within a circular region of diameter 100 km.</span>
-<span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='input'><span class='va'>lon</span> <span class='op'>&lt;-</span> <span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>lat</span> <span class='op'>&lt;-</span> <span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>near</span> <span class='op'>&lt;-</span> <span class='fu'>oce</span><span class='fu'>::</span><span class='fu'><a href='https://dankelley.github.io/oce/reference/geodDist.html'>geodDist</a></span><span class='op'>(</span><span class='va'>lon</span>, <span class='va'>lat</span>, <span class='op'>-</span><span class='fl'>77.06</span>, <span class='fl'>26.54</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='fl'>100</span>
-<span class='va'>R</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, <span class='va'>near</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Kept 315 cycles (31.2%)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>R</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>R</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>,
-    cex<span class='op'>=</span><span class='fl'>0.6</span>, pch<span class='op'>=</span><span class='fl'>20</span>, col<span class='op'>=</span><span class='st'>"red"</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-2.png' alt='' width='672' height='672' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span>
-
-<span class='co'># Example 3: TS of a built-in data file.</span>
-<span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span>
-<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='input'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3.3</span>, <span class='fl'>3.3</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># wide margins for axis names</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"TS"</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-3.png' alt='' width='672' height='672' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span>
-<span class='co'># \donttest{</span>
-<span class='co'># Example 4: map with bathymetry. Note that par(mar) is adjusted</span>
-<span class='co'># for the bathymetry palette, so it must be adjusted again after</span>
-<span class='co'># the plot(), in order to add new plot elements.</span>
-<span class='co'># This example specifies a coarse bathymetry dataset that is provided</span>
-<span class='co'># by the 'oce' package.  In typical applications, the user will use</span>
-<span class='co'># a finer-scale dataset, either by using bathymetry=TRUE (which</span>
-<span class='co'># downloads a file appropriate for the plot view), or by using</span>
-<span class='co'># an already-downloaded file.</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>topoWorld</span>, package<span class='op'>=</span><span class='st'>"oce"</span><span class='op'>)</span>
-<span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># narrow margins for a map</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>source<span class='op'>=</span><span class='va'>topoWorld</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='input'><span class='co'># For bathymetry plots that use images, plot() temporarily</span>
-<span class='co'># adds 2.75 to par("mar")[4] so the same must be done, in order</span>
-<span class='co'># to correctly position additional points (shown as black rings).</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='st'>"mar"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>2.75</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>,
-    cex<span class='op'>=</span><span class='fl'>0.6</span>, pch<span class='op'>=</span><span class='fl'>20</span>, col<span class='op'>=</span><span class='st'>"red"</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-4.png' alt='' width='672' height='672' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span>
-
-<span class='co'># Example 5. Simple contour version, using coarse dataset (ok on basin-scale).</span>
-<span class='co'># Hint: use oce::download.topo() to download high-resolution datasets to</span>
-<span class='co'># use instead of topoWorld.</span>
-<span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>topoWorld</span>, package<span class='op'>=</span><span class='st'>"oce"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>source<span class='op'>=</span><span class='va'>topoWorld</span>, contour<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-5.png' alt='' width='672' height='672' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span>
-
-<span class='co'># Example 6. Customized map, sidestepping plot,argoFloats-method().</span>
-<span class='va'>lon</span> <span class='op'>&lt;-</span> <span class='va'>topoWorld</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>lat</span> <span class='op'>&lt;-</span> <span class='va'>topoWorld</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>asp</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/Trig.html'>cos</a></span><span class='op'>(</span><span class='va'>pi</span><span class='op'>/</span><span class='fl'>180</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>lat</span><span class='op'>)</span><span class='op'>)</span>
-<span class='co'># Limit plot region to float region.</span>
-<span class='va'>xlim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-<span class='va'>ylim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-<span class='co'># Colourize 1km, 2km, etc, isobaths.</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/contour.html'>contour</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>lon</span>, y<span class='op'>=</span><span class='va'>lat</span>, z<span class='op'>=</span><span class='va'>topoWorld</span><span class='op'>[[</span><span class='st'>"z"</span><span class='op'>]</span><span class='op'>]</span>, xlab<span class='op'>=</span><span class='st'>""</span>, ylab<span class='op'>=</span><span class='st'>""</span>,
-        xlim<span class='op'>=</span><span class='va'>xlim</span>, ylim<span class='op'>=</span><span class='va'>ylim</span>, asp<span class='op'>=</span><span class='va'>asp</span>,
-        col<span class='op'>=</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, lwd<span class='op'>=</span><span class='fl'>2</span>, levels<span class='op'>=</span><span class='op'>-</span><span class='fl'>1000</span><span class='op'>*</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, drawlabels<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='input'><span class='co'># Show land</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>coastlineWorldFine</span>, package<span class='op'>=</span><span class='st'>"ocedata"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/polygon.html'>polygon</a></span><span class='op'>(</span><span class='va'>coastlineWorldFine</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>,
-        <span class='va'>coastlineWorldFine</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, col<span class='op'>=</span><span class='st'>"lightgray"</span><span class='op'>)</span>
-</div><div class='input'><span class='co'># Indicate float positions.</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>20</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-6.png' alt='' width='672' height='672' /></div><div class='input'>
-
-<span class='co'># Example 7: Temperature profile of the 131st cycle of float with ID 2902204</span>
-<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='input'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># mimic the oce::plotProfile() default</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3.5</span>,<span class='fl'>3.5</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># mimic the oce::plotProfile() default</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"profile"</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-7.png' alt='' width='672' height='672' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span>
-
-<span class='co'># Example 8: As Example 7, but showing temperature dependence on potential density anomaly.</span>
-<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
-#&gt; <span class='warning'>    The indices of the bad profiles are as follows.</span>
-#&gt; <span class='warning'>    1</span></div><div class='input'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># mimic the oce::plotProfile() default</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3.5</span>,<span class='fl'>3.5</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># mimic the oce::plotProfile() default</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"profile"</span>, profileControl<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>parameter<span class='op'>=</span><span class='st'>"temperature"</span>, ytype<span class='op'>=</span><span class='st'>"sigma0"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='img'><img src='plot-argoFloats-method-8.png' alt='' width='672' height='672' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span>
-
-<span class='co'># }</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># Example 1: map profiles in index</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='plot-argoFloats-method-1.png' alt='' width='672' height='672' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Example 2: as Example 1, but narrow the margins and highlight floats</span></span>
+<span class='r-in'><span class='co'># within a circular region of diameter 100 km.</span></span>
+<span class='r-in'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>lon</span> <span class='op'>&lt;-</span> <span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>lat</span> <span class='op'>&lt;-</span> <span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>near</span> <span class='op'>&lt;-</span> <span class='fu'>oce</span><span class='fu'>::</span><span class='fu'><a href='https://dankelley.github.io/oce/reference/geodDist.html'>geodDist</a></span><span class='op'>(</span><span class='va'>lon</span>, <span class='va'>lat</span>, <span class='op'>-</span><span class='fl'>77.06</span>, <span class='fl'>26.54</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='fl'>100</span></span>
+<span class='r-in'><span class='va'>R</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>index</span>, <span class='va'>near</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Kept 315 cycles (31.2%)</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>R</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>R</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span class='r-in'>    cex<span class='op'>=</span><span class='fl'>0.6</span>, pch<span class='op'>=</span><span class='fl'>20</span>, col<span class='op'>=</span><span class='st'>"red"</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='plot-argoFloats-method-2.png' alt='' width='672' height='672' /></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Example 3: TS of a built-in data file.</span></span>
+<span class='r-in'><span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-in'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3.3</span>, <span class='fl'>3.3</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># wide margins for axis names</span></span>
+<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"TS"</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='plot-argoFloats-method-3.png' alt='' width='672' height='672' /></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='co'># Example 4: map with bathymetry. Note that par(mar) is adjusted</span></span>
+<span class='r-in'><span class='co'># for the bathymetry palette, so it must be adjusted again after</span></span>
+<span class='r-in'><span class='co'># the plot(), in order to add new plot elements.</span></span>
+<span class='r-in'><span class='co'># This example specifies a coarse bathymetry dataset that is provided</span></span>
+<span class='r-in'><span class='co'># by the 'oce' package.  In typical applications, the user will use</span></span>
+<span class='r-in'><span class='co'># a finer-scale dataset, either by using bathymetry=TRUE (which</span></span>
+<span class='r-in'><span class='co'># downloads a file appropriate for the plot view), or by using</span></span>
+<span class='r-in'><span class='co'># an already-downloaded file.</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>topoWorld</span>, package<span class='op'>=</span><span class='st'>"oce"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># narrow margins for a map</span></span>
+<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>source<span class='op'>=</span><span class='va'>topoWorld</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># For bathymetry plots that use images, plot() temporarily</span></span>
+<span class='r-in'><span class='co'># adds 2.75 to par("mar")[4] so the same must be done, in order</span></span>
+<span class='r-in'><span class='co'># to correctly position additional points (shown as black rings).</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='st'>"mar"</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>0</span>, <span class='fl'>2.75</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span class='r-in'>    cex<span class='op'>=</span><span class='fl'>0.6</span>, pch<span class='op'>=</span><span class='fl'>20</span>, col<span class='op'>=</span><span class='st'>"red"</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='plot-argoFloats-method-4.png' alt='' width='672' height='672' /></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Example 5. Simple contour version, using coarse dataset (ok on basin-scale).</span></span>
+<span class='r-in'><span class='co'># Hint: use oce::download.topo() to download high-resolution datasets to</span></span>
+<span class='r-in'><span class='co'># use instead of topoWorld.</span></span>
+<span class='r-in'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>topoWorld</span>, package<span class='op'>=</span><span class='st'>"oce"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>source<span class='op'>=</span><span class='va'>topoWorld</span>, contour<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='plot-argoFloats-method-5.png' alt='' width='672' height='672' /></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Example 6. Customized map, sidestepping plot,argoFloats-method().</span></span>
+<span class='r-in'><span class='va'>lon</span> <span class='op'>&lt;-</span> <span class='va'>topoWorld</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>lat</span> <span class='op'>&lt;-</span> <span class='va'>topoWorld</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span></span>
+<span class='r-in'><span class='va'>asp</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/Trig.html'>cos</a></span><span class='op'>(</span><span class='va'>pi</span><span class='op'>/</span><span class='fl'>180</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>lat</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Limit plot region to float region.</span></span>
+<span class='r-in'><span class='va'>xlim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ylim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Colourize 1km, 2km, etc, isobaths.</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/contour.html'>contour</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>lon</span>, y<span class='op'>=</span><span class='va'>lat</span>, z<span class='op'>=</span><span class='va'>topoWorld</span><span class='op'>[[</span><span class='st'>"z"</span><span class='op'>]</span><span class='op'>]</span>, xlab<span class='op'>=</span><span class='st'>""</span>, ylab<span class='op'>=</span><span class='st'>""</span>,</span>
+<span class='r-in'>        xlim<span class='op'>=</span><span class='va'>xlim</span>, ylim<span class='op'>=</span><span class='va'>ylim</span>, asp<span class='op'>=</span><span class='va'>asp</span>,</span>
+<span class='r-in'>        col<span class='op'>=</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, lwd<span class='op'>=</span><span class='fl'>2</span>, levels<span class='op'>=</span><span class='op'>-</span><span class='fl'>1000</span><span class='op'>*</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>, drawlabels<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Show land</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>coastlineWorldFine</span>, package<span class='op'>=</span><span class='st'>"ocedata"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/polygon.html'>polygon</a></span><span class='op'>(</span><span class='va'>coastlineWorldFine</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span class='r-in'>        <span class='va'>coastlineWorldFine</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, col<span class='op'>=</span><span class='st'>"lightgray"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># Indicate float positions.</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/points.html'>points</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span>, pch<span class='op'>=</span><span class='fl'>20</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='plot-argoFloats-method-6.png' alt='' width='672' height='672' /></span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Example 7: Temperature profile of the 131st cycle of float with ID 2902204</span></span>
+<span class='r-in'><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-in'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># mimic the oce::plotProfile() default</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3.5</span>,<span class='fl'>3.5</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># mimic the oce::plotProfile() default</span></span>
+<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"profile"</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='plot-argoFloats-method-7.png' alt='' width='672' height='672' /></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Example 8: As Example 7, but showing temperature dependence on potential density anomaly.</span></span>
+<span class='r-in'><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='readProfiles.html'>readProfiles</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"SR2902204_131.nc"</span>, package<span class='op'>=</span><span class='st'>"argoFloats"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of chlorophyllA values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     The indices of the bad profiles are as follows.</span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span>     1</span>
+<span class='r-in'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>                  <span class='co'># mimic the oce::plotProfile() default</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3.5</span>,<span class='fl'>3.5</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>                <span class='co'># mimic the oce::plotProfile() default</span></span>
+<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>a</span>, which<span class='op'>=</span><span class='st'>"profile"</span>, profileControl<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>parameter<span class='op'>=</span><span class='st'>"temperature"</span>, ytype<span class='op'>=</span><span class='st'>"sigma0"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='plot-argoFloats-method-8.png' alt='' width='672' height='672' /></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span><span class='va'>oldpar</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
