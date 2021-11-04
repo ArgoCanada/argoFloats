@@ -278,8 +278,7 @@ showQCTests <- function(x, style="brief")
                 stop("style must be either \"brief\" or \"full\", not \"", style, "\" as given")
             }
         } else {
-            #message('Warning: As of 2021-02-11, showQCTests() cannot handle cycles that have more than one performed or failed entry in historyAction.')
-            message('Warning: historyAction is not in the expected format. It is recommended the user inspect historyAction and historyQCTest.')
+            message('Warning: historyAction is not in the expected format. The tests performed were recorded ', length(perf), ' times and the tests failed were recorded ', length(fail), ' times.')
         }
     }
     invisible(NULL)
