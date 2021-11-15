@@ -764,8 +764,16 @@ setMethod(f="plot",
                   nitems <- length(items)
                   if (nitems) {
                       omfrow <- par("mfrow")
-                      par(mfrow=c(nitems, 1))
-                      on.exit(par(mfrow=omfrow))
+                      omar <- par("mar")
+                      omgp <- par("mgp")
+                      par(mar=c(3,3,2,1.5), mgp=c(1.75, 0.5, 0))
+                      if (nitems < 3)
+                          par(mfrow=c(nitems, 1))
+                      else if (nitems == 4)
+                          par(mfrow=c(2, 2))
+                      else
+                          par(mfrow=c(3, 2))
+                      on.exit(par(mfrow=omfrow, mar=omar, mgp=omgp))
                       time <- as.POSIXct(unlist(x[["time"]]), origin="1970-01-01", tz="UTC")
                       o <- order(time)
                       for (iitem in seq_len(nitems)) {
