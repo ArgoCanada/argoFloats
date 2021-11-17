@@ -28,6 +28,11 @@ The development version may be installed with
 where, of course, the `devtools` package must be installed first, if it
 is not already present on the user’s system.
 
+Typical use will require also installing several other packages, using
+
+    install.packages(c("colourpicker", "curl", "lubridate", "ncdf4",
+            "oce", "ocedata", "s2", "sf", "shiny"))
+
 Once things are set up as above, it will be possible to use all the
 features of `argoFloats`, many of which are illustrated in the
 documentation for its functions, and in the vignette that is built into
@@ -81,7 +86,7 @@ necessary.
     ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
     index <- subset(indexAll,
                     circle=list(longitude=-77.06,latitude=26.54,radius=30))
-    #> Kept 41 cycles (0.00162%)
+    #> Kept 41 cycles (0.00161%)
     ## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
     profiles  <- getProfiles(index)
     ## 4. Read the NetCDF files.
@@ -112,6 +117,6 @@ necessary.
     par(mar=c(3.5, 3.5, 2.0, 1.0))         # increase left margin for name
     plot(argosClean, which="TS")
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="80%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="80%" />
 
     par(oldpar)
