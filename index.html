@@ -102,6 +102,9 @@
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(devtools)</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw">install_github</span>(<span class="st">"ArgoCanada/argoFloats"</span>, <span class="dt">ref=</span><span class="st">"develop"</span>)</span></code></pre></div>
 <p>where, of course, the <code>devtools</code> package must be installed first, if it is not already present on the user’s system.</p>
+<p>Typical use will require also installing several other packages, using</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">"colourpicker"</span>, <span class="st">"curl"</span>, <span class="st">"lubridate"</span>, <span class="st">"ncdf4"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>        <span class="st">"oce"</span>, <span class="st">"ocedata"</span>, <span class="st">"s2"</span>, <span class="st">"sf"</span>, <span class="st">"shiny"</span>))</span></code></pre></div>
 <p>Once things are set up as above, it will be possible to use all the features of <code>argoFloats</code>, many of which are illustrated in the documentation for its functions, and in the vignette that is built into the package, both of which are displayed on the <a href="https://argocanada.github.io/argoFloats/index.html">user-oriented website</a>. Note that the vignette also lists Youtube videos about the package.</p>
 <p>As a practical example, the code block given below shows how to create a map and a temperature-salinity diagram for Argo float profiles near Abaco Island in the Bahamas. The key steps, many of which are common to most analyzes using the package, are as follows.</p>
 <ol>
@@ -114,46 +117,46 @@
 <li><p><code>plot</code> is used again, to make a temperature-salinity diagram.</p></li>
 </ol>
 <p>With this in mind, readers ought to find it easy to read the following code. A reasonable next step would be to try altering the code, perhaps to explore another region or to see whether the QC step is actually necessary.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(argoFloats)</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">library</span>(oce)</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="co">#&gt; Loading required package: gsw</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co">## 1. Get worldwide float-profile index, saving to ~/data/argo by default.</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>indexAll &lt;-<span class="st"> </span><span class="kw">getIndex</span>()</span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="co">## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.</span></span>
-<span id="cb3-7"><a href="#cb3-7"></a>index &lt;-<span class="st"> </span><span class="kw">subset</span>(indexAll,</span>
-<span id="cb3-8"><a href="#cb3-8"></a>                <span class="dt">circle=</span><span class="kw">list</span>(<span class="dt">longitude=</span><span class="op">-</span><span class="fl">77.06</span>,<span class="dt">latitude=</span><span class="fl">26.54</span>,<span class="dt">radius=</span><span class="dv">30</span>))</span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt; Kept 41 cycles (0.00162%)</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="co">## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.</span></span>
-<span id="cb3-11"><a href="#cb3-11"></a>profiles  &lt;-<span class="st"> </span><span class="kw">getProfiles</span>(index)</span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="co">## 4. Read the NetCDF files.</span></span>
-<span id="cb3-13"><a href="#cb3-13"></a>argos &lt;-<span class="st"> </span><span class="kw">readProfiles</span>(profiles)</span>
-<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt; Warning in readProfiles(profiles): Of 41 profiles read, 2 have &gt;10% of conductivity values with QC flag of 4, signalling bad data.</span></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt;     The indices of the bad profiles are as follows.</span></span>
-<span id="cb3-16"><a href="#cb3-16"></a><span class="co">#&gt;     3 8</span></span>
-<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt; Warning in readProfiles(profiles): Of 41 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span></span>
-<span id="cb3-18"><a href="#cb3-18"></a><span class="co">#&gt;     The indices of the bad profiles are as follows.</span></span>
-<span id="cb3-19"><a href="#cb3-19"></a><span class="co">#&gt;     3</span></span>
-<span id="cb3-20"><a href="#cb3-20"></a><span class="co">#&gt; Warning in readProfiles(profiles): Of 41 profiles read, 4 have &gt;10% of salinity values with QC flag of 4, signalling bad data.</span></span>
-<span id="cb3-21"><a href="#cb3-21"></a><span class="co">#&gt;     The indices of the bad profiles are as follows.</span></span>
-<span id="cb3-22"><a href="#cb3-22"></a><span class="co">#&gt;     3 6 7 13</span></span>
-<span id="cb3-23"><a href="#cb3-23"></a><span class="co">#&gt; Warning in readProfiles(profiles): Of 41 profiles read, 3 have &gt;10% of temperature values with QC flag of 4, signalling bad data.</span></span>
-<span id="cb3-24"><a href="#cb3-24"></a><span class="co">#&gt;     The indices of the bad profiles are as follows.</span></span>
-<span id="cb3-25"><a href="#cb3-25"></a><span class="co">#&gt;     3 7 13</span></span>
-<span id="cb3-26"><a href="#cb3-26"></a><span class="co">## 5. Examine QC flags, and set questionable data to NA.</span></span>
-<span id="cb3-27"><a href="#cb3-27"></a>argosClean &lt;-<span class="st"> </span><span class="kw">applyQC</span>(argos)</span>
-<span id="cb3-28"><a href="#cb3-28"></a>oldpar &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">no.readonly=</span><span class="ot">TRUE</span>)</span>
-<span id="cb3-29"><a href="#cb3-29"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))                     <span class="co"># want two-panel plot</span></span>
-<span id="cb3-30"><a href="#cb3-30"></a><span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="fl">3.5</span>, <span class="fl">2.0</span>, <span class="fl">2.0</span>, <span class="fl">2.0</span>))         <span class="co"># maps do not get axis names</span></span>
-<span id="cb3-31"><a href="#cb3-31"></a><span class="kw">par</span>(<span class="dt">mgp=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="fl">0.7</span>,<span class="dv">0</span>))                    <span class="co"># tighten axes</span></span>
-<span id="cb3-32"><a href="#cb3-32"></a><span class="co">## 6. Plot a map of profile locations.</span></span>
-<span id="cb3-33"><a href="#cb3-33"></a><span class="kw">plot</span>(index, <span class="dt">which=</span><span class="st">"map"</span>, <span class="dt">bathymetry=</span><span class="ot">FALSE</span>)</span>
-<span id="cb3-34"><a href="#cb3-34"></a><span class="kw">points</span>(<span class="op">-</span><span class="fl">77.06</span>, <span class="fl">26.54</span>, <span class="dt">pch=</span><span class="st">"*"</span>, <span class="dt">cex=</span><span class="dv">3</span>)  <span class="co"># show centre of focus</span></span>
-<span id="cb3-35"><a href="#cb3-35"></a><span class="kw">mtext</span>(<span class="kw">paste</span>(argosClean[[<span class="st">"length"</span>]], <span class="st">"profiles"</span>), <span class="dt">line=</span><span class="fl">1.0</span>)</span>
-<span id="cb3-36"><a href="#cb3-36"></a><span class="co">## 7. Plot a TS diagram</span></span>
-<span id="cb3-37"><a href="#cb3-37"></a><span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">2.0</span>, <span class="fl">1.0</span>))         <span class="co"># increase left margin for name</span></span>
-<span id="cb3-38"><a href="#cb3-38"></a><span class="kw">plot</span>(argosClean, <span class="dt">which=</span><span class="st">"TS"</span>)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="80%"></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">par</span>(oldpar)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(argoFloats)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">library</span>(oce)</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt; Loading required package: gsw</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">## 1. Get worldwide float-profile index, saving to ~/data/argo by default.</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>indexAll &lt;-<span class="st"> </span><span class="kw">getIndex</span>()</span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co">## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>index &lt;-<span class="st"> </span><span class="kw">subset</span>(indexAll,</span>
+<span id="cb4-8"><a href="#cb4-8"></a>                <span class="dt">circle=</span><span class="kw">list</span>(<span class="dt">longitude=</span><span class="op">-</span><span class="fl">77.06</span>,<span class="dt">latitude=</span><span class="fl">26.54</span>,<span class="dt">radius=</span><span class="dv">30</span>))</span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#&gt; Kept 41 cycles (0.00161%)</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>profiles  &lt;-<span class="st"> </span><span class="kw">getProfiles</span>(index)</span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co">## 4. Read the NetCDF files.</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>argos &lt;-<span class="st"> </span><span class="kw">readProfiles</span>(profiles)</span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt; Warning in readProfiles(profiles): Of 41 profiles read, 2 have &gt;10% of conductivity values with QC flag of 4, signalling bad data.</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt;     The indices of the bad profiles are as follows.</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt;     3 8</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; Warning in readProfiles(profiles): Of 41 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="co">#&gt;     The indices of the bad profiles are as follows.</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="co">#&gt;     3</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="co">#&gt; Warning in readProfiles(profiles): Of 41 profiles read, 4 have &gt;10% of salinity values with QC flag of 4, signalling bad data.</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="co">#&gt;     The indices of the bad profiles are as follows.</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a><span class="co">#&gt;     3 6 7 13</span></span>
+<span id="cb4-23"><a href="#cb4-23"></a><span class="co">#&gt; Warning in readProfiles(profiles): Of 41 profiles read, 3 have &gt;10% of temperature values with QC flag of 4, signalling bad data.</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a><span class="co">#&gt;     The indices of the bad profiles are as follows.</span></span>
+<span id="cb4-25"><a href="#cb4-25"></a><span class="co">#&gt;     3 7 13</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a><span class="co">## 5. Examine QC flags, and set questionable data to NA.</span></span>
+<span id="cb4-27"><a href="#cb4-27"></a>argosClean &lt;-<span class="st"> </span><span class="kw">applyQC</span>(argos)</span>
+<span id="cb4-28"><a href="#cb4-28"></a>oldpar &lt;-<span class="st"> </span><span class="kw">par</span>(<span class="dt">no.readonly=</span><span class="ot">TRUE</span>)</span>
+<span id="cb4-29"><a href="#cb4-29"></a><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))                     <span class="co"># want two-panel plot</span></span>
+<span id="cb4-30"><a href="#cb4-30"></a><span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="fl">3.5</span>, <span class="fl">2.0</span>, <span class="fl">2.0</span>, <span class="fl">2.0</span>))         <span class="co"># maps do not get axis names</span></span>
+<span id="cb4-31"><a href="#cb4-31"></a><span class="kw">par</span>(<span class="dt">mgp=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="fl">0.7</span>,<span class="dv">0</span>))                    <span class="co"># tighten axes</span></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="co">## 6. Plot a map of profile locations.</span></span>
+<span id="cb4-33"><a href="#cb4-33"></a><span class="kw">plot</span>(index, <span class="dt">which=</span><span class="st">"map"</span>, <span class="dt">bathymetry=</span><span class="ot">FALSE</span>)</span>
+<span id="cb4-34"><a href="#cb4-34"></a><span class="kw">points</span>(<span class="op">-</span><span class="fl">77.06</span>, <span class="fl">26.54</span>, <span class="dt">pch=</span><span class="st">"*"</span>, <span class="dt">cex=</span><span class="dv">3</span>)  <span class="co"># show centre of focus</span></span>
+<span id="cb4-35"><a href="#cb4-35"></a><span class="kw">mtext</span>(<span class="kw">paste</span>(argosClean[[<span class="st">"length"</span>]], <span class="st">"profiles"</span>), <span class="dt">line=</span><span class="fl">1.0</span>)</span>
+<span id="cb4-36"><a href="#cb4-36"></a><span class="co">## 7. Plot a TS diagram</span></span>
+<span id="cb4-37"><a href="#cb4-37"></a><span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">2.0</span>, <span class="fl">1.0</span>))         <span class="co"># increase left margin for name</span></span>
+<span id="cb4-38"><a href="#cb4-38"></a><span class="kw">plot</span>(argosClean, <span class="dt">which=</span><span class="st">"TS"</span>)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="80%"></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">par</span>(oldpar)</span></code></pre></div>
 </div>
   </div>
 
