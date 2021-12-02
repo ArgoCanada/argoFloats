@@ -160,7 +160,7 @@ for more plotting examples.</p>
 <span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span>
   <span class='va'>x</span>,
   which <span class='op'>=</span> <span class='st'>"map"</span>,
-  bathymetry <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  bathymetry <span class='op'>=</span> <span class='fu'><a href='argoDefaultDestdir.html'>argoDefaultBathymetry</a></span><span class='op'>(</span><span class='op'>)</span>,
   geographical <span class='op'>=</span> <span class='fl'>0</span>,
   xlim <span class='op'>=</span> <span class='cn'>NULL</span>,
   ylim <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -197,7 +197,10 @@ see &#8220;Details&#8221;.</p></td>
     <tr>
       <th>bathymetry</th>
       <td><p>an argument used only if <code>which="map"</code>, to control
-whether (and how) to indicate water depth. See &#8220;Details&#8221; for details,
+whether (and how) to indicate water depth. Note that the default
+was <code>TRUE</code> until 2021-12-02, but was changed to <code>FALSE</code> on that
+date, to avoid a bathymetry download, which can be a slow operations.
+See &#8220;Details&#8221; for details,
 and Example 4 for a hint on compensating for the margin
 adjustment done if an image is used to show bathymetry.</p></td>
     </tr>
@@ -365,14 +368,14 @@ is large enough); otherwise, if the <code>oce</code> package is available, then 
 <code>coastlineWorld</code> dataset is used.
 The <code>bathymetry</code> argument controls whether (and how) to draw a map underlay
 that shows water depth. There are three possible values for <code>bathymetry</code>:</p><ol>
-<li><p><code>FALSE</code>, meaning not to draw bathymetry;</p></li>
-<li><p><code>TRUE</code> (the default), meaning to draw bathymetry as an
+<li><p><code>FALSE</code> (the default, via <code><a href='argoDefaultDestdir.html'>argoDefaultBathymetry()</a></code>), meaning not to draw bathymetry;</p></li>
+<li><p><code>TRUE</code>, meaning to draw bathymetry as an
 image, using data downloaded with <code><a href='https://dankelley.github.io/oce/reference/download.topo.html'>oce::download.topo()</a></code>.
 Example 4 illustrates this, and also shows how to adjust
 the margins after the plot, in case there is a need to add
 extra graphical elements using <code><a href='https://rdrr.io/r/graphics/points.html'>points()</a></code>, <code><a href='https://rdrr.io/r/graphics/lines.html'>lines()</a></code>, etc.</p></li>
 <li><p>A list with items controlling both the bathymetry data and its
-representation in the plot.  Those items are:</p><ol>
+representation in the plot (see Example 4).  Those items are:</p><ol>
 <li><p><code>source</code>, a mandatory value that is either
 (a) the string <code>"auto"</code> (the default) to use
 <code><a href='https://dankelley.github.io/oce/reference/download.topo.html'>oce::download.topo()</a></code> to download the data
@@ -389,7 +392,10 @@ applied to the bathymetry data; and</p></li>
 <li><p><code>palette</code>, ignored if <code>contour</code> is <code>TRUE</code>,
 an optional logical value (with <code>TRUE</code> as the default)
 indicating whether to draw a depth-color
-palette to the right of the plot.</p></li>
+palette to the right of the plot.
+Note that the default value for <code>bathymetry</code> is set by a call
+to <code><a href='argoDefaultDestdir.html'>argoDefaultBathymetry()</a></code>, and that this second function can only handle possibilities
+1 and 2 above.</p></li>
 </ol></li>
 </ol></li>
 <li><p>For <code>which="profile"</code>, a profile plot is created, showing the variation of
@@ -448,14 +454,14 @@ doi: <a href='https://doi.org/10.3389/fmars.2021.635922'>10.3389/fmars.2021.6359
     <pre class="examples"><span class='r-in'><span class='co'># Example 1: map profiles in index</span></span>
 <span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/ArgoCanada/argoFloats'>argoFloats</a></span><span class='op'>)</span></span>
 <span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span></span>
-<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span></span>
 <span class='r-plt img'><img src='plot-argoFloats-method-1.png' alt='' width='672' height='672' /></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Example 2: as Example 1, but narrow the margins and highlight floats</span></span>
 <span class='r-in'><span class='co'># within a circular region of diameter 100 km.</span></span>
 <span class='r-in'><span class='va'>oldpar</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>no.readonly<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span></span>
 <span class='r-in'><span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mar<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, mgp<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>0.7</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span></span>
-<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span>, bathymetry<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://r-spatial.github.io/sf/reference/plot.html'>plot</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span></span>
 <span class='r-in'><span class='va'>lon</span> <span class='op'>&lt;-</span> <span class='va'>index</span><span class='op'>[[</span><span class='st'>"longitude"</span><span class='op'>]</span><span class='op'>]</span></span>
 <span class='r-in'><span class='va'>lat</span> <span class='op'>&lt;-</span> <span class='va'>index</span><span class='op'>[[</span><span class='st'>"latitude"</span><span class='op'>]</span><span class='op'>]</span></span>
 <span class='r-in'><span class='va'>near</span> <span class='op'>&lt;-</span> <span class='fu'>oce</span><span class='fu'>::</span><span class='fu'><a href='https://dankelley.github.io/oce/reference/geodDist.html'>geodDist</a></span><span class='op'>(</span><span class='va'>lon</span>, <span class='va'>lat</span>, <span class='op'>-</span><span class='fl'>77.06</span>, <span class='fl'>26.54</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='fl'>100</span></span>
