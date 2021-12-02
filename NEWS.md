@@ -2,6 +2,8 @@
 
 ## argoFloats 1.0.4
 
+* Change plot() to not show bathymetry by default.
+
 * Improve index[["ID"]] speed by 3X.
 
 ## argoFloats 1.0.3 (on CRAN)
