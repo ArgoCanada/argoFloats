@@ -25,6 +25,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -37,18 +39,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="articles/argoFloats.html">Get started</a>
 </li>
@@ -73,7 +69,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ArgoCanada/argoFloats/">
+  <a href="https://github.com/ArgoCanada/argoFloats/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -90,9 +86,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="argofloats" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#argofloats" class="anchor"></a>argoFloats</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="argofloats">argoFloats<a class="anchor" aria-label="anchor" href="#argofloats"></a>
+</h1></div>
 <!-- badges: start -->
 
 <p>The argoFloats package for the R language provides tools for downloading and analyzing collections of oceanographic Argo float datasets. Its developers are * Dan Kelley, Dalhousie University * Jaimie Harbin, Bedford Institute of Oceanography and Dalhousie University * Clark Richards, Bedford Institute of Oceanography * Dewey Dunnington, Bedford Institute of Oceanography</p>
@@ -105,15 +101,15 @@
 <p>Typical use will require also installing several other packages, using</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">"colourpicker"</span>, <span class="st">"curl"</span>, <span class="st">"lubridate"</span>, <span class="st">"ncdf4"</span>,</span>
 <span id="cb3-2"><a href="#cb3-2"></a>        <span class="st">"oce"</span>, <span class="st">"ocedata"</span>, <span class="st">"s2"</span>, <span class="st">"sf"</span>, <span class="st">"shiny"</span>))</span></code></pre></div>
-<p>Once things are set up as above, it will be possible to use all the features of <code>argoFloats</code>, many of which are illustrated in the documentation for its functions, and in the vignette that is built into the package, both of which are displayed on the <a href="https://argocanada.github.io/argoFloats/index.html">user-oriented website</a>. Note that the vignette also lists Youtube videos about the package.</p>
+<p>Once things are set up as above, it will be possible to use all the features of <code>argoFloats</code>, many of which are illustrated in the documentation for its functions, and in the vignette that is built into the package, both of which are displayed on the <a href="https://argocanada.github.io/argoFloats/index.html" class="external-link">user-oriented website</a>. Note that the vignette also lists Youtube videos about the package.</p>
 <p>As a practical example, the code block given below shows how to create a map and a temperature-salinity diagram for Argo float profiles near Abaco Island in the Bahamas. The key steps, many of which are common to most analyzes using the package, are as follows.</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li><p>The <code>getIndex</code> function is used to download a worldwide index of float profiles. (Use <code><a href="reference/getIndex.html">?getIndex</a></code> to learn more about this function, and note in particular the <code>destdir</code> argument, which determines where the index and other argo files will be stored locally.)</p></li>
 <li><p>The <code>subset</code> function is used to narrow the region of interest, yielding 39 profiles as of mid-June, 2020.</p></li>
 <li><p><code>getProfiles</code> is used to download the NetCDF files that contain the profile measurements.</p></li>
 <li><p><code>readProfiles</code> is used to read those files.</p></li>
 <li><p><code>applyQC</code> is used to set questionable data to <code>NA</code>. This uses quality-control (QC) flags that are present in the argo data.</p></li>
-<li><p><code>plot</code> is used to create a map plot. The image shows water depth in metres, determined through a call to the <code>getNOAA.bathy</code> function in the <code>marmap</code> package. For context, a star is drawn to indicate the centre of he focus region. A label is drawn above the map, showing the number of profiles. This illustrates the use of <code>[[</code>, a generic R function that is used in argoFloats to access data and metadata elements in argoFloats objects, as well as things that can be computed from these elements, such as seawater density, etc. Use <code><a href="reference/%5B%5B,argoFloats-method.html">?"[[,argoFloats-method"</a></code> to see the details of how <code>[[</code> works.</p></li>
+<li><p><code>plot</code> is used to create a map plot. The image shows water depth in metres, determined through a call to the <code>getNOAA.bathy</code> function in the <code>marmap</code> package. For context, a star is drawn to indicate the centre of he focus region. A label is drawn above the map, showing the number of profiles. This illustrates the use of <code>[[</code>, a generic R function that is used in argoFloats to access data and metadata elements in argoFloats objects, as well as things that can be computed from these elements, such as seawater density, etc. Use <code><a href="reference/sub-sub-argoFloats-method.html">?"[[,argoFloats-method"</a></code> to see the details of how <code>[[</code> works.</p></li>
 <li><p><code>plot</code> is used again, to make a temperature-salinity diagram.</p></li>
 </ol>
 <p>With this in mind, readers ought to find it easy to read the following code. A reasonable next step would be to try altering the code, perhaps to explore another region or to see whether the QC step is actually necessary.</p>
@@ -162,54 +158,64 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=argoFloats">https://​cloud.r-project.org/​package=argoFloats</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/ArgoCanada/argoFloats/">https://​github.com/​ArgoCanada/​argoFloats/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/ArgoCanada/argoFloats/issues">https://​github.com/​ArgoCanada/​argoFloats/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=argoFloats" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/ArgoCanada/argoFloats/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/ArgoCanada/argoFloats/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 2)</li>
 </ul>
 </div>
+
 <div class="community">
-<h2>Community</h2>
+<h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Dan Kelley <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/https://orcid.org/0000-0001-7808-5911" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Jaimie Harbin <br><small class="roles"> Author </small> <a href="https://orcid.org/https://orcid.org/0000-0003-3774-3732" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing argoFloats</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/ArgoCanada/argoFloats/actions"><img src="https://github.com/ArgoCanada/argoFloats/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://app.codecov.io/gh/ArgoCanada/argoFloats"><img src="https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg" alt="codecov"></a></li>
+<li>Dan Kelley <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/https://orcid.org/0000-0001-7808-5911" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Jaimie Harbin <br><small class="roles"> Author </small> <a href="https://orcid.org/https://orcid.org/0000-0003-3774-3732" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/ArgoCanada/argoFloats/actions" class="external-link"><img src="https://github.com/ArgoCanada/argoFloats/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://app.codecov.io/gh/ArgoCanada/argoFloats" class="external-link"><img src="https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg" alt="codecov"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Dan Kelley, Jaimie Harbin.</p>
+  <p></p>
+<p>Developed by Dan Kelley, Jaimie Harbin.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -217,6 +223,8 @@
 
   
 
+
+  
 
   </body>
 </html>
