@@ -1,16 +1,13 @@
 name: Mark stale issues and pull requests
-
 on:
   schedule:
   - cron: "30 1 * * *"
 
 jobs:
   stale:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/stale@v4.1.0
+    - uses: actions/stale@main
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-issue-message: 'The Stale-bot has marked this issue as Stale, because no new comments have been added in the past 30 days. Unless a comment is added within the next 7 days, the Stale-bot will close the issue. The purpose of these automated actions is to prevent the developers from forgetting about unattended tasks. Note that adding a "pinned" label will turn this action off for a given issue.'
