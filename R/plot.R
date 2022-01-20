@@ -589,7 +589,7 @@ setMethod(f="plot",
                       if (drawBathymetry && !inherits(bathy, "try-error") && !bathymetry$contour && bathymetry$palette) {
                           argoFloatsDebug(debug, "drawing a bathymetry palette\n")
                           omai <- par("mai") # save this, since oce::drawPalette() may change it
-                          oce::drawPalette(colormap=bathymetry$colormap, cex=if (is.null(cex)) 1 else cex)
+                          oce::drawPalette(colormap=bathymetry$colormap, cex=if (is.null(cex)) 1 else par("cex.axis"))
                           on.exit(par(mai=omai))
                       } else {
                           argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed (or failed bathymetry download)\n")
