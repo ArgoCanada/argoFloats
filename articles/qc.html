@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Handling Quality Control Flags and Adjusted Data</h1>
                         <h4 data-toc-skip class="author">Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="external-link uri">https://orcid.org/0000-0003-3774-3732</a>), Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="external-link uri">https://orcid.org/0000-0001-7808-5911</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="external-link uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 data-toc-skip class="date">2022-01-12</h4>
+            <h4 data-toc-skip class="date">2022-01-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/HEAD/vignettes/qc.Rmd" class="external-link"><code>vignettes/qc.Rmd</code></a></small>
       <div class="hidden name"><code>qc.Rmd</code></div>
@@ -115,14 +115,14 @@ browseVignettes("argoFloats")
 would show the updated version, but it does NOT. It shows the old version.
 
 -->
-<div class="section level1">
-<h1 id="how-qc-flags-are-set">How QC Flags are set<a class="anchor" aria-label="anchor" href="#how-qc-flags-are-set"></a>
-</h1>
+<div class="section level2">
+<h2 id="how-qc-flags-are-set">How QC Flags are set<a class="anchor" aria-label="anchor" href="#how-qc-flags-are-set"></a>
+</h2>
 <p>Core, biogeochemical (BGC), and Deep Argo data all undergo testing to ensure the data found at the Data Assembly Centers are as accurate as possible. This is done on both “real time” data and “delayed mode” data. As explained in the Argo User’s Manual (Carval et al. 2019), real time measurements are assigned a QC flag within a 24-48 hour time frame, and delayed mode are looked at by scientists who apply procedures to check the quality.</p>
 </div>
-<div class="section level1">
-<h1 id="handling-flags">Handling Flags<a class="anchor" aria-label="anchor" href="#handling-flags"></a>
-</h1>
+<div class="section level2">
+<h2 id="handling-flags">Handling Flags<a class="anchor" aria-label="anchor" href="#handling-flags"></a>
+</h2>
 <p>As described in the Argo user’s manual (Carval et al. 2019), data that are given a flag value of 1, 2, 5, or 8 are considered ‘good’, those given a flag value of 9 are missing, and those given flags 3, 4, 6, and 7 are considered ‘bad’.</p>
 <p>A useful parameter to familiarize with is the <code>dataStateIndicator</code>. This tells the user the degree of processing the data has passed through and can be helpful to determine the validity of the data. <code>argoFloats</code> has incorporated a way to subset by <code>dataStateIndicator</code> to allow the user to analyze data with a specific degree of validity if they wish.</p>
 <p>The <code>argoFloats</code> package, using the associated <code>oce</code> package, has incorporated a 3-step process when considering argo QC flags. The process encourages users to always analyze the data they are considering, and acknowledges that the user assumes all risk from their Argo data, as described in section 1.3 of the Argo User’s Manual (Carval et al. 2019). The process is shown in the following diagram.</p>
@@ -130,9 +130,9 @@ would show the updated version, but it does NOT. It shows the old version.
 <img src="qc_flowchart.png" alt=""><p class="caption">Figure 1: argoFloats Quality Control Flag Process.</p>
 </div>
 <p>This vignette will walk the users through the three step flag process while demonstrating examples using the float with <code>ID</code> 1901584 near the Bahamas.</p>
-<div class="section level2">
-<h2 id="making-qc-plots">Making QC Plots<a class="anchor" aria-label="anchor" href="#making-qc-plots"></a>
-</h2>
+<div class="section level3">
+<h3 id="making-qc-plots">Making QC Plots<a class="anchor" aria-label="anchor" href="#making-qc-plots"></a>
+</h3>
 <p><code>argoFloats</code> uses the flags within profiles to distinguish between “good” and “bad” data. It offers a specialized plot type that displays the quality of data, with a two-panel plot that shows parameter quality and parameter mean. This only works on objects that were created by <code><a href="../reference/getProfiles.html">getProfiles()</a></code>. The user must provide the <code>parameter</code> of interest, but if this is not supplied, the function will issue a message about the permitted parameters for the dataset.</p>
 <p>The following shows how to get the <code>QC</code> plot for temperature for the float with <code>ID</code> equal to “1901584”.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -148,9 +148,9 @@ would show the updated version, but it does NOT. It shows the old version.
 <p>As shown, both “good” and “bad” data exist within this subsection of the data recorded by float 1901584. For example, the first cycle is marked as “bad” (since under 50 percent of its data are considered good), as shown by the red dot. If the user had the desire to investigate the QC performed on this data, the next step would be to use the <code>showQCTests</code> function.</p>
 <p><strong>Exercise 1:</strong> Use the previous code to determine the quality of temperature data for float <code>ID</code> 4900845 referred to in the built-in synthetic index dataset. Explain your results.</p>
 </div>
-<div class="section level2">
-<h2 id="discovering-which-tests-were-performed">Discovering which tests were performed<a class="anchor" aria-label="anchor" href="#discovering-which-tests-were-performed"></a>
-</h2>
+<div class="section level3">
+<h3 id="discovering-which-tests-were-performed">Discovering which tests were performed<a class="anchor" aria-label="anchor" href="#discovering-which-tests-were-performed"></a>
+</h3>
 <p><code>showQCTests</code> prints a summary of the QC tests that were performed on an Argo cycle. <em>Caution:</em> some datasets have flags, indicating that QC procedures had been performed, even though the metadata contains no indication of such procedures; this means that <code>showQCTests</code> can sometimes suggest that no tests were done, even though the evidence is that they <em>had</em> been done.</p>
 <p><code>showQCTests</code> uses <code><a href="../reference/hexToBits.html">hexToBits()</a></code> to decode the hexadecimal values that may be stored in <code>historyQCTest</code>. From there it pairs the determined test values with the appropriate actions, QC Tests performed or QC Tests failed, found in <code>historyAction</code> within the metadata slot of an individual Argo profile, as read directly with <code><a href="https://dankelley.github.io/oce/reference/read.argo.html" class="external-link">oce::read.argo()</a></code> or indirectly with <code><a href="../reference/readProfiles.html">readProfiles()</a></code>.</p>
 <p>To analyze the first cycle shown by the <code>plot(..., which="QC")</code> example, we will use previously defined variables and the <code><a href="../reference/showQCTests.html">showQCTests()</a></code> function as shown below.</p>
@@ -172,9 +172,9 @@ would show the updated version, but it does NOT. It shows the old version.
 <p>Note that this particular test is based on potential density, so some further calculations will be required to check on the procedure. The procedure is not simple, and some study of the Argo documentation will be required of any user who wants to check on the procedures. Even then, a reasonable level of coding expertise would be required of anyone intending to alter the procedures. Proceed with caution!</p>
 <p><strong>Exercise 2</strong>: Use the first cycle of Argo float with <code>ID</code> 4900845 in the synthetic dataset to determine which tests were performed and/or failed during quality control testing. Explain your results.</p>
 </div>
-<div class="section level2">
-<h2 id="applying-qc-flags">Applying QC flags<a class="anchor" aria-label="anchor" href="#applying-qc-flags"></a>
-</h2>
+<div class="section level3">
+<h3 id="applying-qc-flags">Applying QC flags<a class="anchor" aria-label="anchor" href="#applying-qc-flags"></a>
+</h3>
 <p>The <code><a href="../reference/applyQC.html">applyQC()</a></code> function examines QC within an <code>argoFloats</code> object that was created by <code><a href="../reference/readProfiles.html">readProfiles()</a></code>. By default, it replaces all suspicious data with NA values, so they will not appear in plots or be considered in calculations. This is an important early step in processing, because Argo floats commonly report data that are suspicious based on statistical and physical measures.</p>
 <p>If the user decides they are in agreement with the QC tests performed, and solely want to work with the data that is considered “good”, they can use the <code>applyQC</code> function to rid the “bad” data. An example of where this could be useful is when looking at TS diagrams as shown below:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -191,9 +191,9 @@ would show the updated version, but it does NOT. It shows the old version.
 <p><strong>Exercise 3</strong> : Use <code><a href="../reference/applyQC.html">applyQC()</a></code> on float with <code>ID</code> 4900845 from exercise 1 and plot comparing TS diagrams. Do the plots look different? Use basic R functions to determine if the data are different. Explain your results.</p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="using-adjusted-data">Using Adjusted Data<a class="anchor" aria-label="anchor" href="#using-adjusted-data"></a>
-</h1>
+<div class="section level2">
+<h2 id="using-adjusted-data">Using Adjusted Data<a class="anchor" aria-label="anchor" href="#using-adjusted-data"></a>
+</h2>
 <p><strong>Preliminary note:</strong> the <code><a href="../reference/useAdjusted.html">useAdjusted()</a></code> function requires that the version of <code>oce</code> be 1.3.0 or higher. Therefore, the code provided in this section is wrapped in tests of the version number, for otherwise the vignette would not build for all users. It is likely that the CRAN version will be bumped to 1.3.0 sometime in the autumn of 2020, but until then, users will need to build <code>oce</code> from source, using</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dankelley/oce"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></code></pre></div>
@@ -265,9 +265,9 @@ would show the updated version, but it does NOT. It shows the old version.
 <p>reveals that the adjustment involved a simple scaling, in which the oxygen value was increased by 16 percent.</p>
 <p><strong>Exercise 4</strong> Use the same <code>ID</code> and cycle as the previous example to determine if there is a statistically significant difference between raw and adjusted datasets for chlorophyll A.</p>
 </div>
-<div class="section level1">
-<h1 id="answers">Answers<a class="anchor" aria-label="anchor" href="#answers"></a>
-</h1>
+<div class="section level2">
+<h2 id="answers">Answers<a class="anchor" aria-label="anchor" href="#answers"></a>
+</h2>
 <p><strong>Exercise 1:</strong> Use the previous code to determine the quality of temperature data for float <code>ID</code> 4900845 referred to in the built-in synthetic index dataset. Explain your results.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span>
@@ -331,9 +331,9 @@ would show the updated version, but it does NOT. It shows the old version.
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></code></pre></div>
 <p>With the output being showing a p value of &lt; 2.2e-16 indicating that the datasets are statistically different.</p>
 </div>
-<div class="section level1">
-<h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h1>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <ol style="list-style-type: decimal">
 <li><p>Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch, Claudia Schmid, and Roger Goldsmith. Argo User’s Manual V3.3. Ifremer, 2019. </p></li>
 <li><p>Wong, Annie, Robert Keeley, Thierry Carval, and Argo Data Management Team. “Argo Quality Control Manual for CTD and Trajectory Data,” January 1, 2020. <a href="https://archimer.ifremer.fr/doc/00228/33951/" class="external-link uri">https://archimer.ifremer.fr/doc/00228/33951/</a>.</p></li>
@@ -358,7 +358,7 @@ would show the updated version, but it does NOT. It shows the old version.
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
