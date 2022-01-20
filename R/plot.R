@@ -761,11 +761,15 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "summary plot\n", sep="")
                   if (x[["length"]] < 2)
                       stop("In plot,argoFloats-method() : cannot draw a summary plot with only one float cycle", call.=FALSE)
+                  if (!all(names(dots) %in% c("summaryControl")))
+                      stop(names(dots)," is not a valid argument for this plot type. Try summaryControl instead.")
                   if (is.null(summaryControl))
                       summaryControl <- list(items=c("dataStateIndicator", "longitude", "latitude", "length", "deepest"))
                   if (!"items" %in% names(summaryControl))
                       stop("summaryControl must be a list containing a character vector named \"items\"")
-                  ## print(summaryControl)
+
+                  if (!(summaryControl$items) %in% c("dataStateIndicator", "longitude", "latitude", "length", "deepest"))
+                      stop("The names of the items must be dataStateIndicator, longitude, latitude, length, or deepest, not ", paste(summaryControl$items, collapse=" "))
                   items <- summaryControl$items
                   nitems <- length(items)
                   if (nitems) {
@@ -913,13 +917,10 @@ setMethod(f="plot",
                   if (nID != 1)
                       stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single ID", call.=FALSE)
                   knownParameters <- names(x[[1]]@metadata$flags) # FIXME: is it possible that later cycles have different flags?
+                  if (!all(names(dots) %in% c("QCControl")))
+                      stop(names(dots)," is not a valid argument for this plot type. Try QCControl instead.")
                   if (is.null(QCControl)) {
-                      if ("parameter" %in% names(dots)) {
-                          warning("accepting \"parameter\" as a separate argument, but in future, please use QCControl=list(parameter=", dots$parameter, ")")
-                          QCControl <- list(parameter=dots$parameter)
-                      } else {
-                          QCControl <- list(parameter="temperature")
-                      }
+                      QCControl <- list(parameter="temperature")
                   }
                   if (!is.list(QCControl))
                       stop("In plot,argoFloats-method(): QCControl must be a list")
