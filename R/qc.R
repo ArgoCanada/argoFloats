@@ -278,7 +278,7 @@ showQCTests <- function(x, style="brief")
                 stop("style must be either \"brief\" or \"full\", not \"", style, "\" as given")
             }
         } else {
-            message('Warning: historyAction is not in the expected format. The tests performed were recorded ', length(perf), ' times and the tests failed were recorded ', length(fail), ' times.')
+            warning("File \"", x[["filename"]], "\" is malformed, with HISTORY_ACTION listing ", length(perf), " QCP$ items, but ", length(fail), " QCF$ items. These numbers should match.\n")
         }
     }
     invisible(NULL)
