@@ -1,17 +1,18 @@
 ## Test environments
-* local R installation, R 4.1.1
-* ubuntu 16.04 (on travis-ci), R 4.1.0
-* win-builder (devel)
+* local R installation, R 4.1.2
+* R-CMD-check test
+* win-builder (release, oldrelease and devel)
 
 ## R CMD check results
 
 0 errors | 0 warnings | 1 note
 
-* Release status: revision to first submission (details follow)
+* Release status: first submission
 
 # Changes since previous CRAN submission
 
-This version, numbered 1.0.3, addresses (FIXME: add new features here).
+This version, numbered 1.0.4, addresses a problem reported to us on 2022-02-17,
+regarding a width=UNQUOTED problem in a figure.
 
 
 
