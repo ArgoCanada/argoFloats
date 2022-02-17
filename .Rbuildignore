@@ -49,3 +49,4 @@ marmap_coord.*csv
 
 ^README\.Rmd$
 ^CRAN-RELEASE$
+^CRAN-SUBMISSION$
