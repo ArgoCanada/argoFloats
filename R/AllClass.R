@@ -17,7 +17,7 @@
 #' descriptions of the steps on the left, and names of the relevant functions
 #' on the right.
 #'
-#' \if{html}{\figure{workflow.png}{options: width=455px alt="Figure: workflow.png"}}
+#' \if{html}{\figure{workflow.png}{options: width="455" alt="Figure: workflow.png"}}
 #'
 #' As illustrated, the central functions are named
 #' [getIndex()], [subset()][subset,argoFloats-method()],

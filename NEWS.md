@@ -2,6 +2,8 @@
 
 ## argoFloats 1.0.4
 
+* Fix image-size declarations in 3 man pages (required by CRAN).
+
 * Change plot() to not show bathymetry by default.
 
 * Improve index[["ID"]] speed by 3X.
