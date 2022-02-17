@@ -78,6 +78,7 @@ metres
 mol
 na
 nc
+netCDF
 netcdf
 ng
 oce
@@ -90,6 +91,7 @@ rawOxygen
 rawPressure
 rda
 readProfiles
+reusability
 rtqc
 salinities
 subtype
