@@ -7,7 +7,7 @@
 \S4method{plot}{argoFloats}(
   x,
   which = "map",
-  bathymetry = TRUE,
+  bathymetry = argoDefaultBathymetry(),
   geographical = 0,
   xlim = NULL,
   ylim = NULL,
@@ -36,7 +36,10 @@ choices are \code{"map"}, \code{"profile"}, \code{"QC"}, \code{"summary"} and \c
 see \dQuote{Details}.}
 
 \item{bathymetry}{an argument used only if \code{which="map"}, to control
-whether (and how) to indicate water depth. See \dQuote{Details} for details,
+whether (and how) to indicate water depth. Note that the default
+was \code{TRUE} until 2021-12-02, but was changed to \code{FALSE} on that
+date, to avoid a bathymetry download, which can be a slow operations.
+See \dQuote{Details} for details,
 and Example 4 for a hint on compensating for the margin
 adjustment done if an image is used to show bathymetry.}
 
@@ -179,14 +182,14 @@ is large enough); otherwise, if the \code{oce} package is available, then its
 The \code{bathymetry} argument controls whether (and how) to draw a map underlay
 that shows water depth. There are three possible values for \code{bathymetry}:
 \enumerate{
-\item \code{FALSE}, meaning not to draw bathymetry;
-\item \code{TRUE} (the default), meaning to draw bathymetry as an
+\item \code{FALSE} (the default, via \code{\link[=argoDefaultBathymetry]{argoDefaultBathymetry()}}), meaning not to draw bathymetry;
+\item \code{TRUE}, meaning to draw bathymetry as an
 image, using data downloaded with \code{\link[oce:download.topo]{oce::download.topo()}}.
 Example 4 illustrates this, and also shows how to adjust
 the margins after the plot, in case there is a need to add
 extra graphical elements using \code{\link[=points]{points()}}, \code{\link[=lines]{lines()}}, etc.
 \item A list with items controlling both the bathymetry data and its
-representation in the plot.  Those items are:
+representation in the plot (see Example 4).  Those items are:
 \enumerate{
 \item \code{source}, a mandatory value that is either
 (a) the string \code{"auto"} (the default) to use
@@ -205,6 +208,9 @@ applied to the bathymetry data; and
 an optional logical value (with \code{TRUE} as the default)
 indicating whether to draw a depth-color
 palette to the right of the plot.
+Note that the default value for \code{bathymetry} is set by a call
+to \code{\link[=argoDefaultBathymetry]{argoDefaultBathymetry()}}, and that this second function can only handle possibilities
+1 and 2 above.
 }
 }
 \item For \code{which="profile"}, a profile plot is created, showing the variation of
@@ -247,13 +253,13 @@ are plotted with gray symbols.
 # Example 1: map profiles in index
 library(argoFloats)
 data(index)
-plot(index, bathymetry=FALSE)
+plot(index)
 
 # Example 2: as Example 1, but narrow the margins and highlight floats
 # within a circular region of diameter 100 km.
 oldpar <- par(no.readonly=TRUE)
 par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0))
-plot(index, bathymetry=FALSE)
+plot(index)
 lon <- index[["longitude"]]
 lat <- index[["latitude"]]
 near <- oce::geodDist(lon, lat, -77.06, 26.54) < 100

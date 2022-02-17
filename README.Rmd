@@ -39,6 +39,12 @@ install_github("ArgoCanada/argoFloats", ref="develop")
 ```
 where, of course, the `devtools` package must be installed first, if it is not already present on the user's system.
 
+Typical use will require also installing several other packages, using
+```{r eval=FALSE}
+install.packages(c("colourpicker", "curl", "lubridate", "ncdf4",
+        "oce", "ocedata", "s2", "sf", "shiny"))
+```
+
 Once things are set up as above, it will be possible to use all the features of
 `argoFloats`, many of which are illustrated in the documentation for its
 functions, and in the vignette that is built into the package, both of which

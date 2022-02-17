@@ -91,7 +91,9 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #'
 #' `showQCTests` prints a summary of the quality-control (QC) tests
 #' (if any) that were performed on an Argo profile in real-time (**Caution**: any tests completed and/or failed on delayed
-#' mode data are not recorded).  It uses
+#' mode data are not recorded. This function also assumes tests performed
+#' or failed are recorded once, otherwise it produces
+#' a warning).  It uses
 #' [hexToBits()] to decode the hexadecimal  values that may
 #' be stored in `historyQCTest`. From there it pairs the determined
 #' test values with the appropriate actions, QC Tests performed or QC
@@ -248,29 +250,35 @@ showQCTests <- function(x, style="brief")
         ## Match strings within 'action' to find the tests that failed
         fail <- tests[irow, which(action[irow,] == "QCF$")]
         ## Add zeros on left of 'fail', if needed to match length of 'perf'
-        failFull <- paste0(paste(rep("0",nchar(perf)-nchar(fail)),collapse=""), fail, sep="")
-        perfIndices <- which(1==hexToBits(perf))
-        failIndices <- -1 + which(1==hexToBits(failFull))
-        if (style == "brief") {
-            cat(indent, "Tests performed: ", paste(QCTests[perfIndices], collapse=" "), "\n", sep="")
-            if (length(failIndices)) {
-                for (i in failIndices)
-                    cat(indent, sprintf("    Failed test %2d (%s)\n", QCTests[i], names(QCTests)[i]))
+        ## In some instances, QCP$ and QCF$ shows up multiple times in historyAction.
+        ## We're not sure why yet.
+        if (length(fail) == 1 && length(perf) == 1) {
+            failFull <- paste0(paste(rep("0",nchar(perf)-nchar(fail)),collapse=""), fail, sep="")
+            perfIndices <- which(1==hexToBits(perf))
+            failIndices <- -1 + which(1==hexToBits(failFull))
+            if (style == "brief") {
+                cat(indent, "Tests performed: ", paste(QCTests[perfIndices], collapse=" "), "\n", sep="")
+                if (length(failIndices)) {
+                    for (i in failIndices)
+                        cat(indent, sprintf("    Failed test %2d (%s)\n", QCTests[i], names(QCTests)[i]))
+                } else {
+                    cat(indent, "    Passed all tests\n")
+                }
+            } else if (style == "full") {
+                cat(indent, "Test |  Status  | Description\n")
+                cat(indent, "-----|----------|--------------------------------------------------------------\n")
+                for (i in QCTests) {
+                    failed <- i %in% failIndices
+                    skipped <- !(i %in% perfIndices)
+                    status <- if (failed) "*Failed*" else if (skipped) " Skipped" else "  Passed"
+                    cat(indent, sprintf("%4d | %7s | %s\n", i, status, names(QCTests)[i]))
+                }
+                cat(indent, "-----|----------|--------------------------------------------------------------\n")
             } else {
-                cat(indent, "    Passed all tests\n")
+                stop("style must be either \"brief\" or \"full\", not \"", style, "\" as given")
             }
-        } else if (style == "full") {
-            cat(indent, "Test |  Status  | Description\n")
-            cat(indent, "-----|----------|--------------------------------------------------------------\n")
-            for (i in QCTests) {
-                failed <- i %in% failIndices
-                skipped <- !(i %in% perfIndices)
-                status <- if (failed) "*Failed*" else if (skipped) " Skipped" else "  Passed"
-                cat(indent, sprintf("%4d | %7s | %s\n", i, status, names(QCTests)[i]))
-            }
-            cat(indent, "-----|----------|--------------------------------------------------------------\n")
         } else {
-            stop("style must be either \"brief\" or \"full\", not \"", style, "\" as given")
+            warning("File \"", x[["filename"]], "\" is malformed, with HISTORY_ACTION listing ", length(perf), " QCP$ items, but ", length(fail), " QCF$ items. These numbers should match.\n")
         }
     }
     invisible(NULL)

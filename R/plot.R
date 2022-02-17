@@ -29,14 +29,14 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' `coastlineWorld` dataset is used.
 #' The `bathymetry` argument controls whether (and how) to draw a map underlay
 #' that shows water depth. There are three possible values for `bathymetry`:
-#'     1. `FALSE`, meaning not to draw bathymetry;
-#'     2. `TRUE` (the default), meaning to draw bathymetry as an
+#'     1. `FALSE` (the default, via [argoDefaultBathymetry()]), meaning not to draw bathymetry;
+#'     2. `TRUE`, meaning to draw bathymetry as an
 #'        image, using data downloaded with [oce::download.topo()].
 #'        Example 4 illustrates this, and also shows how to adjust
 #'        the margins after the plot, in case there is a need to add
 #'        extra graphical elements using [points()], [lines()], etc.
 #'     3. A list with items controlling both the bathymetry data and its
-#'        representation in the plot.  Those items are:
+#'        representation in the plot (see Example 4).  Those items are:
 #'
 #'         1. `source`, a mandatory value that is either
 #'            (a) the string `"auto"` (the default) to use
@@ -55,6 +55,9 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #'            an optional logical value (with `TRUE` as the default)
 #'            indicating whether to draw a depth-color
 #'            palette to the right of the plot.
+#' Note that the default value for `bathymetry` is set by a call
+#' to [argoDefaultBathymetry()], and that this second function can only handle possibilities
+#' 1 and 2 above.
 #'
 #' * For `which="profile"`, a profile plot is created, showing the variation of
 #' some quantity with pressure or potential density anomaly, as specified by the
@@ -101,7 +104,10 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' see \dQuote{Details}.
 #'
 #' @param bathymetry an argument used only if `which="map"`, to control
-#' whether (and how) to indicate water depth. See \dQuote{Details} for details,
+#' whether (and how) to indicate water depth. Note that the default
+#' was `TRUE` until 2021-12-02, but was changed to `FALSE` on that
+#' date, to avoid a bathymetry download, which can be a slow operations.
+#' See \dQuote{Details} for details,
 #' and Example 4 for a hint on compensating for the margin
 #' adjustment done if an image is used to show bathymetry.
 #'
@@ -217,13 +223,13 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' # Example 1: map profiles in index
 #' library(argoFloats)
 #' data(index)
-#' plot(index, bathymetry=FALSE)
+#' plot(index)
 #'
 #' # Example 2: as Example 1, but narrow the margins and highlight floats
 #' # within a circular region of diameter 100 km.
 #' oldpar <- par(no.readonly=TRUE)
 #' par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0))
-#' plot(index, bathymetry=FALSE)
+#' plot(index)
 #' lon <- index[["longitude"]]
 #' lat <- index[["latitude"]]
 #' near <- oce::geodDist(lon, lat, -77.06, 26.54) < 100
@@ -369,7 +375,7 @@ setMethod(f="plot",
           signature=signature("argoFloats"),
           definition=function(x,
                               which="map",
-                              bathymetry=TRUE,
+                              bathymetry=argoDefaultBathymetry(),
                               geographical=0,
                               xlim=NULL, ylim=NULL,
                               xlab=NULL, ylab=NULL,
@@ -583,7 +589,7 @@ setMethod(f="plot",
                       if (drawBathymetry && !inherits(bathy, "try-error") && !bathymetry$contour && bathymetry$palette) {
                           argoFloatsDebug(debug, "drawing a bathymetry palette\n")
                           omai <- par("mai") # save this, since oce::drawPalette() may change it
-                          oce::drawPalette(colormap=bathymetry$colormap, cex=if (is.null(cex)) 1 else cex)
+                          oce::drawPalette(colormap=bathymetry$colormap, cex=if (is.null(cex)) 1 else par("cex.axis"))
                           on.exit(par(mai=omai))
                       } else {
                           argoFloatsDebug(debug, "not drawing a bathymetry palette, as instructed (or failed bathymetry download)\n")
@@ -755,17 +761,29 @@ setMethod(f="plot",
                   argoFloatsDebug(debug, "summary plot\n", sep="")
                   if (x[["length"]] < 2)
                       stop("In plot,argoFloats-method() : cannot draw a summary plot with only one float cycle", call.=FALSE)
+                  if (!all(names(dots) %in% c("summaryControl")))
+                      stop(names(dots)," is not a valid argument for this plot type. Try summaryControl instead.")
                   if (is.null(summaryControl))
                       summaryControl <- list(items=c("dataStateIndicator", "longitude", "latitude", "length", "deepest"))
                   if (!"items" %in% names(summaryControl))
                       stop("summaryControl must be a list containing a character vector named \"items\"")
-                  ## print(summaryControl)
+
+                  if (!(summaryControl$items) %in% c("dataStateIndicator", "longitude", "latitude", "length", "deepest"))
+                      stop("The names of the items must be dataStateIndicator, longitude, latitude, length, or deepest, not ", paste(summaryControl$items, collapse=" "))
                   items <- summaryControl$items
                   nitems <- length(items)
                   if (nitems) {
                       omfrow <- par("mfrow")
-                      par(mfrow=c(nitems, 1))
-                      on.exit(par(mfrow=omfrow))
+                      omar <- par("mar")
+                      omgp <- par("mgp")
+                      par(mar=c(3,3,2,1.5), mgp=c(1.75, 0.5, 0))
+                      if (nitems < 3)
+                          par(mfrow=c(nitems, 1))
+                      else if (nitems == 4)
+                          par(mfrow=c(2, 2))
+                      else
+                          par(mfrow=c(3, 2))
+                      on.exit(par(mfrow=omfrow, mar=omar, mgp=omgp))
                       time <- as.POSIXct(unlist(x[["time"]]), origin="1970-01-01", tz="UTC")
                       o <- order(time)
                       for (iitem in seq_len(nitems)) {
@@ -899,13 +917,10 @@ setMethod(f="plot",
                   if (nID != 1)
                       stop("In plot,argoFloats-method(): It is only possible to plot a QC of a single ID", call.=FALSE)
                   knownParameters <- names(x[[1]]@metadata$flags) # FIXME: is it possible that later cycles have different flags?
+                  if (!all(names(dots) %in% c("QCControl")))
+                      stop(names(dots)," is not a valid argument for this plot type. Try QCControl instead.")
                   if (is.null(QCControl)) {
-                      if ("parameter" %in% names(dots)) {
-                          warning("accepting \"parameter\" as a separate argument, but in future, please use QCControl=list(parameter=", dots$parameter, ")")
-                          QCControl <- list(parameter=dots$parameter)
-                      } else {
-                          QCControl <- list(parameter="temperature")
-                      }
+                      QCControl <- list(parameter="temperature")
                   }
                   if (!is.list(QCControl))
                       stop("In plot,argoFloats-method(): QCControl must be a list")
