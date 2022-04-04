@@ -9,21 +9,30 @@ grViz("digraph flowchart {
       node [fontname = Helvetica, shape = rectangle, fontsize=35]        
       tab1 [label = '@@1']
       tab2 [label = '@@2']
+      node [fontname = Helvetica, shape = circle, fontsize=35]        
       tab3 [label = '@@3']
       tab4 [label = '@@4']
+      node [fontname = Helvetica, shape = rectangle, fontsize=35]        
       tab5 [label = '@@5']
+      node [fontname = Helvetica, shape = circle, fontsize=35]        
       tab6 [label = '@@6']
       tab7 [label = '@@7']
+      node [fontname = Helvetica, shape = rectangle, fontsize=35]        
       tab8 [label = '@@8']
+      node [fontname = Helvetica, shape = circle, fontsize=35]        
       tab9 [label = '@@9']
       tab10 [label = '@@10']
+      node [fontname = Helvetica, shape = rectangle, fontsize=35]        
       tab11 [label = '@@11']
+      node [fontname = Helvetica, shape = circle, fontsize=35]        
       tab12 [label = '@@12']
       tab13 [label = '@@13']
+      node [fontname = Helvetica, shape = rectangle, fontsize=35]        
       tab14 [label = '@@14']
+      node [fontname = Helvetica, shape = circle, fontsize=35]        
       tab15 [label = '@@15']
       tab16 [label = '@@16']
-      node [fontname = Helvetica, shape = rectangle, style = bold, color= red, fontcolor=red]        
+      node [fontname = Helvetica, shape = circle, style = bold, color= red, fontcolor=red]        
       tab17 [label = '@@17']
       tab18 [label = '@@18']
 
@@ -57,20 +66,20 @@ grViz("digraph flowchart {
 
       }
 
-      [1]: 'Should the developers implement a requested change?'
+      [1]: 'Should the developers try to implement a requested change?'
       [2]: 'Does the request already exist within the package?'
       [3]: 'Yes'
       [4]: 'No'
       [5]: 'Is the request an identified bug?'
       [6]: 'No'
       [7]: 'Yes'
-      [8]: 'Is the requested change correct or logical?'
+      [8]: 'Is the requested change desirable?'
       [9]: 'No'
       [10]: 'Yes'
-      [11]: 'Have any users requested this change?'
+      [11]: 'Have many users requested this change?'
       [12]: 'No'
       [13]: 'Yes'
-      [14]: 'Does the cost outweigh the benefit'
+      [14]: 'Does the cost outweigh the benefit?'
       [15]: 'No'
       [16]: 'Yes'
       [17]: 'Yes'
