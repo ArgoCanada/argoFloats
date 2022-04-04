@@ -29,25 +29,31 @@ grViz("digraph flowchart {
       # edge definitions with the node IDs
       tab1 -> tab2
       tab2 -> tab3
-      tab3 -> tab18
       tab2 -> tab4
       tab4 -> tab5
       tab5 -> tab6
       tab5 -> tab7
-      tab7 -> tab17
       tab6 -> tab8
       tab8 -> tab9
       tab8 -> tab10
-      tab9 -> tab18
-      tab10 -> tab10
+      tab10 -> tab11
       tab11 -> tab12
       tab11 -> tab13
-      tab13 -> tab17
       tab12 -> tab14
       tab14 -> tab15
       tab14 -> tab16
       tab15 -> tab18
+      
       tab16 -> tab17
+      tab3 -> tab18
+      tab7 -> tab17
+      tab9 -> tab18
+      tab13 -> tab17
+      
+     
+
+
+
       }
 
       [1]: 'Should the developers implement a requested change?'
