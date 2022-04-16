@@ -727,7 +727,11 @@ serverMapApp <- function(input, output, session)
                     dmsg("    set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"))
                     dmsg("    set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"))
                 } else {
-                    shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
+                    # Float IDs usually (always?) have 7 digits
+                    if (nchar(input$ID) > 7L)
+                        shiny::showNotification("Float IDs cannot have more than 7 characters", type="error")
+                    else if (nchar(input$ID) > 6L)
+                        shiny::showNotification(paste0("There is no float with ID ", input$ID, "."), type="error")
                 }
             }
             dmsg("} # observeEvent(input$ID)")
