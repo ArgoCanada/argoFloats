@@ -1061,6 +1061,23 @@ serverMapApp <- function(input, output, session)
                             points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                         }
                     }
+
+                    # Highlighting hover message float. FIXME (map loop is still occuring)
+           #         if (state$hoverIsPasted == TRUE) {
+           #             x <- input$hover$x
+           #             y <- input$hover$y
+           #             lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
+           #             latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
+           #             fac <- cos(pi180 * y)      # account for meridional convergence
+           #             dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
+           #             i <- which.min(dist2)
+           #             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
+           #             if (length(dist) && dist < 100) {
+           #                 points(argo$longitude[i], argo$latitude[i], pch=20, col="#FF0000")
+
+           #             }
+           #         }
+
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
                             LONLAT <- lonlat[lonlat$ID==ID,] # will be redefined in this loop
