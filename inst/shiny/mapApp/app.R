@@ -426,22 +426,22 @@ serverMapApp <- function(input, output, session)
         y <- input$hover$y
         if (is.null(x) && input$tabselected == 1)
             return("Hover to see location/cycle; brush to select region; double-click to restrict ID.")
-        lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
-        latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
         rval <- ""
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
             fac <- cos(pi180 * y)      # account for meridional convergence
             dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
             i <- which.min(dist2)
             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
+            lonstring <- ifelse(x < 0, sprintf("%.2fW", argo$longitude[i]), sprintf("%.2fE", x))
+            latstring <- ifelse(y < 0, sprintf("%.2fS", argo$latitude[i]), sprintf("%.2fN", y))
             if (length(dist) && dist < 100) {
-                rval <- sprintf("%s %s, %.0f km from %s float %s cycle %s, at %s",
-                    lonstring,
-                    latstring,
-                    dist,
+
+                rval <- sprintf("%s Float %s, cycle %s, sampled at %s, %s at %s",
                     switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
                     argo$ID[i],
                     argo$cycle[i],
+                    lonstring,
+                    latstring,
                     format(argo$time[i], "%Y-%m-%d %H:%M"))
             } else {
                 rval <- sprintf("%s %s", lonstring, latstring)
