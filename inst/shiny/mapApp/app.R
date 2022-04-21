@@ -107,7 +107,7 @@ keyPressHelp <- "<ul>
 <li> '<b>d</b>': toggle <b>d</b>ebugging flag</li>
 <li> '<b>?</b>': display this message</li> </ul>"
 
-overallHelp <- "<p>mapApp() responds to keystroke actions and GUI actions.</p><p>The permitted <u>keystroke actions</u> will be shown in a pop-up window if the <b>?</b> key is pressed. There are keys for zooming in and out, for moving the focus region through space and time, for controlling updates to an information box that displays mouse location and aspects of a nearby float, undoing previous actions, and turning on a developer mode in which information about processing is printed to the R console.</p><p>The <u>GUI actions</u> are reasonably self-explanatory. On the <i>Main tab</i>, users may enter values in the \"Start\" and \"End\" boxes to set the time range of the display, or empty either box to use the data range. The checkboxes of the \"View\" grouping may be used to choose whether to show 'Core', 'Deep' or 'BGC' data, whether to draw a high-resolution coastline, whether to draw connecting line segments to indicate the path of individual floats, and whether to indicate water depth using contour lines. If a path is displayed, there are options to highlight its start and end points of the path in the selected region, or to hide all points. The focus region may be selected by pressing the mouse at one location, sliding it to a new location, and then releasing it. Double-clicking on a particular float location creates a pop-up window that provides information on that profile. There is a way to focus on an individual float, to the exclusion of others.  Experimenting with the interface will reveal other capabilities; for example, it is worth exploring the <i>Settings tab</i>, which provides control over several aesthetic properties.<p>A text box above the plot shows the mouse position in longitude and latitude as well as information about the nearest profile, if it is within 100km of the mouse location (typing <b>h</b> toggles a setting that causes this information to track the mouse).</p><p>The \"R code\" button brings up a window showing R code that will approximate the view shown in the app, and that hints at some other operations that might be useful in analysis.</p><p>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.</p>"
+overallHelp <- "<p>mapApp() responds to keystroke actions and GUI actions.</p><p>The permitted <u>keystroke actions</u> will be shown in a pop-up window if the <b>?</b> key is pressed. There are keys for zooming in and out, for moving the focus region through space and time, for controlling updates to an information box that displays mouse location and aspects of a nearby float, undoing previous actions, and turning on a developer mode in which information about processing is printed to the R console.</p><p>The <u>GUI actions</u> are reasonably self-explanatory. On the <i>Map tab</i>, users may enter values in the \"Start\" and \"End\" boxes to set the time range of the display, or empty either box to use the data range. The checkboxes of the \"View\" grouping may be used to choose whether to show 'Core', 'Deep' or 'BGC' data, whether to draw a high-resolution coastline, whether to draw connecting line segments to indicate the path of individual floats, and whether to indicate water depth using contour lines. If a path is displayed, there are options to highlight its start and end points of the path in the selected region, or to hide all points. The focus region may be selected by pressing the mouse at one location, sliding it to a new location, and then releasing it. Double-clicking on a particular float location creates a pop-up window that provides information on that profile. There is a way to focus on an individual float, to the exclusion of others.  Experimenting with the interface will reveal other capabilities; for example, it is worth exploring the <i>Settings tab</i>, which provides control over several aesthetic properties.<p>A text box above the plot shows the mouse position in longitude and latitude as well as information about the nearest profile, if it is within 100km of the mouse location (typing <b>h</b> toggles a setting that causes this information to track the mouse).</p><p>The \"R code\" button brings up a window showing R code that will approximate the view shown in the app, and that hints at some other operations that might be useful in analysis.</p><p>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.</p>"
 
 
 uiMapApp <- shiny::fluidPage(
@@ -131,7 +131,7 @@ uiMapApp <- shiny::fluidPage(
 
     # Main Panel
     shiny::mainPanel(shiny::tabsetPanel(type="tab",
-            shiny::tabPanel("Main", value=1),
+            shiny::tabPanel("Map", value=1),
             shiny::tabPanel("Settings", value=3,
                 shiny::tabsetPanel(shiny::tabPanel("Core", value=4, selected=TRUE),
                     shiny::tabPanel("BGC", value=5),
@@ -418,28 +418,30 @@ serverMapApp <- function(input, output, session)
 
     output$info <- shiny::renderText({
         ## show location.  If lat range is under 90deg, also show nearest float within 100km
-        if (state$hoverIsPasted)
-            return(paste("[HOLD:ON] ",lastHoverMessage))
+        if (input$tabselected %in% c(1)) {
+            if (state$hoverIsPasted)
+                return(paste("[HOLD:ON] ",lastHoverMessage))
+        }
         x <- input$hover$x
         y <- input$hover$y
         if (is.null(x) && input$tabselected == 1)
             return("Hover to see location/cycle; brush to select region; double-click to restrict ID.")
-        lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
-        latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
         rval <- ""
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
             fac <- cos(pi180 * y)      # account for meridional convergence
             dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
             i <- which.min(dist2)
             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
+            lonstring <- ifelse(x < 0, sprintf("%.2fW", argo$longitude[i]), sprintf("%.2fE", x))
+            latstring <- ifelse(y < 0, sprintf("%.2fS", argo$latitude[i]), sprintf("%.2fN", y))
             if (length(dist) && dist < 100) {
-                rval <- sprintf("%s %s, %.0f km from %s float %s cycle %s, at %s",
-                    lonstring,
-                    latstring,
-                    dist,
+
+                rval <- sprintf("%s Float %s, cycle %s, sampled at %s, %s at %s",
                     switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
                     argo$ID[i],
                     argo$cycle[i],
+                    lonstring,
+                    latstring,
                     format(argo$time[i], "%Y-%m-%d %H:%M"))
             } else {
                 rval <- sprintf("%s %s", lonstring, latstring)
@@ -1063,6 +1065,23 @@ serverMapApp <- function(input, output, session)
                             points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                         }
                     }
+
+                    # Highlighting hover message float. FIXME (map loop is still occuring)
+           #         if (state$hoverIsPasted == TRUE) {
+           #             x <- input$hover$x
+           #             y <- input$hover$y
+           #             lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
+           #             latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
+           #             fac <- cos(pi180 * y)      # account for meridional convergence
+           #             dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
+           #             i <- which.min(dist2)
+           #             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
+           #             if (length(dist) && dist < 100) {
+           #                 points(argo$longitude[i], argo$latitude[i], pch=20, col="#FF0000")
+
+           #             }
+           #         }
+
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
                             LONLAT <- lonlat[lonlat$ID==ID,] # will be redefined in this loop

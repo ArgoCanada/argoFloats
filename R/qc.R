@@ -262,7 +262,7 @@ showQCTests <- function(x, style="brief")
                     for (i in failIndices)
                         cat(indent, sprintf("    Failed test %2d (%s)\n", QCTests[i], names(QCTests)[i]))
                 } else {
-                    cat(indent, "    Passed all tests\n")
+                    cat(indent, "    Passed all real-time tests\n")
                 }
             } else if (style == "full") {
                 cat(indent, "Test |  Status  | Description\n")
