@@ -447,6 +447,8 @@ serverMapApp <- function(input, output, session)
                 rval <- sprintf("%s %s", lonstring, latstring)
             }
         } else {
+            lonstring <- ifelse(x < 0, sprintf("%.2fW", x), sprintf("%.2fE", x))
+            latstring <- ifelse(y < 0, sprintf("%.2fS", y), sprintf("%.2fN", y))
             rval <- sprintf("%s %s", lonstring, latstring)
         }
         lastHoverMessage <<- rval
