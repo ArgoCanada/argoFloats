@@ -302,6 +302,8 @@ serverMapApp <- function(input, output, session)
         cycle <- i[["cycle"]]
         lon <- i[["longitude"]]
         lat <- i[["latitude"]]
+        profilerType <- i[["profiler_type"]]
+        institution <- i[["institution"]]
         idBGC <- unique(iBGC[["ID"]])
         n <- length(ID)
         type <- rep("core", n)
@@ -312,7 +314,7 @@ serverMapApp <- function(input, output, session)
         type[("849" == i@data$index$profiler_type)] <- "deep"
         type[("862" == i@data$index$profiler_type)] <- "deep"
         type[("864" == i@data$index$profiler_type)] <- "deep"
-        argo <- data.frame(time=i[["date"]], ID=ID, cycle=cycle, longitude=lon, latitude=lat, type=type)
+        argo <- data.frame(time=i[["date"]], ID=ID, cycle=cycle, longitude=lon, latitude=lat, type=type, profilerType=profilerType, institution=institution)
         argo$longitude <- ifelse(argo$longitude > 180, argo$longitude - 360, argo$longitude)
         ok <- is.finite(argo$time)
         argo <- argo[ok, ]
@@ -436,10 +438,12 @@ serverMapApp <- function(input, output, session)
             latstring <- ifelse(y < 0, sprintf("%.2fS", argo$latitude[i]), sprintf("%.2fN", y))
             if (length(dist) && dist < 100) {
 
-                rval <- sprintf("%s Float %s, cycle %s, sampled at %s, %s at %s",
+                rval <- sprintf("%s Float %s, cycle %s (type %s from %s), sampled at %s, %s at %s",
                     switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
                     argo$ID[i],
                     argo$cycle[i],
+                    argo$profilerType[i],
+                    argo$institution[i],
                     lonstring,
                     latstring,
                     format(argo$time[i], "%Y-%m-%d %H:%M"))
