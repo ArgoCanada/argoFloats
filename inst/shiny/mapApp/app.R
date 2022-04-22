@@ -453,10 +453,13 @@ serverMapApp <- function(input, output, session)
             fac <- cos(pi180 * y)      # account for meridional convergence
             dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
             i <- which.min(dist2)
+            holdLatitude <<- argo$latitude[i]
+            holdLongitude <<- argo$longitude[i]
             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
             lonstring <- ifelse(x < 0, sprintf("%.2fW", argo$longitude[i]), sprintf("%.2fE", x))
             latstring <- ifelse(y < 0, sprintf("%.2fS", argo$latitude[i]), sprintf("%.2fN", y))
             if (length(dist) && dist < 100) {
+                highlight <<- TRUE
                 rval <- sprintf("%s Float %s, cycle %s (type %s from %s), sampled at %s, %s at %s",
                     switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
                     argo$ID[i],
@@ -468,6 +471,7 @@ serverMapApp <- function(input, output, session)
                     format(argo$time[i], "%Y-%m-%d %H:%M"))
             } else {
                 rval <- sprintf("%s %s", lonstring, latstring)
+                highlight <<- FALSE
             }
         } else {
             lonstring <- ifelse(x < 0, sprintf("%.2fW", x), sprintf("%.2fE", x))
@@ -1105,6 +1109,9 @@ serverMapApp <- function(input, output, session)
                         } else {
                             points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                         }
+                    }
+                    if (state$hoverIsPasted && highlight == TRUE) {
+                        points(holdLongitude, holdLatitude, pch=21, col="red", bg="red")
                     }
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
