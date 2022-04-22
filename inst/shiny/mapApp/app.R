@@ -91,10 +91,10 @@ printState <- function(debug=0L)
         if (nss > 0L) {
             argoFloatsDebug(debug , "stateStack holds", nss, "elements\n")
             if (FALSE) {
-                dmsg("  top element:")
+                argoFloatsDebug(debug, "top element:\n")
                 topOfStack <- stateStack[[nss]]
                 for (name in sort(names(topOfStack)))
-                    dmsg("    ", name, ": ",format(paste(topOfStack[[name]], collapse=" ")))
+                    argoFloatsDebug(debug, name, ": ",format(paste(topOfStack[[name]], collapse=" ")))
             }
         } else {
             argoFloatsDebug(debug, "stateStack is empty\n")
@@ -289,6 +289,7 @@ serverMapApp <- function(input, output, session)
     } else {
         topoWorldFine <- topoWorld
     }
+    argoFloatsDebug(debug, "mapApp() is about to check the cache\n")
     if (argoFloatsIsCached("argo", debug=debug-1L)) {
         notificationId <- shiny::showNotification("Using argo data that were cached temporarily in R-session memory\n")
         argo <- argoFloats::argoFloatsGetFromCache("argo", debug=debug-1L)
@@ -351,6 +352,7 @@ serverMapApp <- function(input, output, session)
         ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
 
     output$UIview <- shiny::renderUI({
+        argoFloatsDebug(debug,  "renderUIview {\n", sep="", style="bold", unindent=1)
         #> message("UIview: state$view='", paste(state$view, collapse=" "), "'")
         if (argoFloatsIsCached("argo", debug=debug-1L) && input$tabselected %in% c(1)) {
             shiny::removeNotification(notificationId)
@@ -384,6 +386,7 @@ serverMapApp <- function(input, output, session)
                 #? selected=viewDefaults,
                 inline=TRUE)
         }
+        argoFloatsDebug(debug,  "} # renderUIview\n", sep="", style="bold", unindent=1)
     })
 
     output$UIwidget <- shiny::renderUI({
@@ -657,10 +660,10 @@ serverMapApp <- function(input, output, session)
                 msg <- paste(msg, "index <- merge(deep1,deep2)<br>")
             }
             msg <- paste(msg, "# Subset by time.<br>")
-            msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
+            msg <- paste(msg, "from <- as.POSIXct(\"", format(state$startTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>")
             msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
             msg <- paste(msg, "subset1 <- subset(index, time=list(from=from, to=to))<br>")
-            msg <- paste(msg, "# Subset by space.<br>", sep="")
+            msg <- paste(msg, "# Subset by space.<br>")
             lonRect <- state$xlim
             latRect <- state$ylim
             msg <- paste(msg, sprintf("rect <- list(longitude=c(%.4f,%.4f), latitude=c(%.4f,%.4f))<br>",
@@ -791,7 +794,7 @@ serverMapApp <- function(input, output, session)
                 ### pushState(isolate(reactiveValuesToList(state)))
                 #??? shiny::updateTextInput(session, "ID", value=state$focusID)
             } else {
-                dmsg("    float ID='", state$focusID, " is NOT in view")
+                argoFloatsDebug(debug, "float ID=\"", state$focusID, "\" is NOT in view\n", sep="")
             }
             argoFloatsDebug(debug,  "} # observeEvent(input$dblclick)\n", style="bold", showTime=FALSE, unindent=1)
         })
@@ -1037,7 +1040,12 @@ serverMapApp <- function(input, output, session)
         }
         topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
         argoFloatsDebug(debug, "calling plot() to set up scales\n")
+        if (plotCounter < 4) {
+            argoFloatsDebug(debug, "} # plotMap() early return since plotCounter=", plotCounter, "\n", sep="", style="bold", unindent=1)
+            return()
+        }
         plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi180 * mean(state$ylim)))
+        mtext(plotCounter, adj=1, col=2)
         if ("topo" %in% state$view) {
             argoFloatsDebug(debug, "drawing topo as an image\n")
             image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
@@ -1191,7 +1199,7 @@ serverMapApp <- function(input, output, session)
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
             oce::mapScalebar(x="topright", cex=0.8) }
         pushState(isolate(reactiveValuesToList(state)), debug=debug-1L)
-        argoFloatsDebug(debug, "} # plotMap()\n\n", style="bold", unindent=1)
+        argoFloatsDebug(debug, "} # plotMap()\n", style="bold", unindent=1)
     }, execOnResize=TRUE, pointsize=18) # plotMap
 }                                      # serverMapApp
 

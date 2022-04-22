@@ -33,7 +33,7 @@ argoFloatsIsCached <- function(name, debug=0L)
 #' @export
 argoFloatsGetFromCache <- function(name, debug=0)
 {
-    argoFloatsDebug(debug, "argoFloatsGetFromCache(name=\"", name, "\")\n", sep="", unindent=1, sep="")
+    argoFloatsDebug(debug, "argoFloatsGetFromCache(name=\"", name, "\")\n", sep="", style="bold", unindent=1)
     argoFloatsDebug(debug, "} # argoFloatsGetFromCached()\n", style="bold", unindent=1)
     argoFloatsCacheEnv[[name]]
 }
@@ -354,6 +354,7 @@ getIndex <- function(filename="core",
     argoFloatsDebug(debug, "Set destfileRda=\"", destfileRda, "\".\n", sep="")
     res@metadata$url <- url[1]
     res@metadata$header <- NULL
+    argoFloatsDebug(debug, "getIndex() is about to check the cache\n")
     if (argoFloatsIsCached(filenameOrig, debug=debug-1)) {
         argoFloatsDebug(debug, "using an index that is cached in memory for this R session\n")
         return(argoFloatsGetFromCache(filenameOrig, debug=debug-1))
@@ -376,7 +377,7 @@ getIndex <- function(filename="core",
             res@metadata$header <- argoFloatsIndex[["header"]]
             res@data$index <- argoFloatsIndex[["index"]]
             argoFloatsDebug(debug, "Storing this index in memory for this R session.\n")
-            argoFloatsStoreInCache(filenameOrig, res, debug=debug)
+            argoFloatsStoreInCache(filenameOrig, res, debug=debug-1L)
             argoFloatsDebug(debug, "} # getIndex()\n", style="bold", showTime=FALSE, unindent=1)
             return(res)
         }
