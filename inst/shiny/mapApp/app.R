@@ -429,7 +429,7 @@ serverMapApp <- function(input, output, session)
     output$UIinfo <- shiny::renderUI({
         if (argoFloatsIsCached("argo", debug=debug-1L)) {
             shiny::fluidRow(shiny::verbatimTextOutput("info"),
-                if (state$hoverIsPasted == TRUE) {
+                if (state$hoverIsPasted) {
                     tags$head(tags$style("#info{color: red}"))
                 } else {
                     tags$head(tags$style("#info{color: black}"))
@@ -457,7 +457,6 @@ serverMapApp <- function(input, output, session)
             lonstring <- ifelse(x < 0, sprintf("%.2fW", argo$longitude[i]), sprintf("%.2fE", x))
             latstring <- ifelse(y < 0, sprintf("%.2fS", argo$latitude[i]), sprintf("%.2fN", y))
             if (length(dist) && dist < 100) {
-
                 rval <- sprintf("%s Float %s, cycle %s (type %s from %s), sampled at %s, %s at %s",
                     switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
                     argo$ID[i],
@@ -939,6 +938,7 @@ serverMapApp <- function(input, output, session)
                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
                 ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "h") { # paste hover message
+                argoFloatsDebug(debug, "Key h pressed, so setting state$hoverIsPasted to", !state$hoverIsPasted, "\n")
                 state$hoverIsPasted <<- !state$hoverIsPasted
                 pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "u") {
@@ -1017,6 +1017,7 @@ serverMapApp <- function(input, output, session)
     output$plotMap <- shiny::renderPlot({
         argoFloatsDebug(debug, "plotMap() {\n", style="bold", unindent=1)
         argoFloatsDebug(debug, "plotCounter=", plotCounter, "\n", sep="")
+        argoFloatsDebug(debug, "state$hoverIsPasted=", state$hoverIsPasted, "\n", sep="")
         plotCounter <<- plotCounter + 1L
         #> message("in output$plotMap with state$begin=", state$begin)
         if (state$begin)
@@ -1105,22 +1106,6 @@ serverMapApp <- function(input, output, session)
                             points(lonlat$lon, lonlat$lat, pch=symbSettings[[view]], cex=sizeSettings[[view]], col=colSettings[[view]], bg=colSettings[[view]], lwd=0.5)
                         }
                     }
-                    # Highlighting hover message float. FIXME (map loop is still occuring)
-           #         if (state$hoverIsPasted == TRUE) {
-           #             x <- input$hover$x
-           #             y <- input$hover$y
-           #             lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(x)), sprintf("%.2fE", x))
-           #             latstring <- ifelse(y < 0, sprintf("%.2fS", abs(y)), sprintf("%.2fN", y))
-           #             fac <- cos(pi180 * y)      # account for meridional convergence
-           #             dist2 <- ifelse(visible, (fac * (x - argo$longitude))^2 + (y - argo$latitude)^2, 1000)
-           #             i <- which.min(dist2)
-           #             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
-           #             if (length(dist) && dist < 100) {
-           #                 points(argo$longitude[i], argo$latitude[i], pch=20, col="#FF0000")
-
-           #             }
-           #         }
-
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
                             LONLAT <- lonlat[lonlat$ID==ID,] # will be redefined in this loop

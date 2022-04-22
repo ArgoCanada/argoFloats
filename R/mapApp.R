@@ -105,7 +105,6 @@ mapApp <- function(age=argoDefaultIndexAge(),
         debug=debug)
     dir <- system.file("shiny", "mapApp/app.R", package="argoFloats")
     #dir <- "~/git/argoFloats/inst/shiny/mapApp"
-    message("NOTE: DEK debugging version!!! edit R/mapApp.R to remove this")
     if (!nchar(dir))
         stop("The app could not be located.", call.=FALSE)
     shiny::runApp(dir, display.mode="normal")
