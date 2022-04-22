@@ -947,15 +947,17 @@ setMethod(f="plot",
                   q <- unlist(lapply(x[["argos"]], qf))
                   m <- unlist(lapply(x[["argos"]], meanf))
                   omfrow <- par("mfrow")
+                  omar <- par("mar")
+                  par(mar=c(3, 3, 2, 1))
                   par(mfrow=c(if (QCControl$dataStateIndicator) 3 else 2, 1))
-                  on.exit(par(mfrow=omfrow))
+                  on.exit(par(mfrow=omfrow, mar=omar))
                   if (any(is.finite(q))) {
                       o <- order(time) # cycles are not time-ordered in index files
-                      oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange=FALSE, type="l", mar=par("mar"), xaxs="i")
+                      oce::oce.plot.ts(time[o], q[o], ylab=paste(QCControl$parameter, "% Good"), drawTimeRange=FALSE, type="l", mar=par("mar"), xaxs="i", cex.lab=0.7, cex.axis=0.7)
                       points(time[o], q[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                       abline(h=50, col="red", lty="dashed")
                       if (1 == length(unique(x[["ID"]])))
-                          axis(side=3, at=time[o], labels=x[["cycle"]][o], cex.axis=0.8)
+                          axis(side=3, at=time[o], labels=x[["cycle"]][o], cex.axis=0.7, cex.lab=0.7)
                       if (QCControl$dataStateIndicator) {
                           y <- unlist(x[["dataStateIndicator"]])
                           if (length(y)) {
@@ -977,7 +979,7 @@ setMethod(f="plot",
                           }
                       }
                       oce::oce.plot.ts(time[o], m[o], ylab=paste(QCControl$parameter, "Mean"), drawTimeRange=FALSE, type="l",
-                          mar=par("mar"))
+                          mar=par("mar"), cex.lab=0.7, cex.axis=0.7)
                       points(time[o], m[o], col=ifelse(q[o] < 50, "red", "black"), pch=20, cex=1)
                   } else {
                       plot(0:1, 0:1, xlab="", ylab='', type="n", axes=FALSE)
