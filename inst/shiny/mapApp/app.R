@@ -276,12 +276,12 @@ serverMapApp <- function(input, output, session)
         DPwidth=1.4,
         hoverIsPasted=FALSE)
     pushState(isolate(reactiveValuesToList(state)))
-    ## Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
+    # Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
     data("coastlineWorld", package="oce", envir=environment())
     coastlineWorld <- get("coastlineWorld")
     data("coastlineWorldFine", package="ocedata", envir=environment())
     coastlineWorldFine <- get("coastlineWorldFine")
-    ## Depending on whether 'hires' selected, 'topo' wil be one of the following two version:
+    # Depending on whether 'hires' selected, 'topo' wil be one of the following two version:
     data("topoWorld", package="oce", envir=environment())
     topoWorld <- get("topoWorld")
     if (file.exists("topoWorldFine.rda")) {
@@ -294,7 +294,7 @@ serverMapApp <- function(input, output, session)
         notificationId <- shiny::showNotification("Using argo data that were cached temporarily in R-session memory\n")
         argo <- argoFloats::argoFloatsGetFromCache("argo", debug=debug-1L)
     } else {
-        ## Get core and BGC data.
+        # Get core and BGC data.
         notificationId <- shiny::showNotification("Step 1/3: Getting \"core\" Argo index, either by downloading new data or using data in \"destdir\".  This may take a minute or two.", type="message", duration=NULL)
         i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
         argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n")
@@ -326,9 +326,9 @@ serverMapApp <- function(input, output, session)
         n <- length(ID)
         type <- rep("core", n)
         type[ID %in% idBGC] <- "bgc"
-        ##> ## This method took 0.44s (DE 2021-01-11), whereas the next one
-        ##> ## took 0.027s.
-        ##> type[grepl("849|862|864", i@data$index$profiler_type)] <- "deep"
+        #> ## This method took 0.44s (DE 2021-01-11), whereas the next one
+        #> ## took 0.027s.
+        #> type[grepl("849|862|864", i@data$index$profiler_type)] <- "deep"
         type[("849" == i@data$index$profiler_type)] <- "deep"
         type[("862" == i@data$index$profiler_type)] <- "deep"
         type[("864" == i@data$index$profiler_type)] <- "deep"
@@ -345,7 +345,7 @@ serverMapApp <- function(input, output, session)
     argo <- argo[ok, ]
     visible <- rep(TRUE, length(argo$lon)) # vector indicating whether to keep any given cycle.
 
-    ## Functions used to prevent off-world points
+    # Functions used to prevent off-world points
     pinlat <- function(lat)
         ifelse(lat < -90, -90, ifelse(90 < lat, 90, lat))
     pinlon <- function(lon)
@@ -439,7 +439,7 @@ serverMapApp <- function(input, output, session)
     })
 
     output$info <- shiny::renderText({
-        ## show location.  If lat range is under 90deg, also show nearest float within 100km
+        # show location.  If lat range is under 90deg, also show nearest float within 100km
         if (input$tabselected %in% c(1)) {
             if (state$hoverIsPasted)
                 return(paste("[HOLD:ON] ",lastHoverMessage))
@@ -481,6 +481,16 @@ serverMapApp <- function(input, output, session)
         lastHoverMessage <<- rval
         rval
     })
+
+    shiny::observeEvent(input$brush,
+        {
+            argoFloatsDebug(debug,  "observeEvent(input$brush) {\n", style="bold", showTime=FALSE, unindent=1)
+            state$xlim <<- c(input$brush$xmin, input$brush$xmax)
+            state$ylim <<- c(input$brush$ymin, input$brush$ymax)
+            argoFloatsDebug(debug, "set state$xlim=c(",paste(state$xlim,collapse=",),"),
+                " and state$ylim=c(", paste(state$ylim, collapse=","), ")\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$ID)\n", style="bold", showTime=FALSE, unindent=1)
+        })
 
     shiny::observeEvent(input$Ccolour,
         {
@@ -777,7 +787,7 @@ serverMapApp <- function(input, output, session)
                 argoFloatsDebug(debug, "state$focusID is NULL\n")
                 keep <- argo$ID == state$focusID
             } else {
-                ## Restrict search to the present time window
+                # Restrict search to the present time window
                 argoFloatsDebug(debug, "state$focusID='", state$focusID, "'\n", sep="")
                 keep <- state$startTime <= argo$time & argo$time <= state$endTime
             }
@@ -794,8 +804,6 @@ serverMapApp <- function(input, output, session)
                 argoFloatsDebug(debug, "set ylim:      ", state$ylim[1], " to ", state$ylim[2], "\n")
                 argoFloatsDebug(debug, "set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"), "\n")
                 argoFloatsDebug(debug, "set endTime:   ", format(state$endTime, "%Y-%m-%d %H:%M:%S"), "\n")
-                ### pushState(isolate(reactiveValuesToList(state)))
-                #??? shiny::updateTextInput(session, "ID", value=state$focusID)
             } else {
                 argoFloatsDebug(debug, "float ID=\"", state$focusID, "\" is NOT in view\n", sep="")
             }
@@ -807,7 +815,6 @@ serverMapApp <- function(input, output, session)
             argoFloatsDebug(debug,  "observeEvent(input$start) {\n", style="bold", showTime=FALSE, unindent=1)
             if (0 == nchar(input$start)) {
                 state$startTime <<- min(argo$time, na.rm=TRUE)
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else {
                 t <- try(as.POSIXct(format(input$start, "%Y-%m-%d 00:00:00"), tz="UTC"), silent=TRUE)
                 if (inherits(t, "try-error")) {
@@ -816,7 +823,6 @@ serverMapApp <- function(input, output, session)
                             "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type="error")
                 } else {
                     state$startTime <<- t
-                    ### pushState(isolate(reactiveValuesToList(state)))
                     argoFloatsDebug(debug, "user selected start time ", format(t, "%Y-%m-%d %H:%M:%S %z"), "\n")
                 }
             }
@@ -828,14 +834,12 @@ serverMapApp <- function(input, output, session)
             argoFloatsDebug(debug,  "observeEvent(input$end) {\n", style="bold", showTime=FALSE, unindent=1)
             if (0 == nchar(input$end)) {
                 state$endTime <<- max(argo$time, na.rm = TRUE)
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else {
                 t <- try(as.POSIXct(format(input$end, "%Y-%m-%d 00:00:00"), tz="UTC"), silent=TRUE)
                 if (inherits(t, "try-error")) {
                     shiny::showNotification(paste0( "End time \"", input$end, "\" is not in yyyy-mm-dd format, or is otherwise invalid."), type = "error")
                 } else {
                     state$endTime <<- t
-                    ### pushState(isolate(reactiveValuesToList(state)))
                     argoFloatsDebug(debug, "user selected end time ", format(t, "%Y-%m-%d %H:%M:%S %z"), "\n")
                 }
             }
@@ -906,41 +910,33 @@ serverMapApp <- function(input, output, session)
             } else if (key == "n") { # go north
                 dy <- diff(state$ylim)
                 state$ylim <<- pinlat(state$ylim + dy / 4)
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "s") { # go south
                 dy <- diff(state$ylim)
                 state$ylim <<- pinlat(state$ylim - dy / 4)
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "e") { # go east
                 dx <- diff(state$xlim)
                 state$xlim <<- pinlon(state$xlim + dx / 4)
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "w") { # go west
                 dx <- diff(state$xlim)
                 state$xlim <<- pinlon(state$xlim - dx / 4)
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "f") { # forward in time
                 interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
                 state$startTime <<- state$startTime + interval
                 state$endTime <<- state$endTime + interval
                 shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                 shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "b") { # backward in time
                 interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
                 state$startTime <<- state$startTime - interval
                 state$endTime <<- state$endTime - interval
                 shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
                 shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "i") { # zoom in
                 state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
                 state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "o") { # zoom out
                 state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
                 state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "h") { # paste hover message
                 argoFloatsDebug(debug, "Key h pressed, so setting state$hoverIsPasted to", !state$hoverIsPasted, "\n")
                 state$hoverIsPasted <<- !state$hoverIsPasted
@@ -1006,12 +1002,10 @@ serverMapApp <- function(input, output, session)
                 shiny::updateNumericInput(session, inputId="Dsymbol", value=21)
                 shiny::updateSliderInput(session, inputId="Dsize", value=0.9)
                 shiny::updateSliderInput(session, inputId="DPwidth", value=1.4)
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "0") { # Unzoom an area and keep same time scale
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
-                ### pushState(isolate(reactiveValuesToList(state)))
             } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
@@ -1033,16 +1027,6 @@ serverMapApp <- function(input, output, session)
         omgp <- par("mgp")
         par(mar=c(2.0, 2.0, 1.0, 1.0), mgp=c(2, 0.75, 0))
         on.exit(par(mar=omar, mgp=omgp))
-        if (!is.null(input$brush)) {
-            if ((input$brush$xmax - input$brush$xmin) > 0.5 && (input$brush$ymax - input$brush$ymin) > 0.5) {
-                state$xlim <<- c(input$brush$xmin, input$brush$xmax)
-                state$ylim <<- c(input$brush$ymin, input$brush$ymax)
-                ### pushState(isolate(reactiveValuesToList(state)))
-                argoFloatsDebug(debug, "a brush exists, so set state$xlim and state$ylim\n")
-            } else {
-                argoFloatsDebug(debug, "a brush exists, but it was too small to set state$xlim and state$ylim\n")
-            }
-        }
         topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
         argoFloatsDebug(debug, "calling plot() to set up scales\n")
         if (plotCounter < 4) {
@@ -1072,7 +1056,7 @@ serverMapApp <- function(input, output, session)
         argoFloatsDebug(debug, "drawing coastline as a polygon\n")
         polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
         rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
-        ## For focusID mode, we do not trim by time or space
+        # For focusID mode, we do not trim by time or space
         keep <- if (!is.null(state$focusID)) {
             argo$ID == state$focusID
         }  else {
@@ -1086,7 +1070,7 @@ serverMapApp <- function(input, output, session)
         cex <- 0.9
         counts <- ""
         if (sum(c("core", "deep", "bgc") %in% state$view) > 0) {
-            ## Draw points, optionally connecting paths (and indicating start points)
+            # Draw points, optionally connecting paths (and indicating start points)
             visible <<- rep(FALSE, length(argo$lon))
             for (view in c("core", "deep", "bgc")) {
                 if (view %in% state$view) {
@@ -1116,7 +1100,7 @@ serverMapApp <- function(input, output, session)
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
                             LONLAT <- lonlat[lonlat$ID==ID,] # will be redefined in this loop
-                            ## Sort by time instead of relying on the order in the repository
+                            # Sort by time instead of relying on the order in the repository
                             o <- order(LONLAT$time)
                             LONLAT <- LONLAT[o, ]
                             no <- length(o)
@@ -1161,10 +1145,10 @@ serverMapApp <- function(input, output, session)
                     }
                 }
             }
-            ## Draw the inspection rectangle as a thick gray line, but only if zoomed
+            # Draw the inspection rectangle as a thick gray line, but only if zoomed
             if (-180 < state$xlim[1] || state$xlim[2] < 180 || -90 < state$ylim[1] || state$ylim[2] < 90)
                 rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
-            ## Write a margin comment
+            # Write a margin comment
             argoFloatsDebug(debug, counts, "\n")
             if (!is.null(state$focusID)) {
                 argoFloatsDebug(debug, "single-ID with", sum(visible), "profiles\n")
