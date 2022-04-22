@@ -11,7 +11,7 @@ getIndex(
   age = argoDefaultIndexAge(),
   quiet = FALSE,
   keep = FALSE,
-  debug = 0
+  debug = 0L
 )
 }
 \arguments{

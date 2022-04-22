@@ -4,7 +4,7 @@
 \alias{argoFloatsIsCached}
 \title{Check Whether an Item is Cached}
 \usage{
-argoFloatsIsCached(name, debug = 0)
+argoFloatsIsCached(name, debug = 0L)
 }
 \arguments{
 \item{name}{character value, naming the item.}
