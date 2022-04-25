@@ -351,12 +351,10 @@ serverMapApp <- function(input, output, session)
     pinlon <- function(lon)
         ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
 
+    argoFloatsDebug(debug,  "renderUIview {\n", sep="", style="bold", unindent=1)
     output$UIview <- shiny::renderUI({
-        argoFloatsDebug(debug,  "renderUIview {\n", sep="", style="bold", unindent=1)
-        #> message("UIview: state$view='", paste(state$view, collapse=" "), "'")
         if (argoFloatsIsCached("argo", debug=debug-1L) && input$tabselected %in% c(1)) {
             shiny::removeNotification(notificationId)
-            #notificationIdDeep <- shiny::showNotification("Step 4/5: Creating widgets", type="message", duration=2)
             shiny::checkboxGroupInput("view",
                 label="View",
                 choiceNames=list(
@@ -386,8 +384,8 @@ serverMapApp <- function(input, output, session)
                 #? selected=viewDefaults,
                 inline=TRUE)
         }
-        argoFloatsDebug(debug,  "} # renderUIview\n", sep="", style="bold", unindent=1)
     })
+    argoFloatsDebug(debug,  "} # renderUIview\n", sep="", style="bold", unindent=1)
 
     output$UIwidget <- shiny::renderUI({
         if (argoFloatsIsCached("argo", debug=debug-1L) && input$tabselected %in% c(1)) {
