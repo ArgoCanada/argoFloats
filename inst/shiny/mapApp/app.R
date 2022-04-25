@@ -1034,7 +1034,9 @@ serverMapApp <- function(input, output, session)
             return()
         }
         plot(state$xlim, state$ylim, xlab="", ylab="", axes=FALSE, type="n", asp=1 / cos(pi180 * mean(state$ylim)))
-        mtext(plotCounter, adj=1, col=2)
+        if (debug > 0) {
+            mtext(plotCounter, adj=1, col=2)
+        }
         if ("topo" %in% state$view) {
             argoFloatsDebug(debug, "drawing topo as an image\n")
             image(topo[["longitude"]], topo[["latitude"]], topo[["z"]], add=TRUE, breaks=seq(-8000, 0, 100), col=oce::oceColorsGebco(80))
