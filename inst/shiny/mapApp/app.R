@@ -442,7 +442,7 @@ serverMapApp <- function(input, output, session)
         # show location.  If lat range is under 90deg, also show nearest float within 100km
         if (input$tabselected %in% c(1)) {
             if (state$hoverIsPasted)
-                return(paste("[HOLD:ON] ",lastHoverMessage))
+                return(paste("[HOLD]",lastHoverMessage))
         }
         x <- input$hover$x
         y <- input$hover$y
@@ -456,11 +456,11 @@ serverMapApp <- function(input, output, session)
             holdLatitude <<- argo$latitude[i]
             holdLongitude <<- argo$longitude[i]
             dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
-            lonstring <- ifelse(x < 0, sprintf("%.2fW", argo$longitude[i]), sprintf("%.2fE", x))
-            latstring <- ifelse(y < 0, sprintf("%.2fS", argo$latitude[i]), sprintf("%.2fN", y))
+            lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(argo$longitude[i])), sprintf("%.2fE", x))
+            latstring <- ifelse(y < 0, sprintf("%.2fS", abs(argo$latitude[i])), sprintf("%.2fN", y))
             if (length(dist) && dist < 100) {
                 highlight <<- TRUE
-                rval <- sprintf("%s Float %s, cycle %s (type %s from %s), sampled at %s, %s at %s",
+                rval <- sprintf("%s Float %s cycle %s (type %s from %s) sampled at %s %s, %s",
                     switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
                     argo$ID[i],
                     argo$cycle[i],
