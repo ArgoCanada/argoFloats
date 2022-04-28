@@ -232,6 +232,7 @@ uiMapApp <- shiny::fluidPage(
         shiny::fluidRow(shiny::plotOutput("plotMap",
                 hover=shiny::hoverOpts("hover"),
                 dblclick=shiny::dblclickOpts("dblclick"),
+                click=shiny::clickOpts("click"),
                 brush=shiny::brushOpts("brush", delay=2000, resetOnNew=TRUE)))))
 
 serverMapApp <- function(input, output, session)
@@ -251,6 +252,7 @@ serverMapApp <- function(input, output, session)
         begin=TRUE,
         xlim=c(-180, 180),
         ylim=c(-90, 90),
+        polyDone=FALSE,
         startTime=startTime,
         endTime=endTime,
         action=NULL,
@@ -274,6 +276,7 @@ serverMapApp <- function(input, output, session)
         Dborder="black",
         DPcolour=colDefaults$deep,
         DPwidth=1.4,
+        click=NULL,
         hoverIsPasted=FALSE)
     pushState(isolate(reactiveValuesToList(state)))
     # Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
@@ -296,11 +299,12 @@ serverMapApp <- function(input, output, session)
     } else {
         # Get core and BGC data.
         notificationId <- shiny::showNotification("Step 1/3: Getting \"core\" Argo index, either by downloading new data or using data in \"destdir\".  This may take a minute or two.", type="message", duration=NULL)
-        i <- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
+        i <<- argoFloats::getIndex(age=age, destdir=destdir, server=argoServer, debug=debug)
         argoFloatsDebug(debug, "getIndex() returned", if (is.null(i)) "NULL" else "not NULL", "\n")
         shiny::removeNotification(notificationId)
         notificationId <- shiny::showNotification("Step 2/3: Getting \"BGC\" Argo index, either by downloading new data or using cached data.  This may take a minute or two.", type="message", duration=NULL)
-        iBGC <- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
+        iBGC <<- argoFloats::getIndex("bgc", age=age, destdir=destdir, server=argoServer, debug=debug)
+        m <<- merge(i, iBGC)
         shiny::removeNotification(notificationId)
         # Combine core and BGC data.  This relies on the fact that every BGC ID is
         # also a core ID.  Here is sample code that proves it:
@@ -322,6 +326,7 @@ serverMapApp <- function(input, output, session)
         lat <- i[["latitude"]]
         profilerType <- i[["profiler_type"]]
         institution <- i[["institution"]]
+        file <- i[["file"]]
         idBGC <- unique(iBGC[["ID"]])
         n <- length(ID)
         type <- rep("core", n)
@@ -332,7 +337,7 @@ serverMapApp <- function(input, output, session)
         type[("849" == i@data$index$profiler_type)] <- "deep"
         type[("862" == i@data$index$profiler_type)] <- "deep"
         type[("864" == i@data$index$profiler_type)] <- "deep"
-        argo <- data.frame(time=i[["date"]], ID=ID, cycle=cycle, longitude=lon, latitude=lat, type=type, profilerType=profilerType, institution=institution)
+        argo <- data.frame(time=i[["date"]], ID=ID, cycle=cycle, longitude=lon, latitude=lat, type=type, profilerType=profilerType, institution=institution, file=file)
         argo$longitude <- ifelse(argo$longitude > 180, argo$longitude - 360, argo$longitude)
         ok <- is.finite(argo$time)
         argo <- argo[ok, ]
@@ -399,6 +404,8 @@ serverMapApp <- function(input, output, session)
                 shiny::actionButton("goE", shiny::HTML("&rarr;")),
                 shiny::actionButton("zoomIn", "+"),
                 shiny::actionButton("zoomOut", "-"),
+                shiny::actionButton("polygon", shiny::HTML("&#x2B21;")),
+                shinyBS::bsTooltip(id="polygon",title="To subset by polygon: 1) Click this button 2) Click a polygon in map 3) Click q when done.", trigger="hover"),
                 shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",
                     shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
@@ -598,6 +605,11 @@ serverMapApp <- function(input, output, session)
             state$xlim <<- pinlon(state$xlim + dx / 4)
         })
 
+    shiny::observeEvent(input$click,
+        {
+            state$click <<- input$click
+        })
+
     shiny::observeEvent(input$goW,
         {
             dx <- diff(state$xlim) # present longitude span
@@ -675,11 +687,17 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
             msg <- paste(msg, "subset1 <- subset(index, time=list(from=from, to=to))<br>")
             msg <- paste(msg, "# Subset by space.<br>")
-            lonRect <- state$xlim
-            latRect <- state$ylim
-            msg <- paste(msg, sprintf("rect <- list(longitude=c(%.4f,%.4f), latitude=c(%.4f,%.4f))<br>",
-                                      lonRect[1], lonRect[2], latRect[1], latRect[2]))
-            msg <- paste(msg, "subset2 <- subset(subset1, rectangle=rect)<br>")
+            if (input$polygon && state$polyDone) {
+                latp <- paste(latpoly, collapse=",")
+                lonp <- paste(lonpoly, collapse=",")
+                msg <- paste(msg, "subset2 <- subset(subset1, polygon=list(longitude=c(",lonp,"),latitude=c(",latp,")))<br>")
+            } else {
+                lonRect <- state$xlim
+                latRect <- state$ylim
+                msg <- paste(msg, sprintf("rect <- list(longitude=c(%.4f,%.4f), latitude=c(%.4f,%.4f))<br>",
+                        lonRect[1], lonRect[2], latRect[1], latRect[2]))
+                msg <- paste(msg, "subset2 <- subset(subset1, rectangle=rect)<br>")
+            }
             if (!is.null(state$focusID)) {
                 msg <- paste0(msg, sprintf("subset2 <- subset(subset2, ID=%2s)<br>", state$focusID))
             }
@@ -808,6 +826,20 @@ serverMapApp <- function(input, output, session)
             argoFloatsDebug(debug,  "} # observeEvent(input$dblclick)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
+    # FIXME: JAIM working here
+    var1 <- list()
+    var2 <- list()
+    val <- reactiveValues(clickx = NULL, clicky = NULL, data = cbind (var1, var2))
+    shiny::observeEvent(input$click,
+        {
+            if (input$polygon) {
+                val$clickx <- c(val$clickx, input$click$x)
+                val$clicky <- c(val$clicky, input$click$y)
+                val$data <<- rbind(val$data, cbind(input$click$x, input$click$y))
+                lonpoly <<- unlist(val$data[,1])
+                latpoly <<- unlist(val$data[,2])
+            }
+        })
     shiny::observeEvent(input$start,
         {
             argoFloatsDebug(debug,  "observeEvent(input$start) {\n", style="bold", showTime=FALSE, unindent=1)
@@ -1007,6 +1039,23 @@ serverMapApp <- function(input, output, session)
             } else if (key == "?") { # show help on keystrokes
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
+            } else if (key == "q") {
+                if (input$polygon) {
+                    if (length(lonpoly) < 3) {
+                        shiny::showNotification("Must choose at least 3 points for polygon.", type="message", duration=5)
+                    } else {
+                        state$polyDone <<- TRUE
+                        POLY <- subset(m, polygon=list(longitude=lonpoly, latitude=latpoly), silent=TRUE)
+                        # Only show floats of interest
+                        polykeep <<- which(argo[["file"]] %in% POLY[["file"]])
+                        # Zoom in on area
+                        state$xlim <<- c(min(lonpoly), max(lonpoly))
+                        state$ylim <<- c(min(latpoly), max(latpoly))
+                    }
+                }
+            } else {
+                state$polyDone <<- FALSE
+
             }
         })                                  # keypressTrigger
 
@@ -1064,6 +1113,7 @@ serverMapApp <- function(input, output, session)
         }
         argoFloatsDebug(debug, "subset from", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "to", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
         keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
+        # End FIXME
         keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
         keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
         argoFloatsDebug(debug, "subsetting for time and space leaves", sum(keep), "profiles, in categories:\n")
@@ -1096,6 +1146,12 @@ serverMapApp <- function(input, output, session)
                     }
                     if (state$hoverIsPasted && highlight == TRUE) {
                         points(holdLongitude, holdLatitude, pch=21, col="red", bg="red")
+                    }
+                    if (input$polygon) {
+                        # FIXME: JAIM
+                        lonpoly <<- unlist(val$data[,1])
+                        latpoly <<- unlist(val$data[,2])
+                        points(lonpoly,latpoly, pch=20, col="red", type="o", lwd=2)
                     }
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
