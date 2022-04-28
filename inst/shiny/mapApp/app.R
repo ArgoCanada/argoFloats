@@ -405,7 +405,7 @@ serverMapApp <- function(input, output, session)
                 shiny::actionButton("zoomIn", "+"),
                 shiny::actionButton("zoomOut", "-"),
                 shiny::actionButton("polygon", shiny::HTML("&#x2B21;")),
-                shinyBS::bsTooltip(id="polygon",title="To subset by polygon: 1) Click this button 2) Click a polygon in map 3) Click q when done.", trigger="hover"),
+                shinyBS::bsTooltip(id="polygon",title="To subset by polygon 1) Click this button 2) Click at least 3 points in the map 3) Click q to indicate done.", trigger="hover"),
                 shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",
                     shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
@@ -1002,6 +1002,7 @@ serverMapApp <- function(input, output, session)
                 state$endTime <<- endTime
                 state$focusID <<- NULL
                 state$hoverIsPasted <<- FALSE
+                state$polyDone <<- FALSE
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 shiny::updateCheckboxGroupInput(session, "view", selected=c("core", "deep", "bgc"))
                 shiny::updateSelectInput(session, "action", selected=NULL)
