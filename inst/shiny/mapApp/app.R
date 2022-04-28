@@ -825,8 +825,6 @@ serverMapApp <- function(input, output, session)
             }
             argoFloatsDebug(debug,  "} # observeEvent(input$dblclick)\n", style="bold", showTime=FALSE, unindent=1)
         })
-
-    # FIXME: JAIM working here
     var1 <- list()
     var2 <- list()
     val <- reactiveValues(clickx = NULL, clicky = NULL, data = cbind (var1, var2))
@@ -1049,8 +1047,10 @@ serverMapApp <- function(input, output, session)
                         POLY2 <- subset(POLY, time=list(from=state$startTime, to=state$endTime), silent=TRUE)
                         keep <- rep(TRUE, length(argo$ID))
 
-                        # Only show floats of interest
                         polykeep <<- keep & (argo[["file"]] %in% POLY2[["file"]])
+                        # Zoom in on area
+                        state$xlim <<- c(min(lonpoly), max(lonpoly))
+                        state$ylim <<- c(min(latpoly), max(latpoly))
                     }
                 }
             } else {
@@ -1106,7 +1106,7 @@ serverMapApp <- function(input, output, session)
         polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
         rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
         # For focusID mode, we do not trim by time or space
-        if (state$polyDone == FALSE) { # JAIM, FIXME trying
+        if (state$polyDone == FALSE) {
         keep <- if (!is.null(state$focusID)) {
             argo$ID == state$focusID
         }  else {
@@ -1151,7 +1151,6 @@ serverMapApp <- function(input, output, session)
                         points(holdLongitude, holdLatitude, pch=21, col="red", bg="red")
                     }
                     if (input$polygon) {
-                        # FIXME: JAIM
                         lonpoly <<- unlist(val$data[,1])
                         latpoly <<- unlist(val$data[,2])
                         points(lonpoly,latpoly, pch=20, col="red", type="o", lwd=2)
