@@ -1046,11 +1046,11 @@ serverMapApp <- function(input, output, session)
                     } else {
                         state$polyDone <<- TRUE
                         POLY <- subset(m, polygon=list(longitude=lonpoly, latitude=latpoly), silent=TRUE)
+                        POLY2 <- subset(POLY, time=list(from=state$startTime, to=state$endTime), silent=TRUE)
+                        keep <- rep(TRUE, length(argo$ID))
+
                         # Only show floats of interest
-                        polykeep <<- which(argo[["file"]] %in% POLY[["file"]])
-                        # Zoom in on area
-                        state$xlim <<- c(min(lonpoly), max(lonpoly))
-                        state$ylim <<- c(min(latpoly), max(latpoly))
+                        polykeep <<- keep & (argo[["file"]] %in% POLY2[["file"]])
                     }
                 }
             } else {
@@ -1106,6 +1106,7 @@ serverMapApp <- function(input, output, session)
         polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
         rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
         # For focusID mode, we do not trim by time or space
+        if (state$polyDone == FALSE) { # JAIM, FIXME trying
         keep <- if (!is.null(state$focusID)) {
             argo$ID == state$focusID
         }  else {
@@ -1113,9 +1114,11 @@ serverMapApp <- function(input, output, session)
         }
         argoFloatsDebug(debug, "subset from", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "to", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
         keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
-        # End FIXME
         keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
         keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
+        } else {
+            keep <- polykeep
+        }
         argoFloatsDebug(debug, "subsetting for time and space leaves", sum(keep), "profiles, in categories:\n")
         cex <- 0.9
         counts <- ""
