@@ -1046,10 +1046,7 @@ serverMapApp <- function(input, output, session)
                     } else {
                         state$polyDone <<- TRUE
                         POLY <- subset(m, polygon=list(longitude=lonpoly, latitude=latpoly), silent=TRUE)
-                        POLY2 <- subset(POLY, time=list(from=state$startTime, to=state$endTime), silent=TRUE)
-                       # keep <- rep(TRUE, length(argo$ID))
-
-                        polykeep <<- (argo[["file"]] %in% POLY2[["file"]])
+                        polykeep <<- (argo[["file"]] %in% POLY[["file"]])
                         state$xlim <<- c(min(lonpoly), max(lonpoly))
                         state$ylim <<- c(min(latpoly), max(latpoly))
                     }
@@ -1112,11 +1109,11 @@ serverMapApp <- function(input, output, session)
         }  else {
             rep(TRUE, length(argo$ID))
         }
-        if (state$polyDone == FALSE) {
         argoFloatsDebug(debug, "subset from", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "to", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
         keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
-        keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
-        keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
+        if (state$polyDone == FALSE) {
+            keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
+            keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
         } else {
             keep <- keep & polykeep
         }
