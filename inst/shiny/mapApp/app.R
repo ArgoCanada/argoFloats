@@ -253,6 +253,9 @@ serverMapApp <- function(input, output, session)
         xlim=c(-180, 180),
         ylim=c(-90, 90),
         polyDone=FALSE,
+        clickx=NULL,
+        clicky=NULL,
+        date=NULL,
         startTime=startTime,
         endTime=endTime,
         action=NULL,
@@ -276,7 +279,6 @@ serverMapApp <- function(input, output, session)
         Dborder="black",
         DPcolour=colDefaults$deep,
         DPwidth=1.4,
-        click=NULL,
         hoverIsPasted=FALSE)
     pushState(isolate(reactiveValuesToList(state)))
     # Depending on whether 'hires' selected, 'coastline' will be one of the following two version:
@@ -605,11 +607,6 @@ serverMapApp <- function(input, output, session)
             state$xlim <<- pinlon(state$xlim + dx / 4)
         })
 
-    shiny::observeEvent(input$click,
-        {
-            state$click <<- input$click
-        })
-
     shiny::observeEvent(input$goW,
         {
             dx <- diff(state$xlim) # present longitude span
@@ -827,15 +824,15 @@ serverMapApp <- function(input, output, session)
         })
     var1 <- list()
     var2 <- list()
-    val <- reactiveValues(clickx = NULL, clicky = NULL, data = cbind (var1, var2))
+    data <- cbind(var1, var2)
     shiny::observeEvent(input$click,
         {
             if (input$polygon) {
-                val$clickx <- c(val$clickx, input$click$x)
-                val$clicky <- c(val$clicky, input$click$y)
-                val$data <<- rbind(val$data, cbind(input$click$x, input$click$y))
-                lonpoly <<- unlist(val$data[,1])
-                latpoly <<- unlist(val$data[,2])
+                state$clickx <- c(state$clickx, input$click$x)
+                state$clicky <- c(state$clicky, input$click$y)
+                state$data <<- rbind(state$data, cbind(input$click$x, input$click$y))
+                lonpoly <<- unlist(state$data[,1])
+                latpoly <<- unlist(state$data[,2])
             }
         })
     shiny::observeEvent(input$start,
@@ -1152,8 +1149,8 @@ serverMapApp <- function(input, output, session)
                         points(holdLongitude, holdLatitude, pch=21, col="red", bg="red")
                     }
                     if (input$polygon && state$polyDone==FALSE) { # JAIM
-                        lonpoly <<- unlist(val$data[,1])
-                        latpoly <<- unlist(val$data[,2])
+                        lonpoly <<- unlist(state$data[,1])
+                        latpoly <<- unlist(state$data[,2])
                         points(lonpoly,latpoly, pch=20, col="red", type="o", lwd=2)
                     }
                     if ("path" %in% state$view) {
