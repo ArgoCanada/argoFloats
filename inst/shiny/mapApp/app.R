@@ -253,9 +253,8 @@ serverMapApp <- function(input, output, session)
         xlim=c(-180, 180),
         ylim=c(-90, 90),
         polyDone=FALSE,
-        clickx=NULL,
-        clicky=NULL,
-        date=NULL,
+        click=NULL,
+        polygon=FALSE,
         startTime=startTime,
         endTime=endTime,
         action=NULL,
@@ -684,7 +683,7 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
             msg <- paste(msg, "subset1 <- subset(index, time=list(from=from, to=to))<br>")
             msg <- paste(msg, "# Subset by space.<br>")
-            if (input$polygon && state$polyDone) {
+            if (state$polygon && state$polyDone) {
                 latp <- paste(latpoly, collapse=",")
                 lonp <- paste(lonpoly, collapse=",")
                 msg <- paste(msg, "subset2 <- subset(subset1, polygon=list(longitude=c(",lonp,"),latitude=c(",latp,")))<br>")
@@ -828,9 +827,12 @@ serverMapApp <- function(input, output, session)
     shiny::observeEvent(input$click,
         {
             if (input$polygon) {
-                state$clickx <- c(state$clickx, input$click$x)
-                state$clicky <- c(state$clicky, input$click$y)
-                state$data <<- rbind(state$data, cbind(input$click$x, input$click$y))
+                state$polygon <<- input$polygon
+                state$click$x <<- input$click$x
+                state$click$y <<- input$click$y
+                state$clickx <- c(state$clickx, state$click$x)
+                state$clicky <- c(state$clicky, state$click$y)
+                state$data <- rbind(state$data, cbind(input$click$x, input$click$y))
                 lonpoly <<- unlist(state$data[,1])
                 latpoly <<- unlist(state$data[,2])
             }
@@ -999,7 +1001,7 @@ serverMapApp <- function(input, output, session)
                 state$endTime <<- endTime
                 state$focusID <<- NULL
                 state$hoverIsPasted <<- FALSE
-                state$polyDone <<- FALSE # JAIM
+                state$polyDone <<- FALSE
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 shiny::updateCheckboxGroupInput(session, "view", selected=c("core", "deep", "bgc"))
                 shiny::updateSelectInput(session, "action", selected=NULL)
@@ -1036,17 +1038,16 @@ serverMapApp <- function(input, output, session)
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
             } else if (key == "q") {
-                if (input$polygon) {
+                if (state$polygon) {
                     if (length(lonpoly) < 3) {
                         shiny::showNotification("Must choose at least 3 points for polygon.", type="message", duration=5)
                     } else {
                         state$polyDone <<- TRUE
                         POLY <- subset(m, polygon=list(longitude=lonpoly, latitude=latpoly), silent=TRUE)
                         POLY2 <- subset(POLY, time=list(from=state$startTime, to=state$endTime), silent=TRUE)
-                        keep <- rep(TRUE, length(argo$ID))
+                       # keep <- rep(TRUE, length(argo$ID))
 
-                        polykeep <<- keep & (argo[["file"]] %in% POLY2[["file"]])
-                        # Zoom in on area
+                        polykeep <<- (argo[["file"]] %in% POLY2[["file"]])
                         state$xlim <<- c(min(lonpoly), max(lonpoly))
                         state$ylim <<- c(min(latpoly), max(latpoly))
                     }
@@ -1104,18 +1105,18 @@ serverMapApp <- function(input, output, session)
         polygon(coastline[["longitude"]], coastline[["latitude"]], col=colLand)
         rect(usr[1], usr[3], usr[2], usr[4], lwd = 1)
         # For focusID mode, we do not trim by time or space
-        if (state$polyDone == FALSE) {
         keep <- if (!is.null(state$focusID)) {
             argo$ID == state$focusID
         }  else {
             rep(TRUE, length(argo$ID))
         }
+        if (state$polyDone == FALSE) {
         argoFloatsDebug(debug, "subset from", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "to", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
         keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
         keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
         keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
         } else {
-            keep <- polykeep
+            keep <- keep & polykeep
         }
         argoFloatsDebug(debug, "subsetting for time and space leaves", sum(keep), "profiles, in categories:\n")
         cex <- 0.9
@@ -1148,10 +1149,8 @@ serverMapApp <- function(input, output, session)
                     if (state$hoverIsPasted && highlight == TRUE) {
                         points(holdLongitude, holdLatitude, pch=21, col="red", bg="red")
                     }
-                    if (input$polygon && state$polyDone==FALSE) { # JAIM
-                        lonpoly <<- unlist(state$data[,1])
-                        latpoly <<- unlist(state$data[,2])
-                        points(lonpoly,latpoly, pch=20, col="red", type="o", lwd=2)
+                    if (state$polygon && state$polyDone == FALSE) { # JAIM
+                        points(unlist(state$data[,1]), unlist(state$data[,2]), pch=20, col="red", type="o", lwd=2)
                     }
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
