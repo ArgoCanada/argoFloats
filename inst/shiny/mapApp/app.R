@@ -1002,7 +1002,7 @@ serverMapApp <- function(input, output, session)
                 state$endTime <<- endTime
                 state$focusID <<- NULL
                 state$hoverIsPasted <<- FALSE
-                state$polyDone <<- FALSE
+                state$polyDone <<- FALSE # JAIM
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 shiny::updateCheckboxGroupInput(session, "view", selected=c("core", "deep", "bgc"))
                 shiny::updateSelectInput(session, "action", selected=NULL)
@@ -1151,7 +1151,7 @@ serverMapApp <- function(input, output, session)
                     if (state$hoverIsPasted && highlight == TRUE) {
                         points(holdLongitude, holdLatitude, pch=21, col="red", bg="red")
                     }
-                    if (input$polygon) {
+                    if (input$polygon && state$polyDone == FALSE) { # JAIM
                         lonpoly <<- unlist(val$data[,1])
                         latpoly <<- unlist(val$data[,2])
                         points(lonpoly,latpoly, pch=20, col="red", type="o", lwd=2)
