@@ -787,6 +787,8 @@ serverMapApp <- function(input, output, session)
             argoFloatsDebug(debug,  "observeEvent(input$dblclick) {\n", style="bold", showTime=FALSE, unindent=1)
             x <- input$dblclick$x
             y <- input$dblclick$y
+            state$polyDone <- FALSE
+            state$polygon <- FALSE
             fac2 <- 1.0/cos(pi180*y)^2 # for deltaLon^2 compared with deltaLat^2
             if (!is.null(state$focusID)) {
                 argoFloatsDebug(debug, "state$focusID is NULL\n")
@@ -1036,6 +1038,7 @@ serverMapApp <- function(input, output, session)
                     if (length(lonpoly) < 3) {
                         shiny::showNotification("Must choose at least 3 points for polygon.", type="message", duration=5)
                     } else {
+                        state$data <- NULL
                         state$polyDone <- TRUE
                         POLY <- subset(m, polygon=list(longitude=lonpoly, latitude=latpoly), silent=TRUE)
                         polykeep <<- (argo[["file"]] %in% POLY[["file"]])
