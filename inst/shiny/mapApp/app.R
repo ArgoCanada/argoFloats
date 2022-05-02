@@ -767,14 +767,6 @@ serverMapApp <- function(input, output, session)
                     state$ylim <<- pinlat(extendrange(argo$lat[k], f=0.15))
                     state$startTime <<- dayStart(min(argo$time[k]))
                     state$endTime <<- dayEnd(max(argo$time[k]))
-                    #?? # Q: does skipping the updates fix the redrawing problem?
-                    #?? # A: no, but it doesn't seem to cause any effect so let's skip it.
-                    #?? if (FALSE) {
-                    #??     shiny::updateTextInput(session, "start",
-                    #??         value=format(state$startTime, "%Y-%m-%d"))
-                    #??     shiny::updateTextInput(session, "end",
-                    #??         value=format(state$endTime, "%Y-%m-%d"))
-                    #?? }
                     argoFloatsDebug(debug, "set xlim:      ", state$xlim[1], " to ", state$xlim[2], "\n")
                     argoFloatsDebug(debug, "set ylim:      ", state$ylim[1], " to ", state$ylim[2], "\n")
                     argoFloatsDebug(debug, "set startTime: ", format(state$startTime, "%Y-%m-%d %H:%M:%S"), "\n")
@@ -1002,7 +994,7 @@ serverMapApp <- function(input, output, session)
                 state$endTime <<- endTime
                 state$focusID <<- NULL
                 state$hoverIsPasted <<- FALSE
-                state$polyDone <<- FALSE
+                state$polyDone <- FALSE
                 state$data <<- NULL
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
                 shiny::updateCheckboxGroupInput(session, "view", selected=c("core", "deep", "bgc"))
@@ -1044,7 +1036,7 @@ serverMapApp <- function(input, output, session)
                     if (length(lonpoly) < 3) {
                         shiny::showNotification("Must choose at least 3 points for polygon.", type="message", duration=5)
                     } else {
-                        state$polyDone <<- TRUE
+                        state$polyDone <- TRUE
                         POLY <- subset(m, polygon=list(longitude=lonpoly, latitude=latpoly), silent=TRUE)
                         polykeep <<- (argo[["file"]] %in% POLY[["file"]])
                         state$xlim <<- c(min(lonpoly), max(lonpoly))
@@ -1052,7 +1044,7 @@ serverMapApp <- function(input, output, session)
                     }
                 }
             } else {
-                state$polyDone <<- FALSE
+                state$polyDone <- FALSE
 
             }
         })                                  # keypressTrigger
@@ -1111,10 +1103,9 @@ serverMapApp <- function(input, output, session)
         }
         argoFloatsDebug(debug, "subset from", format(state$startTime, "%Y-%m-%d %H:%M:%S %z"), "to", format(state$endTime, "%Y-%m-%d %H:%M:%S %z"), "\n")
         keep <- keep & (state$startTime <= argo$time & argo$time <= state$endTime)
-        if (state$polyDone == FALSE) {
-            keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
-            keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
-        } else {
+        keep <- keep & (state$xlim[1] <= argo$longitude & argo$longitude <= state$xlim[2])
+        keep <- keep & (state$ylim[1] <= argo$latitude & argo$latitude <= state$ylim[2])
+        if (state$polyDone && is.null(state$focusID)) {
             keep <- keep & polykeep
         }
         argoFloatsDebug(debug, "subsetting for time and space leaves", sum(keep), "profiles, in categories:\n")
