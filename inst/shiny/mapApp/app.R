@@ -406,7 +406,7 @@ serverMapApp <- function(input, output, session)
                 shiny::actionButton("goE", shiny::HTML("&rarr;")),
                 shiny::actionButton("zoomIn", "+"),
                 shiny::actionButton("zoomOut", "-"),
-                shiny::actionButton("polygon", shiny::HTML("&#x2B21;")),
+                shinyBS::bsButton("polygon", shiny::HTML("&#x2B21;")),
                 shinyBS::bsTooltip(id="polygon",title="To subset by polygon 1) Click this button 2) Click at least 3 points in the map 3) Click q to indicate done.", trigger="hover"),
                 shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",
                     shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
@@ -831,6 +831,10 @@ serverMapApp <- function(input, output, session)
                 lonpoly <<- unlist(state$data[,1])
                 latpoly <<- unlist(state$data[,2])
             }
+        })
+    shiny::observeEvent(input$polygon,
+        {
+            shinyBS::updateButton(session, "polygon", style="danger")
         })
     shiny::observeEvent(input$start,
         {
