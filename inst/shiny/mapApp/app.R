@@ -498,12 +498,14 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$brush,
         {
-            argoFloatsDebug(debug,  "observeEvent(input$brush) {\n", style="bold", showTime=FALSE, unindent=1)
-            state$xlim <<- c(input$brush$xmin, input$brush$xmax)
-            state$ylim <<- c(input$brush$ymin, input$brush$ymax)
-            argoFloatsDebug(debug, "set state$xlim=c(",paste(state$xlim,collapse=",),"),
-                " and state$ylim=c(", paste(state$ylim, collapse=","), ")\n")
-            argoFloatsDebug(debug,  "} # observeEvent(input$ID)\n", style="bold", showTime=FALSE, unindent=1)
+            if (state$polygon == FALSE) {
+                argoFloatsDebug(debug,  "observeEvent(input$brush) {\n", style="bold", showTime=FALSE, unindent=1)
+                state$xlim <<- c(input$brush$xmin, input$brush$xmax)
+                state$ylim <<- c(input$brush$ymin, input$brush$ymax)
+                argoFloatsDebug(debug, "set state$xlim=c(",paste(state$xlim,collapse=",),"),
+                    " and state$ylim=c(", paste(state$ylim, collapse=","), ")\n")
+                argoFloatsDebug(debug,  "} # observeEvent(input$ID)\n", style="bold", showTime=FALSE, unindent=1)
+            }
         })
 
     shiny::observeEvent(input$Ccolour,
@@ -691,7 +693,7 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, "to <- as.POSIXct(\"", format(state$endTime, "%Y-%m-%d", tz="UTC"), "\", tz=\"UTC\")<br>", sep="")
             msg <- paste(msg, "subset1 <- subset(index, time=list(from=from, to=to))<br>")
             msg <- paste(msg, "# Subset by space.<br>")
-            if (state$polygon && state$polyDone) {
+            if (state$polyDone) {
                 latp <- paste(round(latpoly,3), collapse=",")
                 lonp <- paste(round(lonpoly,3), collapse=",")
                 msg <- paste(msg, "subset2 <- subset(subset1, polygon=list(longitude=c(",lonp,"),latitude=c(",latp,")))<br>")
@@ -829,7 +831,6 @@ serverMapApp <- function(input, output, session)
     shiny::observeEvent(input$click,
         {
             if (input$polygon) {
-                state$polygon <<- input$polygon
                 state$click$x <<- input$click$x
                 state$click$y <<- input$click$y
                 state$clickx <- c(state$clickx, state$click$x)
@@ -841,6 +842,7 @@ serverMapApp <- function(input, output, session)
         })
     shiny::observeEvent(input$polygon,
         {
+            state$polygon <<- input$polygon
             shinyBS::updateButton(session, "polygon", style="danger")
         })
     shiny::observeEvent(input$start,
@@ -1049,6 +1051,7 @@ serverMapApp <- function(input, output, session)
                     if (length(lonpoly) < 3) {
                         shiny::showNotification("Must choose at least 3 points for polygon.", type="message", duration=5)
                     } else {
+                        state$polygon <- FALSE
                         state$data <- NULL
                         state$polyDone <- TRUE
                         POLY <- subset(m, polygon=list(longitude=lonpoly, latitude=latpoly), silent=TRUE)
