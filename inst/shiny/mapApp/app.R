@@ -135,7 +135,9 @@ uiMapApp <- shiny::fluidPage(
     # margin-top works, but not sure if either pre{} or formgroup{} work.
     style="text-indent:1em; line-height:1.2; background:#e6f3ff; margin-top: -2ex; pre { line-height: 0.5; }; .form-group { margin-top: 3px; margin-bottom: 3px;};",
     shiny::fluidRow(
-        shiny::column(5, shiny::uiOutput(outputId="UIwidget"))),
+        shiny::uiOutput(outputId="UIwidget1")),
+    shiny::fluidRow(
+        shiny::uiOutput(outputId="UIwidget2")),
     shiny::fluidRow(
         shiny::column(9, shiny::uiOutput(outputId="UIview"))),
     shiny::fluidRow(
@@ -394,7 +396,7 @@ serverMapApp <- function(input, output, session)
     })
     argoFloatsDebug(debug,  "} # renderUIview\n", sep="", style="bold", unindent=1)
 
-    output$UIwidget <- shiny::renderUI({
+    output$UIwidget1 <- shiny::renderUI({
         if (argoFloatsIsCached("argo", debug=debug-1L) && input$tabselected %in% c(1)) {
             shiny::fluidRow(
                 shiny::actionButton("help", "Help"),
@@ -408,13 +410,18 @@ serverMapApp <- function(input, output, session)
                 shiny::actionButton("zoomOut", "-"),
                 shinyBS::bsButton("polygon", shiny::HTML("&#x2B21;")),
                 shinyBS::bsTooltip(id="polygon",title="To subset by polygon 1) Click this button 2) Click at least 3 points in the map 3) Click q to indicate done.", trigger="hover"),
+                style="margin-left:0.5em;")
+        }
+    })
+    output$UIwidget2 <- shiny::renderUI({
+        if (argoFloatsIsCached("argo", debug=debug-1L) && input$tabselected %in% c(1)) {
+            shiny::fluidRow(
                 shiny::div(style="display: inline-block; vertical-align:center; width: 8em; margin: 0; padding-left:0px;",
                     shiny::dateInput(inputId="start", label="Start", value=state$startTime)),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                     shiny::dateInput(inputId="end", label="End", value=state$endTime)),
                 shiny::div(style="display: inline-block;vertical-align:top; width: 8em;",
                     shiny::textInput("ID", "Float ID", value=state$focusID, width="8em")),
-                    #shiny::dateInput(inputId="end", label="End", value=state$endTime)),
                 style="margin-left:0.5em;")
         }
     })
