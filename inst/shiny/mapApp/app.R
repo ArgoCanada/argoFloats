@@ -1206,7 +1206,9 @@ serverMapApp <- function(input, output, session)
             }
             # Draw the inspection rectangle as a thick gray line, but only if zoomed
             if (-180 < state$xlim[1] || state$xlim[2] < 180 || -90 < state$ylim[1] || state$ylim[2] < 90)
-                rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
+                if (state$polyDone == FALSE) {
+                    rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
+                }
             # Write a margin comment
             argoFloatsDebug(debug, counts, "\n")
             if (!is.null(state$focusID)) {
