@@ -135,7 +135,7 @@ uiMapApp <- shiny::fluidPage(
     # margin-top works, but not sure if either pre{} or formgroup{} work.
     style="text-indent:1em; line-height:1.2; background:#e6f3ff; margin-top: -2ex; pre { line-height: 0.5; }; .form-group { margin-top: 3px; margin-bottom: 3px;};",
     shiny::fluidRow(
-        shiny::uiOutput(outputId="UIwidget")),
+        shiny::column(5, shiny::uiOutput(outputId="UIwidget"))),
     shiny::fluidRow(
         shiny::column(9, shiny::uiOutput(outputId="UIview"))),
     shiny::fluidRow(
