@@ -801,6 +801,7 @@ serverMapApp <- function(input, output, session)
             y <- input$dblclick$y
             state$polyDone <- FALSE
             state$polygon <- FALSE
+            shinyBS::updateButton(session, "polygon", style="default")
             fac2 <- 1.0/cos(pi180*y)^2 # for deltaLon^2 compared with deltaLat^2
             if (!is.null(state$focusID)) {
                 argoFloatsDebug(debug, "state$focusID is NULL\n")
@@ -849,8 +850,8 @@ serverMapApp <- function(input, output, session)
     shiny::observeEvent(input$polygon,
         {
             state$polygon <<- input$polygon
-                message("POLYGON. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
-           # shinyBS::updateButton(session, "polygon", style="danger")
+            message("POLYGON. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
+            shinyBS::updateButton(session, "polygon", style="danger")
         })
     shiny::observeEvent(input$start,
         {
@@ -1067,6 +1068,7 @@ serverMapApp <- function(input, output, session)
                     }
                 }
                 state$polygon <- FALSE
+                shinyBS::updateButton(session, "polygon", style="default")
                 message("END Q state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
             }
         })                                  # keypressTrigger
