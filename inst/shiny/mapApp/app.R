@@ -498,9 +498,9 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$brush,
         {
-            state$data <- NULL
-            state$polyDone <- FALSE
             if (state$polygon == FALSE) {
+                state$data <- NULL
+                state$polyDone <- FALSE
                 argoFloatsDebug(debug,  "observeEvent(input$brush) {\n", style="bold", showTime=FALSE, unindent=1)
                 state$xlim <<- c(input$brush$xmin, input$brush$xmax)
                 state$ylim <<- c(input$brush$ymin, input$brush$ymax)
@@ -1070,10 +1070,10 @@ serverMapApp <- function(input, output, session)
                         polykeep <<- (argo[["file"]] %in% POLY[["file"]])
                         state$xlim <<- c(min(lonpoly), max(lonpoly))
                         state$ylim <<- c(min(latpoly), max(latpoly))
+                        shinyBS::updateButton(session, "polygon", style="default")
                     }
                 }
                 #message("END Q. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
-                shinyBS::updateButton(session, "polygon", style="default")
             }
         })                                  # keypressTrigger
 
