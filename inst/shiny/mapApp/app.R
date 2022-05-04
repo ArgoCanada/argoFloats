@@ -1163,6 +1163,8 @@ serverMapApp <- function(input, output, session)
                     }
                     if (!(state$polygon %in% FALSE) && state$polyDone == FALSE) {
                         points(unlist(state$data[,1]), unlist(state$data[,2]), pch=20, col="red", type="o", lwd=2)
+                    } else if (state$polygon > 1) {
+                        points(unlist(state$data[,1]), unlist(state$data[,2]), pch=20, col="red", type="o", lwd=2)
                     }
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
