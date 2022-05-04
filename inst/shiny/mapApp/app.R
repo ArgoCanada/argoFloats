@@ -501,7 +501,6 @@ serverMapApp <- function(input, output, session)
             state$data <- NULL
             state$polyDone <- FALSE
             if (state$polygon == FALSE) {
-                message("BRUSH. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
                 argoFloatsDebug(debug,  "observeEvent(input$brush) {\n", style="bold", showTime=FALSE, unindent=1)
                 state$xlim <<- c(input$brush$xmin, input$brush$xmax)
                 state$ylim <<- c(input$brush$ymin, input$brush$ymax)
@@ -509,6 +508,8 @@ serverMapApp <- function(input, output, session)
                     " and state$ylim=c(", paste(state$ylim, collapse=","), ")\n")
                 argoFloatsDebug(debug,  "} # observeEvent(input$ID)\n", style="bold", showTime=FALSE, unindent=1)
             }
+            message("BRUSH. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
+            message("xlim=", state$xlim, " and ylim=", state$ylim)
         })
 
     shiny::observeEvent(input$Ccolour,
@@ -799,6 +800,7 @@ serverMapApp <- function(input, output, session)
             argoFloatsDebug(debug,  "observeEvent(input$dblclick) {\n", style="bold", showTime=FALSE, unindent=1)
             x <- input$dblclick$x
             y <- input$dblclick$y
+            state$data <- NULL
             state$polyDone <- FALSE
             state$polygon <- FALSE
             shinyBS::updateButton(session, "polygon", style="default")
@@ -850,8 +852,11 @@ serverMapApp <- function(input, output, session)
     shiny::observeEvent(input$polygon,
         {
             state$polygon <<- input$polygon
-            message("POLYGON. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
             shinyBS::updateButton(session, "polygon", style="danger")
+            if (state$polygon > 1) {
+                state$data <- NULL
+            }
+            message("POLYGON state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
         })
     shiny::observeEvent(input$start,
         {
@@ -1059,17 +1064,16 @@ serverMapApp <- function(input, output, session)
                     if (length(lonpoly) < 3) {
                         shiny::showNotification("Must choose at least 3 points for polygon.", type="message", duration=5)
                     } else {
-                        state$data <- NULL
                         state$polyDone <- TRUE
+                        state$polygon <- FALSE
                         POLY <- subset(m, polygon=list(longitude=lonpoly, latitude=latpoly), silent=TRUE)
                         polykeep <<- (argo[["file"]] %in% POLY[["file"]])
                         state$xlim <<- c(min(lonpoly), max(lonpoly))
                         state$ylim <<- c(min(latpoly), max(latpoly))
                     }
                 }
-                state$polygon <- FALSE
+                message("END Q. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
                 shinyBS::updateButton(session, "polygon", style="default")
-                message("END Q state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
             }
         })                                  # keypressTrigger
 
@@ -1163,10 +1167,11 @@ serverMapApp <- function(input, output, session)
                     if (state$hoverIsPasted && highlight == TRUE) {
                         points(holdLongitude, holdLatitude, pch=21, col="red", bg="red")
                     }
-                    if (!(state$polygon %in% FALSE) && state$polyDone == FALSE) {
+                    if (!(state$polygon %in% FALSE)) {
                         points(unlist(state$data[,1]), unlist(state$data[,2]), pch=20, col="red", type="o", lwd=2)
-                    } else if (state$polygon > 1) {
-                        points(unlist(state$data[,1]), unlist(state$data[,2]), pch=20, col="red", type="o", lwd=2)
+                    }
+                    if (state$polyDone == TRUE && state$polygon == FALSE) {
+                        points(unlist(state$data[,1]), unlist(state$data[,2]), pch=20, col="gray", type="o", lwd=2)
                     }
                     if ("path" %in% state$view) {
                         for (ID in unique(lonlat$ID)) {
