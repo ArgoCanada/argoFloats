@@ -498,7 +498,10 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$brush,
         {
+            state$data <- NULL
+            state$polyDone <- FALSE
             if (state$polygon == FALSE) {
+                message("BRUSH. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
                 argoFloatsDebug(debug,  "observeEvent(input$brush) {\n", style="bold", showTime=FALSE, unindent=1)
                 state$xlim <<- c(input$brush$xmin, input$brush$xmax)
                 state$ylim <<- c(input$brush$ymin, input$brush$ymax)
@@ -838,12 +841,16 @@ serverMapApp <- function(input, output, session)
                 state$data <- rbind(state$data, cbind(input$click$x, input$click$y))
                 lonpoly <<- unlist(state$data[,1])
                 latpoly <<- unlist(state$data[,2])
+            } else {
+                state$click <- NULL
+                state$data <- NULL
             }
         })
     shiny::observeEvent(input$polygon,
         {
             state$polygon <<- input$polygon
-            shinyBS::updateButton(session, "polygon", style="danger")
+                message("POLYGON. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
+           # shinyBS::updateButton(session, "polygon", style="danger")
         })
     shiny::observeEvent(input$start,
         {
@@ -1051,7 +1058,6 @@ serverMapApp <- function(input, output, session)
                     if (length(lonpoly) < 3) {
                         shiny::showNotification("Must choose at least 3 points for polygon.", type="message", duration=5)
                     } else {
-                        state$polygon <- FALSE
                         state$data <- NULL
                         state$polyDone <- TRUE
                         POLY <- subset(m, polygon=list(longitude=lonpoly, latitude=latpoly), silent=TRUE)
@@ -1060,9 +1066,8 @@ serverMapApp <- function(input, output, session)
                         state$ylim <<- c(min(latpoly), max(latpoly))
                     }
                 }
-            } else {
-                state$polyDone <- FALSE
-
+                state$polygon <- FALSE
+                message("END Q state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
             }
         })                                  # keypressTrigger
 
@@ -1156,7 +1161,7 @@ serverMapApp <- function(input, output, session)
                     if (state$hoverIsPasted && highlight == TRUE) {
                         points(holdLongitude, holdLatitude, pch=21, col="red", bg="red")
                     }
-                    if (state$polygon && state$polyDone == FALSE) {
+                    if (!(state$polygon %in% FALSE) && state$polyDone == FALSE) {
                         points(unlist(state$data[,1]), unlist(state$data[,2]), pch=20, col="red", type="o", lwd=2)
                     }
                     if ("path" %in% state$view) {
