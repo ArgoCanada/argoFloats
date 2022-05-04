@@ -508,8 +508,8 @@ serverMapApp <- function(input, output, session)
                     " and state$ylim=c(", paste(state$ylim, collapse=","), ")\n")
                 argoFloatsDebug(debug,  "} # observeEvent(input$ID)\n", style="bold", showTime=FALSE, unindent=1)
             }
-            message("BRUSH. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
-            message("xlim=", state$xlim, " and ylim=", state$ylim)
+            #message("BRUSH. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
+            #message("xlim=", state$xlim, " and ylim=", state$ylim)
         })
 
     shiny::observeEvent(input$Ccolour,
@@ -856,7 +856,7 @@ serverMapApp <- function(input, output, session)
             if (state$polygon > 1) {
                 state$data <- NULL
             }
-            message("POLYGON state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
+            #message("POLYGON state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
         })
     shiny::observeEvent(input$start,
         {
@@ -1072,7 +1072,7 @@ serverMapApp <- function(input, output, session)
                         state$ylim <<- c(min(latpoly), max(latpoly))
                     }
                 }
-                message("END Q. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
+                #message("END Q. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
                 shinyBS::updateButton(session, "polygon", style="default")
             }
         })                                  # keypressTrigger
