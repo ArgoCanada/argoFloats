@@ -1016,6 +1016,7 @@ serverMapApp <- function(input, output, session)
                 }
 
             } else if (key == "r") { # reset to start
+                shinyBS::updateButton(session, "polygon", style="default")
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
                 state$startTime <<- startTime
