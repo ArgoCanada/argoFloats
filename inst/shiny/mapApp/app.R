@@ -255,7 +255,6 @@ serverMapApp <- function(input, output, session)
         xlim=c(-180, 180),
         ylim=c(-90, 90),
         polyDone=FALSE,
-        click=NULL,
         polygon=FALSE,
         data=NULL,
         startTime=startTime,
@@ -839,14 +838,9 @@ serverMapApp <- function(input, output, session)
             if (input$polygon) {
                 state$click$x <<- input$click$x
                 state$click$y <<- input$click$y
-                state$clickx <- c(state$clickx, state$click$x)
-                state$clicky <- c(state$clicky, state$click$y)
                 state$data <- rbind(state$data, cbind(input$click$x, input$click$y))
                 lonpoly <<- unlist(state$data[,1])
                 latpoly <<- unlist(state$data[,2])
-            } else {
-                state$click <- NULL
-                state$data <- NULL
             }
         })
     shiny::observeEvent(input$polygon,
@@ -1171,7 +1165,7 @@ serverMapApp <- function(input, output, session)
                     if (!(state$polygon %in% FALSE)) {
                         points(unlist(state$data[,1]), unlist(state$data[,2]), pch=20, col="red", type="o", lwd=2)
                     }
-                    if (state$polyDone == TRUE && state$polygon == FALSE) {
+                    if (state$polyDone && state$polygon == FALSE) {
                         polygon(unlist(state$data[,1]), unlist(state$data[,2]), border="gray", col=NA, lwd=2)
                     }
                     if ("path" %in% state$view) {
@@ -1224,7 +1218,7 @@ serverMapApp <- function(input, output, session)
             }
             # Draw the inspection rectangle as a thick gray line, but only if zoomed
             if (-180 < state$xlim[1] || state$xlim[2] < 180 || -90 < state$ylim[1] || state$ylim[2] < 90)
-                if (state$polyDone == FALSE) {
+                if (!(state$polyDone)) {
                     rect(state$xlim[1], state$ylim[1], state$xlim[2], state$ylim[2], border="darkgray", lwd=4)
                 }
             # Write a margin comment
