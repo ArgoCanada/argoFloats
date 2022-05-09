@@ -42,7 +42,7 @@ startTime <- dayStart(now - 10 * secondsPerDay)
 #checking endTime-startTime
 
 stateStack <- list()
-pushState <- function(state, debug=1L)
+pushState <- function(state, debug=0L)
 {
     argoFloatsDebug(debug, "pushState() { \n", style="bold", unindent=1)
     nss <- sizeState()
@@ -57,7 +57,7 @@ pushState <- function(state, debug=1L)
     argoFloatsDebug(debug, "} # pushState()\n", style="bold", unindent=1)
 }
 
-popState <- function(debug=1L)
+popState <- function(debug=0L)
 {
     argoFloatsDebug(debug, "popState() {\n", style="bold", unindent=1)
     nss <- sizeState()
