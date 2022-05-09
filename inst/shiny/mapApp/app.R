@@ -44,7 +44,7 @@ startTime <- dayStart(now - 10 * secondsPerDay)
 stateStack <- list()
 pushState <- function(state, debug=1L)
 {
-    argoFloatsDebug(debug, "pushState()\n", style="bold", unindent=1)
+    argoFloatsDebug(debug, "pushState() { \n", style="bold", unindent=1)
     nss <- sizeState()
     if (nss == 0L || !identical(state, stateStack[[nss]])) {
         stateStack[[nss + 1L]] <<- state
@@ -59,7 +59,7 @@ pushState <- function(state, debug=1L)
 
 popState <- function(debug=1L)
 {
-    argoFloatsDebug(debug, "popState()\n", style="bold", unindent=1)
+    argoFloatsDebug(debug, "popState() {\n", style="bold", unindent=1)
     nss <- sizeState()
     if (nss > 1L) {
         stateStack[[nss]] <<- NULL
@@ -73,7 +73,7 @@ popState <- function(debug=1L)
 
 topState <- function()
 {
-    argoFloatsDebug(debug, "topState()\n", style="bold", unindent=1)
+    argoFloatsDebug(debug, "topState() {\n", style="bold", unindent=1)
     argoFloatsDebug(debug, "stack length=", length(stateStack), "\n", sep="")
     nss <- sizeState()
     argoFloatsDebug(debug, "} # topState()\n\n", style="bold", unindent=1)
@@ -136,9 +136,6 @@ uiMapApp <- shiny::fluidPage(
         shiny::column(9, shiny::uiOutput(outputId="UIview"))),
     shiny::fluidRow(
         shiny::uiOutput(outputId="UItrajectory")),
-    # These trials (of removing vertical space) did nothing
-    # shiny::div(style = "margin-top:-15px"),
-    # shiny::fluidRow(shiny::uiOutput(outputId="UIinfo"), style="margin-top: -3ex;"),
     shiny::fluidRow(
         shiny::uiOutput(outputId="UIinfo")),
 
@@ -353,7 +350,6 @@ serverMapApp <- function(input, output, session)
     pinlon <- function(lon)
         ifelse(lon < -180, -180, ifelse(180 < lon, 180, lon))
 
-    argoFloatsDebug(debug,  "renderUIview {\n", sep="", style="bold", unindent=1)
     output$UIview <- shiny::renderUI({
         if (argoFloatsIsCached("argo", debug=debug-1L) && input$tabselected %in% c(1)) {
             shiny::removeNotification(notificationId)
@@ -387,8 +383,6 @@ serverMapApp <- function(input, output, session)
                 inline=TRUE)
         }
     })
-    argoFloatsDebug(debug,  "} # renderUIview\n", sep="", style="bold", unindent=1)
-
     output$UIwidget1 <- shiny::renderUI({
         if (argoFloatsIsCached("argo", debug=debug-1L) && input$tabselected %in% c(1)) {
             shiny::fluidRow(
@@ -418,7 +412,6 @@ serverMapApp <- function(input, output, session)
                 style="margin-left:0.5em;")
         }
     })
-
     output$UItrajectory <- shiny::renderUI({
         if (argoFloatsIsCached("argo", debug=debug-1L) && input$tabselected %in% c(1) && "path" %in% state$view) {
             shiny::fluidRow(shiny::column(6,
@@ -432,7 +425,6 @@ serverMapApp <- function(input, output, session)
                         inline=TRUE)))
         }
     })
-
     output$UIinfo <- shiny::renderUI({
         if (argoFloatsIsCached("argo", debug=debug-1L)) {
             shiny::fluidRow(shiny::verbatimTextOutput("info"),
@@ -501,104 +493,155 @@ serverMapApp <- function(input, output, session)
                     " and state$ylim=c(", paste(state$ylim, collapse=","), ")\n")
                 argoFloatsDebug(debug,  "} # observeEvent(input$ID)\n", style="bold", showTime=FALSE, unindent=1)
             }
-            #message("BRUSH. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
-            #message("xlim=", state$xlim, " and ylim=", state$ylim)
         })
 
     shiny::observeEvent(input$Ccolour,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Ccolour) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Ccolour <<- input$Ccolour
+            argoFloatsDebug(debug, "input$Ccolour= ", input$Ccolour, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Ccolour)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$Csymbol,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Csymbol) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Csymbol <<- input$Csymbol
+            argoFloatsDebug(debug, "input$Csymbol= ", input$Csymbol, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Csymbol)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$Csize,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Csize) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Csize <<- input$Csize
+            argoFloatsDebug(debug, "input$Csize= ", input$Csize, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Csize)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$Cborder,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Cborder) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Cborder <<- input$Cborder
+            argoFloatsDebug(debug, "input$Cborder= ", input$Cborder, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Cborder)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$CPcolour,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$CPcolour) {\n", style="bold", showTime=FALSE, unindent=1)
             state$CPcolour <<- input$CPcolour
+            argoFloatsDebug(debug, "input$CPcolour= ", input$CPcolour, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$CPcolour)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$CPwidth,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$CPwidth) {\n", style="bold", showTime=FALSE, unindent=1)
             state$CPwidth <<- input$CPwidth
+            argoFloatsDebug(debug, "input$CPwidth= ", input$CPwidth, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$CPwidth)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
 
  shiny::observeEvent(input$Bcolour,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Bcolour) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Bcolour <<- input$Bcolour
+            argoFloatsDebug(debug, "input$Bcolour= ", input$Bcolour, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Bcolour)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$Bsymbol,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Bsymbol) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Bsymbol <<- input$Bsymbol
+            argoFloatsDebug(debug, "input$Bsymbol= ", input$Bsymbol, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Bsymbol)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$Bsize,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Bsize) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Bsize <<- input$Bsize
+            argoFloatsDebug(debug, "input$=Bsize ", input$Bsize, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Bsize)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$Bborder,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Bborder) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Bborder <<- input$Bborder
+            argoFloatsDebug(debug, "input$=Bborder ", input$Bborder, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Bborder)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$BPcolour,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$BPcolour) {\n", style="bold", showTime=FALSE, unindent=1)
             state$BPcolour <<- input$BPcolour
+            argoFloatsDebug(debug, "input$=BPcolour ", input$BPcolour, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$BPcolour)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$BPwidth,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$BPwidth) {\n", style="bold", showTime=FALSE, unindent=1)
             state$BPwidth <<- input$BPwidth
+            argoFloatsDebug(debug, "input$=BPwidth ", input$BPwidth, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$BPwidth)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
  shiny::observeEvent(input$Dcolour,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Dcolour) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Dcolour <<- input$Dcolour
+            argoFloatsDebug(debug, "input$=Dcolour ", input$Dcolour, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Dcolour)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$Dsymbol,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Dsymbol) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Dsymbol <<- input$Dsymbol
+            argoFloatsDebug(debug, "input$=Dsymbol ", input$Dsymbol, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Dsymbol)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$Dsize,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Dsize) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Dsize <<- input$Dsize
+            argoFloatsDebug(debug, "input$=Dsize ", input$Dsize, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Dsize)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$Dborder,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$Dborder) {\n", style="bold", showTime=FALSE, unindent=1)
             state$Dborder <<- input$Dborder
+            argoFloatsDebug(debug, "input$=Dborder ", input$Dborder, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$Dborder)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$DPcolour,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$DPcolour) {\n", style="bold", showTime=FALSE, unindent=1)
             state$DPcolour <<- input$DPcolour
+            argoFloatsDebug(debug, "input$=DPcolour ", input$DPcolour, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$DPcolour)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$DPwidth,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$DPwidth) {\n", style="bold", showTime=FALSE, unindent=1)
             state$DPwidth <<- input$DPwidth
+            argoFloatsDebug(debug, "input$=DPwidth ", input$DPwidth, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$DPwidth)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$view,
         {
-            # message("observing input$view; view=c(\"", paste(input$view, collapse="\", \""), "\")\n")
             state$view <<- input$view
         }, ignoreNULL=FALSE)
 
@@ -609,42 +652,61 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$goE,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$goE) {\n", style="bold", showTime=FALSE, unindent=1)
             dx <- diff(state$xlim) # present longitude span
             state$xlim <<- pinlon(state$xlim + dx / 4)
+            argoFloatsDebug(debug, "state$xlim ", state$xlim, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$goE)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$goW,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$goW) {\n", style="bold", showTime=FALSE, unindent=1)
             dx <- diff(state$xlim) # present longitude span
             state$xlim <<- pinlon(state$xlim - dx / 4)
+            argoFloatsDebug(debug, "state$xlim ", state$xlim, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$goW)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$goS,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$goS) {\n", style="bold", showTime=FALSE, unindent=1)
             dy <- diff(state$ylim) # present latitude span
             state$ylim <<- pinlat(state$ylim - dy / 4)
+            argoFloatsDebug(debug, "state$ylim ", state$ylim, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$goS)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$goN,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$goN) {\n", style="bold", showTime=FALSE, unindent=1)
             dy <- diff(state$ylim) # present latitude span
             state$ylim <<- pinlat(state$ylim + dy / 4)
+            argoFloatsDebug(debug, "state$ylim ", state$ylim, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$goN)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$zoomIn,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$zoomIn) {\n", style="bold", showTime=FALSE, unindent=1)
             state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
             state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
+            argoFloatsDebug(debug, "state$xlim ", state$xlim, " and state$ylim=",state$ylim, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$zoomIn)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$zoomOut,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$zoomOut) {\n", style="bold", showTime=FALSE, unindent=1)
             state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
             state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+            argoFloatsDebug(debug, "state$xlim ", state$xlim, " and state$ylim=",state$ylim, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$zoomOut)\n", style="bold", showTime=FALSE, unindent=1)
         })
 
     shiny::observeEvent(input$code,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$code) {\n", style="bold", showTime=FALSE, unindent=1)
             msg <- "library(argoFloats)<br>"
             msg <- paste(msg, "# Download (or use cached) index from one of two international servers.<br>")
             if ("core" %in% state$view && "bgc" %in% state$view && !("deep" %in% state$view)) {
@@ -707,7 +769,7 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, "# Plot a map (with different formatting than used here).<br>")
             if ("topo" %in% state$view) {
                 if ("path" %in% state$view) {
-                    if("lines" %in% state$action) {
+                    if ("lines" %in% state$action) {
                         msg <- paste(msg, "plot(subset2, which=\"map\", type=\"l\")<br>")
                     } else  {
                         msg <- paste(msg, "plot(subset2, which=\"map\", type=\"o\")<br>")
@@ -728,6 +790,7 @@ serverMapApp <- function(input, output, session)
             }
 
             if ("start" %in% state$action) {
+                argoFloatsDebug(debug, "state$action= ", state$action, "\n")
                 msg <- paste(msg, "o <- order(subset2[['time']])<br>")
                 msg <- paste(msg, "lat <- subset2[['latitude']]<br>")
                 msg <- paste(msg, "lon <- subset2[['longitude']]<br>")
@@ -755,6 +818,10 @@ serverMapApp <- function(input, output, session)
             msg <- paste(msg, "&nbsp;&nbsp; argos <- readProfiles(profiles)<br>")
             msg <- paste( msg, "&nbsp;&nbsp; plot(applyQC(argos), which=\"TS\", TSControl=list(colByCycle=1:8))<br>")
             msg <- paste(msg, "}<br>")
+            argoFloatsDebug(debug, "state$view= ", state$view, "\n")
+            argoFloatsDebug(debug, "state$focusID= ", state$focusID, "\n")
+            argoFloatsDebug(debug, "state$action= ", state$action, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$code)\n", style="bold", showTime=FALSE, unindent=1)
             shiny::showModal(shiny::modalDialog(shiny::HTML(msg), title="R code hints", size="l"))
         })
 
@@ -829,22 +896,28 @@ serverMapApp <- function(input, output, session)
     data <- cbind(var1, var2)
     shiny::observeEvent(input$click,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$click) {\n", style="bold", showTime=FALSE, unindent=1)
+            argoFloatsDebug(debug, "state$polygon= ", state$polygon, "and state$polyDone = ", state$polyDone, "\n")
             if (input$polygon) {
+                argoFloatsDebug(debug, "state$polygon= ", state$polygon, "and state$polyDone = ", state$polyDone, "\n")
                 state$click$x <<- input$click$x
                 state$click$y <<- input$click$y
                 state$data <- rbind(state$data, cbind(input$click$x, input$click$y))
                 lonpoly <<- unlist(state$data[,1])
                 latpoly <<- unlist(state$data[,2])
             }
+            argoFloatsDebug(debug,  "} # observeEvent(input$click)\n", style="bold", showTime=FALSE, unindent=1)
         })
     shiny::observeEvent(input$polygon,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$polygon) {\n", style="bold", showTime=FALSE, unindent=1)
             state$polygon <<- input$polygon
             shinyBS::updateButton(session, "polygon", style="danger")
             if (state$polygon > 1) {
                 state$data <- NULL
             }
-            #message("POLYGON state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
+            argoFloatsDebug(debug, "state$polygon= ", state$polygon, "and state$polyDone = ", state$polyDone, "\n")
+            argoFloatsDebug(debug,  "} # observeEvent(input$click)\n", style="bold", showTime=FALSE, unindent=1)
         })
     shiny::observeEvent(input$start,
         {
@@ -937,6 +1010,7 @@ serverMapApp <- function(input, output, session)
 
     shiny::observeEvent(input$keypressTrigger,
         {
+            argoFloatsDebug(debug,  "observeEvent(input$keypressTrigger) {\n", style="bold", showTime=FALSE, unindent=1)
             key <- intToUtf8(input$keypress)
             #message(input$keypress)
             #message(key)
@@ -1004,6 +1078,7 @@ serverMapApp <- function(input, output, session)
                 }
 
             } else if (key == "r") { # reset to start
+                argoFloatsDebug(debug, "Key r pressed \n")
                 shinyBS::updateButton(session, "polygon", style="default")
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
@@ -1042,13 +1117,16 @@ serverMapApp <- function(input, output, session)
                 shiny::updateSliderInput(session, inputId="Dsize", value=0.9)
                 shiny::updateSliderInput(session, inputId="DPwidth", value=1.4)
             } else if (key == "0") { # Unzoom an area and keep same time scale
+                argoFloatsDebug(debug, "Key 0 pressed \n")
                 state$xlim <<- c(-180, 180)
                 state$ylim <<- c(-90, 90)
                 shiny::updateCheckboxGroupInput(session, "show", selected=character(0))
             } else if (key == "?") { # show help on keystrokes
+                argoFloatsDebug(debug, "Key ? pressed \n")
                 shiny::showModal(shiny::modalDialog(title="Key-stroke commands",
                         shiny::HTML(keyPressHelp), easyClose=TRUE))
             } else if (key == "q") {
+                argoFloatsDebug(debug, "Key q pressed \n")
                 if (state$polygon) {
                     if (length(lonpoly) < 3) {
                         shiny::showNotification("Must choose at least 3 points for polygon.", type="message", duration=5)
@@ -1062,8 +1140,8 @@ serverMapApp <- function(input, output, session)
                         shinyBS::updateButton(session, "polygon", style="default")
                     }
                 }
-                #message("END Q. state$polygon =", state$polygon, " and state$polyDone =", state$polyDone)
             }
+            argoFloatsDebug(debug,  "} # observeEvent(input$keypressTrigger)\n", style="bold", showTime=FALSE, unindent=1)
         })                                  # keypressTrigger
 
     output$plotMap <- shiny::renderPlot({
