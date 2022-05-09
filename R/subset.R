@@ -682,6 +682,10 @@ setMethod(f="subset",
                         stop("in subset,argoFloats-method():\n  \"polygon\" must be a list containing \"longitude\" and \"latitude\"", call.=FALSE)
                     plat <- polygon$latitude
                     plon <- polygon$longitude
+                    if (!length(plat) > 2)
+                        stop("Must give at least three latitude coordinates.")
+                    if (!length(plon) > 2)
+                        stop("Must give at least three longitude coordinates.")
                     if (length(plat) != length(plon))
                         stop("lengths of polygon$longitude and polygon$latitude must match, but they are ",
                             length(plat), " and ", length(plon))
