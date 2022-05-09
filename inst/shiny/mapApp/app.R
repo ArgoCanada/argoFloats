@@ -109,21 +109,14 @@ printState <- function(debug=0L)
 pi180 <- pi / 180                      # degree/radian conversion factor
 
 keyPressHelp <- "<ul>
-<li> '<b>u</b>': <b>u</b>ndo previous actions</li>
-<li> '<b>i</b>': zoom <b>i</b>n</li>
-<li> '<b>o</b>': zoom <b>o</b>ut</li>
-<li> '<b>n</b>': go <b>n</b>orth</li>
-<li> '<b>e</b>': go <b>e</b>ast</li>
-<li> '<b>s</b>': go <b>s</b>outh</li>
-<li> '<b>w</b>': go <b>w</b>est</li>
-<li> '<b>f</b>': go <b>f</b>orward in time</li>
-<li> '<b>b</b>': go <b>b</b>ackward in time</li>
-<li> '<b>r</b>': <b>r</b>eset to initial state</li>
-<li> '<b>h</b>': hold active hover message (press <b>h</b> again to undo)</li>
-<li> '<b>0</b>': unzoom an area</li>
 <li> '<b>d</b>': toggle <b>d</b>ebugging flag</li>
+<li> '<b>h</b>': hold active hover message (press <b>h</b> again to undo)</li>
+<li> '<b>r</b>': <b>r</b>eset to initial state</li>
 <li> '<b>q</b>': indicate when finished polygon</li>
-<li> '<b>?</b>': display this message</li> </ul>"
+<li> '<b>u</b>': <b>u</b>ndo previous actions</li>
+<li> '<b>0</b>': unzoom an area</li>
+<li> '<b>?</b>': display this message</li>
+</ul>"
 
 overallHelp <- "<p>mapApp() responds to keystroke actions and GUI actions.</p><p>The permitted <u>keystroke actions</u> will be shown in a pop-up window if the <b>?</b> key is pressed. There are keys for zooming in and out, for moving the focus region through space and time, for controlling updates to an information box that displays mouse location and aspects of a nearby float, undoing previous actions, and turning on a developer mode in which information about processing is printed to the R console.</p><p>The <u>GUI actions</u> are reasonably self-explanatory. On the <i>Map tab</i>, users may enter values in the \"Start\" and \"End\" boxes to set the time range of the display, or empty either box to use the data range. The checkboxes of the \"View\" grouping may be used to choose whether to show 'Core', 'Deep' or 'BGC' data, whether to draw a high-resolution coastline, whether to draw connecting line segments to indicate the path of individual floats, and whether to indicate water depth using contour lines. If a path is displayed, there are options to highlight its start and end points of the path in the selected region, or to hide all points. The focus region may be selected by pressing the mouse at one location, sliding it to a new location, and then releasing it. Double-clicking on a particular float location creates a pop-up window that provides information on that profile. There is a way to focus on an individual float, to the exclusion of others.  Experimenting with the interface will reveal other capabilities; for example, it is worth exploring the <i>Settings tab</i>, which provides control over several aesthetic properties.<p>A text box above the plot shows the mouse position in longitude and latitude as well as information about the nearest profile, if it is within 100km of the mouse location (typing <b>h</b> toggles a setting that causes this information to track the mouse).</p><p>The \"Code\" button brings up a window showing R code that will approximate the view shown in the app, and that hints at some other operations that might be useful in analysis.</p><p>For more details, type <tt>?argoFloats::mapApp</tt> in an R console.</p>"
 
@@ -474,7 +467,7 @@ serverMapApp <- function(input, output, session)
             latstring <- ifelse(y < 0, sprintf("%.2fS", abs(argo$latitude[i])), sprintf("%.2fN", y))
             if (length(dist) && dist < 100) {
                 highlight <<- TRUE
-                rval <- sprintf("%s Float %s cycle %s (type %s from %s) sampled at %s %s, %s",
+                rval <- sprintf("%s Float %s cycle %s (type %s from %s) at %s %s, %s",
                     switch(argo$type[i], "core"="Core", "bgc"="BGC", "deep"="Deep"),
                     argo$ID[i],
                     argo$cycle[i],
@@ -950,36 +943,36 @@ serverMapApp <- function(input, output, session)
             if (key == "d") { # toggle debug
                 debug <<- !debug
                 message("switched debug to ", debug)
-            } else if (key == "n") { # go north
-                dy <- diff(state$ylim)
-                state$ylim <<- pinlat(state$ylim + dy / 4)
-            } else if (key == "s") { # go south
-                dy <- diff(state$ylim)
-                state$ylim <<- pinlat(state$ylim - dy / 4)
-            } else if (key == "e") { # go east
-                dx <- diff(state$xlim)
-                state$xlim <<- pinlon(state$xlim + dx / 4)
-            } else if (key == "w") { # go west
-                dx <- diff(state$xlim)
-                state$xlim <<- pinlon(state$xlim - dx / 4)
-            } else if (key == "f") { # forward in time
-                interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
-                state$startTime <<- state$startTime + interval
-                state$endTime <<- state$endTime + interval
-                shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
-                shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-            } else if (key == "b") { # backward in time
-                interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
-                state$startTime <<- state$startTime - interval
-                state$endTime <<- state$endTime - interval
-                shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
-                shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-            } else if (key == "i") { # zoom in
-                state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
-                state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
-            } else if (key == "o") { # zoom out
-                state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
-                state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
+            #} else if (key == "n") { # go north
+            #    dy <- diff(state$ylim)
+            #    state$ylim <<- pinlat(state$ylim + dy / 4)
+            #} else if (key == "s") { # go south
+            #    dy <- diff(state$ylim)
+            #    state$ylim <<- pinlat(state$ylim - dy / 4)
+            #} else if (key == "e") { # go east
+            #    dx <- diff(state$xlim)
+            #    state$xlim <<- pinlon(state$xlim + dx / 4)
+            #} else if (key == "w") { # go west
+            #    dx <- diff(state$xlim)
+            #    state$xlim <<- pinlon(state$xlim - dx / 4)
+            #} else if (key == "f") { # forward in time
+            #    interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
+            #    state$startTime <<- state$startTime + interval
+            #    state$endTime <<- state$endTime + interval
+            #    shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
+            #    shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
+            #} else if (key == "b") { # backward in time
+            #    interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
+            #    state$startTime <<- state$startTime - interval
+            #    state$endTime <<- state$endTime - interval
+            #    shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
+            #    shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
+            #} else if (key == "i") { # zoom in
+            #    state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
+            #    state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
+            #} else if (key == "o") { # zoom out
+            #    state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
+            #    state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
             } else if (key == "h") { # paste hover message
                 argoFloatsDebug(debug, "Key h pressed, so setting state$hoverIsPasted to", !state$hoverIsPasted, "\n")
                 state$hoverIsPasted <<- !state$hoverIsPasted
