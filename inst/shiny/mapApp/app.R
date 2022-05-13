@@ -147,31 +147,9 @@ uiMapApp <- shiny::fluidPage(
                     shiny::tabPanel("BGC", value=4),
                     shiny::tabPanel("Deep", value=5),
                     id="settab")),
-            id="tabselected")),
+            id="tabselected"),
+        shiny::uiOutput(outputId="UIcoreTab")),
 
-    shiny::conditionalPanel(condition="input.settab==3 && input.tabselected==2",
-        shiny::mainPanel(
-            shiny::fluidRow(
-                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
-                    hr("Symbol Properties"))),
-            shiny::fluidRow(
-                shiny::column(3,
-                    shiny::div(style="margin-bottom: 10px;",
-                        shiny::actionButton("CsymbolGallery", "Symbol Gallery")))),
-            shiny::fluidRow(
-                shiny::column(3,
-                    colourpicker::colourInput("Ccolour", "Colour", colDefaults$core)),
-                shiny::column(2, shiny::numericInput("Csymbol", "Type", value=21, min=0, max=25)),
-                shiny::column(3, shiny::sliderInput("Csize", "Size", min=0, max=1, value=0.9, step=0.05)),
-                shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
-                        colourpicker::colourInput("Cborder", "Border Colour", "black")))),
-            shiny::fluidRow(
-                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
-                    hr("Path Properties"))),
-            shiny::fluidRow(
-                shiny::column(3,
-                    colourpicker::colourInput("CPcolour", "Colour", colDefaults$core)),
-                shiny::column(3, shiny::sliderInput("CPwidth", "Width", min=0.5, max=6, value=2, step=0.5))))),
 
     shiny::conditionalPanel(condition="input.settab==4 && input.tabselected==2",
         shiny::mainPanel(
@@ -383,6 +361,34 @@ serverMapApp <- function(input, output, session)
                 inline=TRUE)
         }
     })
+
+    output$UIcoreTab <- shiny::renderUI({
+        if (input$tabselected %in% c(2) && input$settab %in% c(3)) {
+            shiny::mainPanel(
+                shiny::fluidRow(
+                    shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                        hr("Symbol Properties"))),
+                shiny::fluidRow(
+                    shiny::column(3,
+                        shiny::div(style="margin-bottom: 10px;",
+                            shiny::actionButton("CsymbolGallery", "Symbol Gallery")))),
+                shiny::fluidRow(
+                    shiny::column(3,
+                        colourpicker::colourInput("Ccolour", "Colour", state$Ccolour)),
+                    shiny::column(2, shiny::numericInput("Csymbol", "Type", value=state$Csymbol, min=0, max=25)),
+                    shiny::column(3, shiny::sliderInput("Csize", "Size", min=0, max=1, value=state$Csize, step=0.05)),
+                    shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
+                            colourpicker::colourInput("Cborder", "Border Colour", value=state$Cborder)))),
+                shiny::fluidRow(
+                    shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                        hr("Path Properties"))),
+                shiny::fluidRow(
+                    shiny::column(3,
+                        colourpicker::colourInput("CPcolour", "Colour", state$CPcolour)),
+                    shiny::column(3, shiny::sliderInput("CPwidth", "Width", min=0.5, max=6, value=state$CPwidth, step=0.5))))
+        }
+    })
+
     output$UIwidget1 <- shiny::renderUI({
         if (argoFloatsIsCached("argo", debug=debug-1L) && input$tabselected %in% c(1)) {
             shiny::fluidRow(
