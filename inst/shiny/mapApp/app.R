@@ -333,8 +333,7 @@ serverMapApp <- function(input, output, session)
                 shiny::fluidRow(
                     if (state$Csymbol == 21) {
                         shiny::column(3,
-                            colourpicker::colourInput("Cborder", "Border Colour", value=state$Cborder))
-                    }),
+                            colourpicker::colourInput("Cborder", "Border Colour", value=state$Cborder))}),
                 shiny::fluidRow(
                     shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
                         hr("Path Properties"))),
@@ -359,10 +358,12 @@ serverMapApp <- function(input, output, session)
                     shiny::column(3,
                         colourpicker::colourInput("Bcolour", "Colour", state$Bcolour)),
                     shiny::column(2, shiny::numericInput("Bsymbol", "Type", value=state$Bsymbol, min=0, max=25)),
-                    shiny::column(3, shiny::sliderInput("Bsize", "Size", min=0, max=1, value=state$Bsize, step=0.05)),
-                    shiny::column(3, shiny::conditionalPanel("input.Bsymbol== 21",
-                            colourpicker::colourInput("Bborder", "Border Colour",value=state$Bborder)))),
+                    shiny::column(3, shiny::sliderInput("Bsize", "Size", min=0, max=1, value=state$Bsize, step=0.05))),
                 shiny::fluidRow(
+                    if (state$Bsymbol == 21) {
+                        shiny::column(3,
+                            colourpicker::colourInput("Bborder", "Border Colour", value=state$Bborder))}),
+                    shiny::fluidRow(
                     shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
                         hr("Path Properties"))),
                 shiny::fluidRow(
