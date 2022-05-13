@@ -149,31 +149,8 @@ uiMapApp <- shiny::fluidPage(
                     id="settab")),
             id="tabselected"),
         shiny::uiOutput(outputId="UIcoreTab"),
-        shiny::uiOutput(outputId="UIbgcTab")),
-
-    shiny::conditionalPanel(condition="input.settab==5 && input.tabselected==2",
-        shiny::mainPanel(
-            shiny::fluidRow(
-                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
-                    hr("Symbol Properties"))),
-            shiny::fluidRow(
-                shiny::column(3,
-                    shiny::div(style="margin-bottom: 10px;",
-                        shiny::actionButton("DsymbolGallery", "Symbol Gallery")))),
-            shiny::fluidRow(
-                shiny::column(3,
-                    colourpicker::colourInput("Dcolour", "Colour", colDefaults$deep)),
-                shiny::column(2, shiny::numericInput("Dsymbol", "Type", value=21, min=0, max=25)),
-                shiny::column(3, shiny::sliderInput("Dsize", "Size", min=0, max=1, value=0.9, step=0.05)),
-                shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
-                        colourpicker::colourInput("Dborder", "Border Colour", "black")))),
-            shiny::fluidRow(
-                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
-                    hr("Path Properties"))),
-            shiny::fluidRow(
-                shiny::column(3,
-                    colourpicker::colourInput("DPcolour", "Colour", colDefaults$deep)),
-                shiny::column(3, shiny::sliderInput("DPwidth", "Width", min=0.5, max=6, value=2, step=0.5))))),
+        shiny::uiOutput(outputId="UIbgcTab"),
+        shiny::uiOutput(outputId="UIdeepTab")),
 
     shiny::conditionalPanel("input.tabselected!=2",
         shiny::fluidRow(shiny::plotOutput("plotMap",
@@ -389,6 +366,33 @@ serverMapApp <- function(input, output, session)
                     shiny::column(3,
                         colourpicker::colourInput("BPcolour", "Colour", state$BPcolour)),
                     shiny::column(3, shiny::sliderInput("BPwidth", "Width", min=0.5, max=6, value=state$BPwidth, step=0.5))))
+        }
+    })
+
+    output$UIdeepTab <- shiny::renderUI({
+        if (input$tabselected %in% c(2) && input$settab %in% c(5)) {
+        shiny::mainPanel(
+            shiny::fluidRow(
+                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                    hr("Symbol Properties"))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    shiny::div(style="margin-bottom: 10px;",
+                        shiny::actionButton("DsymbolGallery", "Symbol Gallery")))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    colourpicker::colourInput("Dcolour", "Colour", state$Dcolour)),
+                shiny::column(2, shiny::numericInput("Dsymbol", "Type", value=state$Dsymbol, min=0, max=25)),
+                shiny::column(3, shiny::sliderInput("Dsize", "Size", min=0, max=1, value=state$Dsize, step=0.05)),
+                shiny::column(3, shiny::conditionalPanel("input.Dsymbol== 21",
+                        colourpicker::colourInput("Dborder", "Border Colour", value=state$Dborder)))),
+            shiny::fluidRow(
+                shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
+                    hr("Path Properties"))),
+            shiny::fluidRow(
+                shiny::column(3,
+                    colourpicker::colourInput("DPcolour", "Colour", state$DPcolour)),
+                shiny::column(3, shiny::sliderInput("DPwidth", "Width", min=0.5, max=6, value=state$DPwidth, step=0.5))))
         }
     })
 
