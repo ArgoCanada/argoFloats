@@ -329,9 +329,12 @@ serverMapApp <- function(input, output, session)
                     shiny::column(3,
                         colourpicker::colourInput("Ccolour", "Colour", state$Ccolour)),
                     shiny::column(2, shiny::numericInput("Csymbol", "Type", value=state$Csymbol, min=0, max=25)),
-                    shiny::column(3, shiny::sliderInput("Csize", "Size", min=0, max=1, value=state$Csize, step=0.05)),
-                    shiny::column(3, shiny::conditionalPanel("input.Csymbol== 21",
-                            colourpicker::colourInput("Cborder", "Border Colour", value=state$Cborder)))),
+                    shiny::column(3, shiny::sliderInput("Csize", "Size", min=0, max=1, value=state$Csize, step=0.05))),
+                shiny::fluidRow(
+                    if (state$Csymbol == 21) {
+                        shiny::column(3,
+                            colourpicker::colourInput("Cborder", "Border Colour", value=state$Cborder))
+                    }),
                 shiny::fluidRow(
                     shiny::div(style="color:black; font-weight:bold; margin-bottom: 10px;",
                         hr("Path Properties"))),
