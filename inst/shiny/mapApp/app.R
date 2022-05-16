@@ -161,7 +161,7 @@ uiMapApp <- shiny::fluidPage(
 
 serverMapApp <- function(input, output, session)
 {
-    lastHoverMessage <- "" # used with 'p' keystroke
+    lastHoverMessage <- "" # used with 'h' keystroke
     age <- shiny::getShinyOption("age")
     destdir <- shiny::getShinyOption("destdir")
     argoServer <- shiny::getShinyOption("argoServer")
