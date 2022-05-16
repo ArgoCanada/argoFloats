@@ -1167,6 +1167,7 @@ serverMapApp <- function(input, output, session)
     output$plotMap <- shiny::renderPlot({
         argoFloatsDebug(debug, "plotMap() {\n", style="bold", unindent=1)
         argoFloatsDebug(debug, "plotCounter=", plotCounter, "\n", sep="")
+        argoFloatsDebug(debug, "lastHoverMessage=", lastHoverMessage, "\n", sep="")
         argoFloatsDebug(debug, "state$hoverIsPasted=", state$hoverIsPasted, "\n", sep="")
         plotCounter <<- plotCounter + 1L
         #> message("in output$plotMap with state$begin=", state$begin)
