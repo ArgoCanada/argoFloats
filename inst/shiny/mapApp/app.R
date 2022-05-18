@@ -1339,7 +1339,7 @@ serverMapApp <- function(input, output, session)
         # Add a scalebar, if we are zoomed in sufficiently. This whites-out below, so
         # we must do this as the last step of drawing.
         if (diff(range(state$ylim)) < 90 && sum(visible)) {
-        argoFloatsDebug(debug, "Drawing a scale bar because range(state$ylim)= ", range(state$ylim), "\n")
+        argoFloatsDebug(debug, "drawing a scale bar because range(state$ylim)= ", range(state$ylim), "\n")
             oce::mapScalebar(x="topright", cex=0.8) }
         pushState(isolate(reactiveValuesToList(state)), debug=debug-1L)
         argoFloatsDebug(debug, "} # plotMap()\n", style="bold", unindent=1)
