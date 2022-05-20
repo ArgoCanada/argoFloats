@@ -45,23 +45,7 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
 
     destinationInfo <- file.info(destination)
     destinationAge <- (as.integer(Sys.time()) - as.integer(destinationInfo$mtime)) / 86400 # in days
-    if (age == "latest") {
-        f <- list.files(destdir)
-        keep <- which(f %in% destfile)
-        if (length(keep > 1)) {
-            message("it is latest")
-            time <- destinationInfo$ctime
-            # Make times on computer be UTC
-            timeUTC <- lubridate::with_tz(time, "UTC")
-            # Determine if computer time is earlier than date_update
-            # Figure out index from getProfiles FIXME
-            dateUpdate <- index[["date_update"]]
-            # Get file again if it is. Note FALSE means I need to get it again
-            keep2 <- timeUTC < dateUpdate
-            skipDownload <- index[which(keep2 == TRUE)]
-        }
-    }
-        skipDownload <- file.exists(destination) & (destinationAge < age)
+    skipDownload <- file.exists(destination) & (destinationAge < age)
     success[skipDownload] <- TRUE
 
     urlDownload <- url[!skipDownload]

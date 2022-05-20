@@ -659,8 +659,31 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         ## way, so the Ifremer case was rewritten to match the usgodae case.
         urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
-        file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls),
-                                    quiet=quiet, age=age, async=TRUE, debug=debug-1)
+        if (age == "latest") {
+            fileNames <- gsub("^.*[/\\\\]([A-Z]*[0-9]*_[0-9]{3,4}[D]{0,1}\\.nc)$", "\\1", index@data$index$file, perl=TRUE) # files of index
+            f <- list.files(destdir) # files in directory
+            path <- paste0(destdir, "/",f)
+            # First, keep files that don't exist
+            download1 <- which(!(fileNames %in% f)) 
+            # Now keep any that do exist, but are out of date
+            if (length(f) > 0) {
+                keep <- which(f %in% fileNames)
+                info <- lapply(path[keep], file.info)
+                time <- do.call(c, lapply(info, function(x) x$ctime))
+                # Make times on computer be UTC
+                timeUTC <- lubridate::with_tz(time, "UTC")
+                # Determine if computer time is earlier than date_update
+                dateUpdate <- index[["date_update"]]
+                # Get file again if it is. Note FALSE means I need to get it again
+                download2 <- which(timeUTC < dateUpdate)
+                file <- c(path[download1], path[download2])
+            } else {
+                file <- path[download1]
+            }
+        } else {
+            file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls),
+                quiet=quiet, age=age, async=TRUE, debug=debug-1)
+        }
     }
     res@metadata$destdir <- destdir
     res@data$url <- urls
