@@ -664,7 +664,7 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
             f <- list.files(destdir) # files in directory
             path <- paste0(destdir, "/",f)
             # First, keep files that don't exist
-            download1 <- which(!(fileNames %in% f)) 
+            download1 <- which(!(fileNames %in% f))
             # Now keep any that do exist, but are out of date
             if (length(f) > 0) {
                 keep <- which(f %in% fileNames)
