@@ -662,24 +662,30 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         f <- list.files(destdir) # files in directory
         if (age == "latest" && length(f) > 0) {
             fileNames <- gsub("^.*[/\\\\]([A-Z]*[0-9]*_[0-9]{3,4}[D]{0,1}\\.nc)$", "\\1", index@data$index$file, perl=TRUE) # files of index
-            path <- paste0(destdir, "/",f)
             # First, download if they don't exist
             download1 <- which(!(fileNames %in% f))
             # Now keep any that do exist, but are out of date
-            keep <- which(f %in% fileNames)
-            info <- lapply(path[keep], file.info)
+            keep <- which(fileNames %in% f)
+            path <- paste0(destdir, "/",fileNames[keep])
+            info <- lapply(path, file.info)
             time <- do.call(c, lapply(info, function(x) x$ctime))
             # Make times on computer be UTC
             timeUTC <- lubridate::with_tz(time, "UTC")
             # Determine if computer time is earlier than date_update
-            dateUpdate <- index[["date_update"]]
-            # Get file again if it is. Note FALSE means I need to get it again
+            dateUpdate <- index[["date_update"]][keep]
+            # Get file again if it is
+            #download2 <- which(!(timeUTC < dateUpdate)) # FIXME can turn this to ! if check to work
             download2 <- which(timeUTC < dateUpdate) # FIXME can turn this to ! if check to work
-            #message(download1, "is download 1 and we CANT SKIP IT")
-            #message(download2, "is download 2 and we CANT SKIP IT")
-            sd2 <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls),
-                quiet=quiet, age="latest", async=TRUE, debug=debug-1)
-            skipDownload <<- (c(!(path[download1]), path[download2]))
+            argoFloatsDebug(debug, "Files numbered" ,download1, " did not exist and are not skipped. \n")
+            argoFloatsDebug(debug, "Files numbered" ,download2, " did exist and had date older than the date_update. They are not skipped. \n")
+           # message(download1, "is download 1 meaning it didn't exist and we CANT SKIP IT")
+           # message(download2, "is download 2 meaning it did exist but the date was older than updated and we CANT SKIP IT")
+            sd2 <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls), quiet=quiet, age="latest", async=TRUE, debug=debug-1)
+            SKIP1 <- which(!(seq_along(fileNames) %in% download1))
+            SKIP2 <- which(!(seq_along(fileNames[keep]) %in% download2))
+            skipDownload <<- unique(c(SKIP1, SKIP2))
+            argoFloatsDebug(debug, "Files numbered ", skipDownload, " are being skipped during download. \n")
+
         }
         file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls),
             quiet=quiet, age=age, async=TRUE, debug=debug-1)

@@ -52,8 +52,7 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
     if (age == "latest") {
         age <- 0
         # FIXME need to define skipDownload here
-        # TO DO: get skipDownload 100% correct in other file,  remove age <- 0 here, ifelse skipDownload
-        message(SKIP, "is SKIP")
+        # TO DO: remove age <- 0 here, ifelse skipDownload
 
     }
 
