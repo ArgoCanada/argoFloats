@@ -578,7 +578,13 @@ getIndex <- function(filename="core",
 #'
 #' @template destdir
 #'
-#' @template age
+#' @param age Option 1) a numerical value indicating a time interval, in days.
+#' If the file to be downloaded from the server already exists locally,
+#' and was created is less than age days in the past, it will not be downloaded.
+#' The default is one year. Setting age=0 will force a download.
+#' Option 2) "latest" if the file doesn't exist or the time it was
+#' created is older than the date_update in the index file, it will be
+#' downloaded. Otherwise it will not.
 #'
 #' @template retries
 #'
