@@ -23,7 +23,7 @@ by readProfiles()."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aj
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5</span>
       </span>
     </div>
 
@@ -106,10 +106,13 @@ File clutter is reduced by creating a top-level directory called
 <code>data</code>, with subdirectories for various file types; see
 “Examples”.</p></dd>
 <dt>age</dt>
-<dd><p>a numerical value indicating a time interval, in days.  If the file
-to be downloaded from the server already exists locally, and was created
-is less than <code>age</code> days in the past, it will not be downloaded.  The default,
-<code><a href="argoDefaultDestdir.html">argoDefaultProfileAge()</a></code>, is one year.  Setting <code>age=0</code> will force a download.</p></dd>
+<dd><p>Option 1) a numerical value indicating a time interval, in days.
+If the file to be downloaded from the server already exists locally,
+and was created is less than age days in the past, it will not be downloaded.
+The default is one year. Setting age=0 will force a download.
+Option 2) "latest" meaning the file will only be downloaded if
+A) the file doesn't exist or B) the file does exist and the time
+it was created is older than the date_update in the index file</p></dd>
 <dt>retries</dt>
 <dd><p>integer telling how many times to retry a download,
 if the first attempt fails.</p></dd>

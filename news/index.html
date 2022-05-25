@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.5</span>
       </span>
     </div>
 
@@ -63,35 +63,43 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="argofloats-development-version">argoFloats (development version)<a class="anchor" aria-label="anchor" href="#argofloats-development-version"></a></h2>
 <div class="section level3">
-<h3 id="argofloats-development-version-1">argoFloats 1.0.4<a class="anchor" aria-label="anchor" href="#argofloats-development-version-1"></a></h3>
+<h3 id="argofloats-development-version-1">argoFloats 1.0.5<a class="anchor" aria-label="anchor" href="#argofloats-development-version-1"></a></h3>
+<ul><li><p>Change <code><a href="../reference/getProfiles.html">getProfiles()</a></code> to permit age=“latest”.</p></li>
+<li><p>Change <code><a href="../reference/mapApp.html">mapApp()</a></code> to allow subset by polygon.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="argofloats-on-cran-development-version">argoFloats 1.0.4 (on CRAN)<a class="anchor" aria-label="anchor" href="#argofloats-on-cran-development-version"></a></h3>
 <ul><li><p>Fix image-size declarations in 3 man pages (required by CRAN).</p></li>
-<li><p>Change plot() to not show bathymetry by default.</p></li>
-<li><p>Improve index[[“ID”]] speed by 3X.</p></li>
+<li><p>Change <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> to not show bathymetry by default.</p></li>
+<li><p>Improve <code>index[["ID"]]</code> speed by 3X.</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="argofloats-on-cran-development-version">argoFloats 1.0.3 (on CRAN)<a class="anchor" aria-label="anchor" href="#argofloats-on-cran-development-version"></a></h3>
-<ul><li>Fix a mapApp() problem with paths that cross the dateline.</li>
-<li>Fix a mapApp() problem in handling mouse brush events.</li>
+<h3 id="argofloats-on-cran-development-version-1">argoFloats 1.0.3 (on CRAN)<a class="anchor" aria-label="anchor" href="#argofloats-on-cran-development-version-1"></a></h3>
+<ul><li>Fix a <code><a href="../reference/mapApp.html">mapApp()</a></code> problem with paths that cross the dateline.</li>
+<li>Fix a <code><a href="../reference/mapApp.html">mapApp()</a></code> problem in handling mouse brush events.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="argofloats-on-cran-development-version-1">argoFloats 1.0.2 (on CRAN)<a class="anchor" aria-label="anchor" href="#argofloats-on-cran-development-version-1"></a></h3>
-<ul><li>Examples reset par() to its initial state.</li></ul></div>
+<h3 id="argofloats-on-cran-development-version-2">argoFloats 1.0.2 (on CRAN)<a class="anchor" aria-label="anchor" href="#argofloats-on-cran-development-version-2"></a></h3>
+<ul><li>Examples reset <code><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par()</a></code> to its initial state.</li></ul></div>
 <div class="section level3">
 <h3 id="argofloats-development-version-2">argoFloats 1.0.1<a class="anchor" aria-label="anchor" href="#argofloats-development-version-2"></a></h3>
 <ul><li>DESCRIPTION improved</li>
 <li>Document return values of all functions</li>
 <li>Describe base class.</li>
-<li>plot() resets par() to its initial state before returning.</li>
+<li>
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> resets <code><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par()</a></code> to its initial state before returning.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="argofloats-development-version-3">argoFloats 1.0.0<a class="anchor" aria-label="anchor" href="#argofloats-development-version-3"></a></h3>
 <ul><li>Improve documentation for a CRAN release</li>
-<li>Remove version number from mapApp()</li>
+<li>Remove version number from <code><a href="../reference/mapApp.html">mapApp()</a></code>
+</li>
 </ul></div>
 <div class="section level3">
 <h3 id="argofloats-development-version-4">argoFloats 0.2.0<a class="anchor" aria-label="anchor" href="#argofloats-development-version-4"></a></h3>
 <ul><li>Add subset by section</li>
-<li>Add “traj” and “bio-traj” arguments to getIndex()</li>
+<li>Add “traj” and “bio-traj” arguments to <code><a href="../reference/getIndex.html">getIndex()</a></code>
+</li>
 <li>Created subtype cycles and trajectories for index type</li>
 <li>Created map plot for trajectories type</li>
 </ul></div>
