@@ -152,7 +152,8 @@ BGC, or Deep (which may be displayed in any combination, using
 GUI elements).</p>
 <p>The <code>hi-res</code> button will only affect the coastline, not the topography,
 unless there is a local file named <code>topoWorldFine.rda</code> that contains
-an alternative topographic information. Here is how to create such a file:</p><div class="sourceCode R"><pre><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/" class="external-link">oce</a></span><span class="op">)</span>
+an alternative topographic information. Here is how to create such a file:</p>
+<p></p><div class="sourceCode R"><pre><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/" class="external-link">oce</a></span><span class="op">)</span>
 <span class="va">topoFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dankelley.github.io/oce/reference/download.topo.html" class="external-link">download.topo</a></span><span class="op">(</span>west<span class="op">=</span><span class="op">-</span><span class="fl">180</span>, east<span class="op">=</span><span class="fl">180</span>,
                           south<span class="op">=</span><span class="op">-</span><span class="fl">90</span>, north<span class="op">=</span><span class="fl">90</span>,
                           resolution<span class="op">=</span><span class="fl">10</span>,
