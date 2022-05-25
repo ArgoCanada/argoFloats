@@ -45,16 +45,15 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
 
     destinationInfo <- file.info(destination)
     destinationAge <- (as.integer(Sys.time()) - as.integer(destinationInfo$mtime)) / 86400 # in days
-    skipDownload <- file.exists(destination) & (destinationAge < age)
+
+    if (age == "latest") {
+        skipDownload <- skipDownload
+    } else {
+        skipDownload <- file.exists(destination) & (destinationAge < age)
+    }
     success[skipDownload] <- TRUE
     urlDownload <- url[!skipDownload]
     destinationDownload <- destination[!skipDownload]
-    if (age == "latest") {
-        age <- 0
-        # FIXME need to define skipDownload here
-        # TO DO: remove age <- 0 here, ifelse skipDownload
-
-    }
 
     for (trial in seq_len(1 + retries)) {
         if (!quiet && (trial > 1))
