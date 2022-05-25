@@ -29,10 +29,13 @@ File clutter is reduced by creating a top-level directory called
 \code{data}, with subdirectories for various file types; see
 \dQuote{Examples}.}
 
-\item{age}{a numerical value indicating a time interval, in days.  If the file
-to be downloaded from the server already exists locally, and was created
-is less than \code{age} days in the past, it will not be downloaded.  The default,
-\code{\link[=argoDefaultProfileAge]{argoDefaultProfileAge()}}, is one year.  Setting \code{age=0} will force a download.}
+\item{age}{Option 1) a numerical value indicating a time interval, in days.
+If the file to be downloaded from the server already exists locally,
+and was created is less than age days in the past, it will not be downloaded.
+The default is one year. Setting age=0 will force a download.
+Option 2) "latest" meaning the file will only be downloaded if
+A) the file doesn't exist or B) the file does exist and the time
+it was created is older than the date_update in the index file}
 
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}

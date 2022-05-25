@@ -578,7 +578,13 @@ getIndex <- function(filename="core",
 #'
 #' @template destdir
 #'
-#' @template age
+#' @param age Option 1) a numerical value indicating a time interval, in days.
+#' If the file to be downloaded from the server already exists locally,
+#' and was created is less than age days in the past, it will not be downloaded.
+#' The default is one year. Setting age=0 will force a download.
+#' Option 2) "latest" meaning the file will only be downloaded if
+#' A) the file doesn't exist or B) the file does exist and the time
+#' it was created is older than the date_update in the index file
 #'
 #' @template retries
 #'
@@ -659,8 +665,34 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         ## way, so the Ifremer case was rewritten to match the usgodae case.
         urls <- paste0(server, "/dac/", index[["file"]])
         argoFloatsDebug(debug, oce::vectorShow(urls))
+        f <- list.files(destdir) # files in directory
+        if (age == "latest" && length(f) > 0) {
+            fileNames <- gsub("^.*[/\\\\]([A-Z]*[0-9]*_[0-9]{3,4}[D]{0,1}\\.nc)$", "\\1", index@data$index$file, perl=TRUE) # files of index
+            # First, download if they don't exist
+            download1 <- which(!(fileNames %in% f))
+            # Now keep any that do exist, but are out of date
+            keep <- which(fileNames %in% f)
+            path <- paste0(destdir, "/",fileNames[keep])
+            info <- lapply(path, file.info)
+            time <- do.call(c, lapply(info, function(x) x$ctime))
+            # Make times on computer be UTC
+            timeUTC <- lubridate::with_tz(time, "UTC")
+            # Determine if computer time is earlier than date_update
+            dateUpdate <- index[["date_update"]][keep]
+            # Get file again if it is
+            #download2 <- which(!(timeUTC < dateUpdate)) # FIXME can turn this to ! if check to work
+            download2 <- which(timeUTC < dateUpdate)
+            argoFloatsDebug(debug, "In age= ", age, ", files " ,paste0(fileNames[download1], collapse=","), " did not exist and are not skipped during downloading. \n")
+            argoFloatsDebug(debug, "In age= ", age, ", files " ,paste0(fileNames[download2], collapse=","), " did exist and had date older than the date_update. They are not skipped during downloading. \n")
+            SKIP1 <- which(!(seq_along(fileNames) %in% download1))
+            SKIP2 <- which(!(seq_along(fileNames[keep]) %in% download2))
+            skipDownload <<- rep(FALSE, length(fileNames))
+            skipDownload[SKIP1] <<- TRUE
+            skipDownload[SKIP2] <<- TRUE
+            argoFloatsDebug(debug, "Files ", paste0(fileNames[skipDownload], collapse=","), " are being skipped during download. \n")
+        }
         file <- downloadWithRetries(urls, destdir=destdir, destfile=basename(urls),
-                                    quiet=quiet, age=age, async=TRUE, debug=debug-1)
+            quiet=quiet, age=age, async=TRUE, debug=debug-1)
     }
     res@metadata$destdir <- destdir
     res@data$url <- urls
