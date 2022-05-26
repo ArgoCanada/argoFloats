@@ -7,11 +7,13 @@
 \description{
 This was created by subsetting a global index to the BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, using the following code.\preformatted{library(argoFloats)
+Bahamas, using the following code.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(argoFloats)
 indexAll <- getIndex("bgc")
 indexBgc <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-}
+}\if{html}{\out{</div>}}
 }
 \section{Caveat about out-of-date index files}{
 
