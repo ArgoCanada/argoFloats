@@ -667,10 +667,10 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         argoFloatsDebug(debug, oce::vectorShow(urls))
         f <- list.files(destdir) # files in directory
         # Find files that should *not* be downloaded, because they are of recent age.
-        skipDownload <- rep(FALSE, length(fileNames))
         useLatest <- age == "latest" && length(f) > 0L
         if (useLatest) {
             fileNames <- gsub("^.*[/\\\\]([A-Z]*[0-9]*_[0-9]{3,4}[D]{0,1}\\.nc)$", "\\1", index@data$index$file, perl=TRUE) # files of index
+            skipDownload <- rep(FALSE, length(fileNames))
             # download1 indicates files not on local system (see also download2 below)
             download1 <- which(!(fileNames %in% f))
             # Now keep any that do exist, but are out of date
