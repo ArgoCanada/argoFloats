@@ -77,7 +77,7 @@ argoFloatsStoreInCache <- function(name, value, debug=0)
 #' @template debug
 #'
 #' @return A character value naming the local location of the downloaded file,
-#' or `NULL` if the file could not be downloaded.
+#' or `NA` if the file could not be downloaded.
 #'
 ## NOTE: this will take longer than 5s, so I had marked it dontrun on an initial
 ## CRAN submission.  THe CRAN review suggested marking it donttest instead, but
