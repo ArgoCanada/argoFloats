@@ -7,6 +7,7 @@
 getIndex(
   filename = "core",
   server = argoDefaultServer(),
+  local = FALSE,
   destdir = argoDefaultDestdir(),
   age = argoDefaultIndexAge(),
   quiet = FALSE,
@@ -15,11 +16,15 @@ getIndex(
 )
 }
 \arguments{
-\item{filename}{character value that indicates the file name on the server, as in
-the first column of the table given in \dQuote{Details}, or (for some file types)
-as in the nickname given in the middle column. Note that the downloaded
-file name will be based on the full file name given as this argument, and
-that nicknames are expanded to the full filenames before saving.}
+\item{filename}{a character value with a meaning that depends on the value of
+the \code{local} parameter.  If \code{local} is FALSE, which is the default, then
+\code{filename} indicates the file name on the server, as given in the first
+column of the table given in \dQuote{Details}, or (for some file types) as in
+the nickname given in the middle column of that table. The downloaded file
+name will be based on the full file name given as this argument.  Nicknames
+are expanded to the full filenames before saving.  By contrast, if
+\code{local} is TRUE, then \code{filename} refers to a local file that was previously
+downloaded from a server.}
 
 \item{server}{character value, or vector of character values, indicating
 the name of servers that supply argo data.  If more than
@@ -33,6 +38,13 @@ to with nicknames \code{"ifremer-https"}, \code{"ifremer"}and  \code{"usgodae"}.
 Any URL that can be used in \code{\link[curl:curl_download]{curl::curl_download()}} is a valid value provided
 that the file structure is identical to the mirrors listed above. See
 \code{\link[=argoDefaultServer]{argoDefaultServer()}} for how to provide a default value.}
+
+\item{local}{a logical value, FALSE by default, indicating whether \code{file} is
+the name of a local file that was previously downloaded from a server.  Use
+\code{local=TRUE} with caution, because old index files can refer to profile files
+that no longer exist on the server, as realtime-mode files get replaced by a
+delayed-mode files.  Note that the values of \code{server}, \code{age}, \code{quiet} and
+\code{keep} are ignored if \code{local} is TRUE.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
@@ -74,21 +86,24 @@ An object of class \code{\linkS4class{argoFloats}} with type=\code{"index"}, whi
 is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 }
 \description{
-This function gets an index of available Argo float profiles, typically
-for later use as the first argument to \code{\link[=getProfiles]{getProfiles()}}. The work is done
-either by downloading information from a data repository or by reusing an existing
-index (packaged within an \code{.rda} file) that is controlled by the \code{age} argument behind the scenes.
+\code{getIndex()} gets an index of available Argo float profiles, perhaps for
+later use as the first argument to \code{\link[=getProfiles]{getProfiles()}}. The work is done in one
+of three ways: (1) downloading information (in a \code{tar.gz} file) from a remote
+server, (2) loading a cached value returned by a previous call to this
+function, or (3) reading a \code{tar.gz} file that was previously downloaded from
+a server, either by using this function with \code{keep=TRUE} or by using some
+other tool to download the file.  The third method is straightforward, but
+the other methods merit further explanation.
 }
 \details{
-The first step is to construct a URL for downloading, based on the
-\code{url} and \code{file} arguments. That URL will be a string ending in \code{.gz},
-or \code{.txt} and from this the name of a local file is constructed by changing the
-suffix to \code{.rda} and prepending the file directory specified by
-\code{destdir}.  If an \code{.rda} file of that name already exists, and is less
-than \code{age} days old, then no downloading takes place. This caching
-procedure is a way to save time, because the download can take from a
-minute to an hour, depending on the bandwidth of the connection to the
-server.
+For methods 1 and 2, the first step is to construct a URL for downloading,
+based on the \code{url} and \code{file} arguments. That URL will be a string ending in
+\code{.gz}, or \code{.txt} and from this the name of a local file is constructed by
+changing the suffix to \code{.rda} and prepending the file directory specified by
+\code{destdir}.  If an \code{.rda} file of that name already exists, and is less than
+\code{age} days old, then no downloading takes place. This caching procedure is a
+way to save time, because the download can take from a minute to an hour,
+depending on the bandwidth of the connection to the server.
 
 The resultant \code{.rda} file, which is named in the return value of this
 function, holds a list named \code{index} that holds following elements:

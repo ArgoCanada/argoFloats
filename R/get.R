@@ -1,4 +1,4 @@
-# vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+# vim:textwidth=80:expandtab:shiftwidth=4:softtabstop=4
 
 argoFloatsCacheEnv <- new.env(parent=emptyenv())
 
@@ -136,20 +136,23 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 
 #' Get an Index of Available Argo Float Profiles
 #'
-#' This function gets an index of available Argo float profiles, typically
-#' for later use as the first argument to [getProfiles()]. The work is done
-#' either by downloading information from a data repository or by reusing an existing
-#' index (packaged within an `.rda` file) that is controlled by the `age` argument behind the scenes.
+#' `getIndex()` gets an index of available Argo float profiles, perhaps for
+#' later use as the first argument to [getProfiles()]. The work is done in one
+#' of three ways: (1) downloading information (in a `tar.gz` file) from a remote
+#' server, (2) loading a cached value returned by a previous call to this
+#' function, or (3) reading a `tar.gz` file that was previously downloaded from
+#' a server, either by using this function with `keep=TRUE` or by using some
+#' other tool to download the file.  The third method is straightforward, but
+#' the other methods merit further explanation.
 #'
-#' The first step is to construct a URL for downloading, based on the
-#' `url` and `file` arguments. That URL will be a string ending in `.gz`,
-#' or `.txt` and from this the name of a local file is constructed by changing the
-#' suffix to `.rda` and prepending the file directory specified by
-#' `destdir`.  If an `.rda` file of that name already exists, and is less
-#' than `age` days old, then no downloading takes place. This caching
-#' procedure is a way to save time, because the download can take from a
-#' minute to an hour, depending on the bandwidth of the connection to the
-#' server.
+#' For methods 1 and 2, the first step is to construct a URL for downloading,
+#' based on the `url` and `file` arguments. That URL will be a string ending in
+#' `.gz`, or `.txt` and from this the name of a local file is constructed by
+#' changing the suffix to `.rda` and prepending the file directory specified by
+#' `destdir`.  If an `.rda` file of that name already exists, and is less than
+#' `age` days old, then no downloading takes place. This caching procedure is a
+#' way to save time, because the download can take from a minute to an hour,
+#' depending on the bandwidth of the connection to the server.
 #'
 #' The resultant `.rda` file, which is named in the return value of this
 #' function, holds a list named `index` that holds following elements:
@@ -202,12 +205,16 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' an object that can be plotted or analyzed in other ways.
 #' For more on this function, see section 2 of Kelley et al. (2021).
 #'
-#' @param filename character value that indicates the file name on the server, as in
-#' the first column of the table given in \dQuote{Details}, or (for some file types)
-#' as in the nickname given in the middle column. Note that the downloaded
-#' file name will be based on the full file name given as this argument, and
-#' that nicknames are expanded to the full filenames before saving.
-#'
+#' @param filename a character value with a meaning that depends on the value of
+#' the `local` parameter.  If `local` is FALSE, which is the default, then
+#' `filename` indicates the file name on the server, as given in the first
+#' column of the table given in \dQuote{Details}, or (for some file types) as in
+#' the nickname given in the middle column of that table. The downloaded file
+#' name will be based on the full file name given as this argument.  Nicknames
+#' are expanded to the full filenames before saving.  By contrast, if
+#' `local` is TRUE, then `filename` refers to a local file that was previously
+#' downloaded from a server.
+
 #' @param server character value, or vector of character values, indicating
 #' the name of servers that supply argo data.  If more than
 #' one value is given, then these are tried sequentially until one
@@ -220,6 +227,13 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' Any URL that can be used in [curl::curl_download()] is a valid value provided
 #' that the file structure is identical to the mirrors listed above. See
 #' [argoDefaultServer()] for how to provide a default value.
+#'
+#' @param local a logical value, FALSE by default, indicating whether `file` is
+#' the name of a local file that was previously downloaded from a server.  Use
+#' `local=TRUE` with caution, because old index files can refer to profile files
+#' that no longer exist on the server, as realtime-mode files get replaced by a
+#' delayed-mode files.  Note that the values of `server`, `age`, `quiet` and
+#' `keep` are ignored if `local` is TRUE.
 #'
 #' @template destdir
 #'
@@ -277,146 +291,157 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' @export
 getIndex <- function(filename="core",
     server=argoDefaultServer(),
+    local=FALSE,
     destdir=argoDefaultDestdir(),
     age=argoDefaultIndexAge(),
     quiet=FALSE,
     keep=FALSE,
     debug=0L)
 {
-    argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
+    argoFloatsDebug(debug,  "getIndex(server='", server, "', filename='", filename, "'", ", server='", server, ", local=", local, ", destdir='", destdir, "') {", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\"), for getIndex() to work")
-    if (!requireNamespace("curl", quietly=TRUE))
-        stop("must install.packages(\"curl\") for getIndex() to work")
-    if (!is.logical(quiet))
-        stop("quiet must be a logical value")
-    if (1 != length(quiet))
-        stop("quiet must be a single value")
-    if (!is.logical(keep))
-        stop("keep must be a logical value")
-    if (1 != length(keep))
-        stop("keep must be a single value")
-    if (keep)
-        age <- 0
-    ## Sample file
-    ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
-    ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
-    istraj <- filename %in% c("traj", "bio-traj", "ar_index_global_traj.txt.gz", "argo_bio-traj_index.txt.gz")
-    res <- new("argoFloats", type="index", subtype=if (istraj) "trajectories" else "cycles")
-    serverOrig <- server
-    serverNicknames <- c("ifremer-https" = "https://data-argo.ifremer.fr",
-        "ifremer" = "ftp://ftp.ifremer.fr/ifremer/argo",
-        "usgodae" = "ftp://usgodae.org/pub/outgoing/argo")
-    serverIsNickname <- server %in% names(serverNicknames)
-    server[serverIsNickname] <- serverNicknames[server[serverIsNickname]]
 
-    if (!all(grepl("^[a-z]+://", server)))
-        stop("server must be \"ifremer-https\", \"usgodae\", \"ifremer\", or a vector of urls, but it is ",
-            if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
-            else paste0("\"", server, "\""), "\n", sep="")
-    ## Ensure that we can save the file
-    if (!file.exists(destdir))
-        stop("First, create a directory named '", destdir, "'")
-    if (!file.info(destdir)$isdir)
-        stop("'", destdir, "' is not a directory")
-    ## Handle nicknames
-    filenameOrig <- filename
-    names <- c("core","bgc","bgcargo","synthetic", "traj", "bio-traj", "ar_index_global_prof.txt.gz", "argo_bio-profile_index.txt.gz", "argo_synthetic-profile_index.txt.gz", "ar_index_global_traj.txt.gz", "argo_bio-traj_index.txt.gz")
-    if (filename == "core") {
-        filename <- "ar_index_global_prof.txt.gz"
-    } else if (filename == "bgcargo" || filename == "bgc") {
-        filename <- "argo_bio-profile_index.txt.gz"
-    } else if (filename == "merge" || filename == "merged") {
-        stop("in getIndex() :\n Merged datasets are no longer available. Try using filename='synthetic'", call.=FALSE)
-    } else if (filename == "synthetic") {
-        filename <- "argo_synthetic-profile_index.txt.gz"
-    } else if (filename == "traj") {
-        filename <- "ar_index_global_traj.txt.gz"
-    } else if (filename == "bio-traj") {
-        filename <- "argo_bio-traj_index.txt.gz"
-    }
-
-    if (!(filename %in% names))
-        stop("filename=\"", filename, "\" doesn't exist. Try one of these: \"core\", \"bgc\", \"bgcargo\", \"traj\", \"bio-traj\", \"synthetic\",\"ar_index_global_prof.txt.gz\", \"argo_bio-profile_index.txt.gz\", \"ar_index_global_traj.txt.gz\", \"argo_bio-traj_index.txt.gz\", or \"argo_synthetic-profile_index.txt.gz\".")
-    if (filename != filenameOrig)
-        argoFloatsDebug(debug, "Converted filename='", filenameOrig, "' to filename='", filename, "'.\n", sep="")
-    ## Note: 'url' may contain more than one element
-    url <- paste(server, filename, sep="/")
-    destfile <- paste(destdir, filename, sep="/")
-    ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
-    if (grepl("\\.txt\\.gz$", destfile)) {
-        destfileRda <- gsub(".txt.gz$", ".rda", destfile)
-    } else if (grepl("\\.txt", destfile)) {
-        destfileRda <- gsub(".txt$", ".rda", destfile)
+    # If there is a local file, we can skip the main action of this function.
+    # The local-file ability was added to address the issue described at
+    # https://github.com/ArgoCanada/argoFloats/issues/577.
+    if (local) {
+        argoFloatsDebug(debug, "Using local file '", filename, "'\n", sep="")
+        destfileTemp <- filename
     } else {
-        stop("cannot construct .rda filename (please report an issue)")
-    }
-    argoFloatsDebug(debug, "Set destfileRda=\"", destfileRda, "\".\n", sep="")
-    res@metadata$url <- url[1]
-    res@metadata$header <- NULL
-    argoFloatsDebug(debug, "getIndex() is about to check the cache\n")
-    if (argoFloatsIsCached(filenameOrig, debug=debug-1)) {
-        argoFloatsDebug(debug, "using an index that is cached in memory for this R session\n")
-        return(argoFloatsGetFromCache(filenameOrig, debug=debug-1))
-    }
-    ## See if we have an .rda file that is sufficiently youthful.
-    if (file.exists(destfileRda)) {
-        destfileAge <- (as.integer(Sys.time()) - as.integer(file.info(destfileRda)$mtime)) / 86400 # in days
-        argoFloatsDebug(debug, "This destfileRda already exists, and its age is ", round(destfileAge, 3), " days.\n", sep="")
-        if (destfileAge < age) {
-            argoFloatsDebug(debug, "Using existing destfileRda, since its age is under ", age, " days.\n", sep="")
-            #argoFloatsDebug(debug, "The local .rda file\n    '", destfileRda, "'\n", sep="")
-            #argoFloatsDebug(debug, "is not being updated from\n    ", url[1], "\n", showTime=FALSE)
-            #argoFloatsDebug(debug, "because it is only", round(destfileAge, 4), "days old.\n", showTime=FALSE)
-            argoFloatsDebug(debug, "About to load '", destfileRda, "'.\n", sep="")
-            argoFloatsIndex <- NULL # defined again in next line; this is to quieten code-diagnostics
-            load(destfileRda)
-            argoFloatsDebug(debug, "Finished loading '", destfileRda, "'.\n", sep="")
-            res@metadata$server <- server[1]
-            res@metadata$ftpRoot <- argoFloatsIndex[["ftpRoot"]]
-            res@metadata$header <- argoFloatsIndex[["header"]]
-            res@data$index <- argoFloatsIndex[["index"]]
-            argoFloatsDebug(debug, "Storing this index in memory for this R session.\n")
-            argoFloatsStoreInCache(filenameOrig, res, debug=debug-1L)
-            argoFloatsDebug(debug, "} # getIndex()\n", style="bold", showTime=FALSE, unindent=1)
-            return(res)
-        }
-        argoFloatsDebug(debug, sprintf("Must update destfileRda, since its age exceeds %.2f days\n", age))
-    }
-    ## We need to download data. We do that to a temporary file, because we will be saving
-    ## an .rda file, not the data on the server.
-    destfileTemp <- tempfile(pattern="argo", fileext=".gz")
-    argoFloatsDebug(debug, "Allocated temporary file\n    '", destfileTemp, "'.\n", sep="")
-    failedDownloads <- 0
-    iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
-    for (iurl in seq_along(url)) {
-        argoFloatsDebug(debug, "About to try downloading index file from\n    '", url[iurl], "'.\n", sep="")
-        if (!quiet) message(sprintf("Downloading '%s'", url[iurl]))
-        status <- try(curl::curl_download(url=url[iurl],
-                                          destfile=destfileTemp,
-                                          mode="wb"))
-        ## status <- capture.output(try(curl::curl_download(url=url[iurl],
-        ##                                                  destfile=destfileTemp,
-        ##                                                  mode="wb"),
-        ##                              silent=!TRUE),
-        ##                          type="message")
-        if (!inherits(status, "try-error")) {
-            if (failedDownloads > 0)
-                message("Downloaded index from ", url[iurl])
-            iurlSuccess <- iurl
-            break                      # the download worked
-        } else if (any(grepl("application callback", status))) {
-            stop(status)
-        }
-        if (iurl == length(url))
-            message("Can't download index from ", server[iurl])
-        else
-            message("Can't download index from ", server[iurl], ", so moving to next server")
-        failedDownloads <- failedDownloads + 1
-    }
-    if (0 == iurlSuccess)
-        stop("Could not download index from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
+        if (!requireNamespace("curl", quietly=TRUE))
+            stop("must install.packages(\"curl\") for getIndex() to work")
+        if (!is.logical(quiet))
+            stop("quiet must be a logical value")
+        if (1 != length(quiet))
+            stop("quiet must be a single value")
+        if (!is.logical(keep))
+            stop("keep must be a logical value")
+        if (1 != length(keep))
+            stop("keep must be a single value")
+        if (keep)
+            age <- 0
+        ## Sample file
+        ## ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
+        ## ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
+        istraj <- filename %in% c("traj", "bio-traj", "ar_index_global_traj.txt.gz", "argo_bio-traj_index.txt.gz")
+        res <- new("argoFloats", type="index", subtype=if (istraj) "trajectories" else "cycles")
+        serverOrig <- server
+        serverNicknames <- c("ifremer-https" = "https://data-argo.ifremer.fr",
+            "ifremer" = "ftp://ftp.ifremer.fr/ifremer/argo",
+            "usgodae" = "ftp://usgodae.org/pub/outgoing/argo")
+        serverIsNickname <- server %in% names(serverNicknames)
+        server[serverIsNickname] <- serverNicknames[server[serverIsNickname]]
 
+        if (!all(grepl("^[a-z]+://", server)))
+            stop("server must be \"ifremer-https\", \"usgodae\", \"ifremer\", or a vector of urls, but it is ",
+                if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
+                else paste0("\"", server, "\""), "\n", sep="")
+        ## Ensure that we can save the file
+        if (!file.exists(destdir))
+            stop("First, create a directory named '", destdir, "'")
+        if (!file.info(destdir)$isdir)
+            stop("'", destdir, "' is not a directory")
+        ## Handle nicknames
+        filenameOrig <- filename
+        names <- c("core","bgc","bgcargo","synthetic", "traj", "bio-traj", "ar_index_global_prof.txt.gz", "argo_bio-profile_index.txt.gz", "argo_synthetic-profile_index.txt.gz", "ar_index_global_traj.txt.gz", "argo_bio-traj_index.txt.gz")
+        if (filename == "core") {
+            filename <- "ar_index_global_prof.txt.gz"
+        } else if (filename == "bgcargo" || filename == "bgc") {
+            filename <- "argo_bio-profile_index.txt.gz"
+        } else if (filename == "merge" || filename == "merged") {
+            stop("in getIndex() :\n Merged datasets are no longer available. Try using filename='synthetic'", call.=FALSE)
+        } else if (filename == "synthetic") {
+            filename <- "argo_synthetic-profile_index.txt.gz"
+        } else if (filename == "traj") {
+            filename <- "ar_index_global_traj.txt.gz"
+        } else if (filename == "bio-traj") {
+            filename <- "argo_bio-traj_index.txt.gz"
+        }
+
+        if (!(filename %in% names))
+            stop("filename=\"", filename, "\" doesn't exist. Try one of these: \"core\", \"bgc\", \"bgcargo\", \"traj\", \"bio-traj\", \"synthetic\",\"ar_index_global_prof.txt.gz\", \"argo_bio-profile_index.txt.gz\", \"ar_index_global_traj.txt.gz\", \"argo_bio-traj_index.txt.gz\", or \"argo_synthetic-profile_index.txt.gz\".")
+        if (filename != filenameOrig)
+            argoFloatsDebug(debug, "Converted filename='", filenameOrig, "' to filename='", filename, "'.\n", sep="")
+        ## Note: 'url' may contain more than one element
+        url <- paste(server, filename, sep="/")
+        destfile <- paste(destdir, filename, sep="/")
+        ## NOTE: we save an .rda file, not the .gz file, for speed of later operations
+        if (grepl("\\.txt\\.gz$", destfile)) {
+            destfileRda <- gsub(".txt.gz$", ".rda", destfile)
+        } else if (grepl("\\.txt", destfile)) {
+            destfileRda <- gsub(".txt$", ".rda", destfile)
+        } else {
+            stop("cannot construct .rda filename (please report an issue)")
+        }
+        argoFloatsDebug(debug, "Set destfileRda=\"", destfileRda, "\".\n", sep="")
+        res@metadata$url <- url[1]
+        res@metadata$header <- NULL
+        argoFloatsDebug(debug, "getIndex() is about to check the cache\n")
+        if (argoFloatsIsCached(filenameOrig, debug=debug-1)) {
+            argoFloatsDebug(debug, "using an index that is cached in memory for this R session\n")
+            return(argoFloatsGetFromCache(filenameOrig, debug=debug-1))
+        }
+        ## See if we have an .rda file that is sufficiently youthful.
+        if (file.exists(destfileRda)) {
+            destfileAge <- (as.integer(Sys.time()) - as.integer(file.info(destfileRda)$mtime)) / 86400 # in days
+            argoFloatsDebug(debug, "This destfileRda already exists, and its age is ", round(destfileAge, 3), " days.\n", sep="")
+            if (destfileAge < age) {
+                argoFloatsDebug(debug, "Using existing destfileRda, since its age is under ", age, " days.\n", sep="")
+                #argoFloatsDebug(debug, "The local .rda file\n    '", destfileRda, "'\n", sep="")
+                #argoFloatsDebug(debug, "is not being updated from\n    ", url[1], "\n", showTime=FALSE)
+                #argoFloatsDebug(debug, "because it is only", round(destfileAge, 4), "days old.\n", showTime=FALSE)
+                argoFloatsDebug(debug, "About to load '", destfileRda, "'.\n", sep="")
+                argoFloatsIndex <- NULL # defined again in next line; this is to quieten code-diagnostics
+                load(destfileRda)
+                argoFloatsDebug(debug, "Finished loading '", destfileRda, "'.\n", sep="")
+                res@metadata$server <- server[1]
+                res@metadata$ftpRoot <- argoFloatsIndex[["ftpRoot"]]
+                res@metadata$header <- argoFloatsIndex[["header"]]
+                res@data$index <- argoFloatsIndex[["index"]]
+                argoFloatsDebug(debug, "Storing this index in memory for this R session.\n")
+                argoFloatsStoreInCache(filenameOrig, res, debug=debug-1L)
+                argoFloatsDebug(debug, "} # getIndex()\n", style="bold", showTime=FALSE, unindent=1)
+                return(res)
+            }
+            argoFloatsDebug(debug, sprintf("Must update destfileRda, since its age exceeds %.2f days\n", age))
+        }
+        ## We need to download data. We do that to a temporary file, because we will be saving
+        ## an .rda file, not the data on the server.
+        destfileTemp <- tempfile(pattern="argo", fileext=".gz")
+        argoFloatsDebug(debug, "Allocated temporary file\n    '", destfileTemp, "'.\n", sep="")
+        failedDownloads <- 0
+        iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
+        for (iurl in seq_along(url)) {
+            argoFloatsDebug(debug, "About to try downloading index file from\n    '", url[iurl], "'.\n", sep="")
+            if (!quiet) message(sprintf("Downloading '%s'", url[iurl]))
+            status <- try(curl::curl_download(url=url[iurl],
+                    destfile=destfileTemp,
+                    mode="wb"))
+            ## status <- capture.output(try(curl::curl_download(url=url[iurl],
+            ##                                                  destfile=destfileTemp,
+            ##                                                  mode="wb"),
+            ##                              silent=!TRUE),
+            ##                          type="message")
+            if (!inherits(status, "try-error")) {
+                if (failedDownloads > 0)
+                    message("Downloaded index from ", url[iurl])
+                iurlSuccess <- iurl
+                break                      # the download worked
+            } else if (any(grepl("application callback", status))) {
+                stop(status)
+            }
+            if (iurl == length(url))
+                message("Can't download index from ", server[iurl])
+            else
+                message("Can't download index from ", server[iurl], ", so moving to next server")
+            failedDownloads <- failedDownloads + 1
+        }
+        if (0 == iurlSuccess)
+            stop("Could not download index from any of these servers:\n'", paste(url, collapse="'\n'"), "'")
+    }
+    # Now have destfileTemp (which might get removed after we process it,
+    # depending on the value of local).
     argoFloatsDebug(debug, "About to read the header at the start of the index file.\n", sep="")
     first <- readLines(destfileTemp, 100)
     ## Typically, length(ftpRoot) is 2
@@ -521,25 +546,28 @@ getIndex <- function(filename="core",
     index$date <- lubridate::fast_strptime(as.character(index$date), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")
     index$date_update <- lubridate::fast_strptime(as.character(index$date_update), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")
 
-    argoFloatsIndex <- list(server=server[iurlSuccess], ftpRoot=ftpRoot, header=header, index=index)
+    theserver <- if (local) "" else server[iurlSuccess]
+    argoFloatsIndex <- list(server=theserver, ftpRoot=ftpRoot, header=header, index=index)
     save(argoFloatsIndex, file=destfileRda)
-    if (keep) {
+    if (!local && keep) {
         to <- paste0(destdir, "/", gsub(".*/", "", url[iurlSuccess]))
         argoFloatsDebug(debug, "Storing temporary raw index file\n    '", destfileTemp, "'\n  locally as\n    '", to, "'.\n", sep="")
         file.copy(from=destfileTemp, to=to)
     }
-    argoFloatsDebug(debug,  "Removing temporary file\n    '", destfileTemp, "'.\n", sep="")
-    unlink(destfileTemp)
+    if (!local) {
+        argoFloatsDebug(debug,  "Removing temporary file\n    '", destfileTemp, "'.\n", sep="")
+        unlink(destfileTemp)
+    }
     res@metadata$server <- server[iurlSuccess]
     res@metadata$url <- url[iurlSuccess]
     res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
     res@metadata$header <- argoFloatsIndex$header
     res@data$index <- argoFloatsIndex$index
     res@processingLog <- oce::processingLogAppend(res@processingLog,
-                                                  paste("getIndex(server=",
-                                                        if (length(serverOrig) == 1) paste("\"", serverOrig, "\", ", sep="")
-                                                        else paste("c(\"", paste(serverOrig, collapse="\", \""), "\"), ", sep=""),
-                                                        "filename=\'", filename, "\", age=", age, ")", sep=""))
+        paste("getIndex(server=",
+            if (length(serverOrig) == 1) paste("\"", serverOrig, "\", ", sep="")
+            else paste("c(\"", paste(serverOrig, collapse="\", \""), "\"), ", sep=""),
+            "filename=\'", filename, "\", age=", age, ")", sep=""))
     argoFloatsDebug(debug, "storing newly-read index in memory for this R session\n")
     argoFloatsStoreInCache(filenameOrig, res, debug=debug-1)
     argoFloatsDebug(debug, "} getIndex()\n\n", style="bold", unindent=1)
