@@ -7,10 +7,12 @@
 \description{
 This was created by subsetting a global index to the deep Argo profiles
 that were within a 800km radius of Antarctica (67S,105E),
-using the following code.\preformatted{library(argoFloats)
+using the following code.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(argoFloats)
 subset <- subset(getIndex(), deep=TRUE)
 sub2 <- subset(subset, circle=list(longitude=105, latitude=-67, radius=800))
-}
+}\if{html}{\out{</div>}}
 }
 \section{Caveat about out-of-date index files}{
 
