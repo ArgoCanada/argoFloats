@@ -74,13 +74,13 @@ to indented messages. Most functions start and end with a call to
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">argoFloatsDebug</span><span class="op">(</span>
-  debug <span class="op">=</span> <span class="fl">0</span>,
-  <span class="va">...</span>,
-  style <span class="op">=</span> <span class="st">"plain"</span>,
-  showTime <span class="op">=</span> <span class="cn">FALSE</span>,
-  unindent <span class="op">=</span> <span class="fl">0</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">argoFloatsDebug</span><span class="op">(</span></span>
+<span>  debug <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  style <span class="op">=</span> <span class="st">"plain"</span>,</span>
+<span>  showTime <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  unindent <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -90,26 +90,37 @@ to indented messages. Most functions start and end with a call to
 than zero indicate that some printing should be done. Values greater
 than 3 are trimmed to 3. Many functions pass <code>debug=debug-1</code> down to
 deeper functions, which yields a nesting-indent format in the output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>values to be printed, analogous to the <code>...</code> argument
 list of <code><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat()</a></code>.</p></dd>
+
+
 <dt>style</dt>
 <dd><p>character value indicating special formatting, with <code>"plain"</code>
 for normal text, <code>"bold"</code> for bold-faced text, <code>"italic"</code> for italicized
 text, <code>"red"</code> for red text, <code>"green"</code> for green text, or <code>"blue"</code> for blue
 text. These codes may not be combined.</p></dd>
+
+
 <dt>showTime</dt>
 <dd><p>logical value indicating whether to preface message with
 the present time. This can be useful for learning about which operations
 are using the most time, but the default is not to show this, in the
 interests of brevity.</p></dd>
+
+
 <dt>unindent</dt>
 <dd><p>integer specifying the degree of reverse indentation
 to be done, as explained in the “Details” section.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>None (invisible NULL).</p>
+    
+
+<p>None (invisible NULL).</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -118,22 +129,22 @@ to be done, as explained in the “Details” section.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"plain text\n"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"plain text\n"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       plain text</span>
-<span class="r-in"><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"red text\n"</span>, style<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"red text\n"</span>, style<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">      red text</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"blue text\n"</span>, style<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"blue text\n"</span>, style<span class="op">=</span><span class="st">"blue"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">      blue text</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"bold text\n"</span>, style<span class="op">=</span><span class="st">"bold"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"bold text\n"</span>, style<span class="op">=</span><span class="st">"bold"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">      bold text</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"italic text with time stamp\n"</span>, style<span class="op">=</span><span class="st">"italic"</span>, showTime<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="font-style: italic;">      [18:07:57] italic text with time stamp</span></span>
+<span class="r-in"><span><span class="fu">argoFloatsDebug</span><span class="op">(</span><span class="fl">1</span>, <span class="st">"italic text with time stamp\n"</span>, style<span class="op">=</span><span class="st">"italic"</span>, showTime<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="font-style: italic;">      [11:11:43] italic text with time stamp</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -148,7 +159,7 @@ to be done, as explained in the “Details” section.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

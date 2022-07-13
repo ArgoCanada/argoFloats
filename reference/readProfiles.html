@@ -74,13 +74,13 @@ or a replacement function provided as the <code>FUN</code> argument.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">readProfiles</span><span class="op">(</span>
-  <span class="va">profiles</span>,
-  <span class="va">FUN</span>,
-  destdir <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultDestdir</a></span><span class="op">(</span><span class="op">)</span>,
-  quiet <span class="op">=</span> <span class="cn">FALSE</span>,
-  debug <span class="op">=</span> <span class="fl">0</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">readProfiles</span><span class="op">(</span></span>
+<span>  <span class="va">profiles</span>,</span>
+<span>  <span class="va">FUN</span>,</span>
+<span>  destdir <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultDestdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  debug <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -92,11 +92,15 @@ object created by <code><a href="getProfiles.html">getProfiles()</a></code>. In 
 items that start with <code>"ftp:"</code> are taken to represent
 the full paths to remote files, and these first downloaded
 to the <code>destdir</code> directory using <code><a href="getProfileFromUrl.html">getProfileFromUrl()</a></code>.</p></dd>
+
+
 <dt>FUN</dt>
 <dd><p>a function that reads the NetCDF files in which the argo
 profiles are stored.  If <code>FUN</code> not provided, then it defaults
 to <code><a href="https://dankelley.github.io/oce/reference/read.argo.html" class="external-link">oce::read.argo()</a></code>.  Only experts should consider anything
 other than this default, or a wrapper to it.</p></dd>
+
+
 <dt>destdir</dt>
 <dd><p>character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
@@ -108,20 +112,27 @@ if <code>destfile</code> is a filename with full path information.
 File clutter is reduced by creating a top-level directory called
 <code>data</code>, with subdirectories for various file types; see
 “Examples”.</p></dd>
+
+
 <dt>quiet</dt>
 <dd><p>logical value; use <code>TRUE</code> to show more
 verbose information when downloading files.
 (Problems will still be reported, though.)</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>an integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,
 a small amount of debugging information is printed.  Note that
 <code>debug-1</code> is passed to <code><a href="https://dankelley.github.io/oce/reference/read.argo.html" class="external-link">oce::read.argo()</a></code>, which actually reads
 the file, and so it will print messages if <code>debug</code> exceeds 1.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An <code><a href="argoFloats-class.html">argoFloats</a></code> object
+    
+
+<p>An <code><a href="argoFloats-class.html">argoFloats</a></code> object
 with <code>type="argos"</code>, in which the <code>data</code> slot
 contains a list named <code>argos</code> that holds objects
 that are created by <code><a href="https://dankelley.github.io/oce/reference/read.argo.html" class="external-link">oce::read.argo()</a></code>.</p>
@@ -147,9 +158,9 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Read from a local file</span></span>
-<span class="r-in"><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"SR2902204_131.nc"</span>, package<span class="op">=</span><span class="st">"argoFloats"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">readProfiles</span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Read from a local file</span></span></span>
+<span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"SR2902204_131.nc"</span>, package<span class="op">=</span><span class="st">"argoFloats"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">readProfiles</span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     The indices of the bad profiles are as follows.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     1</span>
@@ -162,7 +173,7 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Of 1 profiles read, 1 has &gt;10% of pressure values with QC flag of 4, signalling bad data.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     The indices of the bad profiles are as follows.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     1</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -177,7 +188,7 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

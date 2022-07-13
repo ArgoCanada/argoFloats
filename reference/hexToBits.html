@@ -68,7 +68,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">hexToBits</span><span class="op">(</span><span class="va">hex</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hexToBits</span><span class="op">(</span><span class="va">hex</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -76,10 +76,13 @@
     <dl><dt>hex</dt>
 <dd><p>a vector of character values corresponding to a sequence of one or more
 hexadecimal digits (i.e. <code>"0"</code> through <code>"9"</code>,<code>"a"</code> through <code>"f"</code>, or <code>"A"</code> through <code>"F"</code>).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An integer vector holding the bits as values 0 or 1.  The
+    
+
+<p>An integer vector holding the bits as values 0 or 1.  The
 inverse of 'mathematical' order is used, as is the case for the base
 R function <code><a href="https://rdrr.io/r/base/rawConversion.html" class="external-link">rawToBits()</a></code>; see the “Examples”.</p>
     </div>
@@ -90,12 +93,12 @@ R function <code><a href="https://rdrr.io/r/base/rawConversion.html" class="exte
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">hexToBits</span><span class="op">(</span><span class="st">'3'</span><span class="op">)</span>    <span class="co"># 1 1 0 0</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">hexToBits</span><span class="op">(</span><span class="st">'3'</span><span class="op">)</span>    <span class="co"># 1 1 0 0</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 1 0 0</span>
-<span class="r-in"><span class="fu">hexToBits</span><span class="op">(</span><span class="st">'4000'</span><span class="op">)</span> <span class="co"># 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0</span></span>
+<span class="r-in"><span><span class="fu">hexToBits</span><span class="op">(</span><span class="st">'4000'</span><span class="op">)</span> <span class="co"># 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -110,7 +113,7 @@ R function <code><a href="https://rdrr.io/r/base/rawConversion.html" class="exte
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

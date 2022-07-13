@@ -98,29 +98,39 @@ for individual items; see “Details”.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">useAdjusted</span><span class="op">(</span><span class="va">argos</span>, fallback <span class="op">=</span> <span class="cn">FALSE</span>, debug <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">useAdjusted</span><span class="op">(</span><span class="va">argos</span>, fallback <span class="op">=</span> <span class="cn">FALSE</span>, debug <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>argos</dt>
 <dd><p>an <code><a href="argoFloats-class.html">argoFloats</a></code> object, as read by <code><a href="readProfiles.html">readProfiles()</a></code>.</p></dd>
+
+
 <dt>fallback</dt>
 <dd><p>a logical value indicating whether to 'fall back' from
 adjusted data to raw data for profiles that are in real-time mode.  By
 default, <code>fallback</code> is <code>FALSE</code>, to focus entirely on
 adjusted data.  See “Details”.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>an integer that controls whether debugging information is printed
 during processing.  If <code>debug</code> is 0 or less, then no information is printed.
 If it is 1 then minimal overall information is printed.  If it exceeds 1,
 then information is printed for each Argo cycle contained in <code>argos</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>useAdjusted</code> returns an <code><a href="argoFloats-class.html">argoFloats</a></code> object that is similar to
+    
+
+<p><code>useAdjusted</code> returns an <code><a href="argoFloats-class.html">argoFloats</a></code> object that is similar to
 its first argument, but which is set up so that future calls to
-<code><a href="sub-sub-argoFloats-method.html">[[,argoFloats-method</a></code> or <code><a href="plot-argoFloats-method.html">plot,argoFloats-method</a></code>will focus on the "adjusted" data stream.</p>
+<code><a href="sub-sub-argoFloats-method.html">[[,argoFloats-method</a></code> or <code><a href="plot-argoFloats-method.html">plot,argoFloats-method</a></code></p>
+
+
+<p>will focus on the "adjusted" data stream.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -155,9 +165,9 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">file</span> <span class="op">&lt;-</span> <span class="st">"SD5903586_001.nc"</span></span>
-<span class="r-in"><span class="va">raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="va">file</span>, package<span class="op">=</span><span class="st">"argoFloats"</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="st">"SD5903586_001.nc"</span></span></span>
+<span class="r-in"><span><span class="va">raw</span> <span class="op">&lt;-</span> <span class="fu"><a href="readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="va">file</span>, package<span class="op">=</span><span class="st">"argoFloats"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     The indices of the bad profiles are as follows.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     1</span>
@@ -167,13 +177,13 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Of 1 profiles read, 1 has &gt;10% of oxygen values with QC flag of 4, signalling bad data.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     The indices of the bad profiles are as follows.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     1</span>
-<span class="r-in"><span class="va">adj</span> <span class="op">&lt;-</span> <span class="fu">useAdjusted</span><span class="op">(</span><span class="va">raw</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Autoscale with adjusted values so frame shows both raw and adjusted.</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adj</span>, which<span class="op">=</span><span class="st">"profile"</span>, profileControl<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>parameter<span class="op">=</span><span class="st">"oxygen"</span><span class="op">)</span>, pch<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">raw</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"oxygen"</span><span class="op">]</span><span class="op">]</span>, <span class="va">raw</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"pressure"</span><span class="op">]</span><span class="op">]</span>, pch<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"bottomright"</span>, pch<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Raw"</span>, <span class="st">"Adjusted"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">adj</span> <span class="op">&lt;-</span> <span class="fu">useAdjusted</span><span class="op">(</span><span class="va">raw</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Autoscale with adjusted values so frame shows both raw and adjusted.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">adj</span>, which<span class="op">=</span><span class="st">"profile"</span>, profileControl<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>parameter<span class="op">=</span><span class="st">"oxygen"</span><span class="op">)</span>, pch<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">raw</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"oxygen"</span><span class="op">]</span><span class="op">]</span>, <span class="va">raw</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"pressure"</span><span class="op">]</span><span class="op">]</span>, pch<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"bottomright"</span>, pch<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Raw"</span>, <span class="st">"Adjusted"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="useAdjusted-1.png" alt="" width="672" height="672"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -188,7 +198,7 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

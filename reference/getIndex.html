@@ -72,15 +72,15 @@ index (packaged within an <code>.rda</code> file) that is controlled by the <cod
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getIndex</span><span class="op">(</span>
-  filename <span class="op">=</span> <span class="st">"core"</span>,
-  server <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultServer</a></span><span class="op">(</span><span class="op">)</span>,
-  destdir <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultDestdir</a></span><span class="op">(</span><span class="op">)</span>,
-  age <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultIndexAge</a></span><span class="op">(</span><span class="op">)</span>,
-  quiet <span class="op">=</span> <span class="cn">FALSE</span>,
-  keep <span class="op">=</span> <span class="cn">FALSE</span>,
-  debug <span class="op">=</span> <span class="fl">0L</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getIndex</span><span class="op">(</span></span>
+<span>  filename <span class="op">=</span> <span class="st">"core"</span>,</span>
+<span>  server <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultServer</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  destdir <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultDestdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  age <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultIndexAge</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  keep <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  debug <span class="op">=</span> <span class="fl">0L</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -91,6 +91,8 @@ the first column of the table given in “Details”, or (for some file types)
 as in the nickname given in the middle column. Note that the downloaded
 file name will be based on the full file name given as this argument, and
 that nicknames are expanded to the full filenames before saving.</p></dd>
+
+
 <dt>server</dt>
 <dd><p>character value, or vector of character values, indicating
 the name of servers that supply argo data.  If more than
@@ -104,6 +106,8 @@ to with nicknames <code>"ifremer-https"</code>, <code>"ifremer"</code>and  <code
 Any URL that can be used in <code><a href="https://rdrr.io/pkg/curl/man/curl_download.html" class="external-link">curl::curl_download()</a></code> is a valid value provided
 that the file structure is identical to the mirrors listed above. See
 <code><a href="argoDefaultDestdir.html">argoDefaultServer()</a></code> for how to provide a default value.</p></dd>
+
+
 <dt>destdir</dt>
 <dd><p>character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
@@ -115,6 +119,8 @@ if <code>destfile</code> is a filename with full path information.
 File clutter is reduced by creating a top-level directory called
 <code>data</code>, with subdirectories for various file types; see
 “Examples”.</p></dd>
+
+
 <dt>age</dt>
 <dd><p>numeric value indicating how old a downloaded file
 must be (in days), for it to be considered out-of-date.  The
@@ -123,9 +129,13 @@ to avoid slowing down a workflow with a download that might take
 a minute or so. Note that setting <code>age=0</code> will force a new
 download, regardless of the age of the local file, and that
 age is changed to 0 if <code>keep</code> is <code>TRUE</code>.</p></dd>
+
+
 <dt>quiet</dt>
 <dd><p>logical value indicating whether to silence some
 progress indicators.  The default is to show such indicators.</p></dd>
+
+
 <dt>keep</dt>
 <dd><p>logical value indicating whether to retain the
 raw index file as downloaded from the server.  This is <code>FALSE</code>
@@ -133,16 +143,21 @@ by default, indicating that the raw index file is to be
 discarded once it has been analyzed  Note that if <code>keep</code>
 is <code>TRUE</code>, then the supplied value of <code>age</code> is converted
 to 0, to force a new download.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
 will print debugging information.  If a function call fails, the
 first step should be to rerun the function with <code>debug=1</code>,
 to see if the output suggests a problem in the call.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <code><a href="argoFloats-class.html">argoFloats</a></code> with type=<code>"index"</code>, which
+    
+
+<p>An object of class <code><a href="argoFloats-class.html">argoFloats</a></code> with type=<code>"index"</code>, which
 is suitable as the first argument of <code><a href="getProfiles.html">getProfiles()</a></code>.</p>
     </div>
     <div id="details">
@@ -215,7 +230,7 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

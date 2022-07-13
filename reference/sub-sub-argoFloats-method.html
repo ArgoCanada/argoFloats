@@ -82,18 +82,27 @@ value of <code>i</code> and, in some cases, on the value of <code>j</code>; see 
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>an <code><a href="argoFloats-class.html">argoFloats</a></code> object.</p></dd>
+
+
 <dt>i</dt>
 <dd><p>a character value that specifies the item to be looked up;
 see “Details”.</p></dd>
+
+
 <dt>j</dt>
 <dd><p>supplemental index value, used for some <code>x</code> types
 and <code>i</code> values; see “Details”.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>ignored.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>the indicated item, or NULL if it is neither stored within the first argument
+    
+
+<p>the indicated item, or NULL if it is neither stored within the first argument
 nor computable from its contents.</p>
     </div>
     <div id="details">
@@ -194,24 +203,24 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">index</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Full remote filename for first two item in index</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">index</span><span class="op">[[</span><span class="st">"server"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"/dac/"</span>, <span class="va">index</span><span class="op">[[</span><span class="st">"cycle"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">index</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Full remote filename for first two item in index</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">index</span><span class="op">[[</span><span class="st">"server"</span><span class="op">]</span><span class="op">]</span>, <span class="st">"/dac/"</span>, <span class="va">index</span><span class="op">[[</span><span class="st">"cycle"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://data-argo.ifremer.fr/dac/124"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2] "https://data-argo.ifremer.fr/dac/125"</span>
-<span class="r-in"><span class="co"># File names and geographical locations of first 5 items in index</span></span>
-<span class="r-in"><span class="va">index5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># File names and geographical locations of first 5 items in index</span></span></span>
+<span class="r-in"><span><span class="va">index5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Kept 5 cycles (0.496%)</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".*/"</span>, <span class="st">""</span>, <span class="va">index5</span><span class="op">[[</span><span class="st">"file"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
-<span class="r-in">           lon<span class="op">=</span><span class="va">index5</span><span class="op">[[</span><span class="st">"longitude"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span class="r-in">           lat<span class="op">=</span><span class="va">index5</span><span class="op">[[</span><span class="st">"latitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">".*/"</span>, <span class="st">""</span>, <span class="va">index5</span><span class="op">[[</span><span class="st">"file"</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           lon<span class="op">=</span><span class="va">index5</span><span class="op">[[</span><span class="st">"longitude"</span><span class="op">]</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>           lat<span class="op">=</span><span class="va">index5</span><span class="op">[[</span><span class="st">"latitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              file     lon    lat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 D1901584_124.nc -76.231 27.705</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 D1901584_124.nc -76.024 27.773</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 D1901584_124.nc -76.320 28.064</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 D1901584_124.nc -76.520 28.101</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 D1901584_124.nc -77.108 27.794</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -226,7 +235,7 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

@@ -93,13 +93,13 @@ page, and in Section 4 of Kelley et al. (2021).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mapApp</span><span class="op">(</span>
-  age <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultIndexAge</a></span><span class="op">(</span><span class="op">)</span>,
-  server <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultServer</a></span><span class="op">(</span><span class="op">)</span>,
-  destdir <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultDestdir</a></span><span class="op">(</span><span class="op">)</span>,
-  colLand <span class="op">=</span> <span class="st">"lightgray"</span>,
-  debug <span class="op">=</span> <span class="fl">0</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mapApp</span><span class="op">(</span></span>
+<span>  age <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultIndexAge</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  server <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultServer</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  destdir <span class="op">=</span> <span class="fu"><a href="argoDefaultDestdir.html">argoDefaultDestdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  colLand <span class="op">=</span> <span class="st">"lightgray"</span>,</span>
+<span>  debug <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -111,6 +111,8 @@ default, <code><a href="argoDefaultDestdir.html">argoDefaultIndexAge()</a></code
 to avoid slowing down a workflow with a download that might take
 a minute or so. Note that setting <code>age=0</code> will force a new
 download, regardless of the age of the local file.</p></dd>
+
+
 <dt>server</dt>
 <dd><p>character value, or vector of character values, indicating the name of
 servers that supply argo data to be acquired with <code><a href="getIndex.html">getIndex()</a></code>.  If not supplied,
@@ -118,6 +120,8 @@ the default will be determined with <code><a href="argoDefaultDestdir.html">argo
 a value set by <code>options("argoFloats.server"=URL)</code>
 where <code>URL</code> is an appropriate URL, or <code>"ifremer-https"</code> if no such option was
 set.</p></dd>
+
+
 <dt>destdir</dt>
 <dd><p>character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
@@ -129,17 +133,24 @@ if <code>destfile</code> is a filename with full path information.
 File clutter is reduced by creating a top-level directory called
 <code>data</code>, with subdirectories for various file types; see
 “Examples”.</p></dd>
+
+
 <dt>colLand</dt>
 <dd><p>a colour specification for the land.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>integer value that controls how much information <code>mapApp()</code> prints
 to the console as it works.  The default value of 0 leads to a fairly limited
 amount of printing, while higher values lead to more information. This information
 can be helpful in diagnosing problems or bottlenecks.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>mapApp</code> has no return value, since it creates a shiny app by passing
+    
+
+<p><code>mapApp</code> has no return value, since it creates a shiny app by passing
 control to <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp()</a></code>, which never returns.</p>
     </div>
     <div id="details">
@@ -152,14 +163,15 @@ BGC, or Deep (which may be displayed in any combination, using
 GUI elements).</p>
 <p>The <code>hi-res</code> button will only affect the coastline, not the topography,
 unless there is a local file named <code>topoWorldFine.rda</code> that contains
-an alternative topographic information. Here is how to create such a file:</p><div class="sourceCode R"><pre><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/" class="external-link">oce</a></span><span class="op">)</span>
-<span class="va">topoFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dankelley.github.io/oce/reference/download.topo.html" class="external-link">download.topo</a></span><span class="op">(</span>west<span class="op">=</span><span class="op">-</span><span class="fl">180</span>, east<span class="op">=</span><span class="fl">180</span>,
-                          south<span class="op">=</span><span class="op">-</span><span class="fl">90</span>, north<span class="op">=</span><span class="fl">90</span>,
-                          resolution<span class="op">=</span><span class="fl">10</span>,
-                          format<span class="op">=</span><span class="st">"netcdf"</span>, destdir<span class="op">=</span><span class="st">"."</span><span class="op">)</span>
-<span class="va">topoWorldFine</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dankelley.github.io/oce/reference/read.topo.html" class="external-link">read.topo</a></span><span class="op">(</span><span class="va">topoFile</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">topoWorldFine</span>, file<span class="op">=</span><span class="st">"topoWorldFine.rda"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">topoFile</span><span class="op">)</span> <span class="co"># clean up</span></code></pre><p></p></div>
+an alternative topographic information. Here is how to create such a file:</p>
+<p></p><div class="sourceCode R"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/" class="external-link">oce</a></span><span class="op">)</span></span>
+<span><span class="va">topoFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dankelley.github.io/oce/reference/download.topo.html" class="external-link">download.topo</a></span><span class="op">(</span>west<span class="op">=</span><span class="op">-</span><span class="fl">180</span>, east<span class="op">=</span><span class="fl">180</span>,</span>
+<span>                          south<span class="op">=</span><span class="op">-</span><span class="fl">90</span>, north<span class="op">=</span><span class="fl">90</span>,</span>
+<span>                          resolution<span class="op">=</span><span class="fl">10</span>,</span>
+<span>                          format<span class="op">=</span><span class="st">"netcdf"</span>, destdir<span class="op">=</span><span class="st">"."</span><span class="op">)</span></span>
+<span><span class="va">topoWorldFine</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dankelley.github.io/oce/reference/read.topo.html" class="external-link">read.topo</a></span><span class="op">(</span><span class="va">topoFile</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">topoWorldFine</span>, file<span class="op">=</span><span class="st">"topoWorldFine.rda"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">topoFile</span><span class="op">)</span> <span class="co"># clean up</span></span></code></pre><p></p></div>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -175,11 +187,11 @@ Frontiers in Marine Science, (8), 636922.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span>
-<span class="r-in">    <span class="fu">mapApp</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu">mapApp</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -194,7 +206,7 @@ Frontiers in Marine Science, (8), 636922.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
