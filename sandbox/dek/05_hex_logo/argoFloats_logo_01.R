@@ -1,5 +1,6 @@
 library(oce)
 library(argoFloats)
+library(hexSticker)
 data(coastlineWorldFine, package="ocedata")
 
 
@@ -19,7 +20,6 @@ border <- "#91653c"
 fg <- dark
 bg <- bright
 
-library(hexSticker)
 
 
 a <- function()

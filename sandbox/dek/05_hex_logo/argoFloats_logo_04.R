@@ -44,21 +44,24 @@ a <- function()
            breaks=seq(0, -6000, length.out=1+n),
            zlim=c(-5000, 0),
            add=TRUE)
-    axis(1, at=seq(-79, -75, 1), label=FALSE, lwd=lwd)
-    axis(1, at=seq(-79, -75, 2), label=paste0(seq(79,75,-2),"W"), lwd=lwd)
-    axis(2, at=seq(25, 28, 1), label=FALSE, lwd=lwd)
-    axis(2, at=seq(25, 28, 2), label=paste0(seq(25, 28, 2),"N"), lwd=lwd)
+    #axis(1, at=seq(-79, -75, 1), label=FALSE, lwd=lwd)
+    #axis(1, at=seq(-79, -75, 2), label=paste0(seq(79,75,-2),"W"), lwd=lwd)
+    #axis(2, at=seq(25, 28, 1), label=FALSE, lwd=lwd)
+    #axis(2, at=seq(25, 28, 2), label=paste0(seq(25, 28, 2),"N"), lwd=lwd)
     points(lon, lat, pch=21, col="white", bg="red", cex=0.4, lwd=0.2)
     box(lwd=lwd)
     polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]],
             lwd=0.5, col="tan", xpd=FALSE)
     par(xpd=NA)
-    mtext("R", col=fg, cex=1.8, font=2, side=3, line=3)
+    mtext("R", col=fg, cex=3.0, font=2, side=3, line=3)
+    #mtext("argoFloats", col=fg, cex=2.0, font=2, side=3, line=2)
 }
 
 sticker(~a(), package="argoFloats",
-        s_x=0.92,
-        s_y=0.71,
+        s_x=1.0,
+        s_y=0.9,
+        p_x=1.0,
+        p_y=1.6,
         s_width=0.99,
         s_height=0.99,
         h_fill=bg,
