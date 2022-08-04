@@ -16,7 +16,7 @@ indexSynthetic <- subset(indexAll,
 }\if{html}{\out{</div>}}
 
 This "synthetic" type of index is a replacement for the older "merged" index.  See
-\url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
+\verb{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
 for more on the data file format, the reasons for the change, and the
 timetable for the transition from "merged".
 }

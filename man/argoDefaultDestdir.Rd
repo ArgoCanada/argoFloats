@@ -54,7 +54,7 @@ or by defining an environment variable named
 \code{R_ARGOFLOATS_SERVER} at the operating-system level.  If
 the \code{argoFloats.server} option has not been set in R,
 and \code{R_ARGOFLOATS_SERVER} has not been set in the OS, then
-\code{argoDefaultServer()} defaults to \code{"ifremer-https"}.
+\code{argoDefaultServer()} defaults to \code{c("ifremer-https","usgodae")}.
 \item \code{argoDefaultDestdir()} returns the name of the local directory
 into which to store indices and other argo data.
 The option is named

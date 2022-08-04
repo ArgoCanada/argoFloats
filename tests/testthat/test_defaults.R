@@ -4,15 +4,15 @@ context("test defaults")
 test_that("default destdir can be changed by option or env var", {
     old_options <- options(argoFloats.destdir = "custom/argo/path")
     expect_identical(argoDefaultDestdir(), "custom/argo/path")
-    
+
     old_env_var <- Sys.getenv("R_ARGOFLOATS_DESTDIR")
     Sys.setenv(R_ARGOFLOATS_DESTDIR = "custom/argo/path")
     expect_identical(argoDefaultDestdir(), "custom/argo/path")
-    
+
     options(argoFloats.destdir = NULL)
     Sys.setenv(R_ARGOFLOATS_DESTDIR = "")
     expect_identical(argoDefaultDestdir(), "~/data/argo")
-    
+
     options(old_options)
     Sys.setenv(R_ARGOFLOATS_DESTDIR = old_env_var)
 })
@@ -20,15 +20,15 @@ test_that("default destdir can be changed by option or env var", {
 test_that("default server can be changed by option or env var", {
     old_options <- options(argoFloats.server = "http://my.server/")
     expect_identical(argoDefaultServer(), "http://my.server/")
-    
+
     old_env_var <- Sys.getenv("R_ARGOFLOATS_SERVER")
     Sys.setenv(R_ARGOFLOATS_DESTDIR = "http://my.server/")
     expect_identical(argoDefaultServer(), "http://my.server/")
-    
+
     options(argoFloats.server = NULL)
     Sys.setenv(R_ARGOFLOATS_DESTDIR = "")
-    expect_identical(argoDefaultServer(), "ifremer-https")
-    
+    expect_identical(argoDefaultServer(), c("ifremer-https", "usgodae"))
+
     options(old_options)
     Sys.setenv(R_ARGOFLOATS_DESTDIR = old_env_var)
 })

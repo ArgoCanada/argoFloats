@@ -152,7 +152,7 @@ NULL
 #'     circle=list(longitude=-77.06, latitude=26.54, radius=300))
 #'```
 #' This "synthetic" type of index is a replacement for the older "merged" index.  See
-#' \url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
+#' `http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC`
 #' for more on the data file format, the reasons for the change, and the
 #' timetable for the transition from "merged".
 #'
