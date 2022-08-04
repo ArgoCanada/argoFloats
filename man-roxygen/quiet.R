@@ -1,4 +1,4 @@
-#' @param quiet logical value; use `TRUE` to show more
+#' @param quiet logical value; use `FALSE` to show more
 #' verbose information when downloading files.
-#' (Problems will still be reported, though.)
+#' (Even if `quiet` is TRUE, problems will still be reported.)
 
