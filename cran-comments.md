@@ -1,11 +1,15 @@
-## Test environments
+## Local tests
+
 * local R installation, R 4.2.0
-* R-CMD-check test
-* win-builder (release, oldrelease and devel)
+* R-CMD-check test (no errors, warnings, or notes)
 
-## R CMD check results
+## Remote tests
 
-0 errors | 0 warnings | 0 note
+* devtools::check_win_release()
+* devtools::check_win_devel()
+* devtools::check_win_oldrelease()
+* rhub::check_for_cran(show_status=FALSE)
+* rhub::check(platform="debian-clang-devel", show_status=FALSE)
 
 # Changes since previous CRAN submission
 

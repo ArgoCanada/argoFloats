@@ -9,7 +9,7 @@
 state and is being actively
 developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
 
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/oce)](https://cran.r-project.org/package=oce)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/argoFloats)](https://cran.r-project.org/package=argoFloats)
 
 [![R build
 status](https://github.com/ArgoCanada/argoFloats/workflows/R-CMD-check/badge.svg)](https://github.com/ArgoCanada/argoFloats/actions)
@@ -99,7 +99,6 @@ library(oce)
 #> Loading required package: gsw
 ## 1. Get worldwide float-profile index, saving to ~/data/argo by default.
 indexAll <- getIndex()
-#> Downloading 'https://data-argo.ifremer.fr/ar_index_global_prof.txt.gz'
 ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
                 circle=list(longitude=-77.06,latitude=26.54,radius=30))

@@ -4,6 +4,7 @@ requireNamespace(c("codemetar", "devtools", "urlchecker", "rhub", "revdepcheck")
 # senseless, so I only run the false part of the following conditional in the
 # run-up to a release.
 if (FALSE) {
+    library(codemetar)
     codemetar::write_codemeta()
 } else {
     message("run 'codemetar::write_codemeta()' and then git push")
