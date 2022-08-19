@@ -46,6 +46,7 @@ marmap_coord.*csv
 .gitCOMMIT_EDITMSG
 ^log.dat$
 ^revdep$
+^check_package.R$
 
 ^README\.Rmd$
 ^CRAN-RELEASE$
