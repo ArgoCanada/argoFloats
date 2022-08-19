@@ -1,5 +1,9 @@
 # argoFloats (development version)
 
+## argoFloats 1.0.6
+
+* Update docs for CRAN.
+
 ## argoFloats 1.0.5
 
 * Change `getProfiles()` to permit age="latest".
