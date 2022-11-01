@@ -63,7 +63,7 @@ createBackground <- function(transparency=0.9)
   profilesA <- getProfiles(a)
   argosA <- readProfiles(profilesA)
   #plot(argosA, which='TS', col='red', xlim=c(30,38), ylim=c(0,30))
-  #par(mar=c(8,9,8,9))
+  par(mar=c(17.2,16,14.5,15))
   plot(unlist(argosA[['salinity']]), unlist(argosA[["temperature"]]), pch=3, col="red", axes=FALSE, ylab=" ", xlab="")
   
   profilesP <- getProfiles(p)
