@@ -9,7 +9,7 @@ data(coastlineWorldFine, package="ocedata")
 
 # Step 1: create png
 
-createBackground <- function(transparency=0.9)
+createBackground <- function()
 {
   png("background.png", width=4, height=4, unit="in", pointsize=6, res=240)
     library(argoFloats)
@@ -52,18 +52,19 @@ createBackground <- function(transparency=0.9)
 
   # Adding spice graph
   par(new=TRUE, mar=c(7,6,12,5))
-  if (!is.na(transparency)) {
-    rect(0.1,0.2,0.87,0.73, col=rgb(1,1,1,transparency),
-         border=NA)
-    par(new=TRUE, mar=c(9,7.4,13.4,7))
-  }
+  #if (!is.na(transparency)) {
+  #  rect(0.1,0.2,0.87,0.73, col=rgb(1,1,1,transparency),
+  #       border=NA)
+  #  par(new=TRUE, mar=c(9,7.4,13.4,7))
+  #}
   
   # Draw graph
   ## Making TS Diagram for both Atlantic and Pacific
   profilesA <- getProfiles(a)
   argosA <- readProfiles(profilesA)
   #plot(argosA, which='TS', col='red', xlim=c(30,38), ylim=c(0,30))
-  par(mar=c(17.2,16,14.5,15))
+  par(mar=c(17.2,16,15,15))
+  #rect(-85,  8, -83, 10, col=rgb(1,1,1,0.7))
   plot(unlist(argosA[['salinity']]), unlist(argosA[["temperature"]]), pch=3, col="red", axes=FALSE, ylab=" ", xlab="")
   
   profilesP <- getProfiles(p)
@@ -73,16 +74,16 @@ createBackground <- function(transparency=0.9)
   points(S,T, pch=3, col='blue')
   par(xpd=NA)
   usr <- par("usr")
-  #arrows(usr[1], usr[4], usr[2], usr[4], lwd=2, length=0.15)
-  #arrows(usr[1], usr[4], usr[1], usr[3], lwd=2, length=0.15)
-  #mtext("Absolute Salinity [g/kg]", side=3, cex=2.1, line=1, font=2)
-  #mtext("Potential Temperature [C]", side=2, cex=2.1, line=1, font=2)
+  arrows(usr[1], usr[4], usr[2], usr[4], lwd=2, length=0.15)
+  arrows(usr[1], usr[4], usr[1], usr[3], lwd=2, length=0.15)
+  mtext("Absolute Salinity [g/kg]", side=3, cex=1, line=1, font=2)
+  mtext("Potential Temperature [C]", side=2, cex=1, line=1, font=2)
   
   dev.off()
 }
 
 # HINT: play with transparency, in range 0 to 1
-createBackground(transparency=0.9)
+createBackground()
 
 dark <- "black"
 bright <- "black" # https://www.rapidtables.com/web/color/color-scheme.html
