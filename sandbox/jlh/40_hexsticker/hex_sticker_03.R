@@ -96,12 +96,12 @@ createBackground <- function(transparency=0.9)
 # HINT: play with transparency, in range 0 to 1
 createBackground(transparency=0)
 
-dark <- "#4a4326"
-bright <- "#ADD8E6" # https://www.rapidtables.com/web/color/color-scheme.html
+dark <- "black"
+bright <- "black" # https://www.rapidtables.com/web/color/color-scheme.html
 dark <- hsv(177/255, 0.67, 0.57)
 water <- rgb(0, 0, 1, alpha=0.15)      # red, but not glaring
 lwd <- 0.7                             # for axes
-border <- dark
+border <- "black"
 fg <- dark
 bg <- bright
 
