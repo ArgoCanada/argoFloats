@@ -11,11 +11,11 @@ data(coastlineWorldFine, package="ocedata")
 
 createBackground <- function()
 {
-  png("background.png", width=4, height=4, unit="in", pointsize=6, res=240)
+    png("background2.png", width=4, height=4, unit="in", pointsize=6, res=290)
     library(argoFloats)
     ai <- getIndex(age=40)
     s <- subset(ai, circle=list(longitude=-83, latitude=9, radius=150))
- 
+    
     lon <- s[["longitude"]]
     lat <- s[["latitude"]]
     asp <- 1 / cos(pi/180*mean(range(lat)))
@@ -32,7 +32,6 @@ createBackground <- function()
          cex=0.3, axes=FALSE, pch=21)
     n <- 256
     imagep(topo[["longitude"]], topo[["latitude"]], topo[["z"]],
-           ##col=rev(cmocean("deep")(n)),
            col=oce::oceColorsGebco(n),
            breaks=seq(-5000,0, length.out=1+n),
            zlim=c(-5000, 0),
@@ -49,36 +48,9 @@ createBackground <- function()
     # Now select your points on the map in the Pacific
     p <- subset(s, polygon=list(longitude=ppx, latitude=ppy))
     points(p[['longitude']], p[['latitude']],pch=21, col='black', bg='blue', lwd=1)
-  # Adding spice graph
-  par(new=TRUE, mar=c(7,6,12,5))
-  #if (!is.na(transparency)) {
-  #  rect(0.1,0.2,0.87,0.73, col=rgb(1,1,1,transparency),
-  #       border=NA)
-  #  par(new=TRUE, mar=c(9,7.4,13.4,7))
-  #}
-  
-  # Draw graph
-  ## Making TS Diagram for both Atlantic and Pacific
-  profilesA <- getProfiles(a)
-  argosA <- readProfiles(profilesA)
-  #plot(argosA, which='TS', col='red', xlim=c(30,38), ylim=c(0,30))
-  par(mar=c(17.2,16,15,15))
-  #rect(-83.6,  9, -82.9, 9.8, col=rgb(1,1,1,0.7))
-  plot(unlist(argosA[['salinity']]), unlist(argosA[["temperature"]]), pch=3, col="red", axes=FALSE, ylab=" ", xlab="")
-  
-  profilesP <- getProfiles(p)
-  argosP <- readProfiles(profilesP)
-  T <- unlist(argosP[['temperature']])
-  S <- unlist(argosP[['salinity']])
-  points(S,T, pch=3, col='blue')
-  par(xpd=NA)
-  usr <- par("usr")
-  arrows(usr[1], usr[4], usr[2], usr[4], lwd=2, length=0.15)
-  arrows(usr[1], usr[4], usr[1], usr[3], lwd=2, length=0.15)
-  mtext("Absolute Salinity [g/kg]", side=3, cex=1, line=1, font=2)
-  mtext("Potential Temperature [C]", side=2, cex=1, line=1, font=2)
-  
-  dev.off()
+    # Adding spice graph
+    par(new=TRUE, mar=c(7,6,12,5))
+    dev.off()
 }
 
 # HINT: play with transparency, in range 0 to 1
@@ -93,13 +65,13 @@ border <- "black"
 fg <- dark
 bg <- bright
 
-sticker(subplot="background.png",
+sticker(subplot="background2.png",
         package="argoFloats",
         h_fill=bg,
         h_color=border,
-        p_x=1.0,
-        p_y=1.7,
-        p_size=8,
+        p_x=1,
+        p_y=1.2,
+        p_size=10,
         p_family = "sans",
         p_fontface="bold",
         p_color="black",
@@ -108,4 +80,4 @@ sticker(subplot="background.png",
         s_width=1.5,
         s_height=1.5,
         white_around_sticker = TRUE,
-        filename="argoTag_hex_sticker.png")
+        filename="argoTag_hex_sticker2.png")
