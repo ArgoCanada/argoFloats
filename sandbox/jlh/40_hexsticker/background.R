@@ -11,7 +11,7 @@ data(coastlineWorldFine, package="ocedata")
 
 createBackground <- function()
 {
-    png("background2.png", width=4, height=4, unit="in", pointsize=6, res=290)
+    png("background2.png", width=4, height=4, unit="in", pointsize=6, res=144)
     library(argoFloats)
     ai <- getIndex(age=40)
     s <- subset(ai, circle=list(longitude=-83, latitude=9, radius=150))
@@ -33,7 +33,7 @@ createBackground <- function()
     n <- 256
     imagep(topo[["longitude"]], topo[["latitude"]], topo[["z"]],
            col=oce::oceColorsGebco(n),
-           breaks=seq(-5000,0, length.out=1+n),
+           breaks=seq(-3500,1000, length.out=1+n),
            zlim=c(-5000, 0),
            add=TRUE)
     polygon(coastlineWorldFine[["longitude"]], coastlineWorldFine[["latitude"]],
@@ -47,7 +47,7 @@ createBackground <- function()
     ppy <- c(9.643841, 8.939756, 7.919735, 7.621853, 7.630880, 7.657960, 9.445253)
     # Now select your points on the map in the Pacific
     p <- subset(s, polygon=list(longitude=ppx, latitude=ppy))
-    points(p[['longitude']], p[['latitude']],pch=21, col='black', bg='blue', lwd=1)
+    points(p[['longitude']], p[['latitude']],pch=21, col='black', bg='yellowgreen', lwd=1)
     # Adding spice graph
     par(new=TRUE, mar=c(7,6,12,5))
     dev.off()
@@ -61,7 +61,7 @@ bright <- "black" # https://www.rapidtables.com/web/color/color-scheme.html
 dark <- hsv(177/255, 0.67, 0.57)
 water <- rgb(0, 0, 1, alpha=0.15)      # red, but not glaring
 lwd <- 0.7                             # for axes
-border <- "black"
+border <- "dimgray"
 fg <- dark
 bg <- bright
 
@@ -69,12 +69,12 @@ sticker(subplot="background2.png",
         package="argoFloats",
         h_fill=bg,
         h_color=border,
-        p_x=1,
-        p_y=1.2,
-        p_size=10,
+        p_x=1.0,
+        p_y=1.1,
+        p_size=17,
         p_family = "sans",
         p_fontface="bold",
-        p_color="black",
+        p_color="dimgray",
         s_x=1.0,
         s_y=1.05,
         s_width=1.5,
