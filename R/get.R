@@ -137,18 +137,22 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' Get an Index of Available Argo Float Profiles
 #'
 #' This function gets an index of available Argo float profiles, typically
-#' for later use as the first argument to [getProfiles()]. The work is done
-#' either by downloading information from a data repository or by reusing an existing
-#' index (packaged within an `.rda` file) that is controlled by the `age` argument behind the scenes.
+#' for later use as the first argument to [getProfiles()]. The source for the
+#' index may be (a) a remote data repository, (b) a local repository (see the
+#' `keep` argument), or (c) a cached RDA file that contains the result
+#' of a previous call to [getIndex()] (see the `age` parameter).
+#'
+#' **Getting an index from a remote server**
 #'
 #' The first step is to construct a URL for downloading, based on the
 #' `url` and `file` arguments. That URL will be a string ending in `.gz`,
-#' or `.txt` and from this the name of a local file is constructed by changing the
-#' suffix to `.rda` and prepending the file directory specified by
-#' `destdir`.  If an `.rda` file of that name already exists, and is less
-#' than `age` days old, then no downloading takes place. This caching
-#' procedure is a way to save time, because the download can take from a
-#' minute to an hour, depending on the bandwidth of the connection to the
+#' or `.txt` and from this the name of a local file is constructed
+#' by changing the suffix to `.rda` and prepending the file directory
+#' specified by `destdir`.  If an `.rda` file of that name already exists,
+#' and is less than `age` days old, then no downloading takes place. This
+#' caching procedure is a way to save time, because the download can take
+#' from a minute to an hour, depending on the bandwidth of the connection
+#' to the
 #' server.
 #'
 #' The resultant `.rda` file, which is named in the return value of this
@@ -166,7 +170,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #'    `"core"`,`"bgcargo"`, `"synthetic"` files.
 #'
 #' Some expertise is required in deciding on the value for the
-#' `file` argument to [getIndex()].  As of June 2020, the
+#' `file` argument to [getIndex()].  As of March 2023, the
 #' FTP sites
 #' `ftp://usgodae.org/pub/outgoing/argo`
 #' and
@@ -191,16 +195,10 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' `argo_bio-traj_index.txt.gz`          \tab `"bio-traj"`            \tab Bio-trajectory files\cr
 #' `argo_synthetic-profile_index.txt.gz` \tab `"synthetic"`           \tab Synthetic data, successor to `"merge"`\cr
 #' }
-#' Note: as of Dec 01,2020 the user will no longer have the option to use `"argo"` as a filename argument. Instead, `"core"` will
-#' be used.
 #'
-#' The next step after using [getIndex()] is usually to
-#' use [getProfiles()], which downloads or checks for local
-#' copies of the per-profile data files that are listed in an
-#' index, and this is typically followed by a call to
-#' [readProfiles()], which reads the local files, yielding
-#' an object that can be plotted or analyzed in other ways.
-#' For more on this function, see section 2 of Kelley et al. (2021).
+#' **Getting an index that was previously downloaded from a remote server**
+#'
+#' FIXME(JH): write something here, as discussed in Z call with DK,CR and JH.
 #'
 #' @param filename character value that indicates the file name on the server, as in
 #' the first column of the table given in \dQuote{Details}, or (for some file types)
@@ -237,7 +235,8 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' @param keep logical value indicating whether to retain the
 #' raw index file as downloaded from the server.  This is `FALSE`
 #' by default, indicating that the raw index file is to be
-#' discarded once it has been analyzed  Note that if `keep`
+#' discarded once it has been analyzed and used to create a cached
+#' file (which is an RDA file).  Note that if `keep`
 #' is `TRUE`, then the supplied value of `age` is converted
 #' to 0, to force a new download.
 #'
@@ -268,7 +267,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' Argo data. Frontiers in Marine Science, (8), 636922.
 #' \doi{10.3389/fmars.2021.635922}
 #'
-#' @author Dan Kelley
+#' @author Dan Kelley and Jaimie Harbin
 #'
 #' @importFrom utils read.csv tail
 ## @importFrom lubridate fast_strptime

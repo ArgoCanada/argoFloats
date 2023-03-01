@@ -59,7 +59,8 @@ progress indicators.  The default is to show such indicators.}
 \item{keep}{logical value indicating whether to retain the
 raw index file as downloaded from the server.  This is \code{FALSE}
 by default, indicating that the raw index file is to be
-discarded once it has been analyzed  Note that if \code{keep}
+discarded once it has been analyzed and used to create a cached
+file (which is an RDA file).  Note that if \code{keep}
 is \code{TRUE}, then the supplied value of \code{age} is converted
 to 0, to force a new download.}
 
@@ -75,19 +76,23 @@ is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 }
 \description{
 This function gets an index of available Argo float profiles, typically
-for later use as the first argument to \code{\link[=getProfiles]{getProfiles()}}. The work is done
-either by downloading information from a data repository or by reusing an existing
-index (packaged within an \code{.rda} file) that is controlled by the \code{age} argument behind the scenes.
+for later use as the first argument to \code{\link[=getProfiles]{getProfiles()}}. The source for the
+index may be (a) a remote data repository, (b) a local repository (see the
+\code{keep} argument), or (c) a cached RDA file that contains the result
+of a previous call to \code{\link[=getIndex]{getIndex()}} (see the \code{age} parameter).
 }
 \details{
+\strong{Getting an index from a remote server}
+
 The first step is to construct a URL for downloading, based on the
 \code{url} and \code{file} arguments. That URL will be a string ending in \code{.gz},
-or \code{.txt} and from this the name of a local file is constructed by changing the
-suffix to \code{.rda} and prepending the file directory specified by
-\code{destdir}.  If an \code{.rda} file of that name already exists, and is less
-than \code{age} days old, then no downloading takes place. This caching
-procedure is a way to save time, because the download can take from a
-minute to an hour, depending on the bandwidth of the connection to the
+or \code{.txt} and from this the name of a local file is constructed
+by changing the suffix to \code{.rda} and prepending the file directory
+specified by \code{destdir}.  If an \code{.rda} file of that name already exists,
+and is less than \code{age} days old, then no downloading takes place. This
+caching procedure is a way to save time, because the download can take
+from a minute to an hour, depending on the bandwidth of the connection
+to the
 server.
 
 The resultant \code{.rda} file, which is named in the return value of this
@@ -107,7 +112,7 @@ The names of these items are determined automatically from
 }
 
 Some expertise is required in deciding on the value for the
-\code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of June 2020, the
+\code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of March 2023, the
 FTP sites
 \verb{ftp://usgodae.org/pub/outgoing/argo}
 and
@@ -132,16 +137,10 @@ longer to download, so \code{\link[=getIndex]{getIndex()}} is not designed to wo
 \code{argo_bio-traj_index.txt.gz}          \tab \code{"bio-traj"}            \tab Bio-trajectory files\cr
 \code{argo_synthetic-profile_index.txt.gz} \tab \code{"synthetic"}           \tab Synthetic data, successor to \code{"merge"}\cr
 }
-Note: as of Dec 01,2020 the user will no longer have the option to use \code{"argo"} as a filename argument. Instead, \code{"core"} will
-be used.
 
-The next step after using \code{\link[=getIndex]{getIndex()}} is usually to
-use \code{\link[=getProfiles]{getProfiles()}}, which downloads or checks for local
-copies of the per-profile data files that are listed in an
-index, and this is typically followed by a call to
-\code{\link[=readProfiles]{readProfiles()}}, which reads the local files, yielding
-an object that can be plotted or analyzed in other ways.
-For more on this function, see section 2 of Kelley et al. (2021).
+\strong{Getting an index that was previously downloaded from a remote server}
+
+FIXME(JH): write something here, as discussed in Z call with DK,CR and JH.
 }
 \references{
 Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
@@ -149,5 +148,5 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 \doi{10.3389/fmars.2021.635922}
 }
 \author{
-Dan Kelley
+Dan Kelley and Jaimie Harbin
 }

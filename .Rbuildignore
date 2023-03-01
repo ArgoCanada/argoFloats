@@ -1,3 +1,4 @@
+^R/.lintr$
 ^.*\.csv$
 Rplots.pdf
 ^mapApp.*rda$

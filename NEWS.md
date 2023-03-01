@@ -1,5 +1,9 @@
 # argoFloats (development version)
 
+## argoFloats 1.0.7
+
+* getIndex() can work with previously-downloaded .tgz files.
+
 ## argoFloats 1.0.6
 
 * Update docs for CRAN.
