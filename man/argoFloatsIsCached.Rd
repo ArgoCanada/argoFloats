@@ -17,6 +17,15 @@ A logical value indicating whether a cached value is available.
 \description{
 Check Whether an Item is Cached
 }
+\seealso{
+Other functions relating to cached values: 
+\code{\link{argoFloatsClearCache}()},
+\code{\link{argoFloatsGetFromCache}()},
+\code{\link{argoFloatsListCache}()},
+\code{\link{argoFloatsStoreInCache}()},
+\code{\link{argoFloatsWhenCached}()}
+}
 \author{
 Dan Kelley, making a thin copy of code written by Dewey Dunnington
 }
+\concept{functions relating to cached values}

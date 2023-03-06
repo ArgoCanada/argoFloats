@@ -1,0 +1,66 @@
+---
+title: Working with previously downloaded files
+author: "Dan Kelley"
+date: "2023-03-03"
+---
+
+Source: oce/sandbox/dek/17_get_local_file/17_get_local_file.Rmd
+
+**Abstract.** This document, aimed at co-developers and not users, demonstrates the new ability of `getIndex()` to deal with previously-downloaded files. This relates to issues [584](https://github.com/ArgoCanada/argoFloats/issues/584) and [585](https://github.com/ArgoCanada/argoFloats/issues/585), and to zoom conversations between me, JH and CR on March 1, 2 and 3 of 2023. One of the changes made in this version is to expand the information provided when `debug>0`, including timing information.  Note in particular that the fastest way to work with a previously-downloaded index is to use the `rda` file that was created by `getIndex()` in a previous call.  It makes sense to use the OS to rename such a file for safe-keeping, because otherwise a new call to `getIndex()` will over-write it.
+
+# Setup
+
+```{r}
+library(argoFloats)
+```
+
+# Save a .gz file for later tests
+
+```{r}
+i <- getIndex(debug=3, keep=TRUE)
+i1 <- subset(i, 1)
+summary(i1)
+```
+
+Let's also find the name of the file that will later get downloaded.
+
+```{r}
+dataFile <- paste0("~/data/argo/", gsub(".*/", "", i1[["file"]]))
+```
+
+# Can we read a previously downloaded .gz file?
+
+Test typical sequence of actions.
+
+```{r}
+GZf <- list.files("~/data/argo", "*.gz", full.names=TRUE)[1]
+GZi <- getIndex(GZf, server=NULL, debug=3)
+summary(GZi)
+GZi1 <- subset(GZi, 1)
+summary(GZi1)
+unlink(dataFile)
+GZp1 <- getProfiles(GZi1)
+Sys.time() - file.info(dataFile)$ctime # should be short (just a few Kb download)
+summary(GZp1)
+GZa1 <- readProfiles(GZp1)
+summary(GZa1)
+```
+
+# Can we read a previously downloaded .rda file?
+
+Test typical sequence of actions.
+
+```{r}
+RDAf <- list.files("~/data/argo", "*.rda", full.names=TRUE)[1]
+RDAi <- getIndex(RDAf, server=NULL, debug=3)
+summary(RDAi)
+RDAi1 <- subset(RDAi, 1)
+summary(RDAi1)
+unlink(dataFile)
+RDAp1 <- getProfiles(RDAi1)
+Sys.time() - file.info(dataFile)$ctime # should be short (just a few Kb download)
+summary(RDAp1)
+RDAa1 <- readProfiles(RDAp1)
+summary(RDAa1)
+```
+

@@ -42,6 +42,7 @@
 #' @export
 argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=FALSE, unindent=0)
 {
+    catSpecial <- function(...) if (interactive()) cat(...)
     debug <- max(0L, min(3L, floor(debug+0.5))) # max 3 levels deep
     if (debug > 0) {
         n <- 4 - debug - unindent
@@ -52,45 +53,45 @@ argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=FALSE, uninden
                 cat(format(Sys.time(), "[%H:%M:%S] "))
             cat(...)
         } else if (is.character(style) && style == "bold") {
-            cat("\033[1m")
+            catSpecial("\033[1m")
             if (n > 0)
                 cat(paste(rep("  ", n), collapse=""))
             if (showTime)
                 cat(format(Sys.time(), "[%H:%M:%S] "))
             cat(...)
-            cat("\033[0m")
+            catSpecial("\033[0m")
         } else if (is.character(style) && style == "italic") {
-            cat("\033[3m")
+            catSpecial("\033[3m")
             if (n > 0)
                 cat(paste(rep("  ", n), collapse=""))
             if (showTime)
                 cat(format(Sys.time(), "[%H:%M:%S] "))
             cat(...)
-            cat("\033[0m")
+            catSpecial("\033[0m")
         } else if (is.character(style) && style == "red") {
-            cat("\033[31m")
+            catSpecial("\033[31m")
             if (n > 0)
                 cat(paste(rep("  ", n), collapse=""))
             if (showTime)
                 cat(format(Sys.time(), "[%H:%M:%S] "))
             cat(...)
-            cat("\033[0m")
+            catSpecial("\033[0m")
         } else if (is.character(style) && style == "green") {
-            cat("\033[32m")
+            catSpecial("\033[32m")
             if (n > 0)
                 cat(paste(rep("  ", n), collapse=""))
             if (showTime)
                 cat(format(Sys.time(), "[%H:%M:%S] "))
             cat(...)
-            cat("\033[0m")
+            catSpecial("\033[0m")
         } else if (is.character(style) && style == "blue") {
-            cat("\033[34m")
+            catSpecial("\033[34m")
             if (n > 0)
                 cat(paste(rep("  ", n), collapse=""))
             if (showTime)
                 cat(format(Sys.time(), "[%H:%M:%S] "))
             cat(...)
-            cat("\033[0m")
+            catSpecial("\033[0m")
         } else if (is.function(style)) {
             if (n > 0)
                 cat(style(paste(rep("  ", n), collapse="")))
@@ -108,5 +109,3 @@ argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=FALSE, uninden
     }
     invisible(NULL)
 }
-
-
