@@ -30,7 +30,6 @@ Schmid
 Takashi
 Takatsuki
 Thierry
-unzoom
 USGODAE
 Yasushi
 Yoshida
@@ -71,6 +70,7 @@ fmars
 getIndex
 getProfiles
 github
+gzipped
 https
 jlh
 labelled
@@ -103,6 +103,7 @@ unassessed
 undrawn
 unlist
 unpumped
+unzoom
 useAdjusted
 xlab
 xlim
