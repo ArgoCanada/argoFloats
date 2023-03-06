@@ -553,7 +553,6 @@ getIndex <- function(filename="core",
             stop("file \"", filename, "\" not found")
         } else {
             if (grepl(".gz$", filename)) {
-                argoFloatsDebug(debug, "This is a .gz file. Warning: we have to guess the server to be https://data-argo.ifremer.fr.\n")
                 # TAG2 (update all such together)
                 destfileTemp <- filename
                 # infer some things from the first 100 lines
@@ -562,6 +561,7 @@ getIndex <- function(filename="core",
                 res@metadata$header <- first[hash]
                 lastHash <- tail(hash, 1)
                 res@metadata$server <- "https://data-argo.ifremer.fr"
+                warning(".gz index files lack server information; assuming https://data-argo.ifremer.fr")
                 res@metadata$ftpRoot <- gsub("^[^:]*:[ ]*(.*)$", "\\1", first[which(grepl("^# FTP", first))])
                 names <- strsplit(first[1 + lastHash], ",")[[1]]
                 index <- read.csv(filename, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE, colClasses="character")
