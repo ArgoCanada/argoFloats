@@ -312,7 +312,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' R archive file (ending in `.rda`) that is stored locally. The `.gz` file
 #' is discarded by default, unless `keep` is set to TRUE.  (See also
 #' the documentation on the `server` parameter, next, and the subsection
-#' entitled \dQuote{Using a previousy-downloaded index}.)
+#' entitled \dQuote{Using a previously-downloaded index}.)
 #'
 #' @param server an indication of the source for `filename`.  There are 2
 #' possibilities for this.  (1) If `server` is `NULL`, then `filename` is taken
