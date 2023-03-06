@@ -553,7 +553,7 @@ getIndex <- function(filename="core",
             stop("file \"", filename, "\" not found")
         } else {
             if (grepl(".gz$", filename)) {
-                argoFloatsDebug(debug, "This is a .gz file. Warning: we have to guess on server.\n")
+                argoFloatsDebug(debug, "This is a .gz file. Warning: we have to guess the server to be https://data-argo.ifremer.fr.\n")
                 # TAG2 (update all such together)
                 destfileTemp <- filename
                 # infer some things from the first 100 lines
