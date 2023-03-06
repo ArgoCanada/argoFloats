@@ -88,26 +88,39 @@ of a previous call to <code>getIndex()</code> (see the <code>age</code> paramete
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>filename</dt>
-<dd><p>character value that indicates the file name on the server, as in
+<dd><p>character value that indicates the file name to be downloaded
+from a remote server, or (if <code>server</code> is set to NULL) the name of a local
+file.  For the remote case, the value of <code>server</code> must be taken from
 the first column of the table given in “Details”, or (for some file types)
 as in the nickname given in the middle column. Note that the downloaded
 file name will be based on the full file name given as this argument, and
-that nicknames are expanded to the full filenames before saving.</p></dd>
+that nicknames are expanded to the full filenames before saving.  Note that
+the downloaded file is in gzipped format (indicated by a file name ending
+in <code>.gz</code>) and it is examined and processed by <code>getIndex()</code> to produce an
+R archive file (ending in <code>.rda</code>) that is stored locally. The <code>.gz</code> file
+is discarded by default, unless <code>keep</code> is set to TRUE.  (See also
+the documentation on the <code>server</code> parameter, next, and the subsection
+entitled “Using a previousy-downloaded index”.)</p></dd>
 
 
 <dt>server</dt>
-<dd><p>character value, or vector of character values, indicating
-the name of servers that supply argo data.  If more than
-one value is given, then these are tried sequentially until one
-is found to supply the index file named in the <code>filename</code> argument.
-As of December 2020, the three servers known to work are
+<dd><p>an indication of the source for <code>filename</code>.  There are 2
+possibilities for this.  (1) If <code>server</code> is <code>NULL</code>, then <code>filename</code> is taken
+to be the name of a local index file (ending in suffix <code>.gz</code>) that
+was previously downloaded from a server.  The easiest way to get
+such a file is with a previous call to <code>getIndex()</code> with <code>keep</code> set
+to TRUE.  (2) If <code>server</code> is a character vector (as is it is by default),
+it is taken to represent remote servers to be tried as sources
+for an index file.  The use of multiple servers is a way to avoid
+errors that can result if a server refuses a download request.
+As of March 2023, the three servers known to work are
 <code>"https://data-argo.ifremer.fr"</code>, <code>"ftp://ftp.ifremer.fr/ifremer/argo"</code> and
 <code>"ftp://usgodae.org/pub/outgoing/argo"</code>.
 These may be referred
 to with nicknames <code>"ifremer-https"</code>, <code>"ifremer"</code>and  <code>"usgodae"</code>.
 Any URL that can be used in <code><a href="https://rdrr.io/pkg/curl/man/curl_download.html" class="external-link">curl::curl_download()</a></code> is a valid value provided
 that the file structure is identical to the mirrors listed above. See
-<code><a href="argoDefaultDestdir.html">argoDefaultServer()</a></code> for how to provide a default value.</p></dd>
+<code><a href="argoDefaultDestdir.html">argoDefaultServer()</a></code> for how to provide a default value for <code>server</code>.</p></dd>
 
 
 <dt>destdir</dt>
@@ -128,9 +141,11 @@ File clutter is reduced by creating a top-level directory called
 must be (in days), for it to be considered out-of-date.  The
 default, <code><a href="argoDefaultDestdir.html">argoDefaultIndexAge()</a></code>, limits downloads to once per day, as a way
 to avoid slowing down a workflow with a download that might take
-a minute or so. Note that setting <code>age=0</code> will force a new
+a minute or so.  Setting <code>age=0</code> will force a new
 download, regardless of the age of the local file, and that
-age is changed to 0 if <code>keep</code> is <code>TRUE</code>.</p></dd>
+age is changed to 0 if <code>keep</code> is <code>TRUE</code>.  The value of <code>age</code>
+is ignored if <code>server</code> is NULL (see “Using a previously
+downloaded Index” in “Details”).</p></dd>
 
 
 <dt>quiet</dt>
@@ -165,7 +180,7 @@ is suitable as the first argument of <code><a href="getProfiles.html">getProfile
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p><strong>Getting an index from a remote server</strong></p>
+    <p><strong>Using an index from a remote server</strong></p>
 <p>The first step is to construct a URL for downloading, based on the
 <code>url</code> and <code>file</code> arguments. That URL will be a string ending in <code>.gz</code>,
 or <code>.txt</code> and from this the name of a local file is constructed
@@ -202,8 +217,25 @@ The right-hand column describes the file contents.
 Note that the servers also provide files with names similar to those
 given in the table, but ending in <code>.txt</code>.  These are uncompressed
 equivalents of the <code>.gz</code> files that offer no advantage and take
-longer to download, so <code>getIndex()</code> is not designed to work with them.</p><table class="table table"><tr><td><em>File Name</em></td><td><em>Nickname</em></td><td><em>Contents</em></td></tr><tr><td><code>ar_greylist.txt</code></td><td>-</td><td>Suspicious/malfunctioning floats</td></tr><tr><td><code>ar_index_global_meta.txt.gz</code></td><td>-</td><td>Metadata files</td></tr><tr><td><code>ar_index_global_prof.txt.gz</code></td><td><code>"argo"</code> or <code>"core"</code></td><td>Argo data</td></tr><tr><td><code>ar_index_global_tech.txt.gz</code></td><td>-</td><td>Technical files</td></tr><tr><td><code>ar_index_global_traj.txt.gz</code></td><td><code>"traj"</code></td><td>Trajectory files</td></tr><tr><td><code>argo_bio-profile_index.txt.gz</code></td><td><code>"bgc"</code> or <code>"bgcargo"</code></td><td>Biogeochemical Argo data (without S or T)</td></tr><tr><td><code>argo_bio-traj_index.txt.gz</code></td><td><code>"bio-traj"</code></td><td>Bio-trajectory files</td></tr><tr><td><code>argo_synthetic-profile_index.txt.gz</code></td><td><code>"synthetic"</code></td><td>Synthetic data, successor to <code>"merge"</code></td></tr></table><p><strong>Getting an index that was previously downloaded from a remote server</strong></p>
-<p>FIXME(JH): write something here, as discussed in Z call with DK,CR and JH.</p>
+longer to download, so <code>getIndex()</code> is not designed to work with them.</p><table class="table table"><tr><td><em>File Name</em></td><td><em>Nickname</em></td><td><em>Contents</em></td></tr><tr><td><code>ar_greylist.txt</code></td><td>-</td><td>Suspicious/malfunctioning floats</td></tr><tr><td><code>ar_index_global_meta.txt.gz</code></td><td>-</td><td>Metadata files</td></tr><tr><td><code>ar_index_global_prof.txt.gz</code></td><td><code>"argo"</code> or <code>"core"</code></td><td>Argo data</td></tr><tr><td><code>ar_index_global_tech.txt.gz</code></td><td>-</td><td>Technical files</td></tr><tr><td><code>ar_index_global_traj.txt.gz</code></td><td><code>"traj"</code></td><td>Trajectory files</td></tr><tr><td><code>argo_bio-profile_index.txt.gz</code></td><td><code>"bgc"</code> or <code>"bgcargo"</code></td><td>Biogeochemical Argo data (without S or T)</td></tr><tr><td><code>argo_bio-traj_index.txt.gz</code></td><td><code>"bio-traj"</code></td><td>Bio-trajectory files</td></tr><tr><td><code>argo_synthetic-profile_index.txt.gz</code></td><td><code>"synthetic"</code></td><td>Synthetic data, successor to <code>"merge"</code></td></tr></table><p><strong>Using a previously downloaded index</strong></p>
+<p>In some situations, it can be desirable to work with local
+index file that has been copied directly from a remote server.
+This can be useful if there is a desire to work with the files
+in R separately from the <code>argoFloats</code> package, or with python, etc.
+It can also be useful for group work, in which it is important for
+all participants to use the same source file.</p>
+<p>This need can be handled with <code>getIndex()</code>, by specifying <code>filename</code>
+as the full path name to the previously downloaded file, and
+at the same time specifying <code>server</code> as NULL. This works for
+both the raw files as downloaded from the server (which end
+in <code>.gz</code>, and for the R-data-archive files produced by <code>getIndex()</code>,
+which end in <code>.rda</code>. Since the <code>.rda</code> files load an order
+of magnitude faster than the <code>.gz</code> files, this is usually
+the preferred approach.  However, if the <code>.gz</code> files are preferred,
+perhaps because part of a software chain uses python code that
+works with such files, then it should be noted that calling
+<code>getIndex()</code> with <code>keep=TRUE</code> will save the <code>.gz</code> file in
+the <code>destdir</code> directory.</p>
     </div>
     <div id="references">
     <h2>References</h2>
