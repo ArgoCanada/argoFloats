@@ -1,5 +1,6 @@
 library(oce)
 library(stringr)
+library(ocedata)
 data <- read.csv("sandbox/jlh/42_noaa/ODV4903622QC.csv", header=TRUE)
 names(data) # this tells us names to use in accessing the data
 
@@ -76,7 +77,27 @@ for (i in seq_along(X)) {
 ctds <- NULL
 for (i in seq_along(X)) {
 ctd <- as.ctd(salinity=X[[i]]$Salinity, temperature=X[[i]]$Temperature, pressure=X[[i]]$Pressure, longitude=X[[i]]$Lon, latitude=X[[i]]$Lat)
-ctds[[i]] <- oceSetMetadata(ctd, name="eddy", value=unique(X[[i]]$eddy))
+ctd <- oceSetMetadata(ctd, name="eddy", value=unique(X[[i]]$eddy))
+ctd <- oceSetData(ctd, name="oxygen", value=X[[i]]$Oxygen)
+ctds[[i]] <- oceSetMetadata(ctd, name="time", value=rep(X[[i]]$date), length(X[[i]]$Oxygen))
+}
+
+# Plotting map of the data
+data(coastlineWorldFine)
+mapPlot(coastlineWorldFine, latitudelim = c(10,40), longitudelim = c(-100,-70), col="tan")
+for (i in seq_along(ctds)) {
+    mapPoints(latitude=ctds[[i]][['latitude']], longitude=ctds[[i]][['longitude']], col=i, pch=20)
+}
+
+# Plotting oxygen profiles
+# anticyclonic eddy profile plot showing an oxygen profile for winter and summer.
+
+eddys <- unlist(lapply(ctds, function(x) x[["eddy"]]))
+
+ctds[which(eddys == 3)] # anticyclonic
+plotProfile(ctds[[1]], xtype="oxygen", type="p", pch=20)
+for (i in seq_along(ctds)) {
+    points(ctds[[i]][['oxygen']], ctds[[i]][['pressure']], col=i, pch=20)
 }
 
 
