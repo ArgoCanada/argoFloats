@@ -18,7 +18,7 @@ dates <- str_replace(dates, "-", "/") # Replaces the second "-" with "/"
 # Replace the name of the month with the number for the month
 time <- NULL
 for (i in seq_along(dates)) {
-    if (gsub("^[^/]+/|/.*", "", dates[i]) == "Jan") {
+    if (gsub("^[^/]+/|/.*", "", dates[i]) == "Jan") { # The gsub finds what's between the two //
         time[[i]] <- str_replace(dates[i], gsub("^[^/]+/|/.*", "", dates[i]), "1")
     } else if (gsub("^[^/]+/|/.*", "", dates[i]) == "Feb") {
         time[[i]] <- str_replace(dates[i], gsub("^[^/]+/|/.*", "", dates[i]), "2")
@@ -67,13 +67,13 @@ data2 <- data2[which(data2$date %in% df2$DATE),]
 X <- split(data2, data2$date) # Break up data frame to be different cycles (see data2)
 
 # Add eddy phase to temperature/salinity, etc. data
-
 for (i in seq_along(X)) {
     keep <- which(df2$DATE == unique(X[[i]]$date))[1]
     X[[i]]$eddy <- rep(df2$EDDY[keep], length(X[[i]]$Lon))
 }
 
 ctds <- NULL
+# Note: You could add Nitrate, etc. using oceSetData
 for (i in seq_along(X)) {
 ctd <- as.ctd(salinity=X[[i]]$Salinity, temperature=X[[i]]$Temperature, pressure=X[[i]]$Pressure, longitude=X[[i]]$Lon, latitude=X[[i]]$Lat)
 ctd <- oceSetMetadata(ctd, name="eddy", value=unique(X[[i]]$eddy))
