@@ -70,7 +70,6 @@ X <- split(data2, data2$date) # Break up data frame to be different cycles (see 
 
 for (i in seq_along(X)) {
     keep <- which(df2$DATE == unique(X[[i]]$date))[1]
-    message("Keep = ", keep, " for i =", i)
     X[[i]]$eddy <- rep(df2$EDDY[keep], length(X[[i]]$Lon))
 }
 
@@ -94,13 +93,14 @@ for (i in seq_along(ctds)) {
 
 eddys <- unlist(lapply(ctds, function(x) x[["eddy"]]))
 
-ctds[which(eddys == 3)] # anticyclonic
-plotProfile(ctds[[1]], xtype="oxygen", type="p", pch=20)
-for (i in seq_along(ctds)) {
-    points(ctds[[i]][['oxygen']], ctds[[i]][['pressure']], col=i, pch=20)
+anti <- ctds[which(eddys == 3)] # anticyclonic
+
+plotProfile(anti[[1]], xtype="oxygen", xlim=c(0,500), type="p", pch=20)
+for (i in seq_along(anti)) {
+    points(anti[[i]][['oxygen']], anti[[i]][['pressure']], col=i, pch=20)
 }
 
-
+# Looking at seasons
 
 #4903624
 df4 <- read.csv("sandbox/jlh/42_noaa/4903624_MLD_SSH_16Feb2023.csv")
