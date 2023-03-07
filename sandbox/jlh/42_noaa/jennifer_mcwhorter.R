@@ -77,11 +77,14 @@ ctds <- NULL
 for (i in seq_along(X)) {
 ctd <- as.ctd(salinity=X[[i]]$Salinity, temperature=X[[i]]$Temperature, pressure=X[[i]]$Pressure, longitude=X[[i]]$Lon, latitude=X[[i]]$Lat)
 ctd <- oceSetMetadata(ctd, name="eddy", value=unique(X[[i]]$eddy))
-ctd <- oceSetData(ctd, name="oxygen", value=X[[i]]$Oxygen)
-ctds[[i]] <- oceSetMetadata(ctd, name="time", value=rep(X[[i]]$date), length(X[[i]]$Oxygen))
+ctd <- oceSetData(ctd, name="oxygen", value=X[[i]]$Oxygen) 
+ctds[[i]] <- oceSetMetadata(ctd, name="time", value=rep(as.POSIXct(X[[i]]$date, format="%m/%d/%Y", tz="UTC"), length(X[[i]]$Oxygen))) # Look at strptime documentation for % explanation
 }
 
 # Plotting map of the data
+# Group and plot parameters (MLD, SSH, eddy). In this case we've done eddy
+# Seasonal figures, for example an anticyclonic eddy profile plot showing an oxygen profile for winter and summer.
+
 data(coastlineWorldFine)
 mapPlot(coastlineWorldFine, latitudelim = c(10,40), longitudelim = c(-100,-70), col="tan")
 for (i in seq_along(ctds)) {
@@ -95,12 +98,17 @@ eddys <- unlist(lapply(ctds, function(x) x[["eddy"]]))
 
 anti <- ctds[which(eddys == 3)] # anticyclonic
 
+# Looking at seasons
+par(mar=c(3,3,1,1))
+t <- do.call(c, lapply(anti, function(x) unique(x[["time"]])))
+cm <- colormap(t, col=oceColorsJet)
+drawPalette(colormap=cm, tformat="%Y-%m", pos=3)
 plotProfile(anti[[1]], xtype="oxygen", xlim=c(0,500), type="p", pch=20)
 for (i in seq_along(anti)) {
-    points(anti[[i]][['oxygen']], anti[[i]][['pressure']], col=i, pch=20)
+    points(anti[[i]][['oxygen']], anti[[i]][['pressure']], col=cm$zcol, pch=20)
 }
 
-# Looking at seasons
+
 
 #4903624
 df4 <- read.csv("sandbox/jlh/42_noaa/4903624_MLD_SSH_16Feb2023.csv")
