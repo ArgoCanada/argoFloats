@@ -27,7 +27,7 @@ in \code{.gz}) and it is examined and processed by \code{\link[=getIndex]{getInd
 R archive file (ending in \code{.rda}) that is stored locally. The \code{.gz} file
 is discarded by default, unless \code{keep} is set to TRUE.  (See also
 the documentation on the \code{server} parameter, next, and the subsection
-entitled \dQuote{Using a previousy-downloaded index}.)}
+entitled \dQuote{Using a previously-downloaded index}.)}
 
 \item{server}{an indication of the source for \code{filename}.  There are 2
 possibilities for this.  (1) If \code{server} is \code{NULL}, then \code{filename} is taken
