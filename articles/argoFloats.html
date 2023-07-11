@@ -84,13 +84,15 @@
 
       
 
-      </header><script src="argoFloats_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to argoFloats</h1>
-                        <h4 data-toc-skip class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="external-link uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin (<a href="https://orcid.org/0000-0003-3774-3732" class="external-link uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="external-link uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
+                        <h4 data-toc-skip class="author">Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="external-link uri">https://orcid.org/0000-0001-7808-5911</a>), Jaimie Harbin
+(<a href="https://orcid.org/0000-0003-3774-3732" class="external-link uri">https://orcid.org/0000-0003-3774-3732</a>) and Clark
+Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="external-link uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 data-toc-skip class="date">2023-03-20</h4>
+            <h4 data-toc-skip class="date">2023-07-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/HEAD/vignettes/argoFloats.Rmd" class="external-link"><code>vignettes/argoFloats.Rmd</code></a></small>
       <div class="hidden name"><code>argoFloats.Rmd</code></div>
@@ -109,16 +111,28 @@
 3. To see the results, type the following in an R console:
       browseVignettes("argoFloats")
 -->
-<p><strong>Abstract.</strong> The <code>argoFloats</code> package makes it easy identify, download,cache, and analyze oceanographic data collected by Argo profiling floats, while handling quality control. Our goal in making this package was to eliminate the gap between the freely available Argo data and the end user.</p>
+<p><strong>Abstract.</strong> The <code>argoFloats</code> package makes
+it easy identify, download,cache, and analyze oceanographic data
+collected by Argo profiling floats, while handling quality control. Our
+goal in making this package was to eliminate the gap between the freely
+available Argo data and the end user.</p>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The <code>argoFloats</code> package provides tools for downloading and processing Argo profile data. It allows users to focus on core, biogeochemical (“BGC”) , or deep Argo profiles, and also allows the user to sift these profiles based on ID, time, geography, variable, institution, ocean, cycle, direction, profile, dataStateIndicator, etc. Once downloaded, such data sets can be analyzed within <code>argoFloats</code> or using other R tools and packages.</p>
+<p>The <code>argoFloats</code> package provides tools for downloading
+and processing Argo profile data. It allows users to focus on core,
+biogeochemical (“BGC”) , or deep Argo profiles, and also allows the user
+to sift these profiles based on ID, time, geography, variable,
+institution, ocean, cycle, direction, profile, dataStateIndicator, etc.
+Once downloaded, such data sets can be analyzed within
+<code>argoFloats</code> or using other R tools and packages.</p>
 </div>
 <div class="section level2">
 <h2 id="youtube-videos">Youtube Videos<a class="anchor" aria-label="anchor" href="#youtube-videos"></a>
 </h2>
-<p>As an adjunct to the written documentation, the following videos are provided, to introduce concepts and show how to accomplish some every-day tasks. In some cases, sample code is also made available at <a href="https://github.com/ArgoCanada/argoFloats/tree/develop/videos" class="external-link uri">https://github.com/ArgoCanada/argoFloats/tree/develop/videos</a>.</p>
+<p>As an adjunct to the written documentation, the following videos are
+provided, to introduce concepts and show how to accomplish some
+every-day tasks. In some cases, sample code is also made available at <a href="https://github.com/ArgoCanada/argoFloats/tree/develop/videos" class="external-link uri">https://github.com/ArgoCanada/argoFloats/tree/develop/videos</a>.</p>
 <table class="table">
 <colgroup>
 <col width="43%">
@@ -211,31 +225,54 @@
 <div class="section level2">
 <h2 id="preliminary-setup">Preliminary Setup<a class="anchor" aria-label="anchor" href="#preliminary-setup"></a>
 </h2>
-<p>Since argoFloats is in an active phase of development, it is not yet available on CRAN. Still, it is easily installed in R with</p>
+<p>Since argoFloats is in an active phase of development, it is not yet
+available on CRAN. Still, it is easily installed in R with</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
 <span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ArgoCanada/argoFloats"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></span></code></pre></div>
-<p>` where, of course, the devtools package must be installed first, if it is not already present on the user’s system.</p>
+<p>` where, of course, the devtools package must be installed first, if
+it is not already present on the user’s system.</p>
 </div>
 <div class="section level2">
 <h2 id="typical-work-flow">Typical Work Flow<a class="anchor" aria-label="anchor" href="#typical-work-flow"></a>
 </h2>
-<p>Figure 1 illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.</p>
+<p>Figure 1 illustrates the typical workflow with the package, with
+descriptions of the steps on the left, and names of the relevant
+functions on the right.</p>
 <div class="figure">
-<img src="flowchart.png" alt=""><p class="caption">Figure 1: Work flow of the argoFloats package with descriptions on the left and relevant functions on the right</p>
+<img src="flowchart.png" alt=""><p class="caption">Figure 1: Work flow of the argoFloats package with
+descriptions on the left and relevant functions on the right</p>
 </div>
-<p>As shown above, the central functions for the <code>argoFloats</code> package are <code><a href="../reference/getIndex.html">getIndex()</a></code>, <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>, <code><a href="../reference/getProfiles.html">getProfiles()</a></code>, and <code><a href="../reference/readProfiles.html">readProfiles()</a></code>.</p>
-<p>Some built-in data sets are provided for concreteness of illustration and for testing, but actual work always starts with a call to <code><a href="../reference/getIndex.html">getIndex()</a></code> to download a full index of float data, which we will demonstrate later in this vignette.</p>
-<p>To begin to get familiar with how the <code>argoFloats</code> package works, we will begin looking at the built in data sets. Built into the <code>argoFloats</code> package is the <code>index</code>, <code>indexBgc</code>, <code>indexSynthetic</code>, and <code>indexDeep</code> indices, referring to core Argo, BGC-Argo, a combination, and deep Argo respectively. It should be noted that as of September 21, 2020, <code>indexMerged</code> no longer exists as the switch to <code>indexSynthetic</code> has been made. For the sake of this vignette we will focus on the <code>index</code> data set.</p>
-<p>The first step is to access the required packages that will be needed during this tutorial, with</p>
+<p>As shown above, the central functions for the <code>argoFloats</code>
+package are <code><a href="../reference/getIndex.html">getIndex()</a></code>, <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>,
+<code><a href="../reference/getProfiles.html">getProfiles()</a></code>, and <code><a href="../reference/readProfiles.html">readProfiles()</a></code>.</p>
+<p>Some built-in data sets are provided for concreteness of illustration
+and for testing, but actual work always starts with a call to
+<code><a href="../reference/getIndex.html">getIndex()</a></code> to download a full index of float data, which we
+will demonstrate later in this vignette.</p>
+<p>To begin to get familiar with how the <code>argoFloats</code> package
+works, we will begin looking at the built in data sets. Built into the
+<code>argoFloats</code> package is the <code>index</code>,
+<code>indexBgc</code>, <code>indexSynthetic</code>, and
+<code>indexDeep</code> indices, referring to core Argo, BGC-Argo, a
+combination, and deep Argo respectively. It should be noted that as of
+September 21, 2020, <code>indexMerged</code> no longer exists as the
+switch to <code>indexSynthetic</code> has been made. For the sake of
+this vignette we will focus on the <code>index</code> data set.</p>
+<p>The first step is to access the required packages that will be needed
+during this tutorial, with</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/" class="external-link">oce</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/ocedata/" class="external-link">ocedata</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span></code></pre></div>
-<p>To access the embedded index within <code>argoFloats</code>, the following code is used:</p>
+<p>To access the embedded index within <code>argoFloats</code>, the
+following code is used:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"index"</span><span class="op">)</span></span></code></pre></div>
-<p>It is now possible to process the downloaded index using the <code>argoFloats</code> specialized versions of R “generic” functions, <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, <code>[[</code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, and <code><a href="https://rdrr.io/r/methods/show.html" class="external-link">show()</a></code> as shown below.</p>
+<p>It is now possible to process the downloaded index using the
+<code>argoFloats</code> specialized versions of R “generic” functions,
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, <code>[[</code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, and
+<code><a href="https://rdrr.io/r/methods/show.html" class="external-link">show()</a></code> as shown below.</p>
 </div>
 <div class="section level2">
 <h2 id="processing-steps">Processing Steps<a class="anchor" aria-label="anchor" href="#processing-steps"></a>
@@ -244,35 +281,60 @@
 <div class="section level3">
 <h3 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h3>
-<p>The specialized <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> command within the <code>argoFloats</code> package provides simple ways to plot aspects of <code>argoFloats-class</code> objects. To produce the built in plot and visualize the coordinates of a section of Argo floats off of the Bahamas, the following code is used:</p>
+<p>The specialized <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> command within the
+<code>argoFloats</code> package provides simple ways to plot aspects of
+<code>argoFloats-class</code> objects. To produce the built in plot and
+visualize the coordinates of a section of Argo floats off of the
+Bahamas, the following code is used:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">index</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># also, try using bathymetry=TRUE</span></span></code></pre></div>
 <div class="figure">
 <img src="argoFloats_files/figure-html/unnamed-chunk-5-1.png" alt="Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Bahamas." width="672"><p class="caption">
-Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Bahamas.
+Figure 2: Built in index demonstrating Argo profiling floats within 200
+km of Bahamas.
 </p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="extracting-data">Extracting Data<a class="anchor" aria-label="anchor" href="#extracting-data"></a>
 </h3>
-<p>Furthermore, the <code>[[</code> command provides a way to extract items from <code>argoFloats</code> objects, without getting lost in the details of storage. For example, if the user wanted to extract the <code>file</code> within the <code>index</code> data set, instead of doing <code>index@data$index$file</code>, instead they can simply do <code>index[["file"]]</code>. (Note that <code>[[&lt;-</code> is <em>not</em> specialized, since the user is highly discouraged from altering values within <code>argoFloats</code> objects).</p>
+<p>Furthermore, the <code>[[</code> command provides a way to extract
+items from <code>argoFloats</code> objects, without getting lost in the
+details of storage. For example, if the user wanted to extract the
+<code>file</code> within the <code>index</code> data set, instead of
+doing <code>index@data$index$file</code>, instead they can simply do
+<code>index[["file"]]</code>. (Note that <code>[[&lt;-</code> is
+<em>not</em> specialized, since the user is highly discouraged from
+altering values within <code>argoFloats</code> objects).</p>
 </div>
 <div class="section level3">
 <h3 id="summarizing">Summarizing<a class="anchor" aria-label="anchor" href="#summarizing"></a>
 </h3>
-<p>Additionally, the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> command displays key features of <code>argoFloats-class</code> objects such as the type, server, file, URL etc. See <code>summary,argoFloats-method()</code> further details.</p>
+<p>Additionally, the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> command displays key
+features of <code>argoFloats-class</code> objects such as the type,
+server, file, URL etc. See <code>summary,argoFloats-method()</code>
+further details.</p>
 </div>
 <div class="section level3">
 <h3 id="printing">Printing<a class="anchor" aria-label="anchor" href="#printing"></a>
 </h3>
-<p>Lastly, the <code><a href="https://rdrr.io/r/methods/show.html" class="external-link">show()</a></code> command provides a one-line sketch of <code>argoFloats-class</code> objects. This gets used by the <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> function. For example if the user types in:</p>
+<p>Lastly, the <code><a href="https://rdrr.io/r/methods/show.html" class="external-link">show()</a></code> command provides a one-line sketch of
+<code>argoFloats-class</code> objects. This gets used by the
+<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> function. For example if the user types in:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">index</span></span></code></pre></div>
 <p>The following output occurs:</p>
 <pre><code>argoFloats object of type "index" with 953 items</code></pre>
-<p><strong>Hint:</strong> This command can be particularly useful when doing the <code><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge()</a></code> command, which will be explained in greater detail further down.</p>
-<p>It should be noted that the profile elements within <code>argoFloats</code> objects are stored as in the form of <code>argo</code> objects as defined by the <code>oce</code> package. This means that <code>argoFloats</code> users can rely on a wide variety of <code>oce</code> functions to analyze their data. The full suite of R tools is also available, and the vastness of that suite explains why <code>argoFloats</code> is written in R.</p>
+<p><strong>Hint:</strong> This command can be particularly useful when
+doing the <code><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge()</a></code> command, which will be explained in
+greater detail further down.</p>
+<p>It should be noted that the profile elements within
+<code>argoFloats</code> objects are stored as in the form of
+<code>argo</code> objects as defined by the <code>oce</code> package.
+This means that <code>argoFloats</code> users can rely on a wide variety
+of <code>oce</code> functions to analyze their data. The full suite of R
+tools is also available, and the vastness of that suite explains why
+<code>argoFloats</code> is written in R.</p>
 </div>
 </div>
 <div class="section level2">
@@ -281,8 +343,22 @@ Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Ba
 <div class="section level3">
 <h3 id="getindex">getIndex()<a class="anchor" aria-label="anchor" href="#getindex"></a>
 </h3>
-<p>Until this point, we have demonstrated how the user can become familiar with embedded indices. As previously described, however, actual work always starts with downloading a full index of float data. As shown by Figure 1, the <code><a href="../reference/getIndex.html">getIndex()</a></code> command is used to get an index of available Argo float profiles, either by downloading information from a data repository or by reusing an index (stored as an .rda file) that was prepared by a recent call to the function.</p>
-<p>The <code><a href="../reference/getIndex.html">getIndex()</a></code> command works by specifying the server, with first trying the Ifremer server  and then the USGODAE server  if that does not work. The next step is to specify the file name. The table below can be obtained using <code>?getIndex()</code>. As shown, the user has the ability to write the specific file name from the server, or to simply use the embedded nicknames within the package: <code>"core"</code>, <code>"bgc"</code> or <code>"bgcargo"</code>, or <code>"synthetic"</code>. The following table summarizes the contents of the various files indicated by the <code>filename</code> argument.</p>
+<p>Until this point, we have demonstrated how the user can become
+familiar with embedded indices. As previously described, however, actual
+work always starts with downloading a full index of float data. As shown
+by Figure 1, the <code><a href="../reference/getIndex.html">getIndex()</a></code> command is used to get an index
+of available Argo float profiles, either by downloading information from
+a data repository or by reusing an index (stored as an .rda file) that
+was prepared by a recent call to the function.</p>
+<p>The <code><a href="../reference/getIndex.html">getIndex()</a></code> command works by specifying the server,
+with first trying the Ifremer server and then the USGODAE server if that
+does not work. The next step is to specify the file name. The table
+below can be obtained using <code>?getIndex()</code>. As shown, the user
+has the ability to write the specific file name from the server, or to
+simply use the embedded nicknames within the package:
+<code>"core"</code>, <code>"bgc"</code> or <code>"bgcargo"</code>, or
+<code>"synthetic"</code>. The following table summarizes the contents of
+the various files indicated by the <code>filename</code> argument.</p>
 <table class="table">
 <colgroup>
 <col width="37%">
@@ -340,17 +416,30 @@ Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Ba
 </tr>
 </tbody>
 </table>
-<p>Additionally, the <code>destdir</code> argument has a default of <code>~/data/argo</code>, where it should be noted that <code>~</code> is a short cut for <code>C:\Users\</code>. See <code>?getIndex()</code> for further description about the additional arguments for this command.</p>
-<p>To get the index from the Ifremer server, the following code is used:</p>
+<p>Additionally, the <code>destdir</code> argument has a default of
+<code>~/data/argo</code>, where it should be noted that <code>~</code>
+is a short cut for <code>C:\Users\</code>. See <code>?getIndex()</code>
+for further description about the additional arguments for this
+command.</p>
+<p>To get the index from the Ifremer server, the following code is
+used:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"core"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="subset">subset()<a class="anchor" aria-label="anchor" href="#subset"></a>
 </h3>
-<p>As shown by Figure 1, the next step when working with the <code>argoFloats</code> package is to use the <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> function to focus on a subset of profiles. The <code>argoFloats</code> package provides tools to sift through profiles based on ID, time, geography, variable, institution, ocean, dataMode, cycle, direction, profile, dataStateIndicator, section, etc.</p>
-<p>For geographic subsetting, the user has the ability to subset by <code>circle</code>, <code>rectangle</code>, <code>polygon</code>, or <code>section</code>.</p>
-<p>To subset for specific groups of Argo profiling floats off the coast of Bahamas, the following code is used:</p>
+<p>As shown by Figure 1, the next step when working with the
+<code>argoFloats</code> package is to use the <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>
+function to focus on a subset of profiles. The <code>argoFloats</code>
+package provides tools to sift through profiles based on ID, time,
+geography, variable, institution, ocean, dataMode, cycle, direction,
+profile, dataStateIndicator, section, etc.</p>
+<p>For geographic subsetting, the user has the ability to subset by
+<code>circle</code>, <code>rectangle</code>, <code>polygon</code>, or
+<code>section</code>.</p>
+<p>To subset for specific groups of Argo profiling floats off the coast
+of Bahamas, the following code is used:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Subsetting by circle</span></span>
 <span><span class="va">aiCircle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ai</span>, circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.5</span>, latitude<span class="op">=</span><span class="fl">27.5</span>, radius<span class="op">=</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span></span>
@@ -363,12 +452,23 @@ Figure 2: Built in index demonstrating Argo profiling floats within 200 km of Ba
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">CP</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>             <span class="co"># also, try using bathymetry=TRUE</span></span></code></pre></div>
 <div class="figure">
 <img src="argoFloats_files/figure-html/unnamed-chunk-9-1.png" alt="Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the coast of Bahamas" width="672"><p class="caption">
-Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the coast of Bahamas
+Figure 3: 50 km radius and polygon subset of Argo profiling floats found
+off the coast of Bahamas
 </p>
 </div>
-<p><strong>Exercise 1:</strong> Use the subset by rectangle function to add a rectangle subset onto Figure 3 and subset all of the data to only include samples between 2012 and 2020.</p>
-<p>As of March, 2021, a subset by <code>section</code> was developed to create a section of Argo data, similarly to what is done with CTD data. A subset by <code>section</code> combined with subset by <code>time</code> can provide insightful information of Argo vs CTD sampling efforts. An example of this is highlighted below, which compares a section of Argo data from the Mediterranean outflow region across to North America to the line A03 CTD section data collected in 1993-09-11.</p>
-<p><strong>Exercise 2:</strong> Use the information from Figure 4 to compare Argo and CTD section sampling methods.</p>
+<p><strong>Exercise 1:</strong> Use the subset by rectangle function to
+add a rectangle subset onto Figure 3 and subset all of the data to only
+include samples between 2012 and 2020.</p>
+<p>As of March, 2021, a subset by <code>section</code> was developed to
+create a section of Argo data, similarly to what is done with CTD data.
+A subset by <code>section</code> combined with subset by
+<code>time</code> can provide insightful information of Argo vs CTD
+sampling efforts. An example of this is highlighted below, which
+compares a section of Argo data from the Mediterranean outflow region
+across to North America to the line A03 CTD section data collected in
+1993-09-11.</p>
+<p><strong>Exercise 2:</strong> Use the information from Figure 4 to
+compare Argo and CTD section sampling methods.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dankelley.github.io/oce/" class="external-link">oce</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span>
@@ -391,19 +491,35 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">section</span>, which<span class="op">=</span><span class="st">"map"</span>, col<span class="op">=</span><span class="st">"tan"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="01_section_argo.png" alt=""><p class="caption">Figure 4: Comparison of Argo vs. CTD section data in a westward transect from the Mediterranean outflow region across to North Atlantic. Top: Argo data including 49 samples from 2020-09-23 to 2020-10-25 made by the argoFloats package. Bottom: Line A03 section including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce package</p>
+<img src="01_section_argo.png" alt=""><p class="caption">Figure 4: Comparison of Argo vs. CTD section data in
+a westward transect from the Mediterranean outflow region across to
+North Atlantic. Top: Argo data including 49 samples from 2020-09-23 to
+2020-10-25 made by the argoFloats package. Bottom: Line A03 section
+including 124 CTD samples from 1993-09-23 to 1993-10-25 made by oce
+package</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="getprofiles">getProfiles()<a class="anchor" aria-label="anchor" href="#getprofiles"></a>
 </h3>
-<p>The next step within the <code>argoFloats</code> package is the <code><a href="../reference/getProfiles.html">getProfiles()</a></code> function. This takes an index constructed with <code><a href="../reference/getIndex.html">getIndex()</a></code>, possibly after focusing with <code>subset,argoFloats-method()</code>, and creates a list of files to download from the server named in the index. Then these files are downloaded to the <code>destdir</code> directory, using filenames inferred from the source filenames. The value returned by <code><a href="../reference/getProfiles.html">getProfiles()</a></code> is suitable for use by <code><a href="../reference/readProfiles.html">readProfiles()</a></code> function.</p>
+<p>The next step within the <code>argoFloats</code> package is the
+<code><a href="../reference/getProfiles.html">getProfiles()</a></code> function. This takes an index constructed
+with <code><a href="../reference/getIndex.html">getIndex()</a></code>, possibly after focusing with
+<code>subset,argoFloats-method()</code>, and creates a list of files to
+download from the server named in the index. Then these files are
+downloaded to the <code>destdir</code> directory, using filenames
+inferred from the source filenames. The value returned by
+<code><a href="../reference/getProfiles.html">getProfiles()</a></code> is suitable for use by
+<code><a href="../reference/readProfiles.html">readProfiles()</a></code> function.</p>
 </div>
 <div class="section level3">
 <h3 id="readprofiles">readProfiles()<a class="anchor" aria-label="anchor" href="#readprofiles"></a>
 </h3>
-<p>The <code><a href="../reference/readProfiles.html">readProfiles()</a></code> command works with either a list of local NetCDF files, or a <code>argoFloats</code> object type <code>profiles</code>, as created by <code><a href="../reference/getProfiles.html">getProfiles()</a></code>.</p>
-<p>The command can be useful for analyzing individual profiles, for example:</p>
+<p>The <code><a href="../reference/readProfiles.html">readProfiles()</a></code> command works with either a list of
+local NetCDF files, or a <code>argoFloats</code> object type
+<code>profiles</code>, as created by <code><a href="../reference/getProfiles.html">getProfiles()</a></code>.</p>
+<p>The command can be useful for analyzing individual profiles, for
+example:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">index1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span> <span class="co"># To subset for profiles</span></span>
 <span><span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">index1</span><span class="op">)</span></span>
@@ -411,29 +527,59 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <span><span class="va">argosClean</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/applyQC.html">applyQC</a></span><span class="op">(</span><span class="va">argos</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">argosClean</span>, which<span class="op">=</span><span class="st">"profile"</span>, type<span class="op">=</span><span class="st">"p"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="readProfiles.png" alt=""><p class="caption">Figure 5: Temperature profile created using argoFloats readProfiles function</p>
+<img src="readProfiles.png" alt=""><p class="caption">Figure 5: Temperature profile created using
+argoFloats readProfiles function</p>
 </div>
-<p><strong>Exercise 3:</strong> Using the profile in the previous example, plot a TS diagram.</p>
+<p><strong>Exercise 3:</strong> Using the profile in the previous
+example, plot a TS diagram.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="appendix-1-work-flow-with-local-index-files">Appendix 1: Work Flow With Local Index Files<a class="anchor" aria-label="anchor" href="#appendix-1-work-flow-with-local-index-files"></a>
 </h2>
-<p>In normal usage, <code><a href="../reference/getIndex.html">getIndex()</a></code> works by downloading a gzipped CSV file (with suffix <code>.gz</code>) from an Argo server, analyzing that file writing an R Data Archive file (with suffix <code>.rda</code>), and then deleting the <code>.gz</code> file. However, if <code><a href="../reference/getIndex.html">getIndex()</a></code> is called with the parameter <code>keep</code> set to TRUE, it will retain the <code>.gz</code> file in the directory named by the <code>destdir</code> argument. This can be useful if there is a need to work with the data in a processing system other than <code>argoFloats</code>.</p>
-<p>It is possible to instruct <code><a href="../reference/getIndex.html">getIndex()</a></code> to skip remote downloads, to instead use a local <code>.gz</code> or <code>.rda</code> file. This is done by providing the file name as the first argument, and by setting <code>server=NULL</code>, e.g. using</p>
+<p>In normal usage, <code><a href="../reference/getIndex.html">getIndex()</a></code> works by downloading a
+gzipped CSV file (with suffix <code>.gz</code>) from an Argo server,
+analyzing that file writing an R Data Archive file (with suffix
+<code>.rda</code>), and then deleting the <code>.gz</code> file.
+However, if <code><a href="../reference/getIndex.html">getIndex()</a></code> is called with the parameter
+<code>keep</code> set to TRUE, it will retain the <code>.gz</code> file
+in the directory named by the <code>destdir</code> argument. This can be
+useful if there is a need to work with the data in a processing system
+other than <code>argoFloats</code>.</p>
+<p>It is possible to instruct <code><a href="../reference/getIndex.html">getIndex()</a></code> to skip remote
+downloads, to instead use a local <code>.gz</code> or <code>.rda</code>
+file. This is done by providing the file name as the first argument, and
+by setting <code>server=NULL</code>, e.g. using</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"~/data/argo/ar_index_global_prof.txt.gz"</span>, server<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <p>or</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"~/data/argo/ar_index_global_prof.rda"</span>, server<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
-<p>after which the other processing steps, as outlined in the previous section, can be followed.</p>
-<p>The <code>.rda</code> approach is better than the <code>.gz</code> one, for two reasons: (1) it is faster and (2) it usually sets a better foundation for later calls to <code><a href="../reference/getProfiles.html">getProfiles()</a></code>. The second factor is a result of the fact that the <code>.gz</code> files on servers do not contain an indication of the server URL, whereas the locally-generated <code>.rda</code> files do so. (Recall that <code><a href="../reference/getIndex.html">getIndex()</a></code> can try a list of servers, and it records in the <code>.rda</code> file the first one that yielded results from a download attempt.)</p>
-<p>Whether the <code>.gz</code> or <code>.rda</code> method is chosen, it is worth noting that index files go out of date, as new data become available, and also as pointers to real-time data are made obsolete because of replacement by delayed-mode equivalents. Even so, it can be a good idea to download an index file before a classroom/workshop exercise and to share it over a local network, avoiding placing too much stress on the larger network.</p>
+<p>after which the other processing steps, as outlined in the previous
+section, can be followed.</p>
+<p>The <code>.rda</code> approach is better than the <code>.gz</code>
+one, for two reasons: (1) it is faster and (2) it usually sets a better
+foundation for later calls to <code><a href="../reference/getProfiles.html">getProfiles()</a></code>. The second
+factor is a result of the fact that the <code>.gz</code> files on
+servers do not contain an indication of the server URL, whereas the
+locally-generated <code>.rda</code> files do so. (Recall that
+<code><a href="../reference/getIndex.html">getIndex()</a></code> can try a list of servers, and it records in the
+<code>.rda</code> file the first one that yielded results from a
+download attempt.)</p>
+<p>Whether the <code>.gz</code> or <code>.rda</code> method is chosen,
+it is worth noting that index files go out of date, as new data become
+available, and also as pointers to real-time data are made obsolete
+because of replacement by delayed-mode equivalents. Even so, it can be a
+good idea to download an index file before a classroom/workshop exercise
+and to share it over a local network, avoiding placing too much stress
+on the larger network.</p>
 </div>
 <div class="section level2">
 <h2 id="solutions-to-exercises">Solutions to Exercises<a class="anchor" aria-label="anchor" href="#solutions-to-exercises"></a>
 </h2>
-<p><strong>Exercise 1:</strong> Use the subset by rectangle function to add a rectangle subset onto Figure 3 and subset all of the data to only include data between 2012 and 2020.</p>
+<p><strong>Exercise 1:</strong> Use the subset by rectangle function to
+add a rectangle subset onto Figure 3 and subset all of the data to only
+include data between 2012 and 2020.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span>
 <span><span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -454,9 +600,18 @@ Figure 3: 50 km radius and polygon subset of Argo profiling floats found off the
 <span><span class="va">index6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index5</span>, time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>from<span class="op">=</span><span class="st">"2012-01-01"</span>, to<span class="op">=</span><span class="st">"2020-01-01"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Plot data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">index6</span>, bathymetry<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>             <span class="co"># also, try using bathymetry=TRUE</span></span></code></pre></div>
-<p><strong>Exercise 2:</strong> Use the information from Figure 4 to compare Argo and CTD section sampling efforts.</p>
-<p>Figure 4 reveals that it takes almost 3 months of Argo sampling to reproduce a 1 month CTD section cruise. Additionally, it displayed that there are geographical gaps within the Argo data. On the other hand, it should be noted that by extending the latitude range, these gaps are quickly filled in. In conclusion, Argo sampling is much more cost effective, and it can allow for collection of more information (i.e. nutrients, oxygen, backscattering, etc.) if such thing is desired.</p>
-<p><strong>Exercise 3:</strong> Using the profile in the previous example, plot a TS diagram.</p>
+<p><strong>Exercise 2:</strong> Use the information from Figure 4 to
+compare Argo and CTD section sampling efforts.</p>
+<p>Figure 4 reveals that it takes almost 3 months of Argo sampling to
+reproduce a 1 month CTD section cruise. Additionally, it displayed that
+there are geographical gaps within the Argo data. On the other hand, it
+should be noted that by extending the latitude range, these gaps are
+quickly filled in. In conclusion, Argo sampling is much more cost
+effective, and it can allow for collection of more information
+(i.e. nutrients, oxygen, backscattering, etc.) if such thing is
+desired.</p>
+<p><strong>Exercise 3:</strong> Using the profile in the previous
+example, plot a TS diagram.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span>
 <span><span class="va">ai</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="st">"synthetic"</span><span class="op">)</span></span>
