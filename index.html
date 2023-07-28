@@ -91,10 +91,6 @@
 </h1></div>
 <!-- badges: start -->
 
-
-
-
-
 <!-- badges: end -->
 <p>The argoFloats package for the R language provides tools for downloading and analyzing collections of oceanographic Argo float datasets. Its developers are Dan Kelley (Dalhousie University), Jaimie Harbin (Bedford Institute of Oceanography and Dalhousie University), Clark Richards (Bedford Institute of Oceanography) and Dewey Dunnington (Bedford Institute of Oceanography).</p>
 <p>The CRAN version may be installed with</p>
@@ -127,10 +123,11 @@
 <span><span class="co">#&gt; Loading required package: gsw</span></span>
 <span><span class="co">## 1. Get worldwide float-profile index, saving to ~/data/argo by default.</span></span>
 <span><span class="va">indexAll</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getIndex.html">getIndex</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Downloading 'https://data-argo.ifremer.fr/ar_index_global_prof.txt.gz'</span></span>
 <span><span class="co">## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.</span></span>
 <span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">indexAll</span>,</span>
 <span>                circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.06</span>,latitude<span class="op">=</span><span class="fl">26.54</span>,radius<span class="op">=</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Kept 41 cycles (0.00153%)</span></span>
+<span><span class="co">#&gt; Kept 41 cycles (0.00144%)</span></span>
 <span><span class="co">## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.</span></span>
 <span><span class="va">profiles</span>  <span class="op">&lt;-</span> <span class="fu"><a href="reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">index</span><span class="op">)</span></span>
 <span><span class="co">## 4. Read the NetCDF files.</span></span>
