@@ -17,7 +17,6 @@ marmap*.csv
 *.json
 doc
 marmap*csv
-docs
 ^[0-9]*.R$
 .Rprofile
 .gitCOMMIT_EDITMSG
