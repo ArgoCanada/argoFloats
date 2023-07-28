@@ -25,6 +25,8 @@ developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.rep
 
 [![R build status](https://github.com/ArgoCanada/argoFloats/workflows/R-CMD-check/badge.svg)](https://github.com/ArgoCanada/argoFloats/actions)
 
+![RStudio CRAN mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/argoFloats)
+
 [![codecov](https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/ArgoCanada/argoFloats)
 
 <!-- badges: end -->
