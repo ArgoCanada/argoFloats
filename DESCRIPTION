@@ -12,7 +12,7 @@ Authors@R: c(
     person(given="Clark", family="Richards", email="clark.richards@dfo-mpo.gc.ca", role=c("ctb"),
         comment=c(ORCID="https://orcid.org/0000-0002-7833-206X")))
 Maintainer: Dan Kelley <dan.kelley@dal.ca>
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.1.0)
 Suggests: colourpicker, curl, knitr, lubridate, markdown, ncdf4, ocedata, rmarkdown, shiny, s2, sf, testthat, shinyBS
 Imports: oce (>= 1.3.0), methods
 BugReports: https://github.com/ArgoCanada/argoFloats/issues
