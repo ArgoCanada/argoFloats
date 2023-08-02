@@ -1,5 +1,7 @@
 # argoFloats (development version)
 
+* Require R 4.1.0 or higher, to permit `|>` syntax.
+
 ## argoFloats 1.0.7
 
 * getIndex() can work with previously-downloaded .tgz files.
