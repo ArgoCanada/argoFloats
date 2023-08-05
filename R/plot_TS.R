@@ -1,8 +1,51 @@
 # vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-plotArgoTS <- function(x, xlim=NULL, ylim=NULL, xlab=NULL, ylab=NULL,
+#' Plot a TS diagram for an argoFloats object
+#'
+#' Plot a TS diagram for an [argoFloats-class] object that was created with
+#' [readProfiles()].  This function is called by [plot,argoFloats-method()],
+#' but may also be called directly.
+#'
+#' @param x an argoFloats object that was created with [readProfiles()].
+#'
+#' @param xlim,ylim optional limits of salinity and temperature axes; if not provided,
+#' the plot region will be large enough to show all the data.
+#'
+#' @param type character value indicating the of plot.  This has the same meaning
+#' as for general R plots: `"p"` for points, `"l"` for lines, etc.  Note that
+#' lines are joined up between cycles, unless the `TSControl` parameter indicates
+#' otherwise.
+#'
+#' @param cex,col,pch,bg values that have the same meaning as for general R plots
+#' if `TSControl$groupByCycle` is FALSE, except for that `col` may be set to
+#' `"flags", to use black for good data (flag 1, 2, 5 or 8), red for 
+#' bad data (flag 3, 4, 6 or 7) or gray for unassessed data (flag 0).
+#' This flag indication is not done if `TSControl$groupByCycle` is TRUE,
+#' and in that case `col` and the other parameters in this grouping are
+#' copied with [rep()] to get one value per cycle.
+#'
+#' @param eos character value, either `"gsw"` (the default) for the Gibbs-Seawater
+#' (TEOS-10) equation of state or `"unesco"` for the 1980s-era UNESCO equation of
+#' state.
+#'
+#' @param TSControl an optional list that may have a logical element named `groupByCycle`,
+#' meaning to group the data by cycle. If `TSControl` is not provided, it is set
+#' to `list(groupByDefault=FALSE)`.  In grouped cases, the values of `cex`, `col`,
+#' and `pch` are passed to [rep()] to achieve the same length as the number of
+#' cycles in `x`.  This can be useful in distinguishing between cycles.
+#'
+#' @param debug an integer controlling how much information is to be printed
+#' during operation. Use 0 for silent work, 1 for some information and 2 for
+#' more information.  Note that [plot,argoFloats-method()] reduces its `debug`
+#' value by 1 before passing to [plotArgoTS()].
+#'
+#' @export
+#'
+#' @author Dan Kelley and Jaimie Harbin
+plotArgoTS <- function(x, xlim=NULL, ylim=NULL,
     type="p", cex, col, pch, bg, eos="gsw", TSControl=NULL, debug=0)
 {
+    #message('debug=',debug)
     if (!inherits(x, "argoFloats"))
         stop("x must be an argo object")
     if ((x[["type"]] != "argos"))
@@ -84,15 +127,20 @@ plotArgoTS <- function(x, xlim=NULL, ylim=NULL, xlab=NULL, ylab=NULL,
         argoFloatsDebug(debug, "colorizing by index\n")
         cycles <- unique(cycleIndex)
         ncycles <- length(cycles)
-        if (eos == "gsw") {
-            Slim <- range(ctd[["SA"]], na.rm=TRUE)
-            Tlim <- range(ctd[["CT"]], na.rm=TRUE)
+        if (is.null(xlim)) {
+            Slim <- if (eos == "gsw") range(ctd[["SA"]], na.rm=TRUE)
+            else range(ctd[["salinity"]], na.rm=TRUE)
         } else {
-            Slim <- range(ctd[["salinity"]], na.rm=TRUE)
-            Tlim <- range(ctd[["temperature"]], na.rm=TRUE)
+            Slim <- xlim
         }
-        argoFloatsDebug(debug, "set Slim=", Slim, "\n")
-        argoFloatsDebug(debug, "set Tlim=", Tlim, "\n")
+        if (is.null(ylim)) {
+            Tlim <- if (eos == "gsw") range(ctd[["CT"]], na.rm=TRUE)
+            else range(ctd[["theta"]], na.rm=TRUE)
+        } else {
+            Tlim <- ylim
+        }
+        argoFloatsDebug(debug, "Slim=c(", paste(Slim, collapse=","), ")\n", sep="")
+        argoFloatsDebug(debug, "Tlim=c(", paste(Tlim, collapse=","), ")\n", sep="")
         if (length(longitude) != length(salinity))
             longitude <- rep(longitude[1], length(salinity))
         if (length(latitude) != length(salinity))
@@ -105,33 +153,33 @@ plotArgoTS <- function(x, xlim=NULL, ylim=NULL, xlab=NULL, ylab=NULL,
             type <- rep(type, length.out=ncycles)
         if (length(pch) != ncycles)
             pch <- rep(pch, length.out=ncycles)
-        argoFloatsDebug(debug, "cycle-by-cycle overlay, since groupByCycle is FALSE\n")
+        argoFloatsDebug(debug, "cycle-by-cycle overlay, since groupByCycle is TRUE\n")
+        message('debug=',debug)
         for (i in seq_len(ncycles)) {
-            argoFloatsDebug(debug-1L, "    handling cycle ", i, " of ", ncycles, ", which has ",
+            argoFloatsDebug(debug>1L, "  handling cycle ", i, " of ", ncycles, ", which has ",
                 length(salinity[i==cycleIndex]), " points\n", sep="")
+            look <- i == cycleIndex
             ctd <- oce::as.ctd(
-                salinity=salinity[i == cycleIndex],
-                temperature=temperature[i == cycleIndex],
-                pressure=pressure[i == cycleIndex],
-                latitude=latitude[i == cycleIndex],
-                longitude=longitude[i == cycleIndex])
+                salinity=salinity[look],
+                temperature=temperature[look],
+                pressure=pressure[look],
+                latitude=latitude[look],
+                longitude=longitude[look])
             if (i == 1L) {
                 plotTS(ctd, Slim=Slim, Tlim=Tlim,
-                    cex=cex[i], col=col[i], pch=pch[i], type=type[i])
+                    cex=cex[i], col=col[i], pch=pch[i], type=type[i],
+                    mar=par("mar"), mgp=par("mgp"), eos=eos)
             } else {
                 plotTS(ctd, add=TRUE,
-                    cex=cex[i], col=col[i], pch=pch[i], type=type[i])
+                    cex=cex[i], col=col[i], pch=pch[i], type=type[i],
+                    mar=par("mar"), mgp=par("mgp"), eos=eos)
             }
         }
     } else {
         argoFloatsDebug(debug, "making single plotTS() call, since groupByCycle is FALSE\n")
-        oce::plotTS(ctd,
-            cex=cex,
-            bg=bg,
-            col=col,
-            pch=pch,
+        oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch,
             mar=par("mar"), mgp=par("mgp"), eos=eos,
-            type=if (is.null(type)) "p" else type)
+            type=if (is.null(type)) "p" else type[1])
     }
 }
 

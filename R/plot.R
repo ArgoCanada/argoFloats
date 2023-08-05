@@ -1,4 +1,4 @@
-## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+# vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
 colDefaults <- list(core="7", bgc="#05f076", deep="6")
 
@@ -84,18 +84,11 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' values are indicated along the top axis of the top panel. The choice
 #' of panels is set by the `summaryControl` argument.
 #'
-#' * For `which="TS"`,  an overall TS plot is created.  This only works if `x`
-#' is an [argoFloats-class] object of type `"argos"`, i.e. if it was
-#' created by [readProfiles()]. The scales for the plot
-#' can be altered by putting `Slim` and `Tlim` arguments in the `...` list; see
-#' the documentation for [oce::plotTS()] for other arguments that can be
-#' provided. This plot has a default color code to represent bad, good,
-#' and unassessed data.
-#' This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
-#' data are considered bad if flagged 3, 4, 6, or 7, good
-#' if flagged 1, 2, 5, or 8, and not accessed if flagged 0; good values are plotted
-#' with black symbols, bad ones are plotted with red symbols, and not assessed values
-#' are plotted with gray symbols.
+#' * For `which="TS"`, a TS plot is created, by calling [plotArgoTS()]
+#' with the specified `x`, `xlim`, `ylim`, `xlab`, `ylab`,
+#' `type`, `cex`, `col`, `pch`, `bg`, `eos`, and `TSControl`,
+#' along with `debug-1`.  See the help for [plotArgoTS()]
+#' for how these parameters are interpreted.
 #'
 #' @param x an [`argoFloats-class`] object.
 #'
@@ -397,7 +390,7 @@ setMethod(f="plot",
     {
         if (!requireNamespace("oce", quietly=TRUE))
             stop("must install.packages(\"oce\") for plot() to work")
-        debug <- if (debug > 2) 2 else max(0, floor(debug + 0.5))
+        debug <- if (debug > 3) 3 else max(0, floor(debug + 0.5))
         argoFloatsDebug(debug, "plot(x, which=\"", which, "\") {\n", sep="", unindent=1, style="bold")
         dots <- list(...)
         if (!inherits(x, "argoFloats"))
@@ -844,8 +837,8 @@ setMethod(f="plot",
 
         } else if (which == "TS") {
             #cat("next is cex before call:\n");cat(vectorShow(cex))
-            plotArgoTS(x=x, xlim=xlim,
-                ylim=ylim, xlab=xlab, ylab=ylab,
+            #message("main debug=", debug)
+            plotArgoTS(x=x, xlim=xlim, ylim=ylim,
                 type=type, cex=cex, col=col, pch=pch, bg=bg,
                 eos=eos, TSControl=TSControl, debug=debug-1L)
             argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1, style="bold")
