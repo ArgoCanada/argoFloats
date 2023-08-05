@@ -385,7 +385,7 @@ setMethod(f="plot",
         geographical=0,
         xlim=NULL, ylim=NULL,
         xlab=NULL, ylab=NULL,
-        type=NULL, cex=NULL, col=NULL, pch=NULL, bg=NULL,
+        type="p", cex=par("cex"), col=par("fg"), pch=par("pch"), bg=par("bg"),
         eos="gsw",
         mapControl=NULL,
         profileControl=NULL,
@@ -843,132 +843,141 @@ setMethod(f="plot",
             stop("In plot,argoFloats-method(): cannot draw summary plot for subtype = trajectories", call.=FALSE)
 
         } else if (which == "TS") {
-            argoFloatsDebug(debug, "TS plot\n", sep="")
-            if ((x[["type"]] != "argos"))
-                stop("In plot,argoFloats-method(): x must have been created by readProfiles()", call.=FALSE)
-            if (!(eos %in% c("gsw", "unesco")))
-                stop("In plot,argoFloats-method(): eos must be \"gsw\" or \"unesco\", not \"", eos, "\"", call.=FALSE)
-            # compute cycle, in case we need that
-            cycleIndex <- unlist(lapply(seq_len(x[["length"]]),
-                    function(icycle)
-                        rep(icycle, length(x@data$argos[[icycle]]@data$pressure))))
-            salinity <- unlist(x[["salinity", debug=debug-1L]])
-            temperature <- unlist(x[["temperature", debug=debug-1L]])
-            pressure <- unlist(x[["pressure", debug=debug-1L]])
-            ## Use byLevel to repeat the latitude and longitude values across
-            ## the depths in each profile, so that the resultant vector
-            ## will match the salinity, temperature and pressure vectors.
-            latitude <- unlist(x[["latitude", "byLevel", debug=debug-1L]])
-            longitude <- unlist(x[["longitude", "byLevel", debug=debug-1L]])
-            # Interpolate across NA longitudes (required for traj data, to get TS plot)
-            n <- length(longitude)
-            if (any(is.na(longitude)))
-                longitude <- approx(1:n, longitude, 1:n)$y
-            if (any(is.na(latitude)))
-                latitude <- approx(1:n, latitude, 1:n)$y
-            ctd <- oce::as.ctd(salinity=salinity,
-                temperature=temperature,
-                pressure=pressure,
-                latitude=latitude,
-                longitude=longitude)
-            ctd@data$cycleIndex <- cycleIndex
-            if (is.null(TSControl)) {
-                argoFloatsDebug(debug, "defaulting TSControl\n")
-                TSControl <- list(colByCycle=NULL)
-            }
-            if (is.null(TSControl$colByCycle)) {
-                argoFloatsDebug(debug, "TSControl does not contain colByCycle\n")
-                if (is.null(col)) {
-                    if (which == "TS") {
-                        col <- "flags"
-                    } else {
-                        col <- rgb(0, 0, 1, 0.5)
-                    }
-                }
-            } else {
-                argoFloatsDebug(debug, "TSControl contains colByCycle\n")
-                # Ignore "col" if TSControl contains "colByCycle"
-                colByCycle <- TSControl$colByCycle
-                cycle <- unlist(x[["cycle", debug=debug-1L]])
-                lengths <- sapply(x[["argos"]], function(cc) length(cc[["pressure"]]))
-                # Increase the col length, so e.g. TSControl=list(colByCycle=1:2) will alternate colours
-                colByCycle <- rep(colByCycle, length.out=length(cycle))
-                col <- unlist(lapply(seq_along(cycle), function(i) rep(colByCycle[i], lengths[i])))
-            }
-            if (is.null(cex)) {
-                cex <- par("cex")
-                argoFloatsDebug(debug, "defaulting to cex=", cex, "\n", sep="")
-            }
-            if (is.null(pch)) {
-                pch <- 20
-                argoFloatsDebug(debug, "defaulting to pch=", pch, "\n", sep="")
-            }
-            if (col[1] == "flags") {
-                argoFloatsDebug(debug, "col is \"flags\"\n")
-                salinityFlag <- unlist(x[["salinityFlag"]])
-                temperatureFlag <- unlist(x[["temperatureFlag"]])
-                goodT <- temperatureFlag %in% c(1, 2, 5, 8)
-                goodS <- salinityFlag %in% c(1, 2, 5, 8)
-                good <- goodS & goodT
-                okT <- temperatureFlag %in% c(0)
-                okS <- salinityFlag %in% c(0)
-                ok <- okS & okT
-                col <- ifelse(good, "black", ifelse(ok, "gray", "red"))
-                if (pch == 21)
-                    bg <- ifelse(good, "black", ifelse(ok, "gray", "red"))
-            }
-            argoFloatsDebug(debug, "about to plotTS()\n")
-            if (!is.null(TSControl$colByCycle)) {
-                argoFloatsDebug(debug, "colorizing by index\n")
-                cycles <- unique(cycleIndex)
-                ncycles <- length(cycles)
-                if (eos == "gsw") {
-                    Slim <- range(ctd[["SA"]], na.rm=TRUE)
-                    Tlim <- range(ctd[["CT"]], na.rm=TRUE)
-                } else {
-                    Slim <- range(ctd[["salinity"]], na.rm=TRUE)
-                    Tlim <- range(ctd[["temperature"]], na.rm=TRUE)
-                }
-                argoFloatsDebug(debug, "set Slim=", Slim, "\n")
-                argoFloatsDebug(debug, "set Tlim=", Tlim, "\n")
-                if (length(longitude) != length(salinity))
-                    longitude <- rep(longitude[1], length(salinity))
-                if (length(latitude) != length(salinity))
-                    latitude <- rep(latitude[1], length(salinity))
-                col <- TSControl$colByCycle
-                if (length(col) != ncycles)
-                    col <- rep(col, length.out=ncycles)
-                if (length(type) != ncycles)
-                    type <- rep(type, length.out=ncycles)
-                if (length(pch) != ncycles)
-                    pch <- rep(pch, length.out=ncycles)
-                for (i in seq_len(ncycles)) {
-                    argoFloatsDebug(debug, "    handling cycle ", i, " of ", ncycles, ", which has ",
-                        length(salinity[i==cycleIndex]), " points\n", sep="")
-                    ctd <- oce::as.ctd(
-                        salinity=salinity[i == cycleIndex],
-                        temperature=temperature[i == cycleIndex],
-                        pressure=pressure[i == cycleIndex],
-                        latitude=latitude[i == cycleIndex],
-                        longitude=longitude[i == cycleIndex])
-                    if (i == 1L) {
-                        plotTS(ctd, Slim=Slim, Tlim=Tlim,
-                            type=type[i], col=col[i], pch=pch[i])
-                    } else {
-                        plotTS(ctd, add=TRUE,
-                            type=type[i], col=col[i], pch=pch[i])
-                    }
-                }
-            } else {
-                argoFloatsDebug(debug, "not colorizing by index\n")
-                oce::plotTS(ctd,
-                    cex=cex,
-                    bg=bg,
-                    col=col,
-                    pch=pch,
-                    mar=par("mar"), mgp=par("mgp"), eos=eos,
-                    type=if (is.null(type)) "p" else type, ...)
-            }
+            #cat("next is cex before call:\n");cat(vectorShow(cex))
+            plotArgoTS(x=x, xlim=xlim,
+                ylim=ylim, xlab=xlab, ylab=ylab,
+                type=type, cex=cex, col=col, pch=pch, bg=bg,
+                eos=eos, TSControl=TSControl, debug=debug-1L)
+            argoFloatsDebug(debug, "} # plot()\n", sep="", unindent=1, style="bold")
+            return()
+            #<20230805> #return(do.call("plotArgoTS", args))
+            #<20230805> stop("FIXME: cannot get here")
+            #<20230805> argoFloatsDebug(debug, "TS plot\n", sep="")
+            #<20230805> if ((x[["type"]] != "argos"))
+            #<20230805>     stop("In plot,argoFloats-method(): x must have been created by readProfiles()", call.=FALSE)
+            #<20230805> if (!(eos %in% c("gsw", "unesco")))
+            #<20230805>     stop("In plot,argoFloats-method(): eos must be \"gsw\" or \"unesco\", not \"", eos, "\"", call.=FALSE)
+            #<20230805> # compute cycle, in case we need that
+            #<20230805> cycleIndex <- unlist(lapply(seq_len(x[["length"]]),
+            #<20230805>         function(icycle)
+            #<20230805>             rep(icycle, length(x@data$argos[[icycle]]@data$pressure))))
+            #<20230805> salinity <- unlist(x[["salinity", debug=debug-1L]])
+            #<20230805> temperature <- unlist(x[["temperature", debug=debug-1L]])
+            #<20230805> pressure <- unlist(x[["pressure", debug=debug-1L]])
+            #<20230805> ## Use byLevel to repeat the latitude and longitude values across
+            #<20230805> ## the depths in each profile, so that the resultant vector
+            #<20230805> ## will match the salinity, temperature and pressure vectors.
+            #<20230805> latitude <- unlist(x[["latitude", "byLevel", debug=debug-1L]])
+            #<20230805> longitude <- unlist(x[["longitude", "byLevel", debug=debug-1L]])
+            #<20230805> # Interpolate across NA longitudes (required for traj data, to get TS plot)
+            #<20230805> n <- length(longitude)
+            #<20230805> if (any(is.na(longitude)))
+            #<20230805>     longitude <- approx(1:n, longitude, 1:n)$y
+            #<20230805> if (any(is.na(latitude)))
+            #<20230805>     latitude <- approx(1:n, latitude, 1:n)$y
+            #<20230805> ctd <- oce::as.ctd(salinity=salinity,
+            #<20230805>     temperature=temperature,
+            #<20230805>     pressure=pressure,
+            #<20230805>     latitude=latitude,
+            #<20230805>     longitude=longitude)
+            #<20230805> ctd@data$cycleIndex <- cycleIndex
+            #<20230805> if (is.null(TSControl)) {
+            #<20230805>     argoFloatsDebug(debug, "defaulting TSControl\n")
+            #<20230805>     TSControl <- list(colByCycle=NULL)
+            #<20230805> }
+            #<20230805> if (is.null(TSControl$colByCycle)) {
+            #<20230805>     argoFloatsDebug(debug, "TSControl does not contain colByCycle\n")
+            #<20230805>     if (is.null(col)) {
+            #<20230805>         if (which == "TS") {
+            #<20230805>             col <- "flags"
+            #<20230805>         } else {
+            #<20230805>             col <- rgb(0, 0, 1, 0.5)
+            #<20230805>         }
+            #<20230805>     }
+            #<20230805> } else {
+            #<20230805>     argoFloatsDebug(debug, "TSControl contains colByCycle\n")
+            #<20230805>     # Ignore "col" if TSControl contains "colByCycle"
+            #<20230805>     colByCycle <- TSControl$colByCycle
+            #<20230805>     cycle <- unlist(x[["cycle", debug=debug-1L]])
+            #<20230805>     lengths <- sapply(x[["argos"]], function(cc) length(cc[["pressure"]]))
+            #<20230805>     # Increase the col length, so e.g. TSControl=list(colByCycle=1:2) will alternate colours
+            #<20230805>     colByCycle <- rep(colByCycle, length.out=length(cycle))
+            #<20230805>     col <- unlist(lapply(seq_along(cycle), function(i) rep(colByCycle[i], lengths[i])))
+            #<20230805> }
+            #<20230805> if (is.null(cex)) {
+            #<20230805>     cex <- par("cex")
+            #<20230805>     argoFloatsDebug(debug, "defaulting to cex=", cex, "\n", sep="")
+            #<20230805> }
+            #<20230805> if (is.null(pch)) {
+            #<20230805>     pch <- 20
+            #<20230805>     argoFloatsDebug(debug, "defaulting to pch=", pch, "\n", sep="")
+            #<20230805> }
+            #<20230805> if (col[1] == "flags") {
+            #<20230805>     argoFloatsDebug(debug, "col is \"flags\"\n")
+            #<20230805>     salinityFlag <- unlist(x[["salinityFlag"]])
+            #<20230805>     temperatureFlag <- unlist(x[["temperatureFlag"]])
+            #<20230805>     goodT <- temperatureFlag %in% c(1, 2, 5, 8)
+            #<20230805>     goodS <- salinityFlag %in% c(1, 2, 5, 8)
+            #<20230805>     good <- goodS & goodT
+            #<20230805>     okT <- temperatureFlag %in% c(0)
+            #<20230805>     okS <- salinityFlag %in% c(0)
+            #<20230805>     ok <- okS & okT
+            #<20230805>     col <- ifelse(good, "black", ifelse(ok, "gray", "red"))
+            #<20230805>     if (pch == 21)
+            #<20230805>         bg <- ifelse(good, "black", ifelse(ok, "gray", "red"))
+            #<20230805> }
+            #<20230805> argoFloatsDebug(debug, "about to plotTS()\n")
+            #<20230805> if (!is.null(TSControl$colByCycle)) {
+            #<20230805>     argoFloatsDebug(debug, "colorizing by index\n")
+            #<20230805>     cycles <- unique(cycleIndex)
+            #<20230805>     ncycles <- length(cycles)
+            #<20230805>     if (eos == "gsw") {
+            #<20230805>         Slim <- range(ctd[["SA"]], na.rm=TRUE)
+            #<20230805>         Tlim <- range(ctd[["CT"]], na.rm=TRUE)
+            #<20230805>     } else {
+            #<20230805>         Slim <- range(ctd[["salinity"]], na.rm=TRUE)
+            #<20230805>         Tlim <- range(ctd[["temperature"]], na.rm=TRUE)
+            #<20230805>     }
+            #<20230805>     argoFloatsDebug(debug, "set Slim=", Slim, "\n")
+            #<20230805>     argoFloatsDebug(debug, "set Tlim=", Tlim, "\n")
+            #<20230805>     if (length(longitude) != length(salinity))
+            #<20230805>         longitude <- rep(longitude[1], length(salinity))
+            #<20230805>     if (length(latitude) != length(salinity))
+            #<20230805>         latitude <- rep(latitude[1], length(salinity))
+            #<20230805>     col <- TSControl$colByCycle
+            #<20230805>     if (length(col) != ncycles)
+            #<20230805>         col <- rep(col, length.out=ncycles)
+            #<20230805>     if (length(type) != ncycles)
+            #<20230805>         type <- rep(type, length.out=ncycles)
+            #<20230805>     if (length(pch) != ncycles)
+            #<20230805>         pch <- rep(pch, length.out=ncycles)
+            #<20230805>     for (i in seq_len(ncycles)) {
+            #<20230805>         argoFloatsDebug(debug, "    handling cycle ", i, " of ", ncycles, ", which has ",
+            #<20230805>             length(salinity[i==cycleIndex]), " points\n", sep="")
+            #<20230805>         ctd <- oce::as.ctd(
+            #<20230805>             salinity=salinity[i == cycleIndex],
+            #<20230805>             temperature=temperature[i == cycleIndex],
+            #<20230805>             pressure=pressure[i == cycleIndex],
+            #<20230805>             latitude=latitude[i == cycleIndex],
+            #<20230805>             longitude=longitude[i == cycleIndex])
+            #<20230805>         if (i == 1L) {
+            #<20230805>             plotTS(ctd, Slim=Slim, Tlim=Tlim,
+            #<20230805>                 type=type[i], col=col[i], pch=pch[i])
+            #<20230805>         } else {
+            #<20230805>             plotTS(ctd, add=TRUE,
+            #<20230805>                 type=type[i], col=col[i], pch=pch[i])
+            #<20230805>         }
+            #<20230805>     }
+            #<20230805> } else {
+            #<20230805>     argoFloatsDebug(debug, "not colorizing by index\n")
+            #<20230805>     oce::plotTS(ctd,
+            #<20230805>         cex=cex,
+            #<20230805>         bg=bg,
+            #<20230805>         col=col,
+            #<20230805>         pch=pch,
+            #<20230805>         mar=par("mar"), mgp=par("mgp"), eos=eos,
+            #<20230805>         type=if (is.null(type)) "p" else type, ...)
+            #<20230805> }
         } else if (which == "QC" && !istraj) {
             if (x[["type"]] != "argos")
                 stop("In plot,argoFloats-method(): The type of x must be \"argos\"", call.=FALSE)

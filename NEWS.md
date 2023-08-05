@@ -1,6 +1,7 @@
 # argoFloats (development version)
 
 * Require R 4.1.0 or higher, to permit `|>` syntax.
+* `plot(a, which="TS")` can color by cycle for `type="l"` now.
 
 ## argoFloats 1.0.7
 

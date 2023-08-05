@@ -13,11 +13,11 @@
   ylim = NULL,
   xlab = NULL,
   ylab = NULL,
-  type = NULL,
-  cex = NULL,
-  col = NULL,
-  pch = NULL,
-  bg = NULL,
+  type = "p",
+  cex = par("cex"),
+  col = par("fg"),
+  pch = par("pch"),
+  bg = par("bg"),
   eos = "gsw",
   mapControl = NULL,
   profileControl = NULL,
@@ -137,14 +137,13 @@ all of these will be shown.  If all the elements of \code{x} have the same
 the \code{cycle}.}
 
 \item{TSControl}{a list that permits control of the \code{which="TS"}
-case, and is ignored for the other cases.
-If \code{TSControl} is not supplied as an argument,
-points will be coloured black if their quality-control flags indicate
-good data, red if flags indicate bad data, and gray if flags are not accessed.
-Otherwise, if \code{TSControl} contains a
-vector element named \code{colByCycle}, then the \code{col} argument will be ignored,
-and instead individual cycles will be coloured as dictated by successive
-elements in \code{colByCycle}.}
+case, and is ignored for the other cases. If \code{TSControl} is
+supplied, then other arguments that normally control plots
+are ignored.  \code{TSControl} may have elements named
+\code{drawByCycle}, \code{cex}, \code{col}, \code{pch}, \verb{lty, }lwd\code{and}type\verb{.  The first of these is a logical value indicating whether to plot individual cycles with different aesthetic characteristics, and the other elements describe those characteristics in the usual way.  By default, }type\code{is}"p"\verb{, and the point characteristics are given by the other parameters, which are passed to [rep()] to have one value per cycle.  For example, }TSControl=list(drawByCycle=TRUE,col=1:2,type="l")` indicates
+to draw lines for the individual cycles, with the first being
+black, the second red, the third black, etc.
+\strong{FIXME: THIS IS NOT CODED YET.}}
 
 \item{debug}{an integer specifying the level of debugging.}
 
