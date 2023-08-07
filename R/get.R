@@ -406,27 +406,20 @@ getIndex <- function(filename="core",
         },
         "\", destdir=\"", destdir, "\") { ...", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
     clock0 <- as.numeric(Sys.time())
-    if (!requireNamespace("oce", quietly=TRUE)) {
+    if (!requireNamespace("oce", quietly=TRUE))
         stop("must install.packages(\"oce\"), for getIndex() to work")
-    }
-    if (!requireNamespace("curl", quietly=TRUE)) {
+    if (!requireNamespace("curl", quietly=TRUE))
         stop("must install.packages(\"curl\") for getIndex() to work")
-    }
-    if (!is.logical(quiet)) {
+    if (!is.logical(quiet))
         stop("quiet must be a logical value")
-    }
-    if (1 != length(quiet)) {
+    if (1 != length(quiet))
         stop("quiet must be a single value")
-    }
-    if (!is.logical(keep)) {
+    if (!is.logical(keep))
         stop("keep must be a logical value")
-    }
-    if (1 != length(keep)) {
+    if (1 != length(keep))
         stop("keep must be a single value")
-    }
-    if (keep) {
+    if (keep)
         age <- 0
-    }
     useLocalFile <- is.null(server)
     argoFloatsDebug(debug, "Set useLocalFile=", useLocalFile, "\n", sep="")
     # Sample file
@@ -447,12 +440,10 @@ getIndex <- function(filename="core",
             else paste0("\"", server, "\""), "\n", sep="")
     }
     # Ensure that we can save the file
-    if (!file.exists(destdir)) {
+    if (!file.exists(destdir))
         stop("First, create a directory named '", destdir, "'")
-    }
-    if (!file.info(destdir)$isdir) {
+    if (!file.info(destdir)$isdir)
         stop("'", destdir, "' is not a directory")
-    }
     # Handle nicknames
     filenameOrig <- filename
     names <- c("core", "bgc", "bgcargo", "synthetic", "traj", "bio-traj",
@@ -483,9 +474,8 @@ getIndex <- function(filename="core",
                 "\", or set server=NULL if you want to read a local .rda or .gz file.")
         }
     }
-    if (filename != filenameOrig) {
+    if (filename != filenameOrig)
         argoFloatsDebug(debug, "Converted filename=\"", filenameOrig, "\" to \"", filename, "\".\n", sep="")
-    }
     # Note: 'url' may contain more than one element
     url <- paste(server, filename, sep="/")
     # FIXME: the gsub() below is because filename might be a full pathname but
