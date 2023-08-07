@@ -23,7 +23,8 @@ of results.
 }
 \description{
 \code{showQCTests} prints a summary of the quality-control (QC) tests
-(if any) that were performed on an Argo profile in real-time (\strong{Caution}: any tests completed and/or failed on delayed
+(if any) that were performed on an Argo profile in real-time
+(\strong{Caution}: any tests completed and/or failed on delayed
 mode data are not recorded. This function also assumes tests performed
 or failed are recorded once, otherwise it produces
 a warning).  It uses
@@ -42,7 +43,7 @@ See section 3.3 of Kelley et al. (2021) for more on this function.
 The format used in the \code{historyQCTest} and \code{historyAction}
 elements of the \code{metadata} slot of an \link[oce:argo-class]{oce::argo} object
 is mentioned in Sections 2.2.7, 2.3.7, 5.1, 5.3 and 5.4
-of Carval et al. (2019), in which they are called
+of reference 1, in which they are called
 \code{HISTORY_QCTEST} and \code{HISTORY_ACTION}, respectively.
 Both of these things are vectors of character values,
 with the entries within \code{historyAction} providing names for
@@ -60,7 +61,7 @@ on the left to make the length be the same as that of the
 
 The bits decoded from the relevant elements of \code{historyQCTest}
 correspond to QC tests as indicated in the following table.
-This is based on Table 11 of Carval et al. (2019),
+This is based on Table 11 of reference 1,
 after correcting the "Number" for test 18 from
 261144 to 262144, because the former is not an
 integral power of 2, suggesting a typo
@@ -101,13 +102,14 @@ showQCTests(a[[1]])
 
 }
 \references{
-Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
+\enumerate{
+\item Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
 Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
 \code{doi:10.13155/29825}
-
-Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
+\item Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
 Argo data. Frontiers in Marine Science, (8), 636922.
 \doi{10.3389/fmars.2021.635922}
+}
 }
 \author{
 Jaimie Harbin and Dan Kelley

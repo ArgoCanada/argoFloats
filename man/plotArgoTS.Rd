@@ -9,13 +9,14 @@ plotArgoTS(
   xlim = NULL,
   ylim = NULL,
   type = "p",
-  cex,
-  col,
-  pch,
-  bg,
+  cex = 1,
+  col = NULL,
+  pch = 1,
+  bg = "white",
   eos = "gsw",
   TSControl = NULL,
-  debug = 0
+  debug = 0,
+  ...
 )
 }
 \arguments{
@@ -30,9 +31,17 @@ lines are joined up between cycles, unless the \code{TSControl} parameter indica
 otherwise.}
 
 \item{cex, col, pch, bg}{values that have the same meaning as for general R plots
-if \code{TSControl$groupByCycle} is FALSE, except for that \code{col} may be set to
-\verb{"flags", to use black for good data (flag 1, 2, 5 or 8), red for  bad data (flag 3, 4, 6 or 7) or gray for unassessed data (flag 0). This flag indication is not done if }TSControl$groupByCycle\verb{is TRUE, and in that case}col` and the other parameters in this grouping are
-copied with \code{\link[=rep]{rep()}} to get one value per cycle.}
+if \code{TSControl$groupByCycle} is FALSE, except that if \code{col} is not
+provided by the user and if \code{type} is \code{"l"}, then the points
+are colour-coded to indicate the value of data-quality flags.
+Black symbols indicate good data, i.e. data for which the
+flags for pressure, salinity and temperature are all in the set
+(1, 2, 5, 8).  Red is used for bad data, with any of these three
+variables being flagged in the set (3, 4, 6, 7). And, finally
+gray is used if data that have not been assessed for quality,
+with the flags for all three of these variables being 0.
+(For more on flags, see Reference Table 2 in Section 3.2 of
+reference 1.)}
 
 \item{eos}{character value, either \code{"gsw"} (the default) for the Gibbs-Seawater
 (TEOS-10) equation of state or \code{"unesco"} for the 1980s-era UNESCO equation of
@@ -48,11 +57,19 @@ cycles in \code{x}.  This can be useful in distinguishing between cycles.}
 during operation. Use 0 for silent work, 1 for some information and 2 for
 more information.  Note that \code{\link[=plot,argoFloats-method]{plot,argoFloats-method()}} reduces its \code{debug}
 value by 1 before passing to \code{\link[=plotArgoTS]{plotArgoTS()}}.}
+
+\item{\dots}{extra arguments provided to \code{\link[oce:plotTS]{oce::plotTS()}}.}
 }
 \description{
 Plot a TS diagram for an \linkS4class{argoFloats} object that was created with
 \code{\link[=readProfiles]{readProfiles()}}.  This function is called by \code{\link[=plot,argoFloats-method]{plot,argoFloats-method()}},
 but may also be called directly.
+}
+\references{
+\enumerate{
+\item Argo Data Management. “Argo User’s Manual.” Ifremer, July 5, 2022.
+https://doi.org/10.13155/29825.
+}
 }
 \author{
 Dan Kelley and Jaimie Harbin

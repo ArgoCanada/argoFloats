@@ -181,7 +181,7 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' value naming the quantity for which the quality-control information is
 #' to be plotted, and an element named `dataStateIndicator`, a logical
 #' value controlling whether to add a panel showing this quantity
-#' (see Reference Table 6 of Carval et al, 2019 to learn more
+#' (see Reference Table 6 of reference 1 to learn more
 #' about what is encoded in `dataStateIndicator`).
 #' If not provided, `QCControl` defaults to
 #' `list(parameter="temperature",dataStateIndicator=FALSE)`.
@@ -189,8 +189,8 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' @param summaryControl a list that permits control of the `which="summary"`.
 #' If provided, it should contain an element named `items`, a character vector
 #' naming the items to be shown.  The possible entries in this vector are
-#' `"dataStateIndicator"` (see Reference Table 6 of Carval et al, 2019,
-#' for more information on this quantity)), `"length"` (the number of levels
+#' `"dataStateIndicator"` (see Reference Table 6 of reference 1,
+#' for more information on this quantity), `"length"` (the number of levels
 #' in the profile), `"deepest"` (the highest pressure recorded),
 #' `"longitude"` and `"latitude"`. If `summaryControl` is not provided,
 #' all of these will be shown.  If all the elements of `x` have the same
@@ -293,8 +293,8 @@ colDefaults <- list(core="7", bgc="#05f076", deep="6")
 #' ylim <- range(index[["latitude"]])
 #' # Colourize 1km, 2km, etc, isobaths.
 #' contour(x=lon, y=lat, z=topoWorld[["z"]], xlab="", ylab="",
-#'         xlim=xlim, ylim=ylim, asp=asp,
-#'         col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
+#'     xlim=xlim, ylim=ylim, asp=asp,
+#'     col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 #' # Show land
 #' data(coastlineWorldFine, package="ocedata")
 #' polygon(coastlineWorldFine[["longitude"]],

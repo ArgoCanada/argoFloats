@@ -17,12 +17,17 @@
 #' otherwise.
 #'
 #' @param cex,col,pch,bg values that have the same meaning as for general R plots
-#' if `TSControl$groupByCycle` is FALSE, except for that `col` may be set to
-#' `"flags", to use black for good data (flag 1, 2, 5 or 8), red for 
-#' bad data (flag 3, 4, 6 or 7) or gray for unassessed data (flag 0).
-#' This flag indication is not done if `TSControl$groupByCycle` is TRUE,
-#' and in that case `col` and the other parameters in this grouping are
-#' copied with [rep()] to get one value per cycle.
+#' if `TSControl$groupByCycle` is FALSE, except that if `col` is not
+#' provided by the user and if `type` is `"l"`, then the points
+#' are colour-coded to indicate the value of data-quality flags.
+#' Black symbols indicate good data, i.e. data for which the
+#' flags for pressure, salinity and temperature are all in the set
+#' (1, 2, 5, 8).  Red is used for bad data, with any of these three
+#' variables being flagged in the set (3, 4, 6, 7). And, finally
+#' gray is used if data that have not been assessed for quality,
+#' with the flags for all three of these variables being 0.
+#' (For more on flags, see Reference Table 2 in Section 3.2 of
+#' reference 1.)
 #'
 #' @param eos character value, either `"gsw"` (the default) for the Gibbs-Seawater
 #' (TEOS-10) equation of state or `"unesco"` for the 1980s-era UNESCO equation of
@@ -39,11 +44,19 @@
 #' more information.  Note that [plot,argoFloats-method()] reduces its `debug`
 #' value by 1 before passing to [plotArgoTS()].
 #'
+#' @param \dots extra arguments provided to [oce::plotTS()].
+#'
+#' @references
+#'
+#' 1. Argo Data Management. “Argo User’s Manual.” Ifremer, July 5, 2022.
+#' https://doi.org/10.13155/29825.
+#'
 #' @export
 #'
 #' @author Dan Kelley and Jaimie Harbin
 plotArgoTS <- function(x, xlim=NULL, ylim=NULL,
-    type="p", cex, col, pch, bg, eos="gsw", TSControl=NULL, debug=0)
+    type="p", cex=1, col=NULL, pch=1, bg="white", eos="gsw", TSControl=NULL,
+    debug=0, ...)
 {
     #message('debug=',debug)
     if (!inherits(x, "argoFloats"))
@@ -55,6 +68,7 @@ plotArgoTS <- function(x, xlim=NULL, ylim=NULL,
     argoFloatsDebug(debug, "plotArgoTS(x, ..., eos=\"", eos, "\", ...) {\n", sep="", unindent=1, style="bold")
     if (!(eos %in% c("gsw", "unesco")))
         stop("In plot,argoFloats-method(): eos must be \"gsw\" or \"unesco\", not \"", eos, "\"", call.=FALSE)
+    colGiven <- !is.null(col)
     # compute cycle, in case we need that
     ncycles <- x[["length"]]
     cycleIndex <- unlist(lapply(seq_len(ncycles),
@@ -108,37 +122,52 @@ plotArgoTS <- function(x, xlim=NULL, ylim=NULL,
         #? #type <- rep(TSControl$type, length.out=ncycles)
     }
     #cat("next is cex inside call (spot 2):\n");cat(vectorShow(cex))
+    # Calculate whether data are good
+    pressureFlag <- unlist(x[["pressureFlag"]])
+    salinityFlag <- unlist(x[["salinityFlag"]])
+    temperatureFlag <- unlist(x[["temperatureFlag"]])
+    # Consider these to be good: 1=good, 2=probably good, 5=changed, 8=estimated
+    # Consider these to be bad: 3=bad data that are potentially correctable,
+    # 4=bad data, 6=not used, 7=not used, 9=missing value.
+    goodp <- pressureFlag %in% c(1, 2, 5, 8)
+    goodT <- temperatureFlag %in% c(1, 2, 5, 8)
+    goodS <- salinityFlag %in% c(1, 2, 5, 8)
+    goodData <- goodp & goodS & goodT
+    unassessedp <- pressureFlag == 0
+    unassessedT <- temperatureFlag == 0
+    unassessedS <- salinityFlag == 0
+    unassessedData <- unassessedp & unassessedS & unassessedT
+    # Colour-code by flag status (may be overruled by the user setting colors)
     if (identical(col[1], "flags")) {
         argoFloatsDebug(debug, "col is \"flags\"\n")
-        salinityFlag <- unlist(x[["salinityFlag"]])
-        temperatureFlag <- unlist(x[["temperatureFlag"]])
-        goodT <- temperatureFlag %in% c(1, 2, 5, 8)
-        goodS <- salinityFlag %in% c(1, 2, 5, 8)
-        good <- goodS & goodT
-        okT <- temperatureFlag %in% c(0)
-        okS <- salinityFlag %in% c(0)
-        ok <- okS & okT
-        col <- ifelse(good, "black", ifelse(ok, "gray", "red"))
-        if (pch == 21)
-            bg <- ifelse(good, "black", ifelse(ok, "gray", "red"))
+        col <- ifelse(goodData, 1, ifelse(unassessedData, "gray", 2))
+        # FIXME: pch=21 does not work.  I think the new name might be pt.bg or something;
+        # using bg colours field. Or is it 'fill'? Revisit this later.
+        if (pch == 21) {
+            bg <- ifelse(goodData, 1, ifelse(unassessedData, "gray", 2))
+        }
     }
-    argoFloatsDebug(debug, "about to plotTS()\n")
+    argoFloatsDebug(debug, "about to set xlim and ylim\n")
+    if (is.null(xlim)) {
+        Slim <- if (eos == "gsw") range(ctd[["SA"]], na.rm=TRUE)
+            else range(ctd[["salinity"]], na.rm=TRUE)
+        argoFloatsDebug(debug, "inferred xlim=", paste(round(Slim, 5), collapse=" "), " from data\n", sep="")
+    } else {
+        Slim <- xlim
+        argoFloatsDebug(debug, "using provided ylim=", paste(round(Slim, 5), collapse=" "), "\n", sep="")
+    }
+    if (is.null(ylim)) {
+        Tlim <- if (eos == "gsw") range(ctd[["CT"]], na.rm=TRUE)
+            else range(ctd[["theta"]], na.rm=TRUE)
+        argoFloatsDebug(debug, "inferred ylim=", paste(round(Tlim, 5), collapse=" "), " from data\n", sep="")
+    } else {
+        Tlim <- ylim
+        argoFloatsDebug(debug, "using provided ylim=", paste(round(Tlim, 5), collapse=" "), "\n", sep="")
+    }
     if (isTRUE(TSControl$groupByCycle)) {
         argoFloatsDebug(debug, "colorizing by index\n")
         cycles <- unique(cycleIndex)
         ncycles <- length(cycles)
-        if (is.null(xlim)) {
-            Slim <- if (eos == "gsw") range(ctd[["SA"]], na.rm=TRUE)
-            else range(ctd[["salinity"]], na.rm=TRUE)
-        } else {
-            Slim <- xlim
-        }
-        if (is.null(ylim)) {
-            Tlim <- if (eos == "gsw") range(ctd[["CT"]], na.rm=TRUE)
-            else range(ctd[["theta"]], na.rm=TRUE)
-        } else {
-            Tlim <- ylim
-        }
         argoFloatsDebug(debug, "Slim=c(", paste(Slim, collapse=","), ")\n", sep="")
         argoFloatsDebug(debug, "Tlim=c(", paste(Tlim, collapse=","), ")\n", sep="")
         if (length(longitude) != length(salinity))
@@ -168,18 +197,27 @@ plotArgoTS <- function(x, xlim=NULL, ylim=NULL,
             if (i == 1L) {
                 plotTS(ctd, Slim=Slim, Tlim=Tlim,
                     cex=cex[i], col=col[i], pch=pch[i], type=type[i],
-                    mar=par("mar"), mgp=par("mgp"), eos=eos)
+                    mar=par("mar"), mgp=par("mgp"), eos=eos, ...)
             } else {
                 plotTS(ctd, add=TRUE,
                     cex=cex[i], col=col[i], pch=pch[i], type=type[i],
-                    mar=par("mar"), mgp=par("mgp"), eos=eos)
+                    mar=par("mar"), mgp=par("mgp"), eos=eos, ...)
             }
         }
     } else {
         argoFloatsDebug(debug, "making single plotTS() call, since groupByCycle is FALSE\n")
-        oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch,
-            mar=par("mar"), mgp=par("mgp"), eos=eos,
-            type=if (is.null(type)) "p" else type[1])
+        if (colGiven) {
+            oce::plotTS(ctd, Slim=Slim, Tlim=Tlim, col=col, pch=pch, cex=cex, ...)
+        } else {
+            #print(table(col))
+            ctdBad <- subset(ctd, !goodData)
+            #DAN<<-list(ctd=ctd, ctdBad=ctdBad, goodData=goodData)
+            oce::plotTS(ctd, Slim=Slim, Tlim=Tlim, col=col, pch=pch, cex=cex, ...)
+            #?oce::plotTS(ctdBad, col=2, pch=pch, cex=cex, add=TRUE)
+            #?oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch,
+            #?    mar=par("mar"), mgp=par("mgp"), eos=eos,
+            #?    type=if (is.null(type)) "p" else type[1], debug=debug-1L)
+        }
     }
 }
 

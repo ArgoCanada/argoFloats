@@ -120,7 +120,7 @@ case.  If provided, it may contain an element named \code{parameter}, a characte
 value naming the quantity for which the quality-control information is
 to be plotted, and an element named \code{dataStateIndicator}, a logical
 value controlling whether to add a panel showing this quantity
-(see Reference Table 6 of Carval et al, 2019 to learn more
+(see Reference Table 6 of reference 1 to learn more
 about what is encoded in \code{dataStateIndicator}).
 If not provided, \code{QCControl} defaults to
 \code{list(parameter="temperature",dataStateIndicator=FALSE)}.}
@@ -128,8 +128,8 @@ If not provided, \code{QCControl} defaults to
 \item{summaryControl}{a list that permits control of the \code{which="summary"}.
 If provided, it should contain an element named \code{items}, a character vector
 naming the items to be shown.  The possible entries in this vector are
-\code{"dataStateIndicator"} (see Reference Table 6 of Carval et al, 2019,
-for more information on this quantity)), \code{"length"} (the number of levels
+\code{"dataStateIndicator"} (see Reference Table 6 of reference 1,
+for more information on this quantity), \code{"length"} (the number of levels
 in the profile), \code{"deepest"} (the highest pressure recorded),
 \code{"longitude"} and \code{"latitude"}. If \code{summaryControl} is not provided,
 all of these will be shown.  If all the elements of \code{x} have the same
@@ -306,8 +306,8 @@ xlim <- range(index[["longitude"]])
 ylim <- range(index[["latitude"]])
 # Colourize 1km, 2km, etc, isobaths.
 contour(x=lon, y=lat, z=topoWorld[["z"]], xlab="", ylab="",
-        xlim=xlim, ylim=ylim, asp=asp,
-        col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
+    xlim=xlim, ylim=ylim, asp=asp,
+    col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 # Show land
 data(coastlineWorldFine, package="ocedata")
 polygon(coastlineWorldFine[["longitude"]],
