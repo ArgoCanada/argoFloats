@@ -60,8 +60,12 @@
 #' \doi{10.3389/fmars.2021.635922}
 #'
 #' @importFrom methods new
-#' @name argoFloats-package
+#' @name argoFloats
 #' @docType package
+#' @keywords internal
+"_PACKAGE"
+## usethis namespace: start
+## usethis namespace: end
 NULL
 
 
