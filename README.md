@@ -11,7 +11,12 @@ developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.rep
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/argoFloats)](https://cran.r-project.org/package=argoFloats)
 [![R build
 status](https://github.com/ArgoCanada/argoFloats/workflows/R-CMD-check/badge.svg)](https://github.com/ArgoCanada/argoFloats/actions)
-![RStudio CRAN mirror downloads](https://cranlogs.r-pkg.org/badges/last-month/argoFloats)
+![RStudio CRAN mirror
+downloads](https://cranlogs.r-pkg.org/badges/last-month/argoFloats)
+![RStudio CRAN mirror
+downloads](https://cranlogs.r-pkg.org/badges/last-week/argoFloats)
+![RStudio CRAN mirror
+downloads](https://cranlogs.r-pkg.org/badges/last-day/argoFloats)
 ![RStudio CRAN mirror
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/argoFloats)
 [![codecov](https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/ArgoCanada/argoFloats)
@@ -99,10 +104,9 @@ library(oce)
 #> Loading required package: gsw
 ## 1. Get worldwide float-profile index, saving to ~/data/argo by default.
 indexAll <- getIndex()
-#> Downloading 'https://data-argo.ifremer.fr/ar_index_global_prof.txt.gz'
 ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
-                circle=list(longitude=-77.06,latitude=26.54,radius=30))
+    circle=list(longitude=-77.06,latitude=26.54,radius=30))
 #> Kept 41 cycles (0.00144%)
 ## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
 profiles  <- getProfiles(index)
