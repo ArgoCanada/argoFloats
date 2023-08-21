@@ -97,6 +97,10 @@ With this in mind, readers ought to find it easy to read the following code.  A
 reasonable next step would be to try altering the code, perhaps to explore
 another region or to see whether the QC step is actually necessary.
 
+```{r results="hide", echo=FALSE}
+oldpar <- par(no.readonly=TRUE)
+```
+
 ```{r results="hide", out.width="80%", fig.height=3, fig.width=5, dev.args=list(pointsize=8)}
 library(argoFloats)
 library(oce)
@@ -111,7 +115,6 @@ profiles  <- getProfiles(index)
 argos <- readProfiles(profiles)
 ## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)
-oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(1, 2))                     # want two-panel plot
 par(mar=c(3.5, 2.0, 2.0, 2.0))         # maps do not get axis names
 par(mgp=c(2,0.7,0))                    # tighten axes
@@ -122,6 +125,9 @@ mtext(paste(argosClean[["length"]], "profiles"), line=1.0)
 ## 7. Plot a TS diagram
 par(mar=c(3.5, 3.5, 2.0, 1.0))         # increase left margin for name
 plot(argosClean, which="TS")
+```
+
+```{r results="hide", echo=FALSE}
 par(oldpar)
 ```
 

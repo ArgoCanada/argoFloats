@@ -126,7 +126,6 @@ argos <- readProfiles(profiles)
 #>     3 7 13
 ## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)
-oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(1, 2))                     # want two-panel plot
 par(mar=c(3.5, 2.0, 2.0, 2.0))         # maps do not get axis names
 par(mgp=c(2,0.7,0))                    # tighten axes
@@ -139,8 +138,4 @@ par(mar=c(3.5, 3.5, 2.0, 1.0))         # increase left margin for name
 plot(argosClean, which="TS")
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="80%" />
-
-``` r
-par(oldpar)
-```
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="80%" />
