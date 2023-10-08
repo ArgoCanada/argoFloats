@@ -12,32 +12,45 @@ applyQC(x, flags = NULL, actions = NULL, debug = 0)
 
 \item{flags}{A list specifying flag values upon which actions will be taken. This can take two forms.
 
-In the first form, the list has named elements each containing a vector of integers. For example, salinities flagged with values of 1 or 3:9 would be specified by flags=list(salinity=c(1,3:9)). Several data items can be specified, e.g. flags=list(salinity=c(1,3:9), temperature=c(1,3:9)) indicates that the actions are to take place for both salinity and temperature.
+In the first form, the list has named elements each containing a vector of
+integers. For example, salinities flagged with values of 1 or 3:9 would be
+specified by flags=list(salinity=c(1,3:9)). Several data items can be
+specified, e.g. flags=list(salinity=c(1,3:9), temperature=c(1,3:9)) indicates
+that the actions are to take place for both salinity and temperature.
 
-In the second form, flags is a list holding a single unnamed vector, and this means to apply the actions to all the data entries. For example, flags=list(c(1,3:9)) means to apply not just to salinity and temperature, but to everything within the data slot.
+In the second form, flags is a list holding a single unnamed vector, and this
+means to apply the actions to all the data entries. For example,
+flags=list(c(1,3:9)) means to apply not just to salinity and temperature, but
+to everything within the data slot.
 
-If flags is NULL then flags=list(c(0,3,4,6,7,9)) is used by default where:
-0 = data that have not yet been assessed,
-3 = "probably bad" data,
-4 = for "bad" data,
-6 = an unused flag,
-7 = an unused flag, or
-9 = "missing" data.
+If flags is NULL then it is set to \code{list(c(0,3,4,6,7,9))}, which means to
+eliminate data that are considered bad (in some degree) or for which QC was
+not performed. Following Section 3.2.1 of reference 1, the flag
+meanings are as follows.
+\itemize{
+\item 0: No QC was performed
+\item 1: Good data
+\item 2: Probably good data
+\item 3: Bad data that are potentially correctable
+\item 4: Bad data
+\item 5: Value changed
+\item 6: Not used
+\item 7: Not used
+\item 8: Estimated value
+\item 9: Missing data
+}}
 
-See Sections 3.2.1 and 3.2.2 of Carval et al. (2019) for
-more information on these QC code values.}
-
-\item{actions}{the actions to perform. The default, \code{NULL}, means to
-use the actions set up by \code{\link[=readProfiles]{readProfiles()}}, which, by default.
-causes any data flagged as suspicious to be set to \code{NA}.}
+\item{actions}{the actions to perform. The default, \code{NULL}, means to use the
+actions set up by \code{\link[=readProfiles]{readProfiles()}}, which, by default. causes any data
+flagged as suspicious to be set to \code{NA}.}
 
 \item{debug}{an integer passed to \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.  If this
 is set to a positive value, then some debugging information will be printed
 as the processing is done.}
 }
 \value{
-A copy of \code{x} but with each of the objects within its
-\code{data} slot having been passed through \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.
+A copy of \code{x} but with each of the objects within its \code{data} slot
+having been passed through \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.
 }
 \description{
 This function examines the quality-control ("QC") flags within an \code{\linkS4class{argoFloats}}
@@ -45,7 +58,9 @@ object that was created by \code{\link[=readProfiles]{readProfiles()}}.  By defa
 data with \code{NA} values, so they will not appear in plots or be considered in calculations.
 This is an important early step in processing, because suspicious Argo floats commonly
 report data that are suspicious based on statistical and physical measures, as
-is illustrated in the \dQuote{Examples} section. See section 3.3 of Kelley et al. (2021) for more on this function.
+is illustrated in the \dQuote{Examples} section.
+See section 3.3 of Kelley et al. (2021) for more information
+about this function.
 }
 \details{
 The work is done by using \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}
@@ -69,12 +84,13 @@ par(oldpar)
 
 }
 \references{
-Carval, Thierry, Bob Keeley, Yasushi Takatsuki, Takashi Yoshida, Stephen Loch,
-Claudia Schmid, and Roger Goldsmith. Argo User's Manual V3.3. Ifremer, 2019.
-\code{doi:10.13155/29825}
-
-Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
-Argo data. Frontiers in Marine Science, (8), 636922. \doi{10.3389/fmars.2021.635922}
+\enumerate{
+\item Argo Data Management. “Argo User’s Manual.” Ifremer, July 5, 2022.
+https://doi.org/10.13155/29825.
+\item Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package
+for analyzing Argo data. Frontiers in Marine Science, (8), 636922.
+\doi{10.3389/fmars.2021.635922}
+}
 }
 \author{
 Dan Kelley

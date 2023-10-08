@@ -90,11 +90,11 @@ for more plotting examples.</p>
 <span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  cex <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  col <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  pch <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  bg <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"p"</span>,</span>
+<span>  cex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"cex"</span><span class="op">)</span>,</span>
+<span>  col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"fg"</span><span class="op">)</span>,</span>
+<span>  pch <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"pch"</span><span class="op">)</span>,</span>
+<span>  bg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"bg"</span><span class="op">)</span>,</span>
 <span>  eos <span class="op">=</span> <span class="st">"gsw"</span>,</span>
 <span>  mapControl <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  profileControl <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -230,7 +230,7 @@ case.  If provided, it may contain an element named <code>parameter</code>, a ch
 value naming the quantity for which the quality-control information is
 to be plotted, and an element named <code>dataStateIndicator</code>, a logical
 value controlling whether to add a panel showing this quantity
-(see Reference Table 6 of Carval et al, 2019 to learn more
+(see Reference Table 6 of reference 1 to learn more
 about what is encoded in <code>dataStateIndicator</code>).
 If not provided, <code>QCControl</code> defaults to
 <code>list(parameter="temperature",dataStateIndicator=FALSE)</code>.</p></dd>
@@ -240,8 +240,8 @@ If not provided, <code>QCControl</code> defaults to
 <dd><p>a list that permits control of the <code>which="summary"</code>.
 If provided, it should contain an element named <code>items</code>, a character vector
 naming the items to be shown.  The possible entries in this vector are
-<code>"dataStateIndicator"</code> (see Reference Table 6 of Carval et al, 2019,
-for more information on this quantity)), <code>"length"</code> (the number of levels
+<code>"dataStateIndicator"</code> (see Reference Table 6 of reference 1,
+for more information on this quantity), <code>"length"</code> (the number of levels
 in the profile), <code>"deepest"</code> (the highest pressure recorded),
 <code>"longitude"</code> and <code>"latitude"</code>. If <code>summaryControl</code> is not provided,
 all of these will be shown.  If all the elements of <code>x</code> have the same
@@ -251,14 +251,13 @@ the <code>cycle</code>.</p></dd>
 
 <dt>TSControl</dt>
 <dd><p>a list that permits control of the <code>which="TS"</code>
-case, and is ignored for the other cases.
-If <code>TSControl</code> is not supplied as an argument,
-points will be coloured black if their quality-control flags indicate
-good data, red if flags indicate bad data, and gray if flags are not accessed.
-Otherwise, if <code>TSControl</code> contains a
-vector element named <code>colByCycle</code>, then the <code>col</code> argument will be ignored,
-and instead individual cycles will be coloured as dictated by successive
-elements in <code>colByCycle</code>.</p></dd>
+case, and is ignored for the other cases. If <code>TSControl</code> is
+supplied, then other arguments that normally control plots
+are ignored.  <code>TSControl</code> may have elements named
+<code>drawByCycle</code>, <code>cex</code>, <code>col</code>, <code>pch</code>, <code>lty, </code>lwd<code>and</code>type<code>.  The first of these is a logical value indicating whether to plot individual cycles with different aesthetic characteristics, and the other elements describe those characteristics in the usual way.  By default, </code>type<code>is</code>"p"<code>, and the point characteristics are given by the other parameters, which are passed to [rep()] to have one value per cycle.  For example, </code>TSControl=list(drawByCycle=TRUE,col=1:2,type="l")` indicates
+to draw lines for the individual cycles, with the first being
+black, the second red, the third black, etc.
+<strong>FIXME: THIS IS NOT CODED YET.</strong></p></dd>
 
 
 <dt>debug</dt>
@@ -342,18 +341,11 @@ regardless of the flag value.</p></li>
 in a vertical stack.  If there is only one ID in <code>x</code>, then the cycle
 values are indicated along the top axis of the top panel. The choice
 of panels is set by the <code>summaryControl</code> argument.</p></li>
-<li><p>For <code>which="TS"</code>,  an overall TS plot is created.  This only works if <code>x</code>
-is an <a href="argoFloats-class.html">argoFloats</a> object of type <code>"argos"</code>, i.e. if it was
-created by <code><a href="readProfiles.html">readProfiles()</a></code>. The scales for the plot
-can be altered by putting <code>Slim</code> and <code>Tlim</code> arguments in the <code>...</code> list; see
-the documentation for <code><a href="https://dankelley.github.io/oce/reference/plotTS.html" class="external-link">oce::plotTS()</a></code> for other arguments that can be
-provided. This plot has a default color code to represent bad, good,
-and unassessed data.
-This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
-data are considered bad if flagged 3, 4, 6, or 7, good
-if flagged 1, 2, 5, or 8, and not accessed if flagged 0; good values are plotted
-with black symbols, bad ones are plotted with red symbols, and not assessed values
-are plotted with gray symbols.</p></li>
+<li><p>For <code>which="TS"</code>, a TS plot is created, by calling <code><a href="plotArgoTS.html">plotArgoTS()</a></code>
+with the specified <code>x</code>, <code>xlim</code>, <code>ylim</code>, <code>xlab</code>, <code>ylab</code>,
+<code>type</code>, <code>cex</code>, <code>col</code>, <code>pch</code>, <code>bg</code>, <code>eos</code>, and <code>TSControl</code>,
+along with <code>debug-1</code>.  See the help for <code><a href="plotArgoTS.html">plotArgoTS()</a></code>
+for how these parameters are interpreted.</p></li>
 </ul></div>
     <div id="references">
     <h2>References</h2>
@@ -412,6 +404,7 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.3</span>, <span class="fl">3.3</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, mgp<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.7</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="co"># wide margins for axis names</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">a</span>, which<span class="op">=</span><span class="st">"TS"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot-argoFloats-method-3.png" alt="" width="672" height="672"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># Example 4: map with bathymetry. Note that par(mar) is adjusted</span></span></span>
@@ -454,8 +447,8 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 <span class="r-in"><span><span class="va">ylim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">index</span><span class="op">[[</span><span class="st">"latitude"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Colourize 1km, 2km, etc, isobaths.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/contour.html" class="external-link">contour</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">lon</span>, y<span class="op">=</span><span class="va">lat</span>, z<span class="op">=</span><span class="va">topoWorld</span><span class="op">[[</span><span class="st">"z"</span><span class="op">]</span><span class="op">]</span>, xlab<span class="op">=</span><span class="st">""</span>, ylab<span class="op">=</span><span class="st">""</span>,</span></span>
-<span class="r-in"><span>        xlim<span class="op">=</span><span class="va">xlim</span>, ylim<span class="op">=</span><span class="va">ylim</span>, asp<span class="op">=</span><span class="va">asp</span>,</span></span>
-<span class="r-in"><span>        col<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, lwd<span class="op">=</span><span class="fl">2</span>, levels<span class="op">=</span><span class="op">-</span><span class="fl">1000</span><span class="op">*</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, drawlabels<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    xlim<span class="op">=</span><span class="va">xlim</span>, ylim<span class="op">=</span><span class="va">ylim</span>, asp<span class="op">=</span><span class="va">asp</span>,</span></span>
+<span class="r-in"><span>    col<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, lwd<span class="op">=</span><span class="fl">2</span>, levels<span class="op">=</span><span class="op">-</span><span class="fl">1000</span><span class="op">*</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, drawlabels<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Show land</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">coastlineWorldFine</span>, package<span class="op">=</span><span class="st">"ocedata"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/polygon.html" class="external-link">polygon</a></span><span class="op">(</span><span class="va">coastlineWorldFine</span><span class="op">[[</span><span class="st">"longitude"</span><span class="op">]</span><span class="op">]</span>,</span></span>

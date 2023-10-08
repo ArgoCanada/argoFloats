@@ -13,11 +13,11 @@
   ylim = NULL,
   xlab = NULL,
   ylab = NULL,
-  type = NULL,
-  cex = NULL,
-  col = NULL,
-  pch = NULL,
-  bg = NULL,
+  type = "p",
+  cex = par("cex"),
+  col = par("fg"),
+  pch = par("pch"),
+  bg = par("bg"),
   eos = "gsw",
   mapControl = NULL,
   profileControl = NULL,
@@ -120,7 +120,7 @@ case.  If provided, it may contain an element named \code{parameter}, a characte
 value naming the quantity for which the quality-control information is
 to be plotted, and an element named \code{dataStateIndicator}, a logical
 value controlling whether to add a panel showing this quantity
-(see Reference Table 6 of Carval et al, 2019 to learn more
+(see Reference Table 6 of reference 1 to learn more
 about what is encoded in \code{dataStateIndicator}).
 If not provided, \code{QCControl} defaults to
 \code{list(parameter="temperature",dataStateIndicator=FALSE)}.}
@@ -128,8 +128,8 @@ If not provided, \code{QCControl} defaults to
 \item{summaryControl}{a list that permits control of the \code{which="summary"}.
 If provided, it should contain an element named \code{items}, a character vector
 naming the items to be shown.  The possible entries in this vector are
-\code{"dataStateIndicator"} (see Reference Table 6 of Carval et al, 2019,
-for more information on this quantity)), \code{"length"} (the number of levels
+\code{"dataStateIndicator"} (see Reference Table 6 of reference 1,
+for more information on this quantity), \code{"length"} (the number of levels
 in the profile), \code{"deepest"} (the highest pressure recorded),
 \code{"longitude"} and \code{"latitude"}. If \code{summaryControl} is not provided,
 all of these will be shown.  If all the elements of \code{x} have the same
@@ -137,14 +137,13 @@ all of these will be shown.  If all the elements of \code{x} have the same
 the \code{cycle}.}
 
 \item{TSControl}{a list that permits control of the \code{which="TS"}
-case, and is ignored for the other cases.
-If \code{TSControl} is not supplied as an argument,
-points will be coloured black if their quality-control flags indicate
-good data, red if flags indicate bad data, and gray if flags are not accessed.
-Otherwise, if \code{TSControl} contains a
-vector element named \code{colByCycle}, then the \code{col} argument will be ignored,
-and instead individual cycles will be coloured as dictated by successive
-elements in \code{colByCycle}.}
+case, and is ignored for the other cases. If \code{TSControl} is
+supplied, then other arguments that normally control plots
+are ignored.  \code{TSControl} may have elements named
+\code{drawByCycle}, \code{cex}, \code{col}, \code{pch}, \verb{lty, }lwd\code{and}type\verb{.  The first of these is a logical value indicating whether to plot individual cycles with different aesthetic characteristics, and the other elements describe those characteristics in the usual way.  By default, }type\code{is}"p"\verb{, and the point characteristics are given by the other parameters, which are passed to [rep()] to have one value per cycle.  For example, }TSControl=list(drawByCycle=TRUE,col=1:2,type="l")` indicates
+to draw lines for the individual cycles, with the first being
+black, the second red, the third black, etc.
+\strong{FIXME: THIS IS NOT CODED YET.}}
 
 \item{debug}{an integer specifying the level of debugging.}
 
@@ -235,18 +234,11 @@ regardless of the flag value.
 in a vertical stack.  If there is only one ID in \code{x}, then the cycle
 values are indicated along the top axis of the top panel. The choice
 of panels is set by the \code{summaryControl} argument.
-\item For \code{which="TS"},  an overall TS plot is created.  This only works if \code{x}
-is an \linkS4class{argoFloats} object of type \code{"argos"}, i.e. if it was
-created by \code{\link[=readProfiles]{readProfiles()}}. The scales for the plot
-can be altered by putting \code{Slim} and \code{Tlim} arguments in the \code{...} list; see
-the documentation for \code{\link[oce:plotTS]{oce::plotTS()}} for other arguments that can be
-provided. This plot has a default color code to represent bad, good,
-and unassessed data.
-This scheme comes from sections 3.2.1 and 3.2.2 of Carval et al. (2019), in which
-data are considered bad if flagged 3, 4, 6, or 7, good
-if flagged 1, 2, 5, or 8, and not accessed if flagged 0; good values are plotted
-with black symbols, bad ones are plotted with red symbols, and not assessed values
-are plotted with gray symbols.
+\item For \code{which="TS"}, a TS plot is created, by calling \code{\link[=plotArgoTS]{plotArgoTS()}}
+with the specified \code{x}, \code{xlim}, \code{ylim}, \code{xlab}, \code{ylab},
+\code{type}, \code{cex}, \code{col}, \code{pch}, \code{bg}, \code{eos}, and \code{TSControl},
+along with \code{debug-1}.  See the help for \code{\link[=plotArgoTS]{plotArgoTS()}}
+for how these parameters are interpreted.
 }
 }
 \examples{
@@ -314,8 +306,8 @@ xlim <- range(index[["longitude"]])
 ylim <- range(index[["latitude"]])
 # Colourize 1km, 2km, etc, isobaths.
 contour(x=lon, y=lat, z=topoWorld[["z"]], xlab="", ylab="",
-        xlim=xlim, ylim=ylim, asp=asp,
-        col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
+    xlim=xlim, ylim=ylim, asp=asp,
+    col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
 # Show land
 data(coastlineWorldFine, package="ocedata")
 polygon(coastlineWorldFine[["longitude"]],
