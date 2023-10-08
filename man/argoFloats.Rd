@@ -79,7 +79,7 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item Dewey Dunnington \email{dewey.dunnington@dfo-mpo.gc.ca} (\href{http://orcid.org/0000-0002-9415-4582}{ORCID}) [contributor]
+  \item Dewey Dunnington \email{dewey.dunnington@dfo-mpo.gc.ca} (\href{https://orcid.org/0000-0002-9415-4582}{ORCID}) [contributor]
   \item Clark Richards \email{clark.richards@dfo-mpo.gc.ca} (\href{https://orcid.org/0000-0002-7833-206X}{ORCID}) [contributor]
 }
 

@@ -14,7 +14,6 @@ Carval
 Dalhousie
 FIXME
 GEBCO
-gzipped
 Harbour
 Ifremer
 KORDI
@@ -24,13 +23,16 @@ MEDD
 MEDS
 Mollweide
 NetCDF
+ORCID
 POSIXt
 QCP
+RStudio
 Realtime
 Schmid
+TEOS
+TSControl
 Takashi
 Takatsuki
-tgz
 Thierry
 USGODAE
 Yasushi
@@ -63,6 +65,7 @@ computable
 dataMode
 dataStateIndicator
 dbar
+drawByCycle
 dek
 devtools
 doi
@@ -73,9 +76,11 @@ getIndex
 getProfiles
 github
 gzipped
+gzipped
 https
 jlh
 labelled
+lwd
 mapApp
 metres
 mol
@@ -98,6 +103,7 @@ reusability
 rtqc
 salinities
 subtype
+tgz
 tgz
 th
 traj
