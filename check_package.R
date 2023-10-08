@@ -1,4 +1,4 @@
-rhub <- FALSE # this takes ages, and I can't recall ever seeing a problem that was not revealed otherwise
+rhub <- FALSE # rhub is VERY slow, and seems never to reveal problem not revealed otherwise
 
 #install.packages("codemetar")
 requireNamespace(c("codemetar", "devtools", "urlchecker", "rhub", "revdepcheck"))
@@ -28,3 +28,4 @@ if (rhub) {
 }
 revdepcheck::revdep_reset()
 revdepcheck::revdep_check(num_workers=4)
+message("run following if desired: pkgdown::build_site()")
