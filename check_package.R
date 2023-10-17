@@ -1,4 +1,4 @@
-rhub <- FALSE # rhub is VERY slow, and seems never to reveal problem not revealed otherwise
+rhub <- !FALSE # rhub is VERY slow, and seems never to reveal problem not revealed otherwise
 
 #install.packages("codemetar")
 requireNamespace(c("codemetar", "devtools", "urlchecker", "rhub", "revdepcheck"))
