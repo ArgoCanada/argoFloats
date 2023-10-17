@@ -36,9 +36,9 @@ File clutter is reduced by creating a top-level directory called
 \code{data}, with subdirectories for various file types; see
 \dQuote{Examples}.}
 
-\item{quiet}{logical value; use \code{TRUE} to show more
+\item{quiet}{logical value; use \code{FALSE} to show more
 verbose information when downloading files.
-(Problems will still be reported, though.)}
+(Even if \code{quiet} is TRUE, problems will still be reported.)}
 
 \item{debug}{an integer specifying the level of debugging. If
 this is zero, the work proceeds silently. If it is 1,

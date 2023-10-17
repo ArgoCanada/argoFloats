@@ -7,14 +7,16 @@
 \description{
 This was created by subsetting a global index to the BGC Argo profiles
 that were within a 300km radius of Marsh Harbour, Abaco Island,
-Bahamas, using the following code.\preformatted{library(argoFloats)
+Bahamas, using the following code.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(argoFloats)
 indexAll <- getIndex("synthetic")
 indexSynthetic <- subset(indexAll,
     circle=list(longitude=-77.06, latitude=26.54, radius=300))
-}
+}\if{html}{\out{</div>}}
 
 This "synthetic" type of index is a replacement for the older "merged" index.  See
-\url{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
+\verb{http://www.argodatamgt.org/Data-Mgt-Team/News/BGC-Argo-synthetic-profiles-distributed-on-GDAC}
 for more on the data file format, the reasons for the change, and the
 timetable for the transition from "merged".
 }

@@ -4,8 +4,21 @@
 #' the spatial-temporal distribution of Argo profiles.  The graphical
 #' user interface (GUI) is meant to be reasonably self-explanatory,
 #' and a button labelled Help yields a pop-up window with
-#' more information that might not
-#' be evident at first glance.
+#' more information that might not be evident at first glance.
+#' A number of keystrokes exist to assist the user including: \cr
+#' **u**: undo previous actions \cr
+#' **i**: zoom in \cr
+#' **o**: zoom out \cr
+#' **n**: go north \cr
+#' **e**: go east \cr
+#' **s**: go south \cr
+#' **w**: go west \cr
+#' **f**: go forward in time \cr
+#' **b**: go backward in time \cr
+#' **r**: reset to initial state \cr
+#' **h**: hold active hover message (press h again to undo) \cr
+#' **0**: unzoom an area \cr
+#' **d**: toggle debugging flag \cr
 #' More details are provided in the rest of this documentation
 #' page, and in Section 4 of Kelley et al. (2021).
 #'
@@ -29,6 +42,7 @@
 #' save(topoWorldFine, file="topoWorldFine.rda")
 #' unlink(topoFile) # clean up
 #'```
+#'
 #'
 #' @param age numeric value indicating how old a downloaded file
 #' must be (in days), for it to be considered out-of-date.  The
@@ -90,6 +104,7 @@ mapApp <- function(age=argoDefaultIndexAge(),
         colLand=colLand,
         debug=debug)
     dir <- system.file("shiny", "mapApp/app.R", package="argoFloats")
+    #dir <- "~/git/argoFloats/inst/shiny/mapApp"
     if (!nchar(dir))
         stop("The app could not be located.", call.=FALSE)
     shiny::runApp(dir, display.mode="normal")

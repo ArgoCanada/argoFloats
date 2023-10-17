@@ -23,10 +23,14 @@ MEDD
 MEDS
 Mollweide
 NetCDF
+ORCID
 POSIXt
 QCP
+RStudio
 Realtime
 Schmid
+TEOS
+TSControl
 Takashi
 Takatsuki
 Thierry
@@ -61,6 +65,7 @@ computable
 dataMode
 dataStateIndicator
 dbar
+drawByCycle
 dek
 devtools
 doi
@@ -70,9 +75,12 @@ fmars
 getIndex
 getProfiles
 github
+gzipped
+gzipped
 https
 jlh
 labelled
+lwd
 mapApp
 metres
 mol
@@ -95,6 +103,8 @@ reusability
 rtqc
 salinities
 subtype
+tgz
+tgz
 th
 traj
 unadjusted
@@ -102,6 +112,7 @@ unassessed
 undrawn
 unlist
 unpumped
+unzoom
 useAdjusted
 xlab
 xlim

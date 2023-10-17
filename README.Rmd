@@ -16,16 +16,25 @@ knitr::opts_chunk$set(
 # argoFloats
 
 <!-- badges: start -->
+
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/argoFloats)](https://cran.r-project.org/package=argoFloats)
 [![R build status](https://github.com/ArgoCanada/argoFloats/workflows/R-CMD-check/badge.svg)](https://github.com/ArgoCanada/argoFloats/actions)
+![RStudio CRAN mirror downloads](https://cranlogs.r-pkg.org/badges/last-month/argoFloats)
+![RStudio CRAN mirror downloads](https://cranlogs.r-pkg.org/badges/last-week/argoFloats)
+![RStudio CRAN mirror downloads](https://cranlogs.r-pkg.org/badges/last-day/argoFloats)
+![RStudio CRAN mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/argoFloats)
 [![codecov](https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/ArgoCanada/argoFloats)
+
 <!-- badges: end -->
 
 The argoFloats package for the R language provides tools for downloading and
 analyzing collections of oceanographic Argo float datasets.  Its developers are
-* Dan Kelley, Dalhousie University
-* Jaimie Harbin, Bedford Institute of Oceanography and Dalhousie University
-* Clark Richards, Bedford Institute of Oceanography
-* Dewey Dunnington, Bedford Institute of Oceanography
+Dan Kelley (Dalhousie University), Jaimie Harbin (Bedford Institute of
+Oceanography and Dalhousie University), Clark Richards (Bedford Institute of
+Oceanography) and Dewey Dunnington (Bedford Institute of Oceanography).
 
 The CRAN version may be installed with
 ```{r eval=FALSE}
@@ -41,7 +50,7 @@ where, of course, the `devtools` package must be installed first, if it is not a
 
 Typical use will require also installing several other packages, using
 ```{r eval=FALSE}
-install.packages(c("colourpicker", "curl", "lubridate", "ncdf4",
+install.packages(c("shinyBS", "colourpicker", "curl", "lubridate", "ncdf4",
         "oce", "ocedata", "s2", "sf", "shiny"))
 ```
 
@@ -88,6 +97,10 @@ With this in mind, readers ought to find it easy to read the following code.  A
 reasonable next step would be to try altering the code, perhaps to explore
 another region or to see whether the QC step is actually necessary.
 
+```{r results="hide", echo=FALSE}
+oldpar <- par(no.readonly=TRUE)
+```
+
 ```{r results="hide", out.width="80%", fig.height=3, fig.width=5, dev.args=list(pointsize=8)}
 library(argoFloats)
 library(oce)
@@ -95,14 +108,13 @@ library(oce)
 indexAll <- getIndex()
 ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
-                circle=list(longitude=-77.06,latitude=26.54,radius=30))
+    circle=list(longitude=-77.06,latitude=26.54,radius=30))
 ## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
 profiles  <- getProfiles(index)
 ## 4. Read the NetCDF files.
 argos <- readProfiles(profiles)
 ## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)
-oldpar <- par(no.readonly=TRUE)
 par(mfrow=c(1, 2))                     # want two-panel plot
 par(mar=c(3.5, 2.0, 2.0, 2.0))         # maps do not get axis names
 par(mgp=c(2,0.7,0))                    # tighten axes
@@ -113,6 +125,9 @@ mtext(paste(argosClean[["length"]], "profiles"), line=1.0)
 ## 7. Plot a TS diagram
 par(mar=c(3.5, 3.5, 2.0, 1.0))         # increase left margin for name
 plot(argosClean, which="TS")
+```
+
+```{r results="hide", echo=FALSE}
 par(oldpar)
 ```
 

@@ -26,7 +26,7 @@ test_that("error messages", {
     a <- expect_warning(readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats")),
         "Of 1 profiles read, 1 has")
     expect_error(plot(a, which="TS", eos="dog"), "eos must be")
-    expect_error(plot(index, which="TS"), "x must have been created by readProfiles()")
+    expect_error(plot(index, which="TS"), "x must be the result of a call to readProfiles()")
     expect_error(plot(index, which="QC"), "type of x must be .argos.")
     expect_error(plot(index, which="dog"), "cannot handle which=\"dog\"")
 })

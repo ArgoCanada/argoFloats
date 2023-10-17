@@ -35,9 +35,9 @@ the other parameters of the function call, so that subsequent calls with
 the same parameters will yield the same result; this is useful
 for caching.}
 
-\item{quiet}{logical value; use \code{TRUE} to show more
+\item{quiet}{logical value; use \code{FALSE} to show more
 verbose information when downloading files.
-(Problems will still be reported, though.)}
+(Even if \code{quiet} is TRUE, problems will still be reported.)}
 
 \item{age}{a numerical value indicating a time interval, in days.  If the file
 to be downloaded from the server already exists locally, and was created

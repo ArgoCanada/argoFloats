@@ -30,8 +30,8 @@
 #'
 #' @author Dan Kelley
 downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
-                                age=argoDefaultProfileAge(), retries=3, async=FALSE,
-                                debug=0)
+    age=argoDefaultProfileAge(), retries=3, async=FALSE,
+    debug=0)
 {
     retries <- max(1, as.integer(retries))
     if (length(destfile) != length(url))
@@ -45,9 +45,9 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
 
     destinationInfo <- file.info(destination)
     destinationAge <- (as.integer(Sys.time()) - as.integer(destinationInfo$mtime)) / 86400 # in days
+
     skipDownload <- file.exists(destination) & (destinationAge < age)
     success[skipDownload] <- TRUE
-
     urlDownload <- url[!skipDownload]
     destinationDownload <- destination[!skipDownload]
 

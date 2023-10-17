@@ -54,8 +54,21 @@ control to \code{\link[shiny:runApp]{shiny::runApp()}}, which never returns.
 the spatial-temporal distribution of Argo profiles.  The graphical
 user interface (GUI) is meant to be reasonably self-explanatory,
 and a button labelled Help yields a pop-up window with
-more information that might not
-be evident at first glance.
+more information that might not be evident at first glance.
+A number of keystrokes exist to assist the user including: \cr
+\strong{u}: undo previous actions \cr
+\strong{i}: zoom in \cr
+\strong{o}: zoom out \cr
+\strong{n}: go north \cr
+\strong{e}: go east \cr
+\strong{s}: go south \cr
+\strong{w}: go west \cr
+\strong{f}: go forward in time \cr
+\strong{b}: go backward in time \cr
+\strong{r}: reset to initial state \cr
+\strong{h}: hold active hover message (press h again to undo) \cr
+\strong{0}: unzoom an area \cr
+\strong{d}: toggle debugging flag \cr
 More details are provided in the rest of this documentation
 page, and in Section 4 of Kelley et al. (2021).
 }
@@ -69,7 +82,9 @@ GUI elements).
 
 The \code{hi-res} button will only affect the coastline, not the topography,
 unless there is a local file named \code{topoWorldFine.rda} that contains
-an alternative topographic information. Here is how to create such a file:\if{html}{\out{<div class="sourceCode R">}}\preformatted{library(oce)
+an alternative topographic information. Here is how to create such a file:
+
+\if{html}{\out{<div class="sourceCode R">}}\preformatted{library(oce)
 topoFile <- download.topo(west=-180, east=180,
                           south=-90, north=90,
                           resolution=10,

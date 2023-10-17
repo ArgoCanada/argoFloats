@@ -41,9 +41,9 @@ is less than \code{age} days in the past, it will not be downloaded.  The defaul
 \item{retries}{integer telling how many times to retry a download,
 if the first attempt fails.}
 
-\item{quiet}{logical value; use \code{TRUE} to show more
+\item{quiet}{logical value; use \code{FALSE} to show more
 verbose information when downloading files.
-(Problems will still be reported, though.)}
+(Even if \code{quiet} is TRUE, problems will still be reported.)}
 
 \item{debug}{integer value indicating level of debugging. If this
 is less than 1, no debugging is done. Otherwise, some functions
@@ -53,7 +53,7 @@ to see if the output suggests a problem in the call.}
 }
 \value{
 A character value naming the local location of the downloaded file,
-or \code{NULL} if the file could not be downloaded.
+or \code{NA} if the file could not be downloaded.
 }
 \description{
 Get Data for an Argo Float Profile

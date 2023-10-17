@@ -1,6 +1,6 @@
 ## vim:textwidth=128:expandtab:shiftwidth=2:softtabstop=2
 library(argoFloats)
-context("useAdjusted() on core data data")
+context("useAdjusted() on core data")
 
 RMS <- function(x) sqrt(mean(x^2, na.rm=TRUE))
 

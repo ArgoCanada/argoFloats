@@ -70,7 +70,7 @@ install_github("ArgoCanada/argoFloats", ref="develop")
 `
 where, of course, the devtools package must be installed first, if it is not already present on the user's system.
 
-# Work Flow
+# Typical Work Flow
 
 Figure 1 illustrates the typical workflow with the package, with descriptions of the steps on the left, and names of the relevant functions on the right.
 
@@ -238,6 +238,46 @@ plot(argosClean, which="profile", type="p")
 ![Figure 5: Temperature profile created using argoFloats readProfiles function](readProfiles.png)
 
 **Exercise 3:** Using the profile in the previous example, plot a TS diagram.
+
+# Appendix 1: Work Flow With Local Index Files
+
+In normal usage, `getIndex()` works by downloading a gzipped CSV file (with
+suffix `.gz`) from an Argo server, analyzing that file writing an R Data
+Archive file (with suffix `.rda`), and then deleting the `.gz` file.  However,
+if `getIndex()` is called with the parameter `keep` set to TRUE, it will retain
+the `.gz` file in the directory named by the `destdir` argument.  This can be
+useful if there is a need to work with the data in a processing system other
+than `argoFloats`.
+
+It is possible to instruct `getIndex()` to skip remote downloads, to instead
+use a local `.gz` or `.rda` file.  This is done by providing the file name as
+the first argument, and by setting `server=NULL`, e.g. using
+```{r eval=FALSE}
+index <- getIndex("~/data/argo/ar_index_global_prof.txt.gz", server=NULL)
+```
+or
+```{r eval=FALSE}
+index <- getIndex("~/data/argo/ar_index_global_prof.rda", server=NULL)
+```
+after which the other processing steps, as outlined in the previous section,
+can be followed.
+
+The `.rda` approach is better than the `.gz` one, for two reasons: (1) it is
+faster and (2) it usually sets a better foundation for later calls to
+`getProfiles()`.  The second factor is a result of the fact that the `.gz`
+files on servers do not contain an indication of the server URL, whereas the
+locally-generated `.rda` files do so. (Recall that `getIndex()` can try a list
+of servers, and it records in the `.rda` file the first one that yielded
+results from a download attempt.)
+
+Whether the `.gz` or `.rda` method is chosen, it is worth noting that index
+files go out of date, as new data become available, and also as pointers to
+real-time data are made obsolete because of replacement by delayed-mode
+equivalents.  Even so, it can be a good idea to download an index file before a
+classroom/workshop exercise and to share it over a local network, avoiding
+placing too much stress on the larger network.
+
+
 
 # Solutions to Exercises
 

@@ -19,3 +19,12 @@ None (invisible NULL).
 \description{
 Store an Item in the Cache
 }
+\seealso{
+Other functions relating to cached values: 
+\code{\link{argoFloatsClearCache}()},
+\code{\link{argoFloatsGetFromCache}()},
+\code{\link{argoFloatsIsCached}()},
+\code{\link{argoFloatsListCache}()},
+\code{\link{argoFloatsWhenCached}()}
+}
+\concept{functions relating to cached values}

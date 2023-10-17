@@ -11,28 +11,41 @@ getIndex(
   age = argoDefaultIndexAge(),
   quiet = FALSE,
   keep = FALSE,
-  debug = 0
+  debug = 0L
 )
 }
 \arguments{
-\item{filename}{character value that indicates the file name on the server, as in
+\item{filename}{character value that indicates the file name to be downloaded
+from a remote server, or (if \code{server} is set to NULL) the name of a local
+file.  For the remote case, the value of \code{server} must be taken from
 the first column of the table given in \dQuote{Details}, or (for some file types)
 as in the nickname given in the middle column. Note that the downloaded
 file name will be based on the full file name given as this argument, and
-that nicknames are expanded to the full filenames before saving.}
+that nicknames are expanded to the full filenames before saving.  Note that
+the downloaded file is in gzipped format (indicated by a file name ending
+in \code{.gz}) and it is examined and processed by \code{\link[=getIndex]{getIndex()}} to produce an
+R archive file (ending in \code{.rda}) that is stored locally. The \code{.gz} file
+is discarded by default, unless \code{keep} is set to TRUE.  (See also
+the documentation on the \code{server} parameter, next, and the subsection
+entitled \dQuote{Using a previously-downloaded index}.)}
 
-\item{server}{character value, or vector of character values, indicating
-the name of servers that supply argo data.  If more than
-one value is given, then these are tried sequentially until one
-is found to supply the index file named in the \code{filename} argument.
-As of December 2020, the three servers known to work are
+\item{server}{an indication of the source for \code{filename}.  There are 2
+possibilities for this.  (1) If \code{server} is \code{NULL}, then \code{filename} is taken
+to be the name of a local index file (ending in suffix \code{.gz}) that
+was previously downloaded from a server.  The easiest way to get
+such a file is with a previous call to \code{\link[=getIndex]{getIndex()}} with \code{keep} set
+to TRUE.  (2) If \code{server} is a character vector (as is it is by default),
+it is taken to represent remote servers to be tried as sources
+for an index file.  The use of multiple servers is a way to avoid
+errors that can result if a server refuses a download request.
+As of March 2023, the three servers known to work are
 \code{"https://data-argo.ifremer.fr"}, \code{"ftp://ftp.ifremer.fr/ifremer/argo"} and
 \code{"ftp://usgodae.org/pub/outgoing/argo"}.
 These may be referred
 to with nicknames \code{"ifremer-https"}, \code{"ifremer"}and  \code{"usgodae"}.
 Any URL that can be used in \code{\link[curl:curl_download]{curl::curl_download()}} is a valid value provided
 that the file structure is identical to the mirrors listed above. See
-\code{\link[=argoDefaultServer]{argoDefaultServer()}} for how to provide a default value.}
+\code{\link[=argoDefaultServer]{argoDefaultServer()}} for how to provide a default value for \code{server}.}
 
 \item{destdir}{character value indicating the directory in which to store
 downloaded files. The default value is to compute this using
@@ -49,9 +62,11 @@ File clutter is reduced by creating a top-level directory called
 must be (in days), for it to be considered out-of-date.  The
 default, \code{\link[=argoDefaultIndexAge]{argoDefaultIndexAge()}}, limits downloads to once per day, as a way
 to avoid slowing down a workflow with a download that might take
-a minute or so. Note that setting \code{age=0} will force a new
+a minute or so.  Setting \code{age=0} will force a new
 download, regardless of the age of the local file, and that
-age is changed to 0 if \code{keep} is \code{TRUE}.}
+age is changed to 0 if \code{keep} is \code{TRUE}.  The value of \code{age}
+is ignored if \code{server} is NULL (see \dQuote{Using a previously
+downloaded Index} in \dQuote{Details}).}
 
 \item{quiet}{logical value indicating whether to silence some
 progress indicators.  The default is to show such indicators.}
@@ -59,7 +74,8 @@ progress indicators.  The default is to show such indicators.}
 \item{keep}{logical value indicating whether to retain the
 raw index file as downloaded from the server.  This is \code{FALSE}
 by default, indicating that the raw index file is to be
-discarded once it has been analyzed  Note that if \code{keep}
+discarded once it has been analyzed and used to create a cached
+file (which is an RDA file).  Note that if \code{keep}
 is \code{TRUE}, then the supplied value of \code{age} is converted
 to 0, to force a new download.}
 
@@ -75,19 +91,23 @@ is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 }
 \description{
 This function gets an index of available Argo float profiles, typically
-for later use as the first argument to \code{\link[=getProfiles]{getProfiles()}}. The work is done
-either by downloading information from a data repository or by reusing an existing
-index (packaged within an \code{.rda} file) that is controlled by the \code{age} argument behind the scenes.
+for later use as the first argument to \code{\link[=getProfiles]{getProfiles()}}. The source for the
+index may be (a) a remote data repository, (b) a local repository (see the
+\code{keep} argument), or (c) a cached RDA file that contains the result
+of a previous call to \code{\link[=getIndex]{getIndex()}} (see the \code{age} parameter).
 }
 \details{
+\strong{Using an index from a remote server}
+
 The first step is to construct a URL for downloading, based on the
 \code{url} and \code{file} arguments. That URL will be a string ending in \code{.gz},
-or \code{.txt} and from this the name of a local file is constructed by changing the
-suffix to \code{.rda} and prepending the file directory specified by
-\code{destdir}.  If an \code{.rda} file of that name already exists, and is less
-than \code{age} days old, then no downloading takes place. This caching
-procedure is a way to save time, because the download can take from a
-minute to an hour, depending on the bandwidth of the connection to the
+or \code{.txt} and from this the name of a local file is constructed
+by changing the suffix to \code{.rda} and prepending the file directory
+specified by \code{destdir}.  If an \code{.rda} file of that name already exists,
+and is less than \code{age} days old, then no downloading takes place. This
+caching procedure is a way to save time, because the download can take
+from a minute to an hour, depending on the bandwidth of the connection
+to the
 server.
 
 The resultant \code{.rda} file, which is named in the return value of this
@@ -107,7 +127,7 @@ The names of these items are determined automatically from
 }
 
 Some expertise is required in deciding on the value for the
-\code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of June 2020, the
+\code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of March 2023, the
 FTP sites
 \verb{ftp://usgodae.org/pub/outgoing/argo}
 and
@@ -132,16 +152,28 @@ longer to download, so \code{\link[=getIndex]{getIndex()}} is not designed to wo
 \code{argo_bio-traj_index.txt.gz}          \tab \code{"bio-traj"}            \tab Bio-trajectory files\cr
 \code{argo_synthetic-profile_index.txt.gz} \tab \code{"synthetic"}           \tab Synthetic data, successor to \code{"merge"}\cr
 }
-Note: as of Dec 01,2020 the user will no longer have the option to use \code{"argo"} as a filename argument. Instead, \code{"core"} will
-be used.
 
-The next step after using \code{\link[=getIndex]{getIndex()}} is usually to
-use \code{\link[=getProfiles]{getProfiles()}}, which downloads or checks for local
-copies of the per-profile data files that are listed in an
-index, and this is typically followed by a call to
-\code{\link[=readProfiles]{readProfiles()}}, which reads the local files, yielding
-an object that can be plotted or analyzed in other ways.
-For more on this function, see section 2 of Kelley et al. (2021).
+\strong{Using a previously downloaded index}
+
+In some situations, it can be desirable to work with local
+index file that has been copied directly from a remote server.
+This can be useful if there is a desire to work with the files
+in R separately from the \code{argoFloats} package, or with python, etc.
+It can also be useful for group work, in which it is important for
+all participants to use the same source file.
+
+This need can be handled with \code{\link[=getIndex]{getIndex()}}, by specifying \code{filename}
+as the full path name to the previously downloaded file, and
+at the same time specifying \code{server} as NULL. This works for
+both the raw files as downloaded from the server (which end
+in \code{.gz}, and for the R-data-archive files produced by \code{\link[=getIndex]{getIndex()}},
+which end in \code{.rda}. Since the \code{.rda} files load an order
+of magnitude faster than the \code{.gz} files, this is usually
+the preferred approach.  However, if the \code{.gz} files are preferred,
+perhaps because part of a software chain uses python code that
+works with such files, then it should be noted that calling
+\code{getIndex()} with \code{keep=TRUE} will save the \code{.gz} file in
+the \code{destdir} directory.
 }
 \references{
 Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
@@ -149,5 +181,5 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 \doi{10.3389/fmars.2021.635922}
 }
 \author{
-Dan Kelley
+Dan Kelley and Jaimie Harbin
 }

@@ -28,7 +28,7 @@
 #' `R_ARGOFLOATS_SERVER` at the operating-system level.  If
 #' the `argoFloats.server` option has not been set in R,
 #' and `R_ARGOFLOATS_SERVER` has not been set in the OS, then
-#' `argoDefaultServer()` defaults to `"ifremer-https"`.
+#' `argoDefaultServer()` defaults to `c("ifremer-https","usgodae")`.
 #'
 #' * `argoDefaultDestdir()` returns the name of the local directory
 #' into which to store indices and other argo data.
@@ -96,7 +96,7 @@ argoDefaultDestdir <- function()
 #' @export
 argoDefaultServer <- function()
 {
-    argoOptionValue("argoFloats.server", "R_ARGOFLOATS_SERVER", "ifremer-https")
+    argoOptionValue("argoFloats.server", "R_ARGOFLOATS_SERVER", c("ifremer-https", "usgodae"))
 }
 
 #' @rdname argoDefaultDestdir

@@ -1,37 +1,57 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # argoFloats
 
 <!-- badges: start -->
 
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/argoFloats)](https://cran.r-project.org/package=argoFloats)
 [![R build
 status](https://github.com/ArgoCanada/argoFloats/workflows/R-CMD-check/badge.svg)](https://github.com/ArgoCanada/argoFloats/actions)
+![RStudio CRAN mirror
+downloads](https://cranlogs.r-pkg.org/badges/last-month/argoFloats)
+![RStudio CRAN mirror
+downloads](https://cranlogs.r-pkg.org/badges/last-week/argoFloats)
+![RStudio CRAN mirror
+downloads](https://cranlogs.r-pkg.org/badges/last-day/argoFloats)
+![RStudio CRAN mirror
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/argoFloats)
 [![codecov](https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/ArgoCanada/argoFloats)
+
 <!-- badges: end -->
 
 The argoFloats package for the R language provides tools for downloading
 and analyzing collections of oceanographic Argo float datasets. Its
-developers are \* Dan Kelley, Dalhousie University \* Jaimie Harbin,
-Bedford Institute of Oceanography and Dalhousie University \* Clark
-Richards, Bedford Institute of Oceanography \* Dewey Dunnington, Bedford
-Institute of Oceanography
+developers are Dan Kelley (Dalhousie University), Jaimie Harbin (Bedford
+Institute of Oceanography and Dalhousie University), Clark Richards
+(Bedford Institute of Oceanography) and Dewey Dunnington (Bedford
+Institute of Oceanography).
 
 The CRAN version may be installed with
 
-    install.packages("argoFloats")
+``` r
+install.packages("argoFloats")
+```
 
 The development version may be installed with
 
-    library(devtools)
-    install_github("ArgoCanada/argoFloats", ref="develop")
+``` r
+library(devtools)
+install_github("ArgoCanada/argoFloats", ref="develop")
+```
 
 where, of course, the `devtools` package must be installed first, if it
 is not already present on the user’s system.
 
 Typical use will require also installing several other packages, using
 
-    install.packages(c("colourpicker", "curl", "lubridate", "ncdf4",
-            "oce", "ocedata", "s2", "sf", "shiny"))
+``` r
+install.packages(c("shinyBS", "colourpicker", "curl", "lubridate", "ncdf4",
+        "oce", "ocedata", "s2", "sf", "shiny"))
+```
 
 Once things are set up as above, it will be possible to use all the
 features of `argoFloats`, many of which are illustrated in the
@@ -78,45 +98,44 @@ code. A reasonable next step would be to try altering the code, perhaps
 to explore another region or to see whether the QC step is actually
 necessary.
 
-    library(argoFloats)
-    library(oce)
-    #> Loading required package: gsw
-    ## 1. Get worldwide float-profile index, saving to ~/data/argo by default.
-    indexAll <- getIndex()
-    ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
-    index <- subset(indexAll,
-                    circle=list(longitude=-77.06,latitude=26.54,radius=30))
-    #> Kept 41 cycles (0.00161%)
-    ## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
-    profiles  <- getProfiles(index)
-    ## 4. Read the NetCDF files.
-    argos <- readProfiles(profiles)
-    #> Warning in readProfiles(profiles): Of 41 profiles read, 2 have >10% of conductivity values with QC flag of 4, signalling bad data.
-    #>     The indices of the bad profiles are as follows.
-    #>     3 8
-    #> Warning in readProfiles(profiles): Of 41 profiles read, 1 has >10% of pressure values with QC flag of 4, signalling bad data.
-    #>     The indices of the bad profiles are as follows.
-    #>     3
-    #> Warning in readProfiles(profiles): Of 41 profiles read, 4 have >10% of salinity values with QC flag of 4, signalling bad data.
-    #>     The indices of the bad profiles are as follows.
-    #>     3 6 7 13
-    #> Warning in readProfiles(profiles): Of 41 profiles read, 3 have >10% of temperature values with QC flag of 4, signalling bad data.
-    #>     The indices of the bad profiles are as follows.
-    #>     3 7 13
-    ## 5. Examine QC flags, and set questionable data to NA.
-    argosClean <- applyQC(argos)
-    oldpar <- par(no.readonly=TRUE)
-    par(mfrow=c(1, 2))                     # want two-panel plot
-    par(mar=c(3.5, 2.0, 2.0, 2.0))         # maps do not get axis names
-    par(mgp=c(2,0.7,0))                    # tighten axes
-    ## 6. Plot a map of profile locations.
-    plot(index, which="map", bathymetry=FALSE)
-    points(-77.06, 26.54, pch="*", cex=3)  # show centre of focus
-    mtext(paste(argosClean[["length"]], "profiles"), line=1.0)
-    ## 7. Plot a TS diagram
-    par(mar=c(3.5, 3.5, 2.0, 1.0))         # increase left margin for name
-    plot(argosClean, which="TS")
+``` r
+library(argoFloats)
+library(oce)
+#> Loading required package: gsw
+## 1. Get worldwide float-profile index, saving to ~/data/argo by default.
+indexAll <- getIndex()
+## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
+index <- subset(indexAll,
+    circle=list(longitude=-77.06,latitude=26.54,radius=30))
+#> Kept 41 cycles (0.00144%)
+## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
+profiles  <- getProfiles(index)
+## 4. Read the NetCDF files.
+argos <- readProfiles(profiles)
+#> Warning in readProfiles(profiles): Of 41 profiles read, 2 have >10% of conductivity values with QC flag of 4, signalling bad data.
+#>     The indices of the bad profiles are as follows.
+#>     3 8
+#> Warning in readProfiles(profiles): Of 41 profiles read, 1 has >10% of pressure values with QC flag of 4, signalling bad data.
+#>     The indices of the bad profiles are as follows.
+#>     3
+#> Warning in readProfiles(profiles): Of 41 profiles read, 4 have >10% of salinity values with QC flag of 4, signalling bad data.
+#>     The indices of the bad profiles are as follows.
+#>     3 6 7 13
+#> Warning in readProfiles(profiles): Of 41 profiles read, 3 have >10% of temperature values with QC flag of 4, signalling bad data.
+#>     The indices of the bad profiles are as follows.
+#>     3 7 13
+## 5. Examine QC flags, and set questionable data to NA.
+argosClean <- applyQC(argos)
+par(mfrow=c(1, 2))                     # want two-panel plot
+par(mar=c(3.5, 2.0, 2.0, 2.0))         # maps do not get axis names
+par(mgp=c(2,0.7,0))                    # tighten axes
+## 6. Plot a map of profile locations.
+plot(index, which="map", bathymetry=FALSE)
+points(-77.06, 26.54, pch="*", cex=3)  # show centre of focus
+mtext(paste(argosClean[["length"]], "profiles"), line=1.0)
+## 7. Plot a TS diagram
+par(mar=c(3.5, 3.5, 2.0, 1.0))         # increase left margin for name
+plot(argosClean, which="TS")
+```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="80%" />
-
-    par(oldpar)
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="80%" />

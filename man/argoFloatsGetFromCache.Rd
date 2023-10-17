@@ -17,3 +17,12 @@ The cached value, as stored with \code{\link[=argoFloatsStoreInCache]{argoFloats
 \description{
 Get an Item From The Cache
 }
+\seealso{
+Other functions relating to cached values: 
+\code{\link{argoFloatsClearCache}()},
+\code{\link{argoFloatsIsCached}()},
+\code{\link{argoFloatsListCache}()},
+\code{\link{argoFloatsStoreInCache}()},
+\code{\link{argoFloatsWhenCached}()}
+}
+\concept{functions relating to cached values}
