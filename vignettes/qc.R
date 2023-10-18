@@ -1,4 +1,4 @@
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 
 ## ----eval=FALSE---------------------------------------------------------------
@@ -9,7 +9,7 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>")
 ## ----echo=FALSE---------------------------------------------------------------
 ID <- "1901584"
 
-## ---- warning=FALSE, error=FALSE, message=FALSE, eval=FALSE-------------------
+## ----warning=FALSE, error=FALSE, message=FALSE, eval=FALSE--------------------
 #  library(argoFloats)
 #  data("index")
 #  index1 <- subset(index, ID="1901584")
@@ -17,19 +17,19 @@ ID <- "1901584"
 #  argos <- readProfiles(profiles)
 #  plot(argos, which="QC", parameter="temperature")
 
-## ---- message=FALSE, error=FALSE, warning=FALSE, eval=FALSE-------------------
+## ----message=FALSE, error=FALSE, warning=FALSE, eval=FALSE--------------------
 #  index2 <- subset(index1, cycle="124")
 #  profiles2 <- getProfiles(index2)
 #  argos2 <- readProfiles(profiles2)
 #  showQCTests(argos2[[1]])
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  A <- argos[[1]]
 #  D <- data.frame(T=A[["temperature"]], TF=A[["temperatureFlag"]],
 #                  S=A[["salinity"]], SF=A[["salinityFlag"]],
 #                  P=A[["pressure"]], PF=A[["pressureFlag"]])
 
-## ---- message=FALSE, error=FALSE, warning=FALSE, eval=FALSE-------------------
+## ----message=FALSE, error=FALSE, warning=FALSE, eval=FALSE--------------------
 #  clean <- applyQC(argos)
 #  oldpar <- par(no.readonly=TRUE)
 #  par(mfrow=c(1, 2))
@@ -40,7 +40,7 @@ ID <- "1901584"
 ## ----eval=FALSE---------------------------------------------------------------
 #  remotes::install_github("dankelley/oce", ref="develop")
 
-## ----  warning=FALSE, message=FALSE, error=FALSE, fig.cap="*Figure 5.* Comparison of raw and adjusted oxygen profiles for built-in float file `SD5903586_001.nc`."----
+## ----warning=FALSE, message=FALSE, error=FALSE, fig.cap="*Figure 5.* Comparison of raw and adjusted oxygen profiles for built-in float file `SD5903586_001.nc`."----
 if (packageVersion("oce") > "1.2.0") {
     library(argoFloats)
     raw <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
@@ -60,7 +60,7 @@ if (packageVersion("oce") > "1.2.0") {
     legend("bottomright", pch=c(1,3), col=c(1,2), c("Raw", "Adjusted"))
 }
 
-## ---- warning=FALSE, error=FALSE, message=FALSE, fig.cap="*Figure 6.* Comparison of raw and adjusted oxygen for built-in float file `SD5903586_001.nc`.  The dotted line is a 1:1 relationship, and the red line is the result of linear regression (see text)."----
+## ----warning=FALSE, error=FALSE, message=FALSE, fig.cap="*Figure 6.* Comparison of raw and adjusted oxygen for built-in float file `SD5903586_001.nc`.  The dotted line is a 1:1 relationship, and the red line is the result of linear regression (see text)."----
 if (packageVersion("oce") > "1.2.0") {
     plot(rawOxygen, adjustedOxygen,
          xlab=expression("Raw Oxygen ["*mu*mol/kg*"]"),
