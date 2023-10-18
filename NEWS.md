@@ -1,3 +1,7 @@
+# argoFloats 1.0.8
+
+* Fix formatting of `NEWS.md` file.
+
 # argoFloats 1.0.7
 
 * Remove suggestion for now-retired `rgdal` package.
