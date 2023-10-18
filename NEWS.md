@@ -7,7 +7,7 @@
 * Remove suggestion for now-retired `rgdal` package.
 * Require R 4.1.0 or higher, to permit `|>` syntax.
 * `plot(a, which="TS")` can color by cycle for `type="l"` now.
-* `getIndex()` can work with previously-downloaded .tgz files.
+* `getIndex()` can work with previously-downloaded `.tgz` files.
 
 # argoFloats 1.0.6
 
