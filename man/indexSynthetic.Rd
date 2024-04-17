@@ -44,8 +44,8 @@ unique(indexSynthetic[["parameters"]])
 }
 \seealso{
 Other datasets provided with argoFloats: 
+\code{\link{index}},
 \code{\link{indexBgc}},
-\code{\link{indexDeep}},
-\code{\link{index}}
+\code{\link{indexDeep}}
 }
 \concept{datasets provided with argoFloats}
