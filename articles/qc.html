@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -93,7 +93,7 @@ Data</h1>
 (<a href="https://orcid.org/0000-0003-3774-3732" class="external-link uri">https://orcid.org/0000-0003-3774-3732</a>), Dan Kelley (<a href="https://orcid.org/0000-0001-7808-5911" class="external-link uri">https://orcid.org/0000-0001-7808-5911</a>) and Clark
 Richards (<a href="https://orcid.org/0000-0002-7833-206X" class="external-link uri">https://orcid.org/0000-0002-7833-206X</a>)</h4>
             
-            <h4 data-toc-skip class="date">2024-02-08</h4>
+            <h4 data-toc-skip class="date">2024-04-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ArgoCanada/argoFloats/blob/HEAD/vignettes/qc.Rmd" class="external-link"><code>vignettes/qc.Rmd</code></a></small>
       <div class="hidden name"><code>qc.Rmd</code></div>
@@ -157,9 +157,9 @@ analyze the data they are considering, and acknowledges that the user
 assumes all risk from their Argo data, as described in section 1.3 of
 the Argo User’s Manual (Carval et al. 2019). The process is shown in the
 following diagram.</p>
-<div class="figure">
-<img src="qc_flowchart.png" alt=""><p class="caption">Figure 1: argoFloats Quality Control Flag
-Process.</p>
+<div class="float">
+<img src="qc_flowchart.png" alt="Figure 1: argoFloats Quality Control Flag Process."><div class="figcaption">Figure 1: argoFloats Quality Control Flag
+Process.</div>
 </div>
 <p>This vignette will walk the users through the three step flag process
 while demonstrating examples using the float with <code>ID</code>
@@ -184,13 +184,13 @@ temperature for the float with <code>ID</code> equal to “1901584”.</p>
 <span><span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getProfiles.html">getProfiles</a></span><span class="op">(</span><span class="va">index1</span><span class="op">)</span></span>
 <span><span class="va">argos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="va">profiles</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">argos</span>, which<span class="op">=</span><span class="st">"QC"</span>, parameter<span class="op">=</span><span class="st">"temperature"</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="plotqc.png" alt=""><p class="caption">Figure 2: QC plot for temperature recorded by the
-float with <code>ID</code> 1901584. The top panel shows the percentage
-of good data within the individual cycles (or profiles), with the dotted
-line and red dots indicating a threshold of at least 50 percent good
-data. The bottom panel shows the mean of those data that are considered
-good.</p>
+<div class="float">
+<img src="plotqc.png" alt="Figure 2: QC plot for temperature recorded by the float with ID 1901584. The top panel shows the percentage of good data within the individual cycles (or profiles), with the dotted line and red dots indicating a threshold of at least 50 percent good data. The bottom panel shows the mean of those data that are considered good."><div class="figcaption">Figure 2: QC plot for temperature recorded by
+the float with <code>ID</code> 1901584. The top panel shows the
+percentage of good data within the individual cycles (or profiles), with
+the dotted line and red dots indicating a threshold of at least 50
+percent good data. The bottom panel shows the mean of those data that
+are considered good.</div>
 </div>
 <p>As shown, both “good” and “bad” data exist within this subsection of
 the data recorded by float 1901584. For example, the first cycle is
@@ -277,9 +277,9 @@ diagrams as shown below:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">argos</span>, which<span class="op">=</span><span class="st">"TS"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">clean</span>, which<span class="op">=</span><span class="st">"TS"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="applyQC.png" alt=""><p class="caption">Figure 3: argoFloats applyQC() function used on float
-with <code>ID</code> 1901584.</p>
+<div class="float">
+<img src="applyQC.png" alt="Figure 3: argoFloats applyQC() function used on float with ID 1901584."><div class="figcaption">Figure 3: argoFloats applyQC() function used on
+float with <code>ID</code> 1901584.</div>
 </div>
 <p>Although Figure 3 provides a clear illustration of the need for QC
 testing and the handling of QC flags, it also illustrates limitations,
@@ -524,7 +524,7 @@ Data,” January 1, 2020.
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>
