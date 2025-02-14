@@ -13,7 +13,7 @@ Authors@R: c(
         comment=c(ORCID="https://orcid.org/0000-0002-7833-206X")))
 Maintainer: Dan Kelley <dan.kelley@dal.ca>
 Depends: R (>= 4.1.0)
-Suggests: colourpicker, curl, knitr, lubridate, markdown, ncdf4, ocedata, rmarkdown, shiny, s2, sf, testthat, shinyBS
+Suggests: colourpicker, curl, knitr, lubridate, markdown, ncdf4, ocedata, rmarkdown, shiny, shinyBS, s2, sf, testthat
 Imports: oce (>= 1.3.0), methods
 BugReports: https://github.com/ArgoCanada/argoFloats/issues
 Description: Supports the analysis of oceanographic data recorded by Argo autonomous drifting profiling floats. Functions are provided to (a) download and cache data files, (b) subset data in various ways, (c) handle quality-control flags and (d) plot the results according to oceanographic conventions. A shiny app is provided for easy exploration of datasets. The package is designed to work well with the 'oce' package, providing a wide range of processing capabilities that are particular to oceanographic analysis. See Kelley, Harbin, and Richards (2021) <doi:10.3389/fmars.2021.635922> for more on the scientific context and applications.

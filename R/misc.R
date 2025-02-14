@@ -20,6 +20,8 @@
 #' @export
 #'
 #' @author Jaimie Harbin and Dan Kelley
+# next is required for package to build as of 2025-02-14
+#' @importFrom shinyBS bsButton bsTooltip updateButton
 hexToBits <- function(hex)
 {
     ## see https://github.com/ArgoCanada/argoFloats/issues/176
