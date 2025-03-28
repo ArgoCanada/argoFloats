@@ -67,8 +67,30 @@ with a quality-control code of 0, 3, 4, 6, 7, or 9 (see the
 on this function, see section 2 of Kelley et al. (2021).
 }
 \examples{
+# # Omit this, because rhub errors out, evidently because it is running donttest blocks.
+# # Example 1: read 5 profiles and plot TS for the first, in raw and QC-cleaned forms.
+# # This example involves downloading to a local repository, so it is not run on CRAN.
+#
+\donttest{
+# library(argoFloats)
+# data(index)
+# index1 <- subset(index, 1)
+# profiles <- getProfiles(index1)
+# raw <- readProfiles(profiles)
+# clean <- applyQC(raw)
+# par(mfrow=c(1, 2))
+# file <- gsub(".*/", "",  profiles[[1]])
+# aWithNA <- clean[[1]]
+# oce::plotTS(raw[[1]], eos="unesco", type="o")
+# mtext(file, cex=0.7*par("cex"))
+# aWithoutNA <- raw[[1]]
+# oce::plotTS(clean[[1]], eos="unesco", type="o")
+# mtext(paste(file, "\n (after applying QC)"), cex=0.7*par("cex"))
+#
+}
+#
 # Read from a local file
-f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
+f <- system.file("extdata", "SR2902204_131.nc", package = "argoFloats")
 p <- readProfiles(f)
 
 }

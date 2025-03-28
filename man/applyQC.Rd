@@ -71,15 +71,17 @@ common conventions for flags in Argo data.
 \examples{
 # Demonstrate applyQC to a built-in file
 library(argoFloats)
-f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
+f <- system.file("extdata", "SR2902204_131.nc", package = "argoFloats")
 raw <- readProfiles(f)
 clean <- applyQC(raw)
-oldpar <- par(no.readonly=TRUE)
-par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0))
-plot(raw, col="red", which="TS")
-points(clean[[1]][["SA"]], clean[[1]][["CT"]], pch=20)
-legend("topleft", pch=20, cex=1,
-    col=c("black", "red"), legend=c("OK", "Flagged"), bg="white")
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(3.3, 3.3, 1, 1), mgp = c(2, 0.7, 0))
+plot(raw, col = "red", which = "TS")
+points(clean[[1]][["SA"]], clean[[1]][["CT"]], pch = 20)
+legend("topleft",
+    pch = 20, cex = 1,
+    col = c("black", "red"), legend = c("OK", "Flagged"), bg = "white"
+)
 par(oldpar)
 
 }

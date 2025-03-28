@@ -12,7 +12,7 @@ on 2021 March 7.
 }
 \examples{
 library(argoFloats)
-a <- readProfiles(system.file("extdata", "R3901602_163.nc", package="argoFloats"))
+a <- readProfiles(system.file("extdata", "R3901602_163.nc", package = "argoFloats"))
 summary(a)
 summary(a[[1]])
 

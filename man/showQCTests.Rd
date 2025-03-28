@@ -97,7 +97,7 @@ is that the individual bits map to individual tests).\tabular{lll}{
 }
 \examples{
 library(argoFloats)
-a <- readProfiles(system.file("extdata", "D4900785_048.nc", package="argoFloats"))
+a <- readProfiles(system.file("extdata", "D4900785_048.nc", package = "argoFloats"))
 showQCTests(a[[1]])
 
 }

@@ -62,15 +62,17 @@
 #' @examples
 #' # Demonstrate applyQC to a built-in file
 #' library(argoFloats)
-#' f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
+#' f <- system.file("extdata", "SR2902204_131.nc", package = "argoFloats")
 #' raw <- readProfiles(f)
 #' clean <- applyQC(raw)
-#' oldpar <- par(no.readonly=TRUE)
-#' par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0))
-#' plot(raw, col="red", which="TS")
-#' points(clean[[1]][["SA"]], clean[[1]][["CT"]], pch=20)
-#' legend("topleft", pch=20, cex=1,
-#'     col=c("black", "red"), legend=c("OK", "Flagged"), bg="white")
+#' oldpar <- par(no.readonly = TRUE)
+#' par(mar = c(3.3, 3.3, 1, 1), mgp = c(2, 0.7, 0))
+#' plot(raw, col = "red", which = "TS")
+#' points(clean[[1]][["SA"]], clean[[1]][["CT"]], pch = 20)
+#' legend("topleft",
+#'     pch = 20, cex = 1,
+#'     col = c("black", "red"), legend = c("OK", "Flagged"), bg = "white"
+#' )
 #' par(oldpar)
 #'
 #' @references
@@ -84,20 +86,23 @@
 #'
 #' @export
 #' @author Dan Kelley
-applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
-{
-    if (!requireNamespace("oce", quietly=TRUE))
+applyQC <- function(x, flags = NULL, actions = NULL, debug = 0) {
+    if (!requireNamespace("oce", quietly = TRUE)) {
         stop("must install.packages(\"oce\") for applyQC() to work")
-    if ("argos" != x[["type"]])
+    }
+    if ("argos" != x[["type"]]) {
         stop("can only handle flags in an object of type \"argos\", as created with readProfiles()")
+    }
     res <- x
-    if (is.null(flags))
+    if (is.null(flags)) {
         flags <- c(0, 3, 4, 6, 7, 9)
-    #message("next is flags:"); print(flags)
-    if (is.null(actions))
+    }
+    # message("next is flags:"); print(flags)
+    if (is.null(actions)) {
         actions <- "NA"
-    res@data$argos <- lapply(x@data$argos, oce::handleFlags, flags=flags, actions=actions, debug=debug)
-    res@processingLog <- oce::processingLogAppend(x@processingLog, paste(deparse(match.call()), sep="", collapse=""))
+    }
+    res@data$argos <- lapply(x@data$argos, oce::handleFlags, flags = flags, actions = actions, debug = debug)
+    res@processingLog <- oce::processingLogAppend(x@processingLog, paste(deparse(match.call()), sep = "", collapse = ""))
     res
 }
 
@@ -192,7 +197,7 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #'
 #' @examples
 #' library(argoFloats)
-#' a <- readProfiles(system.file("extdata", "D4900785_048.nc", package="argoFloats"))
+#' a <- readProfiles(system.file("extdata", "D4900785_048.nc", package = "argoFloats"))
 #' showQCTests(a[[1]])
 #'
 #' @references
@@ -206,55 +211,58 @@ applyQC <- function(x, flags=NULL, actions=NULL, debug=0)
 #'
 #' @export
 #' @author Jaimie Harbin and Dan Kelley
-showQCTests <- function(x, style="brief")
-{
+showQCTests <- function(x, style = "brief") {
     QCTests <- c(
-        "Platform Identification test"=1,
-        "Impossible Date test"=2,
-        "Impossible Location test"=3,
-        "Position on Land test"=4,
-        "Impossible Speed test"=5,
-        "Global Range test"=6,
-        "Regional Global Parameter test"=7,
-        "Pressure Increasing test"=8,
-        "Spike test"=9,
-        "Top and Bottom Spike test (obsolete)"=10,
-        "Gradient test"=11,
-        "Digit Rollover test"=12,
-        "Stuck Value test"=13,
-        "Density Inversion test"=14,
-        "Grey List test"=15,
-        "Gross Salinity or Temperature Sensor Drift test"=16,
-        "Visual QC test"=17,
-        "Frozen profile test"=18,
-        "Deepest pressure test"=19,
-        "Questionable Argos position test"=20,
-        "Near-surface unpumped CTD salinity test"=21,
-        "Near-surface mixed air/water test"=22,
-        "Interim rtqc flag scheme for data deeper than 2000 dbar"=23,
-        "Interim rtqc flag scheme for data from experimental sensors"=24,
-        "MEDD test"=25)
-    if (!inherits(x, 'argo'))
+        "Platform Identification test" = 1,
+        "Impossible Date test" = 2,
+        "Impossible Location test" = 3,
+        "Position on Land test" = 4,
+        "Impossible Speed test" = 5,
+        "Global Range test" = 6,
+        "Regional Global Parameter test" = 7,
+        "Pressure Increasing test" = 8,
+        "Spike test" = 9,
+        "Top and Bottom Spike test (obsolete)" = 10,
+        "Gradient test" = 11,
+        "Digit Rollover test" = 12,
+        "Stuck Value test" = 13,
+        "Density Inversion test" = 14,
+        "Grey List test" = 15,
+        "Gross Salinity or Temperature Sensor Drift test" = 16,
+        "Visual QC test" = 17,
+        "Frozen profile test" = 18,
+        "Deepest pressure test" = 19,
+        "Questionable Argos position test" = 20,
+        "Near-surface unpumped CTD salinity test" = 21,
+        "Near-surface mixed air/water test" = 22,
+        "Interim rtqc flag scheme for data deeper than 2000 dbar" = 23,
+        "Interim rtqc flag scheme for data from experimental sensors" = 24,
+        "MEDD test" = 25
+    )
+    if (!inherits(x, "argo")) {
         stop("can only display Quality Control tests for oce objects of 'argo' class")
+    }
     # Only attempt a display if the object holds HISTORY_ACTION and HISTORY_TESTS
     # Permit both SNAKE_CASE and camelCase names; oce switched to the latter 2020 Jun 24.
     mnames <- names(x@metadata)
-    if ("HISTORY_ACTION" %in% mnames)
+    if ("HISTORY_ACTION" %in% mnames) {
         action <- x[["HISTORY_ACTION"]]
-    else if ("historyAction" %in% mnames)
+    } else if ("historyAction" %in% mnames) {
         action <- x[["historyAction"]]
-    else {
+    } else {
         cat("historyAction is not present in the metadata for this cycle, so no report can be given")
         return(invisible(NULL))
     }
-    if ("HISTORY_QCTEST" %in% mnames) # to handle oce before version 1.3-0
+    if ("HISTORY_QCTEST" %in% mnames) { # to handle oce before version 1.3-0
         tests <- x[["HISTORY_QCTEST"]]
-    else if ("historyQCTest" %in% mnames)
+    } else if ("historyQCTest" %in% mnames) {
         tests <- x[["historyQCTest"]]
-    else
+    } else {
         return(invisible(NULL))
-    if (is.null(tests))
+    }
+    if (is.null(tests)) {
         return(invisible(NULL))
+    }
     # Match strings within 'action' to find the tests that were performed
     nrows <- nrow(tests)
     indent <- ""
@@ -263,21 +271,22 @@ showQCTests <- function(x, style="brief")
             cat("Profile", irow, "of", nrows, "profiles\n")
             indent <- "    "
         }
-        perf <- tests[irow, which(action[irow,] == "QCP$")]
+        perf <- tests[irow, which(action[irow, ] == "QCP$")]
         # Match strings within 'action' to find the tests that failed
-        fail <- tests[irow, which(action[irow,] == "QCF$")]
+        fail <- tests[irow, which(action[irow, ] == "QCF$")]
         # Add zeros on left of 'fail', if needed to match length of 'perf'
         # In some instances, QCP$ and QCF$ shows up multiple times in historyAction.
         # We're not sure why yet.
         if (length(fail) == 1 && length(perf) == 1) {
-            failFull <- paste0(paste(rep("0",nchar(perf)-nchar(fail)),collapse=""), fail, sep="")
-            perfIndices <- which(1==hexToBits(perf))
-            failIndices <- -1 + which(1==hexToBits(failFull))
+            failFull <- paste0(paste(rep("0", nchar(perf) - nchar(fail)), collapse = ""), fail, sep = "")
+            perfIndices <- which(1 == hexToBits(perf))
+            failIndices <- -1 + which(1 == hexToBits(failFull))
             if (style == "brief") {
-                cat(indent, "Tests performed: ", paste(QCTests[perfIndices], collapse=" "), "\n", sep="")
+                cat(indent, "Tests performed: ", paste(QCTests[perfIndices], collapse = " "), "\n", sep = "")
                 if (length(failIndices)) {
-                    for (i in failIndices)
+                    for (i in failIndices) {
                         cat(indent, sprintf("    Failed test %2d (%s)\n", QCTests[i], names(QCTests)[i]))
+                    }
                 } else {
                     cat(indent, "    Passed all real-time tests\n")
                 }
@@ -300,4 +309,3 @@ showQCTests <- function(x, style="brief")
     }
     invisible(NULL)
 }
-

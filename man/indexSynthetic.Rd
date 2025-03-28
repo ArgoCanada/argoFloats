@@ -38,7 +38,7 @@ explains why \code{\link[=getProfiles]{getProfiles()}} skips over files that can
 \examples{
 library(argoFloats)
 data(indexSynthetic)
-plot(indexSynthetic, bathymetry=FALSE)
+plot(indexSynthetic, bathymetry = FALSE)
 summary(indexSynthetic)
 unique(indexSynthetic[["parameters"]])
 }

@@ -79,11 +79,11 @@ file (which is an RDA file).  Note that if \code{keep}
 is \code{TRUE}, then the supplied value of \code{age} is converted
 to 0, to force a new download.}
 
-\item{debug}{integer value indicating level of debugging. If this
-is less than 1, no debugging is done. Otherwise, some functions
-will print debugging information.  If a function call fails, the
-first step should be to rerun the function with \code{debug=1},
-to see if the output suggests a problem in the call.}
+\item{debug}{an integer indicating the level of debugging.  If this
+is 0, then the function works somewhat quietly.  If it is 1, messages
+are printed at various steps in the process. If it is any number higher
+than 1, then those messages will be prefixed by an indication of
+the time, down to the millisecond.}
 }
 \value{
 An object of class \code{\linkS4class{argoFloats}} with type=\code{"index"}, which

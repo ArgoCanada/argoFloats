@@ -32,7 +32,7 @@ explains why \code{\link[=getProfiles]{getProfiles()}} skips over files that can
 \examples{
 library(argoFloats)
 data(indexDeep)
-plot(indexDeep, bathymetry=FALSE)
+plot(indexDeep, bathymetry = FALSE)
 summary(indexDeep)
 }
 \seealso{

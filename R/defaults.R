@@ -87,57 +87,52 @@
 #' argoDefaultProfileAge()
 #' argoDefaultBathymetry()
 #'
-argoDefaultDestdir <- function()
-{
+argoDefaultDestdir <- function() {
     argoOptionValue("argoFloats.destdir", "R_ARGOFLOATS_DESTDIR", "~/data/argo")
 }
 
 #' @rdname argoDefaultDestdir
 #' @export
-argoDefaultServer <- function()
-{
+argoDefaultServer <- function() {
     argoOptionValue("argoFloats.server", "R_ARGOFLOATS_SERVER", c("ifremer-https", "usgodae"))
 }
 
 #' @rdname argoDefaultDestdir
 #' @export
-argoDefaultIndexAge <- function()
-{
+argoDefaultIndexAge <- function() {
     as.numeric(argoOptionValue("argoFloats.indexAge", "R_ARGOFLOATS_INDEX_AGE", 1))
 }
 
 #' @rdname argoDefaultDestdir
 #' @export
-argoDefaultProfileAge <- function()
-{
+argoDefaultProfileAge <- function() {
     as.numeric(argoOptionValue("argoFloats.profileAge", "R_ARGOFLOATS_PROFILE_AGE", 365))
 }
 
 #' @rdname argoDefaultDestdir
 #' @export
-argoDefaultBathymetry <- function()
-{
+argoDefaultBathymetry <- function() {
     !is.null(getOption("argoFloats.bathymetry")) || (Sys.getenv("R_ARGOFLOATS_BATHYMETRY") != "")
 }
 
 #' @rdname argoDefaultDestdir
 #' @export
-hasArgoTestCache <- function()
-{
+hasArgoTestCache <- function() {
     !is.null(getOption("argoFloats.destdir")) || (Sys.getenv("R_ARGOFLOATS_DESTDIR") != "")
 }
 
 
 
-argoOptionValue <- function(option, envVar, default)
-{
+argoOptionValue <- function(option, envVar, default) {
     value <- getOption(option, default = NULL)
-    if (!is.null(value))
+    if (!is.null(value)) {
         return(value)
+    }
     ## Setting by environment variable is useful on CI, where multiple
     ## R sessions may be started and should all have the same value
     value <- Sys.getenv(envVar, unset = "")
-    if (value != "")
+    if (value != "") {
         return(value)
+    }
     default
 }

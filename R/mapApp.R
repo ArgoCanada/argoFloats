@@ -32,7 +32,7 @@
 #' The `hi-res` button will only affect the coastline, not the topography,
 #' unless there is a local file named `topoWorldFine.rda` that contains
 #' an alternative topographic information. Here is how to create such a file:
-#'```R
+#' ```R
 #' library(oce)
 #' topoFile <- download.topo(west=-180, east=180,
 #'                           south=-90, north=90,
@@ -41,7 +41,7 @@
 #' topoWorldFine <- read.topo(topoFile)
 #' save(topoWorldFine, file="topoWorldFine.rda")
 #' unlink(topoFile) # clean up
-#'```
+#' ```
 #'
 #'
 #' @param age numeric value indicating how old a downloaded file
@@ -84,29 +84,34 @@
 #' @importFrom utils write.table
 #'
 #' @export
-mapApp <- function(age=argoDefaultIndexAge(),
-    server=argoDefaultServer(),
-    destdir=argoDefaultDestdir(),
-    colLand="lightgray",
-    debug=0)
-{
+mapApp <- function(
+    age = argoDefaultIndexAge(),
+    server = argoDefaultServer(),
+    destdir = argoDefaultDestdir(),
+    colLand = "lightgray",
+    debug = 0) {
     debug <- as.integer(max(0, min(debug, 3))) # put in range from 0 to 3
     # Check for related packages and show how to install any that are missing
     need <- c("colourpicker", "curl", "lubridate", "ncdf4", "oce", "ocedata", "s2", "sf")
-    need <- need[sapply(need, function(p) !requireNamespace(p, quietly=TRUE))]
-    if (length(need) > 0L)
-        stop("please install necessary packages, using\n  install.packages(c(\"",
-            paste(need, collapse="\",\""), "\"))")
+    need <- need[sapply(need, function(p) !requireNamespace(p, quietly = TRUE))]
+    if (length(need) > 0L) {
+        stop(
+            "please install necessary packages, using\n  install.packages(c(\"",
+            paste(need, collapse = "\",\""), "\"))"
+        )
+    }
     # Establish options related to downloading and caching
-    shiny::shinyOptions(age=age,
-        destdir=destdir,
-        argoServer=server, # rename server to avoid shiny problem
-        colLand=colLand,
-        debug=debug)
-    dir <- system.file("shiny", "mapApp/app.R", package="argoFloats")
-    #dir <- "~/git/argoFloats/inst/shiny/mapApp"
-    if (!nchar(dir))
-        stop("The app could not be located.", call.=FALSE)
-    shiny::runApp(dir, display.mode="normal")
+    shiny::shinyOptions(
+        age = age,
+        destdir = destdir,
+        argoServer = server, # rename server to avoid shiny problem
+        colLand = colLand,
+        debug = debug
+    )
+    dir <- system.file("shiny", "mapApp/app.R", package = "argoFloats")
+    # dir <- "~/git/argoFloats/inst/shiny/mapApp"
+    if (!nchar(dir)) {
+        stop("The app could not be located.", call. = FALSE)
+    }
+    shiny::runApp(dir, display.mode = "normal")
 }
-
