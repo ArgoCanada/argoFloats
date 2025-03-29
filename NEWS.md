@@ -1,5 +1,7 @@
 # argoFloats 1.0.9
 
+* Change `getIndex()` so that the `"usgodae"` nickname refers to
+  https://usgodae.org/pub/outgoing/argo, not the old FTP site.
 * Change `getIndex()` so that using `debug=2` prints out times during
   processing steps (may help in debugging; see issue #602).
 * Change importing indications so that package will build and check (issue

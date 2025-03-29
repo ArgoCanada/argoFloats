@@ -40,7 +40,7 @@ for an index file.  The use of multiple servers is a way to avoid
 errors that can result if a server refuses a download request.
 As of March 2023, the three servers known to work are
 \code{"https://data-argo.ifremer.fr"}, \code{"ftp://ftp.ifremer.fr/ifremer/argo"} and
-\code{"ftp://usgodae.org/pub/outgoing/argo"}.
+\code{"https://usgodae.org/pub/outgoing/argo"}.
 These may be referred
 to with nicknames \code{"ifremer-https"}, \code{"ifremer"}and  \code{"usgodae"}.
 Any URL that can be used in \code{\link[curl:curl_download]{curl::curl_download()}} is a valid value provided
@@ -128,8 +128,8 @@ The names of these items are determined automatically from
 
 Some expertise is required in deciding on the value for the
 \code{file} argument to \code{\link[=getIndex]{getIndex()}}.  As of March 2023, the
-FTP sites
-\verb{ftp://usgodae.org/pub/outgoing/argo}
+sites
+\verb{https://usgodae.org/pub/outgoing/argo}
 and
 \verb{ftp://ftp.ifremer.fr/ifremer/argo}
 contain multiple index files, as listed in the left-hand column of the

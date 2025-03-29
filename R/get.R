@@ -46,10 +46,7 @@ argoFloatsWhenCached <- function(name, debug = 0L) {
         "\n",
         showTime = showTime
     )
-    argoFloatsDebug(debug, "argoFloatsWhenCached() END\n",
-        style = "bold", unindent = 1, ,
-        showTime = showTime
-    )
+    argoFloatsDebug(debug, "argoFloatsWhenCached() END\n", style = "bold", unindent = 1, showTime = showTime)
     rval
 }
 
@@ -286,8 +283,8 @@ getProfileFromUrl <- function(url = NULL, destdir = argoDefaultDestdir(),
 #'
 #' Some expertise is required in deciding on the value for the
 #' `file` argument to [getIndex()].  As of March 2023, the
-#' FTP sites
-#' `ftp://usgodae.org/pub/outgoing/argo`
+#' sites
+#' `https://usgodae.org/pub/outgoing/argo`
 #' and
 #' `ftp://ftp.ifremer.fr/ifremer/argo`
 #' contain multiple index files, as listed in the left-hand column of the
@@ -358,7 +355,7 @@ getProfileFromUrl <- function(url = NULL, destdir = argoDefaultDestdir(),
 #' errors that can result if a server refuses a download request.
 #' As of March 2023, the three servers known to work are
 #' `"https://data-argo.ifremer.fr"`, `"ftp://ftp.ifremer.fr/ifremer/argo"` and
-#' `"ftp://usgodae.org/pub/outgoing/argo"`.
+#' `"https://usgodae.org/pub/outgoing/argo"`.
 #' These may be referred
 #' to with nicknames `"ifremer-https"`, `"ifremer"`and  `"usgodae"`.
 #' Any URL that can be used in [curl::curl_download()] is a valid value provided
@@ -470,7 +467,6 @@ getIndex <- function(
     argoFloatsDebug(debug, "Set useLocalFile=", useLocalFile, ".\n", sep = "", showTime = showTime)
     # Sample file
     # ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
-    # ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
     istraj <- filename %in% c("traj", "bio-traj", "ar_index_global_traj.txt.gz", "argo_bio-traj_index.txt.gz")
     res <- new("argoFloats", type = "index", subtype = if (istraj) "trajectories" else "cycles")
     argoFloatsDebug(debug, "Created blank argoFloats.\n", showTime = showTime)
@@ -478,7 +474,7 @@ getIndex <- function(
     serverNicknames <- c(
         "ifremer-https" = "https://data-argo.ifremer.fr",
         "ifremer" = "ftp://ftp.ifremer.fr/ifremer/argo",
-        "usgodae" = "ftp://usgodae.org/pub/outgoing/argo"
+        "usgodae" = "https://usgodae.org/pub/outgoing/argo"
     )
     serverIsNickname <- server %in% names(serverNicknames)
     server[serverIsNickname] <- serverNicknames[server[serverIsNickname]]
