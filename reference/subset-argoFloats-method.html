@@ -27,7 +27,7 @@ argument; see &amp;#8216;Details&amp;#8217;.'><!-- mathjax --><script src="https
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.9</span>
       </span>
     </div>
 
@@ -234,35 +234,199 @@ Argo data. Frontiers in Marine Science, (8), 636922.
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Kept 3 cycles (0.298%)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Subset to a circle near Abaco Island</span></span></span>
-<span class="r-in"><span><span class="va">indexCircle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, circle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="op">-</span><span class="fl">77.5</span>, latitude<span class="op">=</span><span class="fl">27.5</span>, radius<span class="op">=</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">indexCircle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, circle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>longitude <span class="op">=</span> <span class="op">-</span><span class="fl">77.5</span>, latitude <span class="op">=</span> <span class="fl">27.5</span>, radius <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Kept 104 cycles (10.3%)</span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: this example was removed because it requires using tempdir, which</span></span></span>
+<span class="r-in"><span><span class="co"># # is not something we want to encourage, since it goes against the whole idea</span></span></span>
+<span class="r-in"><span><span class="co"># # of caching.</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 2B: subset a 300 km radius around Panama using "maps" package</span></span></span>
+<span class="r-in"><span><span class="co"># # This example requires downloading.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># library("maps")</span></span></span>
+<span class="r-in"><span><span class="co"># data(world.cities)</span></span></span>
+<span class="r-in"><span><span class="co"># ai &lt;- getIndex()</span></span></span>
+<span class="r-in"><span><span class="co"># panama &lt;- subset(world.cities, name=="Panama")</span></span></span>
+<span class="r-in"><span><span class="co"># index1 &lt;- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Subset to a rectangle near Abaco Island</span></span></span>
 <span class="r-in"><span><span class="va">lonlim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">76.5</span>, <span class="op">-</span><span class="fl">76</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">latlim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">26.5</span>, <span class="fl">27.5</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">indexRectangle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, rectangle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="va">lonlim</span>, latitude<span class="op">=</span><span class="va">latlim</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">indexRectangle</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, rectangle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>longitude <span class="op">=</span> <span class="va">lonlim</span>, latitude <span class="op">=</span> <span class="va">latlim</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Kept 59 cycles (5.85%)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Subset to a polygon near Abaco Island</span></span></span>
 <span class="r-in"><span><span class="va">lonp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">77.492</span>, <span class="op">-</span><span class="fl">78.219</span>, <span class="op">-</span><span class="fl">77.904</span>, <span class="op">-</span><span class="fl">77.213</span>, <span class="op">-</span><span class="fl">76.728</span>, <span class="op">-</span><span class="fl">77.492</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">latp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="fl">26.244</span>,  <span class="fl">25.247</span>,  <span class="fl">24.749</span>,  <span class="fl">24.987</span>,  <span class="fl">25.421</span>,  <span class="fl">26.244</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">indexPolygon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, polygon<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>longitude<span class="op">=</span><span class="va">lonp</span>, latitude<span class="op">=</span><span class="va">latp</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">latp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">26.244</span>, <span class="fl">25.247</span>, <span class="fl">24.749</span>, <span class="fl">24.987</span>, <span class="fl">25.421</span>, <span class="fl">26.244</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">indexPolygon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, polygon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>longitude <span class="op">=</span> <span class="va">lonp</span>, latitude <span class="op">=</span> <span class="va">latp</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Kept 173 cycles (17.2%)</span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # Show some of these subsets on a map</span></span></span>
+<span class="r-in"><span><span class="co"># plot(index, bathymetry=FALSE)</span></span></span>
+<span class="r-in"><span><span class="co"># points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)</span></span></span>
+<span class="r-in"><span><span class="co"># points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)</span></span></span>
+<span class="r-in"><span><span class="co"># rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)</span></span></span>
+<span class="r-in"><span><span class="co"># points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)</span></span></span>
+<span class="r-in"><span><span class="co"># polygon(p$longitude, p$latitude, border=4)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Subset to year 2019</span></span></span>
-<span class="r-in"><span><span class="va">index2019</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, time<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>from<span class="op">=</span><span class="st">"2019-01-01"</span>, to<span class="op">=</span><span class="st">"2019-12-31"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">index2019</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>from <span class="op">=</span> <span class="st">"2019-01-01"</span>, to <span class="op">=</span> <span class="st">"2019-12-31"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Kept 9 cycles (0.893%)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Subset to Canadian MEDS data</span></span></span>
-<span class="r-in"><span><span class="va">indexMEDS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, institution<span class="op">=</span><span class="st">"ME"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">indexMEDS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">index</span>, institution <span class="op">=</span> <span class="st">"ME"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Kept 3 cycles (0.298%)</span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: this example was removed because it requires using tempdir, which</span></span></span>
+<span class="r-in"><span><span class="co"># # is not something we want to encourage, since it goes against the whole idea</span></span></span>
+<span class="r-in"><span><span class="co"># # of caching.</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 8: subset to a specific ID</span></span></span>
+<span class="r-in"><span><span class="co"># # This example requires downloading.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># ai &lt;- getIndex(filename="synthetic")</span></span></span>
+<span class="r-in"><span><span class="co"># index9 &lt;- subset(ai, ID="1900722")</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: this example was removed because it requires using tempdir, which</span></span></span>
+<span class="r-in"><span><span class="co"># # is not something we want to encourage, since it goes against the whole idea</span></span></span>
+<span class="r-in"><span><span class="co"># # of caching.</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 9: subset data to only include deep argo</span></span></span>
+<span class="r-in"><span><span class="co"># # This example requires downloading.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># ai &lt;- getIndex(filename="synthetic")</span></span></span>
+<span class="r-in"><span><span class="co"># index8 &lt;- subset(ai, deep=TRUE)</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: this example was removed because it requires using tempdir, which</span></span></span>
+<span class="r-in"><span><span class="co"># # is not something we want to encourage, since it goes against the whole idea</span></span></span>
+<span class="r-in"><span><span class="co"># # of caching.</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 10: subset data by ocean</span></span></span>
+<span class="r-in"><span><span class="co"># # This example requires downloading.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># ai &lt;- getIndex()</span></span></span>
+<span class="r-in"><span><span class="co"># index10 &lt;- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))</span></span></span>
+<span class="r-in"><span><span class="co"># plot(index10, which="map", bathymetry=FALSE)</span></span></span>
+<span class="r-in"><span><span class="co"># atlantic &lt;- subset(index10, ocean="A") # Subsetting for Atlantic Ocean</span></span></span>
+<span class="r-in"><span><span class="co"># pacific &lt;- subset(index10, ocean="P")</span></span></span>
+<span class="r-in"><span><span class="co"># points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2)</span></span></span>
+<span class="r-in"><span><span class="co"># points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3)</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: there is no example 11.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: this example was removed because it requires using tempdir, which</span></span></span>
+<span class="r-in"><span><span class="co"># # is not something we want to encourage, since it goes against the whole idea</span></span></span>
+<span class="r-in"><span><span class="co"># # of caching.</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 11: subset by delayed time</span></span></span>
+<span class="r-in"><span><span class="co"># # This example requires downloading.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># data(indexBgc)</span></span></span>
+<span class="r-in"><span><span class="co"># index11 &lt;- subset(indexBgc, dataMode="delayed")</span></span></span>
+<span class="r-in"><span><span class="co"># profiles &lt;- getProfiles(index11)</span></span></span>
+<span class="r-in"><span><span class="co"># argos &lt;- readProfiles(profiles)</span></span></span>
+<span class="r-in"><span><span class="co"># oxygen &lt;- argos[["oxygen"]][[3]]</span></span></span>
+<span class="r-in"><span><span class="co"># pressure &lt;- argos[["pressure"]][[3]]</span></span></span>
+<span class="r-in"><span><span class="co"># plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),</span></span></span>
+<span class="r-in"><span><span class="co">#      ylab="Pressure (dbar)", xlab="Oxygen (umol/kg)")</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 12: subset by cycle</span></span></span>
+<span class="r-in"><span><span class="co"># data(index)</span></span></span>
+<span class="r-in"><span><span class="co"># index12A &lt;- subset(index, cycle="124")</span></span></span>
+<span class="r-in"><span><span class="co"># index12B &lt;- subset(index, cycle=0:2)</span></span></span>
+<span class="r-in"><span><span class="co"># cat("File names with cycle number 124:", paste(index12A[["file"]]), "\n")</span></span></span>
+<span class="r-in"><span><span class="co"># cat("File names with cycle number between 0 and 2:", paste(index12B[["file"]]), "\n")</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: this example was removed because it requires using tempdir, which</span></span></span>
+<span class="r-in"><span><span class="co"># # is not something we want to encourage, since it goes against the whole idea</span></span></span>
+<span class="r-in"><span><span class="co"># # of caching.</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 13: subset by direction</span></span></span>
+<span class="r-in"><span><span class="co"># # This example requires downloading.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># library(argoFloats)</span></span></span>
+<span class="r-in"><span><span class="co"># index13A &lt;- subset(getIndex(), deep=TRUE)</span></span></span>
+<span class="r-in"><span><span class="co"># index13B &lt;- subset(index13A, direction="descent")</span></span></span>
+<span class="r-in"><span><span class="co"># head(index13B[["file"]])</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: this example was removed because it requires using tempdir, which</span></span></span>
+<span class="r-in"><span><span class="co"># # is not something we want to encourage, since it goes against the whole idea</span></span></span>
+<span class="r-in"><span><span class="co"># # of caching.</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 14: subset by profile (for argos type)</span></span></span>
+<span class="r-in"><span><span class="co"># # This example requires downloading.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># library(argoFloats)</span></span></span>
+<span class="r-in"><span><span class="co"># index14A &lt;- subset(getIndex(filename="synthetic"), ID="5903889")</span></span></span>
+<span class="r-in"><span><span class="co"># index14B &lt;- subset(index14A, cycle="074")</span></span></span>
+<span class="r-in"><span><span class="co"># argos14A &lt;- readProfiles(getProfiles(index14B))</span></span></span>
+<span class="r-in"><span><span class="co"># argos14B &lt;- subset(argos14A, profile=1)</span></span></span>
+<span class="r-in"><span><span class="co"># D &lt;- data.frame(Oxygen = argos14A[["oxygen"]],</span></span></span>
+<span class="r-in"><span><span class="co"># col1= argos14B[["oxygen"]][[1]])</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: this example was removed because it requires using tempdir, which</span></span></span>
+<span class="r-in"><span><span class="co"># # is not something we want to encourage, since it goes against the whole idea</span></span></span>
+<span class="r-in"><span><span class="co"># # of caching.</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 15: subset by cycle (for argos type) to create TS diagram</span></span></span>
+<span class="r-in"><span><span class="co"># # This example requires downloading.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># data("index")</span></span></span>
+<span class="r-in"><span><span class="co"># index15 &lt;- subset(index, ID="1901584")</span></span></span>
+<span class="r-in"><span><span class="co"># profiles &lt;- getProfiles(index15)</span></span></span>
+<span class="r-in"><span><span class="co"># argos &lt;- readProfiles(profiles)</span></span></span>
+<span class="r-in"><span><span class="co"># plot(subset(argos, cycle="147"), which="TS")</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # NOTE: this example was removed because it requires using tempdir, which</span></span></span>
+<span class="r-in"><span><span class="co"># # is not something we want to encourage, since it goes against the whole idea</span></span></span>
+<span class="r-in"><span><span class="co"># # of caching.</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 16: subset by dataStateIndicator</span></span></span>
+<span class="r-in"><span><span class="co"># # This example requires downloading.</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># data("index")</span></span></span>
+<span class="r-in"><span><span class="co"># index16 &lt;- subset(index, 1:40)</span></span></span>
+<span class="r-in"><span><span class="co"># argos &lt;- readProfiles(getProfiles(index16))</span></span></span>
+<span class="r-in"><span><span class="co"># argos16A &lt;- subset(argos, dataStateIndicator="2C")</span></span></span>
+<span class="r-in"><span><span class="co"># argos16B &lt;- subset(argos, dataStateIndicator="2B")</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># # Example 17: subset by section to create a map plot</span></span></span>
+<span class="r-in"><span><span class="co"># if (requireNamespace("s2")) {</span></span></span>
+<span class="r-in"><span><span class="co">#     data("index")</span></span></span>
+<span class="r-in"><span><span class="co">#     lon &lt;- c(-78, -77, -76)</span></span></span>
+<span class="r-in"><span><span class="co">#     lat &lt;-c(27.5,27.5,26.5)</span></span></span>
+<span class="r-in"><span><span class="co">#     index17 &lt;- subset(index,</span></span></span>
+<span class="r-in"><span><span class="co">#                       section=list(longitude=lon, latitude=lat, width=50))</span></span></span>
+<span class="r-in"><span><span class="co">#     plot(index17, bathymetry=FALSE)</span></span></span>
+<span class="r-in"><span><span class="co">#     points(lon, lat, pch=21, col="black", bg="red", type="o", lwd=3)</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Subset to profiles with oxygen data</span></span></span>
-<span class="r-in"><span><span class="va">indexOxygen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">indexSynthetic</span>, parameter<span class="op">=</span><span class="st">"DOXY"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">indexOxygen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">indexSynthetic</span>, parameter <span class="op">=</span> <span class="st">"DOXY"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Kept 38 cycles (95%)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Subset to profiles with both salinity and 380-nm downward irradiance data</span></span></span>
-<span class="r-in"><span><span class="va">indexSalinityIrradiance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">indexSynthetic</span>, parameter<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PSAL"</span>, <span class="st">"DOWN_IRRADIANCE380"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">indexSalinityIrradiance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">indexSynthetic</span>, parameter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PSAL"</span>, <span class="st">"DOWN_IRRADIANCE380"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Kept 2 cycles (5%)</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

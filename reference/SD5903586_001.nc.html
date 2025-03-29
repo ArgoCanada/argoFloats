@@ -22,7 +22,7 @@ is shown here, and in the documentation for useAdjusted().'><!-- mathjax --><scr
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.9</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@ is shown here, and in the documentation for <code><a href="useAdjusted.html">use
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ArgoCanada/argoFloats" class="external-link">argoFloats</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"SD5903586_001.nc"</span>, package<span class="op">=</span><span class="st">"argoFloats"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="readProfiles.html">readProfiles</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"SD5903586_001.nc"</span>, package <span class="op">=</span> <span class="st">"argoFloats"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Of 1 profiles read, 1 has &gt;10% of BBP700 values with QC flag of 4, signalling bad data.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     The indices of the bad profiles are as follows.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>     1</span>
@@ -101,9 +101,9 @@ is shown here, and in the documentation for <code><a href="useAdjusted.html">use
 <span class="r-in"><span><span class="co"># Illustrate oxygen adjustment</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">a1</span><span class="op">[[</span><span class="st">"pressure"</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">O</span> <span class="op">&lt;-</span> <span class="va">a1</span><span class="op">[[</span><span class="st">"oxygen"</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="va">Oa</span>  <span class="op">&lt;-</span> <span class="va">a1</span><span class="op">[[</span><span class="st">"oxygenAdjusted"</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">Oa</span> <span class="op">&lt;-</span> <span class="va">a1</span><span class="op">[[</span><span class="st">"oxygenAdjusted"</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">Percent</span> <span class="op">&lt;-</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">Oa</span> <span class="op">-</span> <span class="va">O</span><span class="op">)</span> <span class="op">/</span> <span class="va">O</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">Percent</span>, main<span class="op">=</span><span class="st">"Oxygen adjustment"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">Percent</span>, main <span class="op">=</span> <span class="st">"Oxygen adjustment"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="SD5903586_001.nc-1.png" alt="" width="672" height="672"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

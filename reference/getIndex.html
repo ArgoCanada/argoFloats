@@ -21,7 +21,7 @@ of a previous call to getIndex() (see the age parameter)."><!-- mathjax --><scri
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">argoFloats</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.9</span>
       </span>
     </div>
 
@@ -117,7 +117,7 @@ for an index file.  The use of multiple servers is a way to avoid
 errors that can result if a server refuses a download request.
 As of March 2023, the three servers known to work are
 <code>"https://data-argo.ifremer.fr"</code>, <code>"ftp://ftp.ifremer.fr/ifremer/argo"</code> and
-<code>"ftp://usgodae.org/pub/outgoing/argo"</code>.
+<code>"https://usgodae.org/pub/outgoing/argo"</code>.
 These may be referred
 to with nicknames <code>"ifremer-https"</code>, <code>"ifremer"</code>and  <code>"usgodae"</code>.
 Any URL that can be used in <code><a href="https://jeroen.r-universe.dev/curl/reference/curl_download.html" class="external-link">curl::curl_download()</a></code> is a valid value provided
@@ -166,11 +166,11 @@ to 0, to force a new download.</p></dd>
 
 
 <dt id="arg-debug">debug<a class="anchor" aria-label="anchor" href="#arg-debug"></a></dt>
-<dd><p>integer value indicating level of debugging. If this
-is less than 1, no debugging is done. Otherwise, some functions
-will print debugging information.  If a function call fails, the
-first step should be to rerun the function with <code>debug=1</code>,
-to see if the output suggests a problem in the call.</p></dd>
+<dd><p>an integer indicating the level of debugging.  If this
+is 0, then the function works somewhat quietly.  If it is 1, messages
+are printed at various steps in the process. If it is any number higher
+than 1, then those messages will be prefixed by an indication of
+the time, down to the millisecond.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -205,8 +205,8 @@ The names of these items are determined automatically from
 <code>"core"</code>,<code>"bgcargo"</code>, <code>"synthetic"</code> files.</p></li>
 </ul><p>Some expertise is required in deciding on the value for the
 <code>file</code> argument to <code>getIndex()</code>.  As of March 2023, the
-FTP sites
-<code>ftp://usgodae.org/pub/outgoing/argo</code>
+sites
+<code>https://usgodae.org/pub/outgoing/argo</code>
 and
 <code>ftp://ftp.ifremer.fr/ifremer/argo</code>
 contain multiple index files, as listed in the left-hand column of the
