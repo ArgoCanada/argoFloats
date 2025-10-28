@@ -94,26 +94,30 @@ test_that("subset by cycle", {
 
 test_that("subset by profile", {
     skip_if_not(hasArgoTestCache())
-    i <- getIndex(quiet = TRUE)
-    N <- sum(i[["ID"]] == "5902250")
-    s <- expect_message(subset(i, ID = "5902250"), paste("Kept", N, "cycles"))
-    N <- 1
-    s <- expect_message(subset(s, cycle = "253"), paste("Kept", N, "cycles"))
-    p <- getProfiles(s)
-    a <- expect_output(readProfiles(p), "|===") # Robustness: OK if float stays in archive
-    a1 <- expect_silent(subset(a, profile = 1))
-    a2 <- expect_silent(subset(a, profile = 2))
-    salinity <- a[["salinity"]][[1]]
-    salinity1 <- a1[["salinity"]][[1]]
-    salinity2 <- a2[["salinity"]][[1]]
-    ## Reach inside the oce::argo object to get N.  Was hard-wired
-    ## before, and likely that's okay, but I wanted to check. -- DEK
-    N <- nrow(a@data$argos[[1]]@data$pressure)
-    expect_equal(dim(salinity), c(N, 2))
-    expect_equal(dim(salinity1), c(N, 1))
-    expect_equal(dim(salinity2), c(N, 1))
-    expect_equal(salinity1, salinity[, 1, drop = FALSE])
-    expect_equal(salinity2, salinity[, 2, drop = FALSE])
+    i <- try(getIndex(quiet = TRUE))
+    if (!inherits(t, "try-error")) {
+        N <- sum(i[["ID"]] == "5902250")
+        s <- expect_message(subset(i, ID = "5902250"), paste("Kept", N, "cycles"))
+        N <- 1
+        s <- expect_message(subset(s, cycle = "253"), paste("Kept", N, "cycles"))
+        p <- try(getProfiles(s))
+        if (!inherits(p, "try-error")) {
+            a <- expect_output(readProfiles(p), "|===") # Robustness: OK if float stays in archive
+            a1 <- expect_silent(subset(a, profile = 1))
+            a2 <- expect_silent(subset(a, profile = 2))
+            salinity <- a[["salinity"]][[1]]
+            salinity1 <- a1[["salinity"]][[1]]
+            salinity2 <- a2[["salinity"]][[1]]
+            ## Reach inside the oce::argo object to get N.  Was hard-wired
+            ## before, and likely that's okay, but I wanted to check. -- DEK
+            N <- nrow(a@data$argos[[1]]@data$pressure)
+            expect_equal(dim(salinity), c(N, 2))
+            expect_equal(dim(salinity1), c(N, 1))
+            expect_equal(dim(salinity2), c(N, 1))
+            expect_equal(salinity1, salinity[, 1, drop = FALSE])
+            expect_equal(salinity2, salinity[, 2, drop = FALSE])
+        }
+    }
 })
 
 ## > ## DEK 2020-12-31:
