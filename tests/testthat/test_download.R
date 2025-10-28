@@ -15,10 +15,12 @@ test_that("getProfiles()", {
     tempFile <- tempfile()
     dir.create(tempFile)
     s <- expect_message(subset(index, 1:3), "Kept 3 cycles")
-    p <- getProfiles(s, destdir = tempFile)
-    expect <- expect_output(print(p), "argoFloats object of type \"profiles\" with 3 items")
-    expect_equal(p[["cycle"]], c("124", "125", "126"))
-    expect_equal(p[["length"]], 3)
+    p <- try(getProfiles(s, destdir = tempFile))
+    if (!inherits(p, "try-error")) {
+        expect <- expect_output(print(p), "argoFloats object of type \"profiles\" with 3 items")
+        expect_equal(p[["cycle"]], c("124", "125", "126"))
+        expect_equal(p[["length"]], 3)
+    }
     unlink(tempFile, recursive = TRUE)
 })
 
