@@ -62,7 +62,8 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.9" id="argofloats-109">argoFloats 1.0.9<a class="anchor" aria-label="anchor" href="#argofloats-109"></a></h2>
-<ul><li>Change <code><a href="../reference/getIndex.html">getIndex()</a></code> so that the <code>"usgodae"</code> nickname refers to <a href="https://usgodae.org/pub/outgoing/argo" class="external-link uri">https://usgodae.org/pub/outgoing/argo</a>, not the old FTP site.</li>
+<ul><li>Change some tests to address a download-timeout error reported by CRAN on 2025-10-28, with a requirement to fix by 2025-11-11. The change was mainly to wrap <code><a href="../reference/getIndex.html">getIndex()</a></code> and <code>getProfile()</code> calls in <code>try</code> blocks, although there was one instance in which a function call was simply commented out, since DEK was not sure how to work with <code>try</code> and <code>expect_silent</code> calls together, and since the underlying code has been working for years and there have been no changes that would necessitate long-running tests in the test suite.</li>
+<li>Change <code><a href="../reference/getIndex.html">getIndex()</a></code> so that the <code>"usgodae"</code> nickname refers to <a href="https://usgodae.org/pub/outgoing/argo" class="external-link uri">https://usgodae.org/pub/outgoing/argo</a>, not the old FTP site.</li>
 <li>Change <code><a href="../reference/getIndex.html">getIndex()</a></code> so that using <code>debug=2</code> prints out times during processing steps (may help in debugging; see issue <a href="https://github.com/ArgoCanada/argoFloats/issues/602" class="external-link">#602</a>).</li>
 <li>Change importing indications so that package will build and check (issue <a href="https://github.com/ArgoCanada/argoFloats/issues/603" class="external-link">#603</a>).</li>
 </ul></div>
