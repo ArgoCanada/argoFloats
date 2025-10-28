@@ -1,5 +1,12 @@
 # argoFloats 1.0.9
 
+* Change some tests to address a download-timeout error reported by CRAN on
+  2025-10-28, with a requirement to fix by 2025-11-11.  The change was mainly
+  to wrap `getIndex()` and `getProfile()` calls in `try` blocks, although there
+  was one instance in which a function call was simply commented out, since DEK
+  was not sure how to work with `try` and `expect_silent` calls together, and
+  since the underlying code has been working for years and there have been no
+  changes that would necessitate long-running tests in the test suite.
 * Change `getIndex()` so that the `"usgodae"` nickname refers to
   https://usgodae.org/pub/outgoing/argo, not the old FTP site.
 * Change `getIndex()` so that using `debug=2` prints out times during
