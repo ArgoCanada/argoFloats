@@ -1,9 +1,29 @@
+# argoFloats 1.0.9
+
+* Change some tests to address a download-timeout error reported by CRAN on
+  2025-10-28, with a requirement to fix by 2025-11-11.  The change was mainly
+  to wrap `getIndex()` and `getProfile()` calls in `try` blocks, although there
+  was one instance in which a function call was simply commented out, since DEK
+  was not sure how to work with `try` and `expect_silent` calls together, and
+  since the underlying code has been working for years and there have been no
+  changes that would necessitate long-running tests in the test suite.
+* Change `getIndex()` so that the `"usgodae"` nickname refers to
+  https://usgodae.org/pub/outgoing/argo, not the old FTP site.
+* Change `getIndex()` so that using `debug=2` prints out times during
+  processing steps (may help in debugging; see issue #602).
+* Change importing indications so that package will build and check (issue
+  #603).
+
+# argoFloats 1.0.8
+
+* Fix formatting of `NEWS.md` file.
+
 # argoFloats 1.0.7
 
 * Remove suggestion for now-retired `rgdal` package.
 * Require R 4.1.0 or higher, to permit `|>` syntax.
 * `plot(a, which="TS")` can color by cycle for `type="l"` now.
-* `getIndex()` can work with previously-downloaded .tgz files.
+* `getIndex()` can work with previously-downloaded `.tgz` files.
 
 # argoFloats 1.0.6
 
@@ -12,15 +32,12 @@
 # argoFloats 1.0.5
 
 * Change `getProfiles()` to permit age="latest".
-
 * Change `mapApp()` to allow subset by polygon. 
 
 # argoFloats 1.0.4 (on CRAN)
 
 * Fix image-size declarations in 3 man pages (required by CRAN).
-
 * Change `plot()` to not show bathymetry by default.
-
 * Improve `index[["ID"]]` speed by 3X.
 
 # argoFloats 1.0.3 (on CRAN)
@@ -34,35 +51,35 @@
 
 # argoFloats 1.0.1
 
-* DESCRIPTION improved
-* Document return values of all functions
+* DESCRIPTION improved.
+* Document return values of all functions.
 * Describe base class.
 * `plot()` resets `par()` to its initial state before returning.
 
 # argoFloats 1.0.0
 
-* Improve documentation for a CRAN release
-* Remove version number from `mapApp()`
+* Improve documentation for a CRAN release.
+* Remove version number from `mapApp()`.
 
 # argoFloats 0.2.0
 
-* Add subset by section
-* Add "traj" and "bio-traj" arguments to `getIndex()`
-* Created subtype cycles and trajectories for index type
-* Created map plot for trajectories type
+* Add subset by section.
+* Add "traj" and "bio-traj" arguments to `getIndex()`.
+* Created subtype cycles and trajectories for index type.
+* Created map plot for trajectories type.
 
 # argoFloats 0.1.3
 
-* widen support of `age` argument, remove support for `force`
-* add several new built-in datasets
-* add several new functions
-* improve vignette and other documentation
+* Widen support of `age` argument, remove support for `force`.
+* Add several new built-in datasets.
+* Add several new functions.
+* Improve vignette and other documentation.
 
 # argoFloats 0.1.2
 
-* repository made public, transferred to ArgoCanada organization
+* Repository made public, transferred to ArgoCanada organization.
 
 # argoFloats 0.1.1
 
-* initial version, on github but not CRAN
+* Initial version, on github but not CRAN.
 

@@ -54,74 +54,85 @@
 #' @export
 #'
 #' @author Dan Kelley and Jaimie Harbin
-plotArgoTS <- function(x, xlim=NULL, ylim=NULL,
-    type="p", cex=1, col=NULL, pch=1, bg="white", eos="gsw", TSControl=NULL,
-    debug=0, ...)
-{
-    #message('debug=',debug)
-    if (!inherits(x, "argoFloats"))
+plotArgoTS <- function(
+    x, xlim = NULL, ylim = NULL,
+    type = "p", cex = 1, col = NULL, pch = 1, bg = "white", eos = "gsw", TSControl = NULL,
+    debug = 0, ...) {
+    # message('debug=',debug)
+    if (!inherits(x, "argoFloats")) {
         stop("x must be an argo object")
-    if ((x[["type"]] != "argos"))
+    }
+    if ((x[["type"]] != "argos")) {
         stop("x must be the result of a call to readProfiles()")
-    if (!(eos %in% c("gsw", "unesco")))
+    }
+    if (!(eos %in% c("gsw", "unesco"))) {
         stop("eos must be \"gsw\" or \"unesco\", not \"", eos, "\"")
-    argoFloatsDebug(debug, "plotArgoTS(x, ..., eos=\"", eos, "\", ...) {\n", sep="", unindent=1, style="bold")
-    if (!(eos %in% c("gsw", "unesco")))
-        stop("In plot,argoFloats-method(): eos must be \"gsw\" or \"unesco\", not \"", eos, "\"", call.=FALSE)
+    }
+    argoFloatsDebug(debug, "plotArgoTS(x, ..., eos=\"", eos, "\", ...) {\n", sep = "", unindent = 1, style = "bold")
+    if (!(eos %in% c("gsw", "unesco"))) {
+        stop("In plot,argoFloats-method(): eos must be \"gsw\" or \"unesco\", not \"", eos, "\"", call. = FALSE)
+    }
     colGiven <- !is.null(col)
     # compute cycle, in case we need that
     ncycles <- x[["length"]]
-    cycleIndex <- unlist(lapply(seq_len(ncycles),
-            function(icycle)
-                rep(icycle, length(x@data$argos[[icycle]]@data$pressure))))
-    salinity <- unlist(x[["salinity", debug=debug-1L]])
-    temperature <- unlist(x[["temperature", debug=debug-1L]])
-    pressure <- unlist(x[["pressure", debug=debug-1L]])
+    cycleIndex <- unlist(lapply(
+        seq_len(ncycles),
+        function(icycle) {
+            rep(icycle, length(x@data$argos[[icycle]]@data$pressure))
+        }
+    ))
+    salinity <- unlist(x[["salinity", debug = debug - 1L]])
+    temperature <- unlist(x[["temperature", debug = debug - 1L]])
+    pressure <- unlist(x[["pressure", debug = debug - 1L]])
     ## Use byLevel to repeat the latitude and longitude values across
     ## the depths in each profile, so that the resultant vector
     ## will match the salinity, temperature and pressure vectors.
-    latitude <- unlist(x[["latitude", "byLevel", debug=debug-1L]])
-    longitude <- unlist(x[["longitude", "byLevel", debug=debug-1L]])
+    latitude <- unlist(x[["latitude", "byLevel", debug = debug - 1L]])
+    longitude <- unlist(x[["longitude", "byLevel", debug = debug - 1L]])
     # Interpolate across NA longitudes (required for traj data, to get TS plot)
     n <- length(longitude)
-    if (any(is.na(longitude)))
+    if (any(is.na(longitude))) {
         longitude <- approx(1:n, longitude, 1:n)$y
-    if (any(is.na(latitude)))
+    }
+    if (any(is.na(latitude))) {
         latitude <- approx(1:n, latitude, 1:n)$y
-    ctd <- oce::as.ctd(salinity=salinity,
-        temperature=temperature,
-        pressure=pressure,
-        latitude=latitude,
-        longitude=longitude)
+    }
+    ctd <- oce::as.ctd(
+        salinity = salinity,
+        temperature = temperature,
+        pressure = pressure,
+        latitude = latitude,
+        longitude = longitude
+    )
     ctd@data$cycleIndex <- cycleIndex
     if (is.null(TSControl)) {
         argoFloatsDebug(debug, "defaulting TSControl\n")
-        TSControl <- list(groupByCycle=NULL)
+        TSControl <- list(groupByCycle = NULL)
     }
-    #message("next is col:");print(col)
-    #cat("next is cex inside call (spot 1):\n");cat(vectorShow(cex))
+    # message("next is col:");print(col)
+    # cat("next is cex inside call (spot 1):\n");cat(vectorShow(cex))
     if (is.null(TSControl$groupByCycle)) {
         argoFloatsDebug(debug, "TSControl does not contain groupByCycle\n")
         if (is.null(col)) {
             col <- "flags"
         }
     } else {
-        #? argoFloatsDebug(debug, "TSControl contains groupByCycle\n")
-        #? cycle <- unlist(x[["cycle", debug=debug-1L]])
-        #? lengths <- sapply(x[["argos"]], function(cc) length(cc[["pressure"]]))
-        #? # Increase the col length, so e.g. TSControl=list(groupByCycle=1:2) will alternate colours
-        #? groupByCycle <- rep(TSControl$groupByCycle, length.out=length(cycle))
-        #? col <- rep(col, length.out=ncycles)
-        #? cex <- rep(cex, length.out=ncycles)
-        #? #print(cex)
-        #? pch <- rep(pch, length.out=ncycles)
-        #? type <- rep(type, length.out=ncycles)
-        #? #col <- unlist(lapply(seq_len(ncycles),
-        #? #        function(i)
-        #? #            rep(col[i], lengths[i])))
-        #? #type <- rep(TSControl$type, length.out=ncycles)
+        # ? argoFloatsDebug(debug, "TSControl contains groupByCycle\n")
+        # ? cycle <- unlist(x[["cycle", debug=debug-1L]])
+        # ? lengths <- sapply(x[["argos"]], function(cc) length(cc[["pressure"]]))
+        # ? # Increase the col length, so e.g. TSControl=list(groupByCycle=1:2) will alternate colours
+        # ? groupByCycle <- rep(TSControl$groupByCycle, length.out=length(cycle))
+        # ? col <- rep(col, length.out=ncycles)
+        # ? cex <- rep(cex, length.out=ncycles)
+        # ? #print(cex)
+        # ? pch <- rep(pch, length.out=ncycles)
+        # ? type <- rep(type, length.out=ncycles)
+        # ? #col <- unlist(lapply(seq_len(ncycles),
+        # ? #        function(i)
+        # ? #            rep(col[i], lengths[i])))
+        # ? #type <- rep(TSControl$type, length.out=ncycles)
     }
-    #cat("next is cex inside call (spot 2):\n");cat(vectorShow(cex))
+    # cat("next is cex inside call (spot 2):\n");cat(vectorShow(cex))
     # Calculate whether data are good
     pressureFlag <- unlist(x[["pressureFlag"]])
     salinityFlag <- unlist(x[["salinityFlag"]])
@@ -149,75 +160,93 @@ plotArgoTS <- function(x, xlim=NULL, ylim=NULL,
     }
     argoFloatsDebug(debug, "about to set xlim and ylim\n")
     if (is.null(xlim)) {
-        Slim <- if (eos == "gsw") range(ctd[["SA"]], na.rm=TRUE)
-            else range(ctd[["salinity"]], na.rm=TRUE)
-        argoFloatsDebug(debug, "inferred xlim=", paste(round(Slim, 5), collapse=" "), " from data\n", sep="")
+        Slim <- if (eos == "gsw") {
+            range(ctd[["SA"]], na.rm = TRUE)
+        } else {
+            range(ctd[["salinity"]], na.rm = TRUE)
+        }
+        argoFloatsDebug(debug, "inferred xlim=", paste(round(Slim, 5), collapse = " "), " from data\n", sep = "")
     } else {
         Slim <- xlim
-        argoFloatsDebug(debug, "using provided ylim=", paste(round(Slim, 5), collapse=" "), "\n", sep="")
+        argoFloatsDebug(debug, "using provided ylim=", paste(round(Slim, 5), collapse = " "), "\n", sep = "")
     }
     if (is.null(ylim)) {
-        Tlim <- if (eos == "gsw") range(ctd[["CT"]], na.rm=TRUE)
-            else range(ctd[["theta"]], na.rm=TRUE)
-        argoFloatsDebug(debug, "inferred ylim=", paste(round(Tlim, 5), collapse=" "), " from data\n", sep="")
+        Tlim <- if (eos == "gsw") {
+            range(ctd[["CT"]], na.rm = TRUE)
+        } else {
+            range(ctd[["theta"]], na.rm = TRUE)
+        }
+        argoFloatsDebug(debug, "inferred ylim=", paste(round(Tlim, 5), collapse = " "), " from data\n", sep = "")
     } else {
         Tlim <- ylim
-        argoFloatsDebug(debug, "using provided ylim=", paste(round(Tlim, 5), collapse=" "), "\n", sep="")
+        argoFloatsDebug(debug, "using provided ylim=", paste(round(Tlim, 5), collapse = " "), "\n", sep = "")
     }
     if (isTRUE(TSControl$groupByCycle)) {
         argoFloatsDebug(debug, "colorizing by index\n")
         cycles <- unique(cycleIndex)
         ncycles <- length(cycles)
-        argoFloatsDebug(debug, "Slim=c(", paste(Slim, collapse=","), ")\n", sep="")
-        argoFloatsDebug(debug, "Tlim=c(", paste(Tlim, collapse=","), ")\n", sep="")
-        if (length(longitude) != length(salinity))
+        argoFloatsDebug(debug, "Slim=c(", paste(Slim, collapse = ","), ")\n", sep = "")
+        argoFloatsDebug(debug, "Tlim=c(", paste(Tlim, collapse = ","), ")\n", sep = "")
+        if (length(longitude) != length(salinity)) {
             longitude <- rep(longitude[1], length(salinity))
-        if (length(latitude) != length(salinity))
+        }
+        if (length(latitude) != length(salinity)) {
             latitude <- rep(latitude[1], length(salinity))
-        if (length(cex) != ncycles)
-            cex <- rep(cex, length.out=ncycles)
-        if (length(col) != ncycles)
-            col <- rep(col, length.out=ncycles)
-        if (length(type) != ncycles)
-            type <- rep(type, length.out=ncycles)
-        if (length(pch) != ncycles)
-            pch <- rep(pch, length.out=ncycles)
+        }
+        if (length(cex) != ncycles) {
+            cex <- rep(cex, length.out = ncycles)
+        }
+        if (length(col) != ncycles) {
+            col <- rep(col, length.out = ncycles)
+        }
+        if (length(type) != ncycles) {
+            type <- rep(type, length.out = ncycles)
+        }
+        if (length(pch) != ncycles) {
+            pch <- rep(pch, length.out = ncycles)
+        }
         argoFloatsDebug(debug, "cycle-by-cycle overlay, since groupByCycle is TRUE\n")
-        message('debug=',debug)
+        message("debug=", debug)
         for (i in seq_len(ncycles)) {
-            argoFloatsDebug(debug>1L, "  handling cycle ", i, " of ", ncycles, ", which has ",
-                length(salinity[i==cycleIndex]), " points\n", sep="")
+            argoFloatsDebug(debug > 1L, "  handling cycle ", i, " of ", ncycles, ", which has ",
+                length(salinity[i == cycleIndex]), " points\n",
+                sep = ""
+            )
             look <- i == cycleIndex
             ctd <- oce::as.ctd(
-                salinity=salinity[look],
-                temperature=temperature[look],
-                pressure=pressure[look],
-                latitude=latitude[look],
-                longitude=longitude[look])
+                salinity = salinity[look],
+                temperature = temperature[look],
+                pressure = pressure[look],
+                latitude = latitude[look],
+                longitude = longitude[look]
+            )
             if (i == 1L) {
-                plotTS(ctd, Slim=Slim, Tlim=Tlim,
-                    cex=cex[i], col=col[i], pch=pch[i], type=type[i],
-                    mar=par("mar"), mgp=par("mgp"), eos=eos, ...)
+                plotTS(ctd,
+                    Slim = Slim, Tlim = Tlim,
+                    cex = cex[i], col = col[i], pch = pch[i], type = type[i],
+                    mar = par("mar"), mgp = par("mgp"), eos = eos, ...
+                )
             } else {
-                plotTS(ctd, add=TRUE,
-                    cex=cex[i], col=col[i], pch=pch[i], type=type[i],
-                    mar=par("mar"), mgp=par("mgp"), eos=eos, ...)
+                plotTS(ctd,
+                    add = TRUE,
+                    cex = cex[i], col = col[i], pch = pch[i], type = type[i],
+                    mar = par("mar"), mgp = par("mgp"), eos = eos, ...
+                )
             }
         }
     } else {
         argoFloatsDebug(debug, "making single plotTS() call, since groupByCycle is FALSE\n")
         if (colGiven) {
-            oce::plotTS(ctd, Slim=Slim, Tlim=Tlim, col=col, pch=pch, cex=cex, ...)
+            oce::plotTS(ctd, Slim = Slim, Tlim = Tlim, col = col, pch = pch, cex = cex, ...)
         } else {
-            #print(table(col))
+            # print(table(col))
             ctdBad <- subset(ctd, !goodData)
-            #DAN<<-list(ctd=ctd, ctdBad=ctdBad, goodData=goodData)
-            oce::plotTS(ctd, Slim=Slim, Tlim=Tlim, col=col, pch=pch, cex=cex, ...)
-            #?oce::plotTS(ctdBad, col=2, pch=pch, cex=cex, add=TRUE)
-            #?oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch,
-            #?    mar=par("mar"), mgp=par("mgp"), eos=eos,
-            #?    type=if (is.null(type)) "p" else type[1], debug=debug-1L)
+            # DAN<<-list(ctd=ctd, ctdBad=ctdBad, goodData=goodData)
+            oce::plotTS(ctd, Slim = Slim, Tlim = Tlim, col = col, pch = pch, cex = cex, ...)
+            # ?oce::plotTS(ctdBad, col=2, pch=pch, cex=cex, add=TRUE)
+            # ?oce::plotTS(ctd, cex=cex, bg=bg, col=col, pch=pch,
+            # ?    mar=par("mar"), mgp=par("mgp"), eos=eos,
+            # ?    type=if (is.null(type)) "p" else type[1], debug=debug-1L)
         }
     }
 }
-

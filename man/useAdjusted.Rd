@@ -64,12 +64,12 @@ on this function see section 3.4 of Kelley et. al (2021).
 \examples{
 library(argoFloats)
 file <- "SD5903586_001.nc"
-raw <- readProfiles(system.file("extdata", file, package="argoFloats"))
+raw <- readProfiles(system.file("extdata", file, package = "argoFloats"))
 adj <- useAdjusted(raw)
 # Autoscale with adjusted values so frame shows both raw and adjusted.
-plot(adj, which="profile", profileControl=list(parameter="oxygen"), pch=2)
-points(raw[[1]][["oxygen"]], raw[[1]][["pressure"]], pch=1)
-legend("bottomright", pch=c(2,1), legend=c("Raw", "Adjusted"))
+plot(adj, which = "profile", profileControl = list(parameter = "oxygen"), pch = 2)
+points(raw[[1]][["oxygen"]], raw[[1]][["pressure"]], pch = 1)
+legend("bottomright", pch = c(2, 1), legend = c("Raw", "Adjusted"))
 
 }
 \references{

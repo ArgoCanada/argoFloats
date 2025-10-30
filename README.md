@@ -19,7 +19,6 @@ downloads](https://cranlogs.r-pkg.org/badges/last-week/argoFloats)
 downloads](https://cranlogs.r-pkg.org/badges/last-day/argoFloats)
 ![RStudio CRAN mirror
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/argoFloats)
-[![codecov](https://codecov.io/gh/ArgoCanada/argoFloats/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/ArgoCanada/argoFloats)
 
 <!-- badges: end -->
 
@@ -40,7 +39,7 @@ The development version may be installed with
 
 ``` r
 library(devtools)
-install_github("ArgoCanada/argoFloats", ref="develop")
+install_github("ArgoCanada/argoFloats", ref = "develop")
 ```
 
 where, of course, the `devtools` package must be installed first, if it
@@ -49,8 +48,10 @@ is not already present on the user’s system.
 Typical use will require also installing several other packages, using
 
 ``` r
-install.packages(c("shinyBS", "colourpicker", "curl", "lubridate", "ncdf4",
-        "oce", "ocedata", "s2", "sf", "shiny"))
+install.packages(c(
+    "shinyBS", "colourpicker", "curl", "lubridate", "ncdf4",
+    "oce", "ocedata", "s2", "sf", "shiny"
+))
 ```
 
 Once things are set up as above, it will be possible to use all the
@@ -106,10 +107,11 @@ library(oce)
 indexAll <- getIndex()
 ## 2. Narrow to a 30km-radius circle centred on Abaco Island, The Bahamas.
 index <- subset(indexAll,
-    circle=list(longitude=-77.06,latitude=26.54,radius=30))
-#> Kept 41 cycles (0.00144%)
+    circle = list(longitude = -77.06, latitude = 26.54, radius = 30)
+)
+#> Kept 41 cycles (0.00127%)
 ## 3. Get NetCDF files for these profiles, saving to ~/data/argo by default.
-profiles  <- getProfiles(index)
+profiles <- getProfiles(index)
 ## 4. Read the NetCDF files.
 argos <- readProfiles(profiles)
 #> Warning in readProfiles(profiles): Of 41 profiles read, 2 have >10% of conductivity values with QC flag of 4, signalling bad data.
@@ -126,16 +128,16 @@ argos <- readProfiles(profiles)
 #>     3 7 13
 ## 5. Examine QC flags, and set questionable data to NA.
 argosClean <- applyQC(argos)
-par(mfrow=c(1, 2))                     # want two-panel plot
-par(mar=c(3.5, 2.0, 2.0, 2.0))         # maps do not get axis names
-par(mgp=c(2,0.7,0))                    # tighten axes
+par(mfrow = c(1, 2)) # want two-panel plot
+par(mar = c(3.5, 2.0, 2.0, 2.0)) # maps do not get axis names
+par(mgp = c(2, 0.7, 0)) # tighten axes
 ## 6. Plot a map of profile locations.
-plot(index, which="map", bathymetry=FALSE)
-points(-77.06, 26.54, pch="*", cex=3)  # show centre of focus
-mtext(paste(argosClean[["length"]], "profiles"), line=1.0)
+plot(index, which = "map", bathymetry = FALSE)
+points(-77.06, 26.54, pch = "*", cex = 3) # show centre of focus
+mtext(paste(argosClean[["length"]], "profiles"), line = 1.0)
 ## 7. Plot a TS diagram
-par(mar=c(3.5, 3.5, 2.0, 1.0))         # increase left margin for name
-plot(argosClean, which="TS")
+par(mar = c(3.5, 3.5, 2.0, 1.0)) # increase left margin for name
+plot(argosClean, which = "TS")
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="80%" />

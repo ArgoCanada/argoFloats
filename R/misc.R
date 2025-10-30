@@ -14,14 +14,13 @@
 #'
 #' @examples
 #' library(argoFloats)
-#' hexToBits('3')    # 1 1 0 0
-#' hexToBits('4000') # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0
+#' hexToBits("3") # 1 1 0 0
+#' hexToBits("4000") # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0
 #'
 #' @export
 #'
 #' @author Jaimie Harbin and Dan Kelley
-hexToBits <- function(hex)
-{
+hexToBits <- function(hex) {
     ## see https://github.com/ArgoCanada/argoFloats/issues/176
     res <- NULL
     for (h in strsplit(hex, "")[[1]]) {
@@ -30,4 +29,3 @@ hexToBits <- function(hex)
     }
     rev(res)
 }
-

@@ -139,29 +139,193 @@ data(indexSynthetic)
 indexFirst3 <- subset(index, 1:3)
 
 # Subset to a circle near Abaco Island
-indexCircle <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+indexCircle <- subset(index, circle = list(longitude = -77.5, latitude = 27.5, radius = 50))
+#
+# # NOTE: this example was removed because it requires using tempdir, which
+# # is not something we want to encourage, since it goes against the whole idea
+# # of caching.
+# # Example 2B: subset a 300 km radius around Panama using "maps" package
+# # This example requires downloading.
+#
+\donttest{
+# library("maps")
+# data(world.cities)
+# ai <- getIndex()
+# panama <- subset(world.cities, name=="Panama")
+# index1 <- subset(ai, circle=list(longitude=panama$long, latitude=panama$lat, radius=200))
+#
+}
 
 # Subset to a rectangle near Abaco Island
 lonlim <- c(-76.5, -76)
 latlim <- c(26.5, 27.5)
-indexRectangle <- subset(index, rectangle=list(longitude=lonlim, latitude=latlim))
+indexRectangle <- subset(index, rectangle = list(longitude = lonlim, latitude = latlim))
 
 # Subset to a polygon near Abaco Island
 lonp <- c(-77.492, -78.219, -77.904, -77.213, -76.728, -77.492)
-latp <- c( 26.244,  25.247,  24.749,  24.987,  25.421,  26.244)
-indexPolygon <- subset(index, polygon=list(longitude=lonp, latitude=latp))
+latp <- c(26.244, 25.247, 24.749, 24.987, 25.421, 26.244)
+indexPolygon <- subset(index, polygon = list(longitude = lonp, latitude = latp))
+#
+# # Show some of these subsets on a map
+# plot(index, bathymetry=FALSE)
+# points(index2[["longitude"]], index2[["latitude"]], col=2, pch=20, cex=1.4)
+# points(index3[["longitude"]], index3[["latitude"]], col=3, pch=20, cex=1.4)
+# rect(lonRect[1], latRect[1], lonRect[2], latRect[2], border=3, lwd=2)
+# points(index4[["longitude"]], index4[["latitude"]], col=4, pch=20, cex=1.4)
+# polygon(p$longitude, p$latitude, border=4)
 
 # Subset to year 2019
-index2019 <- subset(index, time=list(from="2019-01-01", to="2019-12-31"))
+index2019 <- subset(index, time = list(from = "2019-01-01", to = "2019-12-31"))
 
 # Subset to Canadian MEDS data
-indexMEDS <- subset(index, institution="ME")
+indexMEDS <- subset(index, institution = "ME")
+#
+# # NOTE: this example was removed because it requires using tempdir, which
+# # is not something we want to encourage, since it goes against the whole idea
+# # of caching.
+# # Example 8: subset to a specific ID
+# # This example requires downloading.
+#
+\donttest{
+# ai <- getIndex(filename="synthetic")
+# index9 <- subset(ai, ID="1900722")
+#
+}
+#
+# # NOTE: this example was removed because it requires using tempdir, which
+# # is not something we want to encourage, since it goes against the whole idea
+# # of caching.
+# # Example 9: subset data to only include deep argo
+# # This example requires downloading.
+#
+\donttest{
+# ai <- getIndex(filename="synthetic")
+# index8 <- subset(ai, deep=TRUE)
+#
+}
+#
+# # NOTE: this example was removed because it requires using tempdir, which
+# # is not something we want to encourage, since it goes against the whole idea
+# # of caching.
+# # Example 10: subset data by ocean
+# # This example requires downloading.
+#
+\donttest{
+# ai <- getIndex()
+# index10 <- subset(ai, circle=list(longitude=-83, latitude=9, radius=500))
+# plot(index10, which="map", bathymetry=FALSE)
+# atlantic <- subset(index10, ocean="A") # Subsetting for Atlantic Ocean
+# pacific <- subset(index10, ocean="P")
+# points(atlantic[["longitude"]], atlantic[["latitude"]], pch=20, col=2)
+# points(pacific[["longitude"]], pacific[["latitude"]], pch=20, col=3)
+#
+}
+#
+# # NOTE: there is no example 11.
+#
+# # NOTE: this example was removed because it requires using tempdir, which
+# # is not something we want to encourage, since it goes against the whole idea
+# # of caching.
+# # Example 11: subset by delayed time
+# # This example requires downloading.
+#
+\donttest{
+# data(indexBgc)
+# index11 <- subset(indexBgc, dataMode="delayed")
+# profiles <- getProfiles(index11)
+# argos <- readProfiles(profiles)
+# oxygen <- argos[["oxygen"]][[3]]
+# pressure <- argos[["pressure"]][[3]]
+# plot(oxygen, pressure, ylim=rev(range(pressure, na.rm=TRUE)),
+#      ylab="Pressure (dbar)", xlab="Oxygen (umol/kg)")
+#
+}
+#
+# # Example 12: subset by cycle
+# data(index)
+# index12A <- subset(index, cycle="124")
+# index12B <- subset(index, cycle=0:2)
+# cat("File names with cycle number 124:", paste(index12A[["file"]]), "\n")
+# cat("File names with cycle number between 0 and 2:", paste(index12B[["file"]]), "\n")
+#
+#
+# # NOTE: this example was removed because it requires using tempdir, which
+# # is not something we want to encourage, since it goes against the whole idea
+# # of caching.
+# # Example 13: subset by direction
+# # This example requires downloading.
+#
+\donttest{
+# library(argoFloats)
+# index13A <- subset(getIndex(), deep=TRUE)
+# index13B <- subset(index13A, direction="descent")
+# head(index13B[["file"]])
+#
+}
+#
+# # NOTE: this example was removed because it requires using tempdir, which
+# # is not something we want to encourage, since it goes against the whole idea
+# # of caching.
+# # Example 14: subset by profile (for argos type)
+# # This example requires downloading.
+#
+\donttest{
+# library(argoFloats)
+# index14A <- subset(getIndex(filename="synthetic"), ID="5903889")
+# index14B <- subset(index14A, cycle="074")
+# argos14A <- readProfiles(getProfiles(index14B))
+# argos14B <- subset(argos14A, profile=1)
+# D <- data.frame(Oxygen = argos14A[["oxygen"]],
+# col1= argos14B[["oxygen"]][[1]])
+#
+}
+#
+# # NOTE: this example was removed because it requires using tempdir, which
+# # is not something we want to encourage, since it goes against the whole idea
+# # of caching.
+# # Example 15: subset by cycle (for argos type) to create TS diagram
+# # This example requires downloading.
+#
+\donttest{
+# data("index")
+# index15 <- subset(index, ID="1901584")
+# profiles <- getProfiles(index15)
+# argos <- readProfiles(profiles)
+# plot(subset(argos, cycle="147"), which="TS")
+#
+}
+#
+# # NOTE: this example was removed because it requires using tempdir, which
+# # is not something we want to encourage, since it goes against the whole idea
+# # of caching.
+# # Example 16: subset by dataStateIndicator
+# # This example requires downloading.
+#
+\donttest{
+# data("index")
+# index16 <- subset(index, 1:40)
+# argos <- readProfiles(getProfiles(index16))
+# argos16A <- subset(argos, dataStateIndicator="2C")
+# argos16B <- subset(argos, dataStateIndicator="2B")
+#
+}
+#
+# # Example 17: subset by section to create a map plot
+# if (requireNamespace("s2")) {
+#     data("index")
+#     lon <- c(-78, -77, -76)
+#     lat <-c(27.5,27.5,26.5)
+#     index17 <- subset(index,
+#                       section=list(longitude=lon, latitude=lat, width=50))
+#     plot(index17, bathymetry=FALSE)
+#     points(lon, lat, pch=21, col="black", bg="red", type="o", lwd=3)
+# }
 
 # Subset to profiles with oxygen data
-indexOxygen <- subset(indexSynthetic, parameter="DOXY")
+indexOxygen <- subset(indexSynthetic, parameter = "DOXY")
 
 # Subset to profiles with both salinity and 380-nm downward irradiance data
-indexSalinityIrradiance <- subset(indexSynthetic, parameter=c("PSAL", "DOWN_IRRADIANCE380"))
+indexSalinityIrradiance <- subset(indexSynthetic, parameter = c("PSAL", "DOWN_IRRADIANCE380"))
 
 }
 \references{

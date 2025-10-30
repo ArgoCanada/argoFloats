@@ -12,7 +12,7 @@ on 2020 June 24.
 }
 \examples{
 library(argoFloats)
-a <- readProfiles(system.file("extdata", "D4900785_048.nc", package="argoFloats"))
+a <- readProfiles(system.file("extdata", "D4900785_048.nc", package = "argoFloats"))
 summary(a)
 summary(a[[1]])
 

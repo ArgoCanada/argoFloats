@@ -2,8 +2,8 @@
 % Please edit documentation in R/AllClass.R
 \docType{package}
 \name{argoFloats}
-\alias{argoFloats}
 \alias{argoFloats-package}
+\alias{argoFloats}
 \title{A Package for Processing Argo Float Profiles}
 \description{
 The \code{argoFloats} package provides tools for downloading and processing Argo profile data.

@@ -1,6 +1,6 @@
 # vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-argoFloatsCacheEnv <- new.env(parent=emptyenv())
+argoFloatsCacheEnv <- new.env(parent = emptyenv())
 
 #' Check Whether an Item is Cached
 #'
@@ -15,12 +15,12 @@ argoFloatsCacheEnv <- new.env(parent=emptyenv())
 #' @family functions relating to cached values
 #'
 #' @author Dan Kelley, making a thin copy of code written by Dewey Dunnington
-argoFloatsIsCached <- function(name, debug=0L)
-{
-    argoFloatsDebug(debug, "argoFloatsIsCached(name=\"", name, "\") {\n", sep="", style="bold", unindent=1)
+argoFloatsIsCached <- function(name, debug = 0L) {
+    showTime <- debug > 1
+    argoFloatsDebug(debug, "argoFloatsIsCached(name=\"", name, "\") START\n", sep = "", style = "bold", unindent = 1, showTime = showTime)
     rval <- name %in% names(argoFloatsCacheEnv)
-    argoFloatsDebug(debug, "returning", rval, "\n")
-    argoFloatsDebug(debug, "} argoFloatsIsCached()\n", style="bold", unindent=1)
+    argoFloatsDebug(debug, "returning", rval, "\n", showTime = showTime)
+    argoFloatsDebug(debug, "argoFloatsIsCached() END\n", style = "bold", unindent = 1, showTime = showTime)
     rval
 }
 
@@ -37,13 +37,16 @@ argoFloatsIsCached <- function(name, debug=0L)
 #' @family functions relating to cached values
 #'
 #' @author Dan Kelley, making a thin copy of code written by Dewey Dunnington
-argoFloatsWhenCached <- function(name, debug=0L)
-{
-    argoFloatsDebug(debug, "argoFloatsWhenCached(name=\"", name, "\") {\n", sep="", style="bold", unindent=1)
+argoFloatsWhenCached <- function(name, debug = 0L) {
+    showTime <- debug > 1
+    argoFloatsDebug(debug, "argoFloatsWhenCached(name=\"", name, "\") START\n", sep = "", style = "bold", unindent = 1, showTime = showTime)
     nameTime <- paste0(name, "Time")
     rval <- argoFloatsCacheEnv[[nameTime]]
-    argoFloatsDebug(debug, "returning", format(as.POSIXct(rval, start="1970-01-01")), "\n")
-    argoFloatsDebug(debug, "} argoFloatsWhenCached()\n", style="bold", unindent=1)
+    argoFloatsDebug(debug, "returning", format(as.POSIXct(rval, start = "1970-01-01")),
+        "\n",
+        showTime = showTime
+    )
+    argoFloatsDebug(debug, "argoFloatsWhenCached() END\n", style = "bold", unindent = 1, showTime = showTime)
     rval
 }
 
@@ -58,11 +61,15 @@ argoFloatsWhenCached <- function(name, debug=0L)
 #' @family functions relating to cached values
 #'
 #' @export
-argoFloatsGetFromCache <- function(name, debug=0)
-{
-    argoFloatsDebug(debug, "argoFloatsGetFromCache(name=\"", name, "\")\n", sep="", style="bold", unindent=1)
+argoFloatsGetFromCache <- function(name, debug = 0) {
+    showTime <- debug > 0
+    argoFloatsDebug(debug, "argoFloatsGetFromCache(name=\"", name, "\") START\n",
+        sep = "", style = "bold", unindent = 1, showTime = showTime
+    )
     rval <- argoFloatsCacheEnv[[name]]
-    argoFloatsDebug(debug, "} # argoFloatsGetFromCached()\n", style="bold", unindent=1)
+    argoFloatsDebug(debug, "argoFloatsGetFromCached() END\n",
+        style = "bold", unindent = 1, showTime = showTime
+    )
     rval
 }
 
@@ -79,13 +86,16 @@ argoFloatsGetFromCache <- function(name, debug=0)
 #' @family functions relating to cached values
 #'
 #' @export
-argoFloatsStoreInCache <- function(name, value, debug=0)
-{
-    argoFloatsDebug(debug, "argoFloatsStoreInCache(name=\"", name, "\")\n", sep="", style="bold", unindent=1)
+argoFloatsStoreInCache <- function(name, value, debug = 0) {
+    showTime <- debug > 1
+    argoFloatsDebug(debug, "argoFloatsStoreInCache(name=\"", name, "\") START\n", sep = "", style = "bold", unindent = 1, showTime = showTime)
     argoFloatsCacheEnv[[name]] <- value
     now <- Sys.time()
     argoFloatsCacheEnv[[paste0(name, "Time")]] <- now
-    argoFloatsDebug(debug, "} argoFloatsStoreInCache()\n", style="bold", unindent=1)
+    argoFloatsDebug(debug, "argoFloatsStoreInCache() END\n",
+        style = "bold", unindent = 1,
+        showTime = showTime
+    )
     invisible(NULL)
 }
 
@@ -103,16 +113,16 @@ argoFloatsStoreInCache <- function(name, value, debug=0)
 #' @family functions relating to cached values
 #'
 #' @author Dan Kelley, making a thin copy of code written by Dewey Dunnington
-argoFloatsClearCache <- function(debug=0L)
-{
-    argoFloatsDebug(debug, "argoFloatsClearCache() {\n", sep="", style="bold", unindent=1)
+argoFloatsClearCache <- function(debug = 0L) {
+    showTime <- debug > 1
+    argoFloatsDebug(debug, "argoFloatsClearCache() START\n", sep = "", style = "bold", unindent = 1)
     removed <- 0L
     for (name in names(argoFloatsCacheEnv)) {
-        argoFloatsDebug(debug, "removing \"", name, "\"\n", sep="")
+        argoFloatsDebug(debug, "Removing \"", name, "\"\n", sep = "", showTime = showTime)
         argoFloatsCacheEnv[[name]] <- NULL
         removed <- removed + 1L
     }
-    argoFloatsDebug(debug, "} argoFloatsClearCache()\n", style="bold", unindent=1)
+    argoFloatsDebug(debug, "argoFloatsClearCache() END\n", style = "bold", unindent = 1, showTime = showTime)
     invisible(removed)
 }
 
@@ -129,14 +139,20 @@ argoFloatsClearCache <- function(debug=0L)
 #' @family functions relating to cached values
 #'
 #' @author Dan Kelley, making a thin copy of code written by Dewey Dunnington
-argoFloatsListCache <- function(debug=0L)
-{
+argoFloatsListCache <- function(debug = 0L) {
+    showTime <- debug > 1
     if (!is.numeric(debug)) {
         stop("debug parameter must be numeric")
     }
-    argoFloatsDebug(debug, "argoFloatsListCache() {\n", sep="", style="bold", unindent=1)
+    argoFloatsDebug(debug, "argoFloatsListCache() START\n",
+        sep = "",
+        style = "bold", unindent = 1, showTime = showTime
+    )
     rval <- names(argoFloatsCacheEnv)
-    argoFloatsDebug(debug, "} argoFloatsListCache()\n", style="bold", unindent=1)
+    argoFloatsDebug(debug, "argoFloatsListCache() END\n",
+        style = "bold", unindent = 1,
+        showTime = showTime
+    )
     rval
 }
 
@@ -169,7 +185,7 @@ argoFloatsListCache <- function(debug=0L)
 ## besides. I don't see that these examples illustrate anything that the docs
 ## don't already illustrate, and so I have removed them. --DK
 ## @examples
-##\dontrun{
+## \dontrun{
 ## # This is not run, because it takes longer than 5s to complete.
 ## # These examples assume that the ~/data/argo directory exists.
 ## library(argoFloats)
@@ -194,24 +210,38 @@ argoFloatsListCache <- function(debug=0L)
 ## argoSable <- read.oce(fileSable)
 ## # Note that oce::plot() changes par(mfrow) and par(mar).
 ## plot(argoSable, which=c(1, 4, 6, 5))
-##}
+## }
 #'
 #' @export
 #'
 #' @author Dan Kelley
-getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=NULL, age=argoDefaultProfileAge(), retries=3, quiet=FALSE, debug=0)
-{
-    argoFloatsDebug(debug,  "getProfileFromUrl(url=\"", url, "\", destdir=\"", destdir, "\", destfile=\"",
-        if (missing(destfile)) "(missing)" else destfile, "\", ...) {", sep="", "\n", style="bold", unindent=1)
-    if (length(url) != 1)
+getProfileFromUrl <- function(url = NULL, destdir = argoDefaultDestdir(),
+                              destfile = NULL, age = argoDefaultProfileAge(),
+                              retries = 3, quiet = FALSE, debug = 0) {
+    showTime <- debug > 0
+    argoFloatsDebug(debug, "getProfileFromUrl(url=\"", url, "\", destdir=\"", destdir,
+        "\", destfile=\"",
+        if (missing(destfile)) "(missing)" else destfile, "\", ...) START",
+        sep = "", "\n", style = "bold", unindent = 1, showTime = showTime
+    )
+    if (length(url) != 1) {
         stop("url must be of length 1, not of length ", length(url))
+    }
     if (is.null(destfile)) {
         destfile <- gsub(".*/(.*).nc", "\\1.nc", url)
-        argoFloatsDebug(debug,  "inferred destfile=\"", destfile, "\" from url.\n", sep="")
+        argoFloatsDebug(debug, "inferred destfile=\"", destfile, "\" from url.\n",
+            sep = "",
+            showTime = showTime
+        )
     }
-    res <- downloadWithRetries(url=url, destdir=destdir, destfile=destfile, quiet=quiet,
-        age=age, retries=retries, debug=debug-1)
-    argoFloatsDebug(debug,  "} # getProfileFromUrl()", sep="", "\n", style="bold", unindent=1)
+    res <- downloadWithRetries(
+        url = url, destdir = destdir, destfile = destfile, quiet = quiet,
+        age = age, retries = retries, debug = debug
+    )
+    argoFloatsDebug(debug, "getProfileFromUrl() END",
+        sep = "", "\n", style = "bold",
+        unindent = 1, showTime = showTime
+    )
     if (is.na(res)) res else paste0(destdir, "/", destfile)
 }
 
@@ -253,8 +283,8 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #'
 #' Some expertise is required in deciding on the value for the
 #' `file` argument to [getIndex()].  As of March 2023, the
-#' FTP sites
-#' `ftp://usgodae.org/pub/outgoing/argo`
+#' sites
+#' `https://usgodae.org/pub/outgoing/argo`
 #' and
 #' `ftp://ftp.ifremer.fr/ifremer/argo`
 #' contain multiple index files, as listed in the left-hand column of the
@@ -325,7 +355,7 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' errors that can result if a server refuses a download request.
 #' As of March 2023, the three servers known to work are
 #' `"https://data-argo.ifremer.fr"`, `"ftp://ftp.ifremer.fr/ifremer/argo"` and
-#' `"ftp://usgodae.org/pub/outgoing/argo"`.
+#' `"https://usgodae.org/pub/outgoing/argo"`.
 #' These may be referred
 #' to with nicknames `"ifremer-https"`, `"ifremer"`and  `"usgodae"`.
 #' Any URL that can be used in [curl::curl_download()] is a valid value provided
@@ -355,7 +385,11 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 #' is `TRUE`, then the supplied value of `age` is converted
 #' to 0, to force a new download.
 #'
-#' @template debug
+#' @param debug an integer indicating the level of debugging.  If this
+#' is 0, then the function works somewhat quietly.  If it is 1, messages
+#' are printed at various steps in the process. If it is any number higher
+#' than 1, then those messages will be prefixed by an indication of
+#' the time, down to the millisecond.
 #'
 #' @return An object of class [`argoFloats-class`] with type=`"index"`, which
 #' is suitable as the first argument of [getProfiles()].
@@ -368,14 +402,14 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 ## besides. I don't see that these examples illustrate anything that the docs
 ## don't already illustrate, and so I have removed them. --DK
 ## @examples
-##\dontrun{
+## \dontrun{
 ## # This is not run, because it takes longer than 5s to complete.
 ## # Download an index of synthetic Argo/BGC-Argo floats, and plot temporal coverage.
 ## library(argoFloats)
 ## i <- getIndex("synthetic")
 ## summary(i)
 ## hist(i[["date"]], breaks="years", main="", xlab="Time", freq=TRUE)
-##}
+## }
 #'
 #' @references
 #' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
@@ -389,73 +423,93 @@ getProfileFromUrl <- function(url=NULL, destdir=argoDefaultDestdir(), destfile=N
 ## @importFrom curl curl_download
 ## @importFrom oce processingLogAppend
 #' @export
-getIndex <- function(filename="core",
-    server=argoDefaultServer(),
-    destdir=argoDefaultDestdir(),
-    age=argoDefaultIndexAge(),
-    quiet=FALSE,
-    keep=FALSE,
-    debug=0L)
-{
-    argoFloatsDebug(debug,  "getIndex(filename=\"", filename,
+getIndex <- function(
+    filename = "core",
+    server = argoDefaultServer(),
+    destdir = argoDefaultDestdir(),
+    age = argoDefaultIndexAge(),
+    quiet = FALSE,
+    keep = FALSE,
+    debug = 0L) {
+    showTime <- debug > 1
+    argoFloatsDebug(debug, "getIndex(filename=\"", filename,
         "\", server=",
         if (is.null(server)) {
             "NULL"
         } else {
-            paste0("c(\"", paste(server, collapse="\", \""), "\")")
+            paste0("c(\"", paste(server, collapse = "\", \""), "\")")
         },
-        "\", destdir=\"", destdir, "\") { ...", sep="", "\n", style="bold", showTime=FALSE, unindent=1)
-    clock0 <- as.numeric(Sys.time())
-    if (!requireNamespace("oce", quietly=TRUE))
+        "\", destdir=\"", destdir, "\") START",
+        sep = "", "\n", style = "bold", showTime = showTime, unindent = 1
+    )
+    if (!requireNamespace("oce", quietly = TRUE)) {
         stop("must install.packages(\"oce\"), for getIndex() to work")
-    if (!requireNamespace("curl", quietly=TRUE))
+    }
+    if (!requireNamespace("curl", quietly = TRUE)) {
         stop("must install.packages(\"curl\") for getIndex() to work")
-    if (!is.logical(quiet))
+    }
+    if (!is.logical(quiet)) {
         stop("quiet must be a logical value")
-    if (1 != length(quiet))
+    }
+    if (1 != length(quiet)) {
         stop("quiet must be a single value")
-    if (!is.logical(keep))
+    }
+    if (!is.logical(keep)) {
         stop("keep must be a logical value")
-    if (1 != length(keep))
+    }
+    if (1 != length(keep)) {
         stop("keep must be a single value")
-    if (keep)
+    }
+    if (keep) {
         age <- 0
+    }
     useLocalFile <- is.null(server)
-    argoFloatsDebug(debug, "Set useLocalFile=", useLocalFile, "\n", sep="")
+    argoFloatsDebug(debug, "Set useLocalFile=", useLocalFile, ".\n", sep = "", showTime = showTime)
     # Sample file
     # ftp://ftp.ifremer.fr/ifremer/argo/dac/aoml/1900710/1900710_prof.nc
-    # ftp://usgodae.org/pub/outgoing/argo/dac/aoml/1900710/1900710_prof.nc
     istraj <- filename %in% c("traj", "bio-traj", "ar_index_global_traj.txt.gz", "argo_bio-traj_index.txt.gz")
-    res <- new("argoFloats", type="index", subtype=if (istraj) "trajectories" else "cycles")
+    res <- new("argoFloats", type = "index", subtype = if (istraj) "trajectories" else "cycles")
+    argoFloatsDebug(debug, "Created blank argoFloats.\n", showTime = showTime)
     serverOrig <- server
-    serverNicknames <- c("ifremer-https"="https://data-argo.ifremer.fr",
-        "ifremer"="ftp://ftp.ifremer.fr/ifremer/argo",
-        "usgodae"="ftp://usgodae.org/pub/outgoing/argo")
+    serverNicknames <- c(
+        "ifremer-https" = "https://data-argo.ifremer.fr",
+        "ifremer" = "ftp://ftp.ifremer.fr/ifremer/argo",
+        "usgodae" = "https://usgodae.org/pub/outgoing/argo"
+    )
     serverIsNickname <- server %in% names(serverNicknames)
     server[serverIsNickname] <- serverNicknames[server[serverIsNickname]]
 
     if (!all(grepl("^[a-z]+://", server))) {
         stop("server must be NULL, \"ifremer-https\", \"usgodae\", \"ifremer\", or a vector of urls, but it is ",
-            if (length(server) > 1) paste0("\"", paste(server, collapse="\", \""), "\"")
-            else paste0("\"", server, "\""), "\n", sep="")
+            if (length(server) > 1) {
+                paste0("\"", paste(server, collapse = "\", \""), "\"")
+            } else {
+                paste0("\"", server, "\"")
+            }, "\n",
+            sep = ""
+        )
     }
     # Ensure that we can save the file
-    if (!file.exists(destdir))
+    if (!file.exists(destdir)) {
         stop("First, create a directory named '", destdir, "'")
-    if (!file.info(destdir)$isdir)
+    }
+    if (!file.info(destdir)$isdir) {
         stop("'", destdir, "' is not a directory")
+    }
     # Handle nicknames
     filenameOrig <- filename
-    names <- c("core", "bgc", "bgcargo", "synthetic", "traj", "bio-traj",
+    names <- c(
+        "core", "bgc", "bgcargo", "synthetic", "traj", "bio-traj",
         "ar_index_global_prof.txt.gz", "argo_bio-profile_index.txt.gz",
         "argo_synthetic-profile_index.txt.gz", "ar_index_global_traj.txt.gz",
-        "argo_bio-traj_index.txt.gz")
+        "argo_bio-traj_index.txt.gz"
+    )
     if (filename == "core") {
         filename <- "ar_index_global_prof.txt.gz"
     } else if (filename == "bgcargo" || filename == "bgc") {
         filename <- "argo_bio-profile_index.txt.gz"
     } else if (filename == "merge" || filename == "merged") {
-        stop("in getIndex() :\n Merged datasets are no longer available. Try using filename='synthetic'", call.=FALSE)
+        stop("in getIndex() :\n Merged datasets are no longer available. Try using filename='synthetic'", call. = FALSE)
     } else if (filename == "synthetic") {
         filename <- "argo_synthetic-profile_index.txt.gz"
     } else if (filename == "traj") {
@@ -469,18 +523,18 @@ getIndex <- function(filename="core",
         }
     } else {
         if (!(filename %in% names)) {
-            stop("filename=\"", filename, "\" is not valid; try one of: ",
-                paste(names, collapse="\", \""),
-                "\", or set server=NULL if you want to read a local .rda or .gz file.")
+            stop(
+                "filename=\"", filename, "\" is not valid; try one of: ",
+                paste(names, collapse = "\", \""),
+                "\", or set server=NULL if you want to read a local .rda or .gz file."
+            )
         }
     }
-    if (filename != filenameOrig)
-        argoFloatsDebug(debug, "Converted filename=\"", filenameOrig, "\" to \"", filename, "\".\n", sep="")
     # Note: 'url' may contain more than one element
-    url <- paste(server, filename, sep="/")
+    url <- paste(server, filename, sep = "/")
     # FIXME: the gsub() below is because filename might be a full pathname but
     # I have no idea what to do on windows machines.
-    destfile <- paste(destdir, gsub(".*/", "", filename), sep="/")
+    destfile <- paste(destdir, gsub(".*/", "", filename), sep = "/")
     # NOTE: we save an .rda file, not the .gz file, for speed of later operations
     if (grepl("\\.txt\\.gz$", destfile)) {
         destfileRda <- gsub(".txt.gz$", ".rda", destfile)
@@ -491,54 +545,49 @@ getIndex <- function(filename="core",
     } else {
         stop("cannot construct .rda filename based on \"", destfile, "\" (please report an issue)")
     }
-    argoFloatsDebug(debug, "Set destfileRda=\"", destfileRda, "\"\n", sep="")
+    argoFloatsDebug(debug, "Set destfileRda=\"", destfileRda, "\".\n", sep = "", showTime = showTime)
     # Handle already-downloaded files
     res@metadata$url <- url[1] # FIXME: this does not make sense
     res@metadata$header <- NULL
-    if (!useLocalFile && argoFloatsIsCached(filenameOrig, debug=debug-1)) {
+    if (!useLocalFile && argoFloatsIsCached(filenameOrig, debug = debug)) {
         argoFloatsDebug(debug, "getIndex() is about to check the cache\n")
-        whenCached <- argoFloatsWhenCached(filenameOrig, debug=debug-1)
+        whenCached <- argoFloatsWhenCached(filenameOrig, debug = debug)
         cacheAge <- (as.numeric(Sys.time()) - as.numeric(whenCached)) / 86400.0
-        argoFloatsDebug(debug, "cacheAge=", cacheAge, " days, age=", age, " days\n", sep="")
+        argoFloatsDebug(debug, "cacheAge=", cacheAge, " days, age=", age, " days\n", sep = "", showTime = showTime)
         if (cacheAge < age) {
-            argoFloatsDebug(debug, "cacheAge < age, so using an index that is cached in memory for this R session\n")
-            res <- argoFloatsGetFromCache(filenameOrig, debug=debug-1)
-            argoFloatsDebug(debug, "} # getIndex() took", as.numeric(Sys.time()) - clock0,
-                "seconds (returning from location A)\n", style="bold", unindent=1)
+            argoFloatsDebug(debug, "cacheAge < age, so using an index that is cached in memory for this R session\n", showTime = showTime)
+            res <- argoFloatsGetFromCache(filenameOrig, debug = debug)
+            argoFloatsDebug(debug, "getIndex() END\n", unindent = 1, showTime = showTime)
             return(res)
         } else {
-            argoFloatsDebug(debug, "cacheAge >= age, so the cached index is not being used\n")
+            argoFloatsDebug(debug, "cacheAge >= age, so the cached index is not being used\n", showTime = showTime)
         }
     }
     # See if we have an .rda file that is sufficiently youthful.
     if (!useLocalFile && file.exists(destfileRda)) {
         destfileAge <- (as.numeric(Sys.time()) - as.numeric(file.info(destfileRda)$mtime)) / 86400 # in days
-        argoFloatsDebug(debug, "This destfileRda already exists, and its age is ", round(destfileAge, 3), " days.\n", sep="")
+        argoFloatsDebug(debug, "This destfileRda already exists, and its age is ", round(destfileAge, 3), " days.\n", sep = "", showTime = showTime)
         if (destfileAge < age) {
-            argoFloatsDebug(debug, "Using existing destfileRda, since its age is under ", age, " days.\n", sep="")
-            argoFloatsDebug(debug, "About to load '", destfileRda, "'...\n", sep="")
-            clock <- as.numeric(Sys.time())
+            argoFloatsDebug(debug, "Using existing destfileRda, since its age is under ", age, " days.\n", sep = "")
+            argoFloatsDebug(debug, "Loading '", destfileRda, "'.\n", sep = "", showTime = showTime)
             argoFloatsIndex <- NULL # defined again in next line; this is to quieten code-diagnostics
             load(destfileRda)
-            argoFloatsDebug(debug, "... took", as.numeric(Sys.time()) - clock, "seconds\n")
             # TAG1 (update all such together)
             res@metadata$server <- server[1]
             res@metadata$ftpRoot <- argoFloatsIndex[["ftpRoot"]]
             res@metadata$header <- argoFloatsIndex[["header"]]
             res@data$index <- argoFloatsIndex[["index"]]
-            argoFloatsDebug(debug, "Storing this index in a memory cache, for this R session.\n")
-            argoFloatsStoreInCache(filenameOrig, res, debug=debug-1L)
-            argoFloatsDebug(debug, "} # getIndex() took", as.numeric(Sys.time()) - clock0,
-                "seconds (returning from location B)\n", style="bold", unindent=1)
+            argoFloatsDebug(debug, "Caching this index in memory for present R session.\n")
+            argoFloatsStoreInCache(filenameOrig, res, debug = debug)
+            argoFloatsDebug(debug, "getIndex() END\n", style = "bold", unindent = 1, showTime = showTime)
             return(res)
         }
-        argoFloatsDebug(debug, sprintf("Must update destfileRda, since its age equals or exceeds %.2f days\n", age))
+        argoFloatsDebug(debug, sprintf("Will update destfileRda, since its age equals or exceeds %.2f days.\n", age), showTime = showTime)
     }
     # We need to download data. We do that to a temporary file, because we will be saving
     # an .rda file, not the data on the server.
     if (useLocalFile) {
-        argoFloatsDebug(debug, "Interpreting filename=\"", filename, "\"\n", sep="")
-        clock <- as.numeric(Sys.time())
+        argoFloatsDebug(debug, "Interpreting filename=\"", filename, "\"\n", sep = "", showTime = showTime)
         if (!file.exists(filename)) {
             stop("file \"", filename, "\" not found")
         } else {
@@ -554,18 +603,16 @@ getIndex <- function(filename="core",
                 warning(".gz index files lack server information; assuming https://data-argo.ifremer.fr")
                 res@metadata$ftpRoot <- gsub("^[^:]*:[ ]*(.*)$", "\\1", first[which(grepl("^# FTP", first))])
                 names <- strsplit(first[1 + lastHash], ",")[[1]]
-                index <- read.csv(filename, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE, colClasses="character")
-                index$date <- lubridate::fast_strptime(as.character(index$date), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")
-                index$date_update <- lubridate::fast_strptime(as.character(index$date_update), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")
+                index <- read.csv(filename, skip = 2 + lastHash, col.names = names, stringsAsFactors = FALSE, colClasses = "character")
+                index$date <- lubridate::fast_strptime(as.character(index$date), format = "%Y%m%d%H%M%S", lt = FALSE, tz = "UTC")
+                index$date_update <- lubridate::fast_strptime(as.character(index$date_update), format = "%Y%m%d%H%M%S", lt = FALSE, tz = "UTC")
                 res@data$index <- index
-                argoFloatsDebug(debug, "Storing this index in a memory cache, for this R session.\n")
-                argoFloatsStoreInCache(filenameOrig, res, debug=debug-1L)
-                argoFloatsDebug(debug, "} # getIndex() took", as.numeric(Sys.time()) - clock0,
-                    "seconds (returning from location C)\n", style="bold", unindent=1)
+                argoFloatsDebug(debug, "Storing this index in a memory cache, for this R session.\n", showTime = showTime)
+                argoFloatsStoreInCache(filenameOrig, res, debug = debug)
+                argoFloatsDebug(debug, "getIndex() END\n", style = "bold", unindent = 1, showTime = showTime)
                 return(res)
             } else if (grepl(".rda$", filename)) {
-                argoFloatsDebug(debug, "Interpeting an .rda file ...\n")
-                clock <- as.numeric(Sys.time())
+                argoFloatsDebug(debug, "Interpeting an .rda file\n", showTime = showTime)
                 RDA <- load(filename)
                 # TAG1 (update all such together)
                 old <- get(RDA)
@@ -576,37 +623,34 @@ getIndex <- function(filename="core",
                 res@metadata$ftpRoot <- old$ftpRoot
                 res@metadata$header <- old$header
                 res@data$index <- old$index
-                argoFloatsDebug(debug, "Storing this index in a memory cache, for this R session.\n")
-                argoFloatsStoreInCache(filenameOrig, res, debug=debug-1L)
-                argoFloatsDebug(debug, "} # getIndex() took", as.numeric(Sys.time()) - clock0,
-                    "seconds (returning from location C)\n", style="bold", unindent=1)
+                argoFloatsDebug(debug, "Storing this index in a memory cache, for this R session.\n", showTime = showTime)
+                argoFloatsStoreInCache(filenameOrig, res, debug = debug)
+                argoFloatsDebug(debug, "getIndex() END\n", style = "bold", unindent = 1, showTime = showTime)
                 return(res)
             } else {
                 stop("filename must end in .gz or in .rda")
             }
         }
-        argoFloatsDebug(debug, "... took", as.numeric(Sys.time()) - clock, "seconds\n")
     } else {
-        argoFloatsDebug(debug, "downloading a remote file ...\n")
-        clock <- as.numeric(Sys.time())
-        destfileTemp <- tempfile(pattern="argo", fileext=".gz")
-        argoFloatsDebug(debug, "Allocated temporary file\n    '", destfileTemp, "'.\n", sep="")
+        argoFloatsDebug(debug, "Allocating temporary file.\n", sep = "", showTime = showTime)
+        destfileTemp <- tempfile(pattern = "argo", fileext = ".gz")
+        argoFloatsDebug(debug, "Temporary filename \"\n", destfileTemp, "\".\n",
+            sep = "", showTime = showTime
+        )
         failedDownloads <- 0
-        iurlSuccess <- 0                   # set to a positive integer in the following loop, if we succeed
-        clock <- as.numeric(Sys.time())
-        argoFloatsDebug(debug, "About to try downloading an index file ...\n")
+        iurlSuccess <- 0 # set to a positive integer in the following loop, if we succeed
+        argoFloatsDebug(debug, "Seeking index file from various servers.\n",
+            showTime = showTime
+        )
         for (iurl in seq_along(url)) {
-            argoFloatsDebug(debug, "   trying '", url[iurl], "'.\n", sep="")
-            if (!quiet) {
-                message(sprintf("Downloading '%s'", url[iurl]))
-            }
-            status <- try(curl::curl_download(url=url[iurl], destfile=destfileTemp, mode="wb"))
+            argoFloatsDebug(debug, "Trying ", url[iurl], ".\n", sep = "", showTime = showTime)
+            status <- try(curl::curl_download(url = url[iurl], destfile = destfileTemp, mode = "wb"))
             if (!inherits(status, "try-error")) {
                 if (failedDownloads > 0) {
                     message("Downloaded index from ", url[iurl])
                 }
                 iurlSuccess <- iurl
-                break                      # the download worked
+                break # the download worked
             } else if (any(grepl("application callback", status))) {
                 stop(status)
             }
@@ -617,37 +661,31 @@ getIndex <- function(filename="core",
             }
             failedDownloads <- failedDownloads + 1
         }
-        argoFloatsDebug(debug, "... took", as.numeric(Sys.time()) - clock, "seconds\n")
         if (0 == iurlSuccess) {
-            stop("  could not download index from these servers:\n'", paste(url, collapse="'\n'"), "'")
+            stop("  could not download index from these servers:\n'", paste(url, collapse = "'\n'"), "'")
         }
     }
-    clock <- as.numeric(Sys.time())
-    argoFloatsDebug(debug, "About to read the header at the start of the index file ...\n", sep="")
+    argoFloatsDebug(debug, "About to read header at start of index file.\n", sep = "", showTime = showTime)
     # TAG2 (update all such together)
     first <- readLines(destfileTemp, 100)
     # Typically, length(ftpRoot) is 2
     ftpRoot <- gsub("^[^:]*:[ ]*(.*)$", "\\1", first[which(grepl("^# FTP", first))])
-    argoFloatsDebug(debug, "  ftpRoot=c(\"", paste(ftpRoot, collapse="\", \""), "\")\n", sep="")
+    # argoFloatsDebug(debug, "Note that ftpRoot=c(\"", paste(ftpRoot, collapse = "\", \""), "\")\n", sep = "", showTime = showTime)
     hash <- which(grepl("^#", first))
     header <- first[hash]
     lastHash <- tail(hash, 1)
     names <- strsplit(first[1 + lastHash], ",")[[1]]
-    argoFloatsDebug(debug, "  names=c(\"", paste(names, collapse="\", \""), "\")\n", sep="")
-    argoFloatsDebug(debug, "... took", as.numeric(Sys.time()) - clock, "seconds\n")
-    clock <- as.numeric(Sys.time())
-    argoFloatsDebug(debug, "Reading index file contents ...\n", sep="")
-    index <- read.csv(destfileTemp, skip=2 + lastHash, col.names=names, stringsAsFactors=FALSE, colClasses="character")
-    argoFloatsDebug(debug, "... took", as.numeric(Sys.time()) - clock, "seconds\n")
-    argoFloatsDebug(debug, "Setting out-of-range longitude and latitude to NA ...\n")
-    clock <- as.numeric(Sys.time())
+    # argoFloatsDebug(debug, "Note that names=c(\"", paste(names, collapse = "\", \""), "\")\n", sep = "", showTime = showTime)
+    argoFloatsDebug(debug, "Reading index file contents.\n", sep = "", showTime = showTime)
+    index <- read.csv(destfileTemp, skip = 2 + lastHash, col.names = names, stringsAsFactors = FALSE, colClasses = "character")
+    argoFloatsDebug(debug, "Setting out-of-range longitude and latitude to NA.\n", showTime = showTime)
     if ("latitude" %in% names(index)) {
         index$latitude <- as.numeric(index$latitude)
         index$latitude[abs(index$latitude) > 90] <- NA
     } else if ("latitude_max" %in% names(index) && "latitude_min" %in% names(index)) {
         index$latitude_max <- as.numeric(index$latitude_max)
         index$latitude_min <- as.numeric(index$latitude_min)
-        #message("the class of lat min is", class(index$latitude_min), "and the class of lat max is", class(index$latitude_max))
+        # message("the class of lat min is", class(index$latitude_min), "and the class of lat max is", class(index$latitude_max))
     } else {
         stop("Misconfigured index file: no \"latitude\" data found")
     }
@@ -660,9 +698,7 @@ getIndex <- function(filename="core",
     } else {
         stop("Misconfigured index file: no \"longitude\" data found")
     }
-    argoFloatsDebug(debug, "... took", as.numeric(Sys.time()) - clock, "seconds\n")
-    clock <- as.numeric(Sys.time())
-    argoFloatsDebug(debug, "Decoding times ...\n", sep="")
+    argoFloatsDebug(debug, "Decoding times.\n", showTime = showTime, sep = "")
     # 2020-12-12: switch from as.POSIXct() to lubridate::fast_strptime(), shaving typically
     # 1 second from elapsed times.  See below for some timing tests, and
     # https://github.com/ArgoCanada/argoFloats/issues/334 for discussion.
@@ -670,21 +706,21 @@ getIndex <- function(filename="core",
     #  Note that we are only 'Suggest'ing lubridate in DESCRIPTION (and requiring it here) because otherwise the user will
     #  see possibly scary messages about function overriding.
     #
-    #: cat("as.POSIXct() timing:\n")
-    #: print(system.time(t1 <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")))
-    #: cat("strptime() timing:\n")
-    #: print(system.time(t2 <- strptime(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")))
-    #: cat("ymd_hms() timing:\n")
-    #: print(system.time(t3 <- lubridate::ymd_hms(as.character(index$date), quiet=TRUE)))
-    #: cat("lubridate::fast_strptime() timing:\n")
-    #: print(system.time(t4 <- lubridate::fast_strptime(as.character(index$date), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")))
-    #: cat("readr::parse_datetime() timing:\n")
-    #: print(system.time(t5 <- readr::parse_datetime(as.character(index$date), format="%Y%m%d%H%M%S")))
-    #: cat("tests of matches:\n")
-    #: cat(" as.POSIXct() same as strptime(): ", all.equal(t1, t2), "\n")
-    #: cat(" as.POSIXct() same as lubridate::ymd_hms(): ", all.equal(t1, t3), "\n")
-    #: cat(" as.POSIXct() same as lubridate::fast_strptime(): ", all.equal(t1, t4), "\n")
-    #: cat(" as.POSIXct() same as readr::parse_datetime(): ", all.equal(t1, t4), "\n")
+    # : cat("as.POSIXct() timing:\n")
+    # : print(system.time(t1 <- as.POSIXct(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")))
+    # : cat("strptime() timing:\n")
+    # : print(system.time(t2 <- strptime(as.character(index$date), format="%Y%m%d%H%M%S", tz="UTC")))
+    # : cat("ymd_hms() timing:\n")
+    # : print(system.time(t3 <- lubridate::ymd_hms(as.character(index$date), quiet=TRUE)))
+    # : cat("lubridate::fast_strptime() timing:\n")
+    # : print(system.time(t4 <- lubridate::fast_strptime(as.character(index$date), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")))
+    # : cat("readr::parse_datetime() timing:\n")
+    # : print(system.time(t5 <- readr::parse_datetime(as.character(index$date), format="%Y%m%d%H%M%S")))
+    # : cat("tests of matches:\n")
+    # : cat(" as.POSIXct() same as strptime(): ", all.equal(t1, t2), "\n")
+    # : cat(" as.POSIXct() same as lubridate::ymd_hms(): ", all.equal(t1, t3), "\n")
+    # : cat(" as.POSIXct() same as lubridate::fast_strptime(): ", all.equal(t1, t4), "\n")
+    # : cat(" as.POSIXct() same as readr::parse_datetime(): ", all.equal(t1, t4), "\n")
     #
     # as.POSIXct() timing:
     #    user  system elapsed
@@ -721,39 +757,39 @@ getIndex <- function(filename="core",
     #   3.324   0.083   3.475
     #   3.293   0.080   3.433
     #   3.067   0.080   3.182
-    if (!requireNamespace("lubridate", quietly=TRUE)) {
+    if (!requireNamespace("lubridate", quietly = TRUE)) {
         stop("must install.packages(\"lubridate\") for getIndex() to work")
     }
-    index$date <- lubridate::fast_strptime(as.character(index$date), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")
-    index$date_update <- lubridate::fast_strptime(as.character(index$date_update), format="%Y%m%d%H%M%S", lt=FALSE, tz="UTC")
-    argoFloatsDebug(debug, "... took", as.numeric(Sys.time()) - clock, "seconds\n")
+    index$date <- lubridate::fast_strptime(as.character(index$date), format = "%Y%m%d%H%M%S", lt = FALSE, tz = "UTC")
+    index$date_update <- lubridate::fast_strptime(as.character(index$date_update), format = "%Y%m%d%H%M%S", lt = FALSE, tz = "UTC")
 
     # If we are working with a local .gz file that was previously downloaded, how do we know the right
     # values to save for 'server' and 'ftpRoot'?  (Are these used later?)
     if (useLocalFile) {
-        argoFloatsIndex <- list(server="unknown", ftpRoot=ftpRoot, header=header, index=index)
+        argoFloatsIndex <- list(server = "unknown", ftpRoot = ftpRoot, header = header, index = index)
     } else {
-        argoFloatsIndex <- list(server=server[iurlSuccess], ftpRoot=ftpRoot, header=header, index=index)
+        argoFloatsIndex <- list(server = server[iurlSuccess], ftpRoot = ftpRoot, header = header, index = index)
     }
-    clock <- as.numeric(Sys.time())
-    argoFloatsDebug(debug, "Saving the RDA file as \"", destfileRda, "\" ...\n")
-    save(argoFloatsIndex, file=destfileRda)
-    argoFloatsDebug(debug, "... took", as.numeric(Sys.time()) - clock, "seconds\n")
+    argoFloatsDebug(debug, "Saving to \"", destfileRda, "\"\n", sep = "", showTime = showTime)
+    save(argoFloatsIndex, file = destfileRda)
     if (keep) {
         to <- paste0(destdir, "/", gsub(".*/", "", url[iurlSuccess]))
-        argoFloatsDebug(debug, "Storing temporary raw index file\n    '", destfileTemp, "'\n  locally as\n    '", to, "'.\n", sep="")
-        file.copy(from=destfileTemp, to=to)
-        message("Saved the original index file as \"", to, "\"")
+        argoFloatsDebug(debug, "Storing temporary raw index file\n    '",
+            destfileTemp, "'\n  locally as\n    '",
+            to, "'.\n",
+            showTime = showTime, sep = ""
+        )
+        file.copy(from = destfileTemp, to = to)
+        message("Saved the original index file as \"", to, ".\"")
     }
-    argoFloatsDebug(debug, "Cleaning up ...\n")
-    clock <- as.numeric(Sys.time())
+    argoFloatsDebug(debug, "Cleaning up.\n", showTime = showTime)
     if (useLocalFile) {
         # FIXME: what to save for server and url?
         res@metadata$server <- server[1]
         res@metadata$url <- url[1]
     } else {
         # Guess on server and URL for a downloaded file
-        argoFloatsDebug(debug, "removing \"", destfileTemp, "\"\n", sep="")
+        argoFloatsDebug(debug, "Removing temporary file.\n", sep = "", showTime = showTime)
         unlink(destfileTemp)
         res@metadata$server <- server[iurlSuccess]
         res@metadata$url <- url[iurlSuccess]
@@ -761,16 +797,21 @@ getIndex <- function(filename="core",
     res@metadata$ftpRoot <- argoFloatsIndex$ftpRoot
     res@metadata$header <- argoFloatsIndex$header
     res@data$index <- argoFloatsIndex$index
-    res@processingLog <- oce::processingLogAppend(res@processingLog,
+    res@processingLog <- oce::processingLogAppend(
+        res@processingLog,
         paste("getIndex(server=",
-            if (length(serverOrig) == 1) paste("\"", serverOrig, "\", ", sep="")
-            else paste("c(\"", paste(serverOrig, collapse="\", \""), "\"), ", sep=""),
-            "filename=\'", filename, "\", age=", age, ")", sep=""))
-    argoFloatsDebug(debug, "... took", as.numeric(Sys.time()) - clock, "seconds\n")
-    argoFloatsDebug(debug, "Storing newly-read index in memory for this R session ...\n")
-    argoFloatsStoreInCache(filenameOrig, res, debug=debug-1)
-    argoFloatsDebug(debug, "} getIndex() took ", as.numeric(Sys.time()) - clock0,
-        "seconds (returning from location D)\n", style="bold", unindent=1)
+            if (length(serverOrig) == 1) {
+                paste("\"", serverOrig, "\", ", sep = "")
+            } else {
+                paste("c(\"", paste(serverOrig, collapse = "\", \""), "\"), ", sep = "")
+            },
+            "filename=\'", filename, "\", age=", age, ")",
+            sep = ""
+        )
+    )
+    argoFloatsDebug(debug, "Storing newly-read index in memory for this R session\n", showTime = showTime)
+    argoFloatsStoreInCache(filenameOrig, res, debug = debug)
+    argoFloatsDebug(debug, "getIndex() END\n", showTime = showTime, style = "bold", unindent = 1)
     res
 }
 
@@ -837,14 +878,14 @@ getIndex <- function(filename="core",
 ## besides. I don't see that these examples illustrate anything that the docs
 ## don't already illustrate, and so I have removed them. --DK
 ## @examples
-##\dontrun{
+## \dontrun{
 ## # This is not run, because it takes longer than 5s to complete.
 ## library(argoFloats)
 ## data(index)
 ## index2 <- subset(index, 1:2)
 ## profiles2 <- getProfiles(index2)
 ## # See ?readProfiles for how to read the files now downloaded.
-##}
+## }
 #'
 #' @references
 #' Kelley, D. E., Harbin, J., & Richards, C. (2021). argoFloats: An R package for analyzing
@@ -856,33 +897,40 @@ getIndex <- function(filename="core",
 ## @importFrom oce processingLogAppend
 #'
 #' @export
-getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProfileAge(), retries=3, skip=TRUE, quiet=TRUE, debug=0)
-{
+getProfiles <- function(index, destdir = argoDefaultDestdir(), age = argoDefaultProfileAge(), retries = 3, skip = TRUE, quiet = TRUE, debug = 0) {
     if (!inherits(index, "argoFloats") || index[["type"]] != "index") {
         stop("'index' must be an object created with getIndex() or subset()")
     }
-    debug <- max(0, min(3, floor(debug+0.5)))
-    if (!requireNamespace("oce", quietly=TRUE)) {
+    showTime <- debug > 0
+    debug <- max(0, min(3, floor(debug + 0.5)))
+    if (!requireNamespace("oce", quietly = TRUE)) {
         stop("must install.packages(\"oce\") for getProfiles() to work")
     }
     n <- length(index@data$index)
-    argoFloatsDebug(debug, "getProfiles(..., age=", age, ", ...) {\n", style="bold", showTime=FALSE, unindent=1, sep="")
+    argoFloatsDebug(debug, "getProfiles(..., age=", age, ", ...) START\n",
+        style = "bold", unindent = 1, sep = "", showTime = showTime
+    )
     if (missing(index)) {
-        stop("In getProfiles() : must provide an index, as created by getIndex()", call.=FALSE)
+        stop("In getProfiles() : must provide an index, as created by getIndex()", call. = FALSE)
     }
     if (!inherits(index, "argoFloats")) {
         stop("'index' must be an object created by getIndex()")
     }
-    res <- new("argoFloats", type="profiles")
+    res <- new("argoFloats", type = "profiles")
     n <- length(index[["file"]])
     if (n == 0) {
-        warning("In getProfiles() : the index has no files, so there is nothing to 'get'\n", call.=FALSE)
+        warning("In getProfiles() : the index has no files, so there is nothing to 'get'\n", call. = FALSE)
         file <- character(0)
     } else {
         file <- rep("", n)
         argoFloatsDebug(debug, "index[[\"ftpRoot\"]] is c(\"",
-            paste(index[["ftpRoot"]], collapse="\", \""), "\")\n", sep="")
-        argoFloatsDebug(debug, "index[[\"file\"]] is \"", index[["file"]], "\"\n", sep="")
+            paste(index[["ftpRoot"]], collapse = "\", \""), "\")\n",
+            sep = "", showTime = showTime
+        )
+        argoFloatsDebug(debug, "index[[\"file\"]] is \"", index[["file"]], "\"\n",
+            sep = "",
+            showTime = showTime
+        )
         # The Construction of the remote filename is tricky was changed on 2020-04-30. Previously,
         # we used "ftpRoot", inferred from the "# FTP" line in the header in the index file.
         # However, as discussed at https://github.com/ArgoCanada/argoFloats/issues/82,
@@ -897,12 +945,12 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
         # name.  That is why the next block was written.  However, as of May 15, 2020, it seems they are set up in the same
         # way, so the Ifremer case was rewritten to match the usgodae case.
         urls <- paste0(server, "/dac/", index[["file"]])
-        argoFloatsDebug(debug, "First entry of urls: \"", urls[1], "\"\n", sep="")
+        argoFloatsDebug(debug, "First entry of urls: \"", urls[1], "\"\n", sep = "", showTime = showTime)
         f <- list.files(destdir) # files in directory
         # Find files that should *not* be downloaded, because they are of recent age.
         useLatest <- age == "latest" && length(f) > 0L
         if (useLatest) {
-            fileNames <- gsub("^.*[/\\\\]([A-Z]*[0-9]*_[0-9]{3,4}[D]{0,1}\\.nc)$", "\\1", index@data$index$file, perl=TRUE) # files of index
+            fileNames <- gsub("^.*[/\\\\]([A-Z]*[0-9]*_[0-9]{3,4}[D]{0,1}\\.nc)$", "\\1", index@data$index$file, perl = TRUE) # files of index
             skipDownload <- rep(FALSE, length(fileNames))
             # download1 indicates files not on local system (see also download2 below)
             download1 <- which(!(fileNames %in% f))
@@ -922,21 +970,22 @@ getProfiles <- function(index, destdir=argoDefaultDestdir(), age=argoDefaultProf
             SKIP2 <- which(!(seq_along(fileNames[keep]) %in% download2))
             skipDownload[SKIP1] <- TRUE
             skipDownload[SKIP2] <- TRUE
-            argoFloatsDebug(length(skipDownload), "files are too young to be downloaded.\n")
+            argoFloatsDebug(length(skipDownload), "files are too young to be downloaded.\n", showTime = showTime)
         }
         file <- downloadWithRetries(
             urls,
-            destdir=destdir,
-            destfile=basename(urls),
-            quiet=quiet,
-            age=if (useLatest) ifelse(skipDownload, 100*365, 0.0) else age,
-            async=TRUE,
-            debug=debug-1L)
+            destdir = destdir,
+            destfile = basename(urls),
+            quiet = quiet,
+            age = if (useLatest) ifelse(skipDownload, 100 * 365, 0.0) else age,
+            async = TRUE,
+            debug = debug
+        )
     }
     res@metadata$destdir <- destdir
     res@data$url <- urls
     res@data$file <- file
     res@processingLog <- oce::processingLogAppend(res@processingLog, "getProfiles(index, ...)")
-    argoFloatsDebug(debug,  "} # getProfiles()\n", style="bold", showTime=FALSE, unindent=1)
+    argoFloatsDebug(debug, "getProfiles() END\n", style = "bold", showTime = showTime, unindent = 1)
     res
 }

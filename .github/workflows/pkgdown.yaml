@@ -43,7 +43,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Cache R packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
@@ -63,7 +63,7 @@ jobs:
       ## the following step downloads new files or when the file format
       ## on the server might have changed.
       - name: Cache Argo downloads
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ runner.temp }}/argo-cache-dir
           key: argo-cache-dir-pkgdown-1

@@ -29,16 +29,18 @@
 #' @export
 #'
 #' @author Dan Kelley
-downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
-    age=argoDefaultProfileAge(), retries=3, async=FALSE,
-    debug=0)
-{
+downloadWithRetries <- function(
+    url, destdir, destfile, quiet = FALSE,
+    age = argoDefaultProfileAge(), retries = 3, async = FALSE,
+    debug = 0) {
     retries <- max(1, as.integer(retries))
-    if (length(destfile) != length(url))
+    if (length(destfile) != length(url)) {
         stop("length(url)=", length(destfile), " must equal length(destfile)=", length(destfile))
+    }
 
-    if (length(url) == 0)
+    if (length(url) == 0) {
         return(character(0))
+    }
 
     destination <- paste0(destdir, "/", destfile)
     success <- rep(FALSE, length(destination))
@@ -52,31 +54,36 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
     destinationDownload <- destination[!skipDownload]
 
     for (trial in seq_len(1 + retries)) {
-        if (!quiet && (trial > 1))
+        if (!quiet && (trial > 1)) {
             message("Retrying ", length(urlDownload), " failed download(s)")
-        else if (!quiet)
+        } else if (!quiet) {
             message("Downloading ", length(urlDownload), " file(s)")
+        }
 
-        if (async)
-            successDownload <- tryDownloadAsync(urlDownload, destinationDownload, quiet=quiet)
-        else
-            successDownload <- tryDownloadSequential(urlDownload, destinationDownload, quiet=quiet)
+        if (async) {
+            successDownload <- tryDownloadAsync(urlDownload, destinationDownload, quiet = quiet)
+        } else {
+            successDownload <- tryDownloadSequential(urlDownload, destinationDownload, quiet = quiet)
+        }
 
         success[destination %in% destinationDownload[successDownload]] <- TRUE
-        if (all(successDownload))
+        if (all(successDownload)) {
             break
+        }
 
         urlDownload <- urlDownload[!successDownload]
         destinationDownload <- destinationDownload[!successDownload]
     }
 
     if (!all(success)) {
-        urlFailed <- paste0("'", url[!success], "'", collapse="\n")
+        urlFailed <- paste0("'", url[!success], "'", collapse = "\n")
 
-        message("Failed downloads:\n",
-                urlFailed,
-                "\n  after ", retries + 1,
-                " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed.")
+        message(
+            "Failed downloads:\n",
+            urlFailed,
+            "\n  after ", retries + 1,
+            " attempts.\n  Try running getIndex(age=0) to refresh the index, in case a file name changed."
+        )
         destination[!success] <- NA_character_
     }
 
@@ -85,8 +92,9 @@ downloadWithRetries <- function(url, destdir, destfile, quiet=FALSE,
 
 
 tryDownloadSequential <- function(urlDownload, destinationDownload, quiet) {
-    if (length(urlDownload) == 0)
+    if (length(urlDownload) == 0) {
         return(logical(0))
+    }
 
     useProgressBar <- !quiet && interactive()
     if (useProgressBar) {
@@ -97,29 +105,31 @@ tryDownloadSequential <- function(urlDownload, destinationDownload, quiet) {
     successDownload <- rep(FALSE, length(urlDownload))
 
     for (i in seq_along(urlDownload)) {
-        t <- try(curl::curl_download(url=urlDownload[i], destfile=destinationDownload[i]), silent=TRUE)
+        t <- try(curl::curl_download(url = urlDownload[i], destfile = destinationDownload[i]), silent = TRUE)
         if (inherits(t, "try-error") && any(grepl("application callback", t))) {
             stop(t)
         } else if (!inherits(t, "try-error")) {
             successDownload[i] <- TRUE
         }
 
-        if (useProgressBar)
+        if (useProgressBar) {
             setTxtProgressBar(pb, i)
+        }
     }
 
     successDownload
 }
 
 tryDownloadAsync <- function(urlDownload, destinationDownload, quiet) {
-    if (length(urlDownload) == 0)
+    if (length(urlDownload) == 0) {
         return(logical(0))
+    }
 
     pool <- curl::new_pool()
 
     # need an object with reference semantics in which success and progress
     # state can be shared among requests
-    mutableSuccess <- new.env(parent=emptyenv())
+    mutableSuccess <- new.env(parent = emptyenv())
     mutableSuccess[["__progress"]] <- 0
 
     useProgressBar <- !quiet && interactive()
@@ -134,13 +144,14 @@ tryDownloadAsync <- function(urlDownload, destinationDownload, quiet) {
     for (i in seq_along(urlDownload)) {
         mutableSuccess[[destinationDownload[i]]] <- FALSE
         curl::curl_fetch_multi(urlDownload[i],
-                               done=downloadAsyncSuccess(urlDownload[i], destinationDownload[i], pb, mutableSuccess),
-                               fail=downloadAsyncFailure(pb, mutableSuccess),
-                               pool=pool)
+            done = downloadAsyncSuccess(urlDownload[i], destinationDownload[i], pb, mutableSuccess),
+            fail = downloadAsyncFailure(pb, mutableSuccess),
+            pool = pool
+        )
     }
 
     # run the requests
-    curl::multi_run(pool=pool)
+    curl::multi_run(pool = pool)
 
     # return the success value recorded in mutableSuccess
     vapply(destinationDownload, function(dest) mutableSuccess[[dest]], logical(1))

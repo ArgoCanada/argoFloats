@@ -13,7 +13,7 @@ As its filename indicates, it holds the "synthetic" version of "real-time" data.
 }
 \examples{
 library(argoFloats)
-a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
+a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package = "argoFloats"))
 summary(a)
 summary(a[[1]])
 

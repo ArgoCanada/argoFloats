@@ -21,8 +21,8 @@ R function \code{\link[=rawToBits]{rawToBits()}}; see the \dQuote{Examples}.
 }
 \examples{
 library(argoFloats)
-hexToBits('3')    # 1 1 0 0
-hexToBits('4000') # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0
+hexToBits("3") # 1 1 0 0
+hexToBits("4000") # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0
 
 }
 \author{

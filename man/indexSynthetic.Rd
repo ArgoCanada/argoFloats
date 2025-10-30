@@ -38,14 +38,14 @@ explains why \code{\link[=getProfiles]{getProfiles()}} skips over files that can
 \examples{
 library(argoFloats)
 data(indexSynthetic)
-plot(indexSynthetic, bathymetry=FALSE)
+plot(indexSynthetic, bathymetry = FALSE)
 summary(indexSynthetic)
 unique(indexSynthetic[["parameters"]])
 }
 \seealso{
 Other datasets provided with argoFloats: 
+\code{\link{index}},
 \code{\link{indexBgc}},
-\code{\link{indexDeep}},
-\code{\link{index}}
+\code{\link{indexDeep}}
 }
 \concept{datasets provided with argoFloats}

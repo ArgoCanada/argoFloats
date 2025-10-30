@@ -132,9 +132,11 @@ data(index)
 paste0(index[["server"]], "/dac/", index[["cycle", 1:2]])
 # File names and geographical locations of first 5 items in index
 index5 <- subset(index, 1:5)
-data.frame(file=gsub(".*/", "", index5[["file"]][1]),
-           lon=index5[["longitude"]],
-           lat=index5[["latitude"]])
+data.frame(
+    file = gsub(".*/", "", index5[["file"]][1]),
+    lon = index5[["longitude"]],
+    lat = index5[["latitude"]]
+)
 
 }
 \references{

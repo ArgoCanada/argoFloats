@@ -47,10 +47,10 @@ to indented messages. Most functions start and end with a call to
 \examples{
 \donttest{
 argoFloatsDebug(1, "plain text\n")
-argoFloatsDebug(1, "red text\n", style="red")
-argoFloatsDebug(1, "blue text\n", style="blue")
-argoFloatsDebug(1, "bold text\n", style="bold")
-argoFloatsDebug(1, "italic text with time stamp\n", style="italic", showTime=TRUE)
+argoFloatsDebug(1, "red text\n", style = "red")
+argoFloatsDebug(1, "blue text\n", style = "blue")
+argoFloatsDebug(1, "bold text\n", style = "bold")
+argoFloatsDebug(1, "italic text with time stamp\n", style = "italic", showTime = TRUE)
 }
 }
 \author{

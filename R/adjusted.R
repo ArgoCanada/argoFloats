@@ -1,23 +1,27 @@
 ## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4:tw=120
 
 # UNEXPORTED support function for useAdjusted() on single oce::argo object
-useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
-{
-    if (!(inherits(argo, "oce") && inherits(argo, "argo")))
+useAdjustedSingle <- function(argo, fallback = FALSE, debug = 0) {
+    if (!(inherits(argo, "oce") && inherits(argo, "argo"))) {
         stop("First argument must be an oce::argo object")
-    argoFloatsDebug(debug, "useAdjustedSingle(..., fallback=", fallback, ", debug=", debug, ") {\n", sep="", unindent=1, style="bold")
+    }
+    argoFloatsDebug(debug, "useAdjustedSingle(..., fallback=", fallback, ", debug=", debug, ") {\n", sep = "", unindent = 1, style = "bold")
     res <- argo
     fn <- argo[["filename"]]
-    argoFloatsDebug(debug, "filename: \"", fn, "\"\n", sep="")
-    typeFromFilename <- switch(substring(gsub(".*/","",fn),1,1), "A"="adjusted", "D"="delayed", "R"="realtime")
+    argoFloatsDebug(debug, "filename: \"", fn, "\"\n", sep = "")
+    typeFromFilename <- switch(substring(gsub(".*/", "", fn), 1, 1),
+        "A" = "adjusted",
+        "D" = "delayed",
+        "R" = "realtime"
+    )
     varNames <- names(argo[["data"]])
     adjustedNames <- grepl("Adjusted$", varNames)
     varNamesRaw <- varNames[!adjustedNames]
     varNamesAdjusted <- varNames[adjustedNames]
     if (debug > 1) {
-        argoFloatsDebug(debug, "varNames: ", paste(varNames, collapse=" "), "\n", sep="")
-        argoFloatsDebug(debug, "varNamesRaw: ", paste(varNamesRaw, collapse=" "), "\n", sep="")
-        argoFloatsDebug(debug, "varNamesAdjusted: ", paste(varNamesAdjusted, collapse=" "), "\n", sep="")
+        argoFloatsDebug(debug, "varNames: ", paste(varNames, collapse = " "), "\n", sep = "")
+        argoFloatsDebug(debug, "varNamesRaw: ", paste(varNamesRaw, collapse = " "), "\n", sep = "")
+        argoFloatsDebug(debug, "varNamesAdjusted: ", paste(varNamesAdjusted, collapse = " "), "\n", sep = "")
     }
     nrow <- nrow(argo@data$pressure)
     ncol <- ncol(argo@data$pressure)
@@ -38,52 +42,59 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
         # Set up dnoRev, to find argoFloats name given NetCDF name
         dno <- argo@metadata$dataNamesOriginal
         dnoRev <- list()
-        for (name in names(dno))
+        for (name in names(dno)) {
             dnoRev[[dno[[name]]]] <- name
-        if (debug > 1) {               # show only at a high debug level
+        }
+        if (debug > 1) { # show only at a high debug level
             cat("dnoRev follows:\n")
             cat(str(dnoRev))
         }
-        #varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
+        # varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
         for (icol in seq_len(ncol)) { # non-BGC case
             mode <- dataMode[icol]
             # Dewey Dunnington realized that 'stationParameters' is what we need next, not 'parameters'.
             # (See https://github.com/ArgoCanada/argoFloats/issues/418 for discussion.)
-            parameters <- trimws(as.vector(argo@metadata$stationParameters[,icol]))
+            parameters <- trimws(as.vector(argo@metadata$stationParameters[, icol]))
             parameters <- parameters[nchar(parameters) > 0]
             varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
-            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, "\n", sep="")
-            argoFloatsDebug(debug, "  mode:       \"", mode, "\"\n", sep="")
-            argoFloatsDebug(debug, "  parameters: ", paste(parameters,collapse=" "), "\n", sep="")
+            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, "\n", sep = "")
+            argoFloatsDebug(debug, "  mode:       \"", mode, "\"\n", sep = "")
+            argoFloatsDebug(debug, "  parameters: ", paste(parameters, collapse = " "), "\n", sep = "")
             # cat("next is varNamesAdjusted\n");print(varNamesAdjusted)
             for (name in varNamesRaw) {
-                argoFloatsDebug(debug, "    ", name, " (AKA ", dno[[name]], ")\n", sep="")
-                #argoFloatsDebug(debug, "name: \"", name, "\"", sep="")
+                argoFloatsDebug(debug, "    ", name, " (AKA ", dno[[name]], ")\n", sep = "")
+                # argoFloatsDebug(debug, "name: \"", name, "\"", sep="")
                 adjustedName <- paste0(name, "Adjusted")
-                #argoFloatsDebug(debug, "name=\"", name, "\", adjustedName=\"", adjustedName, "\"\n", sep="")
+                # argoFloatsDebug(debug, "name=\"", name, "\", adjustedName=\"", adjustedName, "\"\n", sep="")
                 # Can only copy if we have an Adjusted field (which is not always the case).
                 if (adjustedName %in% varNamesAdjusted) {
                     # Copy <PARAM>Adjusted into <PARAM> if either of the following is true.
                     #    Case 1. fallback is FALSE
                     #    Case 2. fallback is TRUE and mode is "A" or "D"
-                    case <- if (fallback == FALSE) { 1 } else if (mode %in% c("A", "D")) { 2 } else { 0 }
+                    case <- if (fallback == FALSE) {
+                        1
+                    } else if (mode %in% c("A", "D")) {
+                        2
+                    } else {
+                        0
+                    }
                     if (case > 0) {
-                        res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
-                        res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
+                        res@data[[name]][, icol] <- argo@data[[adjustedName]][, icol]
+                        res@metadata$flags[[name]][, icol] <- argo@metadata$flags[[adjustedName]][, icol]
                         if (!fallback) {
-                            argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, "\n", sep="")
+                            argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, "\n", sep = "")
                         } else {
-                            argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", mode, "\n", sep="")
+                            argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", mode, "\n", sep = "")
                         }
                     } else {
                         if (!fallback) {
-                            argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, "\n", sep="")
+                            argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, "\n", sep = "")
                         } else {
-                            argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, " and data-mode is ", pdmThis, "\n", sep="")
+                            argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, " and data-mode is ", pdmThis, "\n", sep = "")
                         }
                     }
                 } else {
-                    argoFloatsDebug(debug, "      retaining original, since ", adjustedName, " is not present\n", sep="")
+                    argoFloatsDebug(debug, "      retaining original, since ", adjustedName, " is not present\n", sep = "")
                 }
             }
         }
@@ -94,9 +105,10 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
         # profiles).
         dno <- argo@metadata$dataNamesOriginal
         dnoRev <- list()
-        for (name in names(dno))
+        for (name in names(dno)) {
             dnoRev[[dno[[name]]]] <- name
-        if (debug > 1) {               # show only at a high debug level
+        }
+        if (debug > 1) { # show only at a high debug level
             cat("dnoRev follows:\n")
             cat(str(dnoRev))
         }
@@ -104,14 +116,14 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
             pdm <- argo@metadata$parameterDataMode[icol]
             # Dewey Dunnington realized that 'stationParameters' is what we need next, not 'parameters'.
             # (See https://github.com/ArgoCanada/argoFloats/issues/418 for discussion.)
-            parameters <- trimws(as.vector(argo@metadata$stationParameters[,icol]))
+            parameters <- trimws(as.vector(argo@metadata$stationParameters[, icol]))
             parameters <- parameters[nchar(parameters) > 0]
-            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, "\n", sep="")
-            argoFloatsDebug(debug, "  mode:       \"", pdm, "\"\n", sep="")
-            argoFloatsDebug(debug, "  parameters: ", paste(parameters,collapse=" "), "\n", sep="")
+            argoFloatsDebug(debug, "Profile ", icol, " of ", ncol, "\n", sep = "")
+            argoFloatsDebug(debug, "  mode:       \"", pdm, "\"\n", sep = "")
+            argoFloatsDebug(debug, "  parameters: ", paste(parameters, collapse = " "), "\n", sep = "")
             varNamesRaw <- unlist(lapply(parameters, function(n) dnoRev[[n]]))
             for (name in varNamesRaw) {
-                argoFloatsDebug(debug, "    ", name, " (AKA ", dno[[name]], ")\n", sep="")
+                argoFloatsDebug(debug, "    ", name, " (AKA ", dno[[name]], ")\n", sep = "")
                 adjustedName <- paste0(name, "Adjusted")
                 # Can only copy if we have an Adjusted field (which is not always the case).
                 if (adjustedName %in% varNamesAdjusted) {
@@ -122,27 +134,33 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
                         # Copy <PARAM>Adjusted into <PARAM> if either of the following is true.
                         #    Case 1. fallback is FALSE
                         #    Case 2. fallback is TRUE and mode is "A" or "D"
-                        case <- if (!fallback) { 1 } else if (pdmThis %in% c("A", "D")) { 2 } else { 0 }
+                        case <- if (!fallback) {
+                            1
+                        } else if (pdmThis %in% c("A", "D")) {
+                            2
+                        } else {
+                            0
+                        }
                         if (case > 0) {
-                            res@data[[name]][,icol] <- argo@data[[adjustedName]][,icol]
-                            res@metadata$flags[[name]][,icol] <- argo@metadata$flags[[adjustedName]][,icol]
+                            res@data[[name]][, icol] <- argo@data[[adjustedName]][, icol]
+                            res@metadata$flags[[name]][, icol] <- argo@metadata$flags[[adjustedName]][, icol]
                             if (!fallback) {
-                                argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, "\n", sep="")
+                                argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, "\n", sep = "")
                             } else {
-                                argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", pdmThis, "\n", sep="")
+                                argoFloatsDebug(debug, "      copied ", adjustedName, " to ", name, ", since fallback=", fallback, " and mode=", pdmThis, "\n", sep = "")
                             }
                         } else {
                             if (!fallback) {
-                                argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, "\n", sep="")
+                                argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, "\n", sep = "")
                             } else {
-                                argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, " and data-mode is ", pdmThis, "\n", sep="")
+                                argoFloatsDebug(debug, "      retaining original, since fallback=", fallback, " and data-mode is ", pdmThis, "\n", sep = "")
                             }
                         }
                     } else {
                         argoFloatsDebug(debug, "      \"", name, "\" is not present in this profile\n")
                     }
                 } else {
-                    argoFloatsDebug(debug, "      retaining original, since ", adjustedName, " is not present\n", sep="")
+                    argoFloatsDebug(debug, "      retaining original, since ", adjustedName, " is not present\n", sep = "")
                 }
             }
             # argoFloatsDebug(debug, "this cycle is of not of 'core' type; next is parameterDataMode:\n")
@@ -150,9 +168,11 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
             #     print(parameterDataMode)
         }
     }
-    res@processingLog <- oce::processingLogAppend(res@processingLog,
-                                                  paste0("useAdjustedSingle(argo, fallback=\"", fallback, "\", debug=", debug, ")\n"))
-    argoFloatsDebug(debug, "} # useAdjustedSingle()\n", sep="", unindent=1, style="bold")
+    res@processingLog <- oce::processingLogAppend(
+        res@processingLog,
+        paste0("useAdjustedSingle(argo, fallback=\"", fallback, "\", debug=", debug, ")\n")
+    )
+    argoFloatsDebug(debug, "} # useAdjustedSingle()\n", sep = "", unindent = 1, style = "bold")
     res
 }
 
@@ -207,12 +227,12 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 #' @examples
 #' library(argoFloats)
 #' file <- "SD5903586_001.nc"
-#' raw <- readProfiles(system.file("extdata", file, package="argoFloats"))
+#' raw <- readProfiles(system.file("extdata", file, package = "argoFloats"))
 #' adj <- useAdjusted(raw)
 #' # Autoscale with adjusted values so frame shows both raw and adjusted.
-#' plot(adj, which="profile", profileControl=list(parameter="oxygen"), pch=2)
-#' points(raw[[1]][["oxygen"]], raw[[1]][["pressure"]], pch=1)
-#' legend("bottomright", pch=c(2,1), legend=c("Raw", "Adjusted"))
+#' plot(adj, which = "profile", profileControl = list(parameter = "oxygen"), pch = 2)
+#' points(raw[[1]][["oxygen"]], raw[[1]][["pressure"]], pch = 1)
+#' legend("bottomright", pch = c(2, 1), legend = c("Raw", "Adjusted"))
 #'
 #' @author Dan Kelley, Jaimie Harbin and Clark Richards
 #'
@@ -231,23 +251,24 @@ useAdjustedSingle <- function(argo, fallback=FALSE, debug=0)
 #'
 #' @importFrom utils str
 #' @export
-useAdjusted <- function(argos, fallback=FALSE, debug=0)
-{
-    argoFloatsDebug(debug, "useAdjusted(..., fallback=", fallback, ", debug=", debug, ") {\n", sep="", unindent=1, style="bold")
-    if (!inherits(argos, "argoFloats"))
+useAdjusted <- function(argos, fallback = FALSE, debug = 0) {
+    argoFloatsDebug(debug, "useAdjusted(..., fallback=", fallback, ", debug=", debug, ") {\n", sep = "", unindent = 1, style = "bold")
+    if (!inherits(argos, "argoFloats")) {
         stop("'argos' must be an argoFloats object")
-    if ("argos" != argos@metadata$type)
+    }
+    if ("argos" != argos@metadata$type) {
         stop("'argos' must be an argoFloats object created with argoFloats::readProfiles()")
-    if (!is.logical(fallback))
+    }
+    if (!is.logical(fallback)) {
         stop("fallback value \"", fallback, "\" is not understood.  It must be TRUE or FALSE")
+    }
     debug <- ifelse(debug > 3, 3L, as.integer(debug)) # limit depth
     res <- argos
     argoList <- argos[["argos"]]
     for (i in seq_along(argoList)) {
-        res@data$argos[[i]] <- useAdjustedSingle(argoList[[i]], fallback=fallback, debug=debug-1)
+        res@data$argos[[i]] <- useAdjustedSingle(argoList[[i]], fallback = fallback, debug = debug - 1)
     }
-    res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep="", collapse=""))
-    argoFloatsDebug(debug, "} # useAdjusted()\n", sep="", unindent=1, style="bold")
+    res@processingLog <- oce::processingLogAppend(res@processingLog, paste(deparse(match.call()), sep = "", collapse = ""))
+    argoFloatsDebug(debug, "} # useAdjusted()\n", sep = "", unindent = 1, style = "bold")
     res
 }
-

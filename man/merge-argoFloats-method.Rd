@@ -22,16 +22,16 @@ library(argoFloats)
 data(index)
 
 # Index of floats within 50km of Abaca Island
-C <- subset(index, circle=list(longitude=-77.5, latitude=27.5, radius=50))
+C <- subset(index, circle = list(longitude = -77.5, latitude = 27.5, radius = 50))
 
 # Index of floats within a rectangle near Abaca Island
 lonRect <- c(-76.5, -76)
 latRect <- c(26.5, 27.5)
-R <- subset(index, rectangle=list(longitude=lonRect, latitude=latRect))
+R <- subset(index, rectangle = list(longitude = lonRect, latitude = latRect))
 
 RC <- merge(C, R)
 \donttest{
-plot(RC, bathymetry=FALSE)
+plot(RC, bathymetry = FALSE)
 }
 
 }

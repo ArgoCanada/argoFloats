@@ -30,7 +30,7 @@ jobs:
       ## the following step downloads new files or when the file format
       ## on the server might have changed.
       - name: Cache Argo downloads
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ runner.temp }}/argo-cache-dir
           key: argo-cache-dir-check-2

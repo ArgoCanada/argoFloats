@@ -26,13 +26,13 @@
 #' to be done, as explained in the \dQuote{Details} section.
 #'
 #' @examples
-#'\donttest{
+#' \donttest{
 #' argoFloatsDebug(1, "plain text\n")
-#' argoFloatsDebug(1, "red text\n", style="red")
-#' argoFloatsDebug(1, "blue text\n", style="blue")
-#' argoFloatsDebug(1, "bold text\n", style="bold")
-#' argoFloatsDebug(1, "italic text with time stamp\n", style="italic", showTime=TRUE)
-#'}
+#' argoFloatsDebug(1, "red text\n", style = "red")
+#' argoFloatsDebug(1, "blue text\n", style = "blue")
+#' argoFloatsDebug(1, "bold text\n", style = "bold")
+#' argoFloatsDebug(1, "italic text with time stamp\n", style = "italic", showTime = TRUE)
+#' }
 #' @author Dan Kelley
 #'
 #' @return None (invisible NULL).
@@ -40,69 +40,84 @@
 #' @importFrom utils flush.console
 #'
 #' @export
-argoFloatsDebug <- function(debug=0, ..., style="plain", showTime=FALSE, unindent=0)
-{
+argoFloatsDebug <- function(debug = 0, ..., style = "plain", showTime = FALSE, unindent = 0) {
     catSpecial <- function(...) if (interactive()) cat(...)
-    debug <- max(0L, min(3L, floor(debug+0.5))) # max 3 levels deep
+    debug <- max(0L, min(3L, floor(debug + 0.5))) # max 3 levels deep
     if (debug > 0) {
         n <- 4 - debug - unindent
         if (is.character(style) && style == "plain") {
-            if (n > 0)
-                cat(paste(rep("  ", n), collapse=""))
-            if (showTime)
-                cat(format(Sys.time(), "[%H:%M:%S] "))
+            if (n > 0) {
+                cat(paste(rep("  ", n), collapse = ""))
+            }
+            if (showTime) {
+                cat(format(Sys.time(), "[%H:%M:%OS3] "))
+            }
             cat(...)
         } else if (is.character(style) && style == "bold") {
             catSpecial("\033[1m")
-            if (n > 0)
-                cat(paste(rep("  ", n), collapse=""))
-            if (showTime)
-                cat(format(Sys.time(), "[%H:%M:%S] "))
+            if (n > 0) {
+                cat(paste(rep("  ", n), collapse = ""))
+            }
+            if (showTime) {
+                cat(format(Sys.time(), "[%H:%M:%OS3] "))
+            }
             cat(...)
             catSpecial("\033[0m")
         } else if (is.character(style) && style == "italic") {
             catSpecial("\033[3m")
-            if (n > 0)
-                cat(paste(rep("  ", n), collapse=""))
-            if (showTime)
-                cat(format(Sys.time(), "[%H:%M:%S] "))
+            if (n > 0) {
+                cat(paste(rep("  ", n), collapse = ""))
+            }
+            if (showTime) {
+                cat(format(Sys.time(), "[%H:%M:%OS3] "))
+            }
             cat(...)
             catSpecial("\033[0m")
         } else if (is.character(style) && style == "red") {
             catSpecial("\033[31m")
-            if (n > 0)
-                cat(paste(rep("  ", n), collapse=""))
-            if (showTime)
-                cat(format(Sys.time(), "[%H:%M:%S] "))
+            if (n > 0) {
+                cat(paste(rep("  ", n), collapse = ""))
+            }
+            if (showTime) {
+                cat(format(Sys.time(), "[%H:%M:%OS3] "))
+            }
             cat(...)
             catSpecial("\033[0m")
         } else if (is.character(style) && style == "green") {
             catSpecial("\033[32m")
-            if (n > 0)
-                cat(paste(rep("  ", n), collapse=""))
-            if (showTime)
-                cat(format(Sys.time(), "[%H:%M:%S] "))
+            if (n > 0) {
+                cat(paste(rep("  ", n), collapse = ""))
+            }
+            if (showTime) {
+                cat(format(Sys.time(), "[%H:%M:%OS3] "))
+            }
             cat(...)
             catSpecial("\033[0m")
         } else if (is.character(style) && style == "blue") {
             catSpecial("\033[34m")
-            if (n > 0)
-                cat(paste(rep("  ", n), collapse=""))
-            if (showTime)
-                cat(format(Sys.time(), "[%H:%M:%S] "))
+            if (n > 0) {
+                cat(paste(rep("  ", n), collapse = ""))
+            }
+            if (showTime) {
+                cat(format(Sys.time(), "[%H:%M:%OS3] "))
+            }
             cat(...)
             catSpecial("\033[0m")
         } else if (is.function(style)) {
-            if (n > 0)
-                cat(style(paste(rep("  ", n), collapse="")))
-            if (showTime)
-                cat(format(Sys.time(), "[%H:%M:%S] "))
+            if (n > 0) {
+                cat(style(paste(rep("  ", n), collapse = "")))
+            }
+            if (showTime) {
+                cat(format(Sys.time(), "[%H:%M:%OS3] "))
+            }
             cat(style(...))
         } else { # fallback
-            if (n > 0)
-                cat(paste(rep("  ", n), collapse=""))
-            if (showTime)
-                cat(format(Sys.time(), "[%H:%M:%S] "))
+            if (n > 0) {
+                cat(paste(rep("  ", n), collapse = ""))
+            }
+            if (showTime) {
+                cat(format(Sys.time(), "[%H:%M:%OS3] "))
+            }
             cat(...)
         }
         flush.console()

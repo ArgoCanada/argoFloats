@@ -1,6 +1,6 @@
 rhub <- FALSE # rhub is VERY slow, and seems never to reveal problem not revealed otherwise
 
-#install.packages("codemetar")
+# install.packages("codemetar")
 requireNamespace(c("codemetar", "devtools", "urlchecker", "rhub", "revdepcheck"))
 # codemeta changes a timestamp, so requiring a commit after every call. That is
 # senseless, so I only run the false part of the following conditional in the
@@ -18,14 +18,14 @@ devtools::check_win_devel()
 devtools::check_win_oldrelease()
 if (rhub) {
     # rhub was broken in 2022 June/July but seen to work again on Aug 16
-    rhub::check_for_cran(email="Dan.Kelley@Dal.Ca", show_status=FALSE)
-    rhub::check(platform="debian-clang-devel", show_status=FALSE)
+    rhub::check_for_cran(email = "Dan.Kelley@Dal.Ca", show_status = FALSE)
+    rhub::check(platform = "debian-clang-devel", show_status = FALSE)
     #> rhub::platforms()
-    #debian-clang-devel:
+    # debian-clang-devel:
     #    Debian Linux, R-devel, clang, ISO-8859-15 locale
     #> rhub::check_rhub()
     # remotes::install_github("r-lib/revdepcheck")
 }
 revdepcheck::revdep_reset()
-revdepcheck::revdep_check(num_workers=4)
-message("run following if desired: pkgdown::build_site()")
+revdepcheck::revdep_check(num_workers = 4)
+pkgdown::build_site()

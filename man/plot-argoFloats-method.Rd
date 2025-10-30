@@ -249,23 +249,24 @@ plot(index)
 
 # Example 2: as Example 1, but narrow the margins and highlight floats
 # within a circular region of diameter 100 km.
-oldpar <- par(no.readonly=TRUE)
-par(mar=c(2, 2, 1, 1), mgp=c(2, 0.7, 0))
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(2, 2, 1, 1), mgp = c(2, 0.7, 0))
 plot(index)
 lon <- index[["longitude"]]
 lat <- index[["latitude"]]
 near <- oce::geodDist(lon, lat, -77.06, 26.54) < 100
 R <- subset(index, near)
 points(R[["longitude"]], R[["latitude"]],
-    cex=0.6, pch=20, col="red")
+    cex = 0.6, pch = 20, col = "red"
+)
 par(oldpar)
 
 # Example 3: TS of a built-in data file.
-f <- system.file("extdata", "SR2902204_131.nc", package="argoFloats")
+f <- system.file("extdata", "SR2902204_131.nc", package = "argoFloats")
 a <- readProfiles(f)
-oldpar <- par(no.readonly=TRUE)
-par(mar=c(3.3, 3.3, 1, 1), mgp=c(2, 0.7, 0)) # wide margins for axis names
-plot(a, which="TS")
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(3.3, 3.3, 1, 1), mgp = c(2, 0.7, 0)) # wide margins for axis names
+plot(a, which = "TS")
 par(oldpar)
 \donttest{
 # Example 4: map with bathymetry. Note that par(mar) is adjusted
@@ -276,61 +277,66 @@ par(oldpar)
 # a finer-scale dataset, either by using bathymetry=TRUE (which
 # downloads a file appropriate for the plot view), or by using
 # an already-downloaded file.
-data(topoWorld, package="oce")
-oldpar <- par(no.readonly=TRUE)
-par(mar=c(2, 2, 1, 2), mgp=c(2, 0.7, 0)) # narrow margins for a map
-plot(index, bathymetry=list(source=topoWorld))
+data(topoWorld, package = "oce")
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(2, 2, 1, 2), mgp = c(2, 0.7, 0)) # narrow margins for a map
+plot(index, bathymetry = list(source = topoWorld))
 # For bathymetry plots that use images, plot() temporarily
 # adds 2.75 to par("mar")[4] so the same must be done, in order
 # to correctly position additional points (shown as black rings).
-par(mar=par("mar") + c(0, 0, 0, 2.75))
+par(mar = par("mar") + c(0, 0, 0, 2.75))
 points(index[["longitude"]], index[["latitude"]],
-    cex=0.6, pch=20, col="red")
+    cex = 0.6, pch = 20, col = "red"
+)
 par(oldpar)
 
 # Example 5. Simple contour version, using coarse dataset (ok on basin-scale).
 # Hint: use oce::download.topo() to download high-resolution datasets to
 # use instead of topoWorld.
-oldpar <- par(no.readonly=TRUE)
-par(mar=c(2, 2, 1, 1))
-data(topoWorld, package="oce")
-plot(index, bathymetry=list(source=topoWorld, contour=TRUE))
+oldpar <- par(no.readonly = TRUE)
+par(mar = c(2, 2, 1, 1))
+data(topoWorld, package = "oce")
+plot(index, bathymetry = list(source = topoWorld, contour = TRUE))
 par(oldpar)
 
 # Example 6. Customized map, sidestepping plot,argoFloats-method().
 lon <- topoWorld[["longitude"]]
 lat <- topoWorld[["latitude"]]
-asp <- 1/cos(pi/180*mean(lat))
+asp <- 1 / cos(pi / 180 * mean(lat))
 # Limit plot region to float region.
 xlim <- range(index[["longitude"]])
 ylim <- range(index[["latitude"]])
 # Colourize 1km, 2km, etc, isobaths.
-contour(x=lon, y=lat, z=topoWorld[["z"]], xlab="", ylab="",
-    xlim=xlim, ylim=ylim, asp=asp,
-    col=1:6, lwd=2, levels=-1000*1:6, drawlabels=FALSE)
+contour(
+    x = lon, y = lat, z = topoWorld[["z"]], xlab = "", ylab = "",
+    xlim = xlim, ylim = ylim, asp = asp,
+    col = 1:6, lwd = 2, levels = -1000 * 1:6, drawlabels = FALSE
+)
 # Show land
-data(coastlineWorldFine, package="ocedata")
+data(coastlineWorldFine, package = "ocedata")
 polygon(coastlineWorldFine[["longitude"]],
-        coastlineWorldFine[["latitude"]], col="lightgray")
+    coastlineWorldFine[["latitude"]],
+    col = "lightgray"
+)
 # Indicate float positions.
-points(index[["longitude"]], index[["latitude"]], pch=20)
+points(index[["longitude"]], index[["latitude"]], pch = 20)
 
 
 # Example 7: Temperature profile of the 131st cycle of float with ID 2902204
-a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-oldpar <- par(no.readonly=TRUE)
-par(mfrow=c(1, 1))
-par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
-par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
-plot(a, which="profile")
+a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package = "argoFloats"))
+oldpar <- par(no.readonly = TRUE)
+par(mfrow = c(1, 1))
+par(mgp = c(2, 0.7, 0)) # mimic the oce::plotProfile() default
+par(mar = c(1, 3.5, 3.5, 2)) # mimic the oce::plotProfile() default
+plot(a, which = "profile")
 par(oldpar)
 
 # Example 8: As Example 7, but showing temperature dependence on potential density anomaly.
-a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package="argoFloats"))
-oldpar <- par(no.readonly=TRUE)
-par(mgp=c(2, 0.7, 0))                  # mimic the oce::plotProfile() default
-par(mar=c(1,3.5,3.5,2))                # mimic the oce::plotProfile() default
-plot(a, which="profile", profileControl=list(parameter="temperature", ytype="sigma0"))
+a <- readProfiles(system.file("extdata", "SR2902204_131.nc", package = "argoFloats"))
+oldpar <- par(no.readonly = TRUE)
+par(mgp = c(2, 0.7, 0)) # mimic the oce::plotProfile() default
+par(mar = c(1, 3.5, 3.5, 2)) # mimic the oce::plotProfile() default
+plot(a, which = "profile", profileControl = list(parameter = "temperature", ytype = "sigma0"))
 par(oldpar)
 
 }

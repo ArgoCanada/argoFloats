@@ -15,14 +15,14 @@ is shown here, and in the documentation for \code{\link[=useAdjusted]{useAdjuste
 }
 \examples{
 library(argoFloats)
-a <- readProfiles(system.file("extdata", "SD5903586_001.nc", package="argoFloats"))
+a <- readProfiles(system.file("extdata", "SD5903586_001.nc", package = "argoFloats"))
 a1 <- a[[1]]
 # Illustrate oxygen adjustment
 p <- a1[["pressure"]]
 O <- a1[["oxygen"]]
-Oa  <- a1[["oxygenAdjusted"]]
+Oa <- a1[["oxygenAdjusted"]]
 Percent <- 100 * (Oa - O) / O
-hist(Percent, main="Oxygen adjustment")
+hist(Percent, main = "Oxygen adjustment")
 
 }
 \seealso{
