@@ -1,24 +1,19 @@
 ## Local tests
 
-* local R installation, R 4.3.1
+* local R installation, R 4.5.1
 * R-CMD-check test (no errors, warnings, or notes)
 
 ## Remote tests
 
-The following worked, except for one PREPERROR on a rhub test (which does not
-seem to relate to argoFloats directly).
+The following worked.
 
 * devtools::check_win_release()
 * devtools::check_win_devel()
 * devtools::check_win_oldrelease()
-* rhub::check_for_cran(show_status=FALSE)
-* rhub::check(platform="debian-clang-devel", show_status=FALSE)
+* rhub::rhub_check()
 
 # Changes since previous CRAN submission
 
-This version, numbered 1.0.7, addresses a problem reported to us on 2022-08-19,
-regarding HTML pages, and also removes dependence on now-retired packages such
-as rgdal.
-
-
-
+This version, numbered 1.0.9, addresses a problem reported to us on 2025-10-28,
+regarding tests failing if web downloads failed.  This was addressed by using
+try().
