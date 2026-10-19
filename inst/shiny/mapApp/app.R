@@ -187,7 +187,7 @@ serverMapApp <- function(input, output, session) {
     }
     # State: reactive
     state <- shiny::reactiveValues(
-        begin = TRUE,
+        # __begin = TRUE,
         xlim = c(-180, 180),
         ylim = c(-90, 90),
         polyDone = FALSE,
@@ -1278,11 +1278,11 @@ serverMapApp <- function(input, output, session) {
             argoFloatsDebug(debug, "state$hoverIsPasted=", state$hoverIsPasted, "\n", sep = "")
             plotCounter <<- plotCounter + 1L
             #> message("in output$plotMap with state$begin=", state$begin)
-            if (state$begin) {
-                argoFloatsDebug(debug, "state$begin is TRUE, so setting state$view\n")
-                state$view <<- viewDefaults
-            }
-            state$begin <<- FALSE
+            # ___ if (state$begin) {
+            # ___     argoFloatsDebug(debug, "state$begin is TRUE, so setting state$view\n")
+            # ___     state$view <<- viewDefaults
+            # ___ }
+            # ___ state$begin <<- FALSE
             validate(need(
                 state$startTime < state$endTime,
                 "The Start time must precede the End time."
@@ -1293,10 +1293,10 @@ serverMapApp <- function(input, output, session) {
             on.exit(par(mar = omar, mgp = omgp))
             topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
             argoFloatsDebug(debug, "calling plot() to set up scales\n")
-            if (plotCounter < 4) {
-                argoFloatsDebug(debug, "} # plotMap() early return since plotCounter=", plotCounter, "\n", sep = "", style = "bold", unindent = 1)
-                return()
-            }
+            # ___ if (plotCounter < 4) {
+            # ___     argoFloatsDebug(debug, "} # plotMap() early return since plotCounter=", plotCounter, "\n", sep = "", style = "bold", unindent = 1)
+            # ___     return()
+            # ___ }
             plot(state$xlim, state$ylim, xlab = "", ylab = "", axes = FALSE, type = "n", asp = 1 / cos(pi180 * mean(state$ylim)))
             if (debug > 0) {
                 mtext(plotCounter, adj = 1, col = 2)
