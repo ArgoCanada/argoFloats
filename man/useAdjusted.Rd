@@ -7,7 +7,7 @@
 useAdjusted(argos, fallback = FALSE, debug = 0)
 }
 \arguments{
-\item{argos}{an \code{\linkS4class{argoFloats}} object, as read by \code{\link[=readProfiles]{readProfiles()}}.}
+\item{argos}{an \code{\link[=argoFloats-class]{argoFloats}} object, as read by \code{\link[=readProfiles]{readProfiles()}}.}
 
 \item{fallback}{a logical value indicating whether to 'fall back' from
 adjusted data to raw data for profiles that are in real-time mode.  By
@@ -20,13 +20,13 @@ If it is 1 then minimal overall information is printed.  If it exceeds 1,
 then information is printed for each Argo cycle contained in \code{argos}.}
 }
 \value{
-\code{useAdjusted} returns an \code{\linkS4class{argoFloats}} object that is similar to
+\code{useAdjusted} returns an \code{\link[=argoFloats-class]{argoFloats}} object that is similar to
 its first argument, but which is set up so that future calls to
 \code{\link{[[,argoFloats-method}} or \code{\link{plot,argoFloats-method}}
 will focus on the "adjusted" data stream.
 }
 \description{
-\code{useAdjusted} returns a copy of an \code{\linkS4class{argoFloats}} object
+\code{useAdjusted} returns a copy of an \code{\link[=argoFloats-class]{argoFloats}} object
 within which the individual
 \link[oce:argo-class]{oce::argo} objects may have been modified so that future calls to
 \code{\link{[[,argoFloats-method}}

@@ -8,7 +8,7 @@
 \S4method{show}{argoFloats}(object)
 }
 \arguments{
-\item{object}{an \code{\linkS4class{argoFloats}} object.}
+\item{object}{an \code{\link[=argoFloats-class]{argoFloats}} object.}
 }
 \value{
 None (invisible NULL).

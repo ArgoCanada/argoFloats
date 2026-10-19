@@ -43,7 +43,7 @@ summary(indexSynthetic)
 unique(indexSynthetic[["parameters"]])
 }
 \seealso{
-Other datasets provided with argoFloats: 
+Other datasets provided with argoFloats:
 \code{\link{index}},
 \code{\link{indexBgc}},
 \code{\link{indexDeep}}

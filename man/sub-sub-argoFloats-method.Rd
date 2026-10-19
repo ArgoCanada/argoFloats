@@ -8,7 +8,7 @@
 \S4method{[[}{argoFloats}(x, i, j, ...)
 }
 \arguments{
-\item{x}{an \code{\linkS4class{argoFloats}} object.}
+\item{x}{an \code{\link[=argoFloats-class]{argoFloats}} object.}
 
 \item{i}{a character value that specifies the item to be looked up;
 see \dQuote{Details}.}
@@ -23,7 +23,7 @@ the indicated item, or NULL if it is neither stored within the first argument
 nor computable from its contents.
 }
 \description{
-This function provides an easy way to look up values within an \code{\linkS4class{argoFloats}}
+This function provides an easy way to look up values within an \code{\link[=argoFloats-class]{argoFloats}}
 object, without the need to know the exact structure of the data. The action
 taken by \code{[[} depends on the \code{type} element in the \code{metadata} slot of
 the object (which is set by the function that created the object), on the

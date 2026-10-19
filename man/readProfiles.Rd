@@ -14,7 +14,7 @@ readProfiles(
 }
 \arguments{
 \item{profiles}{either (1) a character vector that holds
-the names of NetCDF files or (2) an \code{\linkS4class{argoFloats}}
+the names of NetCDF files or (2) an \code{\link[=argoFloats-class]{argoFloats}}
 object created by \code{\link[=getProfiles]{getProfiles()}}. In the first case, any
 items that start with \code{"ftp:"} are taken to represent
 the full paths to remote files, and these first downloaded
@@ -47,14 +47,14 @@ a small amount of debugging information is printed.  Note that
 the file, and so it will print messages if \code{debug} exceeds 1.}
 }
 \value{
-An \code{\linkS4class{argoFloats}} object
+An \code{\link[=argoFloats-class]{argoFloats}} object
 with \code{type="argos"}, in which the \code{data} slot
 contains a list named \code{argos} that holds objects
 that are created by \code{\link[oce:read.argo]{oce::read.argo()}}.
 }
 \description{
 This works with either a vector of NetCDF files,
-or a \code{\linkS4class{argoFloats}} object of type \code{"profiles"}, as
+or a \code{\link[=argoFloats-class]{argoFloats}} object of type \code{"profiles"}, as
 created by \code{\link[=getProfiles]{getProfiles()}}.
 During the reading, argo profile objects are created with \code{\link[oce:read.argo]{oce::read.argo()}}
 or a replacement function provided as the \code{FUN} argument.

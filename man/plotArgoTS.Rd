@@ -61,7 +61,7 @@ value by 1 before passing to \code{\link[=plotArgoTS]{plotArgoTS()}}.}
 \item{\dots}{extra arguments provided to \code{\link[oce:plotTS]{oce::plotTS()}}.}
 }
 \description{
-Plot a TS diagram for an \linkS4class{argoFloats} object that was created with
+Plot a TS diagram for an \link[=argoFloats-class]{argoFloats} object that was created with
 \code{\link[=readProfiles]{readProfiles()}}.  This function is called by \code{\link[=plot,argoFloats-method]{plot,argoFloats-method()}},
 but may also be called directly.
 }

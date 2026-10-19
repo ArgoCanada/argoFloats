@@ -7,7 +7,7 @@
 applyQC(x, flags = NULL, actions = NULL, debug = 0)
 }
 \arguments{
-\item{x}{an \code{\linkS4class{argoFloats}} object of type \code{"argos"}, as created by
+\item{x}{an \code{\link[=argoFloats-class]{argoFloats}} object of type \code{"argos"}, as created by
 \code{\link[=readProfiles]{readProfiles()}}.}
 
 \item{flags}{A list specifying flag values upon which actions will be taken. This can take two forms.
@@ -44,16 +44,16 @@ meanings are as follows.
 actions set up by \code{\link[=readProfiles]{readProfiles()}}, which, by default. causes any data
 flagged as suspicious to be set to \code{NA}.}
 
-\item{debug}{an integer passed to \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.  If this
+\item{debug}{an integer passed to \code{\link[oce:handleFlags,argo-method]{oce::handleFlags,argo-method()}}.  If this
 is set to a positive value, then some debugging information will be printed
 as the processing is done.}
 }
 \value{
 A copy of \code{x} but with each of the objects within its \code{data} slot
-having been passed through \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}.
+having been passed through \code{\link[oce:handleFlags,argo-method]{oce::handleFlags,argo-method()}}.
 }
 \description{
-This function examines the quality-control ("QC") flags within an \code{\linkS4class{argoFloats}}
+This function examines the quality-control ("QC") flags within an \code{\link[=argoFloats-class]{argoFloats}}
 object that was created by \code{\link[=readProfiles]{readProfiles()}}.  By default, it replaces all suspicious
 data with \code{NA} values, so they will not appear in plots or be considered in calculations.
 This is an important early step in processing, because suspicious Argo floats commonly
@@ -63,7 +63,7 @@ See section 3.3 of Kelley et al. (2021) for more information
 about this function.
 }
 \details{
-The work is done by using \code{\link[oce:handleFlags-argo-method]{oce::handleFlags,argo-method()}}
+The work is done by using \code{\link[oce:handleFlags,argo-method]{oce::handleFlags,argo-method()}}
 on each of the profiles stored within the object. In most cases, only
 the object needs to be specified, for the default actions coincide with
 common conventions for flags in Argo data.

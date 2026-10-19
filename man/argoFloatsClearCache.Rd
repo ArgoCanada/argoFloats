@@ -17,12 +17,12 @@ Clear the cache.  This is meant mainly for developers working in interactive
 sessions to test coding changes.
 }
 \seealso{
-Other functions relating to cached values: 
-\code{\link{argoFloatsGetFromCache}()},
-\code{\link{argoFloatsIsCached}()},
-\code{\link{argoFloatsListCache}()},
-\code{\link{argoFloatsStoreInCache}()},
-\code{\link{argoFloatsWhenCached}()}
+Other functions relating to cached values:
+\code{\link[=argoFloatsGetFromCache]{argoFloatsGetFromCache()}},
+\code{\link[=argoFloatsIsCached]{argoFloatsIsCached()}},
+\code{\link[=argoFloatsListCache]{argoFloatsListCache()}},
+\code{\link[=argoFloatsStoreInCache]{argoFloatsStoreInCache()}},
+\code{\link[=argoFloatsWhenCached]{argoFloatsWhenCached()}}
 }
 \author{
 Dan Kelley, making a thin copy of code written by Dewey Dunnington

@@ -19,7 +19,7 @@ summary(a[[1]])
 
 }
 \seealso{
-Other raw datasets: 
+Other raw datasets:
 \code{\link{D4900785_048.nc}},
 \code{\link{R3901602_163.nc}},
 \code{\link{SD5903586_001.nc}}

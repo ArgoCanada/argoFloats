@@ -20,11 +20,11 @@ None (invisible NULL).
 Store an Item in the Cache
 }
 \seealso{
-Other functions relating to cached values: 
-\code{\link{argoFloatsClearCache}()},
-\code{\link{argoFloatsGetFromCache}()},
-\code{\link{argoFloatsIsCached}()},
-\code{\link{argoFloatsListCache}()},
-\code{\link{argoFloatsWhenCached}()}
+Other functions relating to cached values:
+\code{\link[=argoFloatsClearCache]{argoFloatsClearCache()}},
+\code{\link[=argoFloatsGetFromCache]{argoFloatsGetFromCache()}},
+\code{\link[=argoFloatsIsCached]{argoFloatsIsCached()}},
+\code{\link[=argoFloatsListCache]{argoFloatsListCache()}},
+\code{\link[=argoFloatsWhenCached]{argoFloatsWhenCached()}}
 }
 \concept{functions relating to cached values}

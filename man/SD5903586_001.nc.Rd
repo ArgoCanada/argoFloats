@@ -26,7 +26,7 @@ hist(Percent, main = "Oxygen adjustment")
 
 }
 \seealso{
-Other raw datasets: 
+Other raw datasets:
 \code{\link{D4900785_048.nc}},
 \code{\link{R3901602_163.nc}},
 \code{\link{SR2902204_131.nc}}

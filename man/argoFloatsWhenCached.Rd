@@ -18,12 +18,12 @@ A logical value indicating whether a cached value is available.
 Check When an Item was Cached
 }
 \seealso{
-Other functions relating to cached values: 
-\code{\link{argoFloatsClearCache}()},
-\code{\link{argoFloatsGetFromCache}()},
-\code{\link{argoFloatsIsCached}()},
-\code{\link{argoFloatsListCache}()},
-\code{\link{argoFloatsStoreInCache}()}
+Other functions relating to cached values:
+\code{\link[=argoFloatsClearCache]{argoFloatsClearCache()}},
+\code{\link[=argoFloatsGetFromCache]{argoFloatsGetFromCache()}},
+\code{\link[=argoFloatsIsCached]{argoFloatsIsCached()}},
+\code{\link[=argoFloatsListCache]{argoFloatsListCache()}},
+\code{\link[=argoFloatsStoreInCache]{argoFloatsStoreInCache()}}
 }
 \author{
 Dan Kelley, making a thin copy of code written by Dewey Dunnington

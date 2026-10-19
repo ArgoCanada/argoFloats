@@ -86,7 +86,7 @@ than 1, then those messages will be prefixed by an indication of
 the time, down to the millisecond.}
 }
 \value{
-An object of class \code{\linkS4class{argoFloats}} with type=\code{"index"}, which
+An object of class \code{\link[=argoFloats-class]{argoFloats}} with type=\code{"index"}, which
 is suitable as the first argument of \code{\link[=getProfiles]{getProfiles()}}.
 }
 \description{

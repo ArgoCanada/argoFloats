@@ -18,11 +18,11 @@ The cached value, as stored with \code{\link[=argoFloatsStoreInCache]{argoFloats
 Get an Item From The Cache
 }
 \seealso{
-Other functions relating to cached values: 
-\code{\link{argoFloatsClearCache}()},
-\code{\link{argoFloatsIsCached}()},
-\code{\link{argoFloatsListCache}()},
-\code{\link{argoFloatsStoreInCache}()},
-\code{\link{argoFloatsWhenCached}()}
+Other functions relating to cached values:
+\code{\link[=argoFloatsClearCache]{argoFloatsClearCache()}},
+\code{\link[=argoFloatsIsCached]{argoFloatsIsCached()}},
+\code{\link[=argoFloatsListCache]{argoFloatsListCache()}},
+\code{\link[=argoFloatsStoreInCache]{argoFloatsStoreInCache()}},
+\code{\link[=argoFloatsWhenCached]{argoFloatsWhenCached()}}
 }
 \concept{functions relating to cached values}

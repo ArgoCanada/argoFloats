@@ -29,7 +29,7 @@
 )
 }
 \arguments{
-\item{x}{an \code{\linkS4class{argoFloats}} object.}
+\item{x}{an \code{\link[=argoFloats-class]{argoFloats}} object.}
 
 \item{which}{a character value indicating the type of plot. The possible
 choices are \code{"map"}, \code{"profile"}, \code{"QC"}, \code{"summary"} and \code{"TS"};
@@ -52,7 +52,7 @@ with \code{geographical=1}.
 In the \code{geographical=4} case, signs are also dropped, but hemispheres
 are indicated by writing \code{S}, \code{N}, \code{W} or \code{E} after axis tick labels,
 except at the equator and prime meridian.
-Note that this scheme mimics that used by \code{\link[oce:plot-coastline-method]{oce::plot,coastline-method()}}.}
+Note that this scheme mimics that used by \code{\link[oce:plot,coastline-method]{oce::plot,coastline-method()}}.}
 
 \item{xlim, ylim}{numerical values, each a two-element vector, that
 set the \code{x} and \code{y} limits of plot axes, as for \code{\link[=plot.default]{plot.default()}} and
@@ -158,7 +158,7 @@ The action depends on the \code{type} of the object, and
 this is set up by the function that created the object;
 see \dQuote{Details}. These are basic plot styles, with
 somewhat limited scope for customization. Since the data with
-\linkS4class{argoFloats} objects are easy to extract, users should
+\link[=argoFloats-class]{argoFloats} objects are easy to extract, users should
 not find it difficult to create their own plots to meet a
 particular aesthetic. See \dQuote{Examples} and Kelley et al. (2021)
 for more plotting examples.
@@ -219,7 +219,7 @@ some quantity with pressure or potential density anomaly, as specified by the
 time being that recorded in the individual profile in the dataset.
 An additional argument named \code{parameter} must be given, to name the
 quantity of interest.  The function only works if \code{x} is an
-\code{\linkS4class{argoFloats}} object created with \code{\link[=readProfiles]{readProfiles()}}.
+\code{\link[=argoFloats-class]{argoFloats}} object created with \code{\link[=readProfiles]{readProfiles()}}.
 The top panel shows the percent of data flagged with codes
 1 (meaning good data), 2 (probably good), 5 (changed)
 or 8 (estimated), as a function of time (lower axis) and

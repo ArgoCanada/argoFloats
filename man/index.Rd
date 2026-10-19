@@ -35,7 +35,7 @@ data(index)
 plot(index, bathymetry = FALSE)
 }
 \seealso{
-Other datasets provided with argoFloats: 
+Other datasets provided with argoFloats:
 \code{\link{indexBgc}},
 \code{\link{indexDeep}},
 \code{\link{indexSynthetic}}

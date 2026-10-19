@@ -16,12 +16,12 @@ character vector of names of items.
 List items in the cache.
 }
 \seealso{
-Other functions relating to cached values: 
-\code{\link{argoFloatsClearCache}()},
-\code{\link{argoFloatsGetFromCache}()},
-\code{\link{argoFloatsIsCached}()},
-\code{\link{argoFloatsStoreInCache}()},
-\code{\link{argoFloatsWhenCached}()}
+Other functions relating to cached values:
+\code{\link[=argoFloatsClearCache]{argoFloatsClearCache()}},
+\code{\link[=argoFloatsGetFromCache]{argoFloatsGetFromCache()}},
+\code{\link[=argoFloatsIsCached]{argoFloatsIsCached()}},
+\code{\link[=argoFloatsStoreInCache]{argoFloatsStoreInCache()}},
+\code{\link[=argoFloatsWhenCached]{argoFloatsWhenCached()}}
 }
 \author{
 Dan Kelley, making a thin copy of code written by Dewey Dunnington

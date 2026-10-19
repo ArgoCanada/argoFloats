@@ -7,7 +7,7 @@
 \S4method{subset}{argoFloats}(x, subset = NULL, ...)
 }
 \arguments{
-\item{x}{an \code{\linkS4class{argoFloats}} object as created by \code{\link[=getIndex]{getIndex()}}.}
+\item{x}{an \code{\link[=argoFloats-class]{argoFloats}} object as created by \code{\link[=getIndex]{getIndex()}}.}
 
 \item{subset}{optional numerical or logical vector that indicates which
 indices of \code{x@data$index} to keep (example 1).}
@@ -24,10 +24,10 @@ during the subsetting operation.
 See \dQuote{Details} and \dQuote{Examples}.}
 }
 \value{
-An \code{\linkS4class{argoFloats}} object, restricted as indicated.
+An \code{\link[=argoFloats-class]{argoFloats}} object, restricted as indicated.
 }
 \description{
-Return a subset of an \code{\linkS4class{argoFloats}} object.  This applies
+Return a subset of an \code{\link[=argoFloats-class]{argoFloats}} object.  This applies
 only to objects of type \code{"index"}, as created with \code{\link[=getIndex]{getIndex()}} or \code{subset()}
 acting on such a value, or of type \code{"argos"}, as created with \code{\link[=readProfiles]{readProfiles()}}.
 (It cannot be used on objects of type \code{"profiles"}, as created with \code{\link[=getProfiles]{getProfiles()}}.)

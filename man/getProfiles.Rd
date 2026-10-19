@@ -15,7 +15,7 @@ getProfiles(
 )
 }
 \arguments{
-\item{index}{an \code{\linkS4class{argoFloats}} object of type \code{"index"}, as created
+\item{index}{an \code{\link[=argoFloats-class]{argoFloats}} object of type \code{"index"}, as created
 by \code{\link[=getIndex]{getIndex()}}.}
 
 \item{destdir}{character value indicating the directory in which to store
@@ -61,7 +61,7 @@ first step should be to rerun the function with \code{debug=1},
 to see if the output suggests a problem in the call.}
 }
 \value{
-An object of class \code{\linkS4class{argoFloats}} with type=\code{"profiles"}, the
+An object of class \code{\link[=argoFloats-class]{argoFloats}} with type=\code{"profiles"}, the
 \code{data} slot of which contains two items: \code{url},
 which holds the URLs from which the NetCDF
 files were downloaded, and \code{file}, which
