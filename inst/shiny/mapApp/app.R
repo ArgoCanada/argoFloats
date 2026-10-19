@@ -11,7 +11,7 @@ dmsg <- function(...) {
     }
 }
 
-viewDefaults <- list("core", "deep", "bgc")
+viewDefaults <- c("core", "deep", "bgc")
 colDefaults <- list(core = "#F5C710", bgc = "#05f076", deep = "#CD0BBC")
 
 # Default start and end times. We must extend present time because
@@ -344,7 +344,7 @@ serverMapApp <- function(input, output, session) {
                     shiny::tags$span("Path", style = "color:black;")
                 ),
                 choiceValues = list("core", "deep", "bgc", "hires", "topo", "contour", "path"),
-                selected = state$view,
+                selected = shiny::isolate(state$view),
                 # ? selected=viewDefaults,
                 inline = TRUE
             )
@@ -552,7 +552,7 @@ serverMapApp <- function(input, output, session) {
                         shiny::tags$span("End", style = "color: black;"),
                         shiny::tags$span("Without Profiles", style = "color: black;")
                     ),
-                    choiceValues = list("start", "end", "lines"), selected = state$action,
+                    choiceValues = list("start", "end", "lines"), selected = shiny::isolate(state$action),
                     inline = TRUE
                 )
             ))
@@ -1267,13 +1267,19 @@ serverMapApp <- function(input, output, session) {
 
     output$plotMap <- shiny::renderPlot(
         {
-            argoFloatsDebug(debug, "plotMap() START\n", style = "bold", unindent = 1)
+            argoFloatsDebug(debug, "plotMap() START (FIXME: bug #607)\n", style = "bold", unindent = 1)
+            # cat("state$view")
+            # str(state$view)
+            # cat("state$action")
+            # str(state$action)
+
             argoFloatsDebug(debug, "plotCounter=", plotCounter, "\n", sep = "")
             argoFloatsDebug(debug, "lastHoverMessage=", lastHoverMessage, "\n", sep = "")
             argoFloatsDebug(debug, "state$hoverIsPasted=", state$hoverIsPasted, "\n", sep = "")
             plotCounter <<- plotCounter + 1L
             #> message("in output$plotMap with state$begin=", state$begin)
             if (state$begin) {
+                argoFloatsDebug(debug, "state$begin is TRUE, so setting state$view\n")
                 state$view <<- viewDefaults
             }
             state$begin <<- FALSE
@@ -1476,7 +1482,7 @@ serverMapApp <- function(input, output, session) {
             pushState(isolate(reactiveValuesToList(state)), debug = debug - 1L)
             argoFloatsDebug(debug, "plotMap() END\n", style = "bold", unindent = 1)
         },
-        execOnResize = TRUE,
+        execOnResize = TRUE, # (setting to !TRUE does not help with issue #607)
         pointsize = 18
     ) # plotMap
 } # serverMapApp
