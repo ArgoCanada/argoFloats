@@ -1,4 +1,5 @@
-## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+# vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+
 context("test defaults")
 
 test_that("default destdir can be changed by option or env var", {
@@ -40,7 +41,7 @@ test_that("default index age can be changed by option or env var", {
     old_env_var <- Sys.getenv("R_ARGOFLOATS_INDEx_AGE")
     Sys.setenv(R_ARGOFLOATS_INDEx_AGE = 12345)
     expect_identical(argoDefaultIndexAge(), 12345)
-    
+
     options(argoFloats.indexAge = NULL)
     Sys.setenv(R_ARGOFLOATS_INDEX_AGE = "")
     expect_identical(argoDefaultIndexAge(), 1)
@@ -56,7 +57,7 @@ test_that("default profile age can be changed by option or env var", {
     old_env_var <- Sys.getenv("R_ARGOFLOATS_PROFILE_AGE")
     Sys.setenv(R_ARGOFLOATS_PROFILE_AGE = 12345)
     expect_identical(argoDefaultProfileAge(), 12345)
-    
+
     options(argoFloats.profileAge = NULL)
     Sys.setenv(R_ARGOFLOATS_PROFILE_AGE = "")
     expect_identical(argoDefaultProfileAge(), 365)

@@ -1,8 +1,9 @@
-## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
-## The tests relating to data dimensions will need to be altered if the dataset is altered.
+# vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 
-## Next is used in some old tests (not yet updated) that required that all the
-## entries in data(index) would stay valid forever.
+# The tests relating to data dimensions will need to be altered if the dataset is altered.
+
+# Next is used in some old tests (not yet updated) that required that all the
+# entries in data(index) would stay valid forever.
 
 library(argoFloats)
 context("subset")
