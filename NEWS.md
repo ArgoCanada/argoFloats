@@ -2,7 +2,8 @@
 
 * Fix a serious "flashing" problem with `mapApp()`.  This problem occurred with
   a change to the Shiny system.
-* Address an R-devel CRAN-check warning relating to "special names".
+* Address a CRAN-package-check warning (from R-devel machines) regarding "Found
+  calls to structure() using deprecated special names".
 
 # argoFloats 1.0.9
 
