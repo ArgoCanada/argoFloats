@@ -1,4 +1,4 @@
-## vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
+# vim:textwidth=128:expandtab:shiftwidth=4:softtabstop=4
 data("index")
 
 test_downloadWithRetries <- FALSE # see discussion on issue #605
