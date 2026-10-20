@@ -1,3 +1,9 @@
+# argoFloats 1.0.10
+
+* Fix a serious "flashing" problem with `mapApp()`.  This problem occurred with
+  a change to the Shiny system.
+* Address an R-devel CRAN-check warning relating to "special names".
+
 # argoFloats 1.0.9
 
 * Change some tests to address a download-timeout error reported by CRAN on
