@@ -12,7 +12,7 @@ dmsg <- function(...) {
 }
 
 viewDefaults <- c("core", "deep", "bgc")
-colDefaults <- list(core = "#F5C710", bgc = "#05f076", deep = "#CD0BBC")
+colDefaults <- list(core = "#F0BD65", bgc = "#2CC17C", deep = "#C446B3")
 
 # Default start and end times. We must extend present time because
 # it gets stored as a date, so otherwise we miss all profiles taken "today".
@@ -64,7 +64,6 @@ popState <- function(debug = 0L) {
     } else {
         argoFloatsDebug(debug, "leaving stack alone, because it is already empty\n")
     }
-    # printState()
     argoFloatsDebug(debug, "popState() END\n", style = "bold", unindent = 1)
 }
 
@@ -119,7 +118,7 @@ overallHelp <- "<p>mapApp() responds to keystroke actions and GUI actions.</p><p
 uiMapApp <- shiny::fluidPage(
     # Header Panel
     shiny::headerPanel(title = "", windowTitle = "argoFloats mapApp"),
-    shiny::tags$script('$(document).on("keypress", function (e) { Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
+    shiny::tags$script('$(document).on("keypress", function (e) { if ($(e.target).is("input, textarea, select")) { return; } Shiny.onInputChange("keypress", e.which); Shiny.onInputChange("keypressTrigger", Math.random()); });'),
     # style="text-indent:1em; line-height:1.2; background:#e6f3ff; .btn{ padding: 2px 9px; }; .form-group { margin-top: 0; margin-bottom: 0 }",
     # margin-top works, but not sure if either pre{} or formgroup{} work.
     style = "text-indent:1em; line-height:1.2; background:#e6f3ff; margin-top: -2ex; pre { line-height: 0.5; }; .form-group { margin-top: 3px; margin-bottom: 3px;};",
@@ -304,16 +303,20 @@ serverMapApp <- function(input, output, session) {
             shiny::checkboxGroupInput("view",
                 label = "View",
                 choiceNames = list(
-                    shiny::tags$span("Core", style = paste0(
-                        "font-weight:bold; color:#",
-                        paste(
-                            as.raw(as.vector(col2rgb(ifelse(state$Ccolour == "default",
-                                colDefaults$core,
-                                state$Ccolour
-                            )))),
-                            collapse = ""
+                    shiny::tags$span("Core",
+                        style = paste0(
+                            "font-weight:bold; color:#",
+                            paste(
+                                as.raw(as.vector(col2rgb(ifelse(state$Ccolour == "default",
+                                    colDefaults$core,
+                                    state$Ccolour
+                                )))),
+                                # next was an attempt to put a border on the text, but it makes text black
+                                # "; text-shadow: -0.2px -0.2px 0 #333, 0.2px -0.2px 0 #333, -0.2px 0.2px 0 #333, 0.2px 0.2px 0 #333;",
+                                collapse = ""
+                            )
                         )
-                    )),
+                    ),
                     shiny::tags$span("Deep",
                         style = paste0(
                             "font-weight:bold; color:#",
@@ -345,7 +348,6 @@ serverMapApp <- function(input, output, session) {
                 ),
                 choiceValues = list("core", "deep", "bgc", "hires", "topo", "contour", "path"),
                 selected = shiny::isolate(state$view),
-                # ? selected=viewDefaults,
                 inline = TRUE
             )
         }
@@ -748,7 +750,7 @@ serverMapApp <- function(input, output, session) {
         argoFloatsDebug(debug, "observeEvent(input$Dborder) START\n", style = "bold", showTime = FALSE, unindent = 1)
         state$Dborder <<- input$Dborder
         argoFloatsDebug(debug, "input$=Dborder ", input$Dborder, "\n")
-        argoFloatsDebug(debug, "observeEvent(input$Dborder) END`\n", style = "bold", showTime = FALSE, unindent = 1)
+        argoFloatsDebug(debug, "observeEvent(input$Dborder) END\n", style = "bold", showTime = FALSE, unindent = 1)
     })
 
     shiny::observeEvent(input$DPcolour, {
@@ -989,11 +991,11 @@ serverMapApp <- function(input, output, session) {
         shinyBS::updateButton(session, "polygon", style = "default")
         fac2 <- 1.0 / cos(pi180 * y)^2 # for deltaLon^2 compared with deltaLat^2
         if (!is.null(state$focusID)) {
-            argoFloatsDebug(debug, "state$focusID is NULL\n")
+            argoFloatsDebug(debug, "state$focusID='", state$focusID, "'\n", sep = "")
             keep <- argo$ID == state$focusID
         } else {
             # Restrict search to the present time window
-            argoFloatsDebug(debug, "state$focusID='", state$focusID, "'\n", sep = "")
+            argoFloatsDebug(debug, "state$focusID is NULL\n")
             keep <- state$startTime <= argo$time & argo$time <= state$endTime
         }
         i <- which.min(ifelse(keep, fac2 * (x - argo$longitude)^2 + (y - argo$latitude)^2, 1000))
@@ -1001,8 +1003,8 @@ serverMapApp <- function(input, output, session) {
             state$focusID <<- argo$ID[i]
             k <- which(argo$ID == argo$ID[i])
             argoFloatsDebug(debug, "have ", length(k), " cycles for inferred ID='", argo$ID[i], "'\n", sep = "")
-            state$xlim <<- pinlon(extendrange(argo$lon[k], f = 0.15))
-            state$ylim <<- pinlat(extendrange(argo$lat[k], f = 0.15))
+            state$xlim <<- pinlon(extendrange(argo$longitude[k], f = 0.15))
+            state$ylim <<- pinlat(extendrange(argo$latitude[k], f = 0.15))
             state$startTime <<- dayStart(min(argo$time[k]))
             state$endTime <<- dayEnd(max(argo$time[k]))
             argoFloatsDebug(debug, "set xlim:      ", state$xlim[1], " to ", state$xlim[2], "\n")
@@ -1136,36 +1138,6 @@ serverMapApp <- function(input, output, session) {
         if (key == "d") { # toggle debug
             debug <<- !debug
             message("switched debug to ", debug)
-            # } else if (key == "n") { # go north
-            #    dy <- diff(state$ylim)
-            #    state$ylim <<- pinlat(state$ylim + dy / 4)
-            # } else if (key == "s") { # go south
-            #    dy <- diff(state$ylim)
-            #    state$ylim <<- pinlat(state$ylim - dy / 4)
-            # } else if (key == "e") { # go east
-            #    dx <- diff(state$xlim)
-            #    state$xlim <<- pinlon(state$xlim + dx / 4)
-            # } else if (key == "w") { # go west
-            #    dx <- diff(state$xlim)
-            #    state$xlim <<- pinlon(state$xlim - dx / 4)
-            # } else if (key == "f") { # forward in time
-            #    interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
-            #    state$startTime <<- state$startTime + interval
-            #    state$endTime <<- state$endTime + interval
-            #    shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
-            #    shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-            # } else if (key == "b") { # backward in time
-            #    interval <- as.numeric(state$endTime) - as.numeric(state$startTime)
-            #    state$startTime <<- state$startTime - interval
-            #    state$endTime <<- state$endTime - interval
-            #    shiny::updateTextInput(session, "start", value=format(state$startTime, "%Y-%m-%d"))
-            #    shiny::updateTextInput(session, "end", value=format(state$endTime, "%Y-%m-%d"))
-            # } else if (key == "i") { # zoom in
-            #    state$xlim <<- pinlon(mean(state$xlim)) + c(-0.5, 0.5) / 1.3 * diff(state$xlim)
-            #    state$ylim <<- pinlat(mean(state$ylim)) + c(-0.5, 0.5) / 1.3 * diff(state$ylim)
-            # } else if (key == "o") { # zoom out
-            #    state$xlim <<- pinlon(mean(state$xlim) + c(-0.5, 0.5) * 1.3 * diff(state$xlim))
-            #    state$ylim <<- pinlat(mean(state$ylim) + c(-0.5, 0.5) * 1.3 * diff(state$ylim))
         } else if (key == "h") { # paste hover message
             argoFloatsDebug(debug, "Key h pressed, so setting state$hoverIsPasted to", !state$hoverIsPasted, "\n")
             state$hoverIsPasted <<- !state$hoverIsPasted
@@ -1267,22 +1239,11 @@ serverMapApp <- function(input, output, session) {
 
     output$plotMap <- shiny::renderPlot(
         {
-            argoFloatsDebug(debug, "plotMap() START (FIXME: bug #607)\n", style = "bold", unindent = 1)
-            # cat("state$view")
-            # str(state$view)
-            # cat("state$action")
-            # str(state$action)
-
+            argoFloatsDebug(debug, "plotMap() START\n", style = "bold", unindent = 1)
             argoFloatsDebug(debug, "plotCounter=", plotCounter, "\n", sep = "")
             argoFloatsDebug(debug, "lastHoverMessage=", lastHoverMessage, "\n", sep = "")
             argoFloatsDebug(debug, "state$hoverIsPasted=", state$hoverIsPasted, "\n", sep = "")
             plotCounter <<- plotCounter + 1L
-            #> message("in output$plotMap with state$begin=", state$begin)
-            # ___ if (state$begin) {
-            # ___     argoFloatsDebug(debug, "state$begin is TRUE, so setting state$view\n")
-            # ___     state$view <<- viewDefaults
-            # ___ }
-            # ___ state$begin <<- FALSE
             validate(need(
                 state$startTime < state$endTime,
                 "The Start time must precede the End time."
@@ -1293,10 +1254,6 @@ serverMapApp <- function(input, output, session) {
             on.exit(par(mar = omar, mgp = omgp))
             topo <- if ("hires" %in% state$view) topoWorldFine else topoWorld
             argoFloatsDebug(debug, "calling plot() to set up scales\n")
-            # ___ if (plotCounter < 4) {
-            # ___     argoFloatsDebug(debug, "} # plotMap() early return since plotCounter=", plotCounter, "\n", sep = "", style = "bold", unindent = 1)
-            # ___     return()
-            # ___ }
             plot(state$xlim, state$ylim, xlab = "", ylab = "", axes = FALSE, type = "n", asp = 1 / cos(pi180 * mean(state$ylim)))
             if (debug > 0) {
                 mtext(plotCounter, adj = 1, col = 2)
@@ -1398,7 +1355,6 @@ serverMapApp <- function(input, output, session) {
                                         deep = if (state$DPcolour == "default") colDefaults$deep else state$DPcolour
                                     )
                                     pathWidth <- list(core = state$CPwidth, bgc = state$BPwidth, deep = state$DPwidth)
-                                    # message(pathColour[[view]], " is the path color")
                                     # Chop data at the dateline
                                     # https://github.com/ArgoCanada/argoFloats/issues/503
                                     LONLAT <- sf::st_wrap_dateline(
@@ -1407,7 +1363,6 @@ serverMapApp <- function(input, output, session) {
                                             crs = "OGC:CRS84"
                                         )
                                     )[[1]]
-                                    # message("class(lonlatSegments): ", paste(class(lonlatSegments), collapse=" "))
                                     # Examination with the above indicates two choices: LINESTRING and MULTILINESTRING
                                     if (inherits(LONLAT, "LINESTRING")) {
                                         lines(LONLAT[, 1], LONLAT[, 2],
