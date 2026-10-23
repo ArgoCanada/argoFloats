@@ -592,9 +592,7 @@ serverMapApp <- function(input, output, session) {
                 holdLatitude <<- argo$latitude[i]
                 holdLongitude <<- argo$longitude[i]
                 dist <- sqrt(dist2[i]) * 111 # 1deg lat approx 111km
-                lonstring <- ifelse(x < 0, sprintf("%.2fW", abs(argo$longitude[i])), sprintf("%.2fE", x))
-                latstring <- ifelse(y < 0, sprintf("%.2fS", abs(argo$latitude[i])), sprintf("%.2fN", y))
-                if (length(dist) && dist < 100) {
+                if (length(dist) == 1 && dist < 100) {
                     highlight <<- TRUE
                     rval <- sprintf(
                         "%s Float %s cycle %s (type %s from %s) at %s %s, %s",
@@ -607,18 +605,23 @@ serverMapApp <- function(input, output, session) {
                         argo$cycle[i],
                         argo$profilerType[i],
                         argo$institution[i],
-                        lonstring,
-                        latstring,
+                        ifelse(x < 0, sprintf("%.3fW", abs(argo$longitude[i])), sprintf("%.3fE", argo$longitude[i])),
+                        ifelse(y < 0, sprintf("%.3fS", abs(argo$latitude[i])), sprintf("%.3fN", argo$latitude[i])),
                         format(argo$time[i], "%Y-%m-%d %H:%M")
                     )
                 } else {
-                    rval <- sprintf("%s %s", lonstring, latstring)
-                    highlight <<- FALSE
+                    rval <- sprintf(
+                        "%s %s",
+                        ifelse(x < 0, sprintf("%.3fW", abs(x)), sprintf("%.3fE", x)),
+                        ifelse(y < 0, sprintf("%.3fS", abs(y)), sprintf("%.3fN", y))
+                    )
                 }
             } else {
-                lonstring <- ifelse(x < 0, sprintf("%.2fW", x), sprintf("%.2fE", x))
-                latstring <- ifelse(y < 0, sprintf("%.2fS", y), sprintf("%.2fN", y))
-                rval <- sprintf("%s %s", lonstring, latstring)
+                rval <- sprintf(
+                    "%s %s",
+                    ifelse(x < 0, sprintf("%.3fW", abs(x)), sprintf("%.3fE", x)),
+                    ifelse(y < 0, sprintf("%.3fS", abs(y)), sprintf("%.3fN", y))
+                )
             }
             lastHoverMessage <<- rval
             rval
