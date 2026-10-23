@@ -1,3 +1,5 @@
+# argoFloats (development version)
+
 # argoFloats 1.0.10
 
 * Fix a serious "flashing" problem with `mapApp()`.  This problem occurred with
