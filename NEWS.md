@@ -1,7 +1,12 @@
-# argoFloats (development version)
+# argoFloats
+
+# argoFloats 1.0.11
+
+* In development
 
 # argoFloats 1.0.10
 
+* On CRAN as of 2026-10-23.
 * Fix a serious "flashing" problem with `mapApp()`.  This problem occurred with
   a change to the Shiny system.
 * Address a CRAN-package-check warning (from R-devel machines) regarding "Found
